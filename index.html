@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="log.js"></script>
+    <script src="midi.js"></script>
+    <script src="net.js"></script>
+    <script src="synth.js"></script>
+    <script src="app.js"></script>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            window.digifuApp = new DigifuApp();
+            window.digifuApp.Main();
+        });
+
+    </script>
+
+    <pre id="log" style="position:absolute;border:2px solid blue; background-color: rgb(211, 211, 211);min-width: 100px;min-height: 100px;"></pre>
+
+</body>
+
+</html>
