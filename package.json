@@ -1,8 +1,8 @@
 {
   "name": "digifujam",
   "version": "1.0.0",
-  "description": "npm install ws\r node server.js",
-  "main": "app.js",
+  "description": "multiplayer jam session",
+  "main": "index.js",
   "dependencies": {
     "express": "^4.17.1",
     "openode": "^2.0.38",
@@ -12,7 +12,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC"
