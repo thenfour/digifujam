@@ -10,6 +10,7 @@ function DigifuApp() {
 
     this.pingMS = 0;
     this.pingsSent = 0;
+    this.pingTimerToken = null;
 
     this.midi = new DigifuMidi();
     this.synth = new DigifuSynth(); // contains all music-making stuff.
@@ -174,6 +175,11 @@ DigifuApp.prototype.NET_OnUserChatMessage = function(msg) {
     }
 }
 
+DigifuApp.prototype.NET_OnDisconnect = function() {
+    clearInterval(this.pingTimerToken);
+    log("todo: disconnection.");
+}
+
 // --------------------------------------------------------------------------------------
 
 DigifuApp.prototype.RequestInstrument = function (instrumentID) {
@@ -198,6 +204,7 @@ DigifuApp.prototype.SendChatMessage = function(msgText, toUserID) {
 
 
 DigifuApp.prototype.Connect = function (midiInputDeviceName, uri, userName, userColor, stateChangeHandler) {
+    log("attempting connection...");
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
@@ -208,7 +215,7 @@ DigifuApp.prototype.Connect = function (midiInputDeviceName, uri, userName, user
     this.synth.Init();
     this.net.Connect(uri, this);
 
-    setInterval(() => {
+    this.pingTimerToken = setInterval(() => {
         this.net.SendPing((new Date()).toISOString());
     }, ClientSettings.PingIntervalMS);
 };
