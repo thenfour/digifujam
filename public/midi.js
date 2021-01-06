@@ -41,8 +41,8 @@ DigifuMidi.prototype.Init = function (midiInputDeviceName, handler) {
   navigator.requestMIDIAccess()
     .then((function (midiAccess) {
       for (var input of midiAccess.inputs.values()) {
-        log(`attaching to device ${input.name}`);
         if (input.name == midiInputDeviceName) {
+          log(`attaching to device ${input.name}`);
           input.onmidimessage = this.OnMIDIMessage.bind(this);
         }
       }

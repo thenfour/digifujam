@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.17.1",
+    "openode": "^2.0.38",
     "socket.io": "^3.0.5",
     "ws": "^7.4.2"
   },
