@@ -1,5 +1,7 @@
 'use strict';
 
+//const { resolve } = require("path");
+
 // https://www.smashingmagazine.com/2018/03/web-midi-api/
 
 // prototype for handler:
@@ -35,17 +37,38 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
 };
 
 
-DigifuMidi.prototype.Init = function (handler) {
+DigifuMidi.prototype.Init = function (midiInputDeviceName, handler) {
   this.EventHandler = handler;
 
   navigator.requestMIDIAccess()
     .then((function (midiAccess) {
       for (var input of midiAccess.inputs.values()) {
         log(`attaching to device ${input.name}`);
-        input.onmidimessage = this.OnMIDIMessage.bind(this);
+        if (input.name == midiInputDeviceName) {
+          input.onmidimessage = this.OnMIDIMessage.bind(this);
+        }
       }
     }).bind(this), function () {
       log('Could not access your MIDI devices.');
     });
+};
+
+// returns a promise(array of names)
+let GetMidiInputDeviceList = function () {
+  return new Promise((resolve, reject) => {
+    navigator.requestMIDIAccess()
+      .then(midiAccess => {
+        let arr = [];
+        for (var input of midiAccess.inputs.values()) {
+          arr.push(input.name);
+        };
+        log(JSON.stringify(arr));
+        resolve(arr);
+      }, () => {
+        log('Could not access your MIDI devices.');
+        reject();
+      });
+  });
+
 };
 

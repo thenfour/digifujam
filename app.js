@@ -3,8 +3,13 @@
 function DigifuApp() {
     this.roomState = null;
 
+    this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
+
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
+
+    this.pingMS = 0;
+    this.pingsSent = 0;
 
     this.midi = new DigifuMidi();
     this.synth = new DigifuSynth(); // contains all music-making stuff.
@@ -79,11 +84,18 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
 
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset);
+
+    if (this.stateChangeHandler) {
+        this.stateChangeHandler();
+    }
 };
 
 DigifuApp.prototype.NET_OnUserEnter = function (data) {
     this.roomState.users.push(data);
     log(`NET_OnUserEnter ${JSON.stringify(data)}`);
+    if (this.stateChangeHandler) {
+        this.stateChangeHandler();
+    }
 };
 
 DigifuApp.prototype.NET_OnUserLeave = function (userID) {
@@ -95,6 +107,9 @@ DigifuApp.prototype.NET_OnUserLeave = function (userID) {
         return;
     }
     this.roomState.users.splice(foundUser.index, 1);
+    if (this.stateChangeHandler) {
+        this.stateChangeHandler();
+    }
 };
 
 DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */) {
@@ -120,6 +135,9 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
     }
 
     foundInstrument.instrument.controlledByUserID = userID;
+    if (this.stateChangeHandler) {
+        this.stateChangeHandler();
+    }
 };
 
 DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
@@ -142,6 +160,20 @@ DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
     this.synth.NoteOff(foundInstrument.instrument, note);
 };
 
+DigifuApp.prototype.NET_OnPong = function (data) {
+    let a = new Date(data); // data is an iso string.
+    let b = new Date(); // now.
+    this.pingMS = (b - a);
+    this.pingsSent ++;
+};
+
+DigifuApp.prototype.NET_OnUserChatMessage = function(msg) {
+    this.roomState.chatLog.push(msg);
+    if (this.stateChangeHandler) {
+        this.stateChangeHandler();
+    }
+}
+
 // --------------------------------------------------------------------------------------
 
 DigifuApp.prototype.RequestInstrument = function (instrumentID) {
@@ -152,16 +184,33 @@ DigifuApp.prototype.ReleaseInstrument = function () {
     this.net.SendReleaseInstrument();
 };
 
+DigifuApp.prototype.SendChatMessage = function(msgText, toUserID) {
+    let msg = new DigifuChatMessage();
+    msg.message = msgText;
+    msg.fromUserID = this.myUser.userID;
+    msg.toUserID = toUserID;
+    msg.timestampUTC = new Date();
 
-DigifuApp.prototype.Connect = function (uri, userName, userColor) {
+    log(`${JSON.stringify(msg)}`);
+
+    this.net.SendChatMessage(msg);
+};
+
+
+DigifuApp.prototype.Connect = function (midiInputDeviceName, uri, userName, userColor, stateChangeHandler) {
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
-    log(`setting identify as ${JSON.stringify(this.myUser)}`);
 
-    this.midi.Init(this);
+    this.stateChangeHandler = stateChangeHandler;
+
+    this.midi.Init(midiInputDeviceName, this);
     this.synth.Init();
     this.net.Connect(uri, this);
+
+    setInterval(() => {
+        this.net.SendPing((new Date()).toISOString());
+    }, ClientSettings.PingIntervalMS);
 };
 
 DigifuApp.prototype.Disconnect = function () {

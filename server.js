@@ -18,6 +18,12 @@ let gRoom = new DF.DigifuRoomState();
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
     {
+        name: "acoustic_grand_piano",
+        color: "#808080",
+        instrumentID: 6,
+        controlledByUserID: null
+    },
+    {
         name: "marimba",
         color: "#884400",
         instrumentID: 69,
@@ -29,6 +35,13 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
         instrumentID: 420,
         controlledByUserID: null
     },
+    {
+        name: "electric_bass_finger",
+        color: "#0000ff",
+        instrumentID: 11,
+        controlledByUserID: null
+    },
+    
 ];
 
 
@@ -258,6 +271,33 @@ let OnClientNoteOff = function (ws, note) {
 };
 
 
+let OnClientChatMessage = function (ws, msg) {
+    // find the user object.
+    let foundUser = FindUserFromSocket(ws);
+    if (foundUser == null) {
+        console.log(`=> unknown user`);
+        return;
+    }
+
+    // correct stuff.
+    msg.fromUserID = foundUser.user.userID;
+    // validate to user id
+    msg.timestampUTC = new Date();
+
+    gRoom.chatLog.push(msg);
+
+    // broadcast to all clients
+    let payload = JSON.stringify({
+        cmd: DF.ServerMessages.UserChatMessage,
+        data: msg
+    });
+    wss.clients.forEach(c => {
+        c.send(payload);
+    });
+};
+
+
+
 
 let OnClientMessage = function (ws, text) {
     console.log(`Received message => ${text}`)
@@ -280,11 +320,14 @@ let OnClientMessage = function (ws, text) {
         case DF.ClientMessages.NoteOff:
             OnClientNoteOff(ws, data);
             break;
-        case DF.ClientMessages.UserChatMessage:
-            // update state, broadcast state change
-            break;
         case DF.ClientMessages.Ping:
-            // update state, broadcast state change
+            ws.send(JSON.stringify({
+                cmd: DF.ServerMessages.Pong,
+                data
+            }));
+            break;
+        case DF.ClientMessages.ChatMessage:
+            OnClientChatMessage(ws, data);
             break;
     }
 };

@@ -17,50 +17,135 @@
     <script src="net.js"></script>
     <script src="synth.js"></script>
     <script src="app.js"></script>
+
+    <style>
+        body {
+            background-color: rgb(215, 195, 255);
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+        }
+
+        .area {
+            padding: 3px;
+            float: left;
+            margin: 5px;
+            border: 4px dashed rgb(153, 130, 0);
+        }
+
+        li {
+            margin: 4px;
+        }
+    </style>
 </head>
 
 <body>
 
     <script type="text/javascript">
 
-        let connect = function () {
+        let InitMidiInputs = function () {
+            $('#midiInputList').empty();
+
+            GetMidiInputDeviceList().then(inputs => {
+                inputs.forEach(i => {
+                    $('#midiInputList').append(`<li><button onclick="connect('${i}')">${i}</button>`);
+                });
+            });
+        };
+
+
+        let ResetState = function () {
+            $('#instrumentList').empty();
+            $('#userList').empty();
+            $('#chatLog').empty();
+            $('#li_ping').text(`(ping goes here)`);
+        };
+
+        let OnStateChange = function () {
+            ResetState();
+            // this is not the correct way to run a UI, just rebuilding everything every time something changes.
+            // its just for dev purposes because i'm not going to get into the front end at this time.
+
+            $('#li_ping').text(`ping: ${digifuApp.pingMS} ms (${digifuApp.pingsSent})`);
+
+            digifuApp.roomState.instrumentCloset.forEach(i => {
+                if (i.controlledByUserID == digifuApp.myUser.userID) {
+                    // you control this instrument.
+                    $('#instrumentList').append(`<li style='color:${i.color};'><button onclick="digifuApp.ReleaseInstrument()">Release</button>${i.name} (#${i.instrumentID}) [you control this]</li>`);
+                } else {
+                    $('#instrumentList').append(`<li style='color:${i.color};'><button onclick="digifuApp.RequestInstrument(${i.instrumentID})">Request</button>${i.name} (#${i.instrumentID})</li>`);
+                }
+            });
+
+            // user list
+            digifuApp.roomState.users.forEach(u => {
+                if (u.userID == digifuApp.myUser.userID) {
+                    $('#userList').append(`<li style='color:${u.color};'>${u.name} (#${u.userID}) [ME!]</li>`);
+                } else {
+                    $('#userList').append(`<li style='color:${u.color};'>${u.name} (#${u.userID})</li>`);
+                }
+            });
+
+            // chat
+            digifuApp.roomState.chatLog.forEach(msg => {
+                $('#chatLog').append(`<li>${JSON.stringify(msg)}</li>`);
+            });
+
+        };
+
+        let connect = function (midiInputDeviceName) {
             window.digifuApp = new DigifuApp();
-            window.digifuApp.Connect("ws://localhost:8080", $("#username").val(), $("#color").val());
-        };
-
-        let disc = function() {
-            window.digifuApp.Disconnect();
-        };
-
-        let requestInstrument = function () {
-            window.digifuApp.RequestInstrument($("#instreq").val());
-        };
-
-        let releaseInstrument = function() {
-            window.digifuApp.ReleaseInstrument();
+            window.digifuApp.Connect(midiInputDeviceName, $("#wsuri").val(), $("#username").val(), $("#color").val(), OnStateChange);
         };
 
     </script>
 
-    <input type="text" id="username" value="tenfour" /><label for="username">name</label>
-    <input type="text" id="color" value="#ffff00" /><label for="color">color</label>
-    <button onclick="connect()">connect.</button>
+    <h2>digifu multiplayer jam</h2>
 
-    <hr />
-    <button onclick="disc()">disconnect.</button>
+    <div class="area">
+        <h2>Connection</h2>
+        <ul>
+            <li>Server URI:<input type="text" id="wsuri" value="ws://localhost:8080" /></li>
+            <li>Username:<input type="text" id="username" value="some user name" /></li>
+            <li>Color:<input type="text" id="color" value="#cc2222" /></li>
+            <ul id="midiInputList">
+                <li><button onclick="InitMidiInputs()">init midi input list</button></li>
+            </ul>
+            <li><button onclick="digifuApp.Disconnect(); ResetState();">disconnect.</button></li>
+            <li id="li_ping">ping: x ms</li>
+        </ul>
+    </div>
 
-    <hr />
-    <input type="text" id="instreq" value="69" />
-    <button onclick="requestInstrument()">req instrument.</button>
 
-    <hr />
-    <button onclick="releaseInstrument()">release instrument.</button>
+    <div class="area">
+        <h2>Instruments</h2>
+        <ul id="instrumentList">
+        </ul>
 
-    <hr />
-    <pre id="log"
-        style="border:2px solid blue; background-color: rgb(211, 211, 211);height: 50%;width: 100%; overflow: scroll;"></pre>
+    </div>
+
+    <div class="area">
+        <h2>Users</h2>
+        <ul id="userList">
+        </ul>
+    </div>
+
+    <div class="area" style="max-height:300px;">
+        <h2>Chat log</h2>
+        <ul id="chatLog">
+        </ul>
+        optional "to user id"<input id="chatmsgToUserID" value="" style="width:30px;" /><br />
+        &gt;<input id="chatmsginput" value="" /><button onclick="digifuApp.SendChatMessage($('#chatmsginput').val(), $('#chatmsgToUserID').val());">send msg</button>
+    </div>
+
+    <div class="area">
+        <h2>Debug log</h2>
+        <button onclick="$('#log').html('')">clear log</button>
+        <pre id="log"
+            style="border:2px solid blue; background-color: rgb(211, 211, 211);max-height: 50%;width: 100%; max-width:900px; overflow: scroll;"></pre>
+    </div>
 
 
 </body>
 
 </html>
+

@@ -5,7 +5,7 @@ const ClientMessages = {
     // move. like to the couch, bar, dance floor, stage
     InstrumentRequest: "InstrumentRequest", // instid
     InstrumentRelease: "InstrumentRelease",
-    SendMessage: "ChatMessage",// (to_userID_null, msg)
+    ChatMessage: "ChatMessage",// (to_userID_null, msg)
     Ping: "Ping", // token, can be used for timing
     NoteOn: "NoteOn", // note, velocity
     NoteOff: "NoteOff", // note
@@ -16,11 +16,15 @@ const ServerMessages = {
     Welcome: "Welcome",// (your UserID & room state)
     UserEnter: "UserEnter",// (user data)
     UserLeave: "UserLeave",// UserID
-    UserMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
+    UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     Pong: "Pong", // token
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl]
     NoteOn: "NoteOn", // user, note, velocity
     NoteOff: "NoteOff" // user, note
+};
+
+const ClientSettings = {
+    PingIntervalMS: 5000
 };
 
 class DigifuUser {
@@ -41,10 +45,20 @@ class DigifuInstrumentSpec {
     }
 };
 
+class DigifuChatMessage {
+    constructor() {
+        this.message = null;
+        this.fromUserID = null;
+        this.toUserID = null;
+        this.timestampUTC = null;
+    }
+};
+
 class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
         this.users = [];
+        this.chatLog = []; // ordered by time asc
     }
 };
 

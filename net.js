@@ -1,5 +1,7 @@
 'use strict';
 
+//const { ServerMessages } = require("./DFCommon");
+
 function DigifuNet() {
     this.serverUri = null;
     this.isConnected = false;
@@ -35,6 +37,12 @@ DigifuNet.prototype.OnSocketMessage = function (e) {
             break;
         case ServerMessages.NoteOff:
             this.handler.NET_OnNoteOff(data.userID, data.note);
+            break;
+        case ServerMessages.Pong:
+            this.handler.NET_OnPong(data);
+            break;
+        case ServerMessages.UserChatMessage:
+            this.handler.NET_OnUserChatMessage(data);
             break;
     }
 };
@@ -75,6 +83,20 @@ DigifuNet.prototype.SendNoteOff = function (note) {
     this.socket.send(JSON.stringify({
         cmd: ClientMessages.NoteOff,
         data: note
+    }));
+};
+
+DigifuNet.prototype.SendPing = function (data) {
+    this.socket.send(JSON.stringify({
+        cmd: ClientMessages.Ping,
+        data
+    }));
+};
+
+DigifuNet.prototype.SendChatMessage = function (msg/* as DigifuChatMessage */) {
+    this.socket.send(JSON.stringify({
+        cmd: ClientMessages.ChatMessage,
+        data: msg
     }));
 };
 
