@@ -1,55 +1,72 @@
+'use strict';
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function DigifuSynthVoice() {
-	this.UserID = null;
-	this.InstrumentType = null; // sampler drum kit, 
-}
+function DigifuSynthInstrument(audioCtx, instrumentSpec) {
+	this.audioCtx = audioCtx;
+	Soundfont.instrument(audioCtx, instrumentSpec.name)
+		.then(function(inst) {
+			this.sfinstrument = inst;
+		}.bind(this));
 
-DigifuSynthVoice.prototype.NoteOn = function(instrumentSpec, note, velocity) {
-	// if instrument type has changed, then reset and set up new instrument.
+	this.sfinstrument = null;
+	this.instrumentSpec = instrumentSpec;
+	this.voices = new Array(256); // map midi note number to a voice
 };
 
-DigifuSynthVoice.prototype.NoteOff = function() {
-	// if instrument type has changed, then reset and set up new instrument.
+DigifuSynthInstrument.prototype.NoteOn = function (midiNote, velocity) {
+	if (!this.sfinstrument) return;
+	//log(`on: ${midiNote}`);
+	this.voices[midiNote] = this.sfinstrument.play(midiNote);
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function DigifuSynthInstrument() {
-	// voice allocator stuff.
-	this.Voices = []; // DigifuSynthVoice
+DigifuSynthInstrument.prototype.NoteOff = function (midiNote) {
+	if (!this.sfinstrument) return;
+	console.assert(this.voices[midiNote]);
+	//log(`off: ${midiNote}`);
+	this.voices[midiNote].stop();
 };
 
-DigifuSynthInstrument.prototype.NoteOn = function (instrumentSpec, note, velocity) {
-	// delegate to instrument
+DigifuSynthInstrument.prototype.AllNotesOff = function () {
+	if (!this.sfinstrument) return;
+	//log(`all notes off`);
+	this.voices = new Array(256); // reset all voices.
+	this.sfinstrument.stop();
 };
-
-DigifuSynthInstrument.prototype.NoteOff = function (instrumentSpec, note) {
-	//
-};
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function DigifuSynth() {
-	// voice allocator stuff.
-	this.Instruments = []; // DigifuSynthInstrument
+	this.audioCtx = null;
+	this.instruments = {};
 };
 
 DigifuSynth.prototype.NoteOn = function (instrumentSpec, note, velocity) {
-	// delegate to instrument
+	console.assert(this.audioCtx != null);
+	this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
 };
 
 DigifuSynth.prototype.NoteOff = function (instrumentSpec, note) {
-	//
+	console.assert(this.audioCtx != null);
+	this.instruments[instrumentSpec.instrumentID].NoteOff(note);
 };
 
+DigifuSynth.prototype.AllNotesOff = function (instrumentSpec) {
+	console.assert(this.audioCtx != null);
+	//log(`AllNotesOff instrumentSpec=${JSON.stringify(instrumentSpec)}`);
+	//log(`AllNotesOff instrumentSpec.instrumentID=${instrumentSpec.instrumentID}, obj=${this.instruments[instrumentSpec.instrumentID]}`);
+	this.instruments[instrumentSpec.instrumentID].AllNotesOff();
+};
+
+// call when you have a list of instruments
 DigifuSynth.prototype.InitInstruments = function (instrumentSpecs) {
-	// reset, then set all instruments
+	this.instruments = {};
+	log(`InitInstruments count=${instrumentSpecs.length}`);
+	instrumentSpecs.forEach(s => {
+		this.instruments[s.instrumentID] = new DigifuSynthInstrument(this.audioCtx, s);
+		log(`InitInstrument id=${s.instrumentID}, name=${s.name}`);
+	});
 };
 
+// call as a sort of ctor
 DigifuSynth.prototype.Init = function () {
-	// create voices and init them
+	this.audioCtx = new AudioContext();
 };
-
-
-// // https://webaudioapi.com/samples/rhythm/
-

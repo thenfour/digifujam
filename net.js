@@ -1,22 +1,4 @@
-
-
-const ClientMessages = {
-    Identify: "Identify", // user info
-    // move. like to the couch, bar, dance floor, stage
-    InstrumentRequest: "InstrumentRequest", // instid
-    InstrumentRelease: "InstrumentRelease",
-    InstrumentControl: "InstrumentControl", //  (note on, note off, param change, ...)
-    ReactToUser: "ReactToUser",// (userID, emoji)    
-};
-const ServerMessages = {
-    PleaseIdentify: "PleaseIdentify",
-    Welcome: "Welcome",// (your UserID & room state)
-    UserEnter: "UserEnter",// (user data)
-    UserLeave: "UserLeave",// UserID
-    // move. like to the couch, bar, dance floor, stage
-    InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID]
-    UserPlay: "UserPlay", // user, msg...]
-};
+'use strict';
 
 function DigifuNet() {
     this.serverUri = null;
@@ -27,10 +9,11 @@ function DigifuNet() {
 
 DigifuNet.prototype.OnSocketMessage = function (e) {
     this.isConnected = true;
-    log(`mESSAGE FROM SERVER ${e.data}`);
     var msg = JSON.parse(e.data);
     var cmd = msg.cmd;
-    var data = cmd.data;
+    var data = msg.data;
+    log(`Msg from server cmd=${cmd}`);
+    log(`  data=${JSON.stringify(data)}`);
     switch (cmd) {
         case ServerMessages.PleaseIdentify:
             this.handler.NET_OnPleaseIdentify();
@@ -42,13 +25,16 @@ DigifuNet.prototype.OnSocketMessage = function (e) {
             this.handler.NET_OnUserEnter(data);
             break;
         case ServerMessages.UserLeave:
-            this.handler.NET_OnUserLeave(data.UserID);
+            this.handler.NET_OnUserLeave(data.userID);
             break;
         case ServerMessages.InstrumentOwnership:
-            this.handler.NET_OnInstrumentOwnership(data.InstrumentID, data.UserID);
+            this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID);
             break;
-        case ServerMessages.UserPlay:
-            this.handler.NET_OnUserPlay();
+        case ServerMessages.NoteOn:
+            this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity);
+            break;
+        case ServerMessages.NoteOff:
+            this.handler.NET_OnNoteOff(data.userID, data.note);
             break;
     }
 };
@@ -61,6 +47,7 @@ DigifuNet.prototype.SendIdentify = function (data) {
 };
 
 DigifuNet.prototype.SendRequestInstrument = function (instrumentID) {
+    log(`sending request for instrument ${instrumentID}`);
     this.socket.send(JSON.stringify({
         cmd: ClientMessages.InstrumentRequest,
         data: instrumentID
@@ -72,6 +59,28 @@ DigifuNet.prototype.SendReleaseInstrument = function () {
         cmd: ClientMessages.InstrumentRelease,
         data: ""
     }));
+};
+
+DigifuNet.prototype.SendNoteOn = function (note, velocity) {
+    this.socket.send(JSON.stringify({
+        cmd: ClientMessages.NoteOn,
+        data: {
+            note,
+            velocity
+        }
+    }));
+};
+
+DigifuNet.prototype.SendNoteOff = function (note) {
+    this.socket.send(JSON.stringify({
+        cmd: ClientMessages.NoteOff,
+        data: note
+    }));
+};
+
+DigifuNet.prototype.Disconnect = function () {
+    this.socket.close();
+    this.socket = null;
 };
 
 DigifuNet.prototype.Connect = function (serverUri, handler) {

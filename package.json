@@ -1,0 +1,17 @@
+{
+  "name": "digifujam",
+  "version": "1.0.0",
+  "description": "npm install ws\r node server.js",
+  "main": "app.js",
+  "dependencies": {
+    "soundfont-player": "^0.12.0",
+    "ws": "^7.4.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

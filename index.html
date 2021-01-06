@@ -3,6 +3,15 @@
 
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="node_modules/soundfont-player/dist/soundfont-player.js"></script>
+
+    <script type="text/javascript">
+        // quick n dirty so i can share DFCommon.js with node.js. I could also use Browserify if it gets any more complex
+        let module = {};
+    </script>
+
+    <script src="DFCommon.js"></script>
     <script src="log.js"></script>
     <script src="midi.js"></script>
     <script src="net.js"></script>
@@ -14,14 +23,43 @@
 
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        let connect = function () {
             window.digifuApp = new DigifuApp();
-            window.digifuApp.Main();
-        });
+            window.digifuApp.Connect("ws://localhost:8080", $("#username").val(), $("#color").val());
+        };
+
+        let disc = function() {
+            window.digifuApp.Disconnect();
+        };
+
+        let requestInstrument = function () {
+            window.digifuApp.RequestInstrument($("#instreq").val());
+        };
+
+        let releaseInstrument = function() {
+            window.digifuApp.ReleaseInstrument();
+        };
 
     </script>
 
-    <pre id="log" style="position:absolute;border:2px solid blue; background-color: rgb(211, 211, 211);min-width: 100px;min-height: 100px;"></pre>
+    <input type="text" id="username" value="tenfour" /><label for="username">name</label>
+    <input type="text" id="color" value="#ffff00" /><label for="color">color</label>
+    <button onclick="connect()">connect.</button>
+
+    <hr />
+    <button onclick="disc()">disconnect.</button>
+
+    <hr />
+    <input type="text" id="instreq" value="69" />
+    <button onclick="requestInstrument()">req instrument.</button>
+
+    <hr />
+    <button onclick="releaseInstrument()">release instrument.</button>
+
+    <hr />
+    <pre id="log"
+        style="border:2px solid blue; background-color: rgb(211, 211, 211);height: 50%;width: 100%; overflow: scroll;"></pre>
+
 
 </body>
 

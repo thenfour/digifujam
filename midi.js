@@ -1,3 +1,5 @@
+'use strict';
+
 // https://www.smashingmagazine.com/2018/03/web-midi-api/
 
 // prototype for handler:
