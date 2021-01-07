@@ -18,12 +18,12 @@ DigifuSynthInstrument.prototype.NoteOn = function (midiNote, velocity) {
 	if (!this.sfinstrument) return;
 	this.voices[midiNote] = this.sfinstrument.play(midiNote);
 	this.voices[midiNote].DFHolding = true;
-	log(`note on ${midiNote} holding=${this.voices[midiNote].DFHolding}`);
+	//log(`note on ${midiNote} holding=${this.voices[midiNote].DFHolding}`);
 };
 
 DigifuSynthInstrument.prototype.NoteOff = function (midiNote) {
 	if (!this.sfinstrument) return;
-	log(`note off ${midiNote}`);
+	//log(`note off ${midiNote}`);
 	console.assert(this.voices[midiNote]);
 	this.voices[midiNote].DFHolding = false;
 	if (!this.sustainMode) {
