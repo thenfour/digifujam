@@ -15,26 +15,44 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
     name: "acoustic_grand_piano",
     color: "#808080",
     instrumentID: 6,
-    controlledByUserID: null
+    controlledByUserID: null,
+    engine: "soundfont"
   },
   {
     name: "marimba",
     color: "#884400",
-    instrumentID: 69,
-    controlledByUserID: null
+    instrumentID: 7,
+    controlledByUserID: null,
+    engine: "soundfont"
   },
   {
     name: "tango_accordion",
     color: "#00ff00",
-    instrumentID: 420,
-    controlledByUserID: null
+    instrumentID: 8,
+    controlledByUserID: null,
+    engine: "soundfont"
   },
   {
     name: "electric_bass_finger",
     color: "#0000ff",
     instrumentID: 11,
-    controlledByUserID: null
+    controlledByUserID: null,
+    engine: "soundfont"
   },
+  {
+    name: "string_ensemble_1",
+    color: "#0000ff",
+    instrumentID: 12,
+    controlledByUserID: null,
+    engine: "soundfont"
+  },
+  {
+    name: "Casio vibraphone",
+    color: "#808020",
+    instrumentID: 13,
+    controlledByUserID: null,
+    engine: "synth"
+  }
   // strings, more pianos, add alt names
 ];
 

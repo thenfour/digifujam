@@ -49,7 +49,7 @@ class DigifuInstrumentSpec {
         this.color = "";
         this.instrumentID = null;
         this.controlledByUserID = null;
-        //this.SynthInstrumentType = "soundfont" or synth or ...
+        this.engine = "synth"; // soundfont, synth
     }
 };
 

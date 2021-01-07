@@ -238,8 +238,12 @@ DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor
     this.userStateChangeHandler = userStateChangeHandler;
 
     this.midi.Init(midiInputDeviceName, this);
-    this.synth.Init();
-    this.net.Connect(this);
+
+	this.audioCtx = new AudioContext();
+	this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
+        this.synth.Init(this.audioCtx);
+        this.net.Connect(this);
+    });
 };
 
 DigifuApp.prototype.Disconnect = function () {
