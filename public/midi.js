@@ -23,9 +23,9 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
   let d1 = message.data[1];
   let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
 
-  if (statusHi != 15) { // pitch bend
-    log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
-  }
+  // if (statusHi != 15) { // pitch bend
+  //   log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
+  // }
 
   switch (statusHi) {
     case 9: // noteOn
