@@ -24,6 +24,7 @@
             background-color: rgb(215, 195, 255);
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
+            border:0;padding:0;margin:0;
         }
 
         .area {
@@ -31,6 +32,21 @@
             float: left;
             margin: 5px;
             border: 4px dashed rgb(153, 130, 0);
+        }
+
+        .header {
+            display:block;
+            background-color: gray;
+            border:none;
+            border-bottom:solid 4px black;
+            margin:0;
+            padding:20px;
+        }
+        .header a:link,
+        .header a:visited,
+        .header a
+        {
+            color:#ccc;
         }
 
         li {
@@ -48,7 +64,7 @@
 
             GetMidiInputDeviceList().then(inputs => {
                 inputs.forEach(i => {
-                    $('#midiInputList').append(`<li><button onclick="connect('${i}')">${i}</button>`);
+                    $('#midiInputList').append(`<li><button onclick="connect('${i}')">Connect with ${i}</button>`);
                 });
             });
         };
@@ -102,19 +118,22 @@
 
     </script>
 
-    <h2>digifu multiplayer jam</h2>
+    <h2 class="header">
+        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a> |
+        <a target="_blank" href="https://github.com/thenfour/digifujam">github.com/thenfour/digifujam</a>
+    </h2>
 
     <div class="area">
         <h2>Connection</h2>
         <ul>
-            <li>Server URI:<input type="text" id="wsuri" value="ws://localhost:8080" /></li>
-            <li>Username:<input type="text" id="username" value="some user name" /></li>
-            <li>Color:<input type="text" id="color" value="#cc2222" /></li>
+            <!-- <li>Server URI:<input type="text" id="wsuri" value="ws://localhost:8080" /></li> -->
+            <li>Your name:<input type="text" id="username" value="some user name" /></li>
+            <li>Your color:<input type="text" id="color" value="#cc2222" /></li>
             <ul id="midiInputList">
                 <li><button onclick="InitMidiInputs()">init midi input list</button></li>
             </ul>
             <li><button onclick="digifuApp.Disconnect(); ResetState();">disconnect.</button></li>
-            <li id="li_ping">ping: x ms</li>
+            <li id="li_ping"></li>
         </ul>
     </div>
 
@@ -123,7 +142,6 @@
         <h2>Instruments</h2>
         <ul id="instrumentList">
         </ul>
-
     </div>
 
     <div class="area">

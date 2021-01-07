@@ -40,10 +40,15 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
 
 
 // returns { user, index } or null.
-let FindUserFromSocket = function (clientSocket) {
-  let idx = gRoom.users.findIndex(user => user.userID == clientSocket.id);
+let FindUserByID = function (userID) {
+  let idx = gRoom.users.findIndex(user => user.userID == userID);
   if (idx == -1) return null;
   return { user: gRoom.users[idx], index: idx };
+};
+
+// returns { user, index } or null.
+let FindUserFromSocket = function (clientSocket) {
+  return FindUserByID(clientSocket.id);
 };
 
 // returns { instrument, index } or null.
@@ -81,11 +86,11 @@ let OnClientIdentify = function (clientSocket, clientUserSpec) {
   clientSocket.broadcast.emit(DF.ServerMessages.UserEnter, u);
 };
 
-let OnClientClose = function (ws, msg) {
-  console.log(`close => ${ws.id} ${msg}`)
+let OnClientClose = function (userID) {
+  console.log(`close => ${userID}`)
 
   // find the user object and remove it.
-  let foundUser = FindUserFromSocket(ws);
+  let foundUser = FindUserByID(userID);
   if (foundUser == null) {
     console.log(`client closing but is not a user...?`);
     return;
@@ -95,15 +100,15 @@ let OnClientClose = function (ws, msg) {
   gRoom.instrumentCloset.forEach(inst => {
     if (inst.controlledByUserID != foundUser.user.userID) return;
     inst.controlledByUserID = null;
-    // broadcast this to clients except this one
-    clientSocket.broadcast.emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null});
+    // broadcast this to clients
+    io.emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null });
   });
 
   // remove user from room.
   gRoom.users.splice(foundUser.index, 1);
 
   // broadcast user exit to all clients except this one
-  clientSocket.broadcast.emit(DF.ServerMessages.UserLeave, ws.id);
+  io.emit(DF.ServerMessages.UserLeave, userID);
 };
 
 let OnClientInstrumentRequest = function (ws, instrumentID) {
@@ -116,7 +121,20 @@ let OnClientInstrumentRequest = function (ws, instrumentID) {
     return;
   }
 
-  // find the instrument.
+  // release existing instrument.
+  // find their instrument.
+  let existingInstrument = FindInstrumentByUserID(foundUser.user.userID);
+  if (existingInstrument != null) {
+    existingInstrument.instrument.controlledByUserID = null;
+
+    // broadcast instrument change to all clients
+    io.emit(DF.ServerMessages.InstrumentOwnership, {
+      instrumentID: existingInstrument.instrument.instrumentID,
+      userID: null
+    });
+  }
+
+  // find the new instrument.
   let foundInstrument = FindInstrumentById(instrumentID);
   if (foundInstrument === null) {
     console.log(`instrument request for unknown instrument`);
@@ -177,18 +195,43 @@ let OnClientNoteOn = function (ws, note, velocity) {
 
 
 let OnClientNoteOff = function (ws, note) {
-  // find the user object.
   let foundUser = FindUserFromSocket(ws);
   if (foundUser == null) {
-    console.log(`=> unknown user`);
+    console.log(`OnClientNoteOff => unknown user`);
     return;
   }
 
   // broadcast to all clients except foundUser
   ws.broadcast.emit(DF.ServerMessages.NoteOff, {
-      userID: foundUser.user.userID,
-      note: note
-    });
+    userID: foundUser.user.userID,
+    note: note
+  });
+};
+
+
+let OnClientPedalUp = function (ws) {
+  let foundUser = FindUserFromSocket(ws);
+  if (foundUser == null) {
+    console.log(`OnClientPedalUp => unknown user`);
+    return;
+  }
+  // broadcast to all clients except foundUser
+  ws.broadcast.emit(DF.ServerMessages.PedalUp, {
+    userID: foundUser.user.userID
+  });
+};
+
+
+let OnClientPedalDown = function (ws) {
+  let foundUser = FindUserFromSocket(ws);
+  if (foundUser == null) {
+    console.log(`OnClientPedalDown => unknown user`);
+    return;
+  }
+  // broadcast to all clients except foundUser
+  ws.broadcast.emit(DF.ServerMessages.PedalDown, {
+    userID: foundUser.user.userID
+  });
 };
 
 
@@ -196,7 +239,7 @@ let OnClientChatMessage = function (ws, msg) {
   // find the user object.
   let foundUser = FindUserFromSocket(ws);
   if (foundUser == null) {
-    console.log(`=> unknown user`);
+    console.log(`OnClientChatMessage => unknown user`);
     return;
   }
 
@@ -217,8 +260,8 @@ let OnClientChatMessage = function (ws, msg) {
 var OnClientConnect = function (ws) {
   console.log(`Connection received; ID=${ws.id}`)
 
-  ws.on('disconnect', (socket, desc) => {
-    OnClientClose(socket, desc);
+  ws.on('disconnect', () => {
+    OnClientClose(ws.id);
   });
 
   ws.on(DF.ClientMessages.Identify, data => {
@@ -241,6 +284,14 @@ var OnClientConnect = function (ws) {
     OnClientNoteOff(ws, data);
   });
 
+  ws.on(DF.ClientMessages.PedalDown, data => {
+    OnClientPedalDown(ws, data);
+  });
+
+  ws.on(DF.ClientMessages.PedalUp, data => {
+    OnClientPedalUp(ws, data);
+  });
+
   ws.on(DF.ClientMessages.Ping, data => {
     ws.emit(DF.ServerMessages.Pong, data);
   });
@@ -255,7 +306,8 @@ var OnClientConnect = function (ws) {
 
 io.on('connection', OnClientConnect);
 
-http.listen(3000, () => {
-  console.log('listening on *:3000');
+let port = process.env.PORT || 8081;
+http.listen(port, () => {
+  console.log(`listening on *:${port}`);
 });
 

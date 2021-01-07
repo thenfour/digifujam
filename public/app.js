@@ -61,6 +61,18 @@ DigifuApp.prototype.MIDI_NoteOff = function (note) {
     this.synth.NoteOff(this.myInstrument, note);
 };
 
+DigifuApp.prototype.MIDI_PedalDown = function () {
+    if (this.myInstrument == null) return;
+    this.net.SendPedalDown();
+    this.synth.PedalDown(this.myInstrument);
+};
+
+DigifuApp.prototype.MIDI_PedalUp = function () {
+    if (this.myInstrument == null) return;
+    this.net.SendPedalUp();
+    this.synth.PedalUp(this.myInstrument);
+};
+
 
 
 // NETWORK HANDLERS --------------------------------------------------------------------------------------
@@ -142,7 +154,6 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
 };
 
 DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
-    log("NET_OnNoteOn");
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         log(`instrument not found`);
@@ -152,13 +163,30 @@ DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
 };
 
 DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
-    log("NET_OnNoteOff");
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         log(`instrument not found`);
         return;
     }
     this.synth.NoteOff(foundInstrument.instrument, note);
+};
+
+DigifuApp.prototype.NET_OnPedalDown = function(userID) {
+    let foundInstrument = this.FindInstrumentByUserID(userID);
+    if (foundInstrument == null) {
+        log(`NET_OnPedalDown instrument not found`);
+        return;
+    }
+    this.synth.PedalDown(foundInstrument.instrument);
+};
+
+DigifuApp.prototype.NET_OnPedalUp = function(userID) {
+    let foundInstrument = this.FindInstrumentByUserID(userID);
+    if (foundInstrument == null) {
+        log(`NET_OnPedalUp instrument not found`);
+        return;
+    }
+    this.synth.PedalUp(foundInstrument.instrument);
 };
 
 DigifuApp.prototype.NET_OnPong = function (data) {
@@ -216,6 +244,8 @@ DigifuApp.prototype.Connect = function (midiInputDeviceName, uri, userName, user
     this.net.Connect(uri, this);
 
     this.pingTimerToken = setInterval(() => {
+        if (!this) return;
+        if (!this.net) return;
         this.net.SendPing((new Date()).toISOString());
     }, ClientSettings.PingIntervalMS);
 };

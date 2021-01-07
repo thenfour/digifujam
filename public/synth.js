@@ -4,32 +4,56 @@
 function DigifuSynthInstrument(audioCtx, instrumentSpec) {
 	this.audioCtx = audioCtx;
 	Soundfont.instrument(audioCtx, instrumentSpec.name)
-		.then(function(inst) {
+		.then(function (inst) {
 			this.sfinstrument = inst;
 		}.bind(this));
 
 	this.sfinstrument = null;
 	this.instrumentSpec = instrumentSpec;
-	this.voices = new Array(256); // map midi note number to a voice
+	this.sustainMode = false; // true = pedal down
+	this.voices = new Array(128); // map midi note number to a voice
 };
 
 DigifuSynthInstrument.prototype.NoteOn = function (midiNote, velocity) {
 	if (!this.sfinstrument) return;
-	//log(`on: ${midiNote}`);
 	this.voices[midiNote] = this.sfinstrument.play(midiNote);
+	this.voices[midiNote].DFHolding = true;
+	log(`note on ${midiNote} holding=${this.voices[midiNote].DFHolding}`);
 };
 
 DigifuSynthInstrument.prototype.NoteOff = function (midiNote) {
 	if (!this.sfinstrument) return;
+	log(`note off ${midiNote}`);
 	console.assert(this.voices[midiNote]);
-	//log(`off: ${midiNote}`);
-	this.voices[midiNote].stop();
+	this.voices[midiNote].DFHolding = false;
+	if (!this.sustainMode) {
+		this.voices[midiNote].stop();
+		this.voices[midiNote] = null;
+	}
+};
+
+DigifuSynthInstrument.prototype.PedalDown = function () {
+	if (!this.sfinstrument) return;
+	this.sustainMode = true;
+};
+
+DigifuSynthInstrument.prototype.PedalUp = function () {
+	if (!this.sfinstrument) return;
+	this.sustainMode = false;
+	// release notes which are playing but not physically pressed.
+	for (let v of this.voices) {
+		if (v) {
+			if (!v.DFHolding) {
+				v.stop();
+			}
+		}
+	}
 };
 
 DigifuSynthInstrument.prototype.AllNotesOff = function () {
 	if (!this.sfinstrument) return;
-	//log(`all notes off`);
-	this.voices = new Array(256); // reset all voices.
+	this.voices = new Array(128); // reset all voices.
+	this.sustainMode = false;
 	this.sfinstrument.stop();
 };
 
@@ -51,9 +75,17 @@ DigifuSynth.prototype.NoteOff = function (instrumentSpec, note) {
 
 DigifuSynth.prototype.AllNotesOff = function (instrumentSpec) {
 	console.assert(this.audioCtx != null);
-	//log(`AllNotesOff instrumentSpec=${JSON.stringify(instrumentSpec)}`);
-	//log(`AllNotesOff instrumentSpec.instrumentID=${instrumentSpec.instrumentID}, obj=${this.instruments[instrumentSpec.instrumentID]}`);
 	this.instruments[instrumentSpec.instrumentID].AllNotesOff();
+};
+
+DigifuSynth.prototype.PedalUp = function (instrumentSpec) {
+	console.assert(this.audioCtx != null);
+	this.instruments[instrumentSpec.instrumentID].PedalUp();
+};
+
+DigifuSynth.prototype.PedalDown = function (instrumentSpec) {
+	console.assert(this.audioCtx != null);
+	this.instruments[instrumentSpec.instrumentID].PedalDown();
 };
 
 // call when you have a list of instruments

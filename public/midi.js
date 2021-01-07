@@ -15,21 +15,46 @@ function DigifuMidi() {
 };
 
 DigifuMidi.prototype.OnMIDIMessage = function (message) {
-  var command = message.data[0];
-  var note = message.data[1];
-  var velocity = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
-  //log(`midi msg ${command}`);
 
-  switch (command) {
-    case 144: // noteOn
-      if (velocity > 0) {
-        this.EventHandler.MIDI_NoteOn(note, velocity);
+  // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
+
+  let statusHi = message.data[0] >> 4;
+  let statusLo = message.data[0] & 0x0f;
+  let d1 = message.data[1];
+  let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
+
+  if (statusHi != 15) { // pitch bend
+    log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
+  }
+
+  switch (statusHi) {
+    case 9: // noteOn
+      if (d2 > 0) {
+        //log ("self note on");
+        this.EventHandler.MIDI_NoteOn(d1, d2);
       } else {
-        this.EventHandler.MIDI_NoteOff(note);
+        //log ("self note off");
+        this.EventHandler.MIDI_NoteOff(d1);
       }
       break;
-    case 128: // noteOff
-      this.EventHandler.MIDI_NoteOff(note);
+    case 8: // noteOff
+      //log ("self note off");
+      this.EventHandler.MIDI_NoteOff(d1);
+      break;
+    // pitch
+    // exp
+    // mod
+    // breath
+    case 11: // cc
+      switch (d1) {
+        case 64:
+          if (d2 > 64) {
+            this.EventHandler.MIDI_PedalDown();
+          } else {
+            this.EventHandler.MIDI_PedalUp();
+          }
+          break;
+      }
       break;
   }
 };

@@ -9,6 +9,8 @@ const ClientMessages = {
     Ping: "Ping", // token, can be used for timing
     NoteOn: "NoteOn", // note, velocity
     NoteOff: "NoteOff", // note
+    PedalDown: "PedalDown",
+    PedalUp: "PedalUp"
 };
 
 const ServerMessages = {
@@ -20,7 +22,9 @@ const ServerMessages = {
     Pong: "Pong", // token
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl]
     NoteOn: "NoteOn", // user, note, velocity
-    NoteOff: "NoteOff" // user, note
+    NoteOff: "NoteOff", // user, note
+    PedalDown: "PedalDown", // user
+    PedalUp: "PedalUp" // user
 };
 
 const ClientSettings = {
