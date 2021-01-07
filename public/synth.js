@@ -30,6 +30,7 @@ class SoundfontInstrument {
 		//log(`note off ${midiNote}`);
 		// we have to respect if a note off happens without corresponding note on.
 		//console.assert(this.voices[midiNote]);
+		if (!this.voices[midiNote]) return;
 		this.voices[midiNote].DFHolding = false;
 		if (!this.sustainMode) {
 			this.voices[midiNote].stop();
@@ -131,7 +132,7 @@ DigifuSynth.prototype.Init = function (audioCtx) {
 	this.masterEffectsInputNode.connect(this.audioCtx.destination);
 
 	// see other possible impulses: https://github.com/burnson/Reverb.js
-	this.masterReverb = this.audioCtx.createReverbFromUrl("http://reverbjs.org/Library/LadyChapelStAlbansCathedral.m4a", () => {
+	this.masterReverb = this.audioCtx.createReverbFromUrl("./LadyChapelStAlbansCathedral.m4a", () => {
 
 		// create wet signal path
 		this.masterReverbGain = this.audioCtx.createGain();

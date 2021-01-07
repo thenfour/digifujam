@@ -100,6 +100,8 @@ class PolySynthVoice {
         this.midiNote = midiNote;
 
         //this.oscillator.frequency.cancelScheduledValues(0);
+        this.filter.frequency.value = (velocity/128) * 3000;
+
         this.oscillator1.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote + this.detune), 0);
         this.oscillator2.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote), 0);
         this.oscillator3.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote - this.detune), 0);
