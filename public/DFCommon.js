@@ -6,7 +6,7 @@ const ClientMessages = {
     InstrumentRequest: "InstrumentRequest", // instid
     InstrumentRelease: "InstrumentRelease",
     ChatMessage: "ChatMessage",// (to_userID_null, msg)
-    Ping: "Ping", // token, can be used for timing
+    Pong: "Pong", // token
     NoteOn: "NoteOn", // note, velocity
     NoteOff: "NoteOff", // note
     PedalDown: "PedalDown",
@@ -19,7 +19,7 @@ const ServerMessages = {
     UserEnter: "UserEnter",// (user data)
     UserLeave: "UserLeave",// UserID
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
-    Pong: "Pong", // token
+    Ping: "Ping", // data, { userid, pingMS }
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl]
     NoteOn: "NoteOn", // user, note, velocity
     NoteOff: "NoteOff", // user, note
@@ -27,8 +27,11 @@ const ServerMessages = {
     PedalUp: "PedalUp" // user
 };
 
+const ServerSettings = {
+    PingIntervalMS: 1000
+};
+
 const ClientSettings = {
-    PingIntervalMS: 5000
 };
 
 class DigifuUser {
@@ -36,6 +39,7 @@ class DigifuUser {
         this.name = "";
         this.color = "";
         this.userID = null;
+        this.pingMS = 0;
     }
 };
 
@@ -71,5 +75,7 @@ module.exports = {
     ServerMessages,
     DigifuUser,
     DigifuInstrumentSpec,
-    DigifuRoomState
+    DigifuRoomState,
+    ServerSettings,
+    ClientSettings
 };

@@ -4,13 +4,10 @@ function DigifuApp() {
     this.roomState = null;
 
     this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
+    this.userStateChangeHandler = null; // similar, but only for user list updates. just to be lighter weight.
 
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
-
-    this.pingMS = 0;
-    this.pingsSent = 0;
-    this.pingTimerToken = null;
 
     this.midi = new DigifuMidi();
     this.synth = new DigifuSynth(); // contains all music-making stuff.
@@ -38,7 +35,7 @@ DigifuApp.prototype.FindInstrumentByUserID = function (userID) {
 };
 
 // returns { instrument, index }
-DigifuApp.prototype.FindUserById = function (userID) {
+DigifuApp.prototype.FindUserByID = function (userID) {
     let ret = null;
     this.roomState.users.forEach(function (user, index) {
         if (user.userID != userID) return;
@@ -114,7 +111,7 @@ DigifuApp.prototype.NET_OnUserEnter = function (data) {
 DigifuApp.prototype.NET_OnUserLeave = function (userID) {
     log("NET_OnUserLeave");
 
-    let foundUser = this.FindUserById(userID);
+    let foundUser = this.FindUserByID(userID);
     if (foundUser == null) {
         log(`  user not found...`);
         return;
@@ -189,11 +186,12 @@ DigifuApp.prototype.NET_OnPedalUp = function(userID) {
     this.synth.PedalUp(foundInstrument.instrument);
 };
 
-DigifuApp.prototype.NET_OnPong = function (data) {
-    let a = new Date(data); // data is an iso string.
-    let b = new Date(); // now.
-    this.pingMS = (b - a);
-    this.pingsSent ++;
+DigifuApp.prototype.NET_OnPing = function (token, users) {
+    this.net.SendPong(token);
+    users.forEach(u => {
+        this.FindUserByID(u.userID).user.pingMS = u.pingMS;
+    });
+    this.userStateChangeHandler();
 };
 
 DigifuApp.prototype.NET_OnUserChatMessage = function(msg) {
@@ -204,7 +202,6 @@ DigifuApp.prototype.NET_OnUserChatMessage = function(msg) {
 }
 
 DigifuApp.prototype.NET_OnDisconnect = function() {
-    clearInterval(this.pingTimerToken);
     log("todo: disconnection.");
 }
 
@@ -231,23 +228,18 @@ DigifuApp.prototype.SendChatMessage = function(msgText, toUserID) {
 };
 
 
-DigifuApp.prototype.Connect = function (midiInputDeviceName, uri, userName, userColor, stateChangeHandler) {
+DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, stateChangeHandler, userStateChangeHandler) {
     log("attempting connection...");
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
 
     this.stateChangeHandler = stateChangeHandler;
+    this.userStateChangeHandler = userStateChangeHandler;
 
     this.midi.Init(midiInputDeviceName, this);
     this.synth.Init();
-    this.net.Connect(uri, this);
-
-    this.pingTimerToken = setInterval(() => {
-        if (!this) return;
-        if (!this.net) return;
-        this.net.SendPing((new Date()).toISOString());
-    }, ClientSettings.PingIntervalMS);
+    this.net.Connect(this);
 };
 
 DigifuApp.prototype.Disconnect = function () {

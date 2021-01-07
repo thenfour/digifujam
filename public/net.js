@@ -40,9 +40,9 @@ DigifuNet.prototype.SendPedalUp = function () {
     this.socket.emit(ClientMessages.PedalUp);
 };
 
-DigifuNet.prototype.SendPing = function (data) {
+DigifuNet.prototype.SendPong = function (token) {
     if (!this.socket) return; // ghost objects' timers can try to send this
-    this.socket.emit(ClientMessages.Ping, data);
+    this.socket.emit(ClientMessages.Pong, token);
 };
 
 DigifuNet.prototype.SendChatMessage = function (msg/* as DigifuChatMessage */) {
@@ -54,9 +54,9 @@ DigifuNet.prototype.Disconnect = function () {
     this.socket = null;
 };
 
-DigifuNet.prototype.Connect = function (serverUri, handler) {
+DigifuNet.prototype.Connect = function (handler) {
     this.handler = handler;
-    this.socket = io();//new WebSocket(serverUri);
+    this.socket = io();
 
     this.socket.on(ServerMessages.PleaseIdentify, (data) => this.handler.NET_OnPleaseIdentify(data));
     this.socket.on(ServerMessages.Welcome, (data) => this.handler.NET_OnWelcome(data));
@@ -69,7 +69,7 @@ DigifuNet.prototype.Connect = function (serverUri, handler) {
     this.socket.on(ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
 
-    this.socket.on(ServerMessages.Pong, (data) => this.handler.NET_OnPong(data));
+    this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data.token, data.users));
     this.socket.on(ServerMessages.UserChatMessage, data => this.handler.NET_OnUserChatMessage(data));
 
     this.socket.on('disconnect', this.handler.NET_OnDisconnect);

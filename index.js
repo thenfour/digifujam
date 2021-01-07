@@ -35,7 +35,7 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
     instrumentID: 11,
     controlledByUserID: null
   },
-
+  // strings, more pianos, add alt names
 ];
 
 
@@ -236,7 +236,6 @@ let OnClientPedalDown = function (ws) {
 
 
 let OnClientChatMessage = function (ws, msg) {
-  // find the user object.
   let foundUser = FindUserFromSocket(ws);
   if (foundUser == null) {
     console.log(`OnClientChatMessage => unknown user`);
@@ -256,8 +255,36 @@ let OnClientChatMessage = function (ws, msg) {
   //ws.broadcast.emit(DF.ServerMessages.UserChatMessage, msg);
 };
 
+// every X seconds, this is called. here we can just do a generic push to clients and they're expected
+// to return a pong. for now used for timing, and reporting user ping.
+let OnPingInterval = function() {
+  var payload = {
+    token: (new Date()).toISOString(),
+    users: []
+  };
+  gRoom.users.forEach(u => {
+    payload.users.push({ userID: u.userID, pingMS: u.pingMS });
+  });
 
-var OnClientConnect = function (ws) {
+  io.emit(DF.ServerMessages.Ping, payload);
+};
+
+let OnClientPong = function (ws, data) {
+  // data is the token we sent, a date iso string.
+  //console.log(`OnClientPong data=${data}`);
+  let a = new Date(data);
+  let b = new Date();
+
+  let foundUser = FindUserFromSocket(ws);
+  if (foundUser == null) {
+    console.log(`OnClientPong => unknown user`);
+    return;
+  }
+
+  foundUser.user.pingMS = (b - a);
+};
+
+let OnClientConnect = function (ws) {
   console.log(`Connection received; ID=${ws.id}`)
 
   ws.on('disconnect', () => {
@@ -292,12 +319,12 @@ var OnClientConnect = function (ws) {
     OnClientPedalUp(ws, data);
   });
 
-  ws.on(DF.ClientMessages.Ping, data => {
-    ws.emit(DF.ServerMessages.Pong, data);
-  });
-
   ws.on(DF.ClientMessages.ChatMessage, data => {
     OnClientChatMessage(ws, data);
+  });
+
+  ws.on(DF.ClientMessages.Pong, data => {
+    OnClientPong(ws, data);
   });
 
   // send the "please identify yourself" msg
@@ -310,4 +337,9 @@ let port = process.env.PORT || 8081;
 http.listen(port, () => {
   console.log(`listening on *:${port}`);
 });
+
+
+setInterval(() => {
+  OnPingInterval();
+}, DF.ServerSettings.PingIntervalMS);
 
