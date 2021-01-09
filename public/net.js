@@ -65,7 +65,7 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.PleaseIdentify, (data) => this.handler.NET_OnPleaseIdentify(data));
     this.socket.on(ServerMessages.Welcome, (data) => this.handler.NET_OnWelcome(data));
     this.socket.on(ServerMessages.UserEnter, (data) => this.handler.NET_OnUserEnter(data));
-    this.socket.on(ServerMessages.UserLeave, data => this.handler.NET_OnUserLeave(data.userID));
+    this.socket.on(ServerMessages.UserLeave, data => this.handler.NET_OnUserLeave(data));
     this.socket.on(ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID));
     
     this.socket.on(ServerMessages.NoteOn, data => this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity));
