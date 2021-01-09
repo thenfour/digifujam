@@ -6,6 +6,14 @@ const DF = require('./public/DFCommon')
 
 app.use(express.static('public'))
 
+let gNextID = 1;
+let generateID = function()
+{
+  let ret = gNextID;
+  gNextID ++;
+  return ret;
+}
+
 let gRoom = new DF.DigifuRoomState();
 
 gRoom.img = "./room.png";
@@ -303,15 +311,20 @@ let OnClientChatMessage = function (ws, msg) {
 
   // correct stuff.
   msg.fromUserID = foundUser.user.userID;
+  msg.messageID = generateID();
   // validate to user id
   msg.timestampUTC = new Date();
 
   gRoom.chatLog.push(msg);
-  // todo: prune old?
 
-  // broadcast to all clients except sender
-  io.emit(DF.ServerMessages.UserChatMessage, msg); // except for now do, just to make it easier to test using only 1 client
-  //ws.broadcast.emit(DF.ServerMessages.UserChatMessage, msg);
+  let now = new Date();
+  gRoom.chatLog = gRoom.chatLog.filter(msg => {
+    return ((now - new Date(msg.timestampUTC)) < DF.ServerSettings.ChatHistoryMaxMS);
+  });
+
+  // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
+  // this allows simpler handling of incorporating the messageID.
+  io.emit(DF.ServerMessages.UserChatMessage, msg);
 };
 
 

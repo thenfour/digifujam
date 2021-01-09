@@ -192,6 +192,7 @@ DigifuApp.prototype.NET_OnPedalUp = function (userID) {
 
 DigifuApp.prototype.NET_OnPing = function (token, users) {
     this.net.SendPong(token);
+    if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
     users.forEach(u => {
         this.FindUserByID(u.userID).user.pingMS = u.pingMS;
     });
@@ -200,6 +201,12 @@ DigifuApp.prototype.NET_OnPing = function (token, users) {
 
 DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
     this.roomState.chatLog.push(msg);
+
+    let now = new Date();
+    this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
+        return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
+    });
+
     this.stateChangeHandler();
 }
 

@@ -59,7 +59,7 @@
 
             display: grid;
             grid-template-columns: 1fr 300px;
-            grid-template-rows: 0fr 1fr 0fr 150px;
+            grid-template-rows: 0fr 1fr 0fr 0fr;
             gap: 5px 5px;
             grid-template-areas:
                 "headerArea headerArea"
@@ -98,13 +98,17 @@
         }
 
         .headerArea {
-            padding: 15px;
+            padding: 3px;
+        }
+        .headerArea span {
+            margin:0;
+            font-size: medium;
         }
 
         .headerArea a:link,
         .headerArea a:visited,
         .headerArea a {
-            color: #044;
+            color: #066;
         }
 
         @keyframes avatarBump1 {
@@ -165,6 +169,14 @@
 
         #chatArea {
             padding: 10px;
+        }
+
+        .chatLog {
+            position: absolute;
+            bottom: 0;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            color: #aaa;
+            pointer-events: none;            
         }
     </style>
 </head>

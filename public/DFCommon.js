@@ -30,10 +30,12 @@ const ServerMessages = {
 };
 
 const ServerSettings = {
-    PingIntervalMS: 1000
+    PingIntervalMS: 1000,
+    ChatHistoryMaxMS: (1000 * 60 * 60),
 };
 
 const ClientSettings = {
+    ChatHistoryMaxMS: (1000 * 60 * 60),
 };
 
 class DigifuUser {
@@ -65,6 +67,7 @@ class DigifuInstrumentSpec {
 
 class DigifuChatMessage {
     constructor() {
+        this.messageID = null;
         this.message = null;
         this.fromUserID = null;
         this.toUserID = null;

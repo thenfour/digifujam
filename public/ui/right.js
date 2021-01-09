@@ -280,6 +280,32 @@ class UserAvatar extends React.Component {
     }
 };
 
+
+class ChatLog extends React.Component {
+    render() {
+        if ((!this.props.app) || (!this.props.app.roomState)) return null;
+
+        const lis = this.props.app.roomState.chatLog.map(msg => {
+            const user = this.props.app.FindUserByID(msg.fromUserID);
+            if (!user) return null;
+
+            const dt = new Date(msg.timestampUTC);
+            const timestamp = `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+
+            return (
+                <li key={msg.messageID}>{timestamp} <span style={{color: user.user.color}}>[{user.user.name}]</span> {msg.message}</li>
+            )
+        });
+
+        return (
+            <ul className='chatLog'>
+                {lis}
+            </ul>
+        );
+    }
+};
+
+
 class RoomArea extends React.Component {
     constructor(props) {
         console.log(`RoomArea ctor`);
@@ -336,7 +362,6 @@ class RoomArea extends React.Component {
     }
     
     updateScrollSize() {
-        console.log("updating scroll size");
         let e = document.getElementById("roomArea");
         if (e.scrollWidth != this.state.scrollSize.x || e.scrollHeight != this.state.scrollSize.y) {
             this.setState({
@@ -381,6 +406,7 @@ class RoomArea extends React.Component {
         return (
             <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {userAvatars}
+                <ChatLog app={this.props.app} />
             </div>
         );
     }
@@ -402,10 +428,17 @@ class ChatArea extends React.Component {
     handleChange(event) {
         this.setState({ value: event.target.value });
     }
+
+    handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            return this.handleClick();
+        }
+    }
+
     render() {
         return (
             <div id="chatArea" style={{ gridArea: "chatArea" }}>
-                chat <input type="text" value={this.state.value} onChange={this.handleChange} />
+                chat <input type="text" value={this.state.value} onChange={this.handleChange} onKeyDown={this.handleKeyDown} />
                 <button onClick={this.handleClick.bind(this)}>send</button>
             </div>
         );
@@ -452,10 +485,12 @@ class RootArea extends React.Component {
         return (
             <div id="grid-container">
                 <div style={{ gridArea: "headerArea", textAlign:'center' }} className="headerArea">
-                    <h2 style={{margin:0}}>
-                        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a> \\
-                        <a target="_blank" href="https://github.com/thenfour/digifujam">github.com/thenfour/digifujam</a>
-                    </h2>
+                    <span style={{float:'left'}}>
+                        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a></span>
+                        <span style={{float:'right'}}>
+                        <a target="_blank" href="https://github.com/thenfour/digifujam">github</a> \\&nbsp;
+                        <a target="_blank" href="https://twitter.com/tenfour2">twitter</a>
+                    </span>
                 </div>
                 <PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
