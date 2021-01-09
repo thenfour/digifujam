@@ -28,13 +28,40 @@ class TextInputField extends React.Component {
 }
 
 
+class TextInputFieldExternalState extends React.Component {
+    handleChange = (val) => {
+        this.setState({ value: val });
+        if (this.props.onChange) {
+            this.props.onChange(val);
+        }
+    }
+    handleChange = (e) => {
+        if (this.props.onChange) {
+            return this.props.onChange(e.target.value);
+        }
+    }
+    handleKeyDown = (e) => {
+        if (e.key === 'Enter' && this.props.onEnter) {
+            return this.props.onEnter(e);
+        }
+    }
+    render() {
+        return (
+            <input type="text" style={this.props.style} value={this.props.value} onChange={this.handleChange} onKeyDown={this.handleKeyDown} />
+        );
+    }
+}
+
+
+
 
 class Connection extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
             userName: 'user',
-            userColor: 'red',
+            userColor: `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`,
             userStatus: '🎶',
             deviceNameList: [],
         };
@@ -62,22 +89,30 @@ class Connection extends React.Component {
             }
         }
 
-        const disconnectBtn = this.props.app ? (<button onClick={this.props.handleDisconnect}>Disconnect</button>) : null;
+        const disconnectBtn = this.props.app ? (<li><button onClick={this.props.handleDisconnect}>Disconnect</button></li>) : null;
 
         const changeUserStateBtn = this.props.app ? (
-            <button onClick={this.sendUserStateChange}>Set user state</button>
+            <li><button onClick={this.sendUserStateChange}>update your username/color/etc ^^</button></li>
         ) : null;
+
+        const randomColor = `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`;
 
         return (
             <div className="component">
                 <ul>
                     <li>name:<TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /></li>
-                    <li>color:<TextInputField style={{ width: 80 }} default={this.state.userColor} onChange={(val) => this.setState({ userColor: val })} onEnter={this.sendUserStateChange}  /></li>
+                    <li>color:<TextInputFieldExternalState
+                        style={{ width: 80 }}
+                        value={this.state.userColor}
+                        onChange={(val) => this.setState({ userColor: val })}
+                        onEnter={this.sendUserStateChange}  />
+                        <button style={{backgroundColor:this.state.userColor}} onClick={()=>{this.setState({userColor: randomColor})}} >random</button>
+                    </li>
                     <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange}  /></li>
                     {inputList}
+                    {changeUserStateBtn}
+                    {disconnectBtn}
                 </ul>
-                {changeUserStateBtn}
-                {disconnectBtn}
             </div>
         );
     }
@@ -217,7 +252,7 @@ class RoomArea extends React.Component {
     // helper APIs
     // where to display the background
     getScreenScrollPosition() {
-        if ((!this.props.app) || (!this.props.app.roomState)) return { x:-1,y:-1};
+        if ((!this.props.app) || (!this.props.app.roomState)) return { x:0,y:0};
         let userPos = this.props.app.myUser.position;
         let x = (this.state.scrollSize.x / 2) - userPos.x;
         let y = (this.state.scrollSize.y / 2) - userPos.y;
@@ -229,11 +264,17 @@ class RoomArea extends React.Component {
     }
 
     screenToRoomPosition(pos) { // takes html on-screen x/y position and translates to "world" coords
+        if ((!this.props.app) || (!this.props.app.roomState)) return { x:0,y:0};
         let sp = this.getScreenScrollPosition();
-        return {
+        let ret = {
             x:  pos.x - sp.x,
             y: pos.y - sp.y,
         };
+        if (ret.x < 0) { ret.x = 0; }
+        if (ret.y < 0) { ret.y = 0; }
+        if (ret.x > this.props.app.roomState.width) { ret.x = this.props.app.roomState.width; }
+        if (ret.y > this.props.app.roomState.height) { ret.y = this.props.app.roomState.height; }
+        return ret;
     }
 
     roomToScreenPosition(pos) {
