@@ -14,9 +14,15 @@ class TextInputField extends React.Component {
             this.props.onChange(val);
         }
     }
+
+    _handleKeyDown = (e) => {
+        if (e.key === 'Enter' && this.props.onEnter) {
+            return this.props.onEnter(e);
+        }
+      }    
     render() {
         return (
-            <input type="text" style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)} />
+            <input type="text" style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)}  onKeyDown={this._handleKeyDown} />
         );
     }
 }
@@ -38,6 +44,10 @@ class Connection extends React.Component {
         });
     }
 
+    sendUserStateChange = (e) =>  {
+        this.props.app.SetUserNameColorStatus(this.state.userName, this.state.userColor, this.state.userStatus);
+    };
+
     render() {
         let inputList = null;
         if (!this.props.app) {
@@ -54,19 +64,19 @@ class Connection extends React.Component {
 
         const disconnectBtn = this.props.app ? (<button onClick={this.props.handleDisconnect}>Disconnect</button>) : null;
 
-        const changeUserNameBtn = this.props.app ? (
-            <button onClick={() => this.props.app.SetUserNameColorStatus(this.state.userName, this.state.userColor, this.state.userStatus)}>Set user state</button>
+        const changeUserStateBtn = this.props.app ? (
+            <button onClick={this.sendUserStateChange}>Set user state</button>
         ) : null;
 
         return (
             <div className="component">
                 <ul>
-                    <li>name:<TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} /></li>
-                    <li>color:<TextInputField style={{ width: 80 }} default={this.state.userColor} onChange={(val) => this.setState({ userColor: val })} /></li>
-                    <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} /></li>
+                    <li>name:<TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /></li>
+                    <li>color:<TextInputField style={{ width: 80 }} default={this.state.userColor} onChange={(val) => this.setState({ userColor: val })} onEnter={this.sendUserStateChange}  /></li>
+                    <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange}  /></li>
                     {inputList}
                 </ul>
-                {changeUserNameBtn}
+                {changeUserStateBtn}
                 {disconnectBtn}
             </div>
         );
@@ -100,15 +110,17 @@ class InstrumentList extends React.Component {
     renderInstrument(i) {
         let app = this.props.app;
         if (i.controlledByUserID == app.myUser.userID) {
-            return (
-                <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.ReleaseInstrument()}>Release</button> {i.name} (#{i.instrumentID}) [yours]</li>
-            );
+            return null;
+            // return (
+            //     <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.ReleaseInstrument()}>Release</button> {i.name} (#{i.instrumentID}) [yours]</li>
+            // );
         }
 
         let ownedByText = "";
         if (i.controlledByUserID) {
-            let u = app.FindUserByID(i.controlledByUserID);
-            ownedByText = " controlled by " + u.name;
+            return null;
+            // let u = app.FindUserByID(i.controlledByUserID);
+            // ownedByText = " controlled by " + u.name;
         }
 
         return (
@@ -145,6 +157,12 @@ class RightArea extends React.Component {
 
 
 class UserAvatar extends React.Component {
+
+    onReleaseInstrument = () => {
+        if (!this.props.app) return null;
+        this.props.app.ReleaseInstrument();
+    };
+
     render() {
         if (!this.props.app) return null;
         if (!this.props.app.roomState) return null;
@@ -157,7 +175,10 @@ class UserAvatar extends React.Component {
                 color: inst.instrument.color,
             };
             instMarkup = (
-                <div style={instStyle} className="userAvatarInstrument">playing {inst.instrument.name}</div>
+                <div style={instStyle} className="userAvatarInstrument">
+                    playing {inst.instrument.name}
+                    <br /><button onClick={this.onReleaseInstrument}>Release</button>
+                </div>
             );
         }
 
@@ -170,8 +191,10 @@ class UserAvatar extends React.Component {
             borderColor: this.props.user.color
         };
 
+        const className = "userAvatar" + ((this.props.app.myUser.userID == this.props.user.userID) ? " me" : "");
+
         return (
-                <div className="userAvatar" style={style}>
+                <div className={className} style={style}>
                     <div>{this.props.user.name}</div>
                     <div>{this.props.user.statusText}</div>
                     {instMarkup}
