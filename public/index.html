@@ -4,6 +4,10 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="../node_modules/soundfont-player/dist/soundfont-player.js"></script>
     <script src="reverb.js"></script>
@@ -22,149 +26,91 @@
     <script src="synth.js"></script>
     <script src="app.js"></script>
 
+    <!-- ui -->
+    <script type="text/babel" src="ui/right.js"></script>
+
     <style>
         body {
-            background-color: rgb(215, 195, 255);
+            background-color: black;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
-            border:0;padding:0;margin:0;
         }
 
-        .area {
-            padding: 3px;
-            float: left;
-            margin: 5px;
-            border: 4px dashed rgb(153, 130, 0);
+        html,body {
+            width:100%;height:100%;
+            border: 0;
+            padding: 0;
+            margin: 0;
         }
 
-        .header {
-            display:block;
-            background-color: gray;
-            border:none;
-            border-bottom:solid 4px black;
-            margin:0;
-            padding:20px;
-        }
-        .header a:link,
-        .header a:visited,
-        .header a
-        {
-            color:#ccc;
+        .component {
+            padding: 5px;
+            width:100%;
+            border: 4px dashed rgb(0, 87, 65);
+            box-sizing: border-box;
+            margin-bottom:20px;
         }
 
-        li {
-            margin: 4px;
+
+        /* https://grid.layoutit.com/ */
+        #grid-container {
+            height: 100vh;
+            width: 100%;
+
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            grid-template-rows: 0fr 1fr 0fr 150px;
+            gap: 5px 5px;
+            grid-template-areas:
+                "headerArea headerArea"
+                "roomArea rightArea"
+                "chatArea rightArea"
+                "pianoArea rightArea";
+        }
+
+        #grid-container>* {
+            background-color: #c0c7ef;
+        }
+
+        #roomArea {
+            background-color: black;
+            color:#339;
+            background-repeat: no-repeat;
+            position:relative;
+        }
+
+        .headerArea a:link,
+        .headerArea a:visited,
+        .headerArea a {
+            color: #99a0c7;
+        }
+
+        .userAvatar {
+            position:absolute;
+        }
+        .userAvatarInstrument {
         }
     </style>
 </head>
 
-<body>
+<body id="body">
 
-    <script type="text/javascript">
+    <script type="text/babel">
 
-        let InitMidiInputs = function () {
-            $('#midiInputList').empty();
-
-            GetMidiInputDeviceList().then(inputs => {
-                inputs.forEach(i => {
-                    $('#midiInputList').append(`<li><button onclick="connect('${i}')">Connect with ${i}</button>`);
-                });
-            });
-        };
-
-        $(document).ready(InitMidiInputs);
-
-
-        let ResetState = function () {
-            $('#instrumentList').empty();
-            $('#userList').empty();
-            $('#chatLog').empty();
-        };
-
-        let OnUserStateChange = function() {
-            $('#userList').empty();
-            // user list
-            digifuApp.roomState.users.forEach(u => {
-                let meText = (u.userID == digifuApp.myUser.userID) ? "<ME>" : "";
-                $('#userList').append(`<li style='color:${u.color};'>${u.name} (#${u.userID})${meText} ping:${u.pingMS}ms</li>`);
-            });
-
-        };
-
-        let OnStateChange = function () {
-            ResetState();
-            // this is not the correct way to run a UI, just rebuilding everything every time something changes.
-            // its just for dev purposes because i'm not going to get into the front end at this time.
-            digifuApp.roomState.instrumentCloset.forEach(i => {
-                if (i.controlledByUserID == digifuApp.myUser.userID) {
-                    // you control this instrument.
-                    $('#instrumentList').append(`<li style='color:${i.color};'><button onclick="digifuApp.ReleaseInstrument()">Release</button>${i.name} (#${i.instrumentID}) [you control this]</li>`);
-                } else if (i.controlledByUserID) {
-                    let u = digifuApp.FindUserByID(i.controlledByUserID);
-                    $('#instrumentList').append(`<li style='color:${i.color};'><button onclick="digifuApp.RequestInstrument(${i.instrumentID})">Request</button>${i.name} (#${i.instrumentID}) played by ${u.user.name} (${u.user.userID})</li>`);
-                } else {
-                    $('#instrumentList').append(`<li style='color:${i.color};'><button onclick="digifuApp.RequestInstrument(${i.instrumentID})">Request</button>${i.name} (#${i.instrumentID})</li>`);
-                }
-            });
-
-            // chat
-            digifuApp.roomState.chatLog.forEach(msg => {
-                $('#chatLog').append(`<li>${JSON.stringify(msg)}</li>`);
-            });
-        };
-
-        let connect = function (midiInputDeviceName) {
-            window.digifuApp = new DigifuApp();
-            window.digifuApp.Connect(midiInputDeviceName, $("#username").val(), $("#color").val(), OnStateChange, OnUserStateChange);
-        };
-
+        ReactDOM.render(
+            <RootArea />,
+            document.getElementById('root')
+        );
     </script>
 
-    <h2 class="header">
-        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a> |
-        <a target="_blank" href="https://github.com/thenfour/digifujam">github.com/thenfour/digifujam</a>
-    </h2>
-
-    <div class="area">
-        <h2>Connection</h2>
-        <ul>
-            <li>Your name:<input type="text" id="username" value="some user name" /></li>
-            <li>Your color:<input type="text" id="color" value="#cc2222" /></li>
-            <ul id="midiInputList">
-                <li><button onclick="InitMidiInputs()">init midi input list</button></li>
-            </ul>
-            <li><button onclick="digifuApp.Disconnect(); ResetState();">disconnect.</button></li>
-        </ul>
-    </div>
-
-
-    <div class="area">
-        <h2>Instruments</h2>
-        <ul id="instrumentList">
-        </ul>
-    </div>
-
-    <div class="area">
-        <h2>Users</h2>
-        <ul id="userList">
-        </ul>
-    </div>
-
-    <div class="area" style="max-height:300px;">
-        <h2>Chat log</h2>
-        <ul id="chatLog">
-        </ul>
-        optional "to user id"<input id="chatmsgToUserID" value="" style="width:30px;" /><br />
-        &gt;<input id="chatmsginput" value="" /><button onclick="digifuApp.SendChatMessage($('#chatmsginput').val(), $('#chatmsgToUserID').val());">send msg</button>
-    </div>
+    <div id="root" style="height:100vh;"></div>
 
     <div class="area">
         <h2>Debug log</h2>
         <button onclick="$('#log').html('')">clear log</button>
         <pre id="log"
             style="border:2px solid blue; background-color: rgb(211, 211, 211);max-height: 50%;width: 100%; max-width:900px; overflow: scroll;"></pre>
-    </div>
-
+    </div> 
 
 </body>
 

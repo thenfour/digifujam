@@ -49,6 +49,10 @@ DigifuNet.prototype.SendChatMessage = function (msg/* as DigifuChatMessage */) {
     this.socket.emit(ClientMessages.ChatMessage, msg);
 };
 
+DigifuNet.prototype.SendUserState = function (data) {
+    this.socket.emit(ClientMessages.UserState, data);
+};
+
 DigifuNet.prototype.Disconnect = function () {
     this.socket.disconnect(true);
     this.socket = null;
@@ -71,6 +75,7 @@ DigifuNet.prototype.Connect = function (handler) {
 
     this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data.token, data.users));
     this.socket.on(ServerMessages.UserChatMessage, data => this.handler.NET_OnUserChatMessage(data));
+    this.socket.on(ServerMessages.UserState, data => this.handler.NET_OnUserState(data));
 
     this.socket.on('disconnect', this.handler.NET_OnDisconnect);
 };

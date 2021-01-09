@@ -4,7 +4,6 @@ function DigifuApp() {
     this.roomState = null;
 
     this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
-    this.userStateChangeHandler = null; // similar, but only for user list updates. just to be lighter weight.
 
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
@@ -137,7 +136,7 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
 
     if (userID == this.myUser.userID) {
         this.myInstrument = foundInstrument.instrument;
-        } else {
+    } else {
         // or if your instrument is being given to someone else, then you no longer have an instrument
         if (foundInstrument.instrument.controlledByUserID == this.myUser.userID) {
             this.myInstrument = null;
@@ -168,7 +167,7 @@ DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
     this.synth.NoteOff(foundInstrument.instrument, note);
 };
 
-DigifuApp.prototype.NET_OnPedalDown = function(userID) {
+DigifuApp.prototype.NET_OnPedalDown = function (userID) {
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         log(`NET_OnPedalDown instrument not found`);
@@ -177,7 +176,7 @@ DigifuApp.prototype.NET_OnPedalDown = function(userID) {
     this.synth.PedalDown(foundInstrument.instrument);
 };
 
-DigifuApp.prototype.NET_OnPedalUp = function(userID) {
+DigifuApp.prototype.NET_OnPedalUp = function (userID) {
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         log(`NET_OnPedalUp instrument not found`);
@@ -191,18 +190,26 @@ DigifuApp.prototype.NET_OnPing = function (token, users) {
     users.forEach(u => {
         this.FindUserByID(u.userID).user.pingMS = u.pingMS;
     });
-    this.userStateChangeHandler();
+    this.stateChangeHandler();
 };
 
-DigifuApp.prototype.NET_OnUserChatMessage = function(msg) {
+DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
     this.roomState.chatLog.push(msg);
-    if (this.stateChangeHandler) {
-        this.stateChangeHandler();
-    }
+    this.stateChangeHandler();
 }
 
-DigifuApp.prototype.NET_OnDisconnect = function() {
-    log("todo: disconnection.");
+DigifuApp.prototype.NET_OnUserState = function (data) {
+    let u = this.FindUserByID(data.userID);
+    u.user.name = data.name;
+    u.user.flairID = data.flairID;
+    u.user.color = data.color;
+    u.user.img = data.img;
+    u.user.position = data.position;
+    this.stateChangeHandler();
+}
+
+DigifuApp.prototype.NET_OnDisconnect = function () {
+    log("DigifuApp disconnection happened; stop using this object.");
 }
 
 // --------------------------------------------------------------------------------------
@@ -211,36 +218,84 @@ DigifuApp.prototype.RequestInstrument = function (instrumentID) {
     this.net.SendRequestInstrument(instrumentID);
 };
 
-DigifuApp.prototype.ReleaseInstrument = function () {    
+DigifuApp.prototype.ReleaseInstrument = function () {
     this.net.SendReleaseInstrument();
 };
 
-DigifuApp.prototype.SendChatMessage = function(msgText, toUserID) {
+DigifuApp.prototype.SendChatMessage = function (msgText, toUserID) {
     let msg = new DigifuChatMessage();
     msg.message = msgText;
     msg.fromUserID = this.myUser.userID;
     msg.toUserID = toUserID;
     msg.timestampUTC = new Date();
 
-    log(`${JSON.stringify(msg)}`);
-
     this.net.SendChatMessage(msg);
 };
 
 
-DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, stateChangeHandler, userStateChangeHandler) {
+DigifuApp.prototype.SetUserPosition = function (pos) {
+    this.net.SendUserState({
+        name: this.myUser.name,
+        color: this.myUser.color,
+        img: this.myUser.img,
+        flairID: this.myUser.flairID,
+        position: pos
+    });
+};
+
+DigifuApp.prototype.SetUserFlairID = function (flairID) {
+    this.net.SendUserState({
+        name: this.myUser.name,
+        color: this.myUser.color,
+        img: this.myUser.img,
+        flairID: flairID,
+        position: this.myUser.position
+    });
+};
+
+DigifuApp.prototype.SetUserNameAndColor = function (name, color) {
+    this.net.SendUserState({
+        name: name,
+        color: color,
+        img: this.myUser.img,
+        flairID: this.myUser.flairID,
+        position: this.myUser.position
+    });
+};
+
+DigifuApp.prototype.SetUserColor = function (color) {
+    this.net.SendUserState({
+        name: this.myUser.name,
+        color: color,
+        img: this.myUser.img,
+        flairID: this.myUser.flairID,
+        position: this.myUser.position
+    });
+};
+
+DigifuApp.prototype.SetUserImg = function (img) {
+    this.net.SendUserState({
+        name: this.myUser.name,
+        color: this.myUser.color,
+        img: img,
+        flairID: this.myUser.flairID,
+        position: this.myUser.position
+    });
+};
+
+
+DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, stateChangeHandler) {
     log("attempting connection...");
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
 
     this.stateChangeHandler = stateChangeHandler;
-    this.userStateChangeHandler = userStateChangeHandler;
 
     this.midi.Init(midiInputDeviceName, this);
 
-	this.audioCtx = new AudioContext();
-	this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
+    this.audioCtx = new AudioContext();
+    this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
         this.synth.Init(this.audioCtx);
         this.net.Connect(this);
     });

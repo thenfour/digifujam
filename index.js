@@ -8,52 +8,88 @@ app.use(express.static('public'))
 
 let gRoom = new DF.DigifuRoomState();
 
+gRoom.img = "./room.png";
+gRoom.width = 1000;
+gRoom.height = 741;
+
+gRoom.flair = [
+  {
+    name: "jammin",
+    flairID: 1,
+    img: null,
+    text: "🎹",
+  },
+  {
+    name: "drinkin",
+    flairID: 2,
+    img: null,
+    text: "🍺",
+  },
+];
+
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
   {
-    name: "acoustic_grand_piano",
+    sfinstrumentName: "acoustic_grand_piano",
+    name: "Piano",
+    img: "",
     color: "#808080",
     instrumentID: 6,
     controlledByUserID: null,
-    engine: "soundfont"
+    engine: "soundfont",
+    activityDisplay: "keyboard",
   },
   {
-    name: "marimba",
+    sfinstrumentName: "marimba",
+    name: "Marimba",
+    img: "",
     color: "#884400",
     instrumentID: 7,
     controlledByUserID: null,
-    engine: "soundfont"
+    engine: "soundfont",
+    activityDisplay: "keyboard",
   },
   {
-    name: "tango_accordion",
+    sfinstrumentName: "tango_accordion",
+    name: "Accordion",
+    img: "",
     color: "#00ff00",
     instrumentID: 8,
     controlledByUserID: null,
-    engine: "soundfont"
+    engine: "soundfont",
+    activityDisplay: "keyboard",
   },
   {
-    name: "electric_bass_finger",
+    sfinstrumentName: "electric_bass_finger",
+    name: "Bass guitar",
+    img: "",
     color: "#0000ff",
     instrumentID: 11,
     controlledByUserID: null,
-    engine: "soundfont"
+    engine: "soundfont",
+    activityDisplay: "keyboard",
   },
   {
-    name: "string_ensemble_1",
+    sfinstrumentName: "string_ensemble_1",
+    name: "Strings",
+    img: "",
     color: "#0000ff",
     instrumentID: 12,
     controlledByUserID: null,
-    engine: "soundfont"
+    engine: "soundfont",
+    activityDisplay: "keyboard",
   },
   {
+    sfinstrumentName: "",
     name: "Casio vibraphone",
+    img: "",
     color: "#808020",
     instrumentID: 13,
     controlledByUserID: null,
-    engine: "synth"
+    engine: "synth",
+    activityDisplay: "keyboard",
   }
-  // strings, more pianos, add alt names
 ];
 
 
@@ -90,6 +126,10 @@ let OnClientIdentify = function (clientSocket, clientUserSpec) {
   u.name = clientUserSpec.name;
   u.color = clientUserSpec.color;
   u.userID = clientSocket.id;
+  u.flairID = 0;
+  u.position = { x: 0, y: 0 };
+  u.img = null;
+
   gRoom.users.push(u);
 
   console.log(`User identified ${u.userID}. Send welcome package.`)
@@ -273,9 +313,31 @@ let OnClientChatMessage = function (ws, msg) {
   //ws.broadcast.emit(DF.ServerMessages.UserChatMessage, msg);
 };
 
+
+let OnClientUserState = function (ws, data) {
+  let foundUser = FindUserFromSocket(ws);
+  if (foundUser == null) {
+    console.log(`OnClientUserState => unknown user`);
+    return;
+  }
+
+  // validate & integrate state.
+  foundUser.user.name = data.name;
+  foundUser.user.color = data.color;
+  foundUser.user.img = data.img;
+  foundUser.user.flairID = data.flairID;
+  foundUser.user.position.x = data.position.x;
+  foundUser.user.position.y = data.position.y;
+
+  data.userID = foundUser.user.userID; // adapt the data packet for sending to all clients.
+
+  io.emit(DF.ServerMessages.UserState, data);
+};
+
+
 // every X seconds, this is called. here we can just do a generic push to clients and they're expected
 // to return a pong. for now used for timing, and reporting user ping.
-let OnPingInterval = function() {
+let OnPingInterval = function () {
   var payload = {
     token: (new Date()).toISOString(),
     users: []
@@ -343,6 +405,10 @@ let OnClientConnect = function (ws) {
 
   ws.on(DF.ClientMessages.Pong, data => {
     OnClientPong(ws, data);
+  });
+
+  ws.on(DF.ClientMessages.UserState, data => {
+    OnClientUserState(ws, data);
   });
 
   // send the "please identify yourself" msg

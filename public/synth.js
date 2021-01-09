@@ -7,7 +7,7 @@
 class SoundfontInstrument {
 	constructor(audioCtx, destination, instrumentSpec) {
 		this.audioCtx = audioCtx;
-		Soundfont.instrument(audioCtx, instrumentSpec.name, {destination})
+		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, {destination})
 			.then(function (inst) {
 				this.sfinstrument = inst;
 			}.bind(this));

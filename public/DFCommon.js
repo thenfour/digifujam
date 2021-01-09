@@ -10,7 +10,8 @@ const ClientMessages = {
     NoteOn: "NoteOn", // note, velocity
     NoteOff: "NoteOff", // note
     PedalDown: "PedalDown",
-    PedalUp: "PedalUp"
+    PedalUp: "PedalUp",
+    UserState: "UserState", // name, color, img, x, y, flair
 };
 
 const ServerMessages = {
@@ -24,7 +25,8 @@ const ServerMessages = {
     NoteOn: "NoteOn", // user, note, velocity
     NoteOff: "NoteOff", // user, note
     PedalDown: "PedalDown", // user
-    PedalUp: "PedalUp" // user
+    PedalUp: "PedalUp", // user
+    UserState: "UserState", // user, name, color, img, x, y, flair
 };
 
 const ServerSettings = {
@@ -36,20 +38,27 @@ const ClientSettings = {
 
 class DigifuUser {
     constructor() {
-        this.name = "";
-        this.color = "";
         this.userID = null;
         this.pingMS = 0;
+
+        this.name = "";
+        this.color = "";
+        this.flairID = null;
+        this.position = {x:0,y:0}; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
+        this.img = null;
     }
 };
 
 class DigifuInstrumentSpec {
     constructor() {
         this.name = "";
+        this.sfinstrumentName = "";
+        this.img = "";
         this.color = "";
         this.instrumentID = null;
         this.controlledByUserID = null;
         this.engine = "synth"; // soundfont, synth
+        this.activityDisplay = "none"; // keyboard, drums, none
     }
 };
 
@@ -62,11 +71,24 @@ class DigifuChatMessage {
     }
 };
 
+class DigifuFlair {
+    constructor() {
+        this.name = null;
+        this.flairID = null;
+        this.img = null;
+        this.text = null;
+    }
+};
+
 class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
         this.users = [];
         this.chatLog = []; // ordered by time asc
+        this.flair = [];
+        this.img = null;
+        this.width = 16;
+        this.height = 9;
     }
 };
 
@@ -75,7 +97,9 @@ module.exports = {
     ServerMessages,
     DigifuUser,
     DigifuInstrumentSpec,
+    DigifuChatMessage,
     DigifuRoomState,
+    DigifuFlair,
     ServerSettings,
     ClientSettings
 };
