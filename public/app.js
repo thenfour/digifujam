@@ -4,6 +4,7 @@ function DigifuApp() {
     this.roomState = null;
 
     this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
+    this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
 
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
@@ -49,6 +50,7 @@ DigifuApp.prototype.MIDI_NoteOn = function (note, velocity) {
     if (this.myInstrument == null) return;
     this.net.SendNoteOn(note, velocity);
     this.synth.NoteOn(this.myInstrument, note, velocity);
+    this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
 };
 
 DigifuApp.prototype.MIDI_NoteOff = function (note) {
@@ -150,12 +152,15 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
 };
 
 DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
+    let foundUser = this.FindUserByID(userID);
+    if (!foundUser) return;
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         log(`instrument not found`);
         return;
     }
     this.synth.NoteOn(foundInstrument.instrument, note, velocity);
+    this.noteOnHandler(foundUser.user, foundInstrument.instrument, note, velocity);
 };
 
 DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
@@ -256,7 +261,7 @@ DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
 };
 
 
-DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, userStatusText, stateChangeHandler) {
+DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, userStatusText, stateChangeHandler, noteOnHandler) {
     log("attempting connection... status = " + userStatusText);
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
@@ -264,6 +269,7 @@ DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor
     this.myUser.statusText = userStatusText;
 
     this.stateChangeHandler = stateChangeHandler;
+    this.noteOnHandler = noteOnHandler;
 
     this.midi.Init(midiInputDeviceName, this);
 

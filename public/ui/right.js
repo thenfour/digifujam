@@ -64,7 +64,10 @@ class Connection extends React.Component {
             userColor: `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`,
             userStatus: '🎶',
             deviceNameList: [],
+            masterGain: 1,// why do i need to keep this here? not sure really.
+            reverbGain: 0.2,
         };
+
         GetMidiInputDeviceList().then(inputs => {
             console.log(JSON.stringify(inputs));
             this.setState({ deviceNameList: inputs });
@@ -74,6 +77,18 @@ class Connection extends React.Component {
     sendUserStateChange = (e) =>  {
         this.props.app.SetUserNameColorStatus(this.state.userName, this.state.userColor, this.state.userStatus);
     };
+
+    setVolumeVal = (v) => {
+        let realVal = parseFloat(v.target.value) / 100;
+        this.setState({masterGain:realVal });
+        this.props.app.synth.masterGain = realVal;
+    }
+
+    setReverbVal = (v) => {
+        let realVal = parseFloat(v.target.value) / 100;
+        this.setState({reverbGain:realVal });
+        this.props.app.synth.reverbGain = realVal;
+    }
 
     render() {
         let inputList = null;
@@ -89,17 +104,35 @@ class Connection extends React.Component {
             }
         }
 
-        const disconnectBtn = this.props.app ? (<li><button onClick={this.props.handleDisconnect}>Disconnect</button></li>) : null;
+        const disconnectBtn = this.props.app ? (
+            <li><button onClick={this.props.handleDisconnect}>Disconnect</button><div style={{height:20}}>&nbsp;</div></li>
+        ) : null;
 
         const changeUserStateBtn = this.props.app ? (
-            <li><button onClick={this.sendUserStateChange}>update your username/color/etc ^^</button></li>
+            <li><button onClick={this.sendUserStateChange}>update above stuff</button></li>
         ) : null;
 
         const randomColor = `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`;
 
+        // volume from 0 to 1(unity) to 2
+        const volumeMarkup = this.props.app && this.props.app.synth ? (
+            <li>
+                    <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.masterGain * 100} />
+                    <label htmlFor="volume">gain:{this.state.masterGain}</label>
+            </li>
+        ) : null;
+
+        const verbMarkup = this.props.app && this.props.app.synth ? (
+            <li>
+                    <input type="range" id="verbGain" name="verbGain" min="0" max="100" onChange={this.setReverbVal} value={this.state.reverbGain * 100} />
+                    <label htmlFor="verbGain">reverb:{this.state.reverbGain}</label>
+            </li>
+        ) : null;
+
         return (
             <div className="component">
                 <ul>
+                    {disconnectBtn}
                     <li>name:<TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /></li>
                     <li>color:<TextInputFieldExternalState
                         style={{ width: 80 }}
@@ -111,7 +144,8 @@ class Connection extends React.Component {
                     <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange}  /></li>
                     {inputList}
                     {changeUserStateBtn}
-                    {disconnectBtn}
+                    {volumeMarkup}
+                    {verbMarkup}
                 </ul>
             </div>
         );
@@ -131,6 +165,7 @@ class UserList extends React.Component {
 
         return (
             <div className="component">
+                <h2>User list</h2>
                 <ul>
                     {users}
                 </ul>
@@ -169,6 +204,7 @@ class InstrumentList extends React.Component {
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
             <div className="component">
+                <h2>Unclaimed instruments</h2>
                 <ul>
                     {instruments}
                 </ul>
@@ -202,6 +238,7 @@ class UserAvatar extends React.Component {
         if (!this.props.app) return null;
         if (!this.props.app.roomState) return null;
         console.assert(this.props.displayHelper);
+        const isMe = (this.props.app.myUser.userID == this.props.user.userID);
 
         const inst = this.props.app.FindInstrumentByUserID(this.props.user.userID);
         let instMarkup = null;
@@ -209,10 +246,15 @@ class UserAvatar extends React.Component {
             const instStyle = {
                 color: inst.instrument.color,
             };
+            let releaseButton = isMe ? (
+                <button onClick={this.onReleaseInstrument}>Release</button>
+            ) : null;
+
             instMarkup = (
                 <div style={instStyle} className="userAvatarInstrument">
                     playing {inst.instrument.name}
-                    <br /><button onClick={this.onReleaseInstrument}>Release</button>
+                    <br />
+                    {releaseButton}
                 </div>
             );
         }
@@ -226,10 +268,10 @@ class UserAvatar extends React.Component {
             borderColor: this.props.user.color
         };
 
-        const className = "userAvatar" + ((this.props.app.myUser.userID == this.props.user.userID) ? " me" : "");
+        const className = "userAvatar userAvatarActivityBump1" + (isMe ? " me" : "");
 
         return (
-                <div className={className} style={style}>
+                <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
                     <div>{this.props.user.name}</div>
                     <div>{this.props.user.statusText}</div>
                     {instMarkup}
@@ -382,19 +424,21 @@ class RootArea extends React.Component {
     OnStateChange() {
         this.setState(this.state);
     }
-    OnUserStateChange() {
-        this.setState(this.state);
-    }
 
-    HandleConnect(midiDevice, userName, color, statusText) {
+    HandleConnect = (midiDevice, userName, color, statusText) => {
         let app = new DigifuApp();
-        app.Connect(midiDevice, userName, color, statusText, () => this.OnStateChange(), () => this.OnUserStateChange());
+        app.Connect(midiDevice, userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn);
         this.setState({ app });
     }
 
     HandleDisconnect() {
         this.state.app.Disconnect();
         this.setState({ app: null });
+    }
+
+    handleNoteOn = (user, instrument, midiNote, velocity) => {
+        console.log("handleNoteOn");
+        $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
     }
 
     constructor(props) {
@@ -407,16 +451,16 @@ class RootArea extends React.Component {
     render() {
         return (
             <div id="grid-container">
-                <div style={{ gridArea: "headerArea" }} className="headerArea">
-                    <h2 >
-                        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a> |
+                <div style={{ gridArea: "headerArea", textAlign:'center' }} className="headerArea">
+                    <h2 style={{margin:0}}>
+                        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a> \\
                         <a target="_blank" href="https://github.com/thenfour/digifujam">github.com/thenfour/digifujam</a>
                     </h2>
                 </div>
                 <PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
                 <RoomArea app={this.state.app} />
-                <RightArea app={this.state.app} handleConnect={(a, b, c, d) => this.HandleConnect(a, b, c, d)} handleDisconnect={() => this.HandleDisconnect()} />
+                <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
             </div>
         );
     }

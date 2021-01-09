@@ -32,8 +32,10 @@
     <style>
         body {
             background-color: black;
+            color: #0aa;
             font-family: 'Courier New', Courier, monospace;
             font-weight: bold;
+            font-size: medium;
         }
 
         html,
@@ -45,14 +47,10 @@
             margin: 0;
         }
 
-        .component {
-            padding: 5px;
-            width: 100%;
-            border: 4px dashed rgb(0, 87, 65);
-            box-sizing: border-box;
-            margin-bottom: 20px;
+        ul {
+            list-style: none;
+            padding: 10px;
         }
-
 
         /* https://grid.layoutit.com/ */
         #grid-container {
@@ -71,7 +69,7 @@
         }
 
         #grid-container>* {
-            background-color: #c0c7ef;
+            background-color: #222;
         }
 
         #roomArea {
@@ -79,28 +77,94 @@
             color: #339;
             background-repeat: no-repeat;
             position: relative;
-            transition: background-position .3s;
+            transition: background-position 1s;
+            /* transition-delay: .5s; */
+        }
+
+        .component {
+            padding: 5px;
+            width: 100%;
+            border: 4px solid #044;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .component>h2 {
+            background-color: #044;
+            padding: 5px;
+            margin: 0;
+            border: 0;
+            font-size: larger;
+        }
+
+        .headerArea {
+            padding: 15px;
         }
 
         .headerArea a:link,
         .headerArea a:visited,
         .headerArea a {
-            color: #99a0c7;
+            color: #044;
+        }
+
+        @keyframes avatarBump1 {
+            0% {
+                transform: translate(0px, 0px);
+                animation-timing-function: ease-in-out;
+            }
+
+            10% {
+                transform: translate(0px, 4px);
+            }
+
+            100% {
+                transform: translate(0px, 0px);
+            }
+        }
+
+        /* exact duplicate of the other, so when i toggle between the classes, it resets the animation. why doesn't CSS let you reset one-shot animations?? */
+        @keyframes avatarBump2 {
+            0% {
+                transform: translate(0px, 0px);
+                animation-timing-function: ease-in-out;
+            }
+
+            10% {
+                transform: translate(0px, 4px);
+            }
+
+            100% {
+                transform: translate(0px, 0px);
+            }
+        }
+
+
+        .userAvatarActivityBump1 {
+            animation: avatarBump1 .2s 1;
+        }
+
+        .userAvatarActivityBump2 {
+            animation: avatarBump2 .2s 1;
         }
 
         .userAvatar {
             position: absolute;
-            transition: top .5s, left .3s;
+            transition: top .5s, left .5s;
             border-radius: 5px;
             border-width: 1px;
-            border-style:solid;
+            border-style: solid;
             padding: 7px;
             background-color: rgba(0, 0, 0, .5);
             text-align: center;
-            filter: drop-shadow(0px 10px 10px rgba(0,0,0,.5));
+            filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, .5));
         }
+
         .userAvatar.me {
             border-top-width: 10px;
+        }
+
+        #chatArea {
+            padding: 10px;
         }
     </style>
 </head>

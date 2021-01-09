@@ -7,7 +7,7 @@
 class SoundfontInstrument {
 	constructor(audioCtx, destination, instrumentSpec) {
 		this.audioCtx = audioCtx;
-		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, {destination})
+		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, { destination })
 			.then(function (inst) {
 				this.sfinstrument = inst;
 			}.bind(this));
@@ -20,7 +20,7 @@ class SoundfontInstrument {
 
 	NoteOn(midiNote, velocity) {
 		if (!this.sfinstrument) return;
-		this.voices[midiNote] = this.sfinstrument.play(midiNote, null, {gain:velocity/128}); // https://www.npmjs.com/package/soundfont-player
+		this.voices[midiNote] = this.sfinstrument.play(midiNote, null, { gain: velocity / 128 }); // https://www.npmjs.com/package/soundfont-player
 		this.voices[midiNote].DFHolding = true;
 		//log(`note on ${midiNote} holding=${this.voices[midiNote].DFHolding}`);
 	};
@@ -68,80 +68,109 @@ class SoundfontInstrument {
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function DigifuSynth() {
-	this.audioCtx = null;
-	this.instruments = {};
-};
+class DigifuSynth {
+	constructor() {
+		this.audioCtx = null;
+		this.instruments = {};
 
-DigifuSynth.prototype.NoteOn = function (instrumentSpec, note, velocity) {
-	this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
-};
-
-DigifuSynth.prototype.NoteOff = function (instrumentSpec, note) {
-	this.instruments[instrumentSpec.instrumentID].NoteOff(note);
-};
-
-DigifuSynth.prototype.AllNotesOff = function (instrumentSpec) {
-	this.instruments[instrumentSpec.instrumentID].AllNotesOff();
-};
-
-DigifuSynth.prototype.PedalUp = function (instrumentSpec) {
-	this.instruments[instrumentSpec.instrumentID].PedalUp();
-};
-
-DigifuSynth.prototype.PedalDown = function (instrumentSpec) {
-	this.instruments[instrumentSpec.instrumentID].PedalDown();
-};
-
-DigifuSynth.prototype.PitchBend = function (instrumentSpec, val) {
-	this.instruments[instrumentSpec.instrumentID].PitchBend(val);
-};
-
-// call when you have a list of instruments
-DigifuSynth.prototype.InitInstruments = function (instrumentSpecs) {
-	this.instruments = {};
-	log(`InitInstruments count=${instrumentSpecs.length}`);
-	instrumentSpecs.forEach(s => {
-		switch (s.engine) {
-			case "synth":
-				this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, this.masterEffectsInputNode, s);
-				break;
-			case "soundfont":
-				//let oldDest = this.audioCtx.destination;
-				//this.audioCtx.destination = this.masterEffectsInputNode;
-				this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, this.masterEffectsInputNode, s);
-				//this.audioCtx.destination  = oldDest;
-				break;
-		}
-		//this.instruments[s.instrumentID] = new DigifuSynthInstrument(this.audioCtx, s);
-		//log(`InitInstrument id=${s.instrumentID}, name=${s.name}`);
-	});
-};
-
-// call as a sort of ctor
-DigifuSynth.prototype.Init = function (audioCtx) {
-	this.audioCtx = audioCtx;
-	if (!this.audioCtx.createReverbFromUrl) {
-		reverbjs.extend(this.audioCtx);
+		this.masterEffectsInputNode = null;
+		this.masterReverbGain = null;
 	}
 
-	// instruments] -> gain|------------------------------>|destination
-	//                     |--> reverb ----> reverbGain -->|
-	this.masterEffectsInputNode = this.audioCtx.createGain();
-	// create dry signal path
-	this.masterEffectsInputNode.connect(this.audioCtx.destination);
+	//this.masterGain = 1.0;// 0 = mute, 1.0 = unity, >1=amplify
+	set masterGain(val) {
+		if (!this.masterEffectsInputNode) return;
+		this.masterEffectsInputNode.gain.value = val;
+	}
 
-	// see other possible impulses: https://github.com/burnson/Reverb.js
-	this.masterReverb = this.audioCtx.createReverbFromUrl("./LadyChapelStAlbansCathedral.m4a", () => {
+	get masterGain() {
+		if (!this.masterEffectsInputNode) return 1.0;
+		return this.masterEffectsInputNode.gain.value;
+	}
 
-		// create wet signal path
-		this.masterReverbGain = this.audioCtx.createGain();
+	set reverbGain(val) {
+		if (!this.masterReverbGain) return;
+		this.masterReverbGain.gain.value = val;
 
-		this.masterEffectsInputNode.connect(this.masterReverb);
-		this.masterReverb.connect(this.masterReverbGain);
-		this.masterReverbGain.connect(this.audioCtx.destination);
+		if (val > 0.0001) {
+			this.masterReverbGain.connect(this.audioCtx.destination);
+		} else {
+			this.masterReverbGain.disconnect();
+		}
+	}
 
-		//
-		this.masterReverbGain.gain.value = 0.5;
-	});
+	NoteOn(instrumentSpec, note, velocity) {
+		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
+	};
+
+	NoteOff(instrumentSpec, note) {
+		this.instruments[instrumentSpec.instrumentID].NoteOff(note);
+	};
+
+	AllNotesOff(instrumentSpec) {
+		this.instruments[instrumentSpec.instrumentID].AllNotesOff();
+	};
+
+	PedalUp(instrumentSpec) {
+		this.instruments[instrumentSpec.instrumentID].PedalUp();
+	};
+
+	PedalDown(instrumentSpec) {
+		this.instruments[instrumentSpec.instrumentID].PedalDown();
+	};
+
+	PitchBend(instrumentSpec, val) {
+		this.instruments[instrumentSpec.instrumentID].PitchBend(val);
+	};
+
+	// call when you have a list of instruments
+	InitInstruments(instrumentSpecs) {
+		this.instruments = {};
+		log(`InitInstruments count=${instrumentSpecs.length}`);
+		instrumentSpecs.forEach(s => {
+			switch (s.engine) {
+				case "synth":
+					this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, this.masterEffectsInputNode, s);
+					break;
+				case "soundfont":
+					//let oldDest = this.audioCtx.destination;
+					//this.audioCtx.destination = this.masterEffectsInputNode;
+					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, this.masterEffectsInputNode, s);
+					//this.audioCtx.destination  = oldDest;
+					break;
+			}
+			//this.instruments[s.instrumentID] = new DigifuSynthInstrument(this.audioCtx, s);
+			//log(`InitInstrument id=${s.instrumentID}, name=${s.name}`);
+		});
+	};
+
+	// call as a sort of ctor
+	Init(audioCtx) {
+		this.audioCtx = audioCtx;
+		if (!this.audioCtx.createReverbFromUrl) {
+			reverbjs.extend(this.audioCtx);
+		}
+
+		// instruments] -> gain|------------------------------>|destination
+		//                     |--> reverb ----> reverbGain -->|
+		this.masterEffectsInputNode = this.audioCtx.createGain();
+		// create dry signal path
+		this.masterEffectsInputNode.connect(this.audioCtx.destination);
+
+		// see other possible impulses: https://github.com/burnson/Reverb.js
+		this.masterReverb = this.audioCtx.createReverbFromUrl("./LadyChapelStAlbansCathedral.m4a", () => {
+
+			// create wet signal path
+			this.masterReverbGain = this.audioCtx.createGain();
+
+			this.masterEffectsInputNode.connect(this.masterReverb);
+			this.masterReverb.connect(this.masterReverbGain);
+			this.masterReverbGain.connect(this.audioCtx.destination);
+
+			//
+			this.masterReverbGain.gain.value = 0.5;
+		});
+	};
 };
+
+
