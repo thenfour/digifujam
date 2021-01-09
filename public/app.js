@@ -202,6 +202,7 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
     let u = this.FindUserByID(data.userID);
     u.user.name = data.name;
     u.user.flairID = data.flairID;
+    u.user.statusText = data.statusText;
     u.user.color = data.color;
     u.user.img = data.img;
     u.user.position = data.position;
@@ -232,63 +233,35 @@ DigifuApp.prototype.SendChatMessage = function (msgText, toUserID) {
     this.net.SendChatMessage(msg);
 };
 
-
 DigifuApp.prototype.SetUserPosition = function (pos) {
     this.net.SendUserState({
         name: this.myUser.name,
         color: this.myUser.color,
         img: this.myUser.img,
         flairID: this.myUser.flairID,
+        statusText: this.myUser.statusText,
         position: pos
     });
 };
 
-DigifuApp.prototype.SetUserFlairID = function (flairID) {
-    this.net.SendUserState({
-        name: this.myUser.name,
-        color: this.myUser.color,
-        img: this.myUser.img,
-        flairID: flairID,
-        position: this.myUser.position
-    });
-};
-
-DigifuApp.prototype.SetUserNameAndColor = function (name, color) {
+DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
     this.net.SendUserState({
         name: name,
         color: color,
         img: this.myUser.img,
         flairID: this.myUser.flairID,
-        position: this.myUser.position
-    });
-};
-
-DigifuApp.prototype.SetUserColor = function (color) {
-    this.net.SendUserState({
-        name: this.myUser.name,
-        color: color,
-        img: this.myUser.img,
-        flairID: this.myUser.flairID,
-        position: this.myUser.position
-    });
-};
-
-DigifuApp.prototype.SetUserImg = function (img) {
-    this.net.SendUserState({
-        name: this.myUser.name,
-        color: this.myUser.color,
-        img: img,
-        flairID: this.myUser.flairID,
+        statusText: status,
         position: this.myUser.position
     });
 };
 
 
-DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, stateChangeHandler) {
-    log("attempting connection...");
+DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, userStatusText, stateChangeHandler) {
+    log("attempting connection... status = " + userStatusText);
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
+    this.myUser.statusText = userStatusText;
 
     this.stateChangeHandler = stateChangeHandler;
 

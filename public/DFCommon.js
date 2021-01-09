@@ -11,7 +11,7 @@ const ClientMessages = {
     NoteOff: "NoteOff", // note
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    UserState: "UserState", // name, color, img, x, y, flair
+    UserState: "UserState", // name, color, img, x, y, flair, statustext
 };
 
 const ServerMessages = {
@@ -26,7 +26,7 @@ const ServerMessages = {
     NoteOff: "NoteOff", // user, note
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    UserState: "UserState", // user, name, color, img, x, y, flair
+    UserState: "UserState", // user, name, color, img, x, y, flair, statustext
 };
 
 const ServerSettings = {
@@ -42,6 +42,7 @@ class DigifuUser {
         this.pingMS = 0;
 
         this.name = "";
+        this.statusText = "";
         this.color = "";
         this.flairID = null;
         this.position = {x:0,y:0}; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation

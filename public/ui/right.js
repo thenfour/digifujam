@@ -29,6 +29,7 @@ class Connection extends React.Component {
         this.state = {
             userName: 'user',
             userColor: 'red',
+            userStatus: '🎶',
             deviceNameList: [],
         };
         GetMidiInputDeviceList().then(inputs => {
@@ -45,7 +46,7 @@ class Connection extends React.Component {
             } else {
                 inputList = this.state.deviceNameList.map(i => (
                 <li key={i}>
-                    <button onClick={() => this.props.handleConnect(i, this.state.userName, this.state.userColor)}>Connect with {i}</button>
+                    <button onClick={() => this.props.handleConnect(i, this.state.userName, this.state.userColor, this.state.userStatus)}>Connect with {i}</button>
                 </li>
             ));
             }
@@ -54,7 +55,7 @@ class Connection extends React.Component {
         const disconnectBtn = this.props.app ? (<button onClick={this.props.handleDisconnect}>Disconnect</button>) : null;
 
         const changeUserNameBtn = this.props.app ? (
-            <button onClick={() => this.props.app.SetUserNameAndColor(this.state.userName, this.state.userColor)}>Set username/color</button>
+            <button onClick={() => this.props.app.SetUserNameColorStatus(this.state.userName, this.state.userColor, this.state.userStatus)}>Set user state</button>
         ) : null;
 
         return (
@@ -62,6 +63,7 @@ class Connection extends React.Component {
                 <ul>
                     <li>name:<TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} /></li>
                     <li>color:<TextInputField style={{ width: 80 }} default={this.state.userColor} onChange={(val) => this.setState({ userColor: val })} /></li>
+                    <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} /></li>
                     {inputList}
                 </ul>
                 {changeUserNameBtn}
@@ -171,7 +173,8 @@ class UserAvatar extends React.Component {
 
         return (
                 <div className="userAvatar" style={style}>
-                    {this.props.user.name}
+                    <div>{this.props.user.name}</div>
+                    <div>{this.props.user.statusText}</div>
                     {instMarkup}
                 </div>
         );
@@ -183,13 +186,8 @@ class RoomArea extends React.Component {
         console.log(`RoomArea ctor`);
         super(props);
         this.state = {
-            //scrollPos:{x:0,y:0},
             scrollSize:{x:0,y:0},// track DOM scrollHeight / scrollWidth
-            //userPos:{x:0,y:0},
         };
-        // if (this.props.app && this.props.app.roomState) {
-        //     this.state.userPos = this.props.app.myUser.position;
-        // }
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
         this.roomToScreenPosition = this.roomToScreenPosition.bind(this);
     }
@@ -197,16 +195,14 @@ class RoomArea extends React.Component {
     // helper APIs
     // where to display the background
     getScreenScrollPosition() {
-        //console.log(`GetScreenScrollPosition => `);
-        //let e = document.getElementById("roomArea");
         if ((!this.props.app) || (!this.props.app.roomState)) return { x:-1,y:-1};
         let userPos = this.props.app.myUser.position;
         let x = (this.state.scrollSize.x / 2) - userPos.x;
-        if (x > this.state.scrollSize.x / 4) x = this.state.scrollSize.x / 4; // don't scroll so far that half of the viewport is empty.
         let y = (this.state.scrollSize.y / 2) - userPos.y;
+
+        if (x > this.state.scrollSize.x / 4) x = this.state.scrollSize.x / 4; // don't scroll so far that half of the viewport is empty.
         if (y > this.state.scrollSize.y / 4) y = this.state.scrollSize.y / 4;
         let ret = { x, y };
-        //console.log(`GetScreenScrollPosition userpos ${JSON.stringify(userPos)} with scrollarea (${JSON.stringify(this.state.scrollSize)}) = ${JSON.stringify(ret)}`);
         return ret;
     }
 
@@ -229,6 +225,7 @@ class RoomArea extends React.Component {
 
     onClick(e) {
         if ((!this.props.app) || (!this.props.app.roomState)) return false;
+        if (!e.target || e.target.id != "roomArea") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
         const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
         this.props.app.SetUserPosition(roomPos);
     }
@@ -326,9 +323,9 @@ class RootArea extends React.Component {
         this.setState(this.state);
     }
 
-    HandleConnect(midiDevice, userName, color) {
+    HandleConnect(midiDevice, userName, color, statusText) {
         let app = new DigifuApp();
-        app.Connect(midiDevice, userName, color, () => this.OnStateChange(), () => this.OnUserStateChange());
+        app.Connect(midiDevice, userName, color, statusText, () => this.OnStateChange(), () => this.OnUserStateChange());
         this.setState({ app });
     }
 
@@ -356,7 +353,7 @@ class RootArea extends React.Component {
                 <PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
                 <RoomArea app={this.state.app} />
-                <RightArea app={this.state.app} handleConnect={(a, b, c) => this.HandleConnect(a, b, c)} handleDisconnect={() => this.HandleDisconnect()} />
+                <RightArea app={this.state.app} handleConnect={(a, b, c, d) => this.HandleConnect(a, b, c, d)} handleDisconnect={() => this.HandleDisconnect()} />
             </div>
         );
     }

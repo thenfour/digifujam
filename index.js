@@ -127,7 +127,8 @@ let OnClientIdentify = function (clientSocket, clientUserSpec) {
   u.color = clientUserSpec.color;
   u.userID = clientSocket.id;
   u.flairID = 0;
-  u.position = { x: 0, y: 0 };
+  u.statusText = clientUserSpec.statusText;
+  u.position = { x: gRoom.width / 2, y: gRoom.height / 2 };
   u.img = null;
 
   gRoom.users.push(u);
@@ -321,11 +322,14 @@ let OnClientUserState = function (ws, data) {
     return;
   }
 
+  console.log(`OnClientUserState: ${JSON.stringify(data)}`);
+
   // validate & integrate state.
   foundUser.user.name = data.name;
   foundUser.user.color = data.color;
   foundUser.user.img = data.img;
   foundUser.user.flairID = data.flairID;
+  foundUser.user.statusText = data.statusText;
   foundUser.user.position.x = data.position.x;
   foundUser.user.position.y = data.position.y;
 
