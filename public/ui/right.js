@@ -155,7 +155,6 @@ class UserAvatar extends React.Component {
         if (inst) {
             const instStyle = {
                 color: inst.instrument.color,
-                border: "2px solid " + inst.instrument.color
             };
             instMarkup = (
                 <div style={instStyle} className="userAvatarInstrument">playing {inst.instrument.name}</div>
@@ -168,7 +167,7 @@ class UserAvatar extends React.Component {
             left: pos.x,
             top: pos.y,
             color: this.props.user.color,
-            border: "2px solid " + this.props.user.color
+            borderColor: this.props.user.color
         };
 
         return (
