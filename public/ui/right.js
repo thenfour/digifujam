@@ -1,4 +1,13 @@
 
+Array.prototype.removeIf = function(callback) {
+    var i = this.length;
+    while (i--) {
+        if (callback(this[i], i)) {
+            this.splice(i, 1);
+        }
+    }
+};
+
 class TextInputField extends React.Component {
     constructor(props) {
         super(props);
@@ -452,7 +461,7 @@ class RootArea extends React.Component {
 
     HandleConnect = (midiDevice, userName, color, statusText) => {
         let app = new DigifuApp();
-        app.Connect(midiDevice, userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn);
+        app.Connect(midiDevice, userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserLeave);
         this.setState({ app });
     }
 
@@ -462,8 +471,41 @@ class RootArea extends React.Component {
     }
 
     handleNoteOn = (user, instrument, midiNote, velocity) => {
-        console.log("handleNoteOn");
         $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
+
+        this.notesOn[midiNote].push({userID: user.userID, color:user.color});
+
+        let k = $("#key_" + midiNote);
+        if (!k.hasClass('active')) {
+            k.addClass("active");
+        }
+        k.css("background-color", user.color);
+    }
+
+    removeUserNoteRef(userID, midiNote) {
+        let refs = this.notesOn[midiNote];
+        refs.removeIf(r => (r.userID == userID ));
+
+        let k = $("#key_" + midiNote);
+        if (refs.length < 1) {
+            k.removeClass("active");
+            k.css("background-color", "");
+            return;
+        }
+        k.css("background-color", refs[refs.length - 1].color);
+    }
+
+    handleNoteOff = (user, instrument, midiNote) => {
+        let refs = this.notesOn[midiNote];
+        if (refs.length < 1) return;
+
+        this.removeUserNoteRef(user.userID, midiNote);
+    }
+
+    handleUserLeave = (userID) => {
+        this.notesOn.forEach((ref, i) => {
+            this.removeUserNoteRef(userID, i);
+        });
     }
 
     constructor(props) {
@@ -471,6 +513,13 @@ class RootArea extends React.Component {
         this.state = {
             app: null
         };
+
+        this.notesOn = []; // not part of state because it's pure jquery
+
+        // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
+        for (let i = 0; i < 128; ++ i) {
+            this.notesOn.push([]); // empty initially.
+        }
     }
 
     render() {
@@ -492,4 +541,3 @@ class RootArea extends React.Component {
         );
     }
 }
-

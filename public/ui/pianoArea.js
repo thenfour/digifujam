@@ -1,6 +1,6 @@
 
-let keyNote = function(midiNoteValue, name, cssClass) {
-    return {midiNoteValue, name, cssClass};
+let keyNote = function (midiNoteValue, name, cssClass) {
+    return { midiNoteValue, name, cssClass };
 };
 
 const gNotes = [
@@ -99,38 +99,38 @@ const gNotes = [
     keyNote(106, "A#7", "black as"),
     keyNote(107, "B7", "white b"),
     keyNote(108, "C8", "white c"),
-    keyNote(109, "C#8", "black cs"),
-    keyNote(110, "D8", "white d"),
-    keyNote(111, "D#8", "black ds"),
-    keyNote(112, "E8", "white e"),
-    keyNote(113, "F8", "white f"),
-    keyNote(114, "F#8", "black fs"),
-    keyNote(115, "G8", "white g"),
-    keyNote(116, "G#8", "black gs"),
+    // keyNote(109, "C#8", "black cs"),
+    // keyNote(110, "D8", "white d"),
+    // keyNote(111, "D#8", "black ds"),
+    // keyNote(112, "E8", "white e"),
+    // keyNote(113, "F8", "white f"),
+    // keyNote(114, "F#8", "black fs"),
+    // keyNote(115, "G8", "white g"),
+    // keyNote(116, "G#8", "black gs"),
 
-    keyNote(117, "A8", "white a"),
-    keyNote(118, "A#8", "black as"),
-    keyNote(119, "B8", "white b"),
-    keyNote(120, "C9", "white c"),
-    keyNote(121, "C#9", "black cs"),
-    keyNote(122, "D9", "white d"),
-    keyNote(123, "D#9", "black ds"),
-    keyNote(124, "E9", "white e"),
-    keyNote(125, "F9", "white f"),
-    keyNote(126, "F#9", "black fs"),
-    keyNote(127, "G9", "white g"),
+    // keyNote(117, "A8", "white a"),
+    // keyNote(118, "A#8", "black as"),
+    // keyNote(119, "B8", "white b"),
+    // keyNote(120, "C9", "white c"),
+    // keyNote(121, "C#9", "black cs"),
+    // keyNote(122, "D9", "white d"),
+    // keyNote(123, "D#9", "black ds"),
+    // keyNote(124, "E9", "white e"),
+    // keyNote(125, "F9", "white f"),
+    // keyNote(126, "F#9", "black fs"),
+    // keyNote(127, "G9", "white g"),
 ];
 
 class PianoArea extends React.Component {
     render() {
         const keys = gNotes.map(k => (
-            <li key={k.midiNoteValue} className={k.cssClass}></li>
+            <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}></li>
         ));
         return (
             <div id="pianoArea" style={{ gridArea: "pianoArea" }}>
-                <ul className="keyboard">
-                    {keys}
-                </ul>
+                    <ul className="keyboard">
+                        {keys}
+                    </ul>
             </div>
         );
     }
