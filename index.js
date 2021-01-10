@@ -410,6 +410,27 @@ let OnClientNoteOff = function (ws, note) {
   });
 };
 
+let OnClientAllNotesOff = function(ws) {
+  let foundUser = FindUserFromSocket(ws);
+  if (foundUser == null) {
+    console.log(`OnClientAllNotesOff => unknown user`);
+    return;
+  }
+
+  let foundInstrument = FindInstrumentByUserID(foundUser.user.userID);
+  if (foundInstrument == null) {
+    console.log(`=> not controlling an instrument.`);
+    return;
+  }
+
+  //console.log(`all notes off for user ${foundUser.user.userID}`);
+
+  UnidleInstrument(foundUser.user, foundInstrument.instrument);
+
+  // broadcast to all clients except foundUser
+  ws.broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
+};
+
 
 let OnClientPedalUp = function (ws) {
   let foundUser = FindUserFromSocket(ws);
@@ -575,6 +596,10 @@ let OnClientConnect = function (ws) {
 
   ws.on(DF.ClientMessages.NoteOff, data => {
     OnClientNoteOff(ws, data);
+  });
+
+  ws.on(DF.ClientMessages.AllNotesOff, data => {
+    OnClientAllNotesOff(ws);
   });
 
   ws.on(DF.ClientMessages.PedalDown, data => {

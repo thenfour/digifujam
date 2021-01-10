@@ -127,7 +127,6 @@ class DigifuSynth {
 	// call when you have a list of instruments
 	InitInstruments(instrumentSpecs, internalMasterGain) {
 		this.instruments = {};
-		log(`InitInstruments count=${instrumentSpecs.length}`);
 		instrumentSpecs.forEach(s => {
 			let gainer = this.audioCtx.createGain();
 			gainer.gain.value = 1;

@@ -32,6 +32,10 @@ DigifuNet.prototype.SendNoteOff = function (note) {
     this.socket.emit(ClientMessages.NoteOff, note);
 };
 
+DigifuNet.prototype.SendAllNotesOff = function () {
+    this.socket.emit(ClientMessages.AllNotesOff);
+};
+
 DigifuNet.prototype.SendPedalDown = function () {
     this.socket.emit(ClientMessages.PedalDown);
 };
@@ -70,6 +74,7 @@ DigifuNet.prototype.Connect = function (handler) {
     
     this.socket.on(ServerMessages.NoteOn, data => this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity));
     this.socket.on(ServerMessages.NoteOff, data => this.handler.NET_OnNoteOff(data.userID, data.note));
+    this.socket.on(ServerMessages.UserAllNotesOff, data => this.handler.NET_OnUserAllNotesOff(data));
     this.socket.on(ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
 

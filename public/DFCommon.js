@@ -1,5 +1,16 @@
 'use strict';
 
+
+Array.prototype.removeIf = function(callback) {
+    var i = this.length;
+    while (i--) {
+        if (callback(this[i], i)) {
+            this.splice(i, 1);
+        }
+    }
+};
+
+
 const ClientMessages = {
     Identify: "Identify", // user info
     // move. like to the couch, bar, dance floor, stage
@@ -9,6 +20,7 @@ const ClientMessages = {
     Pong: "Pong", // token
     NoteOn: "NoteOn", // note, velocity
     NoteOff: "NoteOff", // note
+    AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
     UserState: "UserState", // name, color, img, x, y, flair, statustext
@@ -24,6 +36,7 @@ const ServerMessages = {
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
     NoteOn: "NoteOn", // user, note, velocity
     NoteOff: "NoteOff", // user, note
+    UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
     UserState: "UserState", // user, name, color, img, x, y, flair, statustext
@@ -32,7 +45,7 @@ const ServerMessages = {
 const ServerSettings = {
     PingIntervalMS: 1000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
-    InstrumentIdleTimeoutMS: (1000 * 10)
+    InstrumentIdleTimeoutMS: (1000 * 60)
 };
 
 const ClientSettings = {

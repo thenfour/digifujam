@@ -1,13 +1,4 @@
 
-Array.prototype.removeIf = function(callback) {
-    var i = this.length;
-    while (i--) {
-        if (callback(this[i], i)) {
-            this.splice(i, 1);
-        }
-    }
-};
-
 class TextInputField extends React.Component {
     constructor(props) {
         super(props);
@@ -28,10 +19,10 @@ class TextInputField extends React.Component {
         if (e.key === 'Enter' && this.props.onEnter) {
             return this.props.onEnter(e);
         }
-      }    
+    }
     render() {
         return (
-            <input type="text" style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)}  onKeyDown={this._handleKeyDown} />
+            <input type="text" style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this._handleKeyDown} />
         );
     }
 }
@@ -70,7 +61,7 @@ class Connection extends React.Component {
 
         this.state = {
             userName: 'user',
-            userColor: `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`,
+            userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
             userStatus: '🎶',
             deviceNameList: [],
             masterGain: 1,// why do i need to keep this here? not sure really.
@@ -83,58 +74,72 @@ class Connection extends React.Component {
         });
     }
 
-    sendUserStateChange = (e) =>  {
+    sendUserStateChange = (e) => {
         this.props.app.SetUserNameColorStatus(this.state.userName, this.state.userColor, this.state.userStatus);
     };
 
     setVolumeVal = (v) => {
         let realVal = parseFloat(v.target.value) / 100;
-        this.setState({masterGain:realVal });
+        this.setState({ masterGain: realVal });
         this.props.app.synth.masterGain = realVal;
     }
 
     setReverbVal = (v) => {
         let realVal = parseFloat(v.target.value) / 100;
-        this.setState({reverbGain:realVal });
+        this.setState({ reverbGain: realVal });
         this.props.app.synth.reverbGain = realVal;
     }
 
     render() {
         let inputList = null;
-        if (!this.props.app) {
+        if (this.props.app && this.props.app.midi) {
             if (this.state.deviceNameList.length == 0) {
-                inputList = (<li>(no midi devices found; can't connect)</li>);
+                inputList = (<li>(no midi devices found)</li>);
             } else {
-                inputList = this.state.deviceNameList.map(i => (
-                <li key={i}>
-                    <button onClick={() => this.props.handleConnect(i, this.state.userName, this.state.userColor, this.state.userStatus)}>Connect with {i}</button>
-                </li>
-            ));
+                inputList = this.state.deviceNameList.map(i => {
+                    if (this.props.app.midi.IsListeningOnDevice(i)) {
+                        return (
+                            <li key={i}>
+                                <button onClick={() => this.props.app.midi.StopListeningOnDevice(i)}>Stop using {i}</button>
+                            </li>
+                        );
+                    } else {
+                        return (
+                            <li key={i}>
+                                <button onClick={() => this.props.app.midi.ListenOnDevice(i)}>Start using {i}</button>
+                            </li>
+                        );
+                    }
+                });
             }
         }
 
+        const connectBtn = this.props.app ? null : (
+            <button onClick={() => this.props.handleConnect(this.state.userName, this.state.userColor, this.state.userStatus)}>Connect</button>
+        );
+
         const disconnectBtn = this.props.app ? (
-            <li><button onClick={this.props.handleDisconnect}>Disconnect</button><div style={{height:20}}>&nbsp;</div></li>
+            <li><button onClick={this.props.handleDisconnect}>Disconnect</button><div style={{ height: 20 }}>&nbsp;</div></li>
         ) : null;
 
         const changeUserStateBtn = this.props.app ? (
             <li><button onClick={this.sendUserStateChange}>update above stuff</button></li>
         ) : null;
 
-        const randomColor = `rgb(${[1,2,3].map(x=>Math.random()*256|0)})`;
+        const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
 
         // volume from 0 to 1(unity) to 2
         const volumeMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                    <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.masterGain * 100} />
-                    <label htmlFor="volume">gain:{this.state.masterGain}</label>
+                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.masterGain * 100} />
+                <label htmlFor="volume">gain:{this.state.masterGain}</label>
             </li>
         ) : null;
 
         const verbMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                    <input type="range" id="verbGain" name="verbGain" min="0" max="100" onChange={this.setReverbVal} value={this.state.reverbGain * 100} />
-                    <label htmlFor="verbGain">reverb:{this.state.reverbGain}</label>
+                <input type="range" id="verbGain" name="verbGain" min="0" max="100" onChange={this.setReverbVal} value={this.state.reverbGain * 100} />
+                <label htmlFor="verbGain">reverb:{this.state.reverbGain}</label>
             </li>
         ) : null;
 
@@ -147,12 +152,13 @@ class Connection extends React.Component {
                         style={{ width: 80 }}
                         value={this.state.userColor}
                         onChange={(val) => this.setState({ userColor: val })}
-                        onEnter={this.sendUserStateChange}  />
-                        <button style={{backgroundColor:this.state.userColor}} onClick={()=>{this.setState({userColor: randomColor})}} >random</button>
+                        onEnter={this.sendUserStateChange} />
+                        <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button>
                     </li>
-                    <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange}  /></li>
-                    {inputList}
+                    <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange} /></li>
                     {changeUserStateBtn}
+                    {connectBtn}
+                    {inputList}
                     {volumeMarkup}
                     {verbMarkup}
                 </ul>
@@ -219,8 +225,14 @@ class InstrumentList extends React.Component {
 
         idle = idle ? "(IDLE) " : "";
 
+        const playBtn = app.midi.IsListeningOnAnyDevice() ? (
+            <button onClick={() => app.RequestInstrument(i.instrumentID)}>Play</button>
+        ) : null;
+
         return (
-            <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.RequestInstrument(i.instrumentID)}>Play</button> {idle} {i.name} {ownedByText}</li>
+            <li key={i.instrumentID} style={{ color: i.color }}>
+                {playBtn}
+                {idle} {i.name} {ownedByText}</li>
         );
     }
     render() {
@@ -229,7 +241,7 @@ class InstrumentList extends React.Component {
         }
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
-            <div className="component" style={{whiteSpace:"nowrap"}}>
+            <div className="component" style={{ whiteSpace: "nowrap" }}>
                 <h2>Unclaimed instruments</h2>
                 <ul>
                     {instruments}
@@ -307,11 +319,11 @@ class UserAvatar extends React.Component {
         const className = "userAvatar userAvatarActivityBump1" + (isMe ? " me" : "");
 
         return (
-                <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
-                    <div>{this.props.user.name}</div>
-                    <div>{this.props.user.statusText}</div>
-                    {instMarkup}
-                </div>
+            <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
+                <div>{this.props.user.name}</div>
+                <div>{this.props.user.statusText}</div>
+                {instMarkup}
+            </div>
         );
     }
 };
@@ -329,7 +341,7 @@ class ChatLog extends React.Component {
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 
             return (
-                <li key={msg.messageID}>{timestamp} <span style={{color: msg.fromUserColor}}>[{msg.fromUserName}]</span> {msg.message}</li>
+                <li key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</li>
             )
         });
 
@@ -347,7 +359,7 @@ class RoomArea extends React.Component {
         console.log(`RoomArea ctor`);
         super(props);
         this.state = {
-            scrollSize:{x:0,y:0},// track DOM scrollHeight / scrollWidth
+            scrollSize: { x: 0, y: 0 },// track DOM scrollHeight / scrollWidth
         };
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
         this.roomToScreenPosition = this.roomToScreenPosition.bind(this);
@@ -356,11 +368,11 @@ class RoomArea extends React.Component {
     // helper APIs
     // where to display the background
     getScreenScrollPosition() {
-        if ((!this.props.app) || (!this.props.app.roomState)) return { x:0,y:0};
+        if ((!this.props.app) || (!this.props.app.roomState)) return { x: 0, y: 0 };
         let userPos = this.props.app.myUser.position;
         let x1 = (this.state.scrollSize.x / 2) - userPos.x;
         let y1 = (this.state.scrollSize.y / 2) - userPos.y;
-        
+
         // that will put you square in the center of the screen every time.
         // now calculate the opposite: where the room is always centered.
         let x2 = (this.state.scrollSize.x / 2) - (this.props.app.roomState.width / 2);
@@ -370,16 +382,16 @@ class RoomArea extends React.Component {
         let t = 0.3;
 
         return {
-            x:((x1 * t) + (x2 * (1-t))),
-            y:((y1 * t) + (y2 * (1-t))),
+            x: ((x1 * t) + (x2 * (1 - t))),
+            y: ((y1 * t) + (y2 * (1 - t))),
         };
     }
 
     screenToRoomPosition(pos) { // takes html on-screen x/y position and translates to "world" coords
-        if ((!this.props.app) || (!this.props.app.roomState)) return { x:0,y:0};
+        if ((!this.props.app) || (!this.props.app.roomState)) return { x: 0, y: 0 };
         let sp = this.getScreenScrollPosition();
         let ret = {
-            x:  pos.x - sp.x,
+            x: pos.x - sp.x,
             y: pos.y - sp.y,
         };
         if (ret.x < 0) { ret.x = 0; }
@@ -404,12 +416,12 @@ class RoomArea extends React.Component {
         const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
         this.props.app.SetUserPosition(roomPos);
     }
-    
+
     updateScrollSize() {
         let e = document.getElementById("roomArea");
         if (e.scrollWidth != this.state.scrollSize.x || e.scrollHeight != this.state.scrollSize.y) {
             this.setState({
-                scrollSize: {x:e.scrollWidth, y:e.scrollHeight}
+                scrollSize: { x: e.scrollWidth, y: e.scrollHeight }
             });
         }
     }
@@ -420,13 +432,13 @@ class RoomArea extends React.Component {
             this.updateScrollSize();
         });
         this.resizeObserver.observe(e);
-      
+
         this.updateScrollSize();
     }
 
     componentWillUnmount() {
         if (this.resizeObserver) {
-          this.resizeObserver.disconnect();
+            this.resizeObserver.disconnect();
         }
     }
 
@@ -435,14 +447,14 @@ class RoomArea extends React.Component {
         let userAvatars = null;
         if (this.props.app && this.props.app.roomState) {
             let scrollPos = this.getScreenScrollPosition();
-    
+
             userAvatars = this.props.app.roomState.users.map(u => (
                 <UserAvatar key={u.userID} app={this.props.app} user={u} displayHelper={() => this} />
             ));
-    
+
             style = {
                 gridArea: "roomArea",
-                backgroundImage:`url(${this.props.app.roomState.img})`,
+                backgroundImage: `url(${this.props.app.roomState.img})`,
                 backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
             };
         }
@@ -494,9 +506,9 @@ class RootArea extends React.Component {
         this.setState(this.state);
     }
 
-    HandleConnect = (midiDevice, userName, color, statusText) => {
+    HandleConnect = (userName, color, statusText) => {
         let app = new DigifuApp();
-        app.Connect(midiDevice, userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserLeave);
+        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave);
         this.setState({ app });
     }
 
@@ -508,7 +520,7 @@ class RootArea extends React.Component {
     handleNoteOn = (user, instrument, midiNote, velocity) => {
         $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
 
-        this.notesOn[midiNote].push({userID: user.userID, color:user.color});
+        this.notesOn[midiNote].push({ userID: user.userID, color: user.color });
 
         let k = $("#key_" + midiNote);
         if (!k.hasClass('active')) {
@@ -519,7 +531,7 @@ class RootArea extends React.Component {
 
     removeUserNoteRef(userID, midiNote) {
         let refs = this.notesOn[midiNote];
-        refs.removeIf(r => (r.userID == userID ));
+        refs.removeIf(r => (r.userID == userID));
 
         let k = $("#key_" + midiNote);
         if (refs.length < 1) {
@@ -537,6 +549,14 @@ class RootArea extends React.Component {
         this.removeUserNoteRef(user.userID, midiNote);
     }
 
+    handleUserAllNotesOff = (user, instrument) => {
+        // remove all refs of this user
+        this.notesOn.forEach((refs, midiNote) => {
+            if (refs.length < 1) return;
+            this.removeUserNoteRef(user.userID, midiNote);
+        });
+    };
+
     handleUserLeave = (userID) => {
         this.notesOn.forEach((ref, i) => {
             this.removeUserNoteRef(userID, i);
@@ -552,7 +572,7 @@ class RootArea extends React.Component {
         this.notesOn = []; // not part of state because it's pure jquery
 
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
-        for (let i = 0; i < 128; ++ i) {
+        for (let i = 0; i < 128; ++i) {
             this.notesOn.push([]); // empty initially.
         }
     }
@@ -560,10 +580,10 @@ class RootArea extends React.Component {
     render() {
         return (
             <div id="grid-container">
-                <div style={{ gridArea: "headerArea", textAlign:'center' }} className="headerArea">
-                    <span style={{float:'left'}}>
+                <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
+                    <span style={{ float: 'left' }}>
                         <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a></span>
-                        <span style={{float:'right'}}>
+                    <span style={{ float: 'right' }}>
                         <a target="_blank" href="https://github.com/thenfour/digifujam">github</a> \\&nbsp;
                         <a target="_blank" href="https://twitter.com/tenfour2">twitter</a>
                     </span>

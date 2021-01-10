@@ -12,7 +12,10 @@
 
 function DigifuMidi() {
   this.EventHandler = null;
+  this.currentlyListeningOn = [];// list of device names we're attached to.
 };
+
+let gMidiAccess = null; // yea global...
 
 DigifuMidi.prototype.OnMIDIMessage = function (message) {
 
@@ -59,34 +62,62 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
   }
 };
 
+DigifuMidi.prototype.ListenOnDevice = function (midiInputDeviceName) {
+  for (var input of gMidiAccess.inputs.values()) {
+    if (input.name == midiInputDeviceName) {
+      log(`attaching to device ${input.name}`);
+      this.currentlyListeningOn.push(midiInputDeviceName);
+      input.onmidimessage = this.OnMIDIMessage.bind(this);
+      this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
+    }
+  }
+};
 
-DigifuMidi.prototype.Init = function (midiInputDeviceName, handler) {
+DigifuMidi.prototype.StopListeningOnDevice = function (midiInputDeviceName) {
+  for (var input of gMidiAccess.inputs.values()) {
+    if (input.name == midiInputDeviceName) {
+      log(`detaching from device ${input.name}`);
+      input.onmidimessage = null;
+      this.currentlyListeningOn.removeIf(o => o == midiInputDeviceName);
+      this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
+    }
+  }
+}
+
+DigifuMidi.prototype.IsListeningOnAnyDevice = function () {
+  return this.currentlyListeningOn.length > 0;
+}
+
+DigifuMidi.prototype.IsListeningOnDevice = function (midiInputDeviceName) {
+  return -1 != this.currentlyListeningOn.findIndex(o => o == midiInputDeviceName);
+};
+
+DigifuMidi.prototype.Init = function (handler) {
   this.EventHandler = handler;
-
-  navigator.requestMIDIAccess()
-    .then((function (midiAccess) {
-      for (var input of midiAccess.inputs.values()) {
-        if (input.name == midiInputDeviceName) {
-          log(`attaching to device ${input.name}`);
-          input.onmidimessage = this.OnMIDIMessage.bind(this);
-        }
-      }
-    }).bind(this), function () {
-      log('Could not access your MIDI devices.');
-    });
+  this.currentlyListeningOn = [];
 };
 
 // returns a promise(array of names)
 let GetMidiInputDeviceList = function () {
+  let formResult = () => {
+    let arr = [];
+    for (var input of gMidiAccess.inputs.values()) {
+      arr.push(input.name);
+    };
+    return arr;
+  };
+
+  if (gMidiAccess) {
+    return new Promise((resolve) => {
+      resolve(formResult());
+    });
+  }
+
   return new Promise((resolve, reject) => {
     navigator.requestMIDIAccess()
       .then(midiAccess => {
-        let arr = [];
-        for (var input of midiAccess.inputs.values()) {
-          arr.push(input.name);
-        };
-        log(JSON.stringify(arr));
-        resolve(arr);
+        gMidiAccess = midiAccess;
+        resolve(formResult());
       }, () => {
         log('Could not access your MIDI devices.');
         reject();

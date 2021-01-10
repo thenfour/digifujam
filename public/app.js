@@ -7,6 +7,7 @@ function DigifuApp() {
     this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
     this.noteOffHandler = null;
     this.handleUserLeave = null;
+    this.handleUserAllNotesOff = null;
 
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
@@ -60,6 +61,13 @@ DigifuApp.prototype.MIDI_NoteOff = function (note) {
     this.net.SendNoteOff(note);
     this.synth.NoteOff(this.myInstrument, note);
     this.noteOffHandler(this.myUser, this.myInstrument, note);
+};
+
+DigifuApp.prototype.MIDI_AllNotesOff = function () {
+    if (this.myInstrument == null) return;
+    this.net.SendAllNotesOff();
+    this.synth.AllNotesOff(this.myInstrument);
+    this.handleUserAllNotesOff(this.myUser, this.myInstrument);
 };
 
 DigifuApp.prototype.MIDI_PedalDown = function () {
@@ -128,7 +136,6 @@ DigifuApp.prototype.NET_OnUserLeave = function (userID) {
 };
 
 DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */, idle) {
-    console.log(`NET_OnInstrumentOwnership inst=${instrumentID} user=${userID} idle=${idle}`);
     let foundInstrument = this.FindInstrumentById(instrumentID);
     if (foundInstrument == null) {
         //log(`  instrument not found...`);
@@ -184,6 +191,20 @@ DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
     this.synth.NoteOff(foundInstrument.instrument, note);
     this.noteOffHandler(foundUser.user, foundInstrument.instrument, note);
 };
+
+DigifuApp.prototype.NET_OnUserAllNotesOff = function (userID) {
+    let foundUser = this.FindUserByID(userID);
+    if (!foundUser) return;
+    let foundInstrument = this.FindInstrumentByUserID(userID);
+    if (foundInstrument == null) {
+        //log(`instrument not found`);
+        return;
+    }
+    this.synth.AllNotesOff(foundInstrument.instrument);
+    this.handleUserAllNotesOff(foundUser.user, foundInstrument.instrument);
+};
+
+
 
 DigifuApp.prototype.NET_OnPedalDown = function (userID) {
     let foundInstrument = this.FindInstrumentByUserID(userID);
@@ -281,7 +302,7 @@ DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
 };
 
 
-DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserLeave) {
+DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave) {
     log("attempting connection... status = " + userStatusText);
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
@@ -292,8 +313,9 @@ DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor
     this.noteOnHandler = noteOnHandler;
     this.noteOffHandler = noteOffHandler;
     this.handleUserLeave = handleUserLeave;
+    this.handleUserAllNotesOff = handleUserAllNotesOff;
 
-    this.midi.Init(midiInputDeviceName, this);
+    this.midi.Init(this);
 
     this.audioCtx = new AudioContext();
     // this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
