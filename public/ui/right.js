@@ -527,11 +527,12 @@ class RootArea extends React.Component {
 
     HandleConnect = (userName, color, statusText) => {
         let app = new DigifuApp();
-        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave);
+        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleDisconnect);
         this.setState({ app });
     }
 
-    HandleDisconnect() {
+    // called BOTH for "the network disconnected us whoopsie" and "user clicked disconnect button".
+    HandleDisconnect = () => {
         this.state.app.Disconnect();
         this.setState({ app: null });
     }

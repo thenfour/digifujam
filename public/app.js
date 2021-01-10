@@ -8,6 +8,7 @@ function DigifuApp() {
     this.noteOffHandler = null;
     this.handleUserLeave = null;
     this.handleUserAllNotesOff = null;
+    this.handleDisconnect = null;
 
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
@@ -263,7 +264,8 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
 }
 
 DigifuApp.prototype.NET_OnDisconnect = function () {
-    log("DigifuApp disconnection happened; stop using this object.");
+    //log("DigifuApp disconnection happened; stop using this object.");
+    this.handleDisconnect();
 }
 
 // --------------------------------------------------------------------------------------
@@ -309,7 +311,7 @@ DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
 };
 
 
-DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave) {
+DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave, disconnectHandler) {
     log("attempting connection... status = " + userStatusText);
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
@@ -321,6 +323,7 @@ DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, sta
     this.noteOffHandler = noteOffHandler;
     this.handleUserLeave = handleUserLeave;
     this.handleUserAllNotesOff = handleUserAllNotesOff;
+    this.handleDisconnect = disconnectHandler;
 
     this.midi.Init(this);
 

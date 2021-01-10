@@ -82,6 +82,6 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.UserChatMessage, data => this.handler.NET_OnUserChatMessage(data));
     this.socket.on(ServerMessages.UserState, data => this.handler.NET_OnUserState(data));
 
-    this.socket.on('disconnect', this.handler.NET_OnDisconnect);
+    this.socket.on('disconnect', () => { this.handler.NET_OnDisconnect(); });
 };
 
