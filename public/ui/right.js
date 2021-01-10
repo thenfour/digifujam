@@ -445,14 +445,6 @@ class ChatArea extends React.Component {
     }
 }
 
-class PianoArea extends React.Component {
-    render() {
-        return (
-            <div id="pianoArea" style={{ gridArea: "pianoArea" }}>piano</div>
-        );
-    }
-}
-
 class RootArea extends React.Component {
     OnStateChange() {
         this.setState(this.state);

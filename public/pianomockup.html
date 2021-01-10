@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        ul.keyboard {
+            box-sizing: border-box;
+            position: relative;
+            width:800px;
+            
+        }
+
+        ul.keyboard li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            position: relative;
+            float: left;
+        }
+
+        ul.keyboard .white {
+            height: 128px;
+            z-index: 1;
+            width: 16px;
+            border: 2px solid #bbb;
+            border-radius: 0 0 4px 4px;
+            border-right: 0;
+        }
+
+        ul.keyboard .white:last-child {
+            border: 2px solid #ccc;
+        }
+
+        ul.keyboard .black {
+            height: 72px;
+            width: 12px;
+            z-index: 2;
+            margin: 0 -16px 0 0;
+            background-color: black;
+        }
+
+        ul.keyboard .cs {
+            margin-left: -7px;
+        }
+
+        ul.keyboard .ds {
+            margin-left: -5px;
+        }
+
+        ul.keyboard .fs {
+            margin-left: -8px;
+        }
+
+        ul.keyboard .gs {
+            margin-left: -6px;
+        }
+
+        ul.keyboard .as {
+            margin-left: -4px;
+        }
+
+        ul.keyboard li.white {
+            box-shadow:
+                0 0 4px #ccc inset,
+                0 0 2px rgba(0, 0, 0, 0.2);
+        }
+
+        ul.keyboard li.black {
+            box-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+</style>
+</head>
+
+<body id="body">
+
+    <ul class="keyboard">
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+        <li class="white c"></li>
+        <li class="black cs"></li>
+        <li class="white d"></li>
+        <li class="black ds"></li>
+        <li class="white e"></li>
+        <li class="white f"></li>
+        <li class="black fs"></li>
+        <li class="white g"></li>
+        <li class="black gs"></li>
+        <li class="white a"></li>
+        <li class="black as"></li>
+        <li class="white b"></li>
+    </ul>
+
+    <script type="text/javascript">
+
+        $(document).ready(() => {
+            $('ul.keyboard li').click(function () {
+                let t = $(this);
+                if (t.hasClass('active')) {
+                    t.removeClass('active');
+                    t.css("background-color", "unset");
+                    t.css("transition", "2s");
+                } else {
+                    t.addClass('active');
+                    t.css("background-color", "red");
+                    t.css("transition", "0");
+                }
+            });
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>
