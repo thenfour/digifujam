@@ -7,10 +7,9 @@ const DF = require('./public/DFCommon')
 app.use(express.static('public'))
 
 let gNextID = 1;
-let generateID = function()
-{
+let generateID = function () {
   let ret = gNextID;
-  gNextID ++;
+  gNextID++;
   return ret;
 }
 
@@ -223,6 +222,7 @@ let OnClientIdentify = function (clientSocket, clientUserSpec) {
   u.name = clientUserSpec.name;
   u.color = clientUserSpec.color;
   u.userID = clientSocket.id;
+  u.lastActivity = new Date();
   u.flairID = 0;
   u.statusText = clientUserSpec.statusText;
   u.position = { x: gRoom.width / 2, y: gRoom.height / 2 };
@@ -257,7 +257,7 @@ let OnClientClose = function (userID) {
     if (inst.controlledByUserID != foundUser.user.userID) return;
     inst.controlledByUserID = null;
     // broadcast this to clients
-    io.emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null });
+    io.emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
   });
 
   // remove user from room.
@@ -270,12 +270,14 @@ let OnClientClose = function (userID) {
 let OnClientInstrumentRequest = function (ws, instrumentID) {
   console.log(`OnClientInstrumentRequest => ${ws.id} ${instrumentID}`)
 
-  // find the user object.
   let foundUser = FindUserFromSocket(ws);
   if (foundUser === null) {
     console.log(`instrument request for unknown user`);
     return;
   }
+
+  // TODO: check if the current instrument is available or its controlling user is considered idle.
+  // etc etc
 
   // release existing instrument.
   // find their instrument.
@@ -286,7 +288,8 @@ let OnClientInstrumentRequest = function (ws, instrumentID) {
     // broadcast instrument change to all clients
     io.emit(DF.ServerMessages.InstrumentOwnership, {
       instrumentID: existingInstrument.instrument.instrumentID,
-      userID: null
+      userID: null,
+      idle: false,
     });
   }
 
@@ -298,11 +301,14 @@ let OnClientInstrumentRequest = function (ws, instrumentID) {
   }
 
   foundInstrument.instrument.controlledByUserID = foundUser.user.userID;
+  foundUser.user.idle = false;
+  foundUser.user.lastActivity = new Date();
 
   // broadcast instrument change to all clients
   io.emit(DF.ServerMessages.InstrumentOwnership, {
     instrumentID: foundInstrument.instrument.instrumentID,
-    userID: foundUser.user.userID
+    userID: foundUser.user.userID,
+    idle: false
   });
 };
 
@@ -328,10 +334,22 @@ let OnClientInstrumentRelease = function (ws) {
   // broadcast instrument change to all clients
   io.emit(DF.ServerMessages.InstrumentOwnership, {
     instrumentID: foundInstrument.instrument.instrumentID,
-    userID: null
+    userID: null,
+    idle: false
   });
 };
 
+let UnidleInstrument = function(user, instrument) {
+  user.lastActivity = new Date();
+  if (instrument.idle) {
+    instrument.idle = false;
+    io.emit(DF.ServerMessages.InstrumentOwnership, {
+      instrumentID: instrument.instrumentID,
+      userID: user.userID,
+      idle: false
+    });
+  }
+}
 
 let OnClientNoteOn = function (ws, note, velocity) {
   // find the user object.
@@ -340,6 +358,15 @@ let OnClientNoteOn = function (ws, note, velocity) {
     console.log(`=> unknown user`);
     return;
   }
+
+  // find user's instrument; if we have broadcast an IDLE for this instrument, now revoke it.
+  let foundInstrument = FindInstrumentByUserID(foundUser.user.userID);
+  if (foundInstrument == null) {
+    console.log(`=> not controlling an instrument.`);
+    return;
+  }
+
+  UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
   // broadcast to all clients except foundUser
   ws.broadcast.emit(DF.ServerMessages.NoteOn, {
@@ -356,6 +383,14 @@ let OnClientNoteOff = function (ws, note) {
     console.log(`OnClientNoteOff => unknown user`);
     return;
   }
+
+  let foundInstrument = FindInstrumentByUserID(foundUser.user.userID);
+  if (foundInstrument == null) {
+    console.log(`=> not controlling an instrument.`);
+    return;
+  }
+
+  UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
   // broadcast to all clients except foundUser
   ws.broadcast.emit(DF.ServerMessages.NoteOff, {
@@ -398,13 +433,15 @@ let OnClientChatMessage = function (ws, msg) {
     return;
   }
 
+  foundUser.user.lastActivity = new Date();
+
   // "TO" user?
   let foundToUser = FindUserByID(msg.toUserID);
   if (foundToUser != null) {
-      msg.toUserID = foundToUser.user.userID;
-      msg.toUserColor = foundToUser.user.color;
-      msg.toUserName = foundToUser.user.name;
-      return;
+    msg.toUserID = foundToUser.user.userID;
+    msg.toUserColor = foundToUser.user.color;
+    msg.toUserName = foundToUser.user.name;
+    return;
   }
 
   // correct stuff.
@@ -456,6 +493,26 @@ let OnClientUserState = function (ws, data) {
 // every X seconds, this is called. here we can just do a generic push to clients and they're expected
 // to return a pong. for now used for timing, and reporting user ping.
 let OnPingInterval = function () {
+
+  // check idleness of users holding instruments.
+  let now = new Date();
+  gRoom.instrumentCloset.forEach(i => {
+    if (!i.controlledByUserID) return;
+    let u = FindUserByID(i.controlledByUserID);
+    if (!u) return;
+    if (u.user.idle) return; // it's already been sent.
+    if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentIdleTimeoutMS) {
+      u.user.idle = true;
+      // user is considered idle on their instrument.
+      console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
+      io.emit(DF.ServerMessages.InstrumentOwnership, {
+        instrumentID: i.instrumentID,
+        userID: u.user.userID,
+        idle: true
+      });
+    }
+  });
+
   var payload = {
     token: (new Date()).toISOString(),
     users: []

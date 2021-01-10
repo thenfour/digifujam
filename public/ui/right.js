@@ -195,15 +195,32 @@ class InstrumentList extends React.Component {
             // );
         }
 
-        let ownedByText = "";
+        let inUse = false;
+        let idle = false;
         if (i.controlledByUserID) {
-            return null;
-            // let u = app.FindUserByID(i.controlledByUserID);
-            // ownedByText = " controlled by " + u.name;
+            inUse = true;
+            let foundUser = this.props.app.FindUserByID(i.controlledByUserID);
+            //console.log(`rendering instrument controlled by ${i.controlledByUserID}`);
+            if (foundUser) {
+                if (foundUser.user.idle) {
+                    // user is taken, but considered idle. so we can show it.
+                    idle = true;
+                    //console.log(` ==> idle = true inst ${i.instrumentID} user ${i.controlledByUserID}`);
+                }
+            }
         }
 
+        let ownedByText = "";
+        if (inUse && !idle) {
+            return null;
+            //let u = this.props.app.FindUserByID(i.controlledByUserID);
+            //ownedByText = " controlled by " + u.name;
+        }
+
+        idle = idle ? "(IDLE) " : "";
+
         return (
-            <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.RequestInstrument(i.instrumentID)}>Request</button> {i.name} {ownedByText}</li>
+            <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.RequestInstrument(i.instrumentID)}>Play</button> {idle} {i.name} {ownedByText}</li>
         );
     }
     render() {
@@ -309,7 +326,7 @@ class ChatLog extends React.Component {
             //if (!user) return null;
 
             const dt = new Date(msg.timestampUTC);
-            const timestamp = `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+            const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 
             return (
                 <li key={msg.messageID}>{timestamp} <span style={{color: msg.fromUserColor}}>[{msg.fromUserName}]</span> {msg.message}</li>
@@ -341,13 +358,21 @@ class RoomArea extends React.Component {
     getScreenScrollPosition() {
         if ((!this.props.app) || (!this.props.app.roomState)) return { x:0,y:0};
         let userPos = this.props.app.myUser.position;
-        let x = (this.state.scrollSize.x / 2) - userPos.x;
-        let y = (this.state.scrollSize.y / 2) - userPos.y;
+        let x1 = (this.state.scrollSize.x / 2) - userPos.x;
+        let y1 = (this.state.scrollSize.y / 2) - userPos.y;
+        
+        // that will put you square in the center of the screen every time.
+        // now calculate the opposite: where the room is always centered.
+        let x2 = (this.state.scrollSize.x / 2) - (this.props.app.roomState.width / 2);
+        let y2 = (this.state.scrollSize.y / 2) - (this.props.app.roomState.height / 2);
 
-        if (x > this.state.scrollSize.x / 4) x = this.state.scrollSize.x / 4; // don't scroll so far that half of the viewport is empty.
-        if (y > this.state.scrollSize.y / 4) y = this.state.scrollSize.y / 4;
-        let ret = { x, y };
-        return ret;
+        // so interpolate between the two. smaller = more fixed.
+        let t = 0.3;
+
+        return {
+            x:((x1 * t) + (x2 * (1-t))),
+            y:((y1 * t) + (y2 * (1-t))),
+        };
     }
 
     screenToRoomPosition(pos) { // takes html on-screen x/y position and translates to "world" coords

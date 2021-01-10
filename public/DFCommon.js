@@ -21,7 +21,7 @@ const ServerMessages = {
     UserLeave: "UserLeave",// UserID
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     Ping: "Ping", // data, { userid, pingMS }
-    InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl]
+    InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
     NoteOn: "NoteOn", // user, note, velocity
     NoteOff: "NoteOff", // user, note
     PedalDown: "PedalDown", // user
@@ -32,6 +32,7 @@ const ServerMessages = {
 const ServerSettings = {
     PingIntervalMS: 1000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
+    InstrumentIdleTimeoutMS: (1000 * 10)
 };
 
 const ClientSettings = {
@@ -42,6 +43,7 @@ class DigifuUser {
     constructor() {
         this.userID = null;
         this.pingMS = 0;
+        this.lastActivity = null; // this allows us to display as idle or release instrument
 
         this.name = "";
         this.statusText = "";
@@ -49,6 +51,7 @@ class DigifuUser {
         this.flairID = null;
         this.position = {x:0,y:0}; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
         this.img = null;
+        this.idle = null; // this gets set when a user's instrument ownership becomes idle
     }
 };
 

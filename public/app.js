@@ -127,29 +127,35 @@ DigifuApp.prototype.NET_OnUserLeave = function (userID) {
     this.handleUserLeave(userID);
 };
 
-DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */) {
-    //log(`NET_OnInstrumentOwnership ${instrumentID} ${userID}`);
-
-    // we might validate the userid but not strictly necessary.
-
+DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */, idle) {
+    console.log(`NET_OnInstrumentOwnership inst=${instrumentID} user=${userID} idle=${idle}`);
     let foundInstrument = this.FindInstrumentById(instrumentID);
     if (foundInstrument == null) {
         //log(`  instrument not found...`);
         return;
     }
 
-    this.synth.AllNotesOff(foundInstrument.instrument);
-
-    if (userID == this.myUser.userID) {
-        this.myInstrument = foundInstrument.instrument;
-    } else {
-        // or if your instrument is being given to someone else, then you no longer have an instrument
-        if (foundInstrument.instrument.controlledByUserID == this.myUser.userID) {
-            this.myInstrument = null;
-        }
+    if (userID) {
+        let foundUser = this.FindUserByID(userID);
+        if (!foundUser) return;
+        foundUser.user.idle = idle;
+        console.log(`set user ${foundUser.user.userID} to IDLE = ${idle}`);
     }
 
-    foundInstrument.instrument.controlledByUserID = userID;
+    if (foundInstrument.instrument.controlledByUserID != userID) {
+        this.synth.AllNotesOff(foundInstrument.instrument);
+
+        if (userID == this.myUser.userID) {
+            this.myInstrument = foundInstrument.instrument;
+        } else {
+            // or if your instrument is being given to someone else, then you no longer have an instrument
+            if (foundInstrument.instrument.controlledByUserID == this.myUser.userID) {
+                this.myInstrument = null;
+            }
+        }
+        foundInstrument.instrument.controlledByUserID = userID;
+    }
+
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
     }
