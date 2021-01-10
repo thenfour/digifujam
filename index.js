@@ -94,6 +94,17 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
   },
 
 
+
+  {
+    name: "Soundtrack",
+    sfinstrumentName: "fx_2_soundtrack",
+    img: "",
+    color: "rgb(0, 128, 128)",
+    gain: 1.0,
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
   {
     sfinstrumentName: "tango_accordion",
     name: "Accordion",
@@ -134,9 +145,9 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
   },
 
   {
-    sfinstrumentName: "pan_flute",
+    sfinstrumentName: "lead_7_fifths",
     gain: 1,
-    name: "Pan flute",
+    name: "Fifths",
     img: "",
     color: "rgb(251, 255, 0)",
     engine: "soundfont",
@@ -146,7 +157,7 @@ gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
   {
     sfinstrumentName: "muted_trumpet",
     gain: 1,
-    name: "Mt. Trumpet",
+    name: "Muted Trumpet",
     img: "",
     color: "rgb(36, 152, 50)",
     engine: "soundfont",
