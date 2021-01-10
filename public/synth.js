@@ -72,6 +72,7 @@ class DigifuSynth {
 	constructor() {
 		this.audioCtx = null;
 		this.instruments = {};
+		this.instrumentGainers = {}; // key = instrumentID
 
 		this.masterEffectsInputNode = null;
 		this.masterReverbGain = null;
@@ -124,23 +125,26 @@ class DigifuSynth {
 	};
 
 	// call when you have a list of instruments
-	InitInstruments(instrumentSpecs) {
+	InitInstruments(instrumentSpecs, internalMasterGain) {
 		this.instruments = {};
 		log(`InitInstruments count=${instrumentSpecs.length}`);
 		instrumentSpecs.forEach(s => {
+			let gainer = this.audioCtx.createGain();
+			gainer.gain.value = 1;
+			if (s.gain) {
+				gainer.gain.value = s.gain;
+			}
+			gainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
+			gainer.connect(this.masterEffectsInputNode);
+			this.instrumentGainers[s.instrumentID] = gainer;
 			switch (s.engine) {
 				case "synth":
-					this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, this.masterEffectsInputNode, s);
+					this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, gainer, s);
 					break;
 				case "soundfont":
-					//let oldDest = this.audioCtx.destination;
-					//this.audioCtx.destination = this.masterEffectsInputNode;
-					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, this.masterEffectsInputNode, s);
-					//this.audioCtx.destination  = oldDest;
+					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, s);
 					break;
 			}
-			//this.instruments[s.instrumentID] = new DigifuSynthInstrument(this.audioCtx, s);
-			//log(`InitInstrument id=${s.instrumentID}, name=${s.name}`);
 		});
 	};
 

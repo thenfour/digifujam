@@ -97,7 +97,7 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
     });
 
     // connect instruments to synth
-    this.synth.InitInstruments(this.roomState.instrumentCloset);
+    this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
 
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
@@ -106,18 +106,18 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
 
 DigifuApp.prototype.NET_OnUserEnter = function (data) {
     this.roomState.users.push(data);
-    log(`NET_OnUserEnter ${JSON.stringify(data)}`);
+    //log(`NET_OnUserEnter ${JSON.stringify(data)}`);
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
     }
 };
 
 DigifuApp.prototype.NET_OnUserLeave = function (userID) {
-    log("NET_OnUserLeave");
+    //log("NET_OnUserLeave");
 
     let foundUser = this.FindUserByID(userID);
     if (foundUser == null) {
-        log(`  user not found...`);
+        //log(`  user not found...`);
         return;
     }
     this.roomState.users.splice(foundUser.index, 1);
@@ -128,13 +128,13 @@ DigifuApp.prototype.NET_OnUserLeave = function (userID) {
 };
 
 DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */) {
-    log(`NET_OnInstrumentOwnership ${instrumentID} ${userID}`);
+    //log(`NET_OnInstrumentOwnership ${instrumentID} ${userID}`);
 
     // we might validate the userid but not strictly necessary.
 
     let foundInstrument = this.FindInstrumentById(instrumentID);
     if (foundInstrument == null) {
-        log(`  instrument not found...`);
+        //log(`  instrument not found...`);
         return;
     }
 
@@ -160,7 +160,7 @@ DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
     if (!foundUser) return;
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
-        log(`instrument not found`);
+        //log(`instrument not found`);
         return;
     }
     this.synth.NoteOn(foundInstrument.instrument, note, velocity);
@@ -172,7 +172,7 @@ DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
     if (!foundUser) return;
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
-        log(`instrument not found`);
+        //log(`instrument not found`);
         return;
     }
     this.synth.NoteOff(foundInstrument.instrument, note);
@@ -182,7 +182,7 @@ DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
 DigifuApp.prototype.NET_OnPedalDown = function (userID) {
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
-        log(`NET_OnPedalDown instrument not found`);
+        //log(`NET_OnPedalDown instrument not found`);
         return;
     }
     this.synth.PedalDown(foundInstrument.instrument);
@@ -191,7 +191,7 @@ DigifuApp.prototype.NET_OnPedalDown = function (userID) {
 DigifuApp.prototype.NET_OnPedalUp = function (userID) {
     let foundInstrument = this.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
-        log(`NET_OnPedalUp instrument not found`);
+        //log(`NET_OnPedalUp instrument not found`);
         return;
     }
     this.synth.PedalUp(foundInstrument.instrument);
@@ -290,10 +290,10 @@ DigifuApp.prototype.Connect = function (midiInputDeviceName, userName, userColor
     this.midi.Init(midiInputDeviceName, this);
 
     this.audioCtx = new AudioContext();
-    this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
-        this.synth.Init(this.audioCtx);
-        this.net.Connect(this);
-    });
+    // this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
+    // });
+    this.synth.Init(this.audioCtx);
+    this.net.Connect(this);
 };
 
 DigifuApp.prototype.Disconnect = function () {

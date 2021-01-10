@@ -19,6 +19,7 @@ let gRoom = new DF.DigifuRoomState();
 gRoom.img = "./room.png";
 gRoom.width = 1000;
 gRoom.height = 741;
+gRoom.internalMasterGain = 2.0;
 
 gRoom.flair = [
   {
@@ -39,67 +40,155 @@ gRoom.flair = [
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 gRoom.instrumentCloset = [ // of type DigifuInstrumentSpec
   {
-    sfinstrumentName: "acoustic_grand_piano",
     name: "Piano",
+    sfinstrumentName: "acoustic_grand_piano",
     img: "",
-    color: "#808080",
-    instrumentID: 6,
-    controlledByUserID: null,
+    color: "rgb(73, 137, 255)",
+    gain: 2.0,
     engine: "soundfont",
     activityDisplay: "keyboard",
   },
   {
-    sfinstrumentName: "marimba",
+    sfinstrumentName: "electric_piano_1",
+    gain: 1,
+    name: "Rhodes",
+    img: "",
+    color: "rgb(121, 255, 255)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+  {
+    sfinstrumentName: "electric_piano_2",
+    gain: 1,
+    name: "FM Keys",
+    img: "",
+    color: "rgb(131, 145, 255)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+  {
+    sfinstrumentName: "acoustic_guitar_steel",
+    gain: 1,
+    name: "Acoustic Guitar",
+    img: "",
+    color: "rgb(208, 144, 0)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+  {
     name: "Marimba",
+    sfinstrumentName: "marimba",
     img: "",
-    color: "#884400",
-    instrumentID: 7,
-    controlledByUserID: null,
-    engine: "soundfont",
-    activityDisplay: "keyboard",
-  },
-  {
-    sfinstrumentName: "tango_accordion",
-    name: "Accordion",
-    img: "",
-    color: "#00ff00",
-    instrumentID: 8,
-    controlledByUserID: null,
-    engine: "soundfont",
-    activityDisplay: "keyboard",
-  },
-  {
-    sfinstrumentName: "electric_bass_finger",
-    name: "Bass guitar",
-    img: "",
-    color: "#0000ff",
-    instrumentID: 11,
-    controlledByUserID: null,
-    engine: "soundfont",
-    activityDisplay: "keyboard",
-  },
-  {
-    sfinstrumentName: "string_ensemble_1",
-    name: "Strings",
-    img: "",
-    color: "#0000ff",
-    instrumentID: 12,
-    controlledByUserID: null,
+    color: "rgb(136, 68, 0)",
+    gain: 1.0,
     engine: "soundfont",
     activityDisplay: "keyboard",
   },
   {
     sfinstrumentName: "",
     name: "Casio vibraphone",
+    gain: 1.0,
     img: "",
-    color: "#808020",
-    instrumentID: 13,
-    controlledByUserID: null,
+    color: "rgb(138, 224, 153)",
     engine: "synth",
     activityDisplay: "keyboard",
-  }
+  },
+
+
+  {
+    sfinstrumentName: "tango_accordion",
+    name: "Accordion",
+    img: "",
+    color: "rgb(220, 0, 152)",
+    gain: .8,
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+  {
+    sfinstrumentName: "string_ensemble_1",
+    gain: .8,
+    name: "Strings",
+    img: "",
+    color: "rgb(255, 0, 0)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
+  {
+    sfinstrumentName: "synth_brass_1",
+    gain: 1,
+    name: "Synth Brass",
+    img: "",
+    color: "rgb(255, 228, 153)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
+  {
+    sfinstrumentName: "alto_sax",
+    gain: 1,
+    name: "Alto sax",
+    img: "",
+    color: "rgb(212, 0, 0)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
+  {
+    sfinstrumentName: "pan_flute",
+    gain: 1,
+    name: "Pan flute",
+    img: "",
+    color: "rgb(251, 255, 0)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
+  {
+    sfinstrumentName: "muted_trumpet",
+    gain: 1,
+    name: "Mt. Trumpet",
+    img: "",
+    color: "rgb(36, 152, 50)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
+
+  {
+    sfinstrumentName: "electric_bass_finger",
+    name: "Bass guitar",
+    gain: .8,
+    img: "",
+    color: "rgb(80, 80, 173)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+  {
+    sfinstrumentName: "acoustic_bass",
+    gain: 1,
+    name: "Double Bass",
+    img: "",
+    color: "rgb(109, 107, 36)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
+
+  {
+    sfinstrumentName: "slap_bass_2",
+    gain: 1,
+    name: "Slap Bass",
+    img: "",
+    color: "rgb(111, 111, 111)",
+    engine: "soundfont",
+    activityDisplay: "keyboard",
+  },
 ];
 
+gRoom.instrumentCloset.forEach(i => {
+  i.instrumentID = generateID();
+  i.controlledByUserID = null;
+});
 
 // returns { user, index } or null.
 let FindUserByID = function (userID) {
@@ -309,8 +398,20 @@ let OnClientChatMessage = function (ws, msg) {
     return;
   }
 
+  // "TO" user?
+  let foundToUser = FindUserByID(msg.toUserID);
+  if (foundToUser != null) {
+      msg.toUserID = foundToUser.user.userID;
+      msg.toUserColor = foundToUser.user.color;
+      msg.toUserName = foundToUser.user.name;
+      return;
+  }
+
   // correct stuff.
   msg.fromUserID = foundUser.user.userID;
+  msg.fromUserColor = foundUser.user.color;
+  msg.fromUserName = foundUser.user.name;
+
   msg.messageID = generateID();
   // validate to user id
   msg.timestampUTC = new Date();

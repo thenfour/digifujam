@@ -203,7 +203,7 @@ class InstrumentList extends React.Component {
         }
 
         return (
-            <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.RequestInstrument(i.instrumentID)}>Request</button> {i.name} (#{i.instrumentID}) {ownedByText}</li>
+            <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.RequestInstrument(i.instrumentID)}>Request</button> {i.name} {ownedByText}</li>
         );
     }
     render() {
@@ -212,7 +212,7 @@ class InstrumentList extends React.Component {
         }
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
-            <div className="component">
+            <div className="component" style={{whiteSpace:"nowrap"}}>
                 <h2>Unclaimed instruments</h2>
                 <ul>
                     {instruments}
@@ -295,14 +295,14 @@ class ChatLog extends React.Component {
         if ((!this.props.app) || (!this.props.app.roomState)) return null;
 
         const lis = this.props.app.roomState.chatLog.map(msg => {
-            const user = this.props.app.FindUserByID(msg.fromUserID);
-            if (!user) return null;
+            //const user = this.props.app.FindUserByID(msg.fromUserID);
+            //if (!user) return null;
 
             const dt = new Date(msg.timestampUTC);
             const timestamp = `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 
             return (
-                <li key={msg.messageID}>{timestamp} <span style={{color: user.user.color}}>[{user.user.name}]</span> {msg.message}</li>
+                <li key={msg.messageID}>{timestamp} <span style={{color: msg.fromUserColor}}>[{msg.fromUserName}]</span> {msg.message}</li>
             )
         });
 

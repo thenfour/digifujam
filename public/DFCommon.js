@@ -62,6 +62,7 @@ class DigifuInstrumentSpec {
         this.controlledByUserID = null;
         this.engine = "synth"; // soundfont, synth
         this.activityDisplay = "none"; // keyboard, drums, none
+        this.gain = 1.0;
     }
 };
 
@@ -70,7 +71,11 @@ class DigifuChatMessage {
         this.messageID = null;
         this.message = null;
         this.fromUserID = null;
+        this.fromUserColor = null; // required because we keep a chat history, so when a user is removed from the list this data would no longer be available. now a client has fallback fields.
+        this.fromUserName = null;
         this.toUserID = null;
+        this.toUserColor = null;
+        this.toUserName = null;
         this.timestampUTC = null;
     }
 };
@@ -87,6 +92,7 @@ class DigifuFlair {
 class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
+        this.internalMasterGain = 1.0;
         this.users = [];
         this.chatLog = []; // ordered by time asc
         this.flair = [];

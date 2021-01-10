@@ -37,14 +37,14 @@ class PolySynthVoice {
             release: 0.07  // seconds until returning back to 0.0
         });
 
-        this.filterEnvelope = ADSRNode(audioCtx, { // https://github.com/velipso/adsrnode
-            attack: 0.0, // seconds until hitting 1.0
-            peak: 6000,
-            decay: 3.0, // seconds until hitting sustain value
-            decayCurve: 6.8, // https://rawgit.com/voidqk/adsrnode/master/demo.html
-            sustain: 0.0, // sustain value
-            release: 1  // seconds until returning back to 0.0
-        });
+        // this.filterEnvelope = ADSRNode(audioCtx, { // https://github.com/velipso/adsrnode
+        //     attack: 0.0, // seconds until hitting 1.0
+        //     peak: 6000,
+        //     decay: 3.0, // seconds until hitting sustain value
+        //     decayCurve: 6.8, // https://rawgit.com/voidqk/adsrnode/master/demo.html
+        //     sustain: 0.0, // sustain value
+        //     release: 1  // seconds until returning back to 0.0
+        // });
 
         this.gain = audioCtx.createGain();
         this.gain.gain.value = 0; // a base value before controlled by adsr
@@ -68,7 +68,7 @@ class PolySynthVoice {
         this.filter.connect(destination);
 
         // init node params
-        this.filterEnvelope.start();//gain.value = 0.0;  // Mute the sound
+        //this.filterEnvelope.start();//gain.value = 0.0;  // Mute the sound
         this.gainEnvelope.start();//gain.value = 0.0;  // Mute the sound
 
         this.oscillator1.start(0);  // Go ahead and start up the oscillator
@@ -106,7 +106,7 @@ class PolySynthVoice {
         this.oscillator2.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote), 0);
         this.oscillator3.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote - this.detune), 0);
 
-        this.filterEnvelope.trigger();
+        //this.filterEnvelope.trigger();
         this.gainEnvelope.trigger();
     }
 
@@ -118,12 +118,12 @@ class PolySynthVoice {
         this.timestamp = null;
         this.midiNote = 0;
 
-        this.filterEnvelope.release();
+        //this.filterEnvelope.release();
         this.gainEnvelope.release();
     }
 
     panic() {
-        this.filterEnvelope.reset();
+        //this.filterEnvelope.reset();
         this.gainEnvelope.reset();
         this.midiNote = 0;
         this.timestamp = null;
