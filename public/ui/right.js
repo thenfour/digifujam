@@ -227,9 +227,19 @@ class RightArea extends React.Component {
     render() {
         return (
             <div id="rightArea" style={{ gridArea: "rightArea" }}>
+                <UserList app={this.props.app} />
+            </div>
+        );
+    }
+}
+
+class LeftArea extends React.Component {
+
+    render() {
+        return (
+            <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 <Connection app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
                 <InstrumentList app={this.props.app} />
-                <UserList app={this.props.app} />
             </div>
         );
     }
@@ -537,6 +547,7 @@ class RootArea extends React.Component {
                 <ChatArea app={this.state.app} />
                 <RoomArea app={this.state.app} />
                 <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
+                <LeftArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
             </div>
         );
     }
