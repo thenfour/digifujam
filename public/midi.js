@@ -92,6 +92,11 @@ DigifuMidi.prototype.IsListeningOnDevice = function (midiInputDeviceName) {
   return -1 != this.currentlyListeningOn.findIndex(o => o == midiInputDeviceName);
 };
 
+DigifuMidi.prototype.AnyMidiDevicesAvailable = function () {
+  if (!gMidiAccess) return false;
+  return gMidiAccess.inputs.size > 0;
+};
+
 DigifuMidi.prototype.Init = function (handler) {
   this.EventHandler = handler;
   this.currentlyListeningOn = [];

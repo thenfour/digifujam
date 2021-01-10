@@ -63,6 +63,7 @@ DigifuApp.prototype.MIDI_NoteOff = function (note) {
     this.noteOffHandler(this.myUser, this.myInstrument, note);
 };
 
+// sent when midi devices change
 DigifuApp.prototype.MIDI_AllNotesOff = function () {
     if (this.myInstrument == null) return;
     this.net.SendAllNotesOff();
@@ -142,15 +143,21 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
         return;
     }
 
+    let foundOldUser = null;
     if (userID) {
-        let foundUser = this.FindUserByID(userID);
-        if (!foundUser) return;
-        foundUser.user.idle = idle;
-        console.log(`set user ${foundUser.user.userID} to IDLE = ${idle}`);
+        foundOldUser = this.FindUserByID(userID);
+        if (!foundOldUser) return;
+        foundOldUser.user.idle = idle;
+        console.log(`set user ${foundOldUser.user.userID} to IDLE = ${idle}`);
     }
 
     if (foundInstrument.instrument.controlledByUserID != userID) {
+
+        // do all notes off when instrument changes for safety.
         this.synth.AllNotesOff(foundInstrument.instrument);
+        if (foundOldUser) {
+            this.handleUserAllNotesOff(foundOldUser.user, foundInstrument.instrument);
+        }
 
         if (userID == this.myUser.userID) {
             this.myInstrument = foundInstrument.instrument;
