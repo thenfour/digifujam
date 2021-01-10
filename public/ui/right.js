@@ -66,6 +66,7 @@ class Connection extends React.Component {
             deviceNameList: [],
             masterGain: 1,// why do i need to keep this here? not sure really.
             reverbGain: 0.2,
+            isShown: true,
         };
 
         GetMidiInputDeviceList().then(inputs => {
@@ -89,6 +90,10 @@ class Connection extends React.Component {
         this.setState({ reverbGain: realVal });
         this.props.app.synth.reverbGain = realVal;
     }
+
+    handleToggleShownClick = () => {
+        this.setState({ isShown: !this.state.isShown });
+    };
 
     render() {
         let inputList = null;
@@ -143,19 +148,23 @@ class Connection extends React.Component {
             </li>
         ) : null;
 
+        const ulStyle = this.state.isShown ? { display:  'block'} : {display: "none"};
+        const arrowText = this.state.isShown ? '⯆' : '⯈';
+
         return (
             <div className="component">
-                <ul>
+                <h2 style={{cursor:'pointer'}} onClick={this.handleToggleShownClick}>Connect {arrowText}</h2>
+                <ul style={ulStyle}>
                     {disconnectBtn}
-                    <li>name:<TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /></li>
-                    <li>color:<TextInputFieldExternalState
+                    <li><TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /> name</li>
+                    <li><TextInputFieldExternalState
                         style={{ width: 80 }}
                         value={this.state.userColor}
                         onChange={(val) => this.setState({ userColor: val })}
                         onEnter={this.sendUserStateChange} />
-                        <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button>
+                        <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>
-                    <li>status:<TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange} /></li>
+                    <li><TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange} /> status</li>
                     {changeUserStateBtn}
                     {connectBtn}
                     {inputList}
@@ -353,6 +362,14 @@ class ChatLog extends React.Component {
     }
 };
 
+class AnnouncementArea extends React.Component {
+    render() {
+        if (!this.props.app || !this.props.app.roomState) return null;
+        return (
+            <div id="announcementArea">{this.props.app.roomState.announcement}</div>
+        );
+    }
+};
 
 class RoomArea extends React.Component {
     constructor(props) {
@@ -463,6 +480,7 @@ class RoomArea extends React.Component {
             <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {userAvatars}
                 <ChatLog app={this.props.app} />
+                <AnnouncementArea app={this.props.app} />
             </div>
         );
     }
@@ -492,6 +510,7 @@ class ChatArea extends React.Component {
     }
 
     render() {
+        if (!this.props.app) return null;
         return (
             <div id="chatArea" style={{ gridArea: "chatArea" }}>
                 chat <input type="text" value={this.state.value} onChange={this.handleChange} onKeyDown={this.handleKeyDown} />

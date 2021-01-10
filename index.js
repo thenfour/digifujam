@@ -19,6 +19,7 @@ gRoom.img = "./room.png";
 gRoom.width = 1000;
 gRoom.height = 741;
 gRoom.internalMasterGain = 2.0;
+gRoom.announcement = "** Currently looking for a volunteer to create a room background **";
 
 gRoom.flair = [
   {

@@ -14,10 +14,40 @@ body {
     padding: 0;
     margin: 0;
 }
-
+*:focus {
+    outline: none;
+}
 ul {
     list-style: none;
     padding: 10px;
+    margin:0;
+}
+
+input[type="text" i] {
+    background-color: #444;
+    border: 2px solid #055;
+    color: #0cc;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: normal;
+    font-size: small;
+    margin: 2px;
+}
+input[type="text" i]:focus {
+    border: 2px solid #0cc;
+}
+
+button {
+    background-color: #444;
+    border: 3px solid #888;
+    color: #0bb;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: small;
+    margin: 2px;
+    border-radius: 4px;
+}
+button:focus {
+    border: 3px solid #0ff;
 }
 
 /* https://grid.layoutit.com/ */
@@ -59,7 +89,7 @@ ul {
 
 .component>h2 {
     background-color: #044;
-    padding: 5px;
+    padding-left: 5px;
     margin: 0;
     border: 0;
     font-size: larger;
@@ -76,7 +106,7 @@ ul {
 .headerArea a:link,
 .headerArea a:visited,
 .headerArea a {
-    color: #066;
+    color: #9a6c7b;
 }
 
 @keyframes avatarBump1 {
@@ -137,12 +167,17 @@ ul {
 
 #chatArea {
     padding: 10px;
+    display:flex;
+}
+
+#chatArea input {
+    flex-grow:1;
 }
 
 .chatLog {
     position: absolute;
     bottom: 0;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;/*stroke*/
     color: #aaa;
     pointer-events: none;            
 }
@@ -157,4 +192,11 @@ ul {
     justify-content: center;
 }
 
+
+#announcementArea {
+    color: #be62ec;
+    text-align: center;
+    background-color: #00000087;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
 
