@@ -210,6 +210,15 @@ DigifuApp.prototype.NET_OnPing = function (token, users) {
     users.forEach(u => {
         this.roomState.FindUserByID(u.userID).user.pingMS = u.pingMS;
     });
+
+    // pings are a great time to do some cleanup.
+
+    // prune chat.
+    let now = new Date();
+    this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
+        return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
+    });
+
     this.stateChangeHandler();
 };
 

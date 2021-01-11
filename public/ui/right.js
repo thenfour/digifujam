@@ -1,4 +1,5 @@
 
+
 class TextInputField extends React.Component {
     constructor(props) {
         super(props);
@@ -133,7 +134,7 @@ class Connection extends React.Component {
         ) : null;
 
         const changeUserStateBtn = this.props.app ? (
-            <li style={{marginBottom:10}}><button onClick={this.sendUserStateChange}>update above stuff</button></li>
+            <li style={{ marginBottom: 10 }}><button onClick={this.sendUserStateChange}>update above stuff</button></li>
         ) : null;
 
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
@@ -368,7 +369,7 @@ class AnnouncementArea extends React.Component {
         if (!this.props.app || !this.props.app.roomState) return null;
 
         return (
-            <div id="announcementArea" dangerouslySetInnerHTML={{__html: this.props.app.roomState.announcementHTML}}></div>
+            <div id="announcementArea" dangerouslySetInnerHTML={{ __html: this.props.app.roomState.announcementHTML }}></div>
         );
     }
 };
@@ -553,9 +554,14 @@ class RootArea extends React.Component {
             this.notesOn.push([]); // empty initially.
         }
 
-        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleDisconnect);
+        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected);
         this.setState({ app });
     }
+
+    HandleNetworkDisconnected = () => {
+        // actually at this point socket.io will attempt to reconnect again and when it does, 
+        // the flow of events just replays regarding handshake and welcome msg etc. so nothing needs to be done.
+    };
 
     // called BOTH for "the network disconnected us whoopsie" and "user clicked disconnect button".
     HandleDisconnect = () => {
@@ -624,11 +630,17 @@ class RootArea extends React.Component {
     }
 
     render() {
+        let title = "(not connected)";
+        if (this.state.app && this.state.app.roomState) {
+            title = this.state.app.roomState.roomTitle + " jam";
+        }
+        document.title = title;
+        const url = window.location.href.split('?')[0];
         return (
             <div id="grid-container">
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span style={{ float: 'left' }}>
-                        <a target="_blank" href="https://digifujam.eu.openode.io/">digifujam.eu.openode.io/</a></span>
+                        <a target="_blank" href="{url}">{url}</a></span>
                     <span style={{ float: 'right' }}>
                         <a target="_blank" href="https://github.com/thenfour/digifujam">github</a> \\&nbsp;
                         <a target="_blank" href="https://twitter.com/tenfour2">twitter</a>
