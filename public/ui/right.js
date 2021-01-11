@@ -119,6 +119,11 @@ class Connection extends React.Component {
             }
         }
 
+        let connectCaption = "Connect";
+        if (this.props.app && this.props.app.roomState && this.props.app.roomState.roomTitle.length) {
+            connectCaption = this.props.app.roomState.roomTitle;
+        }
+
         const connectBtn = this.props.app ? null : (
             <button onClick={() => this.props.handleConnect(this.state.userName, this.state.userColor, this.state.userStatus)}>Connect</button>
         );
@@ -128,7 +133,7 @@ class Connection extends React.Component {
         ) : null;
 
         const changeUserStateBtn = this.props.app ? (
-            <li><button onClick={this.sendUserStateChange}>update above stuff</button></li>
+            <li style={{marginBottom:10}}><button onClick={this.sendUserStateChange}>update above stuff</button></li>
         ) : null;
 
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
@@ -148,12 +153,12 @@ class Connection extends React.Component {
             </li>
         ) : null;
 
-        const ulStyle = this.state.isShown ? { display:  'block'} : {display: "none"};
+        const ulStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const arrowText = this.state.isShown ? '⯆' : '⯈';
 
         return (
             <div className="component">
-                <h2 style={{cursor:'pointer'}} onClick={this.handleToggleShownClick}>Connect {arrowText}</h2>
+                <h2 style={{ cursor: 'pointer' }} onClick={this.handleToggleShownClick}>{connectCaption} {arrowText}</h2>
                 <ul style={ulStyle}>
                     {disconnectBtn}
                     <li><TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /> name</li>
@@ -214,7 +219,7 @@ class InstrumentList extends React.Component {
         let idle = false;
         if (i.controlledByUserID) {
             inUse = true;
-            let foundUser = this.props.app.FindUserByID(i.controlledByUserID);
+            let foundUser = this.props.app.roomState.FindUserByID(i.controlledByUserID);
             //console.log(`rendering instrument controlled by ${i.controlledByUserID}`);
             if (foundUser) {
                 if (foundUser.user.idle) {
@@ -228,8 +233,6 @@ class InstrumentList extends React.Component {
         let ownedByText = "";
         if (inUse && !idle) {
             return null;
-            //let u = this.props.app.FindUserByID(i.controlledByUserID);
-            //ownedByText = " controlled by " + u.name;
         }
 
         idle = idle ? "(IDLE) " : "";
@@ -297,7 +300,7 @@ class UserAvatar extends React.Component {
         console.assert(this.props.displayHelper);
         const isMe = (this.props.app.myUser.userID == this.props.user.userID);
 
-        const inst = this.props.app.FindInstrumentByUserID(this.props.user.userID);
+        const inst = this.props.app.roomState.FindInstrumentByUserID(this.props.user.userID);
         let instMarkup = null;
         if (inst) {
             const instStyle = {
@@ -343,8 +346,6 @@ class ChatLog extends React.Component {
         if ((!this.props.app) || (!this.props.app.roomState)) return null;
 
         const lis = this.props.app.roomState.chatLog.map(msg => {
-            //const user = this.props.app.FindUserByID(msg.fromUserID);
-            //if (!user) return null;
 
             const dt = new Date(msg.timestampUTC);
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
@@ -365,8 +366,24 @@ class ChatLog extends React.Component {
 class AnnouncementArea extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
+
         return (
-            <div id="announcementArea">{this.props.app.roomState.announcement}</div>
+            <div id="announcementArea" dangerouslySetInnerHTML={{__html: this.props.app.roomState.announcementHTML}}></div>
+        );
+    }
+};
+
+class RoomAlertArea extends React.Component {
+    render() {
+        if (!this.props.app || !this.props.app.roomState) return null;
+
+        let roomAlertText = "";
+        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice()) roomAlertText = "Select a MIDI input device to start playing";
+
+        if (roomAlertText.length < 1) return null;
+
+        return (
+            <div id="roomAlertArea"><span>{roomAlertText}</span></div>
         );
     }
 };
@@ -481,6 +498,7 @@ class RoomArea extends React.Component {
                 {userAvatars}
                 <ChatLog app={this.props.app} />
                 <AnnouncementArea app={this.props.app} />
+                <RoomAlertArea app={this.props.app} />
             </div>
         );
     }

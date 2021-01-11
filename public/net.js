@@ -22,10 +22,10 @@ DigifuNet.prototype.SendReleaseInstrument = function () {
 };
 
 DigifuNet.prototype.SendNoteOn = function (note, velocity) {
-    this.socket.emit(ClientMessages.NoteOn,{
-            note,
-            velocity
-        });
+    this.socket.emit(ClientMessages.NoteOn, {
+        note,
+        velocity
+    });
 };
 
 DigifuNet.prototype.SendNoteOff = function (note) {
@@ -64,14 +64,18 @@ DigifuNet.prototype.Disconnect = function () {
 
 DigifuNet.prototype.Connect = function (handler) {
     this.handler = handler;
-    this.socket = io();
+    this.socket = io({
+        query: {
+          jamroom: window.location.pathname
+        }
+      });
 
     this.socket.on(ServerMessages.PleaseIdentify, (data) => this.handler.NET_OnPleaseIdentify(data));
     this.socket.on(ServerMessages.Welcome, (data) => this.handler.NET_OnWelcome(data));
     this.socket.on(ServerMessages.UserEnter, (data) => this.handler.NET_OnUserEnter(data));
     this.socket.on(ServerMessages.UserLeave, data => this.handler.NET_OnUserLeave(data));
     this.socket.on(ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID, data.idle));
-    
+
     this.socket.on(ServerMessages.NoteOn, data => this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity));
     this.socket.on(ServerMessages.NoteOff, data => this.handler.NET_OnNoteOff(data.userID, data.note));
     this.socket.on(ServerMessages.UserAllNotesOff, data => this.handler.NET_OnUserAllNotesOff(data));

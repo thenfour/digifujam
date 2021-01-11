@@ -1,7 +1,7 @@
 'use strict';
 
 
-Array.prototype.removeIf = function(callback) {
+Array.prototype.removeIf = function (callback) {
     var i = this.length;
     while (i--) {
         if (callback(this[i], i)) {
@@ -23,7 +23,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    UserState: "UserState", // name, color, img, x, y, flair, statustext
+    UserState: "UserState", // name, color, img, x, y, statustext
 };
 
 const ServerMessages = {
@@ -39,7 +39,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    UserState: "UserState", // user, name, color, img, x, y, flair, statustext
+    UserState: "UserState", // user, name, color, img, x, y, statustext
 };
 
 const ServerSettings = {
@@ -61,11 +61,12 @@ class DigifuUser {
         this.name = "";
         this.statusText = "";
         this.color = "";
-        this.flairID = null;
-        this.position = {x:0,y:0}; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
+        this.position = { x: 0, y: 0 }; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
         this.img = null;
         this.idle = null; // this gets set when a user's instrument ownership becomes idle
     }
+
+    thaw() { /* no child objects to thaw. */ }
 };
 
 class DigifuInstrumentSpec {
@@ -80,6 +81,8 @@ class DigifuInstrumentSpec {
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
     }
+
+    thaw() { /* no child objects to thaw. */ }
 };
 
 class DigifuChatMessage {
@@ -94,27 +97,68 @@ class DigifuChatMessage {
         this.toUserName = null;
         this.timestampUTC = null;
     }
-};
 
-class DigifuFlair {
-    constructor() {
-        this.name = null;
-        this.flairID = null;
-        this.img = null;
-        this.text = null;
-    }
+    thaw() { /* no child objects to thaw. */ }
 };
 
 class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
-        this.internalMasterGain = 1.0;
         this.users = [];
         this.chatLog = []; // ordered by time asc
-        this.flair = [];
+        this.internalMasterGain = 1.0;
         this.img = null;
         this.width = 16;
         this.height = 9;
+        this.roomTitle = "";
+        this.roomCSS = "";
+    }
+
+    // call after Object.assign() to this object, to handle child objects.
+    thaw() {
+        this.instrumentCloset = this.instrumentCloset.map(o => {
+            let n = Object.assign(new DigifuInstrumentSpec(), o);
+            n.thaw();
+            return n;
+        });
+        this.chatLog = this.chatLog.map(o => {
+            let n = Object.assign(new DigifuChatMessage(), o);
+            n.thaw();
+            return n;
+        });
+        this.users = this.users.map(o => {
+            let n = Object.assign(new DigifuUser(), o);
+            n.thaw();
+            return n;
+        });
+    }
+
+    // returns { user, index } or null.
+    FindUserByID(userID) {
+        let idx = this.users.findIndex(user => user.userID == userID);
+        if (idx == -1) return null;
+        return { user: this.users[idx], index: idx };
+    };
+
+    // returns { instrument, index } or null.
+    FindInstrumentById(instrumentID) {
+        let idx = this.instrumentCloset.findIndex(instrument => instrument.instrumentID == instrumentID);
+        if (idx == -1) return null;
+        return { instrument: this.instrumentCloset[idx], index: idx };
+    };
+
+    // returns { instrument, index } or null.
+    FindInstrumentByUserID(userID) {
+        let idx = this.instrumentCloset.findIndex(instrument => instrument.controlledByUserID == userID);
+        if (idx == -1) return null;
+        return { instrument: this.instrumentCloset[idx], index: idx };
+    };
+
+    static FromJSONData(data) {
+        // thaw into live classes
+        let ret = Object.assign(new DigifuRoomState(), data);
+        ret.thaw();
+        return ret;
     }
 };
 
@@ -125,7 +169,6 @@ module.exports = {
     DigifuInstrumentSpec,
     DigifuChatMessage,
     DigifuRoomState,
-    DigifuFlair,
     ServerSettings,
     ClientSettings
 };

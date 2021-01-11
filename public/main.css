@@ -200,3 +200,20 @@ button:focus {
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
+@keyframes blinker3 { to { opacity: 0; } }
+
+#roomAlertArea {
+    color: #ff0000;
+    text-align: center;
+    background-color: #00000087;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+#roomAlertArea > span {
+    animation: blinker3 1s ease-in-out infinite alternate;     
+}
+

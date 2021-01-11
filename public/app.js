@@ -18,37 +18,6 @@ function DigifuApp() {
     this.net = new DigifuNet();
 };
 
-// returns { instrument, index }
-DigifuApp.prototype.FindInstrumentById = function (instrumentID) {
-    let ret = null;
-    this.roomState.instrumentCloset.forEach(function (instrument, index) {
-        if (instrument.instrumentID != instrumentID) return;
-        ret = { instrument, index };
-    });
-    return ret;
-};
-
-// returns { instrument, index }
-DigifuApp.prototype.FindInstrumentByUserID = function (userID) {
-    let ret = null;
-    this.roomState.instrumentCloset.forEach(function (instrument, index) {
-        if (instrument.controlledByUserID != userID) return;
-        ret = { instrument, index };
-    });
-    return ret;
-};
-
-// returns { instrument, index }
-DigifuApp.prototype.FindUserByID = function (userID) {
-    let ret = null;
-    this.roomState.users.forEach(function (user, index) {
-        if (user.userID != userID) return;
-        ret = { user, index };
-    });
-    return ret;
-};
-
-
 // MIDI HANDLERS --------------------------------------------------------------------------------------
 DigifuApp.prototype.MIDI_NoteOn = function (note, velocity) {
     if (this.myInstrument == null) return;
@@ -98,16 +67,19 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
     // {"yourUserID":1,
     // "roomState":{"InstrumentCloset":[{"Name":"piano","Color":"#884400","InstrumentID":69,"ControlledByUserID":null},{"Name":"marimba","Color":"#00ff00","InstrumentID":420,"ControlledByUserID":null}],"Users":[{"Name":"tenfour","Color":"#ff00ff","UserID":1}]}
     let myUserID = data.yourUserID;
-    this.roomState = data.roomState;
+
+    this.roomState = DigifuRoomState.FromJSONData(data.roomState);
 
     // find "you"
-    this.roomState.users.forEach(u => {
-        if (u.userID !== myUserID) return;
-        this.myUser = u;
-    });
+    this.myUser = this.roomState.FindUserByID(myUserID).user;
 
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
+
+    // load room CSS
+    if (this.roomState.roomCSS) {
+        $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomCSS + "' type='text/css' />");
+    }
 
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
@@ -125,7 +97,7 @@ DigifuApp.prototype.NET_OnUserEnter = function (data) {
 DigifuApp.prototype.NET_OnUserLeave = function (userID) {
     //log("NET_OnUserLeave");
 
-    let foundUser = this.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByID(userID);
     if (foundUser == null) {
         //log(`  user not found...`);
         return;
@@ -138,7 +110,7 @@ DigifuApp.prototype.NET_OnUserLeave = function (userID) {
 };
 
 DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */, idle) {
-    let foundInstrument = this.FindInstrumentById(instrumentID);
+    let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
     if (foundInstrument == null) {
         //log(`  instrument not found...`);
         return;
@@ -146,7 +118,7 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
 
     let foundOldUser = null;
     if (userID) {
-        foundOldUser = this.FindUserByID(userID);
+        foundOldUser = this.roomState.FindUserByID(userID);
         if (!foundOldUser) return;
         foundOldUser.user.idle = idle;
         console.log(`set user ${foundOldUser.user.userID} to IDLE = ${idle}`);
@@ -177,9 +149,9 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
 };
 
 DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
-    let foundUser = this.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByID(userID);
     if (!foundUser) return;
-    let foundInstrument = this.FindInstrumentByUserID(userID);
+    let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         //log(`instrument not found`);
         return;
@@ -189,9 +161,9 @@ DigifuApp.prototype.NET_OnNoteOn = function (userID, note, velocity) {
 };
 
 DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
-    let foundUser = this.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByID(userID);
     if (!foundUser) return;
-    let foundInstrument = this.FindInstrumentByUserID(userID);
+    let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         //log(`instrument not found`);
         return;
@@ -201,9 +173,9 @@ DigifuApp.prototype.NET_OnNoteOff = function (userID, note) {
 };
 
 DigifuApp.prototype.NET_OnUserAllNotesOff = function (userID) {
-    let foundUser = this.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByID(userID);
     if (!foundUser) return;
-    let foundInstrument = this.FindInstrumentByUserID(userID);
+    let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         //log(`instrument not found`);
         return;
@@ -215,7 +187,7 @@ DigifuApp.prototype.NET_OnUserAllNotesOff = function (userID) {
 
 
 DigifuApp.prototype.NET_OnPedalDown = function (userID) {
-    let foundInstrument = this.FindInstrumentByUserID(userID);
+    let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         //log(`NET_OnPedalDown instrument not found`);
         return;
@@ -224,7 +196,7 @@ DigifuApp.prototype.NET_OnPedalDown = function (userID) {
 };
 
 DigifuApp.prototype.NET_OnPedalUp = function (userID) {
-    let foundInstrument = this.FindInstrumentByUserID(userID);
+    let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
     if (foundInstrument == null) {
         //log(`NET_OnPedalUp instrument not found`);
         return;
@@ -236,7 +208,7 @@ DigifuApp.prototype.NET_OnPing = function (token, users) {
     this.net.SendPong(token);
     if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
     users.forEach(u => {
-        this.FindUserByID(u.userID).user.pingMS = u.pingMS;
+        this.roomState.FindUserByID(u.userID).user.pingMS = u.pingMS;
     });
     this.stateChangeHandler();
 };
@@ -253,9 +225,8 @@ DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
 }
 
 DigifuApp.prototype.NET_OnUserState = function (data) {
-    let u = this.FindUserByID(data.userID);
+    let u = this.roomState.FindUserByID(data.userID);
     u.user.name = data.name;
-    u.user.flairID = data.flairID;
     u.user.statusText = data.statusText;
     u.user.color = data.color;
     u.user.img = data.img;
@@ -293,7 +264,6 @@ DigifuApp.prototype.SetUserPosition = function (pos) {
         name: this.myUser.name,
         color: this.myUser.color,
         img: this.myUser.img,
-        flairID: this.myUser.flairID,
         statusText: this.myUser.statusText,
         position: pos
     });
@@ -304,7 +274,6 @@ DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
         name: name,
         color: color,
         img: this.myUser.img,
-        flairID: this.myUser.flairID,
         statusText: status,
         position: this.myUser.position
     });
@@ -341,11 +310,5 @@ DigifuApp.prototype.Disconnect = function () {
     this.roomState = null;
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
 };
-
-
-
-
-
-
 
 

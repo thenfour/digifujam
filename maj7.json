@@ -1,0 +1,157 @@
+{
+  "img": "./room.png",
+  "roomTitle": "#maj7",
+  "roomCSS": "maj7.css",
+  "width": 1000,
+  "height": 741,
+  "internalMasterGain": 2.0,
+  "announcementHTML": "Welcome to #maj7 jam session<br />** Currently looking for a volunteer to create a room background **",
+  "users": [],
+  "chatLog": [],
+  "instrumentCloset": [
+    {
+      "name": "Piano",
+      "sfinstrumentName": "acoustic_grand_piano",
+      "img": "",
+      "color": "rgb(73, 137, 255)",
+      "gain": 2.0,
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "electric_piano_1",
+      "gain": 1,
+      "name": "Rhodes",
+      "img": "",
+      "color": "rgb(121, 255, 255)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "electric_piano_2",
+      "gain": 1,
+      "name": "FM Keys",
+      "img": "",
+      "color": "rgb(131, 145, 255)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "acoustic_guitar_steel",
+      "gain": 1,
+      "name": "Acoustic Guitar",
+      "img": "",
+      "color": "rgb(208, 144, 0)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "name": "Marimba",
+      "sfinstrumentName": "marimba",
+      "img": "",
+      "color": "rgb(136, 68, 0)",
+      "gain": 1.0,
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "",
+      "name": "Casio vibraphone",
+      "gain": 1.0,
+      "img": "",
+      "color": "rgb(138, 224, 153)",
+      "engine": "synth",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "name": "Soundtrack",
+      "sfinstrumentName": "fx_2_soundtrack",
+      "img": "",
+      "color": "rgb(0, 128, 128)",
+      "gain": 1.0,
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "tango_accordion",
+      "name": "Accordion",
+      "img": "",
+      "color": "rgb(220, 0, 152)",
+      "gain": 0.8,
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "string_ensemble_1",
+      "gain": 0.8,
+      "name": "Strings",
+      "img": "",
+      "color": "rgb(255, 0, 0)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "synth_brass_1",
+      "gain": 1,
+      "name": "Synth Brass",
+      "img": "",
+      "color": "rgb(255, 228, 153)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "alto_sax",
+      "gain": 1,
+      "name": "Alto sax",
+      "img": "",
+      "color": "rgb(212, 0, 0)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "lead_7_fifths",
+      "gain": 1,
+      "name": "Fifths",
+      "img": "",
+      "color": "rgb(251, 255, 0)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "muted_trumpet",
+      "gain": 1,
+      "name": "Muted Trumpet",
+      "img": "",
+      "color": "rgb(36, 152, 50)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "electric_bass_finger",
+      "name": "Bass guitar",
+      "gain": 0.8,
+      "img": "",
+      "color": "rgb(80, 80, 173)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "acoustic_bass",
+      "gain": 1,
+      "name": "Double Bass",
+      "img": "",
+      "color": "rgb(109, 107, 36)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "sfinstrumentName": "slap_bass_2",
+      "gain": 1,
+      "name": "Slap Bass",
+      "img": "",
+      "color": "rgb(111, 111, 111)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    }
+  ]
+}
