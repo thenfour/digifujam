@@ -100,6 +100,12 @@ class DigifuSynth {
 		}
 	}
 
+	get reverbGain() {
+		if (!this.masterEffectsInputNode) return 0.5;
+		if (!this.masterReverbGain) return 0.5;
+		return this.masterReverbGain.gain.value;
+	}
+
 	NoteOn(instrumentSpec, note, velocity) {
 		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
 	};

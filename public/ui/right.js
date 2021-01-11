@@ -65,8 +65,6 @@ class Connection extends React.Component {
             userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
             userStatus: '🎶',
             deviceNameList: [],
-            masterGain: 1,// why do i need to keep this here? not sure really.
-            reverbGain: 0.2,
             isShown: true,
         };
 
@@ -82,13 +80,13 @@ class Connection extends React.Component {
 
     setVolumeVal = (v) => {
         let realVal = parseFloat(v.target.value) / 100;
-        this.setState({ masterGain: realVal });
+        this.setState(this.state);
         this.props.app.synth.masterGain = realVal;
     }
 
     setReverbVal = (v) => {
         let realVal = parseFloat(v.target.value) / 100;
-        this.setState({ reverbGain: realVal });
+        this.setState(this.state);
         this.props.app.synth.reverbGain = realVal;
     }
 
@@ -142,15 +140,15 @@ class Connection extends React.Component {
         // volume from 0 to 1(unity) to 2
         const volumeMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.masterGain * 100} />
-                <label htmlFor="volume">gain:{this.state.masterGain}</label>
+                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} />
+                <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain*100)}</label>
             </li>
         ) : null;
 
         const verbMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                <input type="range" id="verbGain" name="verbGain" min="0" max="100" onChange={this.setReverbVal} value={this.state.reverbGain * 100} />
-                <label htmlFor="verbGain">reverb:{this.state.reverbGain}</label>
+                <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} />
+                <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain*100)}</label>
             </li>
         ) : null;
 
