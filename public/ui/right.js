@@ -527,6 +527,14 @@ class RootArea extends React.Component {
 
     HandleConnect = (userName, color, statusText) => {
         let app = new DigifuApp();
+
+        // copied from ctor
+        this.notesOn = []; // not part of state because it's pure jquery
+        // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
+        for (let i = 0; i < 128; ++i) {
+            this.notesOn.push([]); // empty initially.
+        }
+
         app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleDisconnect);
         this.setState({ app });
     }
