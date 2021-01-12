@@ -670,7 +670,7 @@ class RootArea extends React.Component {
         // the flow of events just replays regarding handshake and welcome msg etc. so nothing needs to be done.
     };
 
-    // called BOTH for "the network disconnected us whoopsie" and "user clicked disconnect button".
+    // called for "user clicked disconnect button".
     HandleDisconnect = () => {
         this.state.app.Disconnect();
         this.setState({ app: null });

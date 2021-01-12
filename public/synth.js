@@ -62,6 +62,12 @@ class SoundfontInstrument {
 		this.sustainMode = false;
 		this.sfinstrument.stop();
 	};
+
+	disconnect() {
+		if (!this.sfinstrument) return;
+		this.AllNotesOff();
+		this.sfinstrument.stop();
+	}
 };
 
 
@@ -132,7 +138,7 @@ class DigifuSynth {
 
 	// call when you have a list of instruments
 	InitInstruments(instrumentSpecs, internalMasterGain) {
-		this.instruments = {};
+		this.UninitInstruments();
 		instrumentSpecs.forEach(s => {
 			let gainer = this.audioCtx.createGain();
 			gainer.gain.value = 1;
@@ -153,8 +159,21 @@ class DigifuSynth {
 		});
 	};
 
+	UninitInstruments() {
+		for (let inst in this.instruments) {
+			this.instruments[inst].disconnect();
+		}
+		for (let inst in this.instrumentGainers) {
+			this.instrumentGainers[inst].disconnect();
+		}
+		this.instrumentGainers = {};
+		this.instruments = {};
+	}
+
 	// call as a sort of ctor
 	Init(audioCtx) {
+		console.assert(!this.audioCtx); // don't init more than once
+
 		this.audioCtx = audioCtx;
 		if (!this.audioCtx.createReverbFromUrl) {
 			reverbjs.extend(this.audioCtx);

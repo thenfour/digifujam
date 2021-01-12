@@ -100,7 +100,7 @@ class PolySynthVoice {
         this.midiNote = midiNote;
 
         //this.oscillator.frequency.cancelScheduledValues(0);
-        this.filter.frequency.value = (velocity/128) * 3000;
+        this.filter.frequency.value = (velocity / 128) * 3000;
 
         this.oscillator1.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote + this.detune), 0);
         this.oscillator2.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote), 0);
@@ -128,6 +128,30 @@ class PolySynthVoice {
         this.midiNote = 0;
         this.timestamp = null;
         this.isPhysicallyHeld = false;
+    }
+
+    disconnect() {
+        this.panic();
+
+        this.oscillator1.disconnect();
+        this.oscillator2.disconnect();
+        this.oscillator3.disconnect();
+
+        this.osc1Panner.disconnect();
+        this.osc2Panner.disconnect();
+        this.osc3Panner.disconnect();
+
+        this.gainEnvelope.disconnect();
+
+        this.gain.disconnect();
+
+        this.filter.disconnect();
+
+        this.gainEnvelope.stop();
+
+        this.oscillator1.stop();
+        this.oscillator2.stop();
+        this.oscillator3.stop();
     }
 };
 
@@ -200,6 +224,11 @@ class PolySynth {
 
     PitchBend(val) {
         // todo
+    }
+
+    disconnect() {
+        this.AllNotesOff();
+        this.voices.forEach(v => { v.disconnect(); });
     }
 };
 

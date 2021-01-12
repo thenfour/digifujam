@@ -260,8 +260,6 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
 
 DigifuApp.prototype.NET_OnDisconnect = function () {
     this.handleDisconnect();
-
-    // disconnect instruments.
 }
 
 // --------------------------------------------------------------------------------------
@@ -334,4 +332,5 @@ DigifuApp.prototype.Disconnect = function () {
     }
     this.roomState = null;
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
+    this.synth.UninitInstruments();
 };
