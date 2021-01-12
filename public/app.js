@@ -1,5 +1,10 @@
 'use strict';
 
+const { DigifuChatMessage } = require("./DFCommon");
+
+//const { DigifuUser } = require("./DFCommon");
+//const { ClientSettings } = require("./DFCommon");
+
 function DigifuApp() {
     this.roomState = null;
 
@@ -73,13 +78,12 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
     // find "you"
     this.myUser = this.roomState.FindUserByID(myUserID).user;
 
+    Cookies.set("userName", this.myUser.name);
+    Cookies.set("userColor", this.myUser.color);
+    Cookies.set("userStatus", this.myUser.statusText);
+
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
-
-    // load room CSS
-    if (this.roomState.roomCSS) {
-        $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomCSS + "' type='text/css' />");
-    }
 
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
@@ -87,8 +91,10 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
 };
 
 DigifuApp.prototype.NET_OnUserEnter = function (data) {
-    this.roomState.users.push(data);
-    //log(`NET_OnUserEnter ${JSON.stringify(data)}`);
+
+    let nu = Object.assign(new DigifuUser(), data);
+    nu.thaw();
+    this.roomState.users.push(nu);
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
     }
@@ -223,12 +229,15 @@ DigifuApp.prototype.NET_OnPing = function (token, users) {
 };
 
 DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
-    this.roomState.chatLog.push(msg);
 
-    let now = new Date();
-    this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
-        return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
-    });
+    let ncm = Object.assign(new DigifuChatMessage(), msg);
+    ncm.thaw();
+    this.roomState.chatLog.push(ncm);
+
+    // let now = new Date();
+    // this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
+    //     return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
+    // });
 
     this.stateChangeHandler();
 }
@@ -240,12 +249,20 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
     u.user.color = data.color;
     u.user.img = data.img;
     u.user.position = data.position;
+
+    if (u.user.userID == this.myUser.userID) {
+        Cookies.set("userName", this.myUser.name);
+        Cookies.set("userColor", this.myUser.color);
+        Cookies.set("userStatus", this.myUser.statusText);
+    }
+
     this.stateChangeHandler();
 }
 
 DigifuApp.prototype.NET_OnDisconnect = function () {
-    //log("DigifuApp disconnection happened; stop using this object.");
     this.handleDisconnect();
+
+    // disconnect instruments.
 }
 
 // --------------------------------------------------------------------------------------
@@ -319,5 +336,3 @@ DigifuApp.prototype.Disconnect = function () {
     this.roomState = null;
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
 };
-
-

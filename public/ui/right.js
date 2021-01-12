@@ -1,3 +1,23 @@
+//const { ServerSettings } = require("../DFCommon");
+
+
+
+let getValidationErrorMsg = function (userName, userColor, userStatus) {
+    let sanitizedName = sanitizeUsername(userName);
+    let validationErrorTxt = (sanitizedName != null) ? "" : "! Please enter a valid username";
+
+    let sanitizedColor = sanitizeUserColor(userColor);
+    if (sanitizedColor == null) {
+        validationErrorTxt += "! Please enter a valid CSS color";
+    }
+    let sanitizedStatus = sanitizeUserStatus(userStatus);
+    if (sanitizedStatus == null) {
+        validationErrorTxt += "! Please enter a valid status message";
+    }
+    return validationErrorTxt;
+}
+
+
 
 
 class TextInputField extends React.Component {
@@ -23,7 +43,7 @@ class TextInputField extends React.Component {
     }
     render() {
         return (
-            <input type="text" style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this._handleKeyDown} />
+            <input type="text" ref={(input) => { this.inputRef = input; }} style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this._handleKeyDown} />
         );
     }
 }
@@ -56,17 +76,23 @@ class TextInputFieldExternalState extends React.Component {
 
 
 
-class Connection extends React.Component {
+class UserState extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            userName: 'user',
-            userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
-            userStatus: '🎶',
+            userName: '',
+            userColor: '',
+            userStatus: '',
             deviceNameList: [],
             isShown: true,
         };
+
+        if (this.props.app && this.props.app.myUser) {
+            this.state.userName = this.props.app.myUser.name;
+            this.state.userColor = this.props.app.myUser.color;
+            this.state.userStatus = this.props.app.myUser.statusText;
+        }
 
         GetMidiInputDeviceList().then(inputs => {
             console.log(JSON.stringify(inputs));
@@ -118,14 +144,10 @@ class Connection extends React.Component {
             }
         }
 
-        let connectCaption = "Connect";
+        let connectCaption = "";
         if (this.props.app && this.props.app.roomState && this.props.app.roomState.roomTitle.length) {
             connectCaption = this.props.app.roomState.roomTitle;
         }
-
-        const connectBtn = this.props.app ? null : (
-            <button onClick={() => this.props.handleConnect(this.state.userName, this.state.userColor, this.state.userStatus)}>Connect</button>
-        );
 
         const disconnectBtn = this.props.app ? (
             <li><button onClick={this.props.handleDisconnect}>Disconnect</button><div style={{ height: 20 }}>&nbsp;</div></li>
@@ -141,19 +163,24 @@ class Connection extends React.Component {
         const volumeMarkup = this.props.app && this.props.app.synth ? (
             <li>
                 <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} />
-                <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain*100)}</label>
+                <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
             </li>
         ) : null;
 
         const verbMarkup = this.props.app && this.props.app.synth ? (
             <li>
                 <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} />
-                <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain*100)}</label>
+                <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain * 100)}</label>
             </li>
         ) : null;
 
         const ulStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const arrowText = this.state.isShown ? '⯆' : '⯈';
+
+        const validationMsg = getValidationErrorMsg(this.state.userName, this.state.userColor, this.state.userStatus);
+        const validationMarkup = validationMsg.length ? (
+            <div class="validationError">{validationMsg}</div>
+        ) : null;
 
         return (
             <div className="component">
@@ -169,8 +196,8 @@ class Connection extends React.Component {
                         <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>
                     <li><TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange} /> status</li>
+                    {validationMarkup}
                     {changeUserStateBtn}
-                    {connectBtn}
                     {inputList}
                     {volumeMarkup}
                     {verbMarkup}
@@ -179,6 +206,78 @@ class Connection extends React.Component {
         );
     }
 }
+
+
+
+
+class Connection extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            userName: '',
+            userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
+            userStatus: '🎶',
+            showValidationErrors: false, // don't show until you try to connect
+        };
+
+        if (Cookies.get("userName")) {
+            this.state.userName = Cookies.get("userName");
+        }
+        if (Cookies.get("userColor")) {
+            this.state.userColor = Cookies.get("userColor");
+        }
+        if (Cookies.get("userStatus")) {
+            this.state.userStatus = Cookies.get("userStatus");
+        }
+    }
+
+    componentDidMount() {
+        this.nameInput.inputRef.focus();
+    }
+
+    goConnect = () => {
+        let msg = getValidationErrorMsg(this.state.userName, this.state.userColor, this.state.userStatus);
+        if (msg) {
+            this.setState({ showValidationErrors: true });
+            return;
+        }
+        this.props.handleConnect(this.state.userName, this.state.userColor, this.state.userStatus);
+    }
+
+    render() {
+        const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
+
+        //let sanitizedName = sanitizeUsername(this.state.userName);
+        const validationErrorTxt = getValidationErrorMsg(this.state.userName, this.state.userColor, this.state.userStatus);
+
+        const validationError = validationErrorTxt.length && this.state.showValidationErrors ? (
+            <div class='validationError'>{validationErrorTxt}</div>
+        ) : null;
+
+        return (
+            <div className="component">
+                <h2>Connect</h2>
+                <ul>
+                    <li><TextInputField ref={(input) => { this.nameInput = input; }} style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.goConnect} /> name</li>
+                    <li><TextInputFieldExternalState
+                        style={{ width: 80 }}
+                        value={this.state.userColor}
+                        onChange={(val) => this.setState({ userColor: val })}
+                        onEnter={this.goConnect} />
+                        <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
+                    </li>
+                    <li><TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.goConnect} /> status</li>
+                    <button onClick={this.goConnect}>Connect</button>
+                    {validationError}
+                </ul>
+            </div>
+        );
+    }
+}
+
+
+
 
 class UserList extends React.Component {
     render() {
@@ -252,7 +351,7 @@ class InstrumentList extends React.Component {
         }
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
-            <div className="component" style={{ whiteSpace: "nowrap" }}>
+            <div className="component" style={{ whiteSpace: "nowrap", overflowY: "scroll" }}>
                 <h2>Unclaimed instruments</h2>
                 <ul>
                     {instruments}
@@ -276,9 +375,12 @@ class RightArea extends React.Component {
 class LeftArea extends React.Component {
 
     render() {
+        const userState = (!this.props.app) ? null : (
+            <UserState app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
+        );
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
-                <Connection app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
+                {userState}
                 <InstrumentList app={this.props.app} />
             </div>
         );
@@ -436,7 +538,6 @@ class RoomArea extends React.Component {
 
     roomToScreenPosition(pos) {
         let sp = this.getScreenScrollPosition();
-        //console.log(`RoomToScreenPosition from pos ${JSON.stringify(pos)} with scrollSize ${JSON.stringify(this.state.scrollSize)} and scrollpos=${JSON.stringify(sp)}`);
         return {
             x: pos.x + sp.x,
             y: pos.y + sp.y,
@@ -452,9 +553,9 @@ class RoomArea extends React.Component {
 
     updateScrollSize() {
         let e = document.getElementById("roomArea");
-        if (e.scrollWidth != this.state.scrollSize.x || e.scrollHeight != this.state.scrollSize.y) {
+        if (e.clientWidth != this.state.scrollSize.x || e.clientHeight != this.state.scrollSize.y) {
             this.setState({
-                scrollSize: { x: e.scrollWidth, y: e.scrollHeight }
+                scrollSize: { x: e.clientWidth, y: e.clientHeight }
             });
         }
     }
@@ -492,8 +593,13 @@ class RoomArea extends React.Component {
             };
         }
 
+        let connection = (this.props.app) ? null : (
+            <Connection app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
+        );
+
         return (
             <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
+                {connection}
                 {userAvatars}
                 <ChatLog app={this.props.app} />
                 <AnnouncementArea app={this.props.app} />
@@ -512,7 +618,10 @@ class ChatArea extends React.Component {
 
     handleClick() {
         if (!this.props.app) return;
-        this.props.app.SendChatMessage(this.state.value, null);
+        let sanitized = this.state.value.trim();
+        if (sanitized.length < 1) return;
+        sanitized = sanitized.substr(0, ServerSettings.ChatMessageLengthMax);
+        this.props.app.SendChatMessage(sanitized, null);
         this.state.value = '';
     }
 
@@ -571,6 +680,7 @@ class RootArea extends React.Component {
         $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
 
         this.notesOn[midiNote].push({ userID: user.userID, color: user.color });
+        this.activityCount++;
 
         let k = $("#key_" + midiNote);
         if (!k.hasClass('active')) {
@@ -620,6 +730,7 @@ class RootArea extends React.Component {
         };
 
         this.notesOn = []; // not part of state because it's pure jquery
+        this.activityCount = 0;
 
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
         for (let i = 0; i < 128; ++i) {
@@ -630,9 +741,16 @@ class RootArea extends React.Component {
     render() {
         let title = "(not connected)";
         if (this.state.app && this.state.app.roomState) {
-            title = this.state.app.roomState.roomTitle + " jam";
+            let activityTxt = "";
+            if (window.gSpinners) {
+                const spinnerName = "toggle10"; // arc
+                const i = this.activityCount % window.gSpinners[spinnerName].frames.length;
+                activityTxt = window.gSpinners[spinnerName].frames[i];
+            }
+            title = `${this.state.app.roomState.roomTitle} ${activityTxt} [${this.state.app.roomState.users.length}]`;
         }
         document.title = title;
+
         const url = window.location.href.split('?')[0];
         return (
             <div id="grid-container">
@@ -646,7 +764,7 @@ class RootArea extends React.Component {
                 </div>
                 <PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
-                <RoomArea app={this.state.app} />
+                <RoomArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
                 <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
                 <LeftArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
             </div>

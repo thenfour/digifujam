@@ -15,25 +15,12 @@ let generateID = function () {
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
-
-let routeToRoomName = function (r) {
-  let requestedRoomName = r;
-  if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
-
-  // trim slashes
-  if (requestedRoomName[0] == '/') requestedRoomName = requestedRoomName.substring(1);
-  if (requestedRoomName[requestedRoomName.length - 1] == '/') requestedRoomName = requestedRoomName.substring(0, requestedRoomName.length - 1);
-
-  return requestedRoomName.toUpperCase();
-};
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
 
   constructor(route, data) {
     this.route = route;
-    this.roomName = routeToRoomName(route);
+    this.roomName = DF.routeToRoomName(route);
 
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(JSON.parse(data));
@@ -55,12 +42,28 @@ class RoomServer {
   OnClientIdentify(clientSocket, clientUserSpec) {
     // the data is actually a DigifuUser object. but for security it should be copied.
     let u = new DF.DigifuUser();
-    // todo: validate client params
-    u.name = clientUserSpec.name;
-    u.color = clientUserSpec.color;
+
+    u.name = DF.sanitizeUsername(clientUserSpec.name);
+    if (u.name == null) {
+      clientSocket.disconnect();
+      console.log(`OnClientIdentify: Client had invalid username ${clientUserSpec.name}; disconnecting them.`);
+      return;
+    }
+    u.color = DF.sanitizeUserColor(clientUserSpec.color);
+    if (u.color == null) {
+      clientSocket.disconnect();
+      console.log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
+      return;
+    }
+    u.statusText = DF.sanitizeUserStatus(clientUserSpec.statusText);
+    if (u.statusText == null) {
+      clientSocket.disconnect();
+      console.log(`OnClientIdentify: Client had invalid status ${clientUserSpec.statusText}; disconnecting them.`);
+      return;
+    }
+
     u.userID = clientSocket.id;
     u.lastActivity = new Date();
-    u.statusText = clientUserSpec.statusText;
     u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
     u.img = null;
 
@@ -103,8 +106,6 @@ class RoomServer {
   };
 
   OnClientInstrumentRequest(ws, instrumentID) {
-    console.log(`OnClientInstrumentRequest => ${ws.id} ${instrumentID}`)
-
     let foundUser = this.FindUserFromSocket(ws);
     if (foundUser === null) {
       console.log(`instrument request for unknown user`);
@@ -287,7 +288,9 @@ class RoomServer {
       return;
     }
 
-    foundUser.user.lastActivity = new Date();
+    if (typeof(msg) != 'string') return;
+    if (msg.length < 1) return;
+    msg = msg.substring(0, DF.ServerSettings.ChatMessageLengthMax);
 
     // "TO" user?
     let foundToUser = this.roomState.FindUserByID(msg.toUserID);
@@ -330,13 +333,29 @@ class RoomServer {
       return;
     }
 
-    console.log(`OnClientUserState: ${JSON.stringify(data)}`);
+    // validate & integrate state. validation errors will result in just ignoring the request.
+    let origPayload = JSON.stringify(data);
+    data.name = DF.sanitizeUsername(data.name);
+    if (data.name == null) {
+      console.log(`OnClientUserState: invalid username ${origPayload.name}; disconnecting them.`);
+      return;
+    }
+    data.color = DF.sanitizeUserColor(data.color);
+    if (data.color == null) {
+      console.log(`OnClientUserState: invalid color ${origPayload.color}; disconnecting them.`);
+      return;
+    }
+    data.statusText = DF.sanitizeUserStatus(data.statusText);
+    if (data.statusText == null) {
+      console.log(`OnClientUserState: invalid status ${origPayload.statusText}; disconnecting them.`);
+      return;
+    }
 
-    // validate & integrate state.
     foundUser.user.name = data.name;
     foundUser.user.color = data.color;
-    foundUser.user.img = data.img;
     foundUser.user.statusText = data.statusText;
+
+    foundUser.user.img = data.img;
     foundUser.user.position.x = data.position.x;
     foundUser.user.position.y = data.position.y;
 
@@ -433,7 +452,7 @@ let roomIsLoaded = function () {
 
   io.on('connection', ws => {
     try {
-      let requestedRoomName = routeToRoomName(ws.handshake.query["jamroom"]);
+      let requestedRoomName = DF.routeToRoomName(ws.handshake.query["jamroom"]);
       let room = gRooms.find(r => r.roomName.toUpperCase() === requestedRoomName);
       if (!room) {
         throw `user trying to connect to nonexistent room ${requestedRoomName}`

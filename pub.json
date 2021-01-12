@@ -1,7 +1,6 @@
 {
   "img": "./room.png",
   "roomTitle": "#public",
-  "roomCSS": "",
   "width": 1000,
   "height": 741,
   "internalMasterGain": 2.0,

@@ -45,7 +45,15 @@ const ServerMessages = {
 const ServerSettings = {
     PingIntervalMS: 1000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
-    InstrumentIdleTimeoutMS: (1000 * 60)
+    InstrumentIdleTimeoutMS: (1000 * 60),
+    UsernameLengthMax: 20,
+    UsernameLengthMin: 1,
+    UserColorLengthMax: 20,
+    UserColorLengthMin: 1,
+    UserStatusLengthMax: 20,
+    UserStatusLengthMin: 0,
+
+    ChatMessageLengthMax: 288,
 };
 
 const ClientSettings = {
@@ -111,7 +119,6 @@ class DigifuRoomState {
         this.width = 16;
         this.height = 9;
         this.roomTitle = "";
-        this.roomCSS = "";
     }
 
     // call after Object.assign() to this object, to handle child objects.
@@ -162,6 +169,47 @@ class DigifuRoomState {
     }
 };
 
+
+
+let routeToRoomName = function (r) {
+    let requestedRoomName = r;
+    if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
+  
+    // trim slashes
+    if (requestedRoomName[0] == '/') requestedRoomName = requestedRoomName.substring(1);
+    if (requestedRoomName[requestedRoomName.length - 1] == '/') requestedRoomName = requestedRoomName.substring(0, requestedRoomName.length - 1);
+  
+    return requestedRoomName.toUpperCase();
+  };
+  
+  
+// returns null if not a valid username.
+let sanitizeUsername = function (n) {
+    if (typeof(n) != 'string') return null;
+    n = n.trim();
+    if (n.length < ServerSettings.UsernameLengthMin) return null;
+    if (n.length > ServerSettings.UsernameLengthMax) return null;
+    return n;
+};
+
+// returns null if not a valid username.
+let sanitizeUserColor = function (n) {
+    if (typeof(n) != 'string') return null;
+    n = n.trim();
+    if (n.length < ServerSettings.UserColorLengthMin) return null;
+    if (n.length > ServerSettings.UserColorLengthMax) return null;
+    return n;
+};
+
+// returns null if not a valid username.
+let sanitizeUserStatus = function (n) {
+    if (typeof(n) != 'string') return null;
+    n = n.trim();
+    if (n.length < ServerSettings.UserStatusLengthMin) return null;
+    if (n.length > ServerSettings.UserStatusLengthMax) return null;
+    return n;
+};
+
 module.exports = {
     ClientMessages,
     ServerMessages,
@@ -170,5 +218,9 @@ module.exports = {
     DigifuChatMessage,
     DigifuRoomState,
     ServerSettings,
-    ClientSettings
+    ClientSettings,
+    routeToRoomName,
+    sanitizeUsername,
+    sanitizeUserColor,
+    sanitizeUserStatus,
 };

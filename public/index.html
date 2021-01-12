@@ -4,10 +4,12 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    
     <script src="/socket.io/socket.io.js"></script>
     <script src="../node_modules/soundfont-player/dist/soundfont-player.js"></script>
     <script src="reverb.js"></script>
@@ -39,6 +41,13 @@
 
     <script type="text/babel">
 
+        $.getJSON('./ui/spinners.json', function (data) {
+            window.gSpinners = data;
+        });
+
+        let roomName = routeToRoomName(window.location.pathname);
+        $("head").append("<link rel='stylesheet' id='roomcss' href='" + roomName + ".css' type='text/css' />");
+
         ReactDOM.render(
             <RootArea />,
             document.getElementById('root')
@@ -46,13 +55,6 @@
     </script>
 
     <div id="root" style="height:100vh;"></div>
-
-    <!-- <div class="area">
-        <h2>Debug log</h2>
-        <button onclick="$('#log').html('')">clear log</button>
-        <pre id="log"
-            style="border:2px solid blue; background-color: rgb(211, 211, 211);max-height: 50%;width: 100%; max-width:900px; overflow: scroll;"></pre>
-    </div> -->
 
 </body>
 
