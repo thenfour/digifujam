@@ -240,3 +240,33 @@ button:focus {
     animation: blinker3 1s ease-in-out infinite alternate;     
 }
 
+.chatLogEntryNick {
+}
+
+.chatLogEntryJoin {
+}
+
+.chatLogEntryPart {
+}
+
+.chatLogEntryNick,
+.chatLogEntryJoin,
+.chatLogEntryPart {
+    font-style: italic;
+    font-size: smaller;
+    opacity:50%;
+    font-weight: normal;
+}
+
+.chatLogEntryChat {
+}
+
+
+
+
+
+
+
+
+
+

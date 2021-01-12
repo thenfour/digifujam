@@ -74,8 +74,10 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.Welcome, (data) => this.handler.NET_OnWelcome(data));
     this.socket.on(ServerMessages.UserEnter, (data) => this.handler.NET_OnUserEnter(data));
     this.socket.on(ServerMessages.UserLeave, data => this.handler.NET_OnUserLeave(data));
-    this.socket.on(ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID, data.idle));
+    this.socket.on(ServerMessages.UserState, data => this.handler.NET_OnUserState(data));
+    this.socket.on(ServerMessages.UserChatMessage, data => this.handler.NET_OnUserChatMessage(data));
 
+    this.socket.on(ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID, data.idle));
     this.socket.on(ServerMessages.NoteOn, data => this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity));
     this.socket.on(ServerMessages.NoteOff, data => this.handler.NET_OnNoteOff(data.userID, data.note));
     this.socket.on(ServerMessages.UserAllNotesOff, data => this.handler.NET_OnUserAllNotesOff(data));
@@ -83,8 +85,6 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
 
     this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data.token, data.users));
-    this.socket.on(ServerMessages.UserChatMessage, data => this.handler.NET_OnUserChatMessage(data));
-    this.socket.on(ServerMessages.UserState, data => this.handler.NET_OnUserState(data));
 
     this.socket.on('disconnect', () => { this.handler.NET_OnDisconnect(); });
 };

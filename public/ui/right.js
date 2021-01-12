@@ -451,9 +451,29 @@ class ChatLog extends React.Component {
             const dt = new Date(msg.timestampUTC);
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 
-            return (
-                <li key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</li>
-            )
+            switch (msg.messageType) {
+                case ChatMessageType.join:
+                    return (
+                        <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the jam</span></li>
+                    );
+                case ChatMessageType.part:
+                    return (
+                        <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the jam</span></li>
+                    );
+                case ChatMessageType.nick:
+                    return (
+                        <li className="chatLogEntryNick" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} is now known as {msg.toUserName}</span></li>
+                    );
+                case ChatMessageType.chat:
+                    return (
+                        <li className="chatLogEntryChat" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</li>
+                    );
+            }
+
+            return null;
+            // return (
+            //     <li key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</li>
+            // )
         });
 
         return (

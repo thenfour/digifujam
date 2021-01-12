@@ -69,6 +69,15 @@ class RoomServer {
 
     this.roomState.users.push(u);
 
+    let chatMessageEntry = new DF.DigifuChatMessage();
+    chatMessageEntry.messageID = generateID();
+    chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
+    chatMessageEntry.fromUserID = u.userID;
+    chatMessageEntry.fromUserColor = u.color;
+    chatMessageEntry.fromUserName = u.name;
+    chatMessageEntry.timestampUTC = new Date();
+    this.roomState.chatLog.push(chatMessageEntry);
+
     console.log(`User identified ${u.userID}. Send welcome package.`)
 
     // notify this 1 user of their user id & room state
@@ -78,7 +87,7 @@ class RoomServer {
     });
 
     // broadcast user enter to all clients except the user.
-    clientSocket.to(this.roomName).broadcast.emit(DF.ServerMessages.UserEnter, u);
+    clientSocket.to(this.roomName).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
   };
 
   OnClientClose(userID) {
@@ -99,10 +108,19 @@ class RoomServer {
       io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
     });
 
+    let chatMessageEntry = new DF.DigifuChatMessage();
+    chatMessageEntry.messageID = generateID();
+    chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
+    chatMessageEntry.fromUserID = foundUser.user.userID;
+    chatMessageEntry.fromUserColor = foundUser.user.color;
+    chatMessageEntry.fromUserName = foundUser.user.name;
+    chatMessageEntry.timestampUTC = new Date();
+    this.roomState.chatLog.push(chatMessageEntry);
+    
     // remove user from room.
     this.roomState.users.splice(foundUser.index, 1);
 
-    io.to(this.roomName).emit(DF.ServerMessages.UserLeave, userID);
+    io.to(this.roomName).emit(DF.ServerMessages.UserLeave, { userID, chatMessageEntry });
   };
 
   OnClientInstrumentRequest(ws, instrumentID) {
@@ -288,35 +306,36 @@ class RoomServer {
       return;
     }
 
-    if (typeof(msg) != 'string') return;
-    if (msg.length < 1) return;
-    msg = msg.substring(0, DF.ServerSettings.ChatMessageLengthMax);
+    // sanitize msg
+    if (typeof (msg.message) != 'string') return;
+    if (msg.message.length < 1) return;
+    msg.message = msg.message.substring(0, DF.ServerSettings.ChatMessageLengthMax);
 
     // "TO" user?
     let foundToUser = this.roomState.FindUserByID(msg.toUserID);
+
+    let nm = new DF.DigifuChatMessage();
+    nm.messageID = generateID();
+    nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
+    nm.message = msg.message;
+    nm.fromUserID = foundUser.user.userID;
+    nm.fromUserColor = foundUser.user.color;
+    nm.fromUserName = foundUser.user.name;
+    nm.timestampUTC = new Date();
     if (foundToUser != null) {
-      msg.toUserID = foundToUser.user.userID;
-      msg.toUserColor = foundToUser.user.color;
-      msg.toUserName = foundToUser.user.name;
+      nm.toUserID = foundToUser.user.userID;
+      nm.toUserColor = foundToUser.user.color;
+      nm.toUserName = foundToUser.user.name;
       return;
     }
 
-    // correct stuff.
-    msg.fromUserID = foundUser.user.userID;
-    msg.fromUserColor = foundUser.user.color;
-    msg.fromUserName = foundUser.user.name;
-
-    msg.messageID = generateID();
-    // validate to user id
-    msg.timestampUTC = new Date();
-
-    this.roomState.chatLog.push(msg);
+    this.roomState.chatLog.push(nm);
 
     this.CleanUpChatLog();
 
     // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
     // this allows simpler handling of incorporating the messageID.
-    io.to(this.roomName).emit(DF.ServerMessages.UserChatMessage, msg);
+    io.to(this.roomName).emit(DF.ServerMessages.UserChatMessage, nm);
   };
 
   CleanUpChatLog() {
@@ -351,6 +370,22 @@ class RoomServer {
       return;
     }
 
+    let nm = null;
+    if (foundUser.user.name != data.name) { // new chat message entry for this event
+      nm = new DF.DigifuChatMessage();
+      nm.messageID = generateID();
+      nm.messageType = DF.ChatMessageType.nick; // of ChatMessageType. "chat", "part", "join", "nick"
+      nm.message = "";
+      nm.fromUserID = foundUser.user.userID;
+      nm.fromUserColor = foundUser.user.color;
+      nm.fromUserName = foundUser.user.name;
+      nm.timestampUTC = new Date();
+      nm.toUserID = foundUser.user.userID;
+      nm.toUserColor = foundUser.user.color;
+      nm.toUserName = data.name;
+      this.roomState.chatLog.push(nm);
+    }
+
     foundUser.user.name = data.name;
     foundUser.user.color = data.color;
     foundUser.user.statusText = data.statusText;
@@ -361,7 +396,7 @@ class RoomServer {
 
     data.userID = foundUser.user.userID; // adapt the data packet for sending to all clients.
 
-    io.to(this.roomName).emit(DF.ServerMessages.UserState, data);
+    io.to(this.roomName).emit(DF.ServerMessages.UserState, { state: data, chatMessageEntry: nm });
   };
 
 

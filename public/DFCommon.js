@@ -95,9 +95,19 @@ class DigifuInstrumentSpec {
     thaw() { /* no child objects to thaw. */ }
 };
 
+const ChatMessageType = {
+    chat: "chat",
+    part: "part",
+    join: "join",
+    nick: "nick",
+};
+
 class DigifuChatMessage {
     constructor() {
         this.messageID = null;
+
+        this.messageType = null; // of ChatMessageType. "chat", "part", "join", "nick"
+
         this.message = null;
         this.fromUserID = null;
         this.fromUserColor = null; // required because we keep a chat history, so when a user is removed from the list this data would no longer be available. now a client has fallback fields.
@@ -218,6 +228,7 @@ module.exports = {
     DigifuUser,
     DigifuInstrumentSpec,
     DigifuChatMessage,
+    ChatMessageType,
     DigifuRoomState,
     ServerSettings,
     ClientSettings,

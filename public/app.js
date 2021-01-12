@@ -1,9 +1,5 @@
 'use strict';
 
-//const { DigifuChatMessage } = require("./DFCommon");
-//const { DigifuUser } = require("./DFCommon");
-//const { ClientSettings } = require("./DFCommon");
-
 function DigifuApp() {
     this.roomState = null;
 
@@ -91,27 +87,37 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
 
 DigifuApp.prototype.NET_OnUserEnter = function (data) {
 
-    let nu = Object.assign(new DigifuUser(), data);
+    let nu = Object.assign(new DigifuUser(), data.user);
     nu.thaw();
     this.roomState.users.push(nu);
+
+    let msg = Object.assign(new DigifuChatMessage, data.chatMessageEntry);
+    msg.thaw();
+    this.roomState.chatLog.push(msg);
+
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
     }
 };
 
-DigifuApp.prototype.NET_OnUserLeave = function (userID) {
-    //log("NET_OnUserLeave");
+DigifuApp.prototype.NET_OnUserLeave = function (data) {
 
-    let foundUser = this.roomState.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByID(data.userID);
     if (foundUser == null) {
         //log(`  user not found...`);
         return;
     }
     this.roomState.users.splice(foundUser.index, 1);
+
+    let msg = Object.assign(new DigifuChatMessage, data.chatMessageEntry);
+    msg.thaw();
+    this.roomState.chatLog.push(msg);
+
+
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
     }
-    this.handleUserLeave(userID);
+    this.handleUserLeave(data.userID);
 };
 
 DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /* may be null */, idle) {
@@ -233,26 +239,27 @@ DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
     ncm.thaw();
     this.roomState.chatLog.push(ncm);
 
-    // let now = new Date();
-    // this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
-    //     return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
-    // });
-
     this.stateChangeHandler();
 }
 
 DigifuApp.prototype.NET_OnUserState = function (data) {
-    let u = this.roomState.FindUserByID(data.userID);
-    u.user.name = data.name;
-    u.user.statusText = data.statusText;
-    u.user.color = data.color;
-    u.user.img = data.img;
-    u.user.position = data.position;
+    let u = this.roomState.FindUserByID(data.state.userID);
+    u.user.name = data.state.name;
+    u.user.statusText = data.state.statusText;
+    u.user.color = data.state.color;
+    u.user.img = data.state.img;
+    u.user.position = data.state.position;
 
     if (u.user.userID == this.myUser.userID) {
         Cookies.set("userName", this.myUser.name);
         Cookies.set("userColor", this.myUser.color);
         Cookies.set("userStatus", this.myUser.statusText);
+    }
+
+    if (data.chatMessageEntry) {
+        let m = Object.assign(new DigifuChatMessage(), data.chatMessageEntry);
+        m.thaw();
+        this.roomState.chatLog.push(m);
     }
 
     this.stateChangeHandler();
