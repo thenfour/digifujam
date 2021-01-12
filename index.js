@@ -420,6 +420,10 @@ class RoomServer {
 
 
   OnClientConnect(ws) {
+    if (this.roomState.users.length >= DF.ServerSettings.RoomUserCountMaximum) {
+      ws.disconnect();
+      return;
+    }
     ws.join(this.roomName);
     ws.on(DF.ClientMessages.Identify, data => this.OnClientIdentify(ws, data));
     ws.on('disconnect', () => this.OnClientClose(ws.id));

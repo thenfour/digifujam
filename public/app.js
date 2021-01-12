@@ -1,7 +1,6 @@
 'use strict';
 
-const { DigifuChatMessage } = require("./DFCommon");
-
+//const { DigifuChatMessage } = require("./DFCommon");
 //const { DigifuUser } = require("./DFCommon");
 //const { ClientSettings } = require("./DFCommon");
 

@@ -54,6 +54,8 @@ const ServerSettings = {
     UserStatusLengthMin: 0,
 
     ChatMessageLengthMax: 288,
+
+    RoomUserCountMaximum: 100,
 };
 
 const ClientSettings = {
