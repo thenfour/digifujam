@@ -45,7 +45,7 @@ const ServerMessages = {
 };
 
 const ServerSettings = {
-    PingIntervalMS: 1000,
+    PingIntervalMS: 2000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
     InstrumentIdleTimeoutMS: (1000 * 60),
     UsernameLengthMax: 20,
@@ -196,7 +196,7 @@ let routeToRoomName = function (r) {
 
     if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
 
-    return requestedRoomName.toUpperCase();
+    return requestedRoomName.toLowerCase();
 };
 
 

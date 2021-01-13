@@ -466,7 +466,7 @@ class RoomServer {
 
   // text, x, y
   OnClientCheer(ws, data) {
-    console.log(`OnClientCheer => ${JSON.stringify(data)} ${data.text.length}`);
+    //console.log(`OnClientCheer => ${JSON.stringify(data)} ${data.text.length}`);
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
@@ -495,6 +495,23 @@ class RoomServer {
       setTimeout(() => {
         this.OnPingInterval();
       }, DF.ServerSettings.PingIntervalMS);
+
+      // check users who are ghosts. i didn't bother trying to figure out why this happens but suffice it to say that I don't always get
+      // the disconnect event to remove the user.
+      // clients should do the same kind of cleanup: remove any users not appearing in the returned list, as if they've been disconnected.
+      let deletedUsers = [];
+      this.roomState.users.removeIf(u => {
+        let ws = io.of('/').sockets.get(u.userID);
+        let shouldDelete = !ws;
+        if (shouldDelete) {
+          console.log(`PING USER CLEANUP removing userid ${u.userID}`);
+          deletedUsers.push(u);
+        }
+        return shouldDelete;
+      });
+
+      // for the users that deleted, gracefully kill them off.
+      deletedUsers.forEach(u => { OnClientClose(u.userID) });
 
       // check idleness of users holding instruments.
       let now = new Date();
@@ -596,7 +613,7 @@ let roomIsLoaded = function () {
   io.on('connection', ws => {
     try {
       let requestedRoomName = DF.routeToRoomName(ws.handshake.query["jamroom"]);
-      let room = gRooms.find(r => r.roomName.toUpperCase() === requestedRoomName);
+      let room = gRooms.find(r => r.roomName.toLowerCase() === requestedRoomName);
       if (!room) {
         throw `user trying to connect to nonexistent room ${requestedRoomName}`
       }

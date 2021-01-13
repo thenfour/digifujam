@@ -220,7 +220,9 @@ DigifuApp.prototype.NET_OnPing = function (token, users) {
     this.net.SendPong(token);
     if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
     users.forEach(u => {
-        this.roomState.FindUserByID(u.userID).user.pingMS = u.pingMS;
+        let foundUser = this.roomState.FindUserByID(u.userID);
+        if (!foundUser) return; // this is possible because the server may be latent in sending this user data.
+        foundUser.user.pingMS = u.pingMS;
     });
 
     // pings are a great time to do some cleanup.
