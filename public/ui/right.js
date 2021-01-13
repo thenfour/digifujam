@@ -2,17 +2,13 @@
 
 
 
-let getValidationErrorMsg = function (userName, userColor, userStatus) {
+let getValidationErrorMsg = function (userName, userColor) {
     let sanitizedName = sanitizeUsername(userName);
     let validationErrorTxt = (sanitizedName != null) ? "" : "! Please enter a valid username";
 
     let sanitizedColor = sanitizeUserColor(userColor);
     if (sanitizedColor == null) {
         validationErrorTxt += "! Please enter a valid CSS color";
-    }
-    let sanitizedStatus = sanitizeUserStatus(userStatus);
-    if (sanitizedStatus == null) {
-        validationErrorTxt += "! Please enter a valid status message";
     }
     return validationErrorTxt;
 }
@@ -121,7 +117,6 @@ class UserState extends React.Component {
         this.state = {
             userName: '',
             userColor: '',
-            userStatus: '',
             deviceNameList: [],
             isShown: true,
         };
@@ -129,7 +124,6 @@ class UserState extends React.Component {
         if (this.props.app && this.props.app.myUser) {
             this.state.userName = this.props.app.myUser.name;
             this.state.userColor = this.props.app.myUser.color;
-            this.state.userStatus = this.props.app.myUser.statusText;
         }
 
         GetMidiInputDeviceList().then(inputs => {
@@ -139,7 +133,7 @@ class UserState extends React.Component {
     }
 
     sendUserStateChange = (e) => {
-        this.props.app.SetUserNameColorStatus(this.state.userName, this.state.userColor, this.state.userStatus);
+        this.props.app.SetUserNameColor(this.state.userName, this.state.userColor);
     };
 
     setVolumeVal = (v) => {
@@ -215,7 +209,7 @@ class UserState extends React.Component {
         const ulStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const arrowText = this.state.isShown ? '⯆' : '⯈';
 
-        const validationMsg = getValidationErrorMsg(this.state.userName, this.state.userColor, this.state.userStatus);
+        const validationMsg = getValidationErrorMsg(this.state.userName, this.state.userColor);
         const validationMarkup = validationMsg.length ? (
             <div class="validationError">{validationMsg}</div>
         ) : null;
@@ -233,7 +227,6 @@ class UserState extends React.Component {
                         onEnter={this.sendUserStateChange} />
                         <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>
-                    <li><TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.sendUserStateChange} /> status</li>
                     {validationMarkup}
                     {changeUserStateBtn}
                     {inputList}
@@ -255,7 +248,6 @@ class Connection extends React.Component {
         this.state = {
             userName: '',
             userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
-            userStatus: '🎶',
             showValidationErrors: false, // don't show until you try to connect
         };
 
@@ -265,9 +257,6 @@ class Connection extends React.Component {
         if (Cookies.get(window.DFRoomName + "_userColor")) {
             this.state.userColor = Cookies.get(window.DFRoomName + "_userColor");
         }
-        if (Cookies.get(window.DFRoomName + "_userStatus")) {
-            this.state.userStatus = Cookies.get(window.DFRoomName + "_userStatus");
-        }
     }
 
     componentDidMount() {
@@ -275,19 +264,19 @@ class Connection extends React.Component {
     }
 
     goConnect = () => {
-        let msg = getValidationErrorMsg(this.state.userName, this.state.userColor, this.state.userStatus);
+        let msg = getValidationErrorMsg(this.state.userName, this.state.userColor);
         if (msg) {
             this.setState({ showValidationErrors: true });
             return;
         }
-        this.props.handleConnect(this.state.userName, this.state.userColor, this.state.userStatus);
+        this.props.handleConnect(this.state.userName, this.state.userColor);
     }
 
     render() {
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
 
         //let sanitizedName = sanitizeUsername(this.state.userName);
-        const validationErrorTxt = getValidationErrorMsg(this.state.userName, this.state.userColor, this.state.userStatus);
+        const validationErrorTxt = getValidationErrorMsg(this.state.userName, this.state.userColor);
 
         const validationError = validationErrorTxt.length && this.state.showValidationErrors ? (
             <div class='validationError'>{validationErrorTxt}</div>
@@ -305,7 +294,6 @@ class Connection extends React.Component {
                         onEnter={this.goConnect} />
                         <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>
-                    <li><TextInputField style={{ width: 80 }} default={this.state.userStatus} onChange={(val) => this.setState({ userStatus: val })} onEnter={this.goConnect} /> status</li>
                     <button onClick={this.goConnect}>Connect</button>
                     {validationError}
                 </ul>
@@ -472,7 +460,6 @@ class UserAvatar extends React.Component {
         return (
             <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
                 <div>{this.props.user.name}</div>
-                <div>{this.props.user.statusText}</div>
                 {instMarkup}
             </div>
         );
@@ -771,7 +758,7 @@ class RootArea extends React.Component {
         this.setState(this.state);
     }
 
-    HandleConnect = (userName, color, statusText) => {
+    HandleConnect = (userName, color) => {
         let app = new DigifuApp();
 
         // copied from ctor
@@ -781,7 +768,7 @@ class RootArea extends React.Component {
             this.notesOn.push([]); // empty initially.
         }
 
-        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected, this.HandleCheer);
+        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected, this.HandleCheer);
         this.setState({ app });
     }
 

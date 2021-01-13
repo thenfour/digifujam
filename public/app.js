@@ -76,7 +76,6 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
 
     Cookies.set(this.roomName + "_userName", this.myUser.name);
     Cookies.set(this.roomName + "_userColor", this.myUser.color);
-    Cookies.set(this.roomName + "_userStatus", this.myUser.statusText);
 
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
@@ -252,7 +251,6 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
         return;
     }
     u.user.name = data.state.name;
-    u.user.statusText = data.state.statusText;
     u.user.color = data.state.color;
     u.user.img = data.state.img;
     u.user.position = data.state.position;
@@ -260,7 +258,6 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
     if (u.user.userID == this.myUser.userID) {
         Cookies.set(this.roomName + "_userName", this.myUser.name);
         Cookies.set(this.roomName + "_userColor", this.myUser.color);
-        Cookies.set(this.roomName + "_userStatus", this.myUser.statusText);
     }
 
     if (data.chatMessageEntry) {
@@ -313,17 +310,15 @@ DigifuApp.prototype.SetUserPosition = function (pos) {
         name: this.myUser.name,
         color: this.myUser.color,
         img: this.myUser.img,
-        statusText: this.myUser.statusText,
         position: pos
     });
 };
 
-DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
+DigifuApp.prototype.SetUserNameColor = function (name, color) {
     this.net.SendUserState({
         name: name,
         color: color,
         img: this.myUser.img,
-        statusText: status,
         position: this.myUser.position
     });
 };
@@ -333,12 +328,10 @@ DigifuApp.prototype.SendCheer = function (text, x, y) {
 };
 
 
-DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave, disconnectHandler, handleCheer) {
-    log("attempting connection... status = " + userStatusText);
+DigifuApp.prototype.Connect = function (userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave, disconnectHandler, handleCheer) {
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
-    this.myUser.statusText = userStatusText;
 
     this.stateChangeHandler = stateChangeHandler;
     this.noteOnHandler = noteOnHandler;

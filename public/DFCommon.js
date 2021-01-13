@@ -23,7 +23,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    UserState: "UserState", // name, color, img, x, y, statustext
+    UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 };
 
@@ -40,7 +40,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    UserState: "UserState", // user, name, color, img, x, y, statustext
+    UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y
 };
 
@@ -52,8 +52,6 @@ const ServerSettings = {
     UsernameLengthMin: 1,
     UserColorLengthMax: 20,
     UserColorLengthMin: 1,
-    UserStatusLengthMax: 20,
-    UserStatusLengthMin: 0,
 
     ChatMessageLengthMax: 288,
 
@@ -72,7 +70,6 @@ class DigifuUser {
         this.lastActivity = null; // this allows us to display as idle or release instrument
 
         this.name = "";
-        this.statusText = "";
         this.color = "";
         this.position = { x: 0, y: 0 }; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
         this.img = null;
@@ -218,15 +215,6 @@ let sanitizeUserColor = function (n) {
     return n;
 };
 
-// returns null if not a valid username.
-let sanitizeUserStatus = function (n) {
-    if (typeof (n) != 'string') return null;
-    n = n.trim();
-    if (n.length < ServerSettings.UserStatusLengthMin) return null;
-    if (n.length > ServerSettings.UserStatusLengthMax) return null;
-    return n;
-};
-
 let sanitizeCheerText = function (n) {
     if (typeof (n) != 'string') return null;
     n = n.trim();
@@ -248,6 +236,5 @@ module.exports = {
     routeToRoomName,
     sanitizeUsername,
     sanitizeUserColor,
-    sanitizeUserStatus,
     sanitizeCheerText,
 };

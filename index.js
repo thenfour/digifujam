@@ -56,12 +56,6 @@ class RoomServer {
         console.log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
         return;
       }
-      u.statusText = DF.sanitizeUserStatus(clientUserSpec.statusText);
-      if (u.statusText == null) {
-        clientSocket.disconnect();
-        console.log(`OnClientIdentify: Client had invalid status ${clientUserSpec.statusText}; disconnecting them.`);
-        return;
-      }
 
       u.userID = clientSocket.id;
       u.lastActivity = new Date();
@@ -425,11 +419,6 @@ class RoomServer {
         console.log(`OnClientUserState: invalid color ${origPayload.color}.`);
         return;
       }
-      data.statusText = DF.sanitizeUserStatus(data.statusText);
-      if (data.statusText == null) {
-        console.log(`OnClientUserState: invalid status ${origPayload.statusText}.`);
-        return;
-      }
 
       let nm = null;
       if (foundUser.user.name != data.name) { // new chat message entry for this event
@@ -449,7 +438,6 @@ class RoomServer {
 
       foundUser.user.name = data.name;
       foundUser.user.color = data.color;
-      foundUser.user.statusText = data.statusText;
 
       foundUser.user.img = data.img;
       foundUser.user.position.x = data.position.x;
