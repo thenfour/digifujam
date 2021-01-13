@@ -62,6 +62,7 @@ const ServerSettings = {
 
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
+    MinCheerIntervalMS: 125,
 };
 
 class DigifuUser {
@@ -188,20 +189,20 @@ class DigifuRoomState {
 let routeToRoomName = function (r) {
     let requestedRoomName = r;
     if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
-  
+
     // trim slashes
     if (requestedRoomName[0] == '/') requestedRoomName = requestedRoomName.substring(1);
     if (requestedRoomName[requestedRoomName.length - 1] == '/') requestedRoomName = requestedRoomName.substring(0, requestedRoomName.length - 1);
 
     if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
-  
+
     return requestedRoomName.toUpperCase();
-  };
-  
-  
+};
+
+
 // returns null if not a valid username.
 let sanitizeUsername = function (n) {
-    if (typeof(n) != 'string') return null;
+    if (typeof (n) != 'string') return null;
     n = n.trim();
     if (n.length < ServerSettings.UsernameLengthMin) return null;
     if (n.length > ServerSettings.UsernameLengthMax) return null;
@@ -210,7 +211,7 @@ let sanitizeUsername = function (n) {
 
 // returns null if not a valid username.
 let sanitizeUserColor = function (n) {
-    if (typeof(n) != 'string') return null;
+    if (typeof (n) != 'string') return null;
     n = n.trim();
     if (n.length < ServerSettings.UserColorLengthMin) return null;
     if (n.length > ServerSettings.UserColorLengthMax) return null;
@@ -219,15 +220,15 @@ let sanitizeUserColor = function (n) {
 
 // returns null if not a valid username.
 let sanitizeUserStatus = function (n) {
-    if (typeof(n) != 'string') return null;
+    if (typeof (n) != 'string') return null;
     n = n.trim();
     if (n.length < ServerSettings.UserStatusLengthMin) return null;
     if (n.length > ServerSettings.UserStatusLengthMax) return null;
     return n;
 };
 
-let sanitizeCheerText = function(n) {
-    if (typeof(n) != 'string') return null;
+let sanitizeCheerText = function (n) {
+    if (typeof (n) != 'string') return null;
     n = n.trim();
     if (n.length == 0) return null;
     return n;

@@ -102,7 +102,7 @@ class CheerControls extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
         return (
-            <div id="#cheerControl">
+            <div id="cheerControl">
                 <button onClick={() => this.props.handleCheerClick(this.state.text)}>cheer</button>
                 <TextInputFieldExternalState
                     value={this.state.text}
@@ -325,7 +325,7 @@ class UserList extends React.Component {
         //         let meText = (u.userID == digifuApp.myUser.userID) ? "<ME>" : "";
 
         const users = this.props.app.roomState.users.map(u => (
-            <li key={u.userID}><span className="userName"  style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
+            <li key={u.userID}><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
         ));
 
         return (
@@ -556,8 +556,11 @@ class RoomArea extends React.Component {
         };
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
         this.roomToScreenPosition = this.roomToScreenPosition.bind(this);
-        this.isCheering = false;
+
+        this.isExpectingCheer = false; // true directly after clicking "cheer", and back to false when you mouse up or ESC
+        this.isCheerDragging = false; // true after clicking cheer and clicking mouse. back to false on mouse up or ESC
         this.cheerText = "";
+        this.lastCheerTime = new Date(); // for throttling. AND also for detecting when we should ignore onClick due to onMouseUp handled
     }
 
     // helper APIs
@@ -605,21 +608,66 @@ class RoomArea extends React.Component {
     }
 
     onClick(e) {
+        if (((new Date()) - this.lastCheerTime) < 100) {
+            // you have cheered within some milliseconds of this event. it means this onClick is almost certainly the result of a onMouseUp where we have been cheering.
+            return;
+        }
         if ((!this.props.app) || (!this.props.app.roomState)) return false;
         if (!e.target || e.target.id != "roomArea") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
         const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
 
-        if (this.isCheering) {
-            this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
-            this.isCheering = e.shiftKey; // shift continues cheering
-        } else {
+        if (!this.isExpectingCheer) {
+            //     this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
+            //     //this.isCheering = e.shiftKey; // shift continues cheering
+            // } else {
             this.props.app.SetUserPosition(roomPos);
         }
     }
 
     handleCheerClick = (text) => {
-        this.isCheering = true;
+        // init cheer state when you click "CHEER" button
+        this.isExpectingCheer = true;
+        this.isCheerDragging = false;
         this.cheerText = text;
+    }
+
+    onMouseDown = (e) => {
+        if ((!this.props.app) || (!this.props.app.roomState)) return false;
+        if (!e.target || e.target.id != "roomArea") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
+        const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+
+        if (this.isExpectingCheer) {
+            this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
+            this.lastCheerTime = new Date();
+            this.isCheerDragging = true;
+        }
+    }
+
+    onMouseUp = (e) => {
+        if (this.isExpectingCheer || this.isCheerDragging) {
+            this.lastCheerTime = new Date(); // this is necessary so onClick() detects when to ignore due to multiple event
+            this.isExpectingCheer = false;
+            this.isCheerDragging = false;
+        }
+    }
+
+    onMouseMove = (e) => {
+        if ((!this.props.app) || (!this.props.app.roomState)) return false;
+        if (!e.target || e.target.id != "roomArea") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
+
+        if (this.isCheerDragging) {
+            if (e.buttons != 1) { // this indicates button pressed. important to check here because we don't always get a mouseup event if you move the mouse off-window.
+                this.isExpectingCheer = false;
+                this.isCheerDragging = false;
+            }
+            else {
+                if (((new Date()) - this.lastCheerTime) >= ClientSettings.MinCheerIntervalMS) {
+                    this.lastCheerTime = new Date();
+                    const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+                    this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
+                }
+            }
+        }
     }
 
     updateScrollSize() {
@@ -669,7 +717,7 @@ class RoomArea extends React.Component {
         );
 
         return (
-            <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
+            <div id="roomArea" onClick={e => this.onClick(e)} onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseMove={this.onMouseMove} style={style}>
                 {connection}
                 {userAvatars}
                 <ChatLog app={this.props.app} />
@@ -754,7 +802,7 @@ class RootArea extends React.Component {
         var easeY = Math.trunc(random(2)) ? "ease-in" : "ease-out";
         var easyX = Math.trunc(random(2)) ? "ease-in" : "ease-out";
 
-        let pos = this.roomRef.current.roomToScreenPosition({x:data.x, y:data.y});
+        let pos = this.roomRef.current.roomToScreenPosition({ x: data.x, y: data.y });
 
         let css = `
                 animation: floatX${animX} ${durx}s ${easyX} forwards,
