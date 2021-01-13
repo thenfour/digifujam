@@ -40,441 +40,545 @@ class RoomServer {
   };
 
   OnClientIdentify(clientSocket, clientUserSpec) {
-    // the data is actually a DigifuUser object. but for security it should be copied.
-    let u = new DF.DigifuUser();
+    try {
+      // the data is actually a DigifuUser object. but for security it should be copied.
+      let u = new DF.DigifuUser();
 
-    u.name = DF.sanitizeUsername(clientUserSpec.name);
-    if (u.name == null) {
-      clientSocket.disconnect();
-      console.log(`OnClientIdentify: Client had invalid username ${clientUserSpec.name}; disconnecting them.`);
-      return;
+      u.name = DF.sanitizeUsername(clientUserSpec.name);
+      if (u.name == null) {
+        clientSocket.disconnect();
+        console.log(`OnClientIdentify: Client had invalid username ${clientUserSpec.name}; disconnecting them.`);
+        return;
+      }
+      u.color = DF.sanitizeUserColor(clientUserSpec.color);
+      if (u.color == null) {
+        clientSocket.disconnect();
+        console.log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
+        return;
+      }
+      u.statusText = DF.sanitizeUserStatus(clientUserSpec.statusText);
+      if (u.statusText == null) {
+        clientSocket.disconnect();
+        console.log(`OnClientIdentify: Client had invalid status ${clientUserSpec.statusText}; disconnecting them.`);
+        return;
+      }
+
+      u.userID = clientSocket.id;
+      u.lastActivity = new Date();
+      u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
+      u.img = null;
+
+      this.roomState.users.push(u);
+
+      let chatMessageEntry = new DF.DigifuChatMessage();
+      chatMessageEntry.messageID = generateID();
+      chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
+      chatMessageEntry.fromUserID = u.userID;
+      chatMessageEntry.fromUserColor = u.color;
+      chatMessageEntry.fromUserName = u.name;
+      chatMessageEntry.timestampUTC = new Date();
+      this.roomState.chatLog.push(chatMessageEntry);
+
+      console.log(`User identified ${u.userID}. Send welcome package.`)
+
+      // notify this 1 user of their user id & room state
+      clientSocket.emit(DF.ServerMessages.Welcome, {
+        yourUserID: clientSocket.id,
+        roomState: this.roomState
+      });
+
+      // broadcast user enter to all clients except the user.
+      clientSocket.to(this.roomName).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
+    } catch (e) {
+      console.log(`OnClientIdentify exception occurred`);
+      console.log(e);
     }
-    u.color = DF.sanitizeUserColor(clientUserSpec.color);
-    if (u.color == null) {
-      clientSocket.disconnect();
-      console.log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
-      return;
-    }
-    u.statusText = DF.sanitizeUserStatus(clientUserSpec.statusText);
-    if (u.statusText == null) {
-      clientSocket.disconnect();
-      console.log(`OnClientIdentify: Client had invalid status ${clientUserSpec.statusText}; disconnecting them.`);
-      return;
-    }
-
-    u.userID = clientSocket.id;
-    u.lastActivity = new Date();
-    u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
-    u.img = null;
-
-    this.roomState.users.push(u);
-
-    let chatMessageEntry = new DF.DigifuChatMessage();
-    chatMessageEntry.messageID = generateID();
-    chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
-    chatMessageEntry.fromUserID = u.userID;
-    chatMessageEntry.fromUserColor = u.color;
-    chatMessageEntry.fromUserName = u.name;
-    chatMessageEntry.timestampUTC = new Date();
-    this.roomState.chatLog.push(chatMessageEntry);
-
-    console.log(`User identified ${u.userID}. Send welcome package.`)
-
-    // notify this 1 user of their user id & room state
-    clientSocket.emit(DF.ServerMessages.Welcome, {
-      yourUserID: clientSocket.id,
-      roomState: this.roomState
-    });
-
-    // broadcast user enter to all clients except the user.
-    clientSocket.to(this.roomName).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
   };
 
   OnClientClose(userID) {
-    console.log(`close => ${userID}`)
+    try {
+      console.log(`close => ${userID}`)
 
-    // find the user object and remove it.
-    let foundUser = this.roomState.FindUserByID(userID);
-    if (foundUser == null) {
-      console.log(`client closing but is not a user...?`);
-      return;
+      // find the user object and remove it.
+      let foundUser = this.roomState.FindUserByID(userID);
+      if (foundUser == null) {
+        console.log(`client closing but is not a user...?`);
+        return;
+      }
+
+      // remove references to this user.
+      this.roomState.instrumentCloset.forEach(inst => {
+        if (inst.controlledByUserID != foundUser.user.userID) return;
+        inst.controlledByUserID = null;
+        // broadcast this to clients
+        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
+      });
+
+      let chatMessageEntry = new DF.DigifuChatMessage();
+      chatMessageEntry.messageID = generateID();
+      chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
+      chatMessageEntry.fromUserID = foundUser.user.userID;
+      chatMessageEntry.fromUserColor = foundUser.user.color;
+      chatMessageEntry.fromUserName = foundUser.user.name;
+      chatMessageEntry.timestampUTC = new Date();
+      this.roomState.chatLog.push(chatMessageEntry);
+
+      // remove user from room.
+      this.roomState.users.splice(foundUser.index, 1);
+
+      io.to(this.roomName).emit(DF.ServerMessages.UserLeave, { userID, chatMessageEntry });
+    } catch (e) {
+      console.log(`OnClientClose exception occurred`);
+      console.log(e);
     }
-
-    // remove references to this user.
-    this.roomState.instrumentCloset.forEach(inst => {
-      if (inst.controlledByUserID != foundUser.user.userID) return;
-      inst.controlledByUserID = null;
-      // broadcast this to clients
-      io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
-    });
-
-    let chatMessageEntry = new DF.DigifuChatMessage();
-    chatMessageEntry.messageID = generateID();
-    chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
-    chatMessageEntry.fromUserID = foundUser.user.userID;
-    chatMessageEntry.fromUserColor = foundUser.user.color;
-    chatMessageEntry.fromUserName = foundUser.user.name;
-    chatMessageEntry.timestampUTC = new Date();
-    this.roomState.chatLog.push(chatMessageEntry);
-    
-    // remove user from room.
-    this.roomState.users.splice(foundUser.index, 1);
-
-    io.to(this.roomName).emit(DF.ServerMessages.UserLeave, { userID, chatMessageEntry });
   };
 
   OnClientInstrumentRequest(ws, instrumentID) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser === null) {
-      console.log(`instrument request for unknown user`);
-      return;
-    }
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser === null) {
+        console.log(`instrument request for unknown user`);
+        return;
+      }
 
-    // TODO: check if the current instrument is available or its controlling user is considered idle.
-    // etc etc
+      // TODO: check if the current instrument is available or its controlling user is considered idle.
+      // etc etc
 
-    // release existing instrument.
-    // find their instrument.
-    let existingInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-    if (existingInstrument != null) {
-      existingInstrument.instrument.controlledByUserID = null;
+      // release existing instrument.
+      // find their instrument.
+      let existingInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (existingInstrument != null) {
+        existingInstrument.instrument.controlledByUserID = null;
+
+        // broadcast instrument change to all clients
+        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+          instrumentID: existingInstrument.instrument.instrumentID,
+          userID: null,
+          idle: false,
+        });
+      }
+
+      // find the new instrument.
+      let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
+      if (foundInstrument === null) {
+        console.log(`instrument request for unknown instrument`);
+        return;
+      }
+
+      foundInstrument.instrument.controlledByUserID = foundUser.user.userID;
+      foundUser.user.idle = false;
+      foundUser.user.lastActivity = new Date();
 
       // broadcast instrument change to all clients
       io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-        instrumentID: existingInstrument.instrument.instrumentID,
-        userID: null,
-        idle: false,
+        instrumentID: foundInstrument.instrument.instrumentID,
+        userID: foundUser.user.userID,
+        idle: false
       });
+    } catch (e) {
+      console.log(`OnClientInstrumentRequest exception occurred`);
+      console.log(e);
     }
-
-    // find the new instrument.
-    let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
-    if (foundInstrument === null) {
-      console.log(`instrument request for unknown instrument`);
-      return;
-    }
-
-    foundInstrument.instrument.controlledByUserID = foundUser.user.userID;
-    foundUser.user.idle = false;
-    foundUser.user.lastActivity = new Date();
-
-    // broadcast instrument change to all clients
-    io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-      instrumentID: foundInstrument.instrument.instrumentID,
-      userID: foundUser.user.userID,
-      idle: false
-    });
   };
 
   OnClientInstrumentRelease(ws) {
-    console.log(`OnClientInstrumentRelease => ${ws.id}`)
+    try {
+      console.log(`OnClientInstrumentRelease => ${ws.id}`)
 
-    // find the user object.
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`=> unknown user`);
-      return;
+      // find the user object.
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`=> unknown user`);
+        return;
+      }
+
+      // find their instrument.
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        console.log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      foundInstrument.instrument.controlledByUserID = null;
+
+      // broadcast instrument change to all clients
+      io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        userID: null,
+        idle: false
+      });
+    } catch (e) {
+      console.log(`OnClientInstrumentRelease exception occurred`);
+      console.log(e);
     }
-
-    // find their instrument.
-    let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-    if (foundInstrument == null) {
-      console.log(`=> not controlling an instrument.`);
-      return;
-    }
-
-    foundInstrument.instrument.controlledByUserID = null;
-
-    // broadcast instrument change to all clients
-    io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-      instrumentID: foundInstrument.instrument.instrumentID,
-      userID: null,
-      idle: false
-    });
   };
 
   UnidleInstrument(user, instrument) {
-    user.lastActivity = new Date();
-    if (instrument.idle) {
-      instrument.idle = false;
-      io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-        instrumentID: instrument.instrumentID,
-        userID: user.userID,
-        idle: false
-      });
+    try {
+      user.lastActivity = new Date();
+      if (instrument.idle) {
+        instrument.idle = false;
+        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+          instrumentID: instrument.instrumentID,
+          userID: user.userID,
+          idle: false
+        });
+      }
+    } catch (e) {
+      console.log(`UnidleInstrument exception occurred`);
+      console.log(e);
     }
   }
 
   OnClientNoteOn(ws, note, velocity) {
-    // find the user object.
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`=> unknown user`);
-      return;
+    try {
+      // find the user object.
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`=> unknown user`);
+        return;
+      }
+
+      // find user's instrument; if we have broadcast an IDLE for this instrument, now revoke it.
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        console.log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+
+      // broadcast to all clients except foundUser
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.NoteOn, {
+        userID: foundUser.user.userID,
+        note: note,
+        velocity: velocity
+      });
+    } catch (e) {
+      console.log(`OnClientNoteOn exception occurred`);
+      console.log(e);
     }
-
-    // find user's instrument; if we have broadcast an IDLE for this instrument, now revoke it.
-    let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-    if (foundInstrument == null) {
-      console.log(`=> not controlling an instrument.`);
-      return;
-    }
-
-    this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
-
-    // broadcast to all clients except foundUser
-    ws.to(this.roomName).broadcast.emit(DF.ServerMessages.NoteOn, {
-      userID: foundUser.user.userID,
-      note: note,
-      velocity: velocity
-    });
   };
 
 
   OnClientNoteOff(ws, note) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientNoteOff => unknown user`);
-      return;
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientNoteOff => unknown user`);
+        return;
+      }
+
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        console.log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+
+      // broadcast to all clients except foundUser
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.NoteOff, {
+        userID: foundUser.user.userID,
+        note: note
+      });
+    } catch (e) {
+      console.log(`OnClientNoteOff exception occurred`);
+      console.log(e);
     }
-
-    let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-    if (foundInstrument == null) {
-      console.log(`=> not controlling an instrument.`);
-      return;
-    }
-
-    this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
-
-    // broadcast to all clients except foundUser
-    ws.to(this.roomName).broadcast.emit(DF.ServerMessages.NoteOff, {
-      userID: foundUser.user.userID,
-      note: note
-    });
   };
 
   OnClientAllNotesOff(ws) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientAllNotesOff => unknown user`);
-      return;
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientAllNotesOff => unknown user`);
+        return;
+      }
+
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        console.log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+
+      // broadcast to all clients except foundUser
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
+    } catch (e) {
+      console.log(`OnClientAllNotesOff exception occurred`);
+      console.log(e);
     }
-
-    let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-    if (foundInstrument == null) {
-      console.log(`=> not controlling an instrument.`);
-      return;
-    }
-
-    this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
-
-    // broadcast to all clients except foundUser
-    ws.to(this.roomName).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
   };
 
 
   OnClientPedalUp(ws) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientPedalUp => unknown user`);
-      return;
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientPedalUp => unknown user`);
+        return;
+      }
+      // broadcast to all clients except foundUser
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.PedalUp, {
+        userID: foundUser.user.userID
+      });
+    } catch (e) {
+      console.log(`OnClientPedalUp exception occurred`);
+      console.log(e);
     }
-    // broadcast to all clients except foundUser
-    ws.to(this.roomName).broadcast.emit(DF.ServerMessages.PedalUp, {
-      userID: foundUser.user.userID
-    });
   };
 
 
   OnClientPedalDown(ws) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientPedalDown => unknown user`);
-      return;
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientPedalDown => unknown user`);
+        return;
+      }
+      // broadcast to all clients except foundUser
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.PedalDown, {
+        userID: foundUser.user.userID
+      });
+    } catch (e) {
+      console.log(`OnClientPedalDown exception occurred`);
+      console.log(e);
     }
-    // broadcast to all clients except foundUser
-    ws.to(this.roomName).broadcast.emit(DF.ServerMessages.PedalDown, {
-      userID: foundUser.user.userID
-    });
   };
 
 
   OnClientChatMessage(ws, msg) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientChatMessage => unknown user`);
-      return;
-    }
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientChatMessage => unknown user`);
+        return;
+      }
 
-    // sanitize msg
-    if (typeof (msg.message) != 'string') return;
-    if (msg.message.length < 1) return;
-    msg.message = msg.message.substring(0, DF.ServerSettings.ChatMessageLengthMax);
+      // sanitize msg
+      if (typeof (msg.message) != 'string') return;
+      if (msg.message.length < 1) return;
+      msg.message = msg.message.substring(0, DF.ServerSettings.ChatMessageLengthMax);
 
-    // "TO" user?
-    let foundToUser = this.roomState.FindUserByID(msg.toUserID);
+      // "TO" user?
+      let foundToUser = this.roomState.FindUserByID(msg.toUserID);
 
-    let nm = new DF.DigifuChatMessage();
-    nm.messageID = generateID();
-    nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
-    nm.message = msg.message;
-    nm.fromUserID = foundUser.user.userID;
-    nm.fromUserColor = foundUser.user.color;
-    nm.fromUserName = foundUser.user.name;
-    nm.timestampUTC = new Date();
-    if (foundToUser != null) {
-      nm.toUserID = foundToUser.user.userID;
-      nm.toUserColor = foundToUser.user.color;
-      nm.toUserName = foundToUser.user.name;
-      return;
-    }
-
-    this.roomState.chatLog.push(nm);
-
-    this.CleanUpChatLog();
-
-    // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
-    // this allows simpler handling of incorporating the messageID.
-    io.to(this.roomName).emit(DF.ServerMessages.UserChatMessage, nm);
-  };
-
-  CleanUpChatLog() {
-    let now = new Date();
-    this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
-      return ((now - new Date(msg.timestampUTC)) < DF.ServerSettings.ChatHistoryMaxMS);
-    });
-  }
-
-  OnClientUserState(ws, data) {
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientUserState => unknown user`);
-      return;
-    }
-
-    // validate & integrate state. validation errors will result in just ignoring the request.
-    let origPayload = JSON.stringify(data);
-    data.name = DF.sanitizeUsername(data.name);
-    if (data.name == null) {
-      console.log(`OnClientUserState: invalid username ${origPayload.name}; disconnecting them.`);
-      return;
-    }
-    data.color = DF.sanitizeUserColor(data.color);
-    if (data.color == null) {
-      console.log(`OnClientUserState: invalid color ${origPayload.color}; disconnecting them.`);
-      return;
-    }
-    data.statusText = DF.sanitizeUserStatus(data.statusText);
-    if (data.statusText == null) {
-      console.log(`OnClientUserState: invalid status ${origPayload.statusText}; disconnecting them.`);
-      return;
-    }
-
-    let nm = null;
-    if (foundUser.user.name != data.name) { // new chat message entry for this event
-      nm = new DF.DigifuChatMessage();
+      let nm = new DF.DigifuChatMessage();
       nm.messageID = generateID();
-      nm.messageType = DF.ChatMessageType.nick; // of ChatMessageType. "chat", "part", "join", "nick"
-      nm.message = "";
+      nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
+      nm.message = msg.message;
       nm.fromUserID = foundUser.user.userID;
       nm.fromUserColor = foundUser.user.color;
       nm.fromUserName = foundUser.user.name;
       nm.timestampUTC = new Date();
-      nm.toUserID = foundUser.user.userID;
-      nm.toUserColor = foundUser.user.color;
-      nm.toUserName = data.name;
+      if (foundToUser != null) {
+        nm.toUserID = foundToUser.user.userID;
+        nm.toUserColor = foundToUser.user.color;
+        nm.toUserName = foundToUser.user.name;
+        return;
+      }
+
       this.roomState.chatLog.push(nm);
+
+      this.CleanUpChatLog();
+
+      // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
+      // this allows simpler handling of incorporating the messageID.
+      io.to(this.roomName).emit(DF.ServerMessages.UserChatMessage, nm);
+    } catch (e) {
+      console.log(`OnClientChatMessage exception occurred`);
+      console.log(e);
     }
-
-    foundUser.user.name = data.name;
-    foundUser.user.color = data.color;
-    foundUser.user.statusText = data.statusText;
-
-    foundUser.user.img = data.img;
-    foundUser.user.position.x = data.position.x;
-    foundUser.user.position.y = data.position.y;
-
-    data.userID = foundUser.user.userID; // adapt the data packet for sending to all clients.
-
-    io.to(this.roomName).emit(DF.ServerMessages.UserState, { state: data, chatMessageEntry: nm });
   };
+
+  CleanUpChatLog() {
+    try {
+      let now = new Date();
+      this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
+        return ((now - new Date(msg.timestampUTC)) < DF.ServerSettings.ChatHistoryMaxMS);
+      });
+    } catch (e) {
+      console.log(`CleanUpChatLog exception occurred`);
+      console.log(e);
+    }
+  }
+
+  OnClientUserState(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientUserState => unknown user`);
+        return;
+      }
+
+      // validate & integrate state. validation errors will result in just ignoring the request.
+      let origPayload = JSON.stringify(data);
+      data.name = DF.sanitizeUsername(data.name);
+      if (data.name == null) {
+        console.log(`OnClientUserState: invalid username ${origPayload.name}.`);
+        return;
+      }
+      data.color = DF.sanitizeUserColor(data.color);
+      if (data.color == null) {
+        console.log(`OnClientUserState: invalid color ${origPayload.color}.`);
+        return;
+      }
+      data.statusText = DF.sanitizeUserStatus(data.statusText);
+      if (data.statusText == null) {
+        console.log(`OnClientUserState: invalid status ${origPayload.statusText}.`);
+        return;
+      }
+
+      let nm = null;
+      if (foundUser.user.name != data.name) { // new chat message entry for this event
+        nm = new DF.DigifuChatMessage();
+        nm.messageID = generateID();
+        nm.messageType = DF.ChatMessageType.nick; // of ChatMessageType. "chat", "part", "join", "nick"
+        nm.message = "";
+        nm.fromUserID = foundUser.user.userID;
+        nm.fromUserColor = foundUser.user.color;
+        nm.fromUserName = foundUser.user.name;
+        nm.timestampUTC = new Date();
+        nm.toUserID = foundUser.user.userID;
+        nm.toUserColor = foundUser.user.color;
+        nm.toUserName = data.name;
+        this.roomState.chatLog.push(nm);
+      }
+
+      foundUser.user.name = data.name;
+      foundUser.user.color = data.color;
+      foundUser.user.statusText = data.statusText;
+
+      foundUser.user.img = data.img;
+      foundUser.user.position.x = data.position.x;
+      foundUser.user.position.y = data.position.y;
+
+      data.userID = foundUser.user.userID; // adapt the data packet for sending to all clients.
+
+      io.to(this.roomName).emit(DF.ServerMessages.UserState, { state: data, chatMessageEntry: nm });
+    } catch (e) {
+      console.log(`OnClientUserState exception occurred`);
+      console.log(e);
+    }
+  };
+
+  // text, x, y
+  OnClientCheer(ws, data) {
+    console.log(`OnClientCheer => ${JSON.stringify(data)} ${data.text.length}`);
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientCheer => unknown user`);
+        return;
+      }
+
+      let txt = DF.sanitizeCheerText(data.text);
+      if (txt == null) {
+        console.log(`OnClientCheer: invalid cheer ${data.text}.`);
+        return;
+      }
+
+      io.to(this.roomName).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
+    } catch (e) {
+      console.log(`OnClientCheer exception occurred`);
+      console.log(e);
+    }
+  }
 
 
   // every X seconds, this is called. here we can just do a generic push to clients and they're expected
   // to return a pong. for now used for timing, and reporting user ping.
   OnPingInterval() {
-    setTimeout(() => {
-      this.OnPingInterval();
-    }, DF.ServerSettings.PingIntervalMS);
+    try {
+      setTimeout(() => {
+        this.OnPingInterval();
+      }, DF.ServerSettings.PingIntervalMS);
 
-    // check idleness of users holding instruments.
-    let now = new Date();
-    this.roomState.instrumentCloset.forEach(i => {
-      if (!i.controlledByUserID) return;
-      let u = this.roomState.FindUserByID(i.controlledByUserID);
-      if (!u) return;
-      if (u.user.idle) return; // it's already been sent.
-      if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentIdleTimeoutMS) {
-        u.user.idle = true;
-        // user is considered idle on their instrument.
-        console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
-        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-          instrumentID: i.instrumentID,
-          userID: u.user.userID,
-          idle: true
-        });
-      }
-    });
+      // check idleness of users holding instruments.
+      let now = new Date();
+      this.roomState.instrumentCloset.forEach(i => {
+        if (!i.controlledByUserID) return;
+        let u = this.roomState.FindUserByID(i.controlledByUserID);
+        if (!u) return;
+        if (u.user.idle) return; // it's already been sent.
+        if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentIdleTimeoutMS) {
+          u.user.idle = true;
+          // user is considered idle on their instrument.
+          console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
+          io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+            instrumentID: i.instrumentID,
+            userID: u.user.userID,
+            idle: true
+          });
+        }
+      });
 
-    var payload = {
-      token: (new Date()).toISOString(),
-      users: []
-    };
-    this.roomState.users.forEach(u => {
-      payload.users.push({ userID: u.userID, pingMS: u.pingMS });
-    });
+      var payload = {
+        token: (new Date()).toISOString(),
+        users: []
+      };
+      this.roomState.users.forEach(u => {
+        payload.users.push({ userID: u.userID, pingMS: u.pingMS });
+      });
 
-    // ping ALL clients on the server
-    io.emit(DF.ServerMessages.Ping, payload);
+      // ping ALL clients on the server
+      io.emit(DF.ServerMessages.Ping, payload);
+    } catch (e) {
+      console.log(`OnPingInterval exception occurred`);
+      console.log(e);
+    }
   };
 
   OnClientPong(ws, data) {
-    // data is the token we sent, a date iso string.
-    //console.log(`OnClientPong data=${data}`);
-    let a = new Date(data);
-    let b = new Date();
+    try {
+      // data is the token we sent, a date iso string.
+      //console.log(`OnClientPong data=${data}`);
+      let a = new Date(data);
+      let b = new Date();
 
-    let foundUser = this.FindUserFromSocket(ws);
-    if (foundUser == null) {
-      console.log(`OnClientPong => unknown user`);
-      return;
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientPong => unknown user`);
+        return;
+      }
+
+      foundUser.user.pingMS = (b - a);
+    } catch (e) {
+      console.log(`OnClientPong exception occurred`);
+      console.log(e);
     }
-
-    foundUser.user.pingMS = (b - a);
   };
 
 
   OnClientConnect(ws) {
-    if (this.roomState.users.length >= DF.ServerSettings.RoomUserCountMaximum) {
-      ws.disconnect();
-      return;
-    }
-    ws.join(this.roomName);
-    ws.on(DF.ClientMessages.Identify, data => this.OnClientIdentify(ws, data));
-    ws.on('disconnect', () => this.OnClientClose(ws.id));
-    ws.on(DF.ClientMessages.InstrumentRequest, data => this.OnClientInstrumentRequest(ws, data));
-    ws.on(DF.ClientMessages.InstrumentRelease, () => this.OnClientInstrumentRelease(ws));
-    ws.on(DF.ClientMessages.NoteOn, data => this.OnClientNoteOn(ws, data.note, data.velocity));
-    ws.on(DF.ClientMessages.NoteOff, data => this.OnClientNoteOff(ws, data));
-    ws.on(DF.ClientMessages.AllNotesOff, () => this.OnClientAllNotesOff(ws));
-    ws.on(DF.ClientMessages.PedalDown, data => this.OnClientPedalDown(ws, data));
-    ws.on(DF.ClientMessages.PedalUp, data => this.OnClientPedalUp(ws, data));
-    ws.on(DF.ClientMessages.ChatMessage, data => this.OnClientChatMessage(ws, data));
-    ws.on(DF.ClientMessages.Pong, data => this.OnClientPong(ws, data));
-    ws.on(DF.ClientMessages.UserState, data => this.OnClientUserState(ws, data));
+    try {
+      if (this.roomState.users.length >= DF.ServerSettings.RoomUserCountMaximum) {
+        ws.disconnect();
+        return;
+      }
+      ws.join(this.roomName);
+      ws.on(DF.ClientMessages.Identify, data => this.OnClientIdentify(ws, data));
+      ws.on('disconnect', () => this.OnClientClose(ws.id));
+      ws.on(DF.ClientMessages.InstrumentRequest, data => this.OnClientInstrumentRequest(ws, data));
+      ws.on(DF.ClientMessages.InstrumentRelease, () => this.OnClientInstrumentRelease(ws));
+      ws.on(DF.ClientMessages.NoteOn, data => this.OnClientNoteOn(ws, data.note, data.velocity));
+      ws.on(DF.ClientMessages.NoteOff, data => this.OnClientNoteOff(ws, data));
+      ws.on(DF.ClientMessages.AllNotesOff, () => this.OnClientAllNotesOff(ws));
+      ws.on(DF.ClientMessages.PedalDown, data => this.OnClientPedalDown(ws, data));
+      ws.on(DF.ClientMessages.PedalUp, data => this.OnClientPedalUp(ws, data));
+      ws.on(DF.ClientMessages.ChatMessage, data => this.OnClientChatMessage(ws, data));
+      ws.on(DF.ClientMessages.Pong, data => this.OnClientPong(ws, data));
+      ws.on(DF.ClientMessages.UserState, data => this.OnClientUserState(ws, data));
+      ws.on(DF.ClientMessages.Cheer, data => this.OnClientCheer(ws, data));
 
-    // send the "please identify yourself" msg
-    ws.emit(DF.ServerMessages.PleaseIdentify);
+      // send the "please identify yourself" msg
+      ws.emit(DF.ServerMessages.PleaseIdentify);
+    } catch (e) {
+      console.log(`OnClientConnect exception occurred`);
+      console.log(e);
+    }
   }
 
 };

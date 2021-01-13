@@ -46,6 +46,7 @@
         });
 
         let roomName = routeToRoomName(window.location.pathname);
+        window.DFRoomName = roomName;
         $("head").append("<link rel='stylesheet' id='roomcss' href='" + roomName + ".css' type='text/css' />");
 
         ReactDOM.render(

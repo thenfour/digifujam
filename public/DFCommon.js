@@ -24,6 +24,7 @@ const ClientMessages = {
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
     UserState: "UserState", // name, color, img, x, y, statustext
+    Cheer: "Cheer", // text, x, y
 };
 
 const ServerMessages = {
@@ -40,6 +41,7 @@ const ServerMessages = {
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
     UserState: "UserState", // user, name, color, img, x, y, statustext
+    Cheer: "Cheer", // userID, text, x, y
 };
 
 const ServerSettings = {
@@ -190,6 +192,8 @@ let routeToRoomName = function (r) {
     // trim slashes
     if (requestedRoomName[0] == '/') requestedRoomName = requestedRoomName.substring(1);
     if (requestedRoomName[requestedRoomName.length - 1] == '/') requestedRoomName = requestedRoomName.substring(0, requestedRoomName.length - 1);
+
+    if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
   
     return requestedRoomName.toUpperCase();
   };
@@ -222,6 +226,14 @@ let sanitizeUserStatus = function (n) {
     return n;
 };
 
+let sanitizeCheerText = function(n) {
+    if (typeof(n) != 'string') return null;
+    n = n.trim();
+    if (n.length == 0) return null;
+    return n;
+    //return n.substring(0,1);
+}
+
 module.exports = {
     ClientMessages,
     ServerMessages,
@@ -236,4 +248,5 @@ module.exports = {
     sanitizeUsername,
     sanitizeUserColor,
     sanitizeUserStatus,
+    sanitizeCheerText,
 };

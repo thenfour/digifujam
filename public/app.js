@@ -9,6 +9,7 @@ function DigifuApp() {
     this.handleUserLeave = null;
     this.handleUserAllNotesOff = null;
     this.handleDisconnect = null;
+    this.handleCheer = null; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
 
     this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
     this.myInstrument = null; // filled when ownership is given to you.
@@ -73,9 +74,9 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
     // find "you"
     this.myUser = this.roomState.FindUserByID(myUserID).user;
 
-    Cookies.set("userName", this.myUser.name);
-    Cookies.set("userColor", this.myUser.color);
-    Cookies.set("userStatus", this.myUser.statusText);
+    Cookies.set(this.roomName + "_userName", this.myUser.name);
+    Cookies.set(this.roomName + "_userColor", this.myUser.color);
+    Cookies.set(this.roomName + "_userStatus", this.myUser.statusText);
 
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
@@ -244,6 +245,10 @@ DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
 
 DigifuApp.prototype.NET_OnUserState = function (data) {
     let u = this.roomState.FindUserByID(data.state.userID);
+    if (!u.user) {
+        console.log(`NET_OnUserState: unknown user ${data.state.userID}`);
+        return;
+    }
     u.user.name = data.state.name;
     u.user.statusText = data.state.statusText;
     u.user.color = data.state.color;
@@ -251,9 +256,9 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
     u.user.position = data.state.position;
 
     if (u.user.userID == this.myUser.userID) {
-        Cookies.set("userName", this.myUser.name);
-        Cookies.set("userColor", this.myUser.color);
-        Cookies.set("userStatus", this.myUser.statusText);
+        Cookies.set(this.roomName + "_userName", this.myUser.name);
+        Cookies.set(this.roomName + "_userColor", this.myUser.color);
+        Cookies.set(this.roomName + "_userStatus", this.myUser.statusText);
     }
 
     if (data.chatMessageEntry) {
@@ -264,6 +269,18 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
 
     this.stateChangeHandler();
 }
+
+DigifuApp.prototype.NET_OnUserCheer = function (data) {
+    let u = this.roomState.FindUserByID(data.userID);
+    if (!u.user) {
+        console.log(`NET_OnUserState: unknown user ${data.userID}`);
+        return;
+    }
+
+    this.handleCheer({ user:u.user, text:data.text, x:data.x, y:data.y });
+    this.stateChangeHandler();
+}
+
 
 DigifuApp.prototype.NET_OnDisconnect = function () {
     this.handleDisconnect();
@@ -309,8 +326,12 @@ DigifuApp.prototype.SetUserNameColorStatus = function (name, color, status) {
     });
 };
 
+DigifuApp.prototype.SendCheer = function (text, x, y) {
+    this.net.SendCheer(text, x, y);
+};
 
-DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave, disconnectHandler) {
+
+DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave, disconnectHandler, handleCheer) {
     log("attempting connection... status = " + userStatusText);
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
@@ -323,8 +344,11 @@ DigifuApp.prototype.Connect = function (userName, userColor, userStatusText, sta
     this.handleUserLeave = handleUserLeave;
     this.handleUserAllNotesOff = handleUserAllNotesOff;
     this.handleDisconnect = disconnectHandler;
+    this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
 
     this.midi.Init(this);
+
+    this.roomName = routeToRoomName(window.location.pathname); // is it a good idea to calc like this? not sure but for now it is!
 
     this.audioCtx = new AudioContext();
     // this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {

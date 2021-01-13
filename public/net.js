@@ -57,6 +57,11 @@ DigifuNet.prototype.SendUserState = function (data) {
     this.socket.emit(ClientMessages.UserState, data);
 };
 
+// data = { text, x, y }
+DigifuNet.prototype.SendCheer = function (text, x, y) {
+    this.socket.emit(ClientMessages.Cheer, {text, x, y});
+};
+
 DigifuNet.prototype.Disconnect = function () {
     this.socket.disconnect(true);
     this.socket = null;
@@ -76,6 +81,7 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.UserLeave, data => this.handler.NET_OnUserLeave(data));
     this.socket.on(ServerMessages.UserState, data => this.handler.NET_OnUserState(data));
     this.socket.on(ServerMessages.UserChatMessage, data => this.handler.NET_OnUserChatMessage(data));
+    this.socket.on(ServerMessages.Cheer, data => this.handler.NET_OnUserCheer(data));
 
     this.socket.on(ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID, data.idle));
     this.socket.on(ServerMessages.NoteOn, data => this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity));
@@ -88,4 +94,3 @@ DigifuNet.prototype.Connect = function (handler) {
 
     this.socket.on('disconnect', () => { this.handler.NET_OnDisconnect(); });
 };
-

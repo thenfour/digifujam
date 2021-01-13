@@ -19,7 +19,15 @@ let getValidationErrorMsg = function (userName, userColor, userStatus) {
 
 
 
+function random(num) {
+    return (Math.random() * num)
+}
 
+
+// props:
+// - default
+// - onChange(val)
+// - onEnter
 class TextInputField extends React.Component {
     constructor(props) {
         super(props);
@@ -43,12 +51,18 @@ class TextInputField extends React.Component {
     }
     render() {
         return (
-            <input type="text" ref={(input) => { this.inputRef = input; }} style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this._handleKeyDown} />
+            <input type="text" ref={(input) => {
+                this.inputRef = input;
+            }} style={this.props.style} value={this.state.value} onChange={(e) => this.handleChange(e.target.value)} onKeyDown={this._handleKeyDown} />
         );
     }
 }
 
-
+// props
+// - onChange
+// - onEnter
+// - value
+// - style
 class TextInputFieldExternalState extends React.Component {
     handleChange = (val) => {
         this.setState({ value: val });
@@ -74,6 +88,30 @@ class TextInputFieldExternalState extends React.Component {
 }
 
 
+// props
+// - app
+// - handleCheerClick(text)
+class CheerControls extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            text: '👏'
+        };
+    }
+
+    render() {
+        if (!this.props.app || !this.props.app.roomState) return null;
+        return (
+            <div id="#cheerControl">
+                <button onClick={() => this.props.handleCheerClick(this.state.text)}>cheer</button>
+                <TextInputFieldExternalState
+                    value={this.state.text}
+                    onChange={(val) => this.setState({ text: val })}
+                />
+            </div>
+        );
+    }
+}
 
 
 class UserState extends React.Component {
@@ -221,14 +259,14 @@ class Connection extends React.Component {
             showValidationErrors: false, // don't show until you try to connect
         };
 
-        if (Cookies.get("userName")) {
-            this.state.userName = Cookies.get("userName");
+        if (Cookies.get(window.DFRoomName + "_userName")) {
+            this.state.userName = Cookies.get(window.DFRoomName + "_userName");
         }
-        if (Cookies.get("userColor")) {
-            this.state.userColor = Cookies.get("userColor");
+        if (Cookies.get(window.DFRoomName + "_userColor")) {
+            this.state.userColor = Cookies.get(window.DFRoomName + "_userColor");
         }
-        if (Cookies.get("userStatus")) {
-            this.state.userStatus = Cookies.get("userStatus");
+        if (Cookies.get(window.DFRoomName + "_userStatus")) {
+            this.state.userStatus = Cookies.get(window.DFRoomName + "_userStatus");
         }
     }
 
@@ -287,7 +325,7 @@ class UserList extends React.Component {
         //         let meText = (u.userID == digifuApp.myUser.userID) ? "<ME>" : "";
 
         const users = this.props.app.roomState.users.map(u => (
-            <li key={u.userID} style={{ color: u.color }}>{u.name} ({u.pingMS}ms ping)</li>
+            <li key={u.userID}><span className="userName"  style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
         ));
 
         return (
@@ -518,6 +556,8 @@ class RoomArea extends React.Component {
         };
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
         this.roomToScreenPosition = this.roomToScreenPosition.bind(this);
+        this.isCheering = false;
+        this.cheerText = "";
     }
 
     // helper APIs
@@ -568,7 +608,18 @@ class RoomArea extends React.Component {
         if ((!this.props.app) || (!this.props.app.roomState)) return false;
         if (!e.target || e.target.id != "roomArea") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
         const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
-        this.props.app.SetUserPosition(roomPos);
+
+        if (this.isCheering) {
+            this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
+            this.isCheering = e.shiftKey; // shift continues cheering
+        } else {
+            this.props.app.SetUserPosition(roomPos);
+        }
+    }
+
+    handleCheerClick = (text) => {
+        this.isCheering = true;
+        this.cheerText = text;
     }
 
     updateScrollSize() {
@@ -624,6 +675,7 @@ class RoomArea extends React.Component {
                 <ChatLog app={this.props.app} />
                 <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
+                <CheerControls app={this.props.app} handleCheerClick={this.handleCheerClick}></CheerControls>
             </div>
         );
     }
@@ -681,8 +733,49 @@ class RootArea extends React.Component {
             this.notesOn.push([]); // empty initially.
         }
 
-        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected);
+        app.Connect(userName, color, statusText, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected, this.HandleCheer);
         this.setState({ app });
+    }
+
+    handleRoomRef = (r) => {
+        let a = 0;
+    };
+
+    HandleCheer = (data/*user, text x, y*/) => {
+        //alert(`user cheer ${JSON.stringify(data)}`);
+        if (!this.roomRef || !this.roomRef.current) return;
+        //createCheer(data.user, data.text, data.x, data.y, this.roomRef);
+        //console.log(`createCheer(${text}, ${x}, ${y})`);
+        var durx = random(2) + 1.5;
+        var dury = random(2) + 1.5;
+        var fontSize = random(6) + 24;
+        var animX = Math.trunc(random(2));
+        var animY = Math.trunc(random(2));
+        var easeY = Math.trunc(random(2)) ? "ease-in" : "ease-out";
+        var easyX = Math.trunc(random(2)) ? "ease-in" : "ease-out";
+
+        let pos = this.roomRef.current.roomToScreenPosition({x:data.x, y:data.y});
+
+        let css = `
+                animation: floatX${animX} ${durx}s ${easyX} forwards,
+                floatY${animY} ${dury}s ${easeY} forwards,
+                floatOpacity ${dury}s ease-out forwards;
+                top:${pos.y}px;
+                left:${pos.x}px;
+                font-size:${fontSize}px;
+                color:${data.user.color}
+            `;
+
+        var cheerContainer = document.getElementById("roomArea")
+        var cheer = document.createElement("div");
+        cheer.innerText = data.text;
+        cheer.className = "cheer";
+        cheer.style.cssText = css;
+        cheerContainer.append(cheer);
+
+        setTimeout(() => {
+            cheer.parentNode.removeChild(cheer);
+        }, Math.max(durx, dury) * 1000);
     }
 
     HandleNetworkDisconnected = () => {
@@ -751,6 +844,7 @@ class RootArea extends React.Component {
 
         this.notesOn = []; // not part of state because it's pure jquery
         this.activityCount = 0;
+        this.roomRef = React.createRef();
 
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
         for (let i = 0; i < 128; ++i) {
@@ -769,7 +863,9 @@ class RootArea extends React.Component {
             }
             title = `${this.state.app.roomState.roomTitle} ${activityTxt} [${this.state.app.roomState.users.length}]`;
         }
-        document.title = title;
+        if (document.title != title) {
+            document.title = title;
+        }
 
         const url = window.location.href.split('?')[0];
         return (
@@ -784,7 +880,9 @@ class RootArea extends React.Component {
                 </div>
                 <PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
-                <RoomArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
+                <RoomArea app={this.state.app} handleConnect={this.HandleConnect}
+                    handleDisconnect={() => this.HandleDisconnect()}
+                    ref={this.roomRef} />
                 <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
                 <LeftArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
             </div>

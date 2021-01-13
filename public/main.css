@@ -116,6 +116,11 @@ button:focus {
     margin-top:30px;
 }
 
+.userPing {
+    font-size: smaller;
+    font-style: italic;
+    font-weight: normal;
+}
 
 .headerArea {
     padding: 3px;
@@ -262,6 +267,36 @@ button:focus {
 }
 
 
+
+
+  
+  .cheer {
+    position:absolute;
+    pointer-events:none;
+  }
+  #cheerControl input[type="text" i] {
+      width:2em;
+  }
+  
+  @keyframes floatY0 {
+    to {transform: translateY(50px);}
+  }
+  @keyframes floatX0 {
+    to {transform: translate(150px);}
+  }
+  
+  @keyframes floatY1 {
+    to {transform: translateY(-150px);}
+  }
+  @keyframes floatX1 {
+    to {transform: translate(-150px);}
+  }
+  @keyframes floatOpacity {
+    to {opacity: 0;}
+  }
+  
+  
+  
 
 
 
