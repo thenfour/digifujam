@@ -1,78 +1,6 @@
 'use strict';
 
 
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class SoundfontInstrument {
-	constructor(audioCtx, destination, instrumentSpec) {
-		this.audioCtx = audioCtx;
-		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, { destination })
-			.then(function (inst) {
-				this.sfinstrument = inst;
-			}.bind(this));
-
-		this.sfinstrument = null;
-		this.instrumentSpec = instrumentSpec;
-		this.sustainMode = false; // true = pedal down
-		this.voices = new Array(128); // map midi note number to a voice
-	};
-
-	NoteOn(midiNote, velocity) {
-		if (!this.sfinstrument) return;
-		this.voices[midiNote] = this.sfinstrument.play(midiNote, null, { gain: velocity / 128 }); // https://www.npmjs.com/package/soundfont-player
-		this.voices[midiNote].DFHolding = true;
-		//log(`note on ${midiNote} holding=${this.voices[midiNote].DFHolding}`);
-	};
-
-	NoteOff(midiNote) {
-		if (!this.sfinstrument) return;
-		//log(`note off ${midiNote}`);
-		// we have to respect if a note off happens without corresponding note on.
-		//console.assert(this.voices[midiNote]);
-		if (!this.voices[midiNote]) return;
-		this.voices[midiNote].DFHolding = false;
-		if (!this.sustainMode) {
-			this.voices[midiNote].stop();
-			this.voices[midiNote] = null;
-		}
-	};
-
-	PedalDown() {
-		if (!this.sfinstrument) return;
-		this.sustainMode = true;
-	};
-
-	PedalUp() {
-		if (!this.sfinstrument) return;
-		this.sustainMode = false;
-		// release notes which are playing but not physically pressed.
-		for (let v of this.voices) {
-			if (v) {
-				if (!v.DFHolding) {
-					v.stop();
-				}
-			}
-		}
-	};
-
-	AllNotesOff() {
-		if (!this.sfinstrument) return;
-		this.voices = new Array(128); // reset all voices.
-		this.sustainMode = false;
-		this.sfinstrument.stop();
-	};
-
-	disconnect() {
-		if (!this.sfinstrument) return;
-		this.AllNotesOff();
-		this.sfinstrument.stop();
-	}
-};
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DigifuSynth {
 	constructor() {
@@ -80,8 +8,13 @@ class DigifuSynth {
 		this.instruments = {};
 		this.instrumentGainers = {}; // key = instrumentID
 
+		this.instrumentSpecs = null;
+		this.internalMasterGain = null;
+
 		this.masterEffectsInputNode = null;
 		this.masterReverbGain = null;
+
+		this._isMuted = false;
 	}
 
 	//this.masterGain = 1.0;// 0 = mute, 1.0 = unity, >1=amplify
@@ -100,9 +33,9 @@ class DigifuSynth {
 		this.masterReverbGain.gain.value = val;
 
 		if (val > 0.0001) {
-			this.masterReverbGain.connect(this.audioCtx.destination);
+			this.masterReverb.connect(this.masterReverbGain);
 		} else {
-			this.masterReverbGain.disconnect();
+			this.masterReverb.disconnect();
 		}
 	}
 
@@ -112,32 +45,76 @@ class DigifuSynth {
 		return this.masterReverbGain.gain.value;
 	}
 
+	get isMuted() {
+		return this._isMuted; // unfortunately no "is connected" api exists so we must keep state.
+	}
+
+	set isMuted(val) {
+		// instrumentSpecs, internalMasterGain
+		if (val) {
+			// stop all instruments and disconnect our graph temporarily
+			this.masterReverbGain.disconnect();
+			this.masterEffectsInputNode.disconnect();
+			Object.keys(this.instruments).forEach(k => {
+				this.instruments[k].disconnect();
+			});
+		} else {
+			this.masterEffectsInputNode.connect(this.masterReverb);
+			this.masterEffectsInputNode.connect(this.audioCtx.destination);
+			this.masterReverbGain.connect(this.audioCtx.destination);
+			//this.masterReverbGain.connect(this.audioCtx.destination);
+			//this.reverbGain = this.reverbGain; // handles whether it should reconnect verb nodes
+
+			// no need to reconnect; it should be done automatically.
+			// Object.keys(this.instruments).forEach(k => {
+			// 	this.instruments[k].connect(this.instrumentGainers[k]);
+			// });
+		}
+		this._isMuted = !!val;
+	}
+
 	NoteOn(instrumentSpec, note, velocity) {
+		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
 	};
 
 	NoteOff(instrumentSpec, note) {
+		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].NoteOff(note);
 	};
 
 	AllNotesOff(instrumentSpec) {
+		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].AllNotesOff();
 	};
 
 	PedalUp(instrumentSpec) {
+		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].PedalUp();
 	};
 
 	PedalDown(instrumentSpec) {
+		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].PedalDown();
 	};
 
 	PitchBend(instrumentSpec, val) {
+		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].PitchBend(val);
 	};
 
+	ConnectInstrument(instrumentSpec) {
+		this.instruments[instrumentSpec.instrumentID].connect();
+	}
+
+	DisconnectInstrument(instrumentSpec) {
+		this.instruments[instrumentSpec.instrumentID].disconnect();
+	}
+
 	// call when you have a list of instruments
 	InitInstruments(instrumentSpecs, internalMasterGain) {
+		this.instrumentSpecs = instrumentSpecs;
+		this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
 		instrumentSpecs.forEach(s => {
 			let gainer = this.audioCtx.createGain();
@@ -156,6 +133,9 @@ class DigifuSynth {
 					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, s);
 					break;
 			}
+			//if (s.controlledByUserID) {
+			//	this.instruments[s.instrumentID].connect(gainer);
+			//}
 		});
 	};
 

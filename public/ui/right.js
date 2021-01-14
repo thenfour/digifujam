@@ -221,6 +221,14 @@ class UserState extends React.Component {
         this.setState({ isShown: !this.state.isShown });
     };
 
+    onClickMute = () => {
+        // this op takes a while so do async
+        setTimeout(() => {
+            this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
+            this.setState(this.state);
+        }, 0);
+    };
+
     render() {
         let inputList = null;
         if (this.props.app && this.props.app.midi) {
@@ -260,17 +268,22 @@ class UserState extends React.Component {
 
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
 
+        const muteMarkup = this.props.app && this.props.app.synth ? (
+            <button className="muteButton" onClick={this.onClickMute}>{this.props.app.synth.isMuted ? "🔇" : "🔊"}</button>
+        ) : null;
+
         // volume from 0 to 1(unity) to 2
         const volumeMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} />
+                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
                 <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
+                {muteMarkup}
             </li>
         ) : null;
 
         const verbMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} />
+                <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} disabled={this.props.app.synth.isMuted} />
                 <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain * 100)}</label>
             </li>
         ) : null;
@@ -528,7 +541,7 @@ class UserAvatar extends React.Component {
 
         return (
             <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
-                <div>{this.props.user.name}</div>
+                <div><span className="userName">{this.props.user.name}</span></div>
                 {instMarkup}
             </div>
         );
@@ -673,10 +686,10 @@ class RoomArea extends React.Component {
         const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
 
         //if (!this.isExpectingCheer) {
-            //     this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
-            //     //this.isCheering = e.shiftKey; // shift continues cheering
-            // } else {
-            this.props.app.SetUserPosition(roomPos);
+        //     this.props.app.SendCheer(this.cheerText, roomPos.x, roomPos.y);
+        //     //this.isCheering = e.shiftKey; // shift continues cheering
+        // } else {
+        this.props.app.SetUserPosition(roomPos);
         //}
     }
 

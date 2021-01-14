@@ -9,7 +9,6 @@ body {
     background-color: black;
     color: #0aa;
     font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
-    font-weight: bold;
     font-size: medium;
 }
 
@@ -138,32 +137,32 @@ button:focus {
 
 @keyframes avatarBump1 {
     0% {
-        transform: translate(0px, 0px);
+        transform: translate(-50%, -50%);
         animation-timing-function: ease-in-out;
     }
 
     10% {
-        transform: translate(0px, 4px);
+        transform: translate(-50%, calc(-50% + 4px));
     }
 
     100% {
-        transform: translate(0px, 0px);
+        transform: translate(-50%, -50%);
     }
 }
 
 /* exact duplicate of the other, so when i toggle between the classes, it resets the animation. why doesn't CSS let you reset one-shot animations?? */
 @keyframes avatarBump2 {
     0% {
-        transform: translate(0px, 0px);
+        transform: translate(-50%, -50%);
         animation-timing-function: ease-in-out;
     }
 
     10% {
-        transform: translate(0px, 4px);
+        transform: translate(-50%, calc(-50% + 4px));
     }
 
     100% {
-        transform: translate(0px, 0px);
+        transform: translate(-50%, -50%);
     }
 }
 
@@ -186,6 +185,7 @@ button:focus {
     background-color: rgba(0, 0, 0, .5);
     text-align: center;
     filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, .5));
+    transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
 }
 
 .userAvatar.me {
@@ -207,7 +207,13 @@ button:focus {
     width:100%; /* important because if you have 1 message that cannot be wrapped, it will make the chat log area grow wider, and everyone's messages will get cutoff. this allows other long messages to still wrap.*/
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;/*stroke*/
     color: #aaa;
-    pointer-events: none;            
+    pointer-events: none;
+
+    -webkit-mask-image: linear-gradient(transparent, transparent 40%, rgba(0, 0, 0, 1.0) 60%, rgba(0, 0, 0, 1.0));
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 
@@ -267,8 +273,16 @@ button:focus {
 }
 
 
+button.muteButton,
+button.muteButton:focus
+{
+    border:0;
+}
 
 
+.userName {
+    font-weight: bold;
+}
   
   .cheer {
     position:absolute;

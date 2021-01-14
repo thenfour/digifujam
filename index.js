@@ -135,8 +135,7 @@ class RoomServer {
         return;
       }
 
-      // TODO: check if the current instrument is available or its controlling user is considered idle.
-      // etc etc
+      // TODO: validate if the current instrument is available or its controlling user is considered idle.
 
       // release existing instrument.
       // find their instrument.

@@ -128,19 +128,19 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
     }
 
     let foundOldUser = null;
-    if (userID) {
-        foundOldUser = this.roomState.FindUserByID(userID);
-        if (!foundOldUser) return;
-        foundOldUser.user.idle = idle;
-        console.log(`set user ${foundOldUser.user.userID} to IDLE = ${idle}`);
-    }
+    foundOldUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
+
+    let foundNewUser = null;
+    foundNewUser = this.roomState.FindUserByID(userID);
 
     if (foundInstrument.instrument.controlledByUserID != userID) {
-
-        // do all notes off when instrument changes for safety.
+        // do all notes off when instrument changes
         this.synth.AllNotesOff(foundInstrument.instrument);
         if (foundOldUser) {
             this.handleUserAllNotesOff(foundOldUser.user, foundInstrument.instrument);
+        }
+        if (foundNewUser) {
+            this.handleUserAllNotesOff(foundNewUser.user, foundInstrument.instrument);
         }
 
         if (userID == this.myUser.userID) {
@@ -152,6 +152,12 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
             }
         }
         foundInstrument.instrument.controlledByUserID = userID;
+    }
+
+    if (userID) { // bring instrument online, or offline depending on new ownership.
+        this.synth.ConnectInstrument(foundInstrument.instrument);
+    } else {
+        this.synth.DisconnectInstrument(foundInstrument.instrument);
     }
 
     if (this.stateChangeHandler) {
@@ -276,7 +282,7 @@ DigifuApp.prototype.NET_OnUserCheer = function (data) {
         return;
     }
 
-    this.handleCheer({ user:u.user, text:data.text, x:data.x, y:data.y });
+    this.handleCheer({ user: u.user, text: data.text, x: data.x, y: data.y });
     this.stateChangeHandler();
 }
 
