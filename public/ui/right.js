@@ -117,7 +117,6 @@ class CheerControls extends React.Component {
         }
 
         // perform cheer
-        //const pos = this.props.displayHelper().roomToScreenPosition(this.props.app.myUser.position);
         this.props.app.SendCheer(this.state.text, this.props.app.myUser.position.x, this.props.app.myUser.position.y);
 
         // while allowing, continue timer
@@ -133,7 +132,6 @@ class CheerControls extends React.Component {
         this.mouseDown = true; // any time you enter, just assume mouse is released.
 
         // do initial cheer,
-        //const pos = this.props.displayHelper().roomToScreenPosition(this.props.app.myUser.position);
         this.props.app.SendCheer(this.state.text, this.props.app.myUser.position.x, this.props.app.myUser.position.y);
 
         if (!this.timerRunning) {

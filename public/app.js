@@ -330,6 +330,8 @@ DigifuApp.prototype.SetUserNameColor = function (name, color) {
 };
 
 DigifuApp.prototype.SendCheer = function (text, x, y) {
+    text = sanitizeCheerText(text);
+    if (text == null) return;
     this.net.SendCheer(text, x, y);
 };
 

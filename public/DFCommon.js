@@ -219,8 +219,7 @@ let sanitizeCheerText = function (n) {
     if (typeof (n) != 'string') return null;
     n = n.trim();
     if (n.length == 0) return null;
-    return n;
-    //return n.substring(0,1);
+    return String.fromCodePoint(n.codePointAt(0));
 }
 
 module.exports = {
