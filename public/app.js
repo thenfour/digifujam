@@ -79,7 +79,7 @@ DigifuApp.prototype.MIDI_PedalUp = function () {
 // val is 0-16383
 DigifuApp.prototype.MIDI_PitchBend = function (val) {
     if (this.myInstrument == null) return;
-    //this.net.SendPitchBend(val);
+    this.net.SendInstrumentParam("pb", val);
     this.synth.PitchBend(this.myInstrument, val);
 };
 
@@ -258,7 +258,7 @@ DigifuApp.prototype.NET_OnPedalUp = function (userID) {
     this.synth.PedalUp(foundInstrument.instrument);
 };
 
-DigifuApp.prototype.NET_OnInstrumentParams = function(data) // userID, instrumentID, paramName, newVal)
+DigifuApp.prototype.NET_OnInstrumentParams = function (data) // userID, instrumentID, paramName, newVal)
 {
     data.forEach(datum => {
         let foundInstrument = this.roomState.FindInstrumentByUserID(datum.userID);
@@ -266,9 +266,13 @@ DigifuApp.prototype.NET_OnInstrumentParams = function(data) // userID, instrumen
             log(`NET_OnInstrumentParam instrument not found`);
             return;
         }
-        let param = foundInstrument.instrument.params.find(p => p.paramID == datum.paramID);
-        this.synth.SetInstrumentParam(foundInstrument.instrument, param, datum.newVal);
-        });
+        if (datum.paramID == "pb") {
+            this.synth.PitchBend(foundInstrument.instrument, datum.newVal);
+        } else {
+            let param = foundInstrument.instrument.params.find(p => p.paramID == datum.paramID);
+            this.synth.SetInstrumentParam(foundInstrument.instrument, param, datum.newVal);
+        }
+    });
 }
 
 DigifuApp.prototype.NET_OnPing = function (token, users) {

@@ -4,10 +4,94 @@
   "width": 1000,
   "height": 741,
   "internalMasterGain": 2.0,
-  "announcementHTML": "Welcome to #maj7 jam session<br />** Currently looking for a volunteer to create a room background **",
+  "announcementHTML": "** Currently looking for a volunteer to create a room background **",
   "users": [],
   "chatLog": [],
   "instrumentCloset": [
+    {
+      "sfinstrumentName": "",
+      "name": "Poly synth 1",
+      "gain": 1.0,
+      "img": "",
+      "color": "rgb(138, 224, 153)",
+      "engine": "synth",
+      "activityDisplay": "keyboard",
+      "params": [
+        {
+          "paramID": "wave",
+          "name": "Wave",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "currentValue": 1,
+          "enumNames": ["Sine", "Square", "Saw", "Tri"]
+        },
+        {
+          "paramID": "detune",
+          "name": "Detune",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 0.5,
+          "currentValue": 0.1
+        },
+        {
+          "paramID": "pbrange",
+          "name": "PB range",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 12,
+          "currentValue": 2
+        },
+        {
+          "paramID": "a",
+          "name": "A",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 5.0,
+          "currentValue": 0.008
+        },
+        {
+          "paramID": "d",
+          "name": "D",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 5.0,
+          "currentValue": 4.0
+        },
+        {
+          "paramID": "s",
+          "name": "S",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0,
+          "currentValue": 0.0
+        },
+        {
+          "paramID": "r",
+          "name": "R",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 5.0,
+          "currentValue": 0.07
+        },
+        {
+          "paramID": "q",
+          "name": "Filt Q",
+          "parameterType": "floatParam",
+          "minValue": 0.001,
+          "maxValue": 20.0,
+          "currentValue": 1.0
+        },
+        {
+          "paramID": "cutoff",
+          "name": "Tone",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 12000.0,
+          "currentValue": 5000.0
+        }
+      ]
+    },
     {
       "name": "Piano",
       "sfinstrumentName": "acoustic_grand_piano",
@@ -51,15 +135,6 @@
       "color": "rgb(136, 68, 0)",
       "gain": 1.0,
       "engine": "soundfont",
-      "activityDisplay": "keyboard"
-    },
-    {
-      "sfinstrumentName": "",
-      "name": "Casio vibraphone",
-      "gain": 1.0,
-      "img": "",
-      "color": "rgb(138, 224, 153)",
-      "engine": "synth",
       "activityDisplay": "keyboard"
     },
     {

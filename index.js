@@ -397,21 +397,31 @@ class RoomServer {
       // set the value.
       let ret = [];
       data.forEach(x => {
-        let p = foundInstrument.instrument.params.find(o => o.paramID == x.paramID);
-        if (!p) {
-          console.log(`=> param ${x.paramID} not found.`);
-          return;
-        }
-  
-        p.currentValue = DF.sanitizeInstrumentParamVal(x.newVal);
-        //console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal}`);
+        if (x.paramID == "pb") {
+          // special case: pitch bend is not a real param on an instrument but it's very convenient to use the param system for it.
+          ret.push({
+            userID: foundUser.user.userID,
+            instrumentID: foundInstrument.instrument.instrumentID,
+            paramID: x.paramID,
+            newVal: x.newVal
+          });
+        } else {
+          let p = foundInstrument.instrument.params.find(o => o.paramID == x.paramID);
+          if (!p) {
+            console.log(`=> param ${x.paramID} not found.`);
+            return;
+          }
 
-        ret.push({
-          userID: foundUser.user.userID,
-          instrumentID: foundInstrument.instrument.instrumentID,
-          paramID: x.paramID,
-          newVal: x.newVal
-        });
+          p.currentValue = DF.sanitizeInstrumentParamVal(p, x.newVal);
+          console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
+
+          ret.push({
+            userID: foundUser.user.userID,
+            instrumentID: foundInstrument.instrument.instrumentID,
+            paramID: x.paramID,
+            newVal: p.currentValue
+          });
+        }
       });
 
       // broadcast to all clients except foundUser

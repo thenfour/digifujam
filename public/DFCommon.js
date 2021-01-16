@@ -31,7 +31,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    InstrumentParams: "InstParams",// [{ paramID, newVal }]
+    InstrumentParams: "InstParams",// [{ paramID, newVal }] -- pitch bend is a special param called "pb"
     ResetInstrumentParams: "ResetInstrumentParams",
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
@@ -50,7 +50,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    InstrumentParams: "InstParams",//   [ { userID, instrumentID, paramID, newVal } ]
+    InstrumentParams: "InstParams",//   [ { userID, instrumentID, paramID, newVal } ] -- pitch bend is a special param called "pb"
     UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y
 };

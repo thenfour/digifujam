@@ -92,7 +92,7 @@ class PolySynthVoice {
     }
 
     disconnect() {
-        this.panic();
+        this.AllNotesOff();
         if (!this.isConnected) return;
 
         this.gainEnvelope.stop();
@@ -232,11 +232,13 @@ class PolySynthVoice {
         this.gainEnvelope.release();
     }
 
-    panic() {
+    AllNotesOff() {
         if (this.gainEnvelope) this.gainEnvelope.reset();
         this.midiNote = 0;
         this.timestamp = null;
         this.isPhysicallyHeld = false;
+        this.velocity = 0;
+        this.pitchBend = 0;
     }
 
 };
@@ -321,7 +323,7 @@ class PolySynth {
     }
 
     AllNotesOff() {
-        this.voices.forEach(v => v.panic());
+        this.voices.forEach(v => v.AllNotesOff());
     }
 
     PitchBend(val) {
