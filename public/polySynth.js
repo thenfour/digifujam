@@ -47,7 +47,7 @@ class PolySynthVoice {
             peak: this.peakGain, // why must this be so low? not sure...
             decay: this.instrumentSpec.GetParamByID("d").currentValue,//4.0, // seconds until hitting sustain value
             decayCurve: 6.8, // https://rawgit.com/voidqk/adsrnode/master/demo.html
-            sustain: this.instrumentSpec.GetParamByID("s").currentValue,//0.0, // sustain value
+            sustain: this.instrumentSpec.GetParamByID("s").currentValue * this.peakGain,//0.0, // sustain value
             release: this.instrumentSpec.GetParamByID("r").currentValue,// 0.07  // seconds until returning back to 0.0
             releaseCurve: 6.8,
         });

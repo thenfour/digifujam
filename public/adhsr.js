@@ -224,7 +224,8 @@
     
         node.update = function(opts){
             update(opts);
-            return this.reset();
+            //return this.reset();
+            return this;
         };
     
         node.baseTime = 0;

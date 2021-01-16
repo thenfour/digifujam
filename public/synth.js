@@ -85,6 +85,11 @@ class DigifuSynth {
 
 	AllNotesOff(instrumentSpec) {
 		if (this._isMuted) return;
+		if (!instrumentSpec) {
+			// do for all instruments.
+			Object.values(this.instruments).forEach(i => { i.AllNotesOff(); });
+			return;
+		}
 		this.instruments[instrumentSpec.instrumentID].AllNotesOff();
 	};
 

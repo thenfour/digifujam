@@ -1018,7 +1018,7 @@ class RootArea extends React.Component {
             this.notesOn.push([]); // empty initially.
         }
 
-        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected, this.HandleCheer);
+        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected, this.HandleCheer);
         this.setState({ app });
     }
 
@@ -1118,6 +1118,14 @@ class RootArea extends React.Component {
             if (refs.length < 1) return;
             this.removeUserNoteRef(user.userID, midiNote);
         });
+    };
+
+    handleAllNotesOff = () => {
+        this.notesOn = []; // not part of state because it's pure jquery
+        // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
+        for (let i = 0; i < 128; ++i) {
+            this.notesOn.push([]); // empty initially.
+        }
     };
 
     handleUserLeave = (userID) => {

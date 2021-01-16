@@ -9,6 +9,7 @@ function DigifuApp() {
     this.noteOffHandler = null;
     this.handleUserLeave = null;
     this.handleUserAllNotesOff = null;
+    this.handleAllNotesOff = null;
     this.handleDisconnect = null;
     this.handleCheer = null; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
 
@@ -108,11 +109,17 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
 
+    // are any instruments assigned to you?
+    this.myInstrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == myUserID);
+
     // set up init abbreviated chat log
     let ch = this.roomState.chatLog;
     this.roomState.chatLog = [];
     this.shortChatLog = [];
     ch.forEach(msg => { this._addChatMessage(msg); });
+
+    this.synth.AllNotesOff();
+    this.handleAllNotesOff();
 
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
@@ -400,7 +407,7 @@ DigifuApp.prototype.ResetInstrumentParams = function () {
 };
 
 
-DigifuApp.prototype.Connect = function (userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleUserLeave, disconnectHandler, handleCheer) {
+DigifuApp.prototype.Connect = function (userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer) {
     this.myUser = new DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
@@ -409,6 +416,7 @@ DigifuApp.prototype.Connect = function (userName, userColor, stateChangeHandler,
     this.noteOnHandler = noteOnHandler;
     this.noteOffHandler = noteOffHandler;
     this.handleUserLeave = handleUserLeave;
+    this.handleAllNotesOff = handleAllNotesOff;
     this.handleUserAllNotesOff = handleUserAllNotesOff;
     this.handleDisconnect = disconnectHandler;
     this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
