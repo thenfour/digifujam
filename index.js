@@ -413,7 +413,7 @@ class RoomServer {
           }
 
           p.currentValue = DF.sanitizeInstrumentParamVal(p, x.newVal);
-          console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
+          //console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
 
           ret.push({
             userID: foundUser.user.userID,
