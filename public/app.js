@@ -380,6 +380,7 @@ DigifuApp.prototype.SendCheer = function (text, x, y) {
 };
 
 DigifuApp.prototype.SetInstrumentParam = function (inst, param, newVal) {
+    newVal = sanitizeInstrumentParamVal(param, newVal);
     this.net.SendInstrumentParam(param.paramID, newVal);
     this.synth.SetInstrumentParam(inst, param, newVal);
 };

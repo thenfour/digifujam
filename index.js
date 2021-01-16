@@ -380,11 +380,11 @@ class RoomServer {
   };
 
 
-  OnClientInstrumentParam(ws, data) {
+  OnClientInstrumentParams(ws, data) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientInstrumentParam => unknown user`);
+        console.log(`OnClientInstrumentParams => unknown user`);
         return;
       }
 
@@ -395,23 +395,29 @@ class RoomServer {
       }
 
       // set the value.
-      let p = foundInstrument.instrument.params.find(o => o.paramID == data.paramID);
-      if (!p) {
-        console.log(`=> param ${data.paramID} not found.`);
-        return;
-      }
+      let ret = [];
+      data.forEach(x => {
+        let p = foundInstrument.instrument.params.find(o => o.paramID == x.paramID);
+        if (!p) {
+          console.log(`=> param ${x.paramID} not found.`);
+          return;
+        }
+  
+        p.currentValue = DF.sanitizeInstrumentParamVal(x.newVal);
+        //console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal}`);
 
-      p.currentValue = data.newVal;
+        ret.push({
+          userID: foundUser.user.userID,
+          instrumentID: foundInstrument.instrument.instrumentID,
+          paramID: x.paramID,
+          newVal: x.newVal
+        });
+      });
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.InstrumentParams, [{
-        userID: foundUser.user.userID,
-        instrumentID: foundInstrument.instrument.instrumentID,
-        paramID: data.paramID,
-        newVal: data.newVal
-      }]);
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.InstrumentParams, ret);
     } catch (e) {
-      console.log(`OnClientInstrumentParam exception occurred`);
+      console.log(`OnClientInstrumentParams exception occurred`);
       console.log(e);
     }
   };
@@ -665,7 +671,7 @@ class RoomServer {
       ws.on(DF.ClientMessages.AllNotesOff, () => this.OnClientAllNotesOff(ws));
       ws.on(DF.ClientMessages.PedalDown, data => this.OnClientPedalDown(ws, data));
       ws.on(DF.ClientMessages.PedalUp, data => this.OnClientPedalUp(ws, data));
-      ws.on(DF.ClientMessages.InstrumentParam, data => this.OnClientInstrumentParam(ws, data));
+      ws.on(DF.ClientMessages.InstrumentParams, data => this.OnClientInstrumentParams(ws, data));
       ws.on(DF.ClientMessages.ResetInstrumentParams, data => this.OnClientResetInstrumentParams(ws, data));
 
       ws.on(DF.ClientMessages.ChatMessage, data => this.OnClientChatMessage(ws, data));

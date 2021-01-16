@@ -7,6 +7,19 @@ function DigifuNet() {
     this.isConnected = false;
     this.socket = null;
     this.handler = null;
+
+    this.queuedParamChangeData = []; // array of { paramID, newVal } corresponding to ClientSettings.InstrumentParams
+    this.paramChangeLastSent = new Date();
+    this.timerCookie = null;
+};
+
+DigifuNet.prototype.ResetInternalState = function() {
+    if (this.timerCookie) {
+        clearTimeout(this.timerCookie);
+    }
+    this.queuedParamChangeData = []; // array of { paramID, newVal } corresponding to ClientSettings.InstrumentParams
+    this.paramChangeLastSent = new Date();
+    this.timerCookie = null;
 };
 
 DigifuNet.prototype.SendIdentify = function (data) {
@@ -44,11 +57,47 @@ DigifuNet.prototype.SendPedalUp = function () {
     this.socket.emit(ClientMessages.PedalUp);
 };
 
-DigifuNet.prototype.SendInstrumentParam = function (paramID, newVal) {
-    this.socket.emit(ClientMessages.InstrumentParam, { paramID, newVal });
+DigifuNet.prototype.OnParamChangeInterval = function () {
+    this.timerCookie = null;
+    this.paramChangeLastSent = new Date();
+    //console.log(`OnParamChangeInterval QUEUED ${JSON.stringify(this.queuedParamChangeData)} `);
+    this.socket.emit(ClientMessages.InstrumentParams, this.queuedParamChangeData);
+    this.queuedParamChangeData = [];
 };
 
-DigifuNet.prototype.SendResetInstrumentParams = function() {
+DigifuNet.prototype.SendInstrumentParam = function (paramID, newVal) {
+    // how to throttle?
+    // - if we have a timer set, modify the packet it will send.
+    // - if we're slow enough, and no timer set, then send live.
+    // - if we're too fast, then set timer with this packet.
+
+    if (this.timerCookie) {
+        let p = this.queuedParamChangeData.find(x => x.paramID == paramID);
+        if (p) {
+            p.newVal = newVal; // already queued; modify
+            return;
+        } else {
+            this.queuedParamChangeData.push({ paramID, newVal }); // not queued yet; add to the packet.
+            return;
+        }
+    }
+
+    let now = new Date();
+    let delta = now - this.paramChangeLastSent;
+    if (delta >= ClientSettings.InstrumentParamIntervalMS) {
+        // we waited long enough between changes; send in real time.
+        this.paramChangeLastSent = new Date();
+        //console.log(`SendInstrumentParam LIVE delta=${delta} ${JSON.stringify([{ paramID, newVal }])} `);
+        this.socket.emit(ClientMessages.InstrumentParams, [{ paramID, newVal }]);
+        return;
+    }
+
+    // we need to set a timer.
+    //console.log(`SendInstrumentParam setting timer; delta=${delta}`);
+    this.timerCookie = setTimeout(this.OnParamChangeInterval.bind(this), ClientSettings.InstrumentParamIntervalMS - delta);
+};
+
+DigifuNet.prototype.SendResetInstrumentParams = function () {
     this.socket.emit(ClientMessages.ResetInstrumentParams);
 };
 
@@ -67,21 +116,23 @@ DigifuNet.prototype.SendUserState = function (data) {
 
 // data = { text, x, y }
 DigifuNet.prototype.SendCheer = function (text, x, y) {
-    this.socket.emit(ClientMessages.Cheer, {text, x, y});
+    this.socket.emit(ClientMessages.Cheer, { text, x, y });
 };
 
 DigifuNet.prototype.Disconnect = function () {
+    this.ResetInternalState();
     this.socket.disconnect(true);
     this.socket = null;
 };
 
 DigifuNet.prototype.Connect = function (handler) {
     this.handler = handler;
+    this.ResetInternalState();
     this.socket = io({
         query: {
-          jamroom: window.location.pathname
+            jamroom: window.location.pathname
         }
-      });
+    });
 
     this.socket.on(ServerMessages.PleaseIdentify, (data) => this.handler.NET_OnPleaseIdentify(data));
     this.socket.on(ServerMessages.Welcome, (data) => this.handler.NET_OnWelcome(data));
@@ -98,8 +149,8 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
     this.socket.on(ServerMessages.InstrumentParams, data => this.handler.NET_OnInstrumentParams(data));
-    
+
     this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data.token, data.users));
 
-    this.socket.on('disconnect', () => { this.handler.NET_OnDisconnect(); });
+    this.socket.on('disconnect', () => { this.ResetInternalState(); this.handler.NET_OnDisconnect(); });
 };

@@ -31,7 +31,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    InstrumentParam: "InstParam",// { paramID, newVal }
+    InstrumentParams: "InstParams",// [{ paramID, newVal }]
     ResetInstrumentParams: "ResetInstrumentParams",
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
@@ -75,7 +75,7 @@ const ServerSettings = {
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
     MinCheerIntervalMS: 200,
-    InstrumentParamIntervalMS: 50,
+    InstrumentParamIntervalMS: 150,
     InstrumentFloatParamDiscreteValues: 500,
 };
 
@@ -318,6 +318,13 @@ let sanitizeCheerText = function (n) {
     return String.fromCodePoint(n.codePointAt(0));
 }
 
+let sanitizeInstrumentParamVal = function(param, newVal) {
+    // just clamp to the range.
+    if (newVal < param.minValue) return param.minValue;
+    if (newVal > param.maxValue) return param.maxValue;
+    return newVal;
+};
+
 module.exports = {
     ClientMessages,
     ServerMessages,
@@ -333,4 +340,5 @@ module.exports = {
     sanitizeUserColor,
     sanitizeCheerText,
     generateID,
+    sanitizeInstrumentParamVal,
 };
