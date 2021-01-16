@@ -100,6 +100,9 @@ class DigifuSynth {
 
 	PitchBend(instrumentSpec, val) {
 		if (this._isMuted) return;
+		// convert map val to -1 to 1 from 0-3fff.
+		// but it's not exactly; to be 100% precise, the positive & negative ranges are not the same.
+		val = ((val/0x3fff)*2)-1;
 		this.instruments[instrumentSpec.instrumentID].PitchBend(val);
 	};
 

@@ -18,6 +18,8 @@ class PolySynthVoice {
 
         this.midiNote = 0;
         this.velocity = 0;
+        this.pitchBend = 0;// -1 to 1
+
         this.timestamp = null; // when did the note on start?
         this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
 
@@ -150,9 +152,10 @@ class PolySynthVoice {
         switch (param.paramID) {
             case "detune":
                 this.detune = newVal;
-                this.oscillator1.frequency.linearRampToValueAtTime(FrequencyFromMidiNote(this.midiNote + this.detune), ClientSettings.InstrumentParamIntervalMS / 1000);
-                this.oscillator2.frequency.linearRampToValueAtTime(FrequencyFromMidiNote(this.midiNote), ClientSettings.InstrumentParamIntervalMS / 1000);
-                this.oscillator3.frequency.linearRampToValueAtTime(FrequencyFromMidiNote(this.midiNote - this.detune), ClientSettings.InstrumentParamIntervalMS / 1000);
+                let freqs = this._getOscFreqs();
+                this.oscillator1.frequency.linearRampToValueAtTime(freqs[0], ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.oscillator2.frequency.linearRampToValueAtTime(freqs[1], ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.oscillator3.frequency.linearRampToValueAtTime(freqs[2], ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "wave":
                 this._setOscWaveform(newVal);
@@ -165,6 +168,7 @@ class PolySynthVoice {
                 this.filter.frequency.linearRampToValueAtTime((this.velocity / 128) * this.cutoff, ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "pbrange":
+                this.PitchBend(this.pitchBend);
                 break;
             case "a":
                 this.gainEnvelope.update({ attack: newVal });
@@ -181,6 +185,23 @@ class PolySynthVoice {
         }
     }
 
+    _getOscFreqs() {
+        let pbrange = this.instrumentSpec.GetParamByID("pbrange").currentValue;
+        return [
+            FrequencyFromMidiNote((this.pitchBend * pbrange) + this.midiNote + this.detune),
+            FrequencyFromMidiNote((this.pitchBend * pbrange) + this.midiNote),
+            FrequencyFromMidiNote((this.pitchBend * pbrange) + this.midiNote - this.detune),
+        ];
+    }
+
+    PitchBend(val) {
+        this.pitchBend = val;
+        let freqs = this._getOscFreqs();
+        this.oscillator1.frequency.linearRampToValueAtTime(freqs[0], ClientSettings.InstrumentParamIntervalMS / 1000);
+        this.oscillator2.frequency.linearRampToValueAtTime(freqs[1], ClientSettings.InstrumentParamIntervalMS / 1000);
+        this.oscillator3.frequency.linearRampToValueAtTime(freqs[2], ClientSettings.InstrumentParamIntervalMS / 1000);
+    }
+
     physicalAndMusicalNoteOn(midiNote, velocity) {
         this.isPhysicallyHeld = true;
         this.timestamp = new Date();
@@ -188,11 +209,12 @@ class PolySynthVoice {
         this.velocity = velocity;
 
         //this.oscillator.frequency.cancelScheduledValues(0);
-        this.filter.frequency.value = (velocity / 128) * this.cutoff
+        this.filter.frequency.value = (velocity / 128) * this.cutoff;
 
-        this.oscillator1.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote + this.detune), 0);
-        this.oscillator2.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote), 0);
-        this.oscillator3.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote - this.detune), 0);
+        let freqs = this._getOscFreqs();
+        this.oscillator1.frequency.setValueAtTime(freqs[0], 0);
+        this.oscillator2.frequency.setValueAtTime(freqs[1], 0);
+        this.oscillator3.frequency.setValueAtTime(freqs[2], 0);
 
         //this.filterEnvelope.trigger();
         this.gainEnvelope.trigger();
@@ -303,7 +325,8 @@ class PolySynth {
     }
 
     PitchBend(val) {
-        // todo
+        if (!this.isConnected) this.connect();
+        this.voices.forEach(v => v.PitchBend(val));
     }
 
     SetParamValue(param, newVal) {

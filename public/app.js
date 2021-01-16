@@ -76,6 +76,12 @@ DigifuApp.prototype.MIDI_PedalUp = function () {
     this.synth.PedalUp(this.myInstrument);
 };
 
+// val is 0-16383
+DigifuApp.prototype.MIDI_PitchBend = function (val) {
+    if (this.myInstrument == null) return;
+    //this.net.SendPitchBend(val);
+    this.synth.PitchBend(this.myInstrument, val);
+};
 
 
 // NETWORK HANDLERS --------------------------------------------------------------------------------------

@@ -71,6 +71,10 @@ class SoundfontInstrument {
 		return;
 	}
 
+	PitchBend(val) {
+		// not supported.
+	}
+
 	AllNotesOff() {
 		if (!this.sfinstrument) return;
 		this.voices = new Array(128); // reset all voices.

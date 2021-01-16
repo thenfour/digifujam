@@ -79,7 +79,7 @@
           "name": "Filt Q",
           "parameterType": "floatParam",
           "minValue": 0.001,
-          "maxValue": 10.0,
+          "maxValue": 20.0,
           "currentValue": 1.0
         },
         {

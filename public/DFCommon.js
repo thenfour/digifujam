@@ -75,7 +75,7 @@ const ServerSettings = {
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
     MinCheerIntervalMS: 200,
-    InstrumentParamIntervalMS: 150,
+    InstrumentParamIntervalMS: 50,
     InstrumentFloatParamDiscreteValues: 500,
 };
 

@@ -27,7 +27,7 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
   let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
 
   // if (statusHi != 15) { // pitch bend
-  //   log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
+  //log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
   // }
 
   switch (statusHi) {
@@ -48,6 +48,13 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
     // exp
     // mod
     // breath
+    case 14: {
+      // d1:7 | d2:7
+      let v = ((d2 & 0x7f) << 7) | (d1 & 0x7f);
+      //console.log(`PB: ${v & 0x3fff}`);
+      this.EventHandler.MIDI_PitchBend(v & 0x3fff);
+      break;
+    }
     case 11: // cc
       switch (d1) {
         case 64:
