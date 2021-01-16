@@ -437,7 +437,7 @@ class InstrumentList extends React.Component {
             return null;
         }
 
-        idle = idle ? "(IDLE) " : "";
+        idle = idle && ( <span className="idleIndicator">(Idle)</span>);
 
         const playBtn = app.midi.AnyMidiDevicesAvailable() ? (
             <button onClick={() => app.RequestInstrument(i.instrumentID)}>Take</button>

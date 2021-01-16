@@ -10,6 +10,7 @@ gIDDomain = "srv";
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
 
@@ -33,6 +34,58 @@ class RoomServer {
   FindUserFromSocket(clientSocket) {
     return this.roomState.FindUserByID(clientSocket.id);
   };
+
+  Idle_CheckIdlenessAndEmit() {
+    //console.log("Idle_CheckIdlenessAndEmit");
+    // check idleness of users holding instruments.
+    let now = new Date();
+    this.roomState.instrumentCloset.forEach(i => {
+      if (!i.controlledByUserID) return;
+      let u = this.roomState.FindUserByID(i.controlledByUserID);
+      if (!u) return;
+
+      // check auto-release instrument timeout
+      if (u.user.idle) {
+        if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentAutoReleaseTimeoutMS) {
+          //console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID} ==> AUTO RELEASE`);
+          io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+            instrumentID: i.instrumentID,
+            userID: null,
+            idle: false
+          });
+        }
+        return; // user is already idle, but not auto-release. nothing to do.
+      }
+
+      if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentIdleTimeoutMS) {
+        u.user.idle = true;
+        // user is considered idle on their instrument.
+        //console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
+        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+          instrumentID: i.instrumentID,
+          userID: u.user.userID,
+          idle: true
+        });
+      }
+    });
+  }
+
+  UnidleInstrument(user, instrument) {
+    try {
+      user.lastActivity = new Date();
+      if (user.idle) {
+        user.idle = false;
+        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+          instrumentID: instrument.instrumentID,
+          userID: user.userID,
+          idle: false
+        });
+      }
+    } catch (e) {
+      console.log(`UnidleInstrument exception occurred`);
+      console.log(e);
+    }
+  }
 
   OnClientIdentify(clientSocket, clientUserSpec) {
     try {
@@ -69,7 +122,7 @@ class RoomServer {
       this.roomState.chatLog.push(chatMessageEntry);
       //console.log(`chatLog.push => joined`);
 
-      console.log(`User identified ${u.userID}. Send welcome package.`)
+      console.log(`User identified id=${u.userID} name=${u.name}. Send welcome package.`)
 
       // notify this 1 user of their user id & room state
       clientSocket.emit(DF.ServerMessages.Welcome, {
@@ -202,23 +255,6 @@ class RoomServer {
       console.log(e);
     }
   };
-
-  UnidleInstrument(user, instrument) {
-    try {
-      user.lastActivity = new Date();
-      if (instrument.idle) {
-        instrument.idle = false;
-        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-          instrumentID: instrument.instrumentID,
-          userID: user.userID,
-          idle: false
-        });
-      }
-    } catch (e) {
-      console.log(`UnidleInstrument exception occurred`);
-      console.log(e);
-    }
-  }
 
   OnClientNoteOn(ws, note, velocity) {
     try {
@@ -499,24 +535,7 @@ class RoomServer {
       // for the users that deleted, gracefully kill them off.
       deletedUsers.forEach(u => { OnClientClose(u.userID) });
 
-      // check idleness of users holding instruments.
-      let now = new Date();
-      this.roomState.instrumentCloset.forEach(i => {
-        if (!i.controlledByUserID) return;
-        let u = this.roomState.FindUserByID(i.controlledByUserID);
-        if (!u) return;
-        if (u.user.idle) return; // it's already been sent.
-        if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentIdleTimeoutMS) {
-          u.user.idle = true;
-          // user is considered idle on their instrument.
-          console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
-          io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
-            instrumentID: i.instrumentID,
-            userID: u.user.userID,
-            idle: true
-          });
-        }
-      });
+      this.Idle_CheckIdlenessAndEmit();
 
       var payload = {
         token: (new Date()).toISOString(),

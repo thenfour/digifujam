@@ -159,6 +159,10 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
 
     let foundNewUser = null;
     foundNewUser = this.roomState.FindUserByID(userID);
+    if (foundNewUser && (foundNewUser.user.idle != idle)) {
+        console.log(`user ${foundNewUser.user.name} now idle=${idle}`);
+        foundNewUser.user.idle = idle;
+    }
 
     if (foundInstrument.instrument.controlledByUserID != userID) {
         // do all notes off when instrument changes

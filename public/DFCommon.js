@@ -58,7 +58,10 @@ const ServerMessages = {
 const ServerSettings = {
     PingIntervalMS: 2000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
+
     InstrumentIdleTimeoutMS: (1000 * 60),
+    InstrumentAutoReleaseTimeoutMS: (1000 * 60 * 5),
+
     UsernameLengthMax: 20,
     UsernameLengthMin: 1,
     UserColorLengthMax: 20,
