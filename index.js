@@ -5,12 +5,7 @@ const io = require('socket.io')(http);
 const DF = require('./public/DFCommon')
 const fsp = require('fs').promises;
 
-let gNextID = 1;
-let generateID = function () {
-  let ret = gNextID;
-  gNextID++;
-  return ret;
-}
+gIDDomain = "srv";
 
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
@@ -25,7 +20,7 @@ class RoomServer {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(JSON.parse(data));
     this.roomState.instrumentCloset.forEach(i => {
-      i.instrumentID = generateID();
+      i.instrumentID = DF.generateID();
       i.controlledByUserID = null;
     });
 
@@ -65,13 +60,14 @@ class RoomServer {
       this.roomState.users.push(u);
 
       let chatMessageEntry = new DF.DigifuChatMessage();
-      chatMessageEntry.messageID = generateID();
+      chatMessageEntry.messageID = DF.generateID();
       chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
       chatMessageEntry.fromUserID = u.userID;
       chatMessageEntry.fromUserColor = u.color;
       chatMessageEntry.fromUserName = u.name;
       chatMessageEntry.timestampUTC = new Date();
       this.roomState.chatLog.push(chatMessageEntry);
+      //console.log(`chatLog.push => joined`);
 
       console.log(`User identified ${u.userID}. Send welcome package.`)
 
@@ -109,13 +105,14 @@ class RoomServer {
       });
 
       let chatMessageEntry = new DF.DigifuChatMessage();
-      chatMessageEntry.messageID = generateID();
+      chatMessageEntry.messageID = DF.generateID();
       chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
       chatMessageEntry.fromUserID = foundUser.user.userID;
       chatMessageEntry.fromUserColor = foundUser.user.color;
       chatMessageEntry.fromUserName = foundUser.user.name;
       chatMessageEntry.timestampUTC = new Date();
       this.roomState.chatLog.push(chatMessageEntry);
+      //console.log(`chatLog.push => part`);
 
       // remove user from room.
       this.roomState.users.splice(foundUser.index, 1);
@@ -359,7 +356,7 @@ class RoomServer {
       let foundToUser = this.roomState.FindUserByID(msg.toUserID);
 
       let nm = new DF.DigifuChatMessage();
-      nm.messageID = generateID();
+      nm.messageID = DF.generateID();
       nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
       nm.message = msg.message;
       nm.fromUserID = foundUser.user.userID;
@@ -374,8 +371,7 @@ class RoomServer {
       }
 
       this.roomState.chatLog.push(nm);
-
-      this.CleanUpChatLog();
+      ////console.log(`chatLog.push => ${msg.message}`);
 
       // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
       // this allows simpler handling of incorporating the messageID.
@@ -422,7 +418,7 @@ class RoomServer {
       let nm = null;
       if (foundUser.user.name != data.name) { // new chat message entry for this event
         nm = new DF.DigifuChatMessage();
-        nm.messageID = generateID();
+        nm.messageID = DF.generateID();
         nm.messageType = DF.ChatMessageType.nick; // of ChatMessageType. "chat", "part", "join", "nick"
         nm.message = "";
         nm.fromUserID = foundUser.user.userID;
@@ -433,6 +429,7 @@ class RoomServer {
         nm.toUserColor = foundUser.user.color;
         nm.toUserName = data.name;
         this.roomState.chatLog.push(nm);
+        //console.log(`chatLog.push => nick`);
       }
 
       foundUser.user.name = data.name;
@@ -482,6 +479,8 @@ class RoomServer {
       setTimeout(() => {
         this.OnPingInterval();
       }, DF.ServerSettings.PingIntervalMS);
+
+      this.CleanUpChatLog();
 
       // check users who are ghosts. i didn't bother trying to figure out why this happens but suffice it to say that I don't always get
       // the disconnect event to remove the user.

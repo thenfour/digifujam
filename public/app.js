@@ -2,6 +2,7 @@
 
 function DigifuApp() {
     this.roomState = null;
+    this.shortChatLog = []; // contains aggregated entries instead of the full thing
 
     this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
     this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
@@ -17,6 +18,27 @@ function DigifuApp() {
     this.midi = new DigifuMidi();
     this.synth = new DigifuSynth(); // contains all music-making stuff.
     this.net = new DigifuNet();
+};
+
+DigifuApp.prototype._addChatMessage = function (msg) {
+    this.roomState.chatLog.push(msg);
+
+    // look at the last message, see if it can be aggregated.
+    if (this.shortChatLog.length < 1) {
+        this.shortChatLog.push(msg);
+        return;
+    }
+    let lastMsg = this.shortChatLog[this.shortChatLog.length - 1];
+    if (lastMsg.messageType == ChatMessageType.aggregate && msg.isAggregatable()) {
+        lastMsg.integrate(msg);
+        return;
+    }
+    if (!lastMsg.isAggregatable()) {
+        this.shortChatLog.push(msg);
+        return;
+    }
+    let nm = DigifuChatMessage.createAggregate(lastMsg, msg);
+    this.shortChatLog[this.shortChatLog.length - 1] = nm;
 };
 
 // MIDI HANDLERS --------------------------------------------------------------------------------------
@@ -80,6 +102,12 @@ DigifuApp.prototype.NET_OnWelcome = function (data) {
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
 
+    // set up init abbreviated chat log
+    let ch = this.roomState.chatLog;
+    this.roomState.chatLog = [];
+    this.shortChatLog = [];
+    ch.forEach(msg => { this._addChatMessage(msg); });
+
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
     }
@@ -93,7 +121,7 @@ DigifuApp.prototype.NET_OnUserEnter = function (data) {
 
     let msg = Object.assign(new DigifuChatMessage, data.chatMessageEntry);
     msg.thaw();
-    this.roomState.chatLog.push(msg);
+    this._addChatMessage(msg);
 
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
@@ -111,8 +139,7 @@ DigifuApp.prototype.NET_OnUserLeave = function (data) {
 
     let msg = Object.assign(new DigifuChatMessage, data.chatMessageEntry);
     msg.thaw();
-    this.roomState.chatLog.push(msg);
-
+    this._addChatMessage(msg);
 
     if (this.stateChangeHandler) {
         this.stateChangeHandler();
@@ -245,7 +272,7 @@ DigifuApp.prototype.NET_OnUserChatMessage = function (msg) {
 
     let ncm = Object.assign(new DigifuChatMessage(), msg);
     ncm.thaw();
-    this.roomState.chatLog.push(ncm);
+    this._addChatMessage(ncm);
 
     this.stateChangeHandler();
 }
@@ -269,7 +296,7 @@ DigifuApp.prototype.NET_OnUserState = function (data) {
     if (data.chatMessageEntry) {
         let m = Object.assign(new DigifuChatMessage(), data.chatMessageEntry);
         m.thaw();
-        this.roomState.chatLog.push(m);
+        this._addChatMessage(m);
     }
 
     this.stateChangeHandler();

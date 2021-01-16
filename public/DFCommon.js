@@ -10,6 +10,15 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
+// make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
+let gNextID = 1;
+let generateID = function () {
+    console.assert(gIDDomain);
+    let ret = gIDDomain + gNextID;
+    gNextID++;
+    return ret;
+}
+
 
 const ClientMessages = {
     Identify: "Identify", // user info
@@ -23,6 +32,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
+    InstrumentParam: "InstParam",// instrument param (paramName, newvalue)
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 };
@@ -40,6 +50,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
+    InstrumentParam: "InstParam",// userID, paramName, newvalue
     UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y
 };
@@ -60,7 +71,7 @@ const ServerSettings = {
 
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
-    MinCheerIntervalMS: 125,
+    MinCheerIntervalMS: 200,
 };
 
 class DigifuUser {
@@ -79,6 +90,23 @@ class DigifuUser {
     thaw() { /* no child objects to thaw. */ }
 };
 
+const InstrumentParamType = {
+    Int: "int",
+    Float: "float",
+};
+
+class InstrumentParam {
+    constructor() {
+        this.name = "";
+        this.parameterType = InstrumentParamType.Int;
+        this.minValue = 0;
+        this.maxValue = 0;
+
+        this.currentValue = 0;
+    }
+};
+
+
 class DigifuInstrumentSpec {
     constructor() {
         this.name = "";
@@ -90,6 +118,7 @@ class DigifuInstrumentSpec {
         this.engine = "synth"; // soundfont, synth
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
+        this.params = [];// instrument parameter value map
     }
 
     thaw() { /* no child objects to thaw. */ }
@@ -97,28 +126,79 @@ class DigifuInstrumentSpec {
 
 const ChatMessageType = {
     chat: "chat",
+    nick: "nick",
     part: "part",
     join: "join",
-    nick: "nick",
+    changeInstrument: "changeInstrument", // change
+    aggregate: "aggregate",
 };
 
 class DigifuChatMessage {
     constructor() {
         this.messageID = null;
+        this.timestampUTC = null;
+        this.messageType = null; // of ChatMessageType. if aggregate then expect the below properties
 
-        this.messageType = null; // of ChatMessageType. "chat", "part", "join", "nick"
+        //this.aggregateMessages = []; // list of DigifuChatMessages
+        //this.messages = [];// - the latest version of messages for the above events
 
         this.message = null;
+
         this.fromUserID = null;
         this.fromUserColor = null; // required because we keep a chat history, so when a user is removed from the list this data would no longer be available. now a client has fallback fields.
         this.fromUserName = null;
+
         this.toUserID = null;
         this.toUserColor = null;
         this.toUserName = null;
-        this.timestampUTC = null;
     }
 
     thaw() { /* no child objects to thaw. */ }
+
+    // aggregate integration
+    integrate(rhs) {
+        console.assert(this.messageType == ChatMessageType.aggregate);
+        this.aggregateMessages.push(rhs);
+        this.rebuildAggregateMessages();
+    };
+
+    static createAggregate(lhs, rhs) {
+        let ret = new DigifuChatMessage();
+        ret.messageID = generateID();
+        ret.messageType = ChatMessageType.aggregate;
+        ret.aggregateMessages = [lhs, rhs];
+        ret.timestampUTC = lhs.timestampUTC;
+        ret.rebuildAggregateMessages();
+        return ret;
+    };
+
+    isAggregatable() {
+        if (this.messageType == ChatMessageType.part) return true;
+        if (this.messageType == ChatMessageType.join) return true;
+        return false;
+    }
+
+    rebuildAggregateMessages() {
+        console.assert(this.messageType == ChatMessageType.aggregate);
+        // we need to actually group things by user, so multiple events from the same user get collapsed.
+        let joins = {}; // maps userid to { name, color }
+        let parts = {}; // maps userid to { name, color }
+        this.aggregateMessages.forEach(msg => {
+            switch (msg.messageType) {
+                case ChatMessageType.join:
+                    joins[msg.fromUserName] = { name: msg.fromUserName, color: msg.fromUserColor }; // TODO: a real user id to group by.
+                    break;
+                case ChatMessageType.part:
+                    parts[msg.fromUserName] = { name: msg.fromUserName, color: msg.fromUserColor }; // TODO: a real user id to group by.
+                    break;
+            }
+        });
+
+        let joinMsg = `Joined: ${Object.keys(joins).map(k => joins[k].name).join(', ')}`;
+        let partMsg = `Left: ${Object.keys(parts).map(k => parts[k].name).join(', ')}`;
+
+        this.messages = [joinMsg, partMsg];
+    }
 };
 
 class DigifuRoomState {
@@ -236,4 +316,5 @@ module.exports = {
     sanitizeUsername,
     sanitizeUserColor,
     sanitizeCheerText,
+    generateID,
 };

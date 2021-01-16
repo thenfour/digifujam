@@ -1,5 +1,3 @@
-//const { ServerSettings } = require("../DFCommon");
-
 
 
 let getValidationErrorMsg = function (userName, userColor) {
@@ -547,9 +545,60 @@ class UserAvatar extends React.Component {
 };
 
 
-class ChatLog extends React.Component {
+class ShortChatLog extends React.Component {
     render() {
-        if ((!this.props.app) || (!this.props.app.roomState)) return null;
+        if (!this.props.app) return null;
+
+        const lis = this.props.app.shortChatLog.map(msg => {
+
+            const dt = new Date(msg.timestampUTC);
+            const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+
+            switch (msg.messageType) {
+                case ChatMessageType.aggregate:
+                    {
+                        return msg.messages.map(aggMsg => (
+                            <div className="chatLogEntryAggregate" key={msg.messageID}>{timestamp} {aggMsg}</div>
+                        ));
+                    }
+                case ChatMessageType.join:
+                    return (
+                        <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the jam</span></div>
+                    );
+                case ChatMessageType.part:
+                    return (
+                        <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the jam</span></div>
+                    );
+                case ChatMessageType.nick:
+                    return (
+                        <div className="chatLogEntryNick" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} is now known as {msg.toUserName}</span></div>
+                    );
+                case ChatMessageType.chat:
+                    return (
+                        <div className="chatLogEntryChat" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</div>
+                    );
+            }
+
+            return null;
+        });
+
+        return (
+            <div className='shortChatLog'>
+                {/* <button className="switchChatView" onClick={this.props.onToggleView}>Switch view</button> */}
+                {lis}
+            </div>
+        );
+    }
+};
+
+
+
+
+
+
+class FullChatLog extends React.Component {
+    render() {
+        if (!this.props.app || !this.props.app.roomState) return null;
 
         const lis = this.props.app.roomState.chatLog.map(msg => {
 
@@ -579,12 +628,23 @@ class ChatLog extends React.Component {
         });
 
         return (
-            <ul className='chatLog'>
-                {lis}
-            </ul>
+            <div className='fullChatLog'>
+                {/* <button className="switchChatView" onClick={this.props.onToggleView}>Switch view</button> */}
+                <ul style={{height:"100%"}}>
+                    {lis}
+                </ul>
+            </div>
         );
     }
 };
+
+
+
+
+
+
+
+
 
 class AnnouncementArea extends React.Component {
     render() {
@@ -617,6 +677,7 @@ class RoomArea extends React.Component {
         super(props);
         this.state = {
             scrollSize: { x: 0, y: 0 },// track DOM scrollHeight / scrollWidth
+            showFullChat: false,
         };
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
         this.roomToScreenPosition = this.roomToScreenPosition.bind(this);
@@ -683,6 +744,12 @@ class RoomArea extends React.Component {
         }
     }
 
+    toggleChatView = () => {
+        this.setState({
+            showFullChat: !this.state.showFullChat
+        });
+    }
+
     componentDidMount() {
         let e = document.getElementById("roomArea");
         this.resizeObserver = new ResizeObserver((entries) => {
@@ -720,14 +787,18 @@ class RoomArea extends React.Component {
             <Connection app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
         );
 
+        const switchViewButton = this.props.app && this.props.app.roomState && (<button className="switchChatView" onClick={this.toggleChatView}>chat/room view</button>);
+
         return (
             <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
                 {userAvatars}
-                <ChatLog app={this.props.app} />
+                { !this.state.showFullChat && <ShortChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
+                { this.state.showFullChat && <FullChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
                 <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={() => this}></CheerControls>
+                {switchViewButton}
             </div>
         );
     }
