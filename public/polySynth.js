@@ -1,7 +1,7 @@
 'use strict';
 
 const PolySynthSettings = {
-    MaxVoices: 12
+    MaxVoices: 10
 };
 
 let FrequencyFromMidiNote = function (midiNote) {
@@ -17,12 +17,15 @@ class PolySynthVoice {
         this.destination = destination;
 
         this.midiNote = 0;
+        this.velocity = 0;
         this.timestamp = null; // when did the note on start?
         this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
 
-        this.detune = 0.05;
+        this.detune = this.instrumentSpec.GetParamByID("detune").currentValue;
+        this.cutoff = this.instrumentSpec.GetParamByID("cutoff").currentValue;
 
         this.isConnected = false;
+        this.peakGain = 0.017;
     }
 
     connect() {
@@ -38,12 +41,13 @@ class PolySynthVoice {
         this.osc3Panner = this.audioCtx.createStereoPanner();
 
         this.gainEnvelope = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
-            attack: 0.008, // seconds until hitting 1.0
-            peak: 0.017,
-            decay: 4.0, // seconds until hitting sustain value
+            attack: this.instrumentSpec.GetParamByID("a").currentValue,//0.008, // seconds until hitting 1.0
+            peak: this.peakGain, // why must this be so low? not sure...
+            decay: this.instrumentSpec.GetParamByID("d").currentValue,//4.0, // seconds until hitting sustain value
             decayCurve: 6.8, // https://rawgit.com/voidqk/adsrnode/master/demo.html
-            sustain: 0.0, // sustain value
-            release: 0.07  // seconds until returning back to 0.0
+            sustain: this.instrumentSpec.GetParamByID("s").currentValue,//0.0, // sustain value
+            release: this.instrumentSpec.GetParamByID("r").currentValue,// 0.07  // seconds until returning back to 0.0
+            releaseCurve: 6.8,
         });
         this.gainEnvelope.start();//gain.value = 0.0;  // Mute the sound  // this thing does not like to be started more than once even with stop() in between
 
@@ -76,13 +80,12 @@ class PolySynthVoice {
         this.osc2Panner.pan.value = 0.0;
         this.osc3Panner.pan.value = +.5;
 
-        this.oscillator1.type = "square";
-        this.oscillator2.type = "square";
-        this.oscillator3.type = "square";
+        this._setOscWaveform(this.instrumentSpec.GetParamByID("wave").currentValue);
 
         this.filter.frequency.value = 2500;
         this.filter.type = "lowpass";
-        this.filter.Q.value = 1.0;
+        this.filter.Q.value = this.instrumentSpec.GetParamByID("q").currentValue;
+
         this.isConnected = true;
     }
 
@@ -136,13 +139,56 @@ class PolySynthVoice {
         return !!this.timestamp;
     }
 
+    _setOscWaveform(specVal) {
+        const shapes = ["sine", "square", "sawtooth", "triangle", "sine"];
+        this.oscillator1.type = shapes[specVal];
+        this.oscillator2.type = shapes[specVal];
+        this.oscillator3.type = shapes[specVal];
+    }
+
+    SetParamValue(param, newVal) {
+        switch (param.paramID) {
+            case "detune":
+                this.detune = newVal;
+                this.oscillator1.frequency.linearRampToValueAtTime(FrequencyFromMidiNote(this.midiNote + this.detune), ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.oscillator2.frequency.linearRampToValueAtTime(FrequencyFromMidiNote(this.midiNote), ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.oscillator3.frequency.linearRampToValueAtTime(FrequencyFromMidiNote(this.midiNote - this.detune), ClientSettings.InstrumentParamIntervalMS / 1000);
+                break;
+            case "wave":
+                this._setOscWaveform(newVal);
+                break;
+            case "q":
+                this.filter.Q.linearRampToValueAtTime(param.currentValue, ClientSettings.InstrumentParamIntervalMS / 1000);
+                break;
+            case "cutoff":
+                this.cutoff = param.currentValue;
+                this.filter.frequency.linearRampToValueAtTime((this.velocity / 128) * this.cutoff, ClientSettings.InstrumentParamIntervalMS / 1000);
+                break;
+            case "pbrange":
+                break;
+            case "a":
+                this.gainEnvelope.update({ attack: newVal });
+                break;
+            case "d":
+                this.gainEnvelope.update({ decay: newVal });
+                break;
+            case "s":
+                this.gainEnvelope.update({ sustain: newVal * this.peakGain });
+                break;
+            case "r":
+                this.gainEnvelope.update({ release: newVal });
+                break;
+        }
+    }
+
     physicalAndMusicalNoteOn(midiNote, velocity) {
         this.isPhysicallyHeld = true;
         this.timestamp = new Date();
         this.midiNote = midiNote;
+        this.velocity = velocity;
 
         //this.oscillator.frequency.cancelScheduledValues(0);
-        this.filter.frequency.value = (velocity / 128) * 3000;
+        this.filter.frequency.value = (velocity / 128) * this.cutoff
 
         this.oscillator1.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote + this.detune), 0);
         this.oscillator2.frequency.setValueAtTime(FrequencyFromMidiNote(midiNote), 0);
@@ -226,7 +272,7 @@ class PolySynth {
 
     NoteOff(midiNote) {
         if (!this.isConnected) this.connect();
-        
+
         let v = this.voices.find(v => v.midiNote == midiNote);
         if (!v) return;
         v.physicallyRelease();
@@ -237,13 +283,13 @@ class PolySynth {
 
     PedalDown() {
         if (!this.isConnected) this.connect();
-        
+
         this.isSustainPedalDown = true;
     }
 
     PedalUp() {
         if (!this.isConnected) this.connect();
-        
+
         this.isSustainPedalDown = false;
         this.voices.forEach(v => {
             if (!v.isPhysicallyHeld && v.IsPlaying) {
@@ -259,6 +305,12 @@ class PolySynth {
     PitchBend(val) {
         // todo
     }
+
+    SetParamValue(param, newVal) {
+        if (!this.isConnected) this.connect();
+        this.voices.forEach(v => v.SetParamValue(param, newVal));
+    }
+
 };
 
 

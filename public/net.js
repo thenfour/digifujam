@@ -44,6 +44,14 @@ DigifuNet.prototype.SendPedalUp = function () {
     this.socket.emit(ClientMessages.PedalUp);
 };
 
+DigifuNet.prototype.SendInstrumentParam = function (paramID, newVal) {
+    this.socket.emit(ClientMessages.InstrumentParam, { paramID, newVal });
+};
+
+DigifuNet.prototype.SendResetInstrumentParams = function() {
+    this.socket.emit(ClientMessages.ResetInstrumentParams);
+};
+
 DigifuNet.prototype.SendPong = function (token) {
     if (!this.socket) return; // ghost objects' timers can try to send this
     this.socket.emit(ClientMessages.Pong, token);
@@ -89,7 +97,8 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.UserAllNotesOff, data => this.handler.NET_OnUserAllNotesOff(data));
     this.socket.on(ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
-
+    this.socket.on(ServerMessages.InstrumentParams, data => this.handler.NET_OnInstrumentParams(data));
+    
     this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data.token, data.users));
 
     this.socket.on('disconnect', () => { this.handler.NET_OnDisconnect(); });

@@ -160,7 +160,7 @@ DigifuApp.prototype.NET_OnInstrumentOwnership = function (instrumentID, userID /
     let foundNewUser = null;
     foundNewUser = this.roomState.FindUserByID(userID);
     if (foundNewUser && (foundNewUser.user.idle != idle)) {
-        console.log(`user ${foundNewUser.user.name} now idle=${idle}`);
+        //console.log(`user ${foundNewUser.user.name} now idle=${idle}`);
         foundNewUser.user.idle = idle;
     }
 
@@ -251,6 +251,19 @@ DigifuApp.prototype.NET_OnPedalUp = function (userID) {
     }
     this.synth.PedalUp(foundInstrument.instrument);
 };
+
+DigifuApp.prototype.NET_OnInstrumentParams = function(data) // userID, instrumentID, paramName, newVal)
+{
+    data.forEach(datum => {
+        let foundInstrument = this.roomState.FindInstrumentByUserID(datum.userID);
+        if (foundInstrument == null) {
+            log(`NET_OnInstrumentParam instrument not found`);
+            return;
+        }
+        let param = foundInstrument.instrument.params.find(p => p.paramID == datum.paramID);
+        this.synth.SetInstrumentParam(foundInstrument.instrument, param, datum.newVal);
+        });
+}
 
 DigifuApp.prototype.NET_OnPing = function (token, users) {
     this.net.SendPong(token);
@@ -364,6 +377,15 @@ DigifuApp.prototype.SendCheer = function (text, x, y) {
     text = sanitizeCheerText(text);
     if (text == null) return;
     this.net.SendCheer(text, x, y);
+};
+
+DigifuApp.prototype.SetInstrumentParam = function (inst, param, newVal) {
+    this.net.SendInstrumentParam(param.paramID, newVal);
+    this.synth.SetInstrumentParam(inst, param, newVal);
+};
+
+DigifuApp.prototype.ResetInstrumentParams = function () {
+    this.net.SendResetInstrumentParams();
 };
 
 

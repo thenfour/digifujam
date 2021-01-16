@@ -103,6 +103,12 @@ class DigifuSynth {
 		this.instruments[instrumentSpec.instrumentID].PitchBend(val);
 	};
 
+	SetInstrumentParam(instrumentSpec, param, newVal) {
+        param.currentValue = newVal;
+		if (this._isMuted) return;
+		this.instruments[instrumentSpec.instrumentID].SetParamValue(param, newVal);
+	}
+
 	ConnectInstrument(instrumentSpec) {
 		this.instruments[instrumentSpec.instrumentID].connect();
 	}

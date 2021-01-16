@@ -364,7 +364,10 @@ button.muteButton:focus
     font-style: italic;
 }
 
-
+ul.instParamList {
+    white-space: nowrap;
+    overflow-x: hidden;
+}
 
 
 

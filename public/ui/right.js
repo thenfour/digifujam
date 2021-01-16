@@ -11,13 +11,6 @@ let getValidationErrorMsg = function (userName, userColor) {
     return validationErrorTxt;
 }
 
-
-
-function random(num) {
-    return (Math.random() * num)
-}
-
-
 // props:
 // - default
 // - onChange(val)
@@ -80,6 +73,165 @@ class TextInputFieldExternalState extends React.Component {
         );
     }
 }
+
+
+// props.instrument
+class InstIntParam extends React.Component {
+    constructor(props) {
+        super(props);
+        this.valueTextID = "val_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.sliderID = "slider_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.renderedValue = -420.69;
+    }
+    setCaption() {
+        let cap = null;
+        const p = this.props.param;
+        if (p.enumNames) {
+            cap = p.enumNames[this.props.param.currentValue];
+        } else {
+            cap = this.props.param.currentValue;
+        }
+        $("#" + this.valueTextID).text(cap);
+    }
+    onChange = (e) => {
+        //this.setState(this.state);
+        let val = e.target.value;
+        this.renderedValue = val;
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
+        this.setCaption();
+    }
+    componentDidMount() {
+        // set initial values.
+        let val = this.props.param.currentValue;
+        $("#" + this.sliderID).val(val);
+        this.setCaption();
+        this.renderedValue = val;
+    }
+    render() {
+        if (this.renderedValue != this.props.param.currentValue) {
+            //has been externally modified. update ui.
+            let val = this.props.param.currentValue;
+            this.renderedValue = val;
+            $("#" + this.sliderID).val(val);
+            this.setCaption();
+        }
+
+        return (
+            <li>
+                <input id={this.sliderID} type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
+                //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
+                />
+                <label>{this.props.param.name}: <span id={this.valueTextID}></span></label>
+            </li>
+        );
+    }
+}
+
+
+// props.instrument
+class InstFloatParam extends React.Component {
+    constructor(props) {
+        super(props);
+        this.valueTextID = "val_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.sliderID = "slider_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.renderedValue = -420.69;
+    }
+    onChange = (e) => {
+        this.setState(this.state);
+        let realVal = parseFloat(e.target.value) / ClientSettings.InstrumentFloatParamDiscreteValues; // 0-1 within target range.
+        const p = this.props.param;
+        realVal *= p.maxValue - p.minValue; // scaled to range.
+        realVal += p.minValue;// shifted to correct value.
+
+        this.renderedValue = realVal;
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+        $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
+    }
+    componentDidMount() {
+        // set initial values.
+        const p = this.props.param;
+        this.renderedValue = p.currentValue;
+        this.setSliderVal(p.currentValue);
+        // let currentSliderValue = p.currentValue;
+        // currentSliderValue -= p.minValue;
+        // currentSliderValue /= p.maxValue - p.minValue;
+        // currentSliderValue *= ClientSettings.InstrumentFloatParamDiscreteValues;
+        // $("#" + this.sliderID).val(currentSliderValue);
+        this.setCaption(p.currentValue);
+        //$("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
+    }
+    setCaption(val) {
+        $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
+    }
+    setSliderVal(val) {
+        const p = this.props.param;
+        let currentSliderValue = val;
+        currentSliderValue -= p.minValue;
+        currentSliderValue /= p.maxValue - p.minValue;
+        currentSliderValue *= ClientSettings.InstrumentFloatParamDiscreteValues;
+        $("#" + this.sliderID).val(currentSliderValue);
+    }
+    render() {
+        if (this.renderedValue != this.props.param.currentValue) {
+            //has been externally modified. update ui.
+            let val = this.props.param.currentValue;
+            this.renderedValue = val;
+            this.setSliderVal(val);//$("#" + this.sliderID).val(val);
+            this.setCaption(val);
+        }
+
+        return (
+            <li>
+                <input id={this.sliderID} type="range" min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
+                    ref={i => { this.sliderRef = i; }}
+                //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
+                />
+                <label>{this.props.param.name}: <span id={this.valueTextID}></span></label>
+            </li>
+        );
+    }
+}
+
+
+
+
+
+
+
+
+
+class InstrumentParams extends React.Component {
+    onResetClicked = () => {
+        this.props.app.ResetInstrumentParams();
+    };
+
+    render() {
+        let createParam = (p) => {
+            switch (p.parameterType) {
+                case InstrumentParamType.intParam:
+                    return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
+                case InstrumentParamType.floatParam:
+                    return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
+            }
+        };
+        return (
+            <div className="component">
+                <h2>{this.props.instrument.name}</h2>
+                <ul className="instParamList">
+                    <li><button onClick={this.onResetClicked}>Defaults</button></li>
+                    {this.props.instrument.params.map(p => createParam(p))}
+                </ul>
+            </div>
+        );
+    }
+}
+
+
+
+
+
+
+
 
 
 // props
@@ -437,7 +589,7 @@ class InstrumentList extends React.Component {
             return null;
         }
 
-        idle = idle && ( <span className="idleIndicator">(Idle)</span>);
+        idle = idle && (<span className="idleIndicator">(Idle)</span>);
 
         const playBtn = app.midi.AnyMidiDevicesAvailable() ? (
             <button onClick={() => app.RequestInstrument(i.instrumentID)}>Take</button>
@@ -468,8 +620,18 @@ class InstrumentList extends React.Component {
 class RightArea extends React.Component {
 
     render() {
+        let myInstrument = null;
+        let instParams = null;
+        if (this.props.app && this.props.app.roomState) {
+            myInstrument = this.props.app.roomState.FindInstrumentByUserID(this.props.app.myUser.userID);
+            if (myInstrument) myInstrument = myInstrument.instrument;
+        }
+        if (myInstrument && myInstrument.params.length > 0) {
+            instParams = (<InstrumentParams app={this.props.app} instrument={myInstrument}></InstrumentParams>);
+        }
         return (
             <div id="rightArea" style={{ gridArea: "rightArea" }}>
+                {instParams}
                 <UserList app={this.props.app} />
             </div>
         );
@@ -630,7 +792,7 @@ class FullChatLog extends React.Component {
         return (
             <div className='fullChatLog'>
                 {/* <button className="switchChatView" onClick={this.props.onToggleView}>Switch view</button> */}
-                <ul style={{height:"100%"}}>
+                <ul style={{ height: "100%" }}>
                     {lis}
                 </ul>
             </div>
@@ -865,6 +1027,11 @@ class RootArea extends React.Component {
     };
 
     HandleCheer = (data/*user, text x, y*/) => {
+
+        let random = function (num) {
+            return (Math.random() * num)
+        };
+
         //alert(`user cheer ${JSON.stringify(data)}`);
         if (!this.roomRef || !this.roomRef.current) return;
         //createCheer(data.user, data.text, data.x, data.y, this.roomRef);

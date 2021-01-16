@@ -66,6 +66,11 @@ class SoundfontInstrument {
 		}
 	};
 
+	SetParamValue(param, newVal) {
+		// nothing supported.
+		return;
+	}
+
 	AllNotesOff() {
 		if (!this.sfinstrument) return;
 		this.voices = new Array(128); // reset all voices.

@@ -23,6 +23,11 @@ class RoomServer {
     this.roomState.instrumentCloset.forEach(i => {
       i.instrumentID = DF.generateID();
       i.controlledByUserID = null;
+
+      // and init default param values from currentValue which are in the JSON
+      i.params.forEach(param => {
+        param.defaultValue = param.currentValue;
+      });
     });
 
     setTimeout(() => {
@@ -375,6 +380,76 @@ class RoomServer {
   };
 
 
+  OnClientInstrumentParam(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientInstrumentParam => unknown user`);
+        return;
+      }
+
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        console.log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      // set the value.
+      let p = foundInstrument.instrument.params.find(o => o.paramID == data.paramID);
+      if (!p) {
+        console.log(`=> param ${data.paramID} not found.`);
+        return;
+      }
+
+      p.currentValue = data.newVal;
+
+      // broadcast to all clients except foundUser
+      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.InstrumentParams, [{
+        userID: foundUser.user.userID,
+        instrumentID: foundInstrument.instrument.instrumentID,
+        paramID: data.paramID,
+        newVal: data.newVal
+      }]);
+    } catch (e) {
+      console.log(`OnClientInstrumentParam exception occurred`);
+      console.log(e);
+    }
+  };
+
+  OnClientResetInstrumentParams(ws) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientResetInstrumentParams => unknown user`);
+        return;
+      }
+
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        console.log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      let ret = [];
+      foundInstrument.instrument.params.forEach(param => {
+        param.currentValue = param.defaultValue;
+        ret.push({
+          userID: foundUser.user.userID,
+          instrumentID: foundInstrument.instrument.instrumentID,
+          paramID: param.paramID,
+          newVal: param.defaultValue
+        });
+      });
+
+      // broadcast to all clients
+      io.to(this.roomName).emit(DF.ServerMessages.InstrumentParams, ret);
+    } catch (e) {
+      console.log(`OnClientResetInstrumentParams exception occurred`);
+      console.log(e);
+    }
+  };
+
+
   OnClientChatMessage(ws, msg) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
@@ -590,10 +665,14 @@ class RoomServer {
       ws.on(DF.ClientMessages.AllNotesOff, () => this.OnClientAllNotesOff(ws));
       ws.on(DF.ClientMessages.PedalDown, data => this.OnClientPedalDown(ws, data));
       ws.on(DF.ClientMessages.PedalUp, data => this.OnClientPedalUp(ws, data));
+      ws.on(DF.ClientMessages.InstrumentParam, data => this.OnClientInstrumentParam(ws, data));
+      ws.on(DF.ClientMessages.ResetInstrumentParams, data => this.OnClientResetInstrumentParams(ws, data));
+
       ws.on(DF.ClientMessages.ChatMessage, data => this.OnClientChatMessage(ws, data));
       ws.on(DF.ClientMessages.Pong, data => this.OnClientPong(ws, data));
       ws.on(DF.ClientMessages.UserState, data => this.OnClientUserState(ws, data));
       ws.on(DF.ClientMessages.Cheer, data => this.OnClientCheer(ws, data));
+
 
       // send the "please identify yourself" msg
       ws.emit(DF.ServerMessages.PleaseIdentify);

@@ -22,7 +22,6 @@ let generateID = function () {
 
 const ClientMessages = {
     Identify: "Identify", // user info
-    // move. like to the couch, bar, dance floor, stage
     InstrumentRequest: "InstrumentRequest", // instid
     InstrumentRelease: "InstrumentRelease",
     ChatMessage: "ChatMessage",// (to_userID_null, msg)
@@ -32,7 +31,8 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    InstrumentParam: "InstParam",// instrument param (paramName, newvalue)
+    InstrumentParam: "InstParam",// { paramID, newVal }
+    ResetInstrumentParams: "ResetInstrumentParams",
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 };
@@ -50,7 +50,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    InstrumentParam: "InstParam",// userID, paramName, newvalue
+    InstrumentParams: "InstParams",//   [ { userID, instrumentID, paramID, newVal } ]
     UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y
 };
@@ -75,6 +75,8 @@ const ServerSettings = {
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
     MinCheerIntervalMS: 200,
+    InstrumentParamIntervalMS: 50,
+    InstrumentFloatParamDiscreteValues: 500,
 };
 
 class DigifuUser {
@@ -94,21 +96,22 @@ class DigifuUser {
 };
 
 const InstrumentParamType = {
-    Int: "int",
-    Float: "float",
+    intParam: "intParam",
+    floatParam: "floatParam",
 };
 
 class InstrumentParam {
     constructor() {
+        this.paramID = "";
         this.name = "";
-        this.parameterType = InstrumentParamType.Int;
-        this.minValue = 0;
-        this.maxValue = 0;
+        this.parameterType = InstrumentParamType.intParam;
+        this.minValue = 0;// inclusive
+        this.maxValue = 0;// inclusive
 
         this.currentValue = 0;
     }
+    thaw() { /* no child objects to thaw. */ }
 };
-
 
 class DigifuInstrumentSpec {
     constructor() {
@@ -124,7 +127,17 @@ class DigifuInstrumentSpec {
         this.params = [];// instrument parameter value map
     }
 
-    thaw() { /* no child objects to thaw. */ }
+    GetParamByID(paramID) {
+        return this.params.find(p => p.paramID == paramID);
+    }
+
+    thaw() {
+        this.params = this.params.map(o => {
+            let n = Object.assign(new InstrumentParam(), o);
+            n.thaw();
+            return n;
+        });
+    }
 };
 
 const ChatMessageType = {
