@@ -288,6 +288,7 @@ class InstrumentParams extends React.Component {
 
     render() {
         let createParam = (p) => {
+            if (p.hidden) return null;
             switch (p.parameterType) {
                 case InstrumentParamType.intParam:
                     return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);

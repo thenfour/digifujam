@@ -21,8 +21,65 @@
           "name": "algo",
           "parameterType": "intParam",
           "minValue": 0,
-          "maxValue": 11
+          "maxValue": 1,
+          "enumNames": [
+            "A-->B",
+            "A + B"
+          ]
         },
+        {
+          "paramID": "lfo1_wave",
+          "name": "LFO1 wave",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
+        },
+        {
+          "paramID": "lfo1_speed",
+          "name": "LFO1 speed",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 10.0
+        },
+
+
+        {
+          "paramID": "env1_a",
+          "name": "Env1 A",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 4.0
+        },
+        {
+          "paramID": "env1_d",
+          "name": "Env1 D",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "env1_s",
+          "name": "Env1 S",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "env1_r",
+          "name": "Env1 R",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+
+
+
         {
           "paramID": "osc0_wave",
           "name": "O1 Wave",
@@ -35,6 +92,20 @@
             "Saw",
             "Tri"
           ]
+        },
+        {
+          "paramID": "osc0_lfo1_pitchDepth",
+          "name": "O1 LFO1 pitch",
+          "parameterType": "floatParam",
+          "minValue": -12.0,
+          "maxValue": 12.0
+        },
+        {
+          "paramID": "osc0_env1_pitchDepth",
+          "name": "O1 ENV1 pitch",
+          "parameterType": "floatParam",
+          "minValue": -12.0,
+          "maxValue": 12.0
         },
         {
           "paramID": "osc0_freq_mult",
@@ -106,6 +177,20 @@
           ]
         },
         {
+          "paramID": "osc1_lfo1_pitchDepth",
+          "name": "O2 LFO1 pitch",
+          "parameterType": "floatParam",
+          "minValue": -12.0,
+          "maxValue": 12.0
+        },
+        {
+          "paramID": "osc1_env1_pitchDepth",
+          "name": "O2 ENV1 pitch",
+          "parameterType": "floatParam",
+          "minValue": -12.0,
+          "maxValue": 12.0
+        },
+        {
           "paramID": "osc1_freq_mult",
           "name": "O2 freq mul",
           "parameterType": "floatParam",
@@ -164,7 +249,15 @@
       ],
       "presets": {
         "init": {
-          "algo": 1,
+          "algo": 0,
+          "env1_a": 0.01,
+          "env1_d": 0.5,
+          "env1_s": 0.0,
+          "env1_r": 0.4,
+          "lfo1_wave": 0,
+          "lfo1_speed": 2.0,
+          "osc0_lfo1_pitchDepth": 0.0,
+          "osc0_env1_pitchDepth": 0.0,
           "osc0_wave": 0,
           "osc0_freq_mult": 12.0,
           "osc0_freq_abs": 0,
@@ -174,6 +267,8 @@
           "osc0_d": 4,
           "osc0_s": 0,
           "osc0_r": 0.01,
+          "osc1_lfo1_pitchDepth": 0.5,
+          "osc1_env1_pitchDepth": 0.5,
           "osc1_wave": 0,
           "osc1_freq_mult": 1,
           "osc1_freq_abs": 0,

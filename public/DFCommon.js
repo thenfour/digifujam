@@ -113,6 +113,7 @@ class InstrumentParam {
         this.paramID = "";
         this.name = "";
         this.parameterType = InstrumentParamType.intParam;
+        this.hidden = false;
         this.minValue = 0;// inclusive
         this.maxValue = 0;// inclusive
 

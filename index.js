@@ -38,6 +38,7 @@ class RoomServer {
       i.params.push(Object.assign(new DF.InstrumentParam(), {
         paramID: "pb",
         name: "pb",
+        hidden: true,
         parameterType: DF.InstrumentParamType.floatParam,
         minValue: -48,
         maxValue: 48,
