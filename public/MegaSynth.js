@@ -28,6 +28,8 @@ class MegaSynthVoice {
         this.audioCtx = audioCtx;
         this.destination = destination;
 
+        this.pitchBendRange = 2;
+
         this.midiNote = 0;
         this.velocity = 0;
         this.pitchBend = 0;// -1 to 1
@@ -179,9 +181,6 @@ class MegaSynthVoice {
                 this.cutoff = param.currentValue;
                 this.filter.frequency.linearRampToValueAtTime((this.velocity / 128) * this.cutoff, ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
-            case "pbrange":
-                this.PitchBend(this.pitchBend);
-                break;
             case "a":
                 this.gainEnvelope.update({ attack: newVal });
                 break;
@@ -198,11 +197,11 @@ class MegaSynthVoice {
     }
 
     _getOscFreqs() {
-        let pbrange = this.instrumentSpec.GetParamByID("pbrange").currentValue;
+        let pb = this.pitchBend * this.pitchBendRange;
         return [
-            FrequencyFromMidiNote((this.pitchBend * pbrange) + this.midiNote + this.detune),
-            FrequencyFromMidiNote((this.pitchBend * pbrange) + this.midiNote),
-            FrequencyFromMidiNote((this.pitchBend * pbrange) + this.midiNote - this.detune),
+            FrequencyFromMidiNote(pb + this.midiNote + this.detune),
+            FrequencyFromMidiNote(pb + this.midiNote),
+            FrequencyFromMidiNote(pb + this.midiNote - this.detune),
         ];
     }
 
@@ -212,6 +211,12 @@ class MegaSynthVoice {
         this.oscillator1.frequency.linearRampToValueAtTime(freqs[0], ClientSettings.InstrumentParamIntervalMS / 1000);
         this.oscillator2.frequency.linearRampToValueAtTime(freqs[1], ClientSettings.InstrumentParamIntervalMS / 1000);
         this.oscillator3.frequency.linearRampToValueAtTime(freqs[2], ClientSettings.InstrumentParamIntervalMS / 1000);
+    }
+
+    setPitchBendRange(val) {
+        this.pitchBendRange = val;
+        if (!this.isConnected) return;
+        this.PitchBend(this.pitchBend);
     }
 
     physicalAndMusicalNoteOn(midiNote, velocity) {
@@ -341,6 +346,10 @@ class MegaSynth {
     PitchBend(val) {
         if (!this.isConnected) this.connect();
         this.voices.forEach(v => v.PitchBend(val));
+    }
+
+    setPitchBendRange(val) {
+        this.voices.forEach(v => v.setPitchBendRange(val));
     }
 
     SetParamValue(param, newVal) {

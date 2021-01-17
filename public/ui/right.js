@@ -365,6 +365,11 @@ class UserState extends React.Component {
         this.props.app.synth.reverbGain = realVal;
     }
 
+    setPBRange = (v) => {
+        this.setState(this.state);
+        this.props.app.synth.pitchBendRange = v.target.value;
+    }
+
     handleToggleShownClick = () => {
         this.setState({ isShown: !this.state.isShown });
     };
@@ -436,6 +441,13 @@ class UserState extends React.Component {
             </li>
         ) : null;
 
+        const pbrangeMarkup = this.props.app && this.props.app.synth ? (
+            <li>
+                <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.synth.pitchBendRange} />
+                <label htmlFor="pbrange">PB range:{this.props.app.synth.pitchBendRange}</label>
+            </li>
+        ) : null;
+
         const ulStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const arrowText = this.state.isShown ? '⯆' : '⯈';
 
@@ -462,6 +474,7 @@ class UserState extends React.Component {
                     {inputList}
                     {volumeMarkup}
                     {verbMarkup}
+                    {pbrangeMarkup}
                 </ul>
             </div>
         );

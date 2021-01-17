@@ -13,6 +13,7 @@ class DigifuSynth {
 
 		this.masterEffectsInputNode = null;
 		this.masterReverbGain = null;
+		this._pitchBendRange = 2;
 
 		this._isMuted = false;
 	}
@@ -73,6 +74,17 @@ class DigifuSynth {
 		this._isMuted = !!val;
 	}
 
+	get pitchBendRange() {
+		return this._pitchBendRange;
+	}
+
+	set pitchBendRange(val) {
+		this._pitchBendRange = val;
+		Object.keys(this.instruments).forEach(k => {
+			this.instruments[k].setPitchBendRange(val);
+		});
+	}
+
 	NoteOn(instrumentSpec, note, velocity) {
 		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
@@ -107,12 +119,12 @@ class DigifuSynth {
 		if (this._isMuted) return;
 		// convert map val to -1 to 1 from 0-3fff.
 		// but it's not exactly; to be 100% precise, the positive & negative ranges are not the same.
-		val = ((val/0x3fff)*2)-1;
+		val = ((val / 0x3fff) * 2) - 1;
 		this.instruments[instrumentSpec.instrumentID].PitchBend(val);
 	};
 
 	SetInstrumentParam(instrumentSpec, param, newVal) {
-        param.currentValue = newVal;
+		param.currentValue = newVal;
 		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].SetParamValue(param, newVal);
 	}
@@ -143,10 +155,10 @@ class DigifuSynth {
 				case "minisynth":
 					this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, gainer, s);
 					break;
-					case "megasynth":
-						this.instruments[s.instrumentID] = new MegaSynth(this.audioCtx, gainer, s);
-						break;
-					case "soundfont":
+				case "megasynth":
+					this.instruments[s.instrumentID] = new MegaSynth(this.audioCtx, gainer, s);
+					break;
+				case "soundfont":
 					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, s);
 					break;
 			}
