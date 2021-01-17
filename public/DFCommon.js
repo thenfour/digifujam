@@ -15,6 +15,10 @@ let FrequencyFromMidiNote = function (midiNote) {
 };
 
 
+let remap = function(value, low1, high1, low2, high2) {
+    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+}
+
 // make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
 let gNextID = 1;
 let generateID = function () {
@@ -122,7 +126,7 @@ class DigifuInstrumentSpec {
         this.name = "";
         this.sfinstrumentName = "";
         this.img = "";
-        this.color = "";
+        this.color = "rgb(138, 224, 153)";
         this.instrumentID = null;
         this.controlledByUserID = null;
         this.engine = null; // soundfont, minisynth, megasynth
@@ -130,7 +134,7 @@ class DigifuInstrumentSpec {
         this.gain = 1.0;
         this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
-        this.presets = {x:43}; // key = preset name, value = object to apply on params
+        this.presets = { x: 43 }; // key = preset name, value = object to apply on params
     }
 
     GetParamByID(paramID) {
@@ -369,6 +373,8 @@ module.exports = {
     ClientMessages,
     ServerMessages,
     DigifuUser,
+    InstrumentParamType,
+    InstrumentParam,
     DigifuInstrumentSpec,
     DigifuChatMessage,
     ChatMessageType,

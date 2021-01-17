@@ -372,6 +372,11 @@ ul.instParamList {
     overflow-x: hidden;
 }
 
+ul.instParamList label {
+    font-size:smaller;
+    color:#ccc
+}
+
 
 .presetList,
 .presetListControls {

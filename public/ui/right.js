@@ -132,6 +132,8 @@ class InstIntParam extends React.Component {
 class InstFloatParam extends React.Component {
     constructor(props) {
         super(props);
+        this.valueTextInputID = "i_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.valueTextDivID = "idiv_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.valueTextID = "val_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.sliderID = "slider_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.renderedValue = -420.69;
@@ -145,20 +147,20 @@ class InstFloatParam extends React.Component {
 
         this.renderedValue = realVal;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
-        $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
+        this.setCaption(this.props.param.currentValue);
+        this.setInputTextVal(p.currentValue);
     }
     componentDidMount() {
         // set initial values.
         const p = this.props.param;
         this.renderedValue = p.currentValue;
         this.setSliderVal(p.currentValue);
-        // let currentSliderValue = p.currentValue;
-        // currentSliderValue -= p.minValue;
-        // currentSliderValue /= p.maxValue - p.minValue;
-        // currentSliderValue *= ClientSettings.InstrumentFloatParamDiscreteValues;
-        // $("#" + this.sliderID).val(currentSliderValue);
         this.setCaption(p.currentValue);
-        //$("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
+        this.setInputTextVal(p.currentValue);
+    }
+
+    setInputTextVal(val) {
+        $("#" + this.valueTextInputID).val(this.props.param.currentValue.toFixed(3));
     }
     setCaption(val) {
         $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
@@ -170,6 +172,28 @@ class InstFloatParam extends React.Component {
         currentSliderValue /= p.maxValue - p.minValue;
         currentSliderValue *= ClientSettings.InstrumentFloatParamDiscreteValues;
         $("#" + this.sliderID).val(currentSliderValue);
+    }
+
+    toggleShowTxt = () => {
+        let q = $("#" + this.valueTextDivID);
+        if (q.is(':visible')) {
+            q.toggle(false);
+        } else {
+            q.toggle(true, () => {
+                q.focus(); 
+                q.select(); 
+            });
+        }
+    }
+
+    handleTextInputKeyDown = (e) => {
+        if (e.key != 'Enter') return;
+        this.setState(this.state);
+        let realVal = parseFloat(e.target.value);
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+
+        this.setCaption(realVal);
+        this.setSliderVal(realVal);
     }
     render() {
         if (this.renderedValue != this.props.param.currentValue) {
@@ -186,7 +210,10 @@ class InstFloatParam extends React.Component {
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
                 />
-                <label>{this.props.param.name}: <span id={this.valueTextID}></span></label>
+                <label onClick={this.toggleShowTxt}>{this.props.param.name}: <span id={this.valueTextID}></span></label>
+                <div style={{ display: "none" }} id={this.valueTextDivID}>
+                    <input type="text" id={this.valueTextInputID} onKeyDown={this.handleTextInputKeyDown} />
+                </div>
             </li>
         );
     }

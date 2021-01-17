@@ -9,6 +9,172 @@
   "chatLog": [],
   "instrumentCloset": [
     {
+      "name": "Mini FM",
+      "gain": 0.05,
+      "color": "rgb(138, 224, 153)",
+      "engine": "minifm",
+      "instrumentID": "minifm",
+      "activityDisplay": "keyboard",
+      "params": [
+        {
+          "paramID": "algo",
+          "name": "algo",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 11
+        },
+        {
+          "paramID": "osc0_fb_amt",
+          "name": "O1 fb",
+          "parameterType": "floatParam",
+          "minValue": -500.0,
+          "maxValue": 500.0
+        },
+        {
+          "paramID": "osc0_freq_mult",
+          "name": "O1 freq mul",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 20.0
+        },
+        {
+          "paramID": "osc0_freq_abs",
+          "name": "O1 freq abs",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 10000.0
+        },
+        {
+          "paramID": "osc0_level",
+          "name": "O1 level",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_vel_scale",
+          "name": "O1 vel s.",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_a",
+          "name": "O1 A",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 4.0
+        },
+        {
+          "paramID": "osc0_d",
+          "name": "O1 D",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "osc0_s",
+          "name": "O1 S",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_r",
+          "name": "O1 R",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "osc1_fb_amt",
+          "name": "O2 fb",
+          "parameterType": "floatParam",
+          "minValue": -500.0,
+          "maxValue": 500.0
+        },
+        {
+          "paramID": "osc1_freq_mult",
+          "name": "O2 freq mul",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 20.0
+        },
+        {
+          "paramID": "osc1_freq_abs",
+          "name": "O2 freq abs",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 10000.0
+        },
+        {
+          "paramID": "osc1_level",
+          "name": "O2 level",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_vel_scale",
+          "name": "O2 vel s.",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_a",
+          "name": "O2 A",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 4.0
+        },
+        {
+          "paramID": "osc1_d",
+          "name": "O2 D",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "osc1_s",
+          "name": "O2 S",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_r",
+          "name": "O2 R",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        }
+      ],
+      "presets": {
+        "init": {
+          "algo": 1,
+          "osc0_fb_amt": 0,
+          "osc0_freq_mult": 12.0,
+          "osc0_freq_abs": 0,
+          "osc0_level": 0.5,
+          "osc0_vel_scale": 0,
+          "osc0_a": 0.01,
+          "osc0_d": 4,
+          "osc0_s": 0,
+          "osc0_r": 0.01,
+          "osc1_fb_amt": 0,
+          "osc1_freq_mult": 1,
+          "osc1_freq_abs": 0,
+          "osc1_level": 0.5,
+          "osc1_vel_scale": 0,
+          "osc1_a": 0.01,
+          "osc1_d": 0,
+          "osc1_s": 0.5,
+          "osc1_r": 0.01
+        }
+      }
+    },
+    {
       "name": "Minisynth A",
       "gain": 1.0,
       "color": "rgb(138, 224, 153)",
@@ -107,7 +273,6 @@
       "copyOfInstrumentID": "minisynth",
       "name": "Minisynth B"
     },
-
     {
       "name": "Piano",
       "sfinstrumentName": "acoustic_grand_piano",

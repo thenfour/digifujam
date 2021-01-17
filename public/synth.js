@@ -135,24 +135,27 @@ class DigifuSynth {
 		this.instrumentSpecs = instrumentSpecs;
 		this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
-		instrumentSpecs.forEach(s => {
+		instrumentSpecs.forEach(spec => {
 			let gainer = this.audioCtx.createGain();
 			gainer.gain.value = 1;
-			if (s.gain) {
-				gainer.gain.value = s.gain;
+			if (spec.gain) {
+				gainer.gain.value = spec.gain;
 			}
 			gainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
 			gainer.connect(this.masterEffectsInputNode);
-			this.instrumentGainers[s.instrumentID] = gainer;
-			switch (s.engine) {
+			this.instrumentGainers[spec.instrumentID] = gainer;
+			switch (spec.engine) {
 				case "minisynth":
-					this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, gainer, s);
+					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, gainer, spec, (c, d, s) => new PolySynthVoice(c, d, s));
 					break;
-				case "megasynth":
-					this.instruments[s.instrumentID] = new MegaSynth(this.audioCtx, gainer, s);
+				case "minifm":
+					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, gainer, spec, (c, d, s) => new MiniFMSynthVoice(c, d, s));
 					break;
+				// case "megasynth":
+				// 	this.instruments[s.instrumentID] = new MegaSynth(this.audioCtx, gainer, s);
+				// 	break;
 				case "soundfont":
-					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, s);
+					this.instruments[spec.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, spec);
 					break;
 			}
 		});

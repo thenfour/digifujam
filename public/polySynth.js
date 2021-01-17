@@ -157,9 +157,9 @@ class PolySynthVoice {
         this.oscillator3.type = shapes[specVal];
     }
 
-    SetParamValues(patchObj) {
-        Object.keys(patchObj).forEach(paramID => { this.SetParamValue(paramID, patchObj[paramID]); });
-    }
+    // SetParamValues(patchObj) {
+    //     Object.keys(patchObj).forEach(paramID => { this.SetParamValue(paramID, patchObj[paramID]); });
+    // }
 
     SetParamValue(paramID, newVal) {
         switch (paramID) {
@@ -255,15 +255,22 @@ class PolySynthVoice {
 
 };
 
+
+
+
+
+// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class PolySynth {
-    constructor(audioCtx, destination, instrumentSpec) {
+class GeneralPolySynth {
+    constructor(audioCtx, destination, instrumentSpec, createVoiceFn) {
         this.destination = destination;
         this.instrumentSpec = instrumentSpec;
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
-            this.voices.push(new PolySynthVoice(audioCtx, destination, instrumentSpec));
+            //this.voices.push(new PolySynthVoice(audioCtx, destination, instrumentSpec));
+            this.voices.push(createVoiceFn(audioCtx, destination, instrumentSpec));
         }
         this.isSustainPedalDown = false;
         this.isConnected = false;
@@ -325,7 +332,6 @@ class PolySynth {
 
     PedalUp() {
         if (!this.isConnected) this.connect();
-
         this.isSustainPedalDown = false;
         this.voices.forEach(v => {
             if (!v.isPhysicallyHeld && v.IsPlaying) {
@@ -339,8 +345,10 @@ class PolySynth {
     }
 
     SetParamValues(patchObj) {
-        //if (!this.isConnected) this.connect();
-        this.voices.forEach(v => v.SetParamValues(patchObj));
+        let keys = Object.keys(patchObj);
+        this.voices.forEach(voice => {
+            keys.forEach(paramID => { voice.SetParamValue(paramID, patchObj[paramID]); });
+        });
     }
 
 };

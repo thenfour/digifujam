@@ -33,6 +33,16 @@ class RoomServer {
         return;
       }
       i.loadPreset(i.presets[Object.keys(i.presets)[0]]);
+
+      // add special param values...
+      i.params.push(Object.assign(new DF.InstrumentParam(), {
+        paramID: "pb",
+        name: "pb",
+        parameterType: DF.InstrumentParamType.floatParam,
+        minValue: -48,
+        maxValue: 48,
+        currentValue: 0,
+      }));
     });
 
 
