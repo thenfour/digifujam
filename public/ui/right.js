@@ -201,8 +201,38 @@ class InstFloatParam extends React.Component {
 
 
 class InstrumentParams extends React.Component {
-    onResetClicked = () => {
-        this.props.app.ResetInstrumentParams();
+
+    onOpenClicked = () => {
+        //this.props.app.ResetInstrumentParams();
+    };
+
+    onExportClicked = () => {
+        let presetObj = this.props.instrument.exportPresetObj();
+        let txt = JSON.stringify(presetObj);
+        navigator.clipboard.writeText(txt).then(() => {
+            alert('Patch was copied to the clipboard.')
+        }, () => {
+            alert('Unable to copy patch.')
+        });
+    };
+
+    onImportClicked = () => {
+        navigator.clipboard.readText().then(text => {
+            console.log('Pasted content: ', text);
+            try {
+                let presetObj = JSON.parse(text);
+                this.props.app.LoadPresetObj(presetObj);
+            } catch (e) {
+                alert(`Unable to import; maybe badly formatted text... Exception: ${e}`);
+            }
+        })
+            .catch(err => {
+                alert('Unable to read clipboard');
+            });
+    };
+
+    onReleaseClick = () => {
+        this.props.app.ReleaseInstrument();
     };
 
     render() {
@@ -218,7 +248,12 @@ class InstrumentParams extends React.Component {
             <div className="component">
                 <h2>{this.props.instrument.name}</h2>
                 <ul className="instParamList">
-                    <li><button onClick={this.onResetClicked}>Defaults</button></li>
+                    <li>
+                        <button onClick={this.onOpenClicked}>📂</button>
+                        <button onClick={this.onExportClicked}>Export</button>
+                        <button onClick={this.onImportClicked}>Import</button>
+                        <button onClick={this.onReleaseClick}>Release</button>
+                    </li>
                     {this.props.instrument.params.map(p => createParam(p))}
                 </ul>
             </div>
@@ -367,7 +402,7 @@ class UserState extends React.Component {
 
     setPBRange = (v) => {
         this.setState(this.state);
-        this.props.app.synth.pitchBendRange = v.target.value;
+        this.props.app.pitchBendRange = v.target.value;
     }
 
     handleToggleShownClick = () => {
@@ -443,8 +478,8 @@ class UserState extends React.Component {
 
         const pbrangeMarkup = this.props.app && this.props.app.synth ? (
             <li>
-                <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.synth.pitchBendRange} />
-                <label htmlFor="pbrange">PB range:{this.props.app.synth.pitchBendRange}</label>
+                <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
+                <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
             </li>
         ) : null;
 

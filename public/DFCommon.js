@@ -36,8 +36,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    InstrumentParams: "InstParams",// [{ paramID, newVal }] -- pitch bend is a special param called "pb"
-    ResetInstrumentParams: "ResetInstrumentParams",
+    InstrumentParams: "InstParams",// {} object mapping paramID => newVal -- pitch bend is a special param called "pb"
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 };
@@ -55,7 +54,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    InstrumentParams: "InstParams",//   [ { userID, instrumentID, paramID, newVal } ] -- pitch bend is a special param called "pb"
+    InstrumentParams: "InstParams",// { userID, instrumentID, patchObj:{object mapping paramID to newVal} } ] -- pitch bend is a special param called "pb"
     UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y
 };
@@ -131,10 +130,30 @@ class DigifuInstrumentSpec {
         this.gain = 1.0;
         this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
+        this.presets = {x:43}; // key = preset name, value = object to apply on params
     }
 
     GetParamByID(paramID) {
         return this.params.find(p => p.paramID == paramID);
+    }
+
+    loadPreset(presetObj) {
+        Object.keys(presetObj).forEach(k => {
+            let param = this.params.find(p => p.paramID == k);
+            if (!param) {
+                console.log(`loadPreset: ParamID ${k} was not found, its value will be ignored.`);
+                return;
+            }
+            param.currentValue = presetObj[k];
+        });
+    }
+
+    exportPresetObj() {
+        let ret = {};
+        this.params.forEach(param => {
+            ret[param.paramID] = param.currentValue;
+        });
+        return ret;
     }
 
     thaw() {

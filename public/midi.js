@@ -52,7 +52,11 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
       // d1:7 | d2:7
       let v = ((d2 & 0x7f) << 7) | (d1 & 0x7f);
       //console.log(`PB: ${v & 0x3fff}`);
-      this.EventHandler.MIDI_PitchBend(v & 0x3fff);
+      v = ((v / 0x3fff) * 2) - 1; // -1 to 1
+      if (v < -1) v = -1;
+      if (v > 1) v = 1;
+
+      this.EventHandler.MIDI_PitchBend(v);
       break;
     }
     case 11: // cc

@@ -21,16 +21,18 @@ class RoomServer {
 
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(JSON.parse(data));
-    //console.log(`room state: ${JSON.stringify(this.roomState)}`);
+    //console.log(`${JSON.stringify(this.roomState.instrumentCloset[0])}`);
 
-    // do not do this on the client side, because there it takes whatever the server gives. thaw() is enough there.
+    // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     this.roomState.instrumentCloset.forEach(i => {
       i.instrumentID = DF.generateID();
 
-      // and init default param values from currentValue which are in the JSON
-      i.params.forEach(param => {
-        param.defaultValue = param.currentValue;
-      });
+      // load a preset
+      if (!Object.keys(i.presets).length) {
+        console.assert(!i.params.length, `${i.name} ${Object.keys(i.presets).length} ${i.params.length} WARN: if you have any params, you must have a preset. ${JSON.stringify(i)}`);
+        return;
+      }
+      i.loadPreset(i.presets[Object.keys(i.presets)[0]]);
     });
 
 
@@ -400,32 +402,27 @@ class RoomServer {
       }
 
       // set the value.
-      let ret = [];
-      data.forEach(x => {
-        if (x.paramID == "pb") {
+      let ret = {
+        userID: foundUser.user.userID,
+        instrumentID: foundInstrument.instrument.instrumentID,
+        patchObj: {}
+      };
+      Object.keys(data).forEach(paramID => {
+      //data.forEach(x => {
+        if (paramID == "pb") {
           // special case: pitch bend is not a real param on an instrument but it's very convenient to use the param system for it.
-          ret.push({
-            userID: foundUser.user.userID,
-            instrumentID: foundInstrument.instrument.instrumentID,
-            paramID: x.paramID,
-            newVal: x.newVal
-          });
+          // no need to store this locally.
+          ret.patchObj[paramID] = data[paramID];
         } else {
-          let p = foundInstrument.instrument.params.find(o => o.paramID == x.paramID);
+          let p = foundInstrument.instrument.params.find(o => o.paramID == paramID);
           if (!p) {
             console.log(`=> param ${x.paramID} not found.`);
             return;
           }
 
-          p.currentValue = DF.sanitizeInstrumentParamVal(p, x.newVal);
+          p.currentValue = DF.sanitizeInstrumentParamVal(p, data[paramID]);
           //console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
-
-          ret.push({
-            userID: foundUser.user.userID,
-            instrumentID: foundInstrument.instrument.instrumentID,
-            paramID: x.paramID,
-            newVal: p.currentValue
-          });
+          ret.patchObj[paramID] = p.currentValue;
         }
       });
 
@@ -436,40 +433,6 @@ class RoomServer {
       console.log(e);
     }
   };
-
-  OnClientResetInstrumentParams(ws) {
-    try {
-      let foundUser = this.FindUserFromSocket(ws);
-      if (foundUser == null) {
-        console.log(`OnClientResetInstrumentParams => unknown user`);
-        return;
-      }
-
-      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-      if (foundInstrument == null) {
-        console.log(`=> not controlling an instrument.`);
-        return;
-      }
-
-      let ret = [];
-      foundInstrument.instrument.params.forEach(param => {
-        param.currentValue = param.defaultValue;
-        ret.push({
-          userID: foundUser.user.userID,
-          instrumentID: foundInstrument.instrument.instrumentID,
-          paramID: param.paramID,
-          newVal: param.defaultValue
-        });
-      });
-
-      // broadcast to all clients
-      io.to(this.roomName).emit(DF.ServerMessages.InstrumentParams, ret);
-    } catch (e) {
-      console.log(`OnClientResetInstrumentParams exception occurred`);
-      console.log(e);
-    }
-  };
-
 
   OnClientChatMessage(ws, msg) {
     try {
@@ -687,7 +650,6 @@ class RoomServer {
       ws.on(DF.ClientMessages.PedalDown, data => this.OnClientPedalDown(ws, data));
       ws.on(DF.ClientMessages.PedalUp, data => this.OnClientPedalUp(ws, data));
       ws.on(DF.ClientMessages.InstrumentParams, data => this.OnClientInstrumentParams(ws, data));
-      ws.on(DF.ClientMessages.ResetInstrumentParams, data => this.OnClientResetInstrumentParams(ws, data));
 
       ws.on(DF.ClientMessages.ChatMessage, data => this.OnClientChatMessage(ws, data));
       ws.on(DF.ClientMessages.Pong, data => this.OnClientPong(ws, data));
@@ -737,7 +699,7 @@ let roomIsLoaded = function () {
 fsp.readFile("pub.json").then(data => {
   gRooms.push(new RoomServer("/", data));
   fsp.readFile("maj7.json").then(data => {
-    gRooms.push(new RoomServer("/maj7", data));
+    //gRooms.push(new RoomServer("/maj7", data));
     roomIsLoaded();
   });
 });

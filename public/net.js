@@ -8,7 +8,7 @@ function DigifuNet() {
     this.socket = null;
     this.handler = null;
 
-    this.queuedParamChangeData = []; // array of { paramID, newVal } corresponding to ClientSettings.InstrumentParams
+    this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
     this.paramChangeLastSent = new Date();
     this.timerCookie = null;
 };
@@ -17,7 +17,7 @@ DigifuNet.prototype.ResetInternalState = function() {
     if (this.timerCookie) {
         clearTimeout(this.timerCookie);
     }
-    this.queuedParamChangeData = []; // array of { paramID, newVal } corresponding to ClientSettings.InstrumentParams
+    this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
     this.paramChangeLastSent = new Date();
     this.timerCookie = null;
 };
@@ -62,24 +62,18 @@ DigifuNet.prototype.OnParamChangeInterval = function () {
     this.paramChangeLastSent = new Date();
     //console.log(`OnParamChangeInterval QUEUED ${JSON.stringify(this.queuedParamChangeData)} `);
     this.socket.emit(ClientMessages.InstrumentParams, this.queuedParamChangeData);
-    this.queuedParamChangeData = [];
+    this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
 };
 
-DigifuNet.prototype.SendInstrumentParam = function (paramID, newVal) {
+DigifuNet.prototype.SendInstrumentParams = function (presetObj) {
     // how to throttle?
     // - if we have a timer set, modify the packet it will send.
     // - if we're slow enough, and no timer set, then send live.
     // - if we're too fast, then set timer with this packet.
 
     if (this.timerCookie) {
-        let p = this.queuedParamChangeData.find(x => x.paramID == paramID);
-        if (p) {
-            p.newVal = newVal; // already queued; modify
-            return;
-        } else {
-            this.queuedParamChangeData.push({ paramID, newVal }); // not queued yet; add to the packet.
-            return;
-        }
+        this.queuedParamChangeData = Object.assign(this.queuedParamChangeData, presetObj);
+        return;
     }
 
     let now = new Date();
@@ -88,17 +82,13 @@ DigifuNet.prototype.SendInstrumentParam = function (paramID, newVal) {
         // we waited long enough between changes; send in real time.
         this.paramChangeLastSent = new Date();
         //console.log(`SendInstrumentParam LIVE delta=${delta} ${JSON.stringify([{ paramID, newVal }])} `);
-        this.socket.emit(ClientMessages.InstrumentParams, [{ paramID, newVal }]);
+        this.socket.emit(ClientMessages.InstrumentParams, presetObj);
         return;
     }
 
     // we need to set a timer.
     //console.log(`SendInstrumentParam setting timer; delta=${delta}`);
     this.timerCookie = setTimeout(this.OnParamChangeInterval.bind(this), ClientSettings.InstrumentParamIntervalMS - delta);
-};
-
-DigifuNet.prototype.SendResetInstrumentParams = function () {
-    this.socket.emit(ClientMessages.ResetInstrumentParams);
 };
 
 DigifuNet.prototype.SendPong = function (token) {

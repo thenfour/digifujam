@@ -66,16 +66,9 @@ class SoundfontInstrument {
 		}
 	};
 
-	SetParamValue(param, newVal) {
+	SetParamValues(patchObj) {
 		// nothing supported.
-		return;
 	}
-
-	PitchBend(val) {
-		// not supported.
-	}
-
-	setPitchBendRange(val) {} // not supported
 
 	AllNotesOff() {
 		if (!this.sfinstrument) return;

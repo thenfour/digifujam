@@ -13,7 +13,6 @@ class DigifuSynth {
 
 		this.masterEffectsInputNode = null;
 		this.masterReverbGain = null;
-		this._pitchBendRange = 2;
 
 		this._isMuted = false;
 	}
@@ -74,17 +73,6 @@ class DigifuSynth {
 		this._isMuted = !!val;
 	}
 
-	get pitchBendRange() {
-		return this._pitchBendRange;
-	}
-
-	set pitchBendRange(val) {
-		this._pitchBendRange = val;
-		Object.keys(this.instruments).forEach(k => {
-			this.instruments[k].setPitchBendRange(val);
-		});
-	}
-
 	NoteOn(instrumentSpec, note, velocity) {
 		if (this._isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
@@ -115,18 +103,23 @@ class DigifuSynth {
 		this.instruments[instrumentSpec.instrumentID].PedalDown();
 	};
 
-	PitchBend(instrumentSpec, val) {
-		if (this._isMuted) return;
-		// convert map val to -1 to 1 from 0-3fff.
-		// but it's not exactly; to be 100% precise, the positive & negative ranges are not the same.
-		val = ((val / 0x3fff) * 2) - 1;
-		this.instruments[instrumentSpec.instrumentID].PitchBend(val);
-	};
+	// PitchBend(instrumentSpec, val) {
+	// 	if (this._isMuted) return;
+	// 	// convert map val to -1 to 1 from 0-3fff.
+	// 	// but it's not exactly; to be 100% precise, the positive & negative ranges are not the same.
+	// 	//val = ((val / 0x3fff) * 2) - 1;
+	// 	this.instruments[instrumentSpec.instrumentID].PitchBend(val);
+	// };
 
-	SetInstrumentParam(instrumentSpec, param, newVal) {
-		param.currentValue = newVal;
+	SetInstrumentParams(instrumentSpec, patchObj) {
+		Object.keys(patchObj).forEach(paramID => {
+			let param = instrumentSpec.params.find(p => p.paramID == paramID);
+			if (param) { // won't be found for special params like "pb"
+				param.currentValue = patchObj[paramID];
+			}
+		});
 		if (this._isMuted) return;
-		this.instruments[instrumentSpec.instrumentID].SetParamValue(param, newVal);
+		this.instruments[instrumentSpec.instrumentID].SetParamValues(patchObj);
 	}
 
 	ConnectInstrument(instrumentSpec) {

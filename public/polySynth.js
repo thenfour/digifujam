@@ -16,9 +16,6 @@ d
 s
 r
 
-
-
-
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -28,11 +25,9 @@ class PolySynthVoice {
         this.audioCtx = audioCtx;
         this.destination = destination;
 
-        this.pitchBendRange = 2;
-
         this.midiNote = 0;
         this.velocity = 0;
-        this.pitchBend = 0;// -1 to 1
+        this.pitchBend = 0; // semitones
 
         this.timestamp = null; // when did the note on start?
         this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
@@ -162,8 +157,15 @@ class PolySynthVoice {
         this.oscillator3.type = shapes[specVal];
     }
 
-    SetParamValue(param, newVal) {
-        switch (param.paramID) {
+    SetParamValues(patchObj) {
+        Object.keys(patchObj).forEach(paramID => { this.SetParamValue(paramID, patchObj[paramID]); });
+    }
+
+    SetParamValue(paramID, newVal) {
+        switch (paramID) {
+            case "pb":
+                this.PitchBend(newVal);
+                break;
             case "detune":
                 this.detune = newVal;
                 let freqs = this._getOscFreqs();
@@ -175,10 +177,10 @@ class PolySynthVoice {
                 this._setOscWaveform(newVal);
                 break;
             case "q":
-                this.filter.Q.linearRampToValueAtTime(param.currentValue, ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.filter.Q.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "cutoff":
-                this.cutoff = param.currentValue;
+                this.cutoff = newVal;
                 this.filter.frequency.linearRampToValueAtTime((this.velocity / 128) * this.cutoff, ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "a":
@@ -197,26 +199,19 @@ class PolySynthVoice {
     }
 
     _getOscFreqs() {
-        let pb = this.pitchBend * this.pitchBendRange;
         return [
-            FrequencyFromMidiNote(pb + this.midiNote + this.detune),
-            FrequencyFromMidiNote(pb + this.midiNote),
-            FrequencyFromMidiNote(pb + this.midiNote - this.detune),
+            FrequencyFromMidiNote(this.pitchBend + this.midiNote + this.detune),
+            FrequencyFromMidiNote(this.pitchBend + this.midiNote),
+            FrequencyFromMidiNote(this.pitchBend + this.midiNote - this.detune),
         ];
     }
 
-    PitchBend(val) {
-        this.pitchBend = val;
+    PitchBend(val /*semis*/) {
+        this.pitchBend = val;//((val / 0x3fff) * 2) - 1;
         let freqs = this._getOscFreqs();
         this.oscillator1.frequency.linearRampToValueAtTime(freqs[0], ClientSettings.InstrumentParamIntervalMS / 1000);
         this.oscillator2.frequency.linearRampToValueAtTime(freqs[1], ClientSettings.InstrumentParamIntervalMS / 1000);
         this.oscillator3.frequency.linearRampToValueAtTime(freqs[2], ClientSettings.InstrumentParamIntervalMS / 1000);
-    }
-
-    setPitchBendRange(val) {
-        this.pitchBendRange = val;
-        if (!this.isConnected) return;
-        this.PitchBend(this.pitchBend);
     }
 
     physicalAndMusicalNoteOn(midiNote, velocity) {
@@ -343,18 +338,9 @@ class PolySynth {
         this.voices.forEach(v => v.AllNotesOff());
     }
 
-    PitchBend(val) {
-        if (!this.isConnected) this.connect();
-        this.voices.forEach(v => v.PitchBend(val));
-    }
-
-    setPitchBendRange(val) {
-        this.voices.forEach(v => v.setPitchBendRange(val));
-    }
-
-    SetParamValue(param, newVal) {
-        if (!this.isConnected) this.connect();
-        this.voices.forEach(v => v.SetParamValue(param, newVal));
+    SetParamValues(patchObj) {
+        //if (!this.isConnected) this.connect();
+        this.voices.forEach(v => v.SetParamValues(patchObj));
     }
 
 };
