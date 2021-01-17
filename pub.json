@@ -1,15 +1,15 @@
 {
-  "img": "./room.png",
   "roomTitle": "#public",
-  "width": 1000,
-  "height": 741,
+  "img": "./matt00x1600.jpg",
+  "width": 1600,
+  "height": 1600,
   "internalMasterGain": 2.0,
-  "announcementHTML": "** Currently looking for a volunteer to create a room background **",
+  "announcementHTML": "",
   "users": [],
   "chatLog": [],
   "instrumentCloset": [
     {
-      "name": "Mini FM",
+      "name": "Mini FM 1",
       "gain": 0.05,
       "color": "rgb(138, 224, 153)",
       "engine": "minifm",
@@ -19,6 +19,7 @@
         {
           "paramID": "algo",
           "name": "algo",
+          "groupName": "master",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 1,
@@ -30,6 +31,7 @@
         {
           "paramID": "lfo1_wave",
           "name": "LFO1 wave",
+          "groupName": "master",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 3,
@@ -43,6 +45,7 @@
         {
           "paramID": "lfo1_speed",
           "name": "LFO1 speed",
+          "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
           "maxValue": 10.0
@@ -52,6 +55,7 @@
         {
           "paramID": "env1_a",
           "name": "Env1 A",
+          "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -59,6 +63,7 @@
         {
           "paramID": "env1_d",
           "name": "Env1 D",
+          "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -66,6 +71,7 @@
         {
           "paramID": "env1_s",
           "name": "Env1 S",
+          "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -73,6 +79,7 @@
         {
           "paramID": "env1_r",
           "name": "Env1 R",
+          "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -82,7 +89,8 @@
 
         {
           "paramID": "osc0_wave",
-          "name": "O1 Wave",
+          "name": "Wave",
+          "groupName": "Osc A",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 3,
@@ -95,77 +103,88 @@
         },
         {
           "paramID": "osc0_lfo1_pitchDepth",
-          "name": "O1 LFO1 pitch",
+          "name": "LFO1 pitch",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -12.0,
           "maxValue": 12.0
         },
         {
           "paramID": "osc0_env1_pitchDepth",
-          "name": "O1 ENV1 pitch",
+          "name": "ENV1 pitch",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -12.0,
           "maxValue": 12.0
         },
         {
           "paramID": "osc0_freq_mult",
-          "name": "O1 freq mul",
+          "name": "Freq mul",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 20.0
         },
         {
           "paramID": "osc0_freq_abs",
-          "name": "O1 freq abs",
+          "name": "Freq abs",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 10000.0
         },
         {
           "paramID": "osc0_level",
-          "name": "O1 level",
+          "name": "Level",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_vel_scale",
-          "name": "O1 vel s.",
+          "name": "Vel scale",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_a",
-          "name": "O1 A",
+          "name": "Attack",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
         },
         {
           "paramID": "osc0_d",
-          "name": "O1 D",
+          "name": "Decay",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
         },
         {
           "paramID": "osc0_s",
-          "name": "O1 S",
+          "name": "Sustain",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_r",
-          "name": "O1 R",
+          "name": "Release",
+          "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
         },
         {
           "paramID": "osc1_wave",
-          "name": "O2 Wave",
+          "name": "Wave",
+          "groupName": "Osc B",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 3,
@@ -178,70 +197,80 @@
         },
         {
           "paramID": "osc1_lfo1_pitchDepth",
-          "name": "O2 LFO1 pitch",
+          "name": "LFO1 pitch",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -12.0,
           "maxValue": 12.0
         },
         {
           "paramID": "osc1_env1_pitchDepth",
-          "name": "O2 ENV1 pitch",
+          "name": "ENV1 pitch",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -12.0,
           "maxValue": 12.0
         },
         {
           "paramID": "osc1_freq_mult",
-          "name": "O2 freq mul",
+          "name": "Freq mul",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 20.0
         },
         {
           "paramID": "osc1_freq_abs",
-          "name": "O2 freq abs",
+          "name": "Freq abs",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 10000.0
         },
         {
           "paramID": "osc1_level",
-          "name": "O2 level",
+          "name": "Level",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_vel_scale",
-          "name": "O2 vel s.",
+          "name": "Vel Scale",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_a",
-          "name": "O2 A",
+          "name": "Attack",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
         },
         {
           "paramID": "osc1_d",
-          "name": "O2 D",
+          "name": "Decay",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
         },
         {
           "paramID": "osc1_s",
-          "name": "O2 S",
+          "name": "Sustain",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_r",
-          "name": "O2 R",
+          "name": "Release",
+          "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -280,6 +309,10 @@
           "osc1_r": 0.01
         }
       }
+    },
+    {
+      "copyOfInstrumentID": "minifm",
+      "name": "Mini FM 2"
     },
     {
       "name": "Minisynth A",

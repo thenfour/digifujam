@@ -27,6 +27,11 @@ class RoomServer {
     this.roomState.instrumentCloset.forEach(i => {
       i.instrumentID = DF.generateID();
 
+      // make sure all params have a group name
+      // i.params.forEach(p => {
+      //   if (!p.groupName) p.groupName = "Params";
+      // });
+
       // load a preset
       if (!Object.keys(i.presets).length) {
         console.assert(!i.params.length, `${i.name} ${Object.keys(i.presets).length} ${i.params.length} WARN: if you have any params, you must have a preset. ${JSON.stringify(i)}`);

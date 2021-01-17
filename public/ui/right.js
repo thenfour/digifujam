@@ -180,8 +180,8 @@ class InstFloatParam extends React.Component {
             q.toggle(false);
         } else {
             q.toggle(true, () => {
-                q.focus(); 
-                q.select(); 
+                q.focus();
+                q.select();
             });
         }
     }
@@ -312,9 +312,23 @@ class InstrumentParams extends React.Component {
             <li><InstrumentPresetList instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList></li>
         );
 
+        // unique group names.
+        let groupNames = [...new Set(this.props.instrument.params.map(p => p.groupName))];
+        groupNames = groupNames.filter(gn => this.props.instrument.params.find(p => p.groupName == gn && !p.hidden));
+
+        let groups = groupNames.map(groupName => (
+            <fieldset key={groupName} className="instParamGroup">
+                <legend>{groupName}</legend>
+                <ul className="instParamList">
+                    {this.props.instrument.params.filter(p => p.groupName == groupName).map(p => createParam(p))}
+                </ul>
+            </fieldset>
+        ));
+
         return (
             <div className="component">
                 <h2>{this.props.instrument.name}</h2>
+
                 <ul className="instParamList">
                     <li>
                         <button onClick={this.onOpenClicked}>Presets {arrowText}</button>
@@ -322,8 +336,9 @@ class InstrumentParams extends React.Component {
                     </li>
                     {presetControls}
                     {presetList}
-                    {this.props.instrument.params.map(p => createParam(p))}
                 </ul>
+
+                {groups}
             </div>
         );
     }
@@ -975,7 +990,7 @@ class RoomArea extends React.Component {
         let y2 = (this.state.scrollSize.y / 2) - (this.props.app.roomState.height / 2);
 
         // so interpolate between the two. smaller = more fixed.
-        let t = 0.2;
+        let t = 0.65;
 
         return {
             x: ((x1 * t) + (x2 * (1 - t))),

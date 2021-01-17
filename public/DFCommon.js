@@ -114,6 +114,7 @@ class InstrumentParam {
         this.name = "";
         this.parameterType = InstrumentParamType.intParam;
         this.hidden = false;
+        this.groupName = "Params";
         this.minValue = 0;// inclusive
         this.maxValue = 0;// inclusive
 
