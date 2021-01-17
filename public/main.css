@@ -89,10 +89,13 @@ button:focus {
     transition: background-position 1s;
 }
 
-#leftArea {
+#leftArea,
+#rightArea {
     display: flex;
     flex-direction: column;    
+    overflow-y:auto;
 }
+
 
 .component {
     width: 100%;

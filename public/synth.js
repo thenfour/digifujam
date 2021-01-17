@@ -140,16 +140,16 @@ class DigifuSynth {
 			gainer.connect(this.masterEffectsInputNode);
 			this.instrumentGainers[s.instrumentID] = gainer;
 			switch (s.engine) {
-				case "synth":
+				case "minisynth":
 					this.instruments[s.instrumentID] = new PolySynth(this.audioCtx, gainer, s);
 					break;
-				case "soundfont":
+					case "megasynth":
+						this.instruments[s.instrumentID] = new MegaSynth(this.audioCtx, gainer, s);
+						break;
+					case "soundfont":
 					this.instruments[s.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, s);
 					break;
 			}
-			//if (s.controlledByUserID) {
-			//	this.instruments[s.instrumentID].connect(gainer);
-			//}
 		});
 	};
 

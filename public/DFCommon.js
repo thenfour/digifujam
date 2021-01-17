@@ -10,6 +10,11 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
+let FrequencyFromMidiNote = function (midiNote) {
+    return 440 * Math.pow(2, (midiNote - 69) / 12);
+};
+
+
 // make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
 let gNextID = 1;
 let generateID = function () {
@@ -121,9 +126,10 @@ class DigifuInstrumentSpec {
         this.color = "";
         this.instrumentID = null;
         this.controlledByUserID = null;
-        this.engine = "synth"; // soundfont, synth
+        this.engine = null; // soundfont, minisynth, megasynth
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
+        this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
     }
 

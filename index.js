@@ -5,6 +5,7 @@ const io = require('socket.io')(http);
 const DF = require('./public/DFCommon')
 const fsp = require('fs').promises;
 
+// id-generation prefix
 gIDDomain = "srv";
 
 // populate initial room state

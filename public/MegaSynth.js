@@ -22,7 +22,7 @@ r
 */
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class PolySynthVoice {
+class MegaSynthVoice {
     constructor(audioCtx, destination, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
@@ -256,14 +256,14 @@ class PolySynthVoice {
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-class PolySynth {
+class MegaSynth {
     constructor(audioCtx, destination, instrumentSpec) {
         this.destination = destination;
         this.instrumentSpec = instrumentSpec;
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
-            this.voices.push(new PolySynthVoice(audioCtx, destination, instrumentSpec));
+            this.voices.push(new MegaSynthVoice(audioCtx, destination, instrumentSpec));
         }
         this.isSustainPedalDown = false;
         this.isConnected = false;

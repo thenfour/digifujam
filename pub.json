@@ -9,11 +9,11 @@
   "chatLog": [],
   "instrumentCloset": [
     {
-      "name": "Poly synth A",
+      "name": "Minisynth A",
       "gain": 1.0,
       "color": "rgb(138, 224, 153)",
-      "engine": "synth",
-      "instrumentID": "polySynthA",
+      "engine": "minisynth",
+      "instrumentID": "minisynth",
       "activityDisplay": "keyboard",
       "params": [
         {
@@ -93,14 +93,100 @@
     },
 
     {
-      "copyOfInstrumentID":"polySynthA",
-      "name": "Poly synth B"
+      "copyOfInstrumentID":"minisynth",
+      "name": "Minisynth B"
     },
 
+
+
     {
-      "copyOfInstrumentID":"polySynthA",
-      "name": "Poly synth C"
+      "name": "Megasynth A",
+      "gain": 1.0,
+      "color": "rgb(138, 224, 153)",
+      "engine": "megasynth",
+      "instrumentID": "megasynth",
+      "activityDisplay": "keyboard",
+      "params": [
+        {
+          "paramID": "wave",
+          "name": "Wave",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "currentValue": 1,
+          "enumNames": ["Sine", "Square", "Saw", "Tri"]
+        },
+        {
+          "paramID": "detune",
+          "name": "Detune",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 0.5,
+          "currentValue": 0.1
+        },
+        {
+          "paramID": "pbrange",
+          "name": "PB range",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 12,
+          "currentValue": 2
+        },
+        {
+          "paramID": "a",
+          "name": "A",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 5.0,
+          "currentValue": 0.008
+        },
+        {
+          "paramID": "d",
+          "name": "D",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 5.0,
+          "currentValue": 4.0
+        },
+        {
+          "paramID": "s",
+          "name": "S",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0,
+          "currentValue": 0.0
+        },
+        {
+          "paramID": "r",
+          "name": "R",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 5.0,
+          "currentValue": 0.07
+        },
+        {
+          "paramID": "q",
+          "name": "Filt Q",
+          "parameterType": "floatParam",
+          "minValue": 0.001,
+          "maxValue": 20.0,
+          "currentValue": 1.0
+        },
+        {
+          "paramID": "cutoff",
+          "name": "Tone",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 12000.0,
+          "currentValue": 5000.0
+        }
+      ]
     },
+
+
+
+
+
 
 
     {

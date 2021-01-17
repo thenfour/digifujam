@@ -607,7 +607,7 @@ class InstrumentList extends React.Component {
         }
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
-            <div className="component" style={{ whiteSpace: "nowrap", overflowY: "scroll" }}>
+            <div className="component" style={{ whiteSpace: "nowrap" }}>
                 <h2>Unclaimed instruments</h2>
                 <ul>
                     {instruments}
