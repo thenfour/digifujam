@@ -117,14 +117,6 @@
           "currentValue": 0.1
         },
         {
-          "paramID": "pbrange",
-          "name": "PB range",
-          "parameterType": "intParam",
-          "minValue": 0,
-          "maxValue": 12,
-          "currentValue": 2
-        },
-        {
           "paramID": "a",
           "name": "A",
           "parameterType": "floatParam",
