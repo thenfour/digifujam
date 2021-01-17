@@ -42,14 +42,14 @@
           "name": "A",
           "parameterType": "floatParam",
           "minValue": 0.004,
-          "maxValue": 5.0
+          "maxValue": 4.0
         },
         {
           "paramID": "d",
           "name": "D",
           "parameterType": "floatParam",
           "minValue": 0.00,
-          "maxValue": 5.0
+          "maxValue": 7.0
         },
         {
           "paramID": "s",
@@ -63,7 +63,7 @@
           "name": "R",
           "parameterType": "floatParam",
           "minValue": 0.00,
-          "maxValue": 5.0
+          "maxValue": 7.0
         },
         {
           "paramID": "q",
@@ -89,6 +89,16 @@
           "s": 0.0,
           "r": 0.07,
           "q": 1.0,
+          "cutoff": 5000.0
+        },
+        "Synthwave": {
+          "wave": 2,
+          "detune": 0.1,
+          "a": 1.0,
+          "d": 4.0,
+          "s": 0.0,
+          "r": 0.07,
+          "q": 0.0,
           "cutoff": 5000.0
         }
       }

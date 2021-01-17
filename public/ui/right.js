@@ -197,12 +197,36 @@ class InstFloatParam extends React.Component {
 
 
 
+class InstrumentPresetList extends React.Component {
+    presetClick(presetObj) {
+        this.props.app.LoadPresetObj(presetObj);
+    }
+    render() {
+        const lis = Object.keys(this.props.instrument.presets).map(presetName => (
+            <li key={presetName} onClick={() => this.presetClick(this.props.instrument.presets[presetName])}>{presetName}</li>
+        ));
+        return (
+            <ul className="presetList">
+                {lis}
+            </ul>
+        );
+    }
+};
+
 
 
 
 class InstrumentParams extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            presetListShown: false
+        };
+    }
+
     onOpenClicked = () => {
+        this.setState({ presetListShown: !this.state.presetListShown });
         //this.props.app.ResetInstrumentParams();
     };
 
@@ -244,16 +268,32 @@ class InstrumentParams extends React.Component {
                     return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
             }
         };
+
+        const arrowText = this.state.presetListShown ? '⯆' : '⯈';
+
+        let presetControls = this.state.presetListShown && (
+            <li>
+                <ul className="presetListControls">
+                    <li onClick={this.onExportClicked}>Export to clipboard...</li>
+                    <li onClick={this.onImportClicked}>Import from clipboard...</li>
+                </ul>
+            </li>
+        );
+
+        let presetList = this.state.presetListShown && (
+            <li><InstrumentPresetList instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList></li>
+        );
+
         return (
             <div className="component">
                 <h2>{this.props.instrument.name}</h2>
                 <ul className="instParamList">
                     <li>
-                        <button onClick={this.onOpenClicked}>📂</button>
-                        <button onClick={this.onExportClicked}>Export</button>
-                        <button onClick={this.onImportClicked}>Import</button>
+                        <button onClick={this.onOpenClicked}>Presets {arrowText}</button>
                         <button onClick={this.onReleaseClick}>Release</button>
                     </li>
+                    {presetControls}
+                    {presetList}
                     {this.props.instrument.params.map(p => createParam(p))}
                 </ul>
             </div>

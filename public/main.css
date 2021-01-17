@@ -373,6 +373,38 @@ ul.instParamList {
 }
 
 
+.presetList,
+.presetListControls {
+    padding:5px;
+}
+.presetList li,
+.presetListControls li {
+    cursor: pointer;
+    font-size: smaller;
+    color: #aaa;
+    border: 2px solid #044;
+    background-color: #044;
+    padding: 2px;
+    margin: 0;
+    padding-left: 6px;
+}
+
+.presetList li:hover,
+.presetList li:active,
+.presetListControls li:hover,
+.presetListControls li:active
+ {
+    background-color: #066;
+}
 
 
+.presetListControls li {
+    background-color: #444;
+    font-style: italic;
+}
+.presetListControls li:hover,
+.presetListControls li:active
+ {
+    background-color: #666;
+}
 

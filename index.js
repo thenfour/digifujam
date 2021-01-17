@@ -699,7 +699,7 @@ let roomIsLoaded = function () {
 fsp.readFile("pub.json").then(data => {
   gRooms.push(new RoomServer("/", data));
   fsp.readFile("maj7.json").then(data => {
-    //gRooms.push(new RoomServer("/maj7", data));
+    gRooms.push(new RoomServer("/maj7", data));
     roomIsLoaded();
   });
 });
