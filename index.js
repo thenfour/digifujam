@@ -20,15 +20,19 @@ class RoomServer {
 
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(JSON.parse(data));
+    //console.log(`room state: ${JSON.stringify(this.roomState)}`);
+
+    // do not do this on the client side, because there it takes whatever the server gives. thaw() is enough there.
     this.roomState.instrumentCloset.forEach(i => {
       i.instrumentID = DF.generateID();
-      i.controlledByUserID = null;
 
       // and init default param values from currentValue which are in the JSON
       i.params.forEach(param => {
         param.defaultValue = param.currentValue;
       });
     });
+
+
 
     setTimeout(() => {
       this.OnPingInterval();
@@ -209,7 +213,7 @@ class RoomServer {
       // find the new instrument.
       let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
       if (foundInstrument === null) {
-        console.log(`instrument request for unknown instrument`);
+        console.log(`instrument request for unknown instrument ${instrumentID}`);
         return;
       }
 

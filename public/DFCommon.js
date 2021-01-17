@@ -272,7 +272,22 @@ class DigifuRoomState {
     static FromJSONData(data) {
         // thaw into live classes
         let ret = Object.assign(new DigifuRoomState(), data);
+
+        // deal with instruments which are copies of instrumentns. expand them.
+        for (let idx = 0; idx < ret.instrumentCloset.length; ++idx) {
+            let i = ret.instrumentCloset[idx];
+            if (!i.copyOfInstrumentID) continue;
+
+            let base = ret.instrumentCloset.find(o => o.instrumentID == i.copyOfInstrumentID);
+            // create a clone of the base
+            let n = JSON.parse(JSON.stringify(base));
+            // apply modifications
+            i.copyOfInstrumentID = null;
+            ret.instrumentCloset[idx] = Object.assign(n, i);
+        }
+
         ret.thaw();
+
         return ret;
     }
 };
@@ -318,7 +333,7 @@ let sanitizeCheerText = function (n) {
     return String.fromCodePoint(n.codePointAt(0));
 }
 
-let sanitizeInstrumentParamVal = function(param, newVal) {
+let sanitizeInstrumentParamVal = function (param, newVal) {
     // just clamp to the range.
     if (newVal < param.minValue) return param.minValue;
     if (newVal > param.maxValue) return param.maxValue;
