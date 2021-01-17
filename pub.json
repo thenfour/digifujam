@@ -24,11 +24,17 @@
           "maxValue": 11
         },
         {
-          "paramID": "osc0_fb_amt",
-          "name": "O1 fb",
-          "parameterType": "floatParam",
-          "minValue": -500.0,
-          "maxValue": 500.0
+          "paramID": "osc0_wave",
+          "name": "O1 Wave",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
         },
         {
           "paramID": "osc0_freq_mult",
@@ -87,11 +93,17 @@
           "maxValue": 7.0
         },
         {
-          "paramID": "osc1_fb_amt",
-          "name": "O2 fb",
-          "parameterType": "floatParam",
-          "minValue": -500.0,
-          "maxValue": 500.0
+          "paramID": "osc1_wave",
+          "name": "O2 Wave",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
         },
         {
           "paramID": "osc1_freq_mult",
@@ -153,7 +165,7 @@
       "presets": {
         "init": {
           "algo": 1,
-          "osc0_fb_amt": 0,
+          "osc0_wave": 0,
           "osc0_freq_mult": 12.0,
           "osc0_freq_abs": 0,
           "osc0_level": 0.5,
@@ -162,7 +174,7 @@
           "osc0_d": 4,
           "osc0_s": 0,
           "osc0_r": 0.01,
-          "osc1_fb_amt": 0,
+          "osc1_wave": 0,
           "osc1_freq_mult": 1,
           "osc1_freq_abs": 0,
           "osc1_level": 0.5,

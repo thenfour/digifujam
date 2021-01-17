@@ -23,12 +23,12 @@ class MiniFMSynthOsc {
         /*
         each oscillator has
 
-        [fbOsc] -> [fb_gain] -><freq>[OSC] ----> [outp_gain]
-                                                  | <gain>
-                                [env]--> [envGain]
+        [OSC] -----------> [outp_gain]
+                           | <gain>
+         [env]--> [envGain]
 
          params:
-         - fb_amt feedback amt (fb_gain.gain)
+         - wave
          - freq_mult
          - freq_abs
          - level output level
@@ -37,6 +37,7 @@ class MiniFMSynthOsc {
          - d
          - s
          - r
+
         */
         if (this.isConnected) return;
 
@@ -44,7 +45,7 @@ class MiniFMSynthOsc {
         this.outp_gain.gain.value = 0.0;
 
         this.osc = this.audioCtx.createOscillator();
-        this.osc.type = "sine";
+        this._setOscWaveform();
         this.osc.start();
 
         this.env = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
@@ -61,12 +62,6 @@ class MiniFMSynthOsc {
         this.envGain = this.audioCtx.createGain();
         this.envGain.gain.value = this.paramValue("level");
 
-        this.fb_gain = this.audioCtx.createGain();
-        this.fb_gain.gain.value = this.paramValue("fb_amt");
-
-        this.osc.connect(this.fb_gain);
-        this.fb_gain.connect(this.osc.frequency);
-
         this.env.connect(this.envGain);
         this.osc.connect(this.outp_gain);
         this.envGain.connect(this.outp_gain.gain);
@@ -77,6 +72,7 @@ class MiniFMSynthOsc {
 
         this.isConnected = true;
     }
+
     disconnect() {
         if (!this.isConnected) return;
 
@@ -87,9 +83,6 @@ class MiniFMSynthOsc {
         this.osc.stop();
         this.osc.disconnect();
         this.osc = null;
-
-        this.fb_gain.disconnect();
-        this.fb_gain = null;
 
         this.outp_gain.disconnect();
         this.outp_gain = null;
@@ -102,6 +95,11 @@ class MiniFMSynthOsc {
         this.inputNode = null;
 
         this.isConnected = false;
+    }
+
+    _setOscWaveform() {
+        const shapes = ["sine", "square", "sawtooth", "triangle", "sine"];
+        this.osc.type = shapes[this.paramValue("wave")];
     }
 
     getFreq() {
@@ -147,8 +145,8 @@ class MiniFMSynthOsc {
 
     SetParamValue(strippedParamID, newVal) {
         switch (strippedParamID) {
-            case "fb_amt":
-                this.fb_gain.gain.linearRampToValueAtTime(this.paramValue("fb_amt"), ClientSettings.InstrumentParamIntervalMS / 1000);
+            case "wave":
+                this._setOscWaveform();
                 break;
             case "freq_mult":
             case "freq_abs":
