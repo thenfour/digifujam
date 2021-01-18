@@ -1121,7 +1121,7 @@ class RoomArea extends React.Component {
         const switchViewButton = this.props.app && this.props.app.roomState && (<button className="switchChatView" onClick={this.toggleChatView}>chat/room view</button>);
 
         return (
-            <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
+            <div id="roomArea" className="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
                 {userAvatars}
                 {roomItems}
@@ -1207,11 +1207,21 @@ class RootArea extends React.Component {
         screen.className = "screen";
         room.append(screen);
 
-        // elements which animate should be switched to non-animated versions
-
         setTimeout(() => {
             screen.parentNode.removeChild(screen);
-        }, 3000);
+        }, 1600);
+
+        // elements which animate should be switched to non-animated versions
+        $('.userAvatar').addClass('roomWelcomeNoTransition');
+        $('.roomArea').addClass('roomWelcomeNoTransition');
+        $('.roomItem').addClass('roomWelcomeNoTransition');
+
+        this.OnStateChange();
+
+        setTimeout(() => {
+            $('.roomWelcomeNoTransition').removeClass('roomWelcomeNoTransition');
+        }, 1);
+
     };
 
     HandleCheer = (data/*user, text x, y*/) => {

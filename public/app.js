@@ -147,7 +147,7 @@ class DigifuApp {
         this.handleAllNotesOff();
 
         this.handleRoomWelcome();
-        this.stateChangeHandler();
+        //this.stateChangeHandler();
     };
 
     NET_OnUserEnter(data) {

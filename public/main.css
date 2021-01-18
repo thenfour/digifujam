@@ -80,13 +80,17 @@ button:focus {
     background-color: #222;
 }
 
-#roomArea {
+.roomArea {
     background-color: black;
     color: #339;
     background-repeat: no-repeat;
     position: relative;
     overflow:hidden;
     transition: background-position 1s;
+}
+
+.roomArea.roomWelcomeNoTransition {
+	transition: background-position 0s;
 }
 
 #leftArea,
@@ -97,9 +101,8 @@ button:focus {
 }
 
 @keyframes screenFadeOut {
-    to {
-        opacity: 0%;
-    }
+    10% { opacite: 100%}
+    100% { opacity: 0%; }
 }
 
 #roomArea .screen {
@@ -111,7 +114,7 @@ button:focus {
     height: 100vh;
     pointer-events: none;
     opacity: 100%;
-    animation: screenFadeOut 3s 1;
+    animation: screenFadeOut 1s 1;
     animation-fill-mode: forwards;
 }
 
@@ -211,6 +214,10 @@ button:focus {
 
 .userAvatar.me {
     border-top-width: 10px;
+}
+
+.userAvatar.roomWelcomeNoTransition {
+	transition: top 0s, left 0s;
 }
 
 #chatArea {
@@ -446,9 +453,13 @@ ul.instParamList input[type="range" i] {
     border:5px solid blue;
     background:#00000061;
     position: absolute;
-    transition: 1s;
+    transition: top 1s, left 1s;
     pointer-events: none;
     color: #dd0;
     font-weight: bold;
 }
 
+.roomItem.roomWelcomeNoTransition
+{
+    transition: top 0s, left 0s;
+}
