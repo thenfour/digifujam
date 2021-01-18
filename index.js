@@ -11,17 +11,14 @@ gIDDomain = "srv";
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
+let gRooms = {}; // map roomID to RoomServer
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
 
-  constructor(route, data) {
-    this.route = route;
-    this.roomName = DF.routeToRoomName(route);
-
+  constructor(data) {
     // thaw into live classes
-    this.roomState = DF.DigifuRoomState.FromJSONData(JSON.parse(data));
-    //console.log(`${JSON.stringify(this.roomState.instrumentCloset[0])}`);
+    this.roomState = DF.DigifuRoomState.FromJSONData(data);
 
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     this.roomState.instrumentCloset.forEach(i => {
@@ -51,8 +48,6 @@ class RoomServer {
       }));
     });
 
-
-
     setTimeout(() => {
       this.OnPingInterval();
     }, DF.ServerSettings.PingIntervalMS);
@@ -76,7 +71,7 @@ class RoomServer {
       if (u.user.idle) {
         if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentAutoReleaseTimeoutMS) {
           //console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID} ==> AUTO RELEASE`);
-          io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+          io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
             instrumentID: i.instrumentID,
             userID: null,
             idle: false
@@ -89,7 +84,7 @@ class RoomServer {
         u.user.idle = true;
         // user is considered idle on their instrument.
         //console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
-        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+        io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
           instrumentID: i.instrumentID,
           userID: u.user.userID,
           idle: true
@@ -103,7 +98,7 @@ class RoomServer {
       user.lastActivity = new Date();
       if (user.idle) {
         user.idle = false;
-        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+        io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
           instrumentID: instrument.instrumentID,
           userID: user.userID,
           idle: false
@@ -136,6 +131,9 @@ class RoomServer {
       u.userID = clientSocket.id;
       u.lastActivity = new Date();
       u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
+      if (clientSocket.DFPosition) {
+        u.position = clientSocket.DFPosition; // if you're transitioning from a previous room, we store your neew position here across the workflow.
+      }
       u.img = null;
 
       this.roomState.users.push(u);
@@ -147,10 +145,11 @@ class RoomServer {
       chatMessageEntry.fromUserColor = u.color;
       chatMessageEntry.fromUserName = u.name;
       chatMessageEntry.timestampUTC = new Date();
+      chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
       this.roomState.chatLog.push(chatMessageEntry);
-      //console.log(`chatLog.push => joined`);
+      //console.log(`chatLog.push => joined from room ${clientSocket.DFFromRoomName}`);
 
-      console.log(`User identified id=${u.userID} name=${u.name}. Send welcome package.`)
+      //console.log(`User identified id=${u.userID} name=${u.name}. Send welcome package.`)
 
       // notify this 1 user of their user id & room state
       clientSocket.emit(DF.ServerMessages.Welcome, {
@@ -159,48 +158,9 @@ class RoomServer {
       });
 
       // broadcast user enter to all clients except the user.
-      clientSocket.to(this.roomName).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
+      clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
     } catch (e) {
       console.log(`OnClientIdentify exception occurred`);
-      console.log(e);
-    }
-  };
-
-  OnClientClose(userID) {
-    try {
-      console.log(`close => ${userID}`)
-
-      // find the user object and remove it.
-      let foundUser = this.roomState.FindUserByID(userID);
-      if (foundUser == null) {
-        console.log(`client closing but is not a user...?`);
-        return;
-      }
-
-      // remove references to this user.
-      this.roomState.instrumentCloset.forEach(inst => {
-        if (inst.controlledByUserID != foundUser.user.userID) return;
-        inst.controlledByUserID = null;
-        // broadcast this to clients
-        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
-      });
-
-      let chatMessageEntry = new DF.DigifuChatMessage();
-      chatMessageEntry.messageID = DF.generateID();
-      chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
-      chatMessageEntry.fromUserID = foundUser.user.userID;
-      chatMessageEntry.fromUserColor = foundUser.user.color;
-      chatMessageEntry.fromUserName = foundUser.user.name;
-      chatMessageEntry.timestampUTC = new Date();
-      this.roomState.chatLog.push(chatMessageEntry);
-      //console.log(`chatLog.push => part`);
-
-      // remove user from room.
-      this.roomState.users.splice(foundUser.index, 1);
-
-      io.to(this.roomName).emit(DF.ServerMessages.UserLeave, { userID, chatMessageEntry });
-    } catch (e) {
-      console.log(`OnClientClose exception occurred`);
       console.log(e);
     }
   };
@@ -222,7 +182,7 @@ class RoomServer {
         existingInstrument.instrument.controlledByUserID = null;
 
         // broadcast instrument change to all clients
-        io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+        io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
           instrumentID: existingInstrument.instrument.instrumentID,
           userID: null,
           idle: false,
@@ -241,7 +201,7 @@ class RoomServer {
       foundUser.user.lastActivity = new Date();
 
       // broadcast instrument change to all clients
-      io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
         instrumentID: foundInstrument.instrument.instrumentID,
         userID: foundUser.user.userID,
         idle: false
@@ -273,7 +233,7 @@ class RoomServer {
       foundInstrument.instrument.controlledByUserID = null;
 
       // broadcast instrument change to all clients
-      io.to(this.roomName).emit(DF.ServerMessages.InstrumentOwnership, {
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
         instrumentID: foundInstrument.instrument.instrumentID,
         userID: null,
         idle: false
@@ -284,7 +244,7 @@ class RoomServer {
     }
   };
 
-  OnClientNoteOn(ws, note, velocity) {
+  OnClientNoteOn(ws, data) {
     try {
       // find the user object.
       let foundUser = this.FindUserFromSocket(ws);
@@ -303,10 +263,10 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.NoteOn, {
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.NoteOn, {
         userID: foundUser.user.userID,
-        note: note,
-        velocity: velocity
+        note: data.note,
+        velocity: data.velocity
       });
     } catch (e) {
       console.log(`OnClientNoteOn exception occurred`);
@@ -332,7 +292,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.NoteOff, {
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.NoteOff, {
         userID: foundUser.user.userID,
         note: note
       });
@@ -359,7 +319,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
     } catch (e) {
       console.log(`OnClientAllNotesOff exception occurred`);
       console.log(e);
@@ -375,7 +335,7 @@ class RoomServer {
         return;
       }
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.PedalUp, {
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.PedalUp, {
         userID: foundUser.user.userID
       });
     } catch (e) {
@@ -393,7 +353,7 @@ class RoomServer {
         return;
       }
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.PedalDown, {
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.PedalDown, {
         userID: foundUser.user.userID
       });
     } catch (e) {
@@ -424,7 +384,7 @@ class RoomServer {
         patchObj: {}
       };
       Object.keys(data).forEach(paramID => {
-      //data.forEach(x => {
+        //data.forEach(x => {
         if (paramID == "pb") {
           // special case: pitch bend is not a real param on an instrument but it's very convenient to use the param system for it.
           // no need to store this locally.
@@ -443,7 +403,7 @@ class RoomServer {
       });
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomName).broadcast.emit(DF.ServerMessages.InstrumentParams, ret);
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, ret);
     } catch (e) {
       console.log(`OnClientInstrumentParams exception occurred`);
       console.log(e);
@@ -486,7 +446,7 @@ class RoomServer {
 
       // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
       // this allows simpler handling of incorporating the messageID.
-      io.to(this.roomName).emit(DF.ServerMessages.UserChatMessage, nm);
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.UserChatMessage, nm);
     } catch (e) {
       console.log(`OnClientChatMessage exception occurred`);
       console.log(e);
@@ -504,6 +464,35 @@ class RoomServer {
       console.log(e);
     }
   }
+
+  DoUserRoomChange(ws, user, params) {
+    let newRoom = gRooms[params.roomID];
+    console.log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
+    // send user part to everyone else in old room
+    this.ClientLeaveRoom(ws, user.userID, newRoom.roomState.roomTitle);
+    // enter the new room
+    ws.DFPosition = {
+      x: params.x,
+      y: params.y
+    };
+    newRoom.ClientJoin(ws, this.roomState.roomTitle);
+  }
+
+  DoUserItemInteraction(ws, user, item, interactionType) {
+    let interactionSpec = item[interactionType];
+    if (!interactionSpec) {
+      console.log(`Item ${item.itemID} has no interaction type ${interactionType}`);
+      return;
+    }
+    switch (interactionSpec.fn) {
+      case DF.RoomFns.roomChange:
+        this.DoUserRoomChange(ws, user, interactionSpec.params);
+        break;
+      default:
+        console.log(`Item ${item.itemID} / interaction type ${interactionType} has unknown interaction FN ${interactionSpec.fn}`);
+        break;
+    }
+  };
 
   OnClientUserState(ws, data) {
     try {
@@ -552,7 +541,15 @@ class RoomServer {
 
       data.userID = foundUser.user.userID; // adapt the data packet for sending to all clients.
 
-      io.to(this.roomName).emit(DF.ServerMessages.UserState, { state: data, chatMessageEntry: nm });
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.UserState, { state: data, chatMessageEntry: nm });
+
+      // room interaction based on intersection.
+      this.roomState.roomItems.forEach(item => {
+        if (item.rect.PointIntersects(foundUser.user.position)) {
+          this.DoUserItemInteraction(ws, foundUser.user, item, "onAvatarEnter");
+        }
+      });
+
     } catch (e) {
       console.log(`OnClientUserState exception occurred`);
       console.log(e);
@@ -575,7 +572,7 @@ class RoomServer {
         return;
       }
 
-      io.to(this.roomName).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
     } catch (e) {
       console.log(`OnClientCheer exception occurred`);
       console.log(e);
@@ -608,7 +605,7 @@ class RoomServer {
       });
 
       // for the users that deleted, gracefully kill them off.
-      deletedUsers.forEach(u => { OnClientClose(u.userID) });
+      deletedUsers.forEach(u => { this.ClientLeaveRoom(null, u.userID) });
 
       this.Idle_CheckIdlenessAndEmit();
 
@@ -620,8 +617,8 @@ class RoomServer {
         payload.users.push({ userID: u.userID, pingMS: u.pingMS });
       });
 
-      // ping ALL clients on the server
-      io.emit(DF.ServerMessages.Ping, payload);
+      // ping ALL clients on the room
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.Ping, payload);
     } catch (e) {
       console.log(`OnPingInterval exception occurred`);
       console.log(e);
@@ -648,33 +645,57 @@ class RoomServer {
     }
   };
 
-
-  OnClientConnect(ws) {
+  // call this to leave the socket from this room.
+  ClientLeaveRoom(ws/* may be null */, userID, newRoomName) {
     try {
-      if (this.roomState.users.length >= DF.ServerSettings.RoomUserCountMaximum) {
-        ws.disconnect();
+      //console.log(`ClientLeaveRoom => ${userID}`)
+
+      // find the user object and remove it.
+      let foundUser = this.roomState.FindUserByID(userID);
+      if (foundUser == null) {
+        // this is normal
         return;
       }
-      ws.join(this.roomName);
-      ws.on(DF.ClientMessages.Identify, data => this.OnClientIdentify(ws, data));
-      ws.on('disconnect', () => this.OnClientClose(ws.id));
-      ws.on(DF.ClientMessages.InstrumentRequest, data => this.OnClientInstrumentRequest(ws, data));
-      ws.on(DF.ClientMessages.InstrumentRelease, () => this.OnClientInstrumentRelease(ws));
-      ws.on(DF.ClientMessages.NoteOn, data => this.OnClientNoteOn(ws, data.note, data.velocity));
-      ws.on(DF.ClientMessages.NoteOff, data => this.OnClientNoteOff(ws, data));
-      ws.on(DF.ClientMessages.AllNotesOff, () => this.OnClientAllNotesOff(ws));
-      ws.on(DF.ClientMessages.PedalDown, data => this.OnClientPedalDown(ws, data));
-      ws.on(DF.ClientMessages.PedalUp, data => this.OnClientPedalUp(ws, data));
-      ws.on(DF.ClientMessages.InstrumentParams, data => this.OnClientInstrumentParams(ws, data));
 
-      ws.on(DF.ClientMessages.ChatMessage, data => this.OnClientChatMessage(ws, data));
-      ws.on(DF.ClientMessages.Pong, data => this.OnClientPong(ws, data));
-      ws.on(DF.ClientMessages.UserState, data => this.OnClientUserState(ws, data));
-      ws.on(DF.ClientMessages.Cheer, data => this.OnClientCheer(ws, data));
+      // remove references to this user.
+      this.roomState.instrumentCloset.forEach(inst => {
+        if (inst.controlledByUserID != foundUser.user.userID) return;
+        inst.controlledByUserID = null;
+        // broadcast this to clients
+        io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
+      });
 
+      let chatMessageEntry = new DF.DigifuChatMessage();
+      chatMessageEntry.messageID = DF.generateID();
+      chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
+      chatMessageEntry.timestampUTC = new Date();
+      chatMessageEntry.fromUserID = foundUser.user.userID;
+      chatMessageEntry.fromUserColor = foundUser.user.color;
+      chatMessageEntry.fromUserName = foundUser.user.name;
+      chatMessageEntry.toRoomName = newRoomName;
+      this.roomState.chatLog.push(chatMessageEntry);
 
-      // send the "please identify yourself" msg
-      ws.emit(DF.ServerMessages.PleaseIdentify);
+      // remove user from room.
+      this.roomState.users.splice(foundUser.index, 1);
+
+      if (ws) {
+        ws.leave(this.roomState.roomID);
+      }
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.UserLeave, { userID, chatMessageEntry });
+    } catch (e) {
+      console.log(`ClientLeaveRoom exception occurred`);
+      console.log(e);
+    }
+  };
+
+  // call this to join this socket to this room and initiate welcome.
+  ClientJoin(ws, fromRoomName) {
+    // NB! Client may already be connected but just joining this room.
+    try {
+      //console.log(`CLIENT JOINING ${this.roomState.roomID}`);
+      ws.DFFromRoomName = fromRoomName; // convenience so you can persist through the room change workflow.
+      ws.join(this.roomState.roomID);
+      ws.emit(DF.ServerMessages.PleaseIdentify); // ask user to identify
     } catch (e) {
       console.log(`OnClientConnect exception occurred`);
       console.log(e);
@@ -684,23 +705,56 @@ class RoomServer {
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-// load configs
-let gRooms = [];
+let ForwardToRoom = function(ws, fn) {
+  let roomArray = [...ws.rooms];
+  //console.log(`ROOMS=${roomArray} FN=${fn.toString()}`);
+  fn(gRooms[roomArray[1]]); // room[0] is always your socket id.
+};
 
-let roomIsLoaded = function () {
-  // serve the rooms
-  gRooms.forEach(r => {
-    app.use(r.route, express.static('public'))
+let OnDisconnect = function (ws) {
+  // remove from all rooms.
+  Object.keys(gRooms).forEach(roomID => {
+    gRooms[roomID].ClientLeaveRoom(ws, ws.id);
   });
+};
 
+// load configs
+let roomsAreLoaded = function () {
+  // serve the rooms
   io.on('connection', ws => {
     try {
-      let requestedRoomName = DF.routeToRoomName(ws.handshake.query["jamroom"]);
-      let room = gRooms.find(r => r.roomName.toLowerCase() === requestedRoomName);
-      if (!room) {
-        throw `user trying to connect to nonexistent room ${requestedRoomName}`
+      let worldUserCount = 0;
+      Object.keys(gRooms).forEach(k => {
+        worldUserCount += gRooms[k].roomState.users.length;
+      });
+      if (worldUserCount >= DF.ServerSettings.WorldUserCountMaximum) {
+        ws.disconnect();
+        return;
       }
-      room.OnClientConnect(ws);
+      let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"]);
+      let room = gRooms[requestedRoomID];
+      if (!room) {
+        throw `user trying to connect to nonexistent roomID ${requestedRoomID}`
+      }
+
+      ws.on('disconnect', data => OnDisconnect(ws, data));
+      ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentRequest, data => ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentRelease, () => ForwardToRoom(ws, room => room.OnClientInstrumentRelease(ws)));
+      ws.on(DF.ClientMessages.NoteOn, data => ForwardToRoom(ws, room => room.OnClientNoteOn(ws, data)));
+      ws.on(DF.ClientMessages.NoteOff, data => ForwardToRoom(ws, room => room.OnClientNoteOff(ws, data)));
+      ws.on(DF.ClientMessages.AllNotesOff, data => ForwardToRoom(ws, room => room.OnClientAllNotesOff(ws, data)));
+      ws.on(DF.ClientMessages.PedalDown, data => ForwardToRoom(ws, room => room.OnClientPedalDown(ws, data)));
+      ws.on(DF.ClientMessages.PedalUp, data => ForwardToRoom(ws, room => room.OnClientPedalUp(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentParams, data => ForwardToRoom(ws, room => room.OnClientInstrumentParams(ws, data)));
+
+      ws.on(DF.ClientMessages.ChatMessage, data => ForwardToRoom(ws, room => room.OnClientChatMessage(ws, data)));
+      ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
+      ws.on(DF.ClientMessages.UserState, data => ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
+      ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
+
+      room.ClientJoin(ws);
+
     } catch (e) {
       console.log("Exception on connection: " + e);
     }
@@ -712,11 +766,19 @@ let roomIsLoaded = function () {
   });
 };
 
-fsp.readFile("pub.json").then(data => {
-  gRooms.push(new RoomServer("/", data));
-  fsp.readFile("maj7.json").then(data => {
-    gRooms.push(new RoomServer("/maj7", data));
-    roomIsLoaded();
-  });
-});
+let loadRoom = function (jsonTxt) {
+  roomState = JSON.parse(jsonTxt);
+  gRooms[roomState.roomID] = new RoomServer(roomState);
+  console.log(`serving room ${roomState.roomID} on route ${roomState.route}`);
+  app.use(roomState.route, express.static('public'));
+}
+
+fsp.readFile("pub.json")
+  .then(data => loadRoom(data))
+  .then(() => fsp.readFile("maj7.json"))
+  .then(data => loadRoom(data))
+  .then(() => fsp.readFile("hall.json"))
+  .then(data => loadRoom(data))
+  .then(() => roomsAreLoaded());
+
 

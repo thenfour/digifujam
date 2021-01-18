@@ -44,20 +44,25 @@
 
     <script type="text/babel">
 
+        // prefix for client-side generated IDs.
         let gIDDomain = "client";
 
         $.getJSON('./ui/spinners.json', function (data) {
             window.gSpinners = data;
         });
 
-        let roomName = routeToRoomName(window.location.pathname);
-        window.DFRoomName = roomName;
-        $("head").append("<link rel='stylesheet' id='roomcss' href='" + roomName + ".css' type='text/css' />");
+        // a default room name based on the URL you entered. only to be used when you're not connected to a room.
+        let roomID = routeToRoomID(window.location.pathname);
+        window.DFRoomID = roomID;
+
+        // room-specific CSS is loaded at startup, so your initial room is also the CSS you load. joining new rooms doesn't load new CSS.
+        $("head").append("<link rel='stylesheet' id='roomcss' href='" + roomID + ".css' type='text/css' />");
 
         ReactDOM.render(
             <RootArea />,
             document.getElementById('root')
         );
+
     </script>
 
     <div id="root" style="height:100vh;"></div>

@@ -6,6 +6,7 @@ class DigifuApp {
         this.shortChatLog = []; // contains aggregated entries instead of the full thing
 
         this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
+        this.handleRoomWelcome = null; // called when you enter a new room.
         this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
         this.noteOffHandler = null;
         this.handleUserLeave = null;
@@ -23,6 +24,13 @@ class DigifuApp {
         this.midi = new DigifuMidi();
         this.synth = new DigifuSynth(); // contains all music-making stuff.
         this.net = new DigifuNet();
+    }
+
+    get RoomID() {
+        if (!this.roomState) {
+            return window.DFRoomID;
+        }
+        return this.roomState.roomID;
     }
 
     get pitchBendRange() {
@@ -120,8 +128,8 @@ class DigifuApp {
         // find "you"
         this.myUser = this.roomState.FindUserByID(myUserID).user;
 
-        Cookies.set(this.roomName + "_userName", this.myUser.name);
-        Cookies.set(this.roomName + "_userColor", this.myUser.color);
+        Cookies.set(this.roomID + "_userName", this.myUser.name);
+        Cookies.set(this.roomID + "_userColor", this.myUser.color);
 
         // connect instruments to synth
         this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
@@ -138,9 +146,8 @@ class DigifuApp {
         this.synth.AllNotesOff();
         this.handleAllNotesOff();
 
-        if (this.stateChangeHandler) {
-            this.stateChangeHandler();
-        }
+        this.handleRoomWelcome();
+        this.stateChangeHandler();
     };
 
     NET_OnUserEnter(data) {
@@ -333,8 +340,8 @@ class DigifuApp {
         u.user.position = data.state.position;
 
         if (u.user.userID == this.myUser.userID) {
-            Cookies.set(this.roomName + "_userName", this.myUser.name);
-            Cookies.set(this.roomName + "_userColor", this.myUser.color);
+            Cookies.set(this.roomID + "_userName", this.myUser.name);
+            Cookies.set(this.roomID + "_userColor", this.myUser.color);
         }
 
         if (data.chatMessageEntry) {
@@ -421,7 +428,7 @@ class DigifuApp {
         this.LoadPresetObj(presetObj);
     };
 
-    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer) {
+    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer, handleRoomWelcome) {
         this.myUser = new DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
@@ -434,10 +441,9 @@ class DigifuApp {
         this.handleUserAllNotesOff = handleUserAllNotesOff;
         this.handleDisconnect = disconnectHandler;
         this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
+        this.handleRoomWelcome = handleRoomWelcome;
 
         this.midi.Init(this);
-
-        this.roomName = routeToRoomName(window.location.pathname); // is it a good idea to calc like this? not sure but for now it is!
 
         this.audioCtx = new AudioContext();
         // this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {

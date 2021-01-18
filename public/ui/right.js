@@ -1,4 +1,9 @@
 
+let getRoomID = function(app) {
+    if (!app) return window.DFRoomID;
+    if (!app.roomState) return window.DFRoomID;
+    return app.roomState.roomID;
+}
 
 let getValidationErrorMsg = function (userName, userColor) {
     let sanitizedName = sanitizeUsername(userName);
@@ -359,10 +364,10 @@ class CheerControls extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            text: '👏'
+            text: '✨'
         };
-        if (Cookies.get(window.DFRoomName + "_cheerText")) {
-            this.state.text = Cookies.get(window.DFRoomName + "_cheerText");
+        if (Cookies.get(getRoomID(this.props.app) + "_cheerText")) {
+            this.state.text = Cookies.get(getRoomID(this.props.app) + "_cheerText");
         }
         this.mouseIn = false;
         this.mouseDown = false;
@@ -435,7 +440,7 @@ class CheerControls extends React.Component {
                 <TextInputFieldExternalState
                     value={this.state.text}
                     onChange={(val) => {
-                        Cookies.set(window.DFRoomName + "_cheerText", val);
+                        Cookies.set(getRoomID(this.props.app) + "_cheerText", val);
                         this.setState({ text: val });
                     }}
                 />
@@ -612,11 +617,11 @@ class Connection extends React.Component {
             showValidationErrors: false, // don't show until you try to connect
         };
 
-        if (Cookies.get(window.DFRoomName + "_userName")) {
-            this.state.userName = Cookies.get(window.DFRoomName + "_userName");
+        if (Cookies.get(getRoomID(this.props.app) + "_userName")) {
+            this.state.userName = Cookies.get(getRoomID(this.props.app) + "_userName");
         }
-        if (Cookies.get(window.DFRoomName + "_userColor")) {
-            this.state.userColor = Cookies.get(window.DFRoomName + "_userColor");
+        if (Cookies.get(getRoomID(this.props.app) + "_userColor")) {
+            this.state.userColor = Cookies.get(getRoomID(this.props.app) + "_userColor");
         }
     }
 
@@ -733,7 +738,7 @@ class InstrumentList extends React.Component {
         );
     }
     render() {
-        if (!this.props.app || !this.props.app.roomState) {
+        if (!this.props.app || !this.props.app.roomState || (this.props.app.roomState.instrumentCloset.length < 1)) {
             return null;
         }
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
@@ -838,6 +843,28 @@ class UserAvatar extends React.Component {
 };
 
 
+
+
+class UIRoomItem extends React.Component {
+
+    render() {
+        const pos = this.props.displayHelper().roomToScreenPosition(this.props.item.rect);
+        let style= Object.assign({
+            left: pos.x,
+            top: pos.y,
+            width: this.props.item.rect.w,
+            height: this.props.item.rect.h,
+        }, this.props.item.style);
+        return (
+            <div className="roomItem" style={style}>{this.props.item.name}</div>
+        );
+    }
+};
+
+
+
+
+
 class ShortChatLog extends React.Component {
     render() {
         if (!this.props.app) return null;
@@ -855,12 +882,14 @@ class ShortChatLog extends React.Component {
                         ));
                     }
                 case ChatMessageType.join:
+                    let fromRoomTxt = msg.fromRoomName && `(from ${msg.fromRoomName})`;
                     return (
-                        <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the jam</span></div>
+                        <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the {this.props.app.roomState.roomTitle} jam {fromRoomTxt}</span></div>
                     );
                 case ChatMessageType.part:
+                    let toRoomTxt = msg.toRoomName && `(to ${msg.toRoomName})`;
                     return (
-                        <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the jam</span></div>
+                        <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the {this.props.app.roomState.roomTitle} jam {toRoomTxt}</span></div>
                     );
                 case ChatMessageType.nick:
                     return (
@@ -900,12 +929,14 @@ class FullChatLog extends React.Component {
 
             switch (msg.messageType) {
                 case ChatMessageType.join:
+                    let fromRoomTxt = msg.fromRoomName && `(from ${msg.fromRoomName})`;
                     return (
-                        <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the jam</span></li>
+                        <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the {this.props.app.roomState.roomTitle} jam {fromRoomTxt}</span></li>
                     );
                 case ChatMessageType.part:
+                    let toRoomTxt = msg.toRoomName && `(to ${msg.toRoomName})`;
                     return (
-                        <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the jam</span></li>
+                        <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the {this.props.app.roomState.roomTitle} jam {toRoomTxt}</span></li>
                     );
                 case ChatMessageType.nick:
                     return (
@@ -989,8 +1020,8 @@ class RoomArea extends React.Component {
         let x2 = (this.state.scrollSize.x / 2) - (this.props.app.roomState.width / 2);
         let y2 = (this.state.scrollSize.y / 2) - (this.props.app.roomState.height / 2);
 
-        // so interpolate between the two. smaller = more fixed.
-        let t = 0.65;
+        // so interpolate between the two. smaller = easier on the eyes, the room stays put, but parts can become unreachable.
+        let t = 0.85;
 
         return {
             x: ((x1 * t) + (x2 * (1 - t))),
@@ -1062,11 +1093,17 @@ class RoomArea extends React.Component {
     render() {
         let style = {};
         let userAvatars = null;
+        let roomItems = null;
+
         if (this.props.app && this.props.app.roomState) {
             let scrollPos = this.getScreenScrollPosition();
 
             userAvatars = this.props.app.roomState.users.map(u => (
                 <UserAvatar key={u.userID} app={this.props.app} user={u} displayHelper={() => this} />
+            ));
+
+            roomItems = this.props.app.roomState.roomItems.map(item => (
+                <UIRoomItem key={item.itemID} app={this.props.app} item={item} displayHelper={() => this} />
             ));
 
             style = {
@@ -1075,6 +1112,7 @@ class RoomArea extends React.Component {
                 backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
             };
         }
+
 
         let connection = (this.props.app) ? null : (
             <Connection app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
@@ -1086,12 +1124,14 @@ class RoomArea extends React.Component {
             <div id="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
                 {userAvatars}
+                {roomItems}
                 { !this.state.showFullChat && <ShortChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
                 { this.state.showFullChat && <FullChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
                 <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={() => this}></CheerControls>
                 {switchViewButton}
+                
             </div>
         );
     }
@@ -1149,12 +1189,29 @@ class RootArea extends React.Component {
             this.notesOn.push([]); // empty initially.
         }
 
-        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff, this.handleUserAllNotesOff, this.handleAllNotesOff, this.handleUserLeave, this.HandleNetworkDisconnected, this.HandleCheer);
+        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
+            this.handleUserAllNotesOff, this.handleAllNotesOff,
+            this.handleUserLeave, this.HandleNetworkDisconnected,
+            this.HandleCheer, this.handleRoomWelcome);
         this.setState({ app });
     }
 
     handleRoomRef = (r) => {
         let a = 0;
+    };
+
+    handleRoomWelcome = () => {
+        // throw up a screen and it fades out, then we remove it.
+        var room = document.getElementById("roomArea");
+        var screen = document.createElement("div");
+        screen.className = "screen";
+        room.append(screen);
+
+        // elements which animate should be switched to non-animated versions
+
+        setTimeout(() => {
+            screen.parentNode.removeChild(screen);
+        }, 3000);
     };
 
     HandleCheer = (data/*user, text x, y*/) => {
@@ -1314,6 +1371,7 @@ class RootArea extends React.Component {
                     ref={this.roomRef} />
                 <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
                 <LeftArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
+
             </div>
         );
     }

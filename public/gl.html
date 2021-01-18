@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://twgljs.org/dist/4.x/twgl.min.js"></script>
+
+</head>
+
+<body id="body">
+
+    <canvas id="glBody" style="border:5px solid blue; width:200px;height:200px;transform:skewY(20deg)"></canvas>
+
+    <script type="text/javascript">
+
+        class Vis {
+            constructor(canv, audioCtx, nodeSrc, nodeDest) {
+
+                const vs = `
+    attribute vec4 v_position;
+    void main() {
+      gl_Position = v_position;
+    }     
+`;
+
+                const fs = `
+    precision mediump float;
+
+    uniform sampler2D fft;
+    uniform float iTime;
+    uniform vec2 iResolution;
+
+    void main() {
+        vec2 uv = gl_FragCoord.xy / iResolution;
+        float h = texture2D(fft, uv.xx).r;
+       gl_FragColor = vec4(uv.y > h ? 1 : 0, 0, 0,1.0); 
+    }
+`;
+
+                // https://stackoverflow.com/questions/19592850/how-to-bind-an-array-of-textures-to-a-webgl-shader-uniform
+                // https://webgl2fundamentals.org/webgl/lessons/webgl-data-textures.html
+                var gl = canv.getContext("webgl");
+                var shader_program = twgl.createProgram(gl, [vs, fs]);
+                gl.useProgram(shader_program);
+                var vertexPositionAttribute = gl.getAttribLocation(shader_program, "v_position");
+                var quad_vertex_buffer = gl.createBuffer();
+                var quad_vertex_buffer_data = new Float32Array([
+                    -1.0, -1.0, 0.0,
+                    1.0, -1.0, 0.0,
+                    -1.0, 1.0, 0.0,
+                    -1.0, 1.0, 0.0,
+                    1.0, -1.0, 0.0,
+                    1.0, 1.0, 0.0]);
+                gl.bindBuffer(gl.ARRAY_BUFFER, quad_vertex_buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, quad_vertex_buffer_data, gl.STATIC_DRAW);
+                gl.vertexAttribPointer(vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
+                gl.enableVertexAttribArray(vertexPositionAttribute);
+                var locationOfTime = gl.getUniformLocation(shader_program, "iTime");
+                var locationOfResolution = gl.getUniformLocation(shader_program, "iResolution");
+
+                // Create a data texture.
+                var texture = gl.createTexture();
+                gl.activeTexture(gl.TEXTURE0 + 0);
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR /*NEAREST*/);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR /*NEAREST*/);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+                let onFrame = function () {
+                    window.requestAnimationFrame(onFrame);
+                    gl.uniform1f(locationOfTime, (new Date()).getMilliseconds());
+                    gl.uniform2f(locationOfResolution, canv.clientWidth, canv.clientHeight);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8/*width*/, 1/*height*/, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                        new Uint8Array([
+                            16, 0, 0, 0,
+                            32, 0, 0, 0,
+                            128, 0, 0, 0,
+                            192, 0, 0, 0,
+                            32, 0, 0, 0,
+                            0, 0, 0, 0,
+                            1, 0, 0, 0,
+                            24, 0, 0, 0,
+                        ]));
+                    gl.drawArrays(gl.TRIANGLES, 0, 6);
+                }
+                window.requestAnimationFrame(onFrame);
+            }
+        };
+
+        window.gApp = new Vis(document.getElementById("glBody"));
+
+    </script>
+
+</body>
+
+</html>

@@ -96,6 +96,24 @@ button:focus {
     overflow-y:auto;
 }
 
+@keyframes screenFadeOut {
+    to {
+        opacity: 0%;
+    }
+}
+
+#roomArea .screen {
+    background-color: black;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    opacity: 100%;
+    animation: screenFadeOut 3s 1;
+    animation-fill-mode: forwards;
+}
 
 .component {
     width: 100%;
@@ -422,5 +440,15 @@ ul.instParamList input[type="range" i] {
 .presetListControls li:active
  {
     background-color: #666;
+}
+
+.roomItem {
+    border:5px solid blue;
+    background:#00000061;
+    position: absolute;
+    transition: 1s;
+    pointer-events: none;
+    color: #dd0;
+    font-weight: bold;
 }
 

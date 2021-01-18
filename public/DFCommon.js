@@ -15,7 +15,7 @@ let FrequencyFromMidiNote = function (midiNote) {
 };
 
 
-let remap = function(value, low1, high1, low2, high2) {
+let remap = function (value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
@@ -48,8 +48,8 @@ const ClientMessages = {
 const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
     Welcome: "Welcome",// (your UserID & room state)
-    UserEnter: "UserEnter",// (user data)
-    UserLeave: "UserLeave",// UserID
+    UserEnter: "UserEnter",// (user data), <oldRoomName>
+    UserLeave: "UserLeave",// UserID, <newRoomName>
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     Ping: "Ping", // data, { userid, pingMS }
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
@@ -77,7 +77,7 @@ const ServerSettings = {
 
     ChatMessageLengthMax: 288,
 
-    RoomUserCountMaximum: 100,
+    WorldUserCountMaximum: 100,
 };
 
 const ClientSettings = {
@@ -198,6 +198,9 @@ class DigifuChatMessage {
         this.toUserID = null;
         this.toUserColor = null;
         this.toUserName = null;
+
+        this.fromRoomName = null;
+        this.toRoomName = null;
     }
 
     thaw() { /* no child objects to thaw. */ }
@@ -248,11 +251,62 @@ class DigifuChatMessage {
     }
 };
 
+class DFRect {
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.w = 0;
+        this.h = 0;
+    }
+    thaw() {}
+
+    PointIntersects(pt) {
+        if (pt.x < this.x) return false;
+        if (pt.y < this.y) return false;
+        if (pt.x >= this.x + this.w) return false;
+        if (pt.y >= this.y + this.h) return false;
+        return true;
+    }
+};
+
+const RoomFns = {
+    roomChange: "roomChange",
+};
+
+// a function that can be invoked by room items.
+class RoomFn {
+    constructor() {
+        this.fn = null; // of RoomFns
+        this.params = null; // anything.
+    }
+    thaw() {}
+};
+
+class RoomItem {
+    constructor() {
+        this.name = "";
+        this.rect = null; // x, y, w, h
+        this.style = null; // CSS
+        this.interactions = {};
+    }
+    thaw() {
+        Object.keys(this.interactions).forEach(k => {
+            this.interactions[k] = Object.assign(new RoomFn(), this.interactions[k]);
+            this.interactions[k].thaw();    
+        });
+        if (this.rect) {
+            this.rect = Object.assign(new DFRect(), this.rect);
+            this.rect.thaw();
+        }
+    }
+};
+
 class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
         this.users = [];
         this.chatLog = []; // ordered by time asc
+        this.roomItems = [];
         this.internalMasterGain = 1.0;
         this.img = null;
         this.width = 16;
@@ -274,6 +328,11 @@ class DigifuRoomState {
         });
         this.users = this.users.map(o => {
             let n = Object.assign(new DigifuUser(), o);
+            n.thaw();
+            return n;
+        });
+        this.roomItems = this.roomItems.map(o => {
+            let n = Object.assign(new RoomItem(), o);
             n.thaw();
             return n;
         });
@@ -325,17 +384,17 @@ class DigifuRoomState {
 
 
 
-let routeToRoomName = function (r) {
-    let requestedRoomName = r;
-    if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
+let routeToRoomID = function (r) {
+    let requestedRoomID = r;
+    if (requestedRoomID.length < 1) return "pub"; // for 0-length strings return a special valid name.
 
     // trim slashes
-    if (requestedRoomName[0] == '/') requestedRoomName = requestedRoomName.substring(1);
-    if (requestedRoomName[requestedRoomName.length - 1] == '/') requestedRoomName = requestedRoomName.substring(0, requestedRoomName.length - 1);
+    if (requestedRoomID[0] == '/') requestedRoomID = requestedRoomID.substring(1);
+    if (requestedRoomID[requestedRoomID.length - 1] == '/') requestedRoomID = requestedRoomID.substring(0, requestedRoomID.length - 1);
 
-    if (requestedRoomName.length < 1) return "pub"; // for 0-length strings return a special valid name.
+    if (requestedRoomID.length < 1) return "pub"; // for 0-length strings return a special valid name.
 
-    return requestedRoomName.toLowerCase();
+    return requestedRoomID.toLowerCase();
 };
 
 
@@ -383,10 +442,13 @@ module.exports = {
     DigifuRoomState,
     ServerSettings,
     ClientSettings,
-    routeToRoomName,
+    routeToRoomID,
     sanitizeUsername,
     sanitizeUserColor,
     sanitizeCheerText,
     generateID,
     sanitizeInstrumentParamVal,
+    RoomItem,
+    RoomFn,
+    RoomFns,
 };

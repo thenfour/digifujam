@@ -1,0 +1,57 @@
+{
+  "roomID": "hall",
+  "roomTitle": "#hall",
+  "route": "/hall",
+  "img": "./hall.png",
+  "width": 1030,
+  "height": 282,
+  "internalMasterGain": 2.0,
+  "announcementHTML": "yep.",
+  "roomItems": [
+    {
+      "itemID": "doorToPub",
+      "name": "#PUB",
+      "style": {
+        "fontSize": 32
+      },
+      "rect": {
+        "x":950,
+        "y": 0,
+        "w": 70,
+        "h": 282
+      },
+      "onAvatarEnter": {
+        "fn": "roomChange",
+        "params": {
+          "roomID": "pub",
+          "x": 200,
+          "y": 660
+        }
+      }
+    },
+    {
+      "itemID": "doorToMaj7",
+      "name": "#MAJ7",
+      "style": {
+        "fontSize": 32
+      },
+      "rect": {
+        "x":0,
+        "y": 0,
+        "w": 70,
+        "h": 282
+      },
+      "onAvatarEnter": {
+        "fn": "roomChange",
+        "params": {
+          "roomID": "maj7",
+          "x": 1100,
+          "y": 460
+        }
+      }
+    }
+  ],
+  "users": [],
+  "chatLog": [],
+  "instrumentCloset": []
+}
