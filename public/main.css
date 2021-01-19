@@ -399,7 +399,8 @@ ul.instParamList {
 
 ul.instParamList label {
     font-size:smaller;
-    color:#ccc
+    color:#ccc;
+    cursor: pointer;
 }
 
 ul.instParamList input[type="range" i] {

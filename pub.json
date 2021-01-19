@@ -50,8 +50,8 @@
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
-            "A-->B",
-            "A + B"
+            "[A🡆B]",
+            "[A] [B]"
           ]
         },
         {

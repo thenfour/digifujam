@@ -184,10 +184,12 @@ class InstFloatParam extends React.Component {
         if (q.is(':visible')) {
             q.toggle(false);
         } else {
-            q.toggle(true, () => {
-                q.focus();
-                q.select();
-            });
+            q.toggle(true);
+            // this never works and i don't know why.
+            // setTimeout(() => {
+            //     q.focus();
+            //     q.select();
+            // }, 100);
         }
     }
 
@@ -246,6 +248,45 @@ class InstrumentPresetList extends React.Component {
 };
 
 
+// props.groupName
+// props.app
+// props.instrument
+// props.filteredParams
+class InstrumentParamGroup extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            expanded: true,
+        };
+    }
+
+    onLegendClick = () => {
+        this.setState({ expanded: !this.state.expanded });
+    };
+
+    render() {
+        const arrowText = this.state.expanded ? '⯆' : '⯈';
+
+        let createParam = (p) => {
+            if (p.hidden) return null;
+            switch (p.parameterType) {
+                case InstrumentParamType.intParam:
+                    return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
+                case InstrumentParamType.floatParam:
+                    return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
+            }
+        };
+
+        return (
+            <fieldset key={this.props.groupName} className="instParamGroup">
+                <legend onClick={this.onLegendClick}>{this.props.groupName} {arrowText}</legend>
+                {this.state.expanded && <ul className="instParamList">
+                    {this.props.filteredParams.filter(p => p.groupName == this.props.groupName).map(p => createParam(p))}
+                </ul>}
+            </fieldset>
+        );
+    }
+};
 
 
 class InstrumentParams extends React.Component {
@@ -297,15 +338,6 @@ class InstrumentParams extends React.Component {
     };
 
     render() {
-        let createParam = (p) => {
-            if (p.hidden) return null;
-            switch (p.parameterType) {
-                case InstrumentParamType.intParam:
-                    return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
-                case InstrumentParamType.floatParam:
-                    return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
-            }
-        };
 
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
@@ -334,14 +366,12 @@ class InstrumentParams extends React.Component {
         let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
         groupNames = groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
 
-        let groups = groupNames.map(groupName => (
-            <fieldset key={groupName} className="instParamGroup">
-                <legend>{groupName}</legend>
-                <ul className="instParamList">
-                    {filteredParams.filter(p => p.groupName == groupName).map(p => createParam(p))}
-                </ul>
-            </fieldset>
-        ));
+        let groups = groupNames.map(groupName => (<InstrumentParamGroup
+            groupName={groupName}
+            app={this.props.app}
+            instrument={this.props.instrument.name}
+            filteredParams={filteredParams}
+        />));
 
         return (
             <div className="component">
@@ -355,11 +385,9 @@ class InstrumentParams extends React.Component {
                     {presetControls}
                     {presetList}
                     <li>
-                    🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
+                        🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
                     </li>
                 </ul>
-
-
                 {groups}
             </div>
         );
