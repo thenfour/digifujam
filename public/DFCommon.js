@@ -112,6 +112,7 @@ class DigifuUser {
 const InstrumentParamType = {
     intParam: "intParam",
     floatParam: "floatParam",
+    textParam: "textParam",
 };
 
 class InstrumentParam {
@@ -145,6 +146,26 @@ class DigifuInstrumentSpec {
         this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
         this.presets = { x: 43 }; // key = preset name, value = object to apply on params
+        this.namePrefix = "";// when forming names based on patch name, this is the prefix
+        this.maxTextLength = 100;
+    }
+
+    getDisplayName() {
+        switch (this.engine) {
+            case "soundfont":
+                return this.name;
+            case "minisynth":
+            case "minifm":
+                // fall through to calculate the name.
+                break;
+        }
+        let pn = this.GetParamByID("patchName");
+        if (!pn) return this.name;
+        
+        if (pn.currentValue && pn.currentValue.length > 0 && this.namePrefix && this.namePrefix.length > 0) {
+            return this.namePrefix + pn.currentValue;
+        }
+        return this.name;
     }
 
     GetParamByID(paramID) {
@@ -165,6 +186,7 @@ class DigifuInstrumentSpec {
     exportPresetObj() {
         let ret = {};
         this.params.forEach(param => {
+            if (param.paramID == "pb") { return; } // pitch bend is not something we want to store in presets
             ret[param.paramID] = param.currentValue;
         });
         return ret;
@@ -442,6 +464,12 @@ let sanitizeCheerText = function (n) {
 }
 
 let sanitizeInstrumentParamVal = function (param, newVal) {
+    if (param.parameterType == InstrumentParamType.textParam) {
+        if (typeof (newVal) != 'string') return "";
+        let ret = newVal.trim();
+        return ret.substring(0, param.maxTextLength);
+    }
+    // numeric types...
     // just clamp to the range.
     if (newVal < param.minValue) return param.minValue;
     if (newVal > param.maxValue) return param.maxValue;

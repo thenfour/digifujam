@@ -35,13 +35,29 @@
   "chatLog": [],
   "instrumentCloset": [
     {
-      "name": "Mini FM 1",
+      "name": "Mini FM A",
+      "namePrefix": "FM A: ",
       "gain": 0.05,
       "color": "rgb(138, 224, 153)",
       "engine": "minifm",
       "instrumentID": "minifm",
       "activityDisplay": "keyboard",
       "params": [
+        {
+          "paramID": "patchName",
+          "name": "Patch name",
+          "groupName": "master",
+          "parameterType": "textParam",
+          "maxTextLength": 100
+        },
+        {
+          "paramID": "masterGain",
+          "name": "Master gain",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
         {
           "paramID": "algo",
           "name": "algo",
@@ -55,6 +71,7 @@
           ]
         },
         {
+          "cssClassName": "paramSpacer",
           "paramID": "lfo1_wave",
           "name": "LFO1 wave",
           "groupName": "master",
@@ -77,6 +94,7 @@
           "maxValue": 10.0
         },
         {
+          "cssClassName": "paramSpacer",
           "paramID": "env1_a",
           "name": "Env1 A",
           "groupName": "master",
@@ -122,23 +140,9 @@
             "Tri"
           ]
         },
+
         {
-          "paramID": "osc0_lfo1_pitchDepth",
-          "name": "LFO1 pitch",
-          "groupName": "Osc A",
-          "parameterType": "floatParam",
-          "minValue": -12.0,
-          "maxValue": 12.0
-        },
-        {
-          "paramID": "osc0_env1_pitchDepth",
-          "name": "ENV1 pitch",
-          "groupName": "Osc A",
-          "parameterType": "floatParam",
-          "minValue": -12.0,
-          "maxValue": 12.0
-        },
-        {
+          "cssClassName": "paramSpacer",
           "paramID": "osc0_freq_mult",
           "name": "Freq mul",
           "groupName": "Osc A",
@@ -155,8 +159,35 @@
           "maxValue": 10000.0
         },
         {
+          "paramID": "osc0_lfo1_pitchDepth",
+          "name": "LFO1 freq",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -12.0,
+          "maxValue": 12.0
+        },
+        {
+          "paramID": "osc0_env1_pitchDepth",
+          "name": "ENV1 freq",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -12.0,
+          "maxValue": 12.0
+        },
+
+
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "osc0_level",
           "name": "Level",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_lfo1_gainAmt",
+          "name": "Level LFO amt",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
@@ -171,6 +202,15 @@
           "maxValue": 1.0
         },
         {
+          "paramID": "osc0_key_scale",
+          "name": "Key scale",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "osc0_a",
           "name": "Attack",
           "groupName": "Osc A",
@@ -299,6 +339,7 @@
       ],
       "presets": {
         "init": {
+          "patchName": "init",
           "algo": 0,
           "env1_a": 0.01,
           "env1_d": 0.5,

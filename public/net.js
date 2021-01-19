@@ -61,6 +61,10 @@ DigifuNet.prototype.OnParamChangeInterval = function () {
     this.timerCookie = null;
     this.paramChangeLastSent = new Date();
     //console.log(`OnParamChangeInterval QUEUED ${JSON.stringify(this.queuedParamChangeData)} `);
+    let keys = Object.keys(this.queuedParamChangeData);
+    if (keys.length < 1) {
+        return;
+    }
     this.socket.emit(ClientMessages.InstrumentParams, this.queuedParamChangeData);
     this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
 };

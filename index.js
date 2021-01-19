@@ -374,6 +374,8 @@ class RoomServer {
         return;
       }
 
+      //console.log(`OnClientInstrumentParams ${JSON.stringify(data)}`);
+
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
         console.log(`=> not controlling an instrument.`);

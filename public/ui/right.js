@@ -80,6 +80,46 @@ class TextInputFieldExternalState extends React.Component {
 }
 
 
+
+class InstTextParam extends React.Component {
+    constructor(props) {
+        super(props);
+        this.inpID = "textParam_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.renderedValue = "";
+    }
+    onChange = (e) => {
+        let val = e.target.value;
+        this.renderedValue = val;
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
+    }
+    componentDidMount() {
+        // set initial values.
+        let val = this.props.param.currentValue;
+        $("#" + this.inpID).val(val);
+        this.renderedValue = val;
+    }
+    render() {
+        if (this.renderedValue != this.props.param.currentValue) {
+            //has been externally modified. update ui.
+            let val = this.props.param.currentValue;
+            this.renderedValue = val;
+            $("#" + this.inpID).val(val);
+        }
+
+        return (
+            <li className={this.props.param.cssClassName}>
+                <input id={this.inpID} type="text" maxlength={this.props.param.maxTextLength} onChange={this.onChange} />
+                <label>{this.props.param.name}</label>
+            </li>
+        );
+    }
+}
+
+
+
+
+
+
 // props.instrument
 class InstIntParam extends React.Component {
     constructor(props) {
@@ -250,7 +290,6 @@ class InstrumentPresetList extends React.Component {
 
 // props.groupName
 // props.app
-// props.instrument
 // props.filteredParams
 class InstrumentParamGroup extends React.Component {
     constructor(props) {
@@ -274,6 +313,8 @@ class InstrumentParamGroup extends React.Component {
                     return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
                 case InstrumentParamType.floatParam:
                     return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
+                case InstrumentParamType.textParam:
+                    return (<InstTextParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstTextParam>);
             }
         };
 
@@ -369,13 +410,13 @@ class InstrumentParams extends React.Component {
         let groups = groupNames.map(groupName => (<InstrumentParamGroup
             groupName={groupName}
             app={this.props.app}
-            instrument={this.props.instrument.name}
+            instrument={this.props.instrument}
             filteredParams={filteredParams}
         />));
 
         return (
             <div className="component">
-                <h2>{this.props.instrument.name}</h2>
+                <h2>{this.props.instrument.getDisplayName()}</h2>
 
                 <ul className="instParamList">
                     <li>
@@ -817,7 +858,7 @@ class InstrumentList extends React.Component {
         return (
             <li key={i.instrumentID} style={{ color: i.color }}>
                 {playBtn}
-                {idle} {i.name} {ownedByText}</li>
+                {idle} {i.getDisplayName()} {ownedByText}</li>
         );
     }
     render() {
@@ -899,7 +940,7 @@ class UserAvatar extends React.Component {
 
             instMarkup = (
                 <div style={instStyle} className="userAvatarInstrument">
-                    playing {inst.instrument.name}
+                    playing {inst.instrument.getDisplayName()}
                     <br />
                     {releaseButton}
                 </div>

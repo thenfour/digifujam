@@ -434,6 +434,8 @@ class DigifuApp {
 
     SetInstrumentParam(inst, param, newVal) {
         let presetObj = {};
+        newVal = sanitizeInstrumentParamVal(param, newVal);
+
         presetObj[param.paramID] = newVal;
         this.LoadPresetObj(presetObj);
     };

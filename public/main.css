@@ -414,6 +414,9 @@ ul.instParamList input[type="range" i] {
     border: 2px solid #066;
     border-radius: 15px;
 }
+.instParamGroup legend {
+    cursor: pointer;
+}
 
 .instParamList .paramSpacer {
     margin-top:15px;
