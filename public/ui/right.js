@@ -718,7 +718,7 @@ class WorldStatus extends React.Component {
             return null;
         }
 
-        const rooms = this.props.app.rooms;
+        const rooms = this.props.app.rooms.filter(r => r.roomID != this.props.app.roomState.roomID);
 
         let userList = (room) => room.users.map(u => (
             <li key={u.userID}><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
@@ -741,7 +741,7 @@ class WorldStatus extends React.Component {
 
         return (
             <div className="component worldStatus">
-                <h2>World status</h2>
+                <h2>Other rooms</h2>
                 {roomsMarkup}
             </div>
         );
