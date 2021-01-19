@@ -262,6 +262,9 @@ class RoomServer {
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
+      foundUser.user.stats.noteOns++;
+      this.roomState.stats.noteOns++;
+
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.NoteOn, {
         userID: foundUser.user.userID,
@@ -441,8 +444,10 @@ class RoomServer {
         return;
       }
 
+      foundUser.user.stats.messages++;
+      this.roomState.stats.messages++;
+
       this.roomState.chatLog.push(nm);
-      ////console.log(`chatLog.push => ${msg.message}`);
 
       // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
       // this allows simpler handling of incorporating the messageID.
@@ -572,6 +577,9 @@ class RoomServer {
         return;
       }
 
+      foundUser.user.stats.cheers++;
+      this.roomState.stats.cheers++;
+
       io.to(this.roomState.roomID).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
     } catch (e) {
       console.log(`OnClientCheer exception occurred`);
@@ -609,12 +617,19 @@ class RoomServer {
 
       this.Idle_CheckIdlenessAndEmit();
 
+      // token, rooms: [{roomID, roomName, users [{ userid, name, pingMS }], stats}]
       var payload = {
         token: (new Date()).toISOString(),
-        users: []
+        rooms: [],
       };
-      this.roomState.users.forEach(u => {
-        payload.users.push({ userID: u.userID, pingMS: u.pingMS });
+      payload.rooms = Object.keys(gRooms).map(k => {
+        let room = gRooms[k];
+        return {
+          roomID: room.roomState.roomID,
+          roomName: room.roomState.roomTitle,
+          users: room.roomState.users.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
+          stats: room.roomState.stats
+        };
       });
 
       // ping ALL clients on the room
@@ -705,7 +720,7 @@ class RoomServer {
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-let ForwardToRoom = function(ws, fn) {
+let ForwardToRoom = function (ws, fn) {
   let roomArray = [...ws.rooms];
   //console.log(`ROOMS=${roomArray} FN=${fn.toString()}`);
   fn(gRooms[roomArray[1]]); // room[0] is always your socket id.

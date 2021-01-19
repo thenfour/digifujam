@@ -47,22 +47,23 @@ class DigifuApp {
     _addChatMessage(msg) {
         this.roomState.chatLog.push(msg);
 
-        // look at the last message, see if it can be aggregated.
-        if (this.shortChatLog.length < 1) {
+        // if this is not aggregatable
+        if (!msg.isAggregatable()) {
             this.shortChatLog.push(msg);
             return;
         }
-        let lastMsg = this.shortChatLog[this.shortChatLog.length - 1];
-        if (lastMsg.messageType == ChatMessageType.aggregate && msg.isAggregatable()) {
-            lastMsg.integrate(msg);
-            return;
+
+        // last msg is aggregatable
+        if (this.shortChatLog.length > 0) {
+            let lastMsg = this.shortChatLog[this.shortChatLog.length - 1];
+            if (lastMsg.messageType == ChatMessageType.aggregate) {
+                lastMsg.integrate(msg);
+                return;
+            }
         }
-        if (!lastMsg.isAggregatable()) {
-            this.shortChatLog.push(msg);
-            return;
-        }
-        let nm = DigifuChatMessage.createAggregate(lastMsg, msg);
-        this.shortChatLog[this.shortChatLog.length - 1] = nm;
+
+        // -> create aggregate of self and add.
+        this.shortChatLog.push(msg.toAggregate());
     };
 
     // MIDI HANDLERS --------------------------------------------------------------------------------------
@@ -128,8 +129,8 @@ class DigifuApp {
         // find "you"
         this.myUser = this.roomState.FindUserByID(myUserID).user;
 
-        Cookies.set(this.roomID + "_userName", this.myUser.name);
-        Cookies.set(this.roomID + "_userColor", this.myUser.color);
+        Cookies.set(this.roomState.roomID + "_userName", this.myUser.name);
+        Cookies.set(this.roomState.roomID + "_userColor", this.myUser.color);
 
         // connect instruments to synth
         this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
@@ -299,14 +300,23 @@ class DigifuApp {
         this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj);
     }
 
-    NET_OnPing(token, users) {
-        this.net.SendPong(token);
+    NET_OnPing(data) {
+        this.net.SendPong(data.token);
         if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
-        users.forEach(u => {
+
+        // token, rooms: [{roomID, roomName, users [{ userid, pingMS }], stats}]
+        this.rooms = data.rooms;
+
+        // bring user stats to our room's user list
+        let room = data.rooms.find(r => r.roomID == this.roomState.roomID);
+        console.assert(!!room, "what, we're in a room, get a ping that doesn't have stats about this room???");
+        room.users.forEach(u => {
             let foundUser = this.roomState.FindUserByID(u.userID);
             if (!foundUser) return; // this is possible because the server may be latent in sending this user data.
             foundUser.user.pingMS = u.pingMS;
         });
+
+
 
         // pings are a great time to do some cleanup.
 
@@ -340,8 +350,8 @@ class DigifuApp {
         u.user.position = data.state.position;
 
         if (u.user.userID == this.myUser.userID) {
-            Cookies.set(this.roomID + "_userName", this.myUser.name);
-            Cookies.set(this.roomID + "_userColor", this.myUser.color);
+            Cookies.set(this.roomState.roomID + "_userName", this.myUser.name);
+            Cookies.set(this.roomState.roomID + "_userColor", this.myUser.color);
         }
 
         if (data.chatMessageEntry) {
@@ -445,6 +455,7 @@ class DigifuApp {
 
         this.midi.Init(this);
 
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
         this.audioCtx = new AudioContext();
         // this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
         // });

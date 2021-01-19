@@ -172,6 +172,7 @@
         },
         {
           "paramID": "osc0_a",
+          "cssClassName": "paramSpacer",
           "name": "Attack",
           "groupName": "Osc A",
           "parameterType": "floatParam",

@@ -414,6 +414,10 @@ ul.instParamList input[type="range" i] {
     border-radius: 15px;
 }
 
+.instParamList .paramSpacer {
+    margin-top:15px;
+}
+
 .presetList,
 .presetListControls {
     padding:5px;
@@ -463,3 +467,36 @@ ul.instParamList input[type="range" i] {
 {
     transition: top 0s, left 0s;
 }
+
+
+.worldStatus .room {
+    margin:5px;
+}
+
+.worldStatus .room h2 {
+    margin: 0;
+    font-size: medium;
+    display: inline;
+}
+
+.worldStatus .room ul.roomStats {
+    display: inline;
+    list-style: none;
+}
+
+.worldStatus .room ul.roomStats li {
+    display: inline;
+}
+
+
+.worldStatus .room ul.userList {
+
+}
+
+.worldStatus .room ul.userList li {
+
+}
+
+
+
+

@@ -140,7 +140,7 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
     this.socket.on(ServerMessages.InstrumentParams, data => this.handler.NET_OnInstrumentParams(data));
 
-    this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data.token, data.users));
+    this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
 
     this.socket.on('disconnect', () => { this.ResetInternalState(); this.handler.NET_OnDisconnect(); });
 };

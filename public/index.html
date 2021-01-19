@@ -47,6 +47,9 @@
         // prefix for client-side generated IDs.
         let gIDDomain = "client";
 
+        // safari audiocontext support
+        window.AudioContext = window.AudioContext||window.webkitAudioContext;
+
         $.getJSON('./ui/spinners.json', function (data) {
             window.gSpinners = data;
         });

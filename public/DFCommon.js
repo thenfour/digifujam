@@ -51,7 +51,7 @@ const ServerMessages = {
     UserEnter: "UserEnter",// (user data), <oldRoomName>
     UserLeave: "UserLeave",// UserID, <newRoomName>
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
-    Ping: "Ping", // data, { userid, pingMS }
+    Ping: "Ping", // token, users: [{ userid, pingMS, roomID, stats }], rooms: [{roomID, roomName, userCount, stats}]
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
     NoteOn: "NoteOn", // user, note, velocity
     NoteOff: "NoteOff", // user, note
@@ -98,6 +98,12 @@ class DigifuUser {
         this.position = { x: 0, y: 0 }; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
         this.img = null;
         this.idle = null; // this gets set when a user's instrument ownership becomes idle
+
+        this.stats = {
+            noteOns: 0,
+            cheers: 0,
+            messages: 0,
+        };
     }
 
     thaw() { /* no child objects to thaw. */ }
@@ -115,6 +121,8 @@ class InstrumentParam {
         this.parameterType = InstrumentParamType.intParam;
         this.hidden = false;
         this.groupName = "Params";
+        this.tags = ""; // any extra strings to match filter text
+        this.cssClassName = "";
         this.minValue = 0;// inclusive
         this.maxValue = 0;// inclusive
 
@@ -212,15 +220,15 @@ class DigifuChatMessage {
         this.rebuildAggregateMessages();
     };
 
-    static createAggregate(lhs, rhs) {
+    toAggregate() {
         let ret = new DigifuChatMessage();
         ret.messageID = generateID();
         ret.messageType = ChatMessageType.aggregate;
-        ret.aggregateMessages = [lhs, rhs];
-        ret.timestampUTC = lhs.timestampUTC;
+        ret.aggregateMessages = [this];
+        ret.timestampUTC = this.timestampUTC;
         ret.rebuildAggregateMessages();
         return ret;
-    };
+    }
 
     isAggregatable() {
         if (this.messageType == ChatMessageType.part) return true;
@@ -241,13 +249,17 @@ class DigifuChatMessage {
                 case ChatMessageType.part:
                     parts[msg.fromUserName] = { name: msg.fromUserName, color: msg.fromUserColor }; // TODO: a real user id to group by.
                     break;
+                default:
+                    console.assert(false, "non-aggregatable msg found in an aggregate message...");
+                    break;
             }
         });
 
-        let joinMsg = `Joined: ${Object.keys(joins).map(k => joins[k].name).join(', ')}`;
-        let partMsg = `Left: ${Object.keys(parts).map(k => parts[k].name).join(', ')}`;
+        this.messages = [];
 
-        this.messages = [joinMsg, partMsg];
+        // todo: group by userID not name, but it depends on having consistent userIDs across joins/parts which for the moment is not happening.
+        if (Object.keys(joins).length > 0) this.messages.push(`Joined: ${Object.keys(joins).map(k => joins[k].name).join(', ')}`);
+        if (Object.keys(parts).length > 0) this.messages.push(`Left: ${Object.keys(parts).map(k => parts[k].name).join(', ')}`);
     }
 };
 
@@ -258,7 +270,7 @@ class DFRect {
         this.w = 0;
         this.h = 0;
     }
-    thaw() {}
+    thaw() { }
 
     PointIntersects(pt) {
         if (pt.x < this.x) return false;
@@ -279,7 +291,7 @@ class RoomFn {
         this.fn = null; // of RoomFns
         this.params = null; // anything.
     }
-    thaw() {}
+    thaw() { }
 };
 
 class RoomItem {
@@ -292,7 +304,7 @@ class RoomItem {
     thaw() {
         Object.keys(this.interactions).forEach(k => {
             this.interactions[k] = Object.assign(new RoomFn(), this.interactions[k]);
-            this.interactions[k].thaw();    
+            this.interactions[k].thaw();
         });
         if (this.rect) {
             this.rect = Object.assign(new DFRect(), this.rect);
@@ -312,6 +324,12 @@ class DigifuRoomState {
         this.width = 16;
         this.height = 9;
         this.roomTitle = "";
+
+        this.stats = {
+            noteOns: 0,
+            cheers: 0,
+            messages: 0,
+        };
     }
 
     // call after Object.assign() to this object, to handle child objects.

@@ -1,5 +1,5 @@
 
-let getRoomID = function(app) {
+let getRoomID = function (app) {
     if (!app) return window.DFRoomID;
     if (!app.roomState) return window.DFRoomID;
     return app.roomState.roomID;
@@ -122,7 +122,7 @@ class InstIntParam extends React.Component {
         }
 
         return (
-            <li>
+            <li className={this.props.param.cssClassName}>
                 <input id={this.sliderID} type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
                 //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
                 />
@@ -210,7 +210,7 @@ class InstFloatParam extends React.Component {
         }
 
         return (
-            <li>
+            <li className={this.props.param.cssClassName}>
                 <input id={this.sliderID} type="range" min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
@@ -253,7 +253,8 @@ class InstrumentParams extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            presetListShown: false
+            presetListShown: false,
+            filterTxt: "",
         };
     }
 
@@ -291,6 +292,10 @@ class InstrumentParams extends React.Component {
         this.props.app.ReleaseInstrument();
     };
 
+    onFilterChange = (txt) => {
+        this.setState({ filterTxt: txt });
+    };
+
     render() {
         let createParam = (p) => {
             if (p.hidden) return null;
@@ -317,15 +322,23 @@ class InstrumentParams extends React.Component {
             <li><InstrumentPresetList instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList></li>
         );
 
+        let filterTxt = this.state.filterTxt.toLowerCase();
+        let filteredParams = this.props.instrument.params.filter(p => {
+            if (p.groupName.toLowerCase().includes(filterTxt)) return true;
+            if (p.name.toLowerCase().includes(filterTxt)) return true;
+            if (p.tags.toLowerCase().includes(filterTxt)) return true;
+            return false;
+        });
+
         // unique group names.
-        let groupNames = [...new Set(this.props.instrument.params.map(p => p.groupName))];
-        groupNames = groupNames.filter(gn => this.props.instrument.params.find(p => p.groupName == gn && !p.hidden));
+        let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
+        groupNames = groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
 
         let groups = groupNames.map(groupName => (
             <fieldset key={groupName} className="instParamGroup">
                 <legend>{groupName}</legend>
                 <ul className="instParamList">
-                    {this.props.instrument.params.filter(p => p.groupName == groupName).map(p => createParam(p))}
+                    {filteredParams.filter(p => p.groupName == groupName).map(p => createParam(p))}
                 </ul>
             </fieldset>
         ));
@@ -341,7 +354,11 @@ class InstrumentParams extends React.Component {
                     </li>
                     {presetControls}
                     {presetList}
+                    <li>
+                    🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
+                    </li>
                 </ul>
+
 
                 {groups}
             </div>
@@ -529,10 +546,10 @@ class UserState extends React.Component {
             }
         }
 
-        let connectCaption = "";
-        if (this.props.app && this.props.app.roomState && this.props.app.roomState.roomTitle.length) {
-            connectCaption = this.props.app.roomState.roomTitle;
-        }
+        let connectCaption = "You";
+        // if (this.props.app && this.props.app.roomState && this.props.app.roomState.roomTitle.length) {
+        //     connectCaption = this.props.app.roomState.roomTitle;
+        // }
 
         const disconnectBtn = this.props.app ? (
             <li><button onClick={this.props.handleDisconnect}>Disconnect</button><div style={{ height: 20 }}>&nbsp;</div></li>
@@ -684,10 +701,48 @@ class UserList extends React.Component {
 
         return (
             <div className="component">
-                <h2>User list</h2>
+                <h2>{this.props.app.roomState.roomTitle} members</h2>
                 <ul>
                     {users}
                 </ul>
+            </div>
+        );
+    }
+}
+
+
+
+class WorldStatus extends React.Component {
+    render() {
+        if (!this.props.app || !this.props.app.roomState || !this.props.app.rooms) {
+            return null;
+        }
+
+        const rooms = this.props.app.rooms;
+
+        let userList = (room) => room.users.map(u => (
+            <li key={u.userID}><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
+        ));
+
+        const roomsMarkup = rooms.map(room => (
+            <div className="room">
+                <h2>{room.roomName}</h2>
+                <ul className="roomStats">
+                    <li>🧑{room.users.length}</li>
+                    <li>🎵{room.stats.noteOns}</li>
+                    <li>👏{room.stats.cheers}</li>
+                    <li>📝{room.stats.messages}</li>
+                </ul>
+                <ul className="userList">
+                    {userList(room)}
+                </ul>
+            </div>
+        ));
+
+        return (
+            <div className="component worldStatus">
+                <h2>World status</h2>
+                {roomsMarkup}
             </div>
         );
     }
@@ -769,6 +824,7 @@ class RightArea extends React.Component {
             <div id="rightArea" style={{ gridArea: "rightArea" }}>
                 {instParams}
                 <UserList app={this.props.app} />
+                <WorldStatus app={this.props.app} />
             </div>
         );
     }
@@ -849,7 +905,7 @@ class UIRoomItem extends React.Component {
 
     render() {
         const pos = this.props.displayHelper().roomToScreenPosition(this.props.item.rect);
-        let style= Object.assign({
+        let style = Object.assign({
             left: pos.x,
             top: pos.y,
             width: this.props.item.rect.w,
@@ -1131,7 +1187,7 @@ class RoomArea extends React.Component {
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={() => this}></CheerControls>
                 {switchViewButton}
-                
+
             </div>
         );
     }
