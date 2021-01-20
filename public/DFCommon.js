@@ -305,6 +305,11 @@ class DFRect {
 
 const RoomFns = {
     roomChange: "roomChange",
+    toggleSign: "toggleSign",
+};
+const DFRoomItemType = {
+    door: "door",
+    sign: "sign",
 };
 
 // a function that can be invoked by room items.
@@ -320,8 +325,10 @@ class RoomItem {
     constructor() {
         this.name = "";
         this.rect = null; // x, y, w, h
+        this.itemType = null; // DFRoomItemType
         this.style = null; // CSS
         this.interactions = {};
+        this.params = {};
     }
     thaw() {
         Object.keys(this.interactions).forEach(k => {
@@ -497,4 +504,5 @@ module.exports = {
     RoomItem,
     RoomFn,
     RoomFns,
+    DFRoomItemType,
 };

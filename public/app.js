@@ -2,6 +2,7 @@
 
 class DigifuApp {
     constructor() {
+        window.gDFApp = this; // for debugging, so i can access this class in the JS console.
         this.roomState = null;
         this.shortChatLog = []; // contains aggregated entries instead of the full thing
 
@@ -105,7 +106,7 @@ class DigifuApp {
     MIDI_PitchBend(val) {
         this._midiPBValue = val;
         if (this.myInstrument == null) return;
-        let patchObj = { "pb" : val * this.pitchBendRange };
+        let patchObj = { "pb": val * this.pitchBendRange };
         this.net.SendInstrumentParams(patchObj);
         this.synth.SetInstrumentParams(this.myInstrument, patchObj);
     };
@@ -352,6 +353,12 @@ class DigifuApp {
         if (u.user.userID == this.myUser.userID) {
             Cookies.set(this.roomState.roomID + "_userName", this.myUser.name);
             Cookies.set(this.roomState.roomID + "_userColor", this.myUser.color);
+            // room interaction based on intersection.
+            this.roomState.roomItems.forEach(item => {
+                if (item.rect.PointIntersects(this.myUser.position)) {
+                    this._DoUserItemInteraction(item, "onAvatarEnter");
+                }
+            });
         }
 
         if (data.chatMessageEntry) {
@@ -397,6 +404,30 @@ class DigifuApp {
         msg.timestampUTC = new Date();
 
         this.net.SendChatMessage(msg);
+    };
+
+    _DoToggleSign(item, interactionParams) {
+        item.params.isShown = !item.params.isShown;
+        //this.stateChangeHandler(); <-- will be handled anyway by a state change from caller
+    }
+
+    _DoUserItemInteraction(item, interactionType) {
+        let interactionSpec = item[interactionType];
+        if (!interactionSpec) {
+            console.log(`Item ${item.itemID} has no interaction type ${interactionType}`);
+            return;
+        }
+        if (interactionSpec.processor != "client") {
+            return;
+        }
+        switch (interactionSpec.fn) {
+            case RoomFns.toggleSign:
+                this._DoToggleSign(item, interactionSpec.params);
+                break;
+            default:
+                console.log(`Item ${item.itemID} / interaction type ${interactionType} has unknown interaction FN ${interactionSpec.fn}`);
+                break;
+        }
     };
 
     SetUserPosition(pos) {

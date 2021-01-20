@@ -23,6 +23,11 @@ body {
 *:focus {
     outline: none;
 }
+a:link,
+a:visited {
+    text-decoration: none;
+}
+
 ul {
     list-style: none;
     padding: 10px;
@@ -200,6 +205,7 @@ button:focus {
 }
 
 .userAvatar {
+    pointer-events: none; /* allow clicks to be processed by the room itself, not the item. */
     position: absolute;
     transition: top .5s, left .5s;
     border-radius: 5px;
@@ -459,10 +465,13 @@ ul.instParamList input[type="range" i] {
 
 .roomItem {
     border:5px solid blue;
+    box-sizing: border-box;
     background:#00000061;
+    text-align: center;
     position: absolute;
     transition: top 1s, left 1s;
-    pointer-events: none;
+    pointer-events: none; /* allow clicks to be processed by the room itself, not the item. */
+    cursor: pointer;
     color: #dd0;
     font-weight: bold;
 }
@@ -471,6 +480,28 @@ ul.instParamList input[type="range" i] {
 {
     transition: top 0s, left 0s;
 }
+
+.roomSign {
+    position: absolute;
+
+    border-radius: 6px;
+    border: 0px;
+    box-sizing: border-box;
+    padding: 15px;
+    transition: top 1s, left 1s;
+    transform: translate(-50%, -110%); /* this puts the "origin" of the element in the center. */
+
+    background:#00000080;
+    font-size: 16px;
+    text-align: center;
+    color: #dd0;
+}
+
+.roomSign a:link,
+.roomSign a:visited {
+    color: #dd0;
+}
+
 
 
 .worldStatus .room {

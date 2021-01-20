@@ -491,6 +491,9 @@ class RoomServer {
       console.log(`Item ${item.itemID} has no interaction type ${interactionType}`);
       return;
     }
+    if (interactionSpec.processor != "server") {
+      return;
+    }
     switch (interactionSpec.fn) {
       case DF.RoomFns.roomChange:
         this.DoUserRoomChange(ws, user, interactionSpec.params);

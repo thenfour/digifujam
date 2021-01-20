@@ -868,7 +868,7 @@ class InstrumentList extends React.Component {
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
             <div className="component" style={{ whiteSpace: "nowrap" }}>
-                <h2>Unclaimed instruments</h2>
+                <h2>Instrument Closet</h2>
                 <ul>
                     {instruments}
                 </ul>
@@ -971,17 +971,43 @@ class UserAvatar extends React.Component {
 
 
 class UIRoomItem extends React.Component {
-
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+    onClickSign = () => {
+        this.props.item.params.isShown = !this.props.item.params.isShown;
+        this.setState({});
+    }
     render() {
         const pos = this.props.displayHelper().roomToScreenPosition(this.props.item.rect);
+
         let style = Object.assign({
             left: pos.x,
             top: pos.y,
             width: this.props.item.rect.w,
             height: this.props.item.rect.h,
         }, this.props.item.style);
+
+        let signMarkup = null;
+        if (this.props.item.itemType == DFRoomItemType.sign) {
+
+            let signStyle = Object.assign({
+                left: pos.x,
+                top: pos.y,
+                opacity: this.props.item.params.isShown ? "100%" : "0",
+            }, this.props.item.params.style);
+
+            signMarkup = (<div className="roomSign" onClick={this.onClickSign} style={signStyle}
+                dangerouslySetInnerHTML={{ __html: this.props.item.params.message }}></div>
+            );
+        }
+
         return (
-            <div className="roomItem" style={style}>{this.props.item.name}</div>
+            <div>
+                <div className="roomItem" style={style}>{this.props.item.name}</div>
+                {signMarkup}
+            </div>
         );
     }
 };
@@ -1254,7 +1280,7 @@ class RoomArea extends React.Component {
                 { this.state.showFullChat && <FullChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
                 <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
-                <CheerControls app={this.props.app} displayHelper={() => this}></CheerControls>
+                <CheerControls app={this.props.app} displayHelper={this}></CheerControls>
                 {switchViewButton}
 
             </div>
@@ -1493,10 +1519,10 @@ class RootArea extends React.Component {
             <div id="grid-container">
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span style={{ float: 'left' }}>
-                        <a target="_blank" href="{url}">{url}</a></span>
+                        <a target="_blank" href="https://github.com/thenfour/digifujam">github</a>
+                        {/* <a target="_blank" href="{url}">{url}</a> */}</span>
                     <span style={{ float: 'right' }}>
-                        <a target="_blank" href="https://github.com/thenfour/digifujam">github</a> \\&nbsp;
-                        <a target="_blank" href="https://twitter.com/tenfour2">twitter</a>
+                        <a target="_blank" href="https://twitter.com/tenfour2">Made by tenfour</a>
                     </span>
                 </div>
                 <PianoArea app={this.state.app} />

@@ -11,6 +11,7 @@
     {
       "itemID": "roomItem1",
       "name": "#PUB",
+      "itemType": "door",
       "style": {
         "transform": "skewY(45deg)",
         "fontSize": 32
@@ -18,16 +19,48 @@
       "rect": {
         "x":1230,
         "y": 320,
-        "w": 70,
-        "h": 315
+        "w": 80,
+        "h": 325
       },
       "onAvatarEnter": {
+        "processor": "server",
         "fn": "roomChange",
         "params": {
           "roomID": "hall",
           "x": 100,
           "y": 140
         }
+      }
+    },
+
+
+
+    {
+      "itemID": "roomCredits",
+      "name": "i",
+      "itemType": "sign",
+      "style": {
+        "fontSize": 32,
+        "borderRadius": "50%",
+        "transform": "skewY(30deg)"
+      },
+      "rect": {
+        "x": 1590,
+        "y": 480,
+        "w": 40,
+        "h": 40
+      },
+      "params": {
+        "message": "Artwork for #maj7 by Tony Thai<br /><a target=\"_blank\" href=\"https://twitter.com/uewipiw\">twitter/@uewipiw</a>.",
+        "style": {
+          "transform": "skewY(26deg) translate(-60%, -40%)",
+          "border": "5px solid #925113eb",
+          "fontSize": 18
+        }
+      },
+      "onAvatarEnter": {
+        "processor": "client",
+        "fn": "toggleSign"
       }
     }
   ],

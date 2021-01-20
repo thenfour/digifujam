@@ -11,16 +11,18 @@
     {
       "itemID": "doorToPub",
       "name": "#PUB",
+      "itemType": "door",
       "style": {
         "fontSize": 32
       },
       "rect": {
         "x":950,
         "y": 0,
-        "w": 70,
-        "h": 282
+        "w": 80,
+        "h": 292
       },
       "onAvatarEnter": {
+        "processor": "server",
         "fn": "roomChange",
         "params": {
           "roomID": "pub",
@@ -32,16 +34,18 @@
     {
       "itemID": "doorToMaj7",
       "name": "#MAJ7",
+      "itemType": "door",
       "style": {
         "fontSize": 32
       },
       "rect": {
         "x":0,
         "y": 0,
-        "w": 70,
-        "h": 282
+        "w": 80,
+        "h": 292
       },
       "onAvatarEnter": {
+        "processor": "server",
         "fn": "roomChange",
         "params": {
           "roomID": "maj7",
