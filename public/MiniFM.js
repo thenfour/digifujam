@@ -212,22 +212,6 @@ class MiniFMSynthOsc {
         let ksAmt = this.paramValue("key_scale");
         const halfKeyScaleRangeSemis = 12 * 4;
         let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
-
-
-        // velocity scaling.
-        // remap(remap);
-        // let vs = 1.0 - (this.velocity / 128); // 1-0 amount of attenuation
-        // vs = 1.0 - (vs * this.paramValue("vel_scale"));
-
-        // let ks = 1.0 - (this.midiNote / 128);
-        // ks = 1.0 - (ks * this.paramValue("key_scale"));
-        // console.log(`keyscale ${ks} from midinote${this.midiNote} and ks ${this.paramValue("key_scale")}`);
-
-        // let vel01 = this.velocity + (this.paramValue("vel_scale") * 128) / 128; // 0 - 1 velocity.
-        // //let velScaling = this.paramValue("vel_scale"); // when this is 0, we want to output 1. when this is 1, output vel01
-        // let velScaleMul = remap(scaling, 0, 1, 1, vel01);
-        // let key01 = this.midiNote / 128;
-        // let keyScaling = this.paramValue("key_scale");
         let p = this.paramValue("level") * ks * vs;
         this.envPeak.gain.linearRampToValueAtTime(p, ClientSettings.InstrumentParamIntervalMS / 1000);;
     }
@@ -339,8 +323,8 @@ class MiniFMSynthVoice {
 
         /*
         
-        [lfo1]--------------------------------->[child oscillators]   (--> destination)
-                             |
+        [lfo1]--------------------------------->[child oscillators] --> [masterDryGain]
+                             |                                      
         [lfo1Offset] -------> [lfo1_01]---->
                                   [env1]------->
         
@@ -377,6 +361,9 @@ class MiniFMSynthVoice {
         // child oscillators
         this.oscillators.forEach(o => o.connect(this.lfo1, this.lfo1_01, this.env1));
 
+        // masterDryGain
+        this.masterDryGain = this.audioCtx.createGain();
+        this.masterDryGain.gain.value = this.instrumentSpec.GetParamByID("masterGain").currentValue;
 
         // set up algo
         let algo = this.instrumentSpec.GetParamByID("algo").currentValue;
@@ -392,18 +379,20 @@ class MiniFMSynthVoice {
                 m0.connect(this.oscillators[1].inputNode.frequency);
 
                 // 1 => dest
-                this.oscillators[1].outputNode.connect(this.destination);
+                this.oscillators[1].outputNode.connect(this.masterDryGain);
                 break;
 
             case 1:
-                this.oscillators[0].outputNode.connect(this.destination);
-                this.oscillators[1].outputNode.connect(this.destination);
+                this.oscillators[0].outputNode.connect(this.masterDryGain);
+                this.oscillators[1].outputNode.connect(this.masterDryGain);
                 break;
             default:
                 console.log(`unknown algorithm ${algo}`);
                 break;
         }
 
+        // connect to outside.
+        this.masterDryGain.connect(this.destination);
         this.isConnected = true;
     }
 
@@ -417,6 +406,9 @@ class MiniFMSynthVoice {
 
         this.lfo1Offset.disconnect();
         this.lfo1Offset = null;
+
+        this.masterDryGain.disconnect();
+        this.masterDryGain = null;
 
         this.env1.stop();
         this.env1.disconnect();
@@ -452,6 +444,9 @@ class MiniFMSynthVoice {
         switch (paramID) {
             case "pb":
                 this.PitchBend(newVal);
+                break;
+            case "masterGain":
+                this.masterDryGain.gain.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "algo": {
                 this.disconnect();
