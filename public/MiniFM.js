@@ -206,12 +206,29 @@ class MiniFMSynthOsc {
 
     // account for key & vel scaling
     updateEnvPeakLevel() {
-        let vel01 = this.velocity / 128; // 0 - 1 velocity.
-        let scaling = this.paramValue("vel_scale"); // when this is 0, we want to output 1. when this is 1, output vel01
 
-        // TODO: key_scale
-        scaling = remap(scaling, 0, 1, 1, vel01);
-        let p = this.paramValue("level") * scaling;
+        let vsAmt = this.paramValue("vel_scale");
+        let vs = 1.0 - remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let ksAmt = this.paramValue("key_scale");
+        const halfKeyScaleRangeSemis = 12 * 4;
+        let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+
+
+        // velocity scaling.
+        // remap(remap);
+        // let vs = 1.0 - (this.velocity / 128); // 1-0 amount of attenuation
+        // vs = 1.0 - (vs * this.paramValue("vel_scale"));
+
+        // let ks = 1.0 - (this.midiNote / 128);
+        // ks = 1.0 - (ks * this.paramValue("key_scale"));
+        // console.log(`keyscale ${ks} from midinote${this.midiNote} and ks ${this.paramValue("key_scale")}`);
+
+        // let vel01 = this.velocity + (this.paramValue("vel_scale") * 128) / 128; // 0 - 1 velocity.
+        // //let velScaling = this.paramValue("vel_scale"); // when this is 0, we want to output 1. when this is 1, output vel01
+        // let velScaleMul = remap(scaling, 0, 1, 1, vel01);
+        // let key01 = this.midiNote / 128;
+        // let keyScaling = this.paramValue("key_scale");
+        let p = this.paramValue("level") * ks * vs;
         this.envPeak.gain.linearRampToValueAtTime(p, ClientSettings.InstrumentParamIntervalMS / 1000);;
     }
 

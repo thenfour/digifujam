@@ -165,7 +165,7 @@
           "name": "Vel scale",
           "groupName": "Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -173,7 +173,7 @@
           "name": "Key scale",
           "groupName": "Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -314,7 +314,7 @@
           "name": "Vel scale",
           "groupName": "Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -322,7 +322,7 @@
           "name": "Key scale",
           "groupName": "Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
