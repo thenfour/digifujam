@@ -380,6 +380,8 @@ class InstrumentParams extends React.Component {
 
     render() {
 
+        if (!this.props.instrument.ShouldShowEditor) return null;
+
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
         let presetControls = this.state.presetListShown && (
@@ -543,7 +545,6 @@ class UserState extends React.Component {
         this.state = {
             userName: '',
             userColor: '',
-            deviceNameList: [],
             isShown: true,
         };
 
@@ -551,11 +552,6 @@ class UserState extends React.Component {
             this.state.userName = this.props.app.myUser.name;
             this.state.userColor = this.props.app.myUser.color;
         }
-
-        GetMidiInputDeviceList().then(inputs => {
-            console.log(JSON.stringify(inputs));
-            this.setState({ deviceNameList: inputs });
-        });
     }
 
     sendUserStateChange = (e) => {
@@ -594,10 +590,10 @@ class UserState extends React.Component {
     render() {
         let inputList = null;
         if (this.props.app && this.props.app.midi) {
-            if (this.state.deviceNameList.length == 0) {
+            if (this.props.app.deviceNameList.length == 0) {
                 inputList = (<li>(no midi devices found)</li>);
             } else {
-                inputList = this.state.deviceNameList.map(i => {
+                inputList = this.props.app.deviceNameList.map(i => {
                     if (this.props.app.midi.IsListeningOnDevice(i)) {
                         return (
                             <li key={i}>
@@ -1135,14 +1131,17 @@ class RoomAlertArea extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
-        let roomAlertText = "";
-        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice()) roomAlertText = "Select a MIDI input device to start playing";
-
-        if (roomAlertText.length < 1) return null;
-
-        return (
-            <div id="roomAlertArea"><span>{roomAlertText}</span></div>
-        );
+        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice()) {
+            return (
+                <div id="roomAlertArea">
+                    <div>Select a MIDI input device to start playing</div>
+                    {this.props.app.deviceNameList.map(i => (
+                        <button onClick={() => this.props.app.midi.ListenOnDevice(i)}>Start using {i}</button>
+                    ))}
+                </div>
+            );
+        }
+        return null;
     }
 };
 

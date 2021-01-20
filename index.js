@@ -793,12 +793,15 @@ let loadRoom = function (jsonTxt) {
   app.use(roomState.route, express.static('public'));
 }
 
-fsp.readFile("pub.json")
-  .then(data => loadRoom(data))
-  .then(() => fsp.readFile("maj7.json"))
-  .then(data => loadRoom(data))
-  .then(() => fsp.readFile("hall.json"))
-  .then(data => loadRoom(data))
-  .then(() => roomsAreLoaded());
-
-
+fsp.readFile("global_instruments.json")
+  .then(data1 => {
+    let i = JSON.parse(data1);
+    DF.SetGlobalInstrumentList(i.globalInstruments);
+    fsp.readFile("pub.json")
+      .then(data2 => loadRoom(data2))
+      .then(() => fsp.readFile("maj7.json"))
+      .then(data3 => loadRoom(data3))
+      .then(() => fsp.readFile("hall.json"))
+      .then(data4 => loadRoom(data4))
+      .then(() => roomsAreLoaded());
+  });

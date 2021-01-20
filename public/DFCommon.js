@@ -1,6 +1,5 @@
 'use strict';
 
-
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
     while (i--) {
@@ -26,6 +25,13 @@ let generateID = function () {
     let ret = gIDDomain + gNextID;
     gNextID++;
     return ret;
+}
+
+let gGlobalInstruments = [];
+
+let SetGlobalInstrumentList = function(x) {
+    gGlobalInstruments = x;
+    console.log(`Global instrument closet now has ${x.length} instruments defined`);
 }
 
 
@@ -148,6 +154,10 @@ class DigifuInstrumentSpec {
         this.presets = { x: 43 }; // key = preset name, value = object to apply on params
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
         this.maxTextLength = 100;
+    }
+
+    get ShouldShowEditor() {
+        return this.engine != "soundfont";
     }
 
     getDisplayName() {
@@ -416,6 +426,13 @@ class DigifuRoomState {
             if (!i.copyOfInstrumentID) continue;
 
             let base = ret.instrumentCloset.find(o => o.instrumentID == i.copyOfInstrumentID);
+
+            if (!base) {
+                // fallback: load from global instrument list
+                base = gGlobalInstruments.find(o => o.instrumentID == i.copyOfInstrumentID);
+            }
+
+            console.assert(!!base, `Instrument is based on nonexistent instrument ${i.copyOfInstrumentID}`);
             // create a clone of the base
             let n = JSON.parse(JSON.stringify(base));
             // apply modifications
@@ -505,4 +522,5 @@ module.exports = {
     RoomFn,
     RoomFns,
     DFRoomItemType,
+    SetGlobalInstrumentList
 };

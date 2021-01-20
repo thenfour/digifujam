@@ -25,6 +25,15 @@ class DigifuApp {
         this.midi = new DigifuMidi();
         this.synth = new DigifuSynth(); // contains all music-making stuff.
         this.net = new DigifuNet();
+
+        this.deviceNameList = [];
+
+        GetMidiInputDeviceList().then(inputs => {
+            this.deviceNameList = inputs;
+            if (this.stateChangeHandler) {
+                this.stateChangeHandler();
+            }
+        });
     }
 
     get RoomID() {
