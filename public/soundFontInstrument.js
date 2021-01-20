@@ -5,22 +5,55 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SoundfontInstrument {
-	constructor(audioCtx, destination, instrumentSpec) {
+	constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
+		/*
+
+		(soundfont) --> [sfOutput] --> [masterDryGain] --> dryDestination
+									 > [masterWetGain] --> wetDestination
+
+		*/
 		this.audioCtx = audioCtx;
-		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, { destination })
+		this.instrumentSpec = instrumentSpec;
+		this.voices = new Array(128); // map midi note number to a voice
+		this.sfinstrument = null;
+		this.sustainMode = false; // true = pedal down
+
+		this.sfOutput = this.audioCtx.createGain();
+		this.sfOutput.gain.value = 1.0;
+
+		// masterDryGain
+		this.masterDryGain = this.audioCtx.createGain();
+		// masterWetGain
+		this.masterWetGain = this.audioCtx.createGain();
+		let gainLevels = this.getGainLevels();
+		this.masterDryGain.gain.value = gainLevels[0];
+		this.masterWetGain.gain.value = gainLevels[1];
+
+		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, { destination: this.sfOutput })
 			.then(function (inst) {
 				this.sfinstrument = inst;
 			}.bind(this));
 
-		this.sfinstrument = null;
-		this.instrumentSpec = instrumentSpec;
-		this.sustainMode = false; // true = pedal down
-		this.voices = new Array(128); // map midi note number to a voice
+		this.sfOutput.connect(this.masterDryGain);
+		this.sfOutput.connect(this.masterWetGain);
+
+		this.masterDryGain.connect(dryDestination);
+		this.masterWetGain.connect(wetDestination);
+
 	};
-    
-    connect() {
-        // nothing to do here; disconnect doesn't really disconnect anything
-    }
+
+	connect() {
+		// nothing to do here; disconnect doesn't really disconnect anything
+	}
+
+	// returns [drygain, wetgain]
+	getGainLevels() {
+		let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
+		let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+		// when verb mix is 0, drygain is the real master gain.
+		// when verb mix is 1, drygain is 0 and verbmix is mastergain
+		return [(1.0 - vg) * ms, vg * ms * 1.3]; // multiply verb gain to compensate, try and make wet as loud as dry.
+	}
 
 	disconnect() {
 		if (!this.sfinstrument) return;
@@ -37,9 +70,7 @@ class SoundfontInstrument {
 
 	NoteOff(midiNote) {
 		if (!this.sfinstrument) return;
-		//log(`note off ${midiNote}`);
 		// we have to respect if a note off happens without corresponding note on.
-		//console.assert(this.voices[midiNote]);
 		if (!this.voices[midiNote]) return;
 		this.voices[midiNote].DFHolding = false;
 		if (!this.sustainMode) {
@@ -67,7 +98,16 @@ class SoundfontInstrument {
 	};
 
 	SetParamValues(patchObj) {
-		// nothing supported.
+		Object.keys(patchObj).forEach(paramID => {
+			switch (paramID) {
+				case "masterGain":
+				case "verbMix":
+					let levels = this.getGainLevels();
+					this.masterDryGain.gain.linearRampToValueAtTime(levels[0], ClientSettings.InstrumentParamIntervalMS / 1000);
+					this.masterWetGain.gain.linearRampToValueAtTime(levels[1], ClientSettings.InstrumentParamIntervalMS / 1000);
+					break;
+			}
+		});
 	}
 
 	AllNotesOff() {
@@ -75,7 +115,7 @@ class SoundfontInstrument {
 		this.voices = new Array(128); // reset all voices.
 		this.sustainMode = false;
 		this.sfinstrument.stop();
-    };
+	};
 };
 
 

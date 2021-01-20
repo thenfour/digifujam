@@ -3,10 +3,10 @@
 
 
 class MiniFMSynthOsc {
-    constructor(audioCtx, destination, instrumentSpec, paramPrefix) {
+    constructor(audioCtx, instrumentSpec, paramPrefix) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
-        this.destination = destination;
+        //this.destination = destination;
         this.paramPrefix = paramPrefix;
 
         this.midiNote = 0;
@@ -298,10 +298,11 @@ lfo: wave, speed, delay, pitch mod depth 1 2 3 4, amp mod depth 1 2 3 4
 pitch env a, d, s, r, depth 1 2 3 4 
 */
 class MiniFMSynthVoice {
-    constructor(audioCtx, destination, instrumentSpec) {
+    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
-        this.destination = destination;
+        this.dryDestination = dryDestination;
+        this.wetDestination = wetDestination;
 
         this.midiNote = 0;
         this.velocity = 0;
@@ -309,8 +310,8 @@ class MiniFMSynthVoice {
         this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
 
         this.oscillators = [
-            new MiniFMSynthOsc(audioCtx, destination, instrumentSpec, "osc0_"),
-            new MiniFMSynthOsc(audioCtx, destination, instrumentSpec, "osc1_"),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc0_"),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc1_"),
         ];
 
         this.modulationGainers = [];
@@ -324,7 +325,7 @@ class MiniFMSynthVoice {
         /*
         
         [lfo1]--------------------------------->[child oscillators] --> [masterDryGain]
-                             |                                      
+                             |                                        > [masterWetGain]
         [lfo1Offset] -------> [lfo1_01]---->
                                   [env1]------->
         
@@ -363,7 +364,12 @@ class MiniFMSynthVoice {
 
         // masterDryGain
         this.masterDryGain = this.audioCtx.createGain();
-        this.masterDryGain.gain.value = this.instrumentSpec.GetParamByID("masterGain").currentValue;
+        // masterWetGain
+        this.masterWetGain = this.audioCtx.createGain();
+
+        let gainLevels = this.getGainLevels();
+        this.masterDryGain.gain.value = gainLevels[0];
+        this.masterWetGain.gain.value = gainLevels[1];
 
         // set up algo
         let algo = this.instrumentSpec.GetParamByID("algo").currentValue;
@@ -380,11 +386,14 @@ class MiniFMSynthVoice {
 
                 // 1 => dest
                 this.oscillators[1].outputNode.connect(this.masterDryGain);
+                this.oscillators[1].outputNode.connect(this.masterWetGain);
                 break;
 
             case 1:
                 this.oscillators[0].outputNode.connect(this.masterDryGain);
+                this.oscillators[0].outputNode.connect(this.masterWetGain);
                 this.oscillators[1].outputNode.connect(this.masterDryGain);
+                this.oscillators[1].outputNode.connect(this.masterWetGain);
                 break;
             default:
                 console.log(`unknown algorithm ${algo}`);
@@ -392,7 +401,8 @@ class MiniFMSynthVoice {
         }
 
         // connect to outside.
-        this.masterDryGain.connect(this.destination);
+        this.masterDryGain.connect(this.dryDestination);
+        this.masterWetGain.connect(this.wetDestination);
         this.isConnected = true;
     }
 
@@ -409,6 +419,9 @@ class MiniFMSynthVoice {
 
         this.masterDryGain.disconnect();
         this.masterDryGain = null;
+
+        this.masterWetGain.disconnect();
+        this.masterWetGain = null;
 
         this.env1.stop();
         this.env1.disconnect();
@@ -429,6 +442,14 @@ class MiniFMSynthVoice {
         this.lfo1.type = shapes[this.instrumentSpec.GetParamByID("lfo1_wave").currentValue];
     }
 
+    // returns [drygain, wetgain]
+    getGainLevels() {
+        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
+        let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        // when verb mix is 0, drygain is the real master gain.
+        // when verb mix is 1, drygain is 0 and verbmix is mastergain
+        return [(1.0 - vg) * ms, vg * ms * 1.3]; // multiply verb gain to compensate, try and make wet as loud as dry.
+    }
 
     get IsPlaying() {
         return !!this.timestamp;
@@ -446,7 +467,10 @@ class MiniFMSynthVoice {
                 this.PitchBend(newVal);
                 break;
             case "masterGain":
-                this.masterDryGain.gain.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
+            case "verbMix":
+                let levels = this.getGainLevels();
+                this.masterDryGain.gain.linearRampToValueAtTime(levels[0], ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.masterWetGain.gain.linearRampToValueAtTime(levels[1], ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "algo": {
                 this.disconnect();

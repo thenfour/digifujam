@@ -30,11 +30,11 @@ class RoomServer {
       // });
 
       // load a preset
-      if (!Object.keys(i.presets).length) {
-        console.assert(!i.params.length, `${i.name} ${Object.keys(i.presets).length} ${i.params.length} WARN: if you have any params, you must have a preset. ${JSON.stringify(i)}`);
+      if (!i.presets.length) {
+        console.assert(!i.params.length, `${i.name} ${i.presets.length} ${i.params.length} WARN: if you have any params, you must have a preset. ${JSON.stringify(i)}`);
         return;
       }
-      i.loadPreset(i.presets[Object.keys(i.presets)[0]]);
+      i.loadPreset(i.presets[0]);
 
       // add special param values...
       i.params.push(Object.assign(new DF.InstrumentParam(), {

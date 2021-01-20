@@ -276,8 +276,8 @@ class InstrumentPresetList extends React.Component {
         this.props.app.LoadPresetObj(presetObj);
     }
     render() {
-        const lis = Object.keys(this.props.instrument.presets).map(presetName => (
-            <li key={presetName} onClick={() => this.presetClick(this.props.instrument.presets[presetName])}>{presetName}</li>
+        const lis = this.props.instrument.presets.map(preset => (
+            <li key={preset.patchName} onClick={() => this.presetClick(preset)}>{preset.patchName}</li>
         ));
         return (
             <ul className="presetList">
@@ -380,7 +380,7 @@ class InstrumentParams extends React.Component {
 
     render() {
 
-        if (!this.props.instrument.ShouldShowEditor) return null;
+        //if (!this.props.instrument.ShouldShowEditor) return null;
 
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
@@ -564,11 +564,11 @@ class UserState extends React.Component {
         this.props.app.synth.masterGain = realVal;
     }
 
-    setReverbVal = (v) => {
-        let realVal = parseFloat(v.target.value) / 100;
-        this.setState(this.state);
-        this.props.app.synth.reverbGain = realVal;
-    }
+    // setReverbVal = (v) => {
+    //     let realVal = parseFloat(v.target.value) / 100;
+    //     this.setState(this.state);
+    //     this.props.app.synth.reverbGain = realVal;
+    // }
 
     setPBRange = (v) => {
         this.setState(this.state);
@@ -639,12 +639,12 @@ class UserState extends React.Component {
             </li>
         ) : null;
 
-        const verbMarkup = this.props.app && this.props.app.synth ? (
-            <li>
-                <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} disabled={this.props.app.synth.isMuted} />
-                <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain * 100)}</label>
-            </li>
-        ) : null;
+        // const verbMarkup = this.props.app && this.props.app.synth ? (
+        //     <li>
+        //         <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} disabled={this.props.app.synth.isMuted} />
+        //         <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain * 100)}</label>
+        //     </li>
+        // ) : null;
 
         const pbrangeMarkup = this.props.app && this.props.app.synth ? (
             <li>
@@ -678,7 +678,7 @@ class UserState extends React.Component {
                     {changeUserStateBtn}
                     {inputList}
                     {volumeMarkup}
-                    {verbMarkup}
+                    {/* {verbMarkup} */}
                     {pbrangeMarkup}
                 </ul>
             </div>

@@ -6,43 +6,27 @@ class DigifuSynth {
 	constructor() {
 		this.audioCtx = null;
 		this.instruments = {};
-		this.instrumentGainers = {}; // key = instrumentID
+		this.instrumentDryGainers = {}; // key = instrumentID
+		this.instrumentWetGainers = {}; // key = instrumentID
 
 		this.instrumentSpecs = null;
 		this.internalMasterGain = null;
 
-		this.masterEffectsInputNode = null;
-		this.masterReverbGain = null;
+		this.masterGainNode = null;
+		this.masterReverb = null;
 
 		this._isMuted = false;
 	}
 
 	//this.masterGain = 1.0;// 0 = mute, 1.0 = unity, >1=amplify
 	set masterGain(val) {
-		if (!this.masterEffectsInputNode) return;
-		this.masterEffectsInputNode.gain.value = val;
+		if (!this.masterGain) return;
+		this.masterGain.gain.value = val;
 	}
 
 	get masterGain() {
-		if (!this.masterEffectsInputNode) return 1.0;
-		return this.masterEffectsInputNode.gain.value;
-	}
-
-	set reverbGain(val) {
-		if (!this.masterReverbGain) return;
-		this.masterReverbGain.gain.value = val;
-
-		if (val > 0.0001) {
-			this.masterReverb.connect(this.masterReverbGain);
-		} else {
-			this.masterReverb.disconnect();
-		}
-	}
-
-	get reverbGain() {
-		if (!this.masterEffectsInputNode) return 0.5;
-		if (!this.masterReverbGain) return 0.5;
-		return this.masterReverbGain.gain.value;
+		if (!this.masterGainNode) return 1.0;
+		return this.masterGainNode.gain.value;
 	}
 
 	get isMuted() {
@@ -53,22 +37,14 @@ class DigifuSynth {
 		// instrumentSpecs, internalMasterGain
 		if (val) {
 			// stop all instruments and disconnect our graph temporarily
-			this.masterReverbGain.disconnect();
-			this.masterEffectsInputNode.disconnect();
+			this.masterReverb.disconnect();
+			this.masterGainNode.disconnect();
 			Object.keys(this.instruments).forEach(k => {
 				this.instruments[k].disconnect();
 			});
 		} else {
-			this.masterEffectsInputNode.connect(this.masterReverb);
-			this.masterEffectsInputNode.connect(this.audioCtx.destination);
-			this.masterReverbGain.connect(this.audioCtx.destination);
-			//this.masterReverbGain.connect(this.audioCtx.destination);
-			//this.reverbGain = this.reverbGain; // handles whether it should reconnect verb nodes
-
-			// no need to reconnect; it should be done automatically.
-			// Object.keys(this.instruments).forEach(k => {
-			// 	this.instruments[k].connect(this.instrumentGainers[k]);
-			// });
+			this.masterGainNode.connect(this.audioCtx.destination);
+			this.masterReverb.connect(this.masterGainNode);
 		}
 		this._isMuted = !!val;
 	}
@@ -128,26 +104,35 @@ class DigifuSynth {
 		this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
 		instrumentSpecs.forEach(spec => {
-			let gainer = this.audioCtx.createGain();
-			gainer.gain.value = 1;
+			let dryGainer = this.audioCtx.createGain();
+			dryGainer.gain.value = 1;
 			if (spec.gain) {
-				gainer.gain.value = spec.gain;
+				dryGainer.gain.value = spec.gain;
 			}
-			gainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
-			gainer.connect(this.masterEffectsInputNode);
-			this.instrumentGainers[spec.instrumentID] = gainer;
+			dryGainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
+			dryGainer.connect(this.masterGainNode);
+			this.instrumentDryGainers[spec.instrumentID] = dryGainer;
+
+			let wetGainer = this.audioCtx.createGain();
+			wetGainer.gain.value = 1;
+			if (spec.gain) {
+				wetGainer.gain.value = spec.gain;
+			}
+			wetGainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
+			if (this.masterReverb) {
+				wetGainer.connect(this.masterReverb);
+			}
+			this.instrumentWetGainers[spec.instrumentID] = wetGainer;
+
 			switch (spec.engine) {
 				case "minisynth":
-					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, gainer, spec, (c, d, s) => new PolySynthVoice(c, d, s));
+					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, d1, d2, s) => new PolySynthVoice(c, d1, d2, s));
 					break;
 				case "minifm":
-					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, gainer, spec, (c, d, s) => new MiniFMSynthVoice(c, d, s));
+					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, d1, d2, s) => new MiniFMSynthVoice(c, d1, d2, s));
 					break;
-				// case "megasynth":
-				// 	this.instruments[s.instrumentID] = new MegaSynth(this.audioCtx, gainer, s);
-				// 	break;
 				case "soundfont":
-					this.instruments[spec.instrumentID] = new SoundfontInstrument(this.audioCtx, gainer, spec);
+					this.instruments[spec.instrumentID] = new SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
 					break;
 			}
 		});
@@ -157,10 +142,17 @@ class DigifuSynth {
 		for (let inst in this.instruments) {
 			this.instruments[inst].disconnect();
 		}
-		for (let inst in this.instrumentGainers) {
-			this.instrumentGainers[inst].disconnect();
+
+		for (let inst in this.instrumentDryGainers) {
+			this.instrumentDryGainers[inst].disconnect();
 		}
-		this.instrumentGainers = {};
+		this.instrumentDryGainers = {};
+
+		for (let inst in this.instrumentWetGainers) {
+			this.instrumentWetGainers[inst].disconnect();
+		}
+		this.instrumentWetGainers = {};
+
 		this.instruments = {};
 	}
 
@@ -173,24 +165,23 @@ class DigifuSynth {
 			reverbjs.extend(this.audioCtx);
 		}
 
-		// instruments] -> gain|------------------------------>|destination
-		//                     |--> reverb ----> reverbGain -->|
-		this.masterEffectsInputNode = this.audioCtx.createGain();
-		// create dry signal path
-		this.masterEffectsInputNode.connect(this.audioCtx.destination);
+		//
+		// (instruments) --> (instrumentDryGainers) --------------------------> [masterGainNode] -->  (destination)
+		//               --> (instrumentWetGainers) ----> [masterReverb] ----->
+		//
+		this.masterGainNode = this.audioCtx.createGain();
+		this.masterGainNode.connect(this.audioCtx.destination);
 
 		// see other possible impulses: https://github.com/burnson/Reverb.js
 		this.masterReverb = this.audioCtx.createReverbFromUrl("./LadyChapelStAlbansCathedral.m4a", () => {
 
+			for (let inst in this.instrumentWetGainers) {
+				this.instrumentWetGainers[inst].connect(this.masterReverb);
+			}
+
 			// create wet signal path
-			this.masterReverbGain = this.audioCtx.createGain();
+			this.masterReverb.connect(this.masterGainNode);
 
-			this.masterEffectsInputNode.connect(this.masterReverb);
-			this.masterReverb.connect(this.masterReverbGain);
-			this.masterReverbGain.connect(this.audioCtx.destination);
-
-			//
-			this.masterReverbGain.gain.value = 0.5;
 		});
 	};
 };

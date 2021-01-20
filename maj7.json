@@ -84,6 +84,7 @@
       "name": "Minisynth B"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "name": "Piano",
       "sfinstrumentName": "acoustic_grand_piano",
       "img": "",
@@ -93,6 +94,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "electric_piano_1",
       "gain": 1,
       "name": "Rhodes",
@@ -102,6 +104,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "electric_piano_2",
       "gain": 1,
       "name": "FM Keys",
@@ -111,6 +114,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "acoustic_guitar_steel",
       "gain": 1,
       "name": "Acoustic Guitar",
@@ -120,6 +124,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "name": "Marimba",
       "sfinstrumentName": "marimba",
       "img": "",
@@ -129,6 +134,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "name": "Soundtrack",
       "sfinstrumentName": "fx_2_soundtrack",
       "img": "",
@@ -138,6 +144,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "tango_accordion",
       "name": "Accordion",
       "img": "",
@@ -147,6 +154,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "string_ensemble_1",
       "gain": 0.8,
       "name": "Strings",
@@ -156,6 +164,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "synth_brass_1",
       "gain": 0.7,
       "name": "Synth Brass",
@@ -165,6 +174,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "muted_trumpet",
       "gain": 1,
       "name": "Muted Trumpet",
@@ -174,6 +184,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "acoustic_bass",
       "gain": 1,
       "name": "Double Bass",
@@ -183,6 +194,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "slap_bass_2",
       "gain": 1,
       "name": "Slap Bass",
@@ -193,3 +205,4 @@
     }
   ]
 }
+

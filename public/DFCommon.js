@@ -151,14 +151,14 @@ class DigifuInstrumentSpec {
         this.gain = 1.0;
         this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
-        this.presets = { x: 43 }; // key = preset name, value = object to apply on params
+        this.presets = []; // a preset is just a param:value pair
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
         this.maxTextLength = 100;
     }
 
-    get ShouldShowEditor() {
-        return this.engine != "soundfont";
-    }
+    // get ShouldShowEditor() {
+    //     return this.engine != "soundfont";
+    // }
 
     getDisplayName() {
         switch (this.engine) {
@@ -190,6 +190,7 @@ class DigifuInstrumentSpec {
                 return;
             }
             param.currentValue = presetObj[k];
+            //console.log(`setting param ${k} to ${presetObj[k]}`);
         });
     }
 

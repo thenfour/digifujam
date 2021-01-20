@@ -1,29 +1,13 @@
 'use strict';
 
-/*
-
-params:
--------------------------
-
-wave
-detune
-
-cutoff
-q
-
-a
-d
-s
-r
-
-*/
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class PolySynthVoice {
-    constructor(audioCtx, destination, instrumentSpec) {
+    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
-        this.destination = destination;
+        this.dryDestination = dryDestination;
+        this.wetDestination = wetDestination;
 
         this.midiNote = 0;
         this.velocity = 0;
@@ -42,15 +26,38 @@ class PolySynthVoice {
     connect() {
         if (this.isConnected) return;
 
-        // create graph nodes
+        /*
+
+            [oscillator1]-->[osc1Panner]------->
+            [oscillator2]-->[osc2Panner]------->
+            [oscillator3]-->[osc3Panner]------->[gain] --> [filter] --> [masterDryGain] --> 
+                                                |                    > [masterWetGain] --> 
+                                                |gain
+                            [gainEnvelope]----->
+        
+        */
+
+        // oscillators
         this.oscillator1 = this.audioCtx.createOscillator();
         this.oscillator2 = this.audioCtx.createOscillator();
         this.oscillator3 = this.audioCtx.createOscillator();
+        this._setOscWaveform(this.instrumentSpec.GetParamByID("wave").currentValue);
+        this.oscillator1.start(0);  // Go ahead and start up the oscillator
+        this.oscillator2.start(0);  // Go ahead and start up the oscillator
+        this.oscillator3.start(0);  // Go ahead and start up the oscillator
 
+        // panners
         this.osc1Panner = this.audioCtx.createStereoPanner();
+        this.oscillator1.connect(this.osc1Panner);
         this.osc2Panner = this.audioCtx.createStereoPanner();
+        this.oscillator2.connect(this.osc2Panner);
         this.osc3Panner = this.audioCtx.createStereoPanner();
+        this.oscillator3.connect(this.osc3Panner);
+        this.osc1Panner.pan.value = -.5;
+        this.osc2Panner.pan.value = 0.0;
+        this.osc3Panner.pan.value = +.5;
 
+        // gainEnvelope
         this.gainEnvelope = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
             attack: this.instrumentSpec.GetParamByID("a").currentValue,//0.008, // seconds until hitting 1.0
             peak: this.peakGain, // why must this be so low? not sure...
@@ -61,42 +68,36 @@ class PolySynthVoice {
             releaseCurve: 6.8,
         });
         this.gainEnvelope.start();//gain.value = 0.0;  // Mute the sound  // this thing does not like to be started more than once even with stop() in between
-        this.env1.reset();
 
+        // gain
         this.gain = this.audioCtx.createGain();
         this.gain.gain.value = 0; // a base value before controlled by adsr
-
-        this.filter = this.audioCtx.createBiquadFilter();
-
-        // create graph geometry (R to L
-        this.oscillator1.connect(this.osc1Panner);
-        this.oscillator2.connect(this.osc2Panner);
-        this.oscillator3.connect(this.osc3Panner);
-
+        this.gainEnvelope.connect(this.gain.gain);
         this.osc1Panner.connect(this.gain);
         this.osc2Panner.connect(this.gain);
         this.osc3Panner.connect(this.gain);
 
-        this.gainEnvelope.connect(this.gain.gain);
-
+        // filter
+        this.filter = this.audioCtx.createBiquadFilter();
         this.gain.connect(this.filter);
-
-        this.filter.connect(this.destination);
-
-        // init node params
-        this.oscillator1.start(0);  // Go ahead and start up the oscillator
-        this.oscillator2.start(0);  // Go ahead and start up the oscillator
-        this.oscillator3.start(0);  // Go ahead and start up the oscillator
-
-        this.osc1Panner.pan.value = -.5;
-        this.osc2Panner.pan.value = 0.0;
-        this.osc3Panner.pan.value = +.5;
-
-        this._setOscWaveform(this.instrumentSpec.GetParamByID("wave").currentValue);
-
-        this.filter.frequency.value = 2500;
         this.filter.type = "lowpass";
+        this.filter.frequency.value = 2500; // will be set on note on.
         this.filter.Q.value = this.instrumentSpec.GetParamByID("q").currentValue;
+
+        // masterDryGain
+        this.masterDryGain = this.audioCtx.createGain();
+        // masterWetGain
+        this.masterWetGain = this.audioCtx.createGain();
+        let gainLevels = this.getGainLevels();
+        this.masterDryGain.gain.value = gainLevels[0];
+        this.masterWetGain.gain.value = gainLevels[1];
+
+        this.filter.connect(this.masterDryGain);
+        this.filter.connect(this.masterWetGain);
+
+        // connect out.
+        this.masterDryGain.connect(this.dryDestination);
+        this.masterWetGain.connect(this.wetDestination);
 
         this.isConnected = true;
     }
@@ -111,12 +112,7 @@ class PolySynthVoice {
         this.oscillator2.stop();
         this.oscillator3.stop();
 
-        //this.osc1Panner.stop();
-        //this.osc2Panner.stop();
-        //this.osc3Panner.stop();
         this.gainEnvelope.stop();
-        //this.gain.stop();
-        //this.filter.stop();
 
         this.oscillator1.disconnect();
         this.oscillator2.disconnect();
@@ -131,6 +127,12 @@ class PolySynthVoice {
         this.gain.disconnect();
 
         this.filter.disconnect();
+
+        this.masterDryGain.disconnect();
+        this.masterDryGain = null;
+
+        this.masterWetGain.disconnect();
+        this.masterWetGain = null;
 
         // set to null
         this.gainEnvelope = null;
@@ -158,14 +160,25 @@ class PolySynthVoice {
         this.oscillator3.type = shapes[specVal];
     }
 
-    // SetParamValues(patchObj) {
-    //     Object.keys(patchObj).forEach(paramID => { this.SetParamValue(paramID, patchObj[paramID]); });
-    // }
+    // returns [drygain, wetgain]
+    getGainLevels() {
+        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
+        let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        // when verb mix is 0, drygain is the real master gain.
+        // when verb mix is 1, drygain is 0 and verbmix is mastergain
+        return [(1.0 - vg) * ms, vg * ms * 1.3]; // multiply verb gain to compensate, try and make wet as loud as dry.
+    }
 
     SetParamValue(paramID, newVal) {
         switch (paramID) {
             case "pb":
                 this.PitchBend(newVal);
+                break;
+            case "masterGain":
+            case "verbMix":
+                let levels = this.getGainLevels();
+                this.masterDryGain.gain.linearRampToValueAtTime(levels[0], ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.masterWetGain.gain.linearRampToValueAtTime(levels[1], ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "detune":
                 this.detune = newVal;
@@ -221,7 +234,6 @@ class PolySynthVoice {
         this.midiNote = midiNote;
         this.velocity = velocity;
 
-        //this.oscillator.frequency.cancelScheduledValues(0);
         this.filter.frequency.value = (velocity / 128) * this.cutoff;
 
         let freqs = this._getOscFreqs();
@@ -229,7 +241,6 @@ class PolySynthVoice {
         this.oscillator2.frequency.setValueAtTime(freqs[1], 0);
         this.oscillator3.frequency.setValueAtTime(freqs[2], 0);
 
-        //this.filterEnvelope.trigger();
         this.gainEnvelope.trigger();
     }
 
@@ -264,14 +275,14 @@ class PolySynthVoice {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class GeneralPolySynth {
-    constructor(audioCtx, destination, instrumentSpec, createVoiceFn) {
-        this.destination = destination;
+    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec, createVoiceFn) {
+        this.dryDestination = dryDestination;
+        this.wetDestination = wetDestination;
         this.instrumentSpec = instrumentSpec;
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
-            //this.voices.push(new PolySynthVoice(audioCtx, destination, instrumentSpec));
-            this.voices.push(createVoiceFn(audioCtx, destination, instrumentSpec));
+            this.voices.push(createVoiceFn(audioCtx, dryDestination, wetDestination, instrumentSpec));
         }
         this.isSustainPedalDown = false;
         this.isConnected = false;
