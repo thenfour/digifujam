@@ -92,6 +92,8 @@
           "minValue": 0.00,
           "maxValue": 7.0
         },
+
+
         {
           "paramID": "osc0_wave",
           "name": "Wave",
@@ -128,17 +130,19 @@
           "name": "LFO1 freq",
           "groupName": "Osc A",
           "parameterType": "floatParam",
-          "minValue": -12.0,
-          "maxValue": 12.0
+          "minValue": -24.0,
+          "maxValue": 24.0
         },
         {
           "paramID": "osc0_env1_pitchDepth",
           "name": "ENV1 freq",
           "groupName": "Osc A",
           "parameterType": "floatParam",
-          "minValue": -12.0,
-          "maxValue": 12.0
+          "minValue": -24.0,
+          "maxValue": 24.0
         },
+
+
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc0_level",
@@ -205,6 +209,40 @@
           "minValue": 0.00,
           "maxValue": 7.0
         },
+
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "osc0_pan",
+          "name": "Pan",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_lfo1PanAmt",
+          "name": "LFO Pan amt",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_env1PanAmt",
+          "name": "Env pan amt",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+
+
+
+
+
+
+        
+
         {
           "paramID": "osc1_wave",
           "name": "Wave",
@@ -220,22 +258,7 @@
           ]
         },
         {
-          "paramID": "osc1_lfo1_pitchDepth",
-          "name": "LFO1 pitch",
-          "groupName": "Osc B",
-          "parameterType": "floatParam",
-          "minValue": -12.0,
-          "maxValue": 12.0
-        },
-        {
-          "paramID": "osc1_env1_pitchDepth",
-          "name": "ENV1 pitch",
-          "groupName": "Osc B",
-          "parameterType": "floatParam",
-          "minValue": -12.0,
-          "maxValue": 12.0
-        },
-        {
+          "cssClassName": "paramSpacer",
           "paramID": "osc1_freq_mult",
           "name": "Freq mul",
           "groupName": "Osc B",
@@ -252,6 +275,25 @@
           "maxValue": 10000.0
         },
         {
+          "paramID": "osc1_lfo1_pitchDepth",
+          "name": "LFO1 freq",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -24.0,
+          "maxValue": 24.0
+        },
+        {
+          "paramID": "osc1_env1_pitchDepth",
+          "name": "ENV1 freq",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -24.0,
+          "maxValue": 24.0
+        },
+
+
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "osc1_level",
           "name": "Level",
           "groupName": "Osc B",
@@ -260,14 +302,31 @@
           "maxValue": 1.0
         },
         {
-          "paramID": "osc1_vel_scale",
-          "name": "Vel Scale",
+          "paramID": "osc1_lfo1_gainAmt",
+          "name": "Level LFO amt",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
+          "paramID": "osc1_vel_scale",
+          "name": "Vel scale",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_key_scale",
+          "name": "Key scale",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "osc1_a",
           "name": "Attack",
           "groupName": "Osc B",
@@ -298,7 +357,45 @@
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
+        },
+
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "osc1_pan",
+          "name": "Pan",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_lfo1PanAmt",
+          "name": "LFO Pan amt",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_env1PanAmt",
+          "name": "Env pan amt",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
         }
+
+
+
+
+
+
+
+
+
+
+
+
       ],
       "presets": {
         "init": {

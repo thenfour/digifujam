@@ -61,6 +61,7 @@ class PolySynthVoice {
             releaseCurve: 6.8,
         });
         this.gainEnvelope.start();//gain.value = 0.0;  // Mute the sound  // this thing does not like to be started more than once even with stop() in between
+        this.env1.reset();
 
         this.gain = this.audioCtx.createGain();
         this.gain.gain.value = 0; // a base value before controlled by adsr
