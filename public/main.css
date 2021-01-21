@@ -71,7 +71,7 @@ button:focus {
     width: 100%;
 
     display: grid;
-    grid-template-columns: 270px minmax(0, 1fr) 280px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
+    grid-template-columns: 270px minmax(0, 1fr) 300px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
     grid-template-rows: 0fr 1fr 0fr 0fr;
     gap: 5px 5px;
     grid-template-areas:

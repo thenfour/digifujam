@@ -371,6 +371,8 @@ class MiniFMSynthVoice {
         this.oscillators = [
             new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc0_"),
             new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc1_"),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc2_"),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc3_"),
         ];
 
         this.modulationGainers = [];
@@ -405,7 +407,18 @@ class MiniFMSynthVoice {
         this.env1.start();
 
         // child oscillators
-        this.oscillators.forEach(o => o.connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1));
+        if (this.instrumentSpec.GetParamByID("enable_osc0").currentValue) {
+            this.oscillators[0].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
+        }
+        if (this.instrumentSpec.GetParamByID("enable_osc1").currentValue) {
+            this.oscillators[1].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
+        }
+        if (this.instrumentSpec.GetParamByID("enable_osc2").currentValue) {
+            this.oscillators[2].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
+        }
+        if (this.instrumentSpec.GetParamByID("enable_osc3").currentValue) {
+            this.oscillators[3].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
+        }
 
         // masterDryGain
         this.masterDryGain = this.audioCtx.createGain();
@@ -419,31 +432,61 @@ class MiniFMSynthVoice {
         // set up algo
         let algo = this.instrumentSpec.GetParamByID("algo").currentValue;
 
+        let mod = (src, dest) => {
+            if (!src.isConnected) return;
+            if (!dest.isConnected) return;
+
+            let m0 = this.audioCtx.createGain();
+            this.modulationGainers.push(m0);
+            m0.gain.value = 20000;
+
+            // 0 => 1
+            src.outputNode.connect(m0);
+            m0.connect(dest.inputNode.frequency);
+        };
+        let out = (osc) => {
+            if (!osc.isConnected) return;
+            osc.outputNode.connect(this.masterDryGain);
+            osc.outputNode.connect(this.masterWetGain);
+        };
+
+        //   "enumNames": [
+        //     "[1🡄2🡄3🡄4]",
+        //     "[1🡄2🡄3][4]",
+        //     "[1🡄2][3🡄4]",
+        //     "[1🡄2][3][4]",
+        //     "[1][2][3][4]"
         switch (parseInt(algo)) {
-            case 0:
-                let m0 = this.audioCtx.createGain();
-                this.modulationGainers.push(m0);
-                m0.gain.value = 20000;
-
-                // 0 => 1
-                this.oscillators[0].outputNode.connect(m0);
-                m0.connect(this.oscillators[1].inputNode.frequency);
-
-                // 1 => dest
-                this.oscillators[1].outputNode.connect(this.masterDryGain);
-                this.oscillators[1].outputNode.connect(this.masterWetGain);
+            case 0: // "[1🡄2🡄3🡄4]",
+                mod(this.oscillators[3], this.oscillators[2]);
+                mod(this.oscillators[2], this.oscillators[1]);
+                mod(this.oscillators[1], this.oscillators[0]);
                 break;
-
-            case 1:
-                this.oscillators[0].outputNode.connect(this.masterDryGain);
-                this.oscillators[0].outputNode.connect(this.masterWetGain);
-                this.oscillators[1].outputNode.connect(this.masterDryGain);
-                this.oscillators[1].outputNode.connect(this.masterWetGain);
+            case 1: // "[1🡄2🡄3][4]",
+                out(this.oscillators[3]);
+                mod(this.oscillators[2], this.oscillators[1]);
+                mod(this.oscillators[1], this.oscillators[0]);
+                break;
+            case 2: // "[1🡄2][3🡄4]",
+                mod(this.oscillators[3], this.oscillators[2]);
+                out(this.oscillators[2]);
+                mod(this.oscillators[1], this.oscillators[0]);
+                break;
+            case 3: // "[1🡄2][3][4]",
+                out(this.oscillators[3]);
+                out(this.oscillators[2]);
+                mod(this.oscillators[1], this.oscillators[0]);
+                break;
+            case 4: // "[1][2][3][4]"
+                out(this.oscillators[3]);
+                out(this.oscillators[2]);
+                out(this.oscillators[1]);
                 break;
             default:
                 console.log(`unknown algorithm ${algo}`);
                 break;
         }
+        out(this.oscillators[0]);
 
         // connect to outside.
         this.masterDryGain.connect(this.dryDestination);
@@ -497,7 +540,9 @@ class MiniFMSynthVoice {
         //console.log(`setting ${paramID} to ${newVal}`);
         if (paramID.startsWith("osc")) {
             let oscid = parseInt(paramID[3]);
-            this.oscillators[oscid].SetParamValue(paramID.substring(5), newVal);
+            if (this.oscillators[oscid].isConnected) {
+                this.oscillators[oscid].SetParamValue(paramID.substring(5), newVal);
+            }
             return;
         }
         switch (paramID) {
@@ -510,6 +555,10 @@ class MiniFMSynthVoice {
                 this.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
                 this.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
                 break;
+            case "enable_osc0":
+            case "enable_osc1":
+            case "enable_osc2":
+            case "enable_osc3":
             case "algo": {
                 let lfo1 = this.lfo1;
                 let lfo1_01 = this.lfo1_01;
@@ -536,7 +585,10 @@ class MiniFMSynthVoice {
     }
 
     PitchBend(semis) {
-        this.oscillators.forEach(o => { o.updateOscFreq(); });
+        this.oscillators.forEach(o => {
+            if (!o.isConnected) return;
+            o.updateOscFreq();
+        });
     }
 
     physicalAndMusicalNoteOn(midiNote, velocity, isLegato) {
@@ -550,6 +602,7 @@ class MiniFMSynthVoice {
             this.env1.trigger();
         }
         this.oscillators.forEach(o => {
+            if (!o.isConnected) return;
             o.noteOn(midiNote, velocity, isLegato);
         });
     }
@@ -561,6 +614,7 @@ class MiniFMSynthVoice {
 
         this.env1.release();
         this.oscillators.forEach(o => {
+            if (!o.isConnected) return;
             o.release();
         });
 
