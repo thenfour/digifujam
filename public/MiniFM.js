@@ -6,7 +6,6 @@ class MiniFMSynthOsc {
     constructor(audioCtx, instrumentSpec, paramPrefix) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
-        //this.destination = destination;
         this.paramPrefix = paramPrefix;
 
         this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
@@ -24,17 +23,17 @@ class MiniFMSynthOsc {
 
     // lfo1 is -1 to 1 range
     // lfo1_01 is 0 to 1 range.
-    connect(lfo1, lfo1_01, env1) {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1) {
         /*
         each oscillator has                                                          
 
 
-                                                                                                      |gain          |gain
-                                                                                |lfogain          [lfo1PanAmt]+[env1PanAmt]
-                                                                            [lfo1LevelAmt]                    |
-        [env1 0 to 1]-->[env1FreqAmt] -->                                      |gain                          |pan
-         [lfo-1 to 1]-->[lfo1FreqAmt] --> [osc] ----> [envGainer]   ---> [lfo1gainer]  ------------------> [panner]  ---> dest
-                                                        | <gain>
+                                                                                                                      |gain          |gain     |gain
+                                                                                   |gain               |gain     [lfo1PanAmt]+[lfo2PanAmt]+[env1PanAmt]
+                                                                            [lfo1LevelAmt]       [lfo2LevelAmt]              |
+        [env1 0 to 1]-->[env1FreqAmt] -->                                      |gain                |gain                    |pan
+         [lfo-1 to 1]-->[lfo1FreqAmt] --> [osc] ----> [envGainer]   ---> [lfo1gainer]  -----> [lfo2gainer]  ------------> [panner]  ---> dest
+         [lfo-1 to 1]-->[lfo2FreqAmt] -->               | <gain>
                                            [env]--> [envPeak]
 
         
@@ -238,17 +237,13 @@ class MiniFMSynthOsc {
         this.velocity = velocity;
         this.updateEnvPeakLevel();
         this.updateOscFreq(false);
-        // let freq = this.getFreqs();
-        // this.osc.frequency.setValueAtTime(freq[0], 0);
-        // this.lfo1FreqAmt.gain.setValueAtTime(freq[1], 0);
-        // this.env1FreqAmt.gain.setValueAtTime(freq[2], 0);
-        //console.log(`setting env1 freq amt to ${freq[2]}`);
         if (!isLegato || (this.paramValue("env_trigMode") == 0)) {
             this.env.trigger();
         }
     }
 
     release() {
+        if (!this.midiNote) return null;
         this.midiNote = 0;
         this.velocity = 0;
         this.env.release();
@@ -334,33 +329,19 @@ class MiniFMSynthVoice {
         this.isConnected = false;
     }
 
-    connect() {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01) {
         if (this.isConnected) return;
+        this.lfo1 = lfo1;
+        this.lfo1_01 = lfo1_01;
+        this.lfo2 = lfo2;
+        this.lfo2_01 = lfo2_01;
 
         /*
-        
-        [lfo1]--------------------------------->[child oscillators] --> [masterDryGain]
-                             |                                        > [masterWetGain]
-        [lfo1Offset] -------> [lfo1_01]---->
-                                  [env1]------->
+                                  (lfos)------->
+                                  [env1]------->[child oscillators] --> [masterDryGain]
+                                                                      > [masterWetGain]
         
         */
-
-        // lfo1
-        this.lfo1 = this.audioCtx.createOscillator();
-        this._setLFOWaveform();
-        this.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
-        this.lfo1.start();
-
-        // lfo1Offset
-        this.lfo1Offset = this.audioCtx.createConstantSource();
-        this.lfo1Offset.offset.value = 1.0;
-
-        // lfo1_01
-        this.lfo1_01 = this.audioCtx.createGain();
-        this.lfo1_01.gain.value = .5;
-        this.lfo1Offset.connect(this.lfo1_01);
-        this.lfo1.connect(this.lfo1_01);
 
         // env1
         this.env1 = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
@@ -375,7 +356,7 @@ class MiniFMSynthVoice {
         this.env1.start();
 
         // child oscillators
-        this.oscillators.forEach(o => o.connect(this.lfo1, this.lfo1_01, this.env1));
+        this.oscillators.forEach(o => o.connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1));
 
         // masterDryGain
         this.masterDryGain = this.audioCtx.createGain();
@@ -424,13 +405,10 @@ class MiniFMSynthVoice {
     disconnect() {
         this.AllNotesOff();
         if (!this.isConnected) return;
-
-        this.lfo1.stop();
-        this.lfo1.disconnect();
         this.lfo1 = null;
-
-        this.lfo1Offset.disconnect();
-        this.lfo1Offset = null;
+        this.lfo1_01 = null;
+        this.lfo2 = null;
+        this.lfo2_01 = null;
 
         this.masterDryGain.disconnect();
         this.masterDryGain = null;
@@ -450,11 +428,6 @@ class MiniFMSynthVoice {
         this.modulationGainers = [];
 
         this.isConnected = false;
-    }
-
-    _setLFOWaveform() {
-        const shapes = ["sine", "square", "sawtooth", "triangle", "sine"];
-        this.lfo1.type = shapes[this.instrumentSpec.GetParamByID("lfo1_wave").currentValue];
     }
 
     // returns [drygain, wetgain]
@@ -489,16 +462,13 @@ class MiniFMSynthVoice {
                 this.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "algo": {
+                let lfo1 = this.lfo1;
+                let lfo1_01 = this.lfo1_01;
+                let lfo2 = this.lfo2;
+                let lfo2_01 = this.lfo2_01;
+                
                 this.disconnect();
-                this.connect();
-                break;
-            }
-            case "lfo1_wave": {
-                this._setLFOWaveform();
-                break;
-            }
-            case "lfo1_speed": {
-                this.lfo1.frequency.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.connect(lfo1, lfo1_01, lfo2, lfo2_01);
                 break;
             }
             case "env1_s":

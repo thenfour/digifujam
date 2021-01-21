@@ -81,8 +81,31 @@
         },
         {
           "cssClassName": "paramSpacer",
+          "paramID": "lfo2_wave",
+          "name": "LFO2 wave",
+          "groupName": "Mod LFO2",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
+        },
+        {
+          "paramID": "lfo2_speed",
+          "name": "LFO2 speed",
+          "groupName": "Mod LFO2",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 10.0
+        },
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "env1_a",
-          "name": "Env1 A",
+          "name": "Attack",
           "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.004,
@@ -90,7 +113,7 @@
         },
         {
           "paramID": "env1_d",
-          "name": "Env1 D",
+          "name": "Decay",
           "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.00,
@@ -98,7 +121,7 @@
         },
         {
           "paramID": "env1_s",
-          "name": "Env1 S",
+          "name": "Sustain",
           "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.00,
@@ -106,7 +129,7 @@
         },
         {
           "paramID": "env1_r",
-          "name": "Env1 R",
+          "name": "Release",
           "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.00,
@@ -114,7 +137,7 @@
         },
         {
           "paramID": "env1_trigMode",
-          "name": "Env1 Trig",
+          "name": "Trigger",
           "groupName": "Mod Envelope",
           "parameterType": "intParam",
           "minValue": 0,
@@ -149,23 +172,23 @@
         },
         {
           "paramID": "osc0_freq_abs",
-          "name": "Freq abs",
+          "name": "Freq offset",
           "groupName": "Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
-          "maxValue": 10000.0
-        },
-        {
-          "paramID": "osc0_portamento",
-          "name": "Portamento",
-          "groupName": "Osc A",
-          "parameterType": "floatParam",
-          "minValue": 0.004,
-          "maxValue": 0.4
+          "minValue": -1000,
+          "maxValue": 9000.0
         },
         {
           "paramID": "osc0_lfo1_pitchDepth",
-          "name": "LFO1 freq",
+          "name": "LFO1 mod",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -24.0,
+          "maxValue": 24.0
+        },
+        {
+          "paramID": "osc0_lfo2_pitchDepth",
+          "name": "LFO2 mod",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -24.0,
@@ -173,16 +196,25 @@
         },
         {
           "paramID": "osc0_env1_pitchDepth",
-          "name": "ENV1 freq",
+          "name": "ENV mod",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
+          "paramID": "osc0_portamento",
+          "name": "Portamento",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 0.25
+        },
+
+        {
           "cssClassName": "paramSpacer",
           "paramID": "osc0_level",
-          "name": "Level",
+          "name": "Gain",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
@@ -190,7 +222,15 @@
         },
         {
           "paramID": "osc0_lfo1_gainAmt",
-          "name": "Level LFO amt",
+          "name": "LFO1 mod",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_lfo2_gainAmt",
+          "name": "LFO2 mod",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
@@ -198,7 +238,7 @@
         },
         {
           "paramID": "osc0_vel_scale",
-          "name": "Vel scale",
+          "name": "Vel scaling",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
@@ -206,7 +246,7 @@
         },
         {
           "paramID": "osc0_key_scale",
-          "name": "Key scale",
+          "name": "Key scaling",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
@@ -247,7 +287,7 @@
         },
         {
           "paramID": "osc0_env_trigMode",
-          "name": "Env Trig",
+          "name": "Trigger",
           "groupName": "Osc A",
           "parameterType": "intParam",
           "minValue": 0,
@@ -268,7 +308,15 @@
         },
         {
           "paramID": "osc0_lfo1PanAmt",
-          "name": "LFO Pan amt",
+          "name": "LFO1 mod",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_lfo2PanAmt",
+          "name": "LFO2 mod",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
@@ -276,12 +324,14 @@
         },
         {
           "paramID": "osc0_env1PanAmt",
-          "name": "Env pan amt",
+          "name": "ENV mod",
           "groupName": "Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
+
+
         {
           "paramID": "osc1_wave",
           "name": "Wave",
@@ -307,23 +357,23 @@
         },
         {
           "paramID": "osc1_freq_abs",
-          "name": "Freq abs",
+          "name": "Freq offset",
           "groupName": "Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
-          "maxValue": 10000.0
-        },
-        {
-          "paramID": "osc1_portamento",
-          "name": "Portamento",
-          "groupName": "Osc B",
-          "parameterType": "floatParam",
-          "minValue": 0.004,
-          "maxValue": 0.4
+          "minValue": -1000,
+          "maxValue": 9000.0
         },
         {
           "paramID": "osc1_lfo1_pitchDepth",
-          "name": "LFO1 freq",
+          "name": "LFO1 mod",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -24.0,
+          "maxValue": 24.0
+        },
+        {
+          "paramID": "osc1_lfo2_pitchDepth",
+          "name": "LFO2 mod",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -24.0,
@@ -331,16 +381,27 @@
         },
         {
           "paramID": "osc1_env1_pitchDepth",
-          "name": "ENV1 freq",
+          "name": "ENV mod",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
+          "paramID": "osc1_portamento",
+          "name": "Portamento",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 0.25
+        },
+
+
+
+        {
           "cssClassName": "paramSpacer",
           "paramID": "osc1_level",
-          "name": "Level",
+          "name": "Gain",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
@@ -348,7 +409,15 @@
         },
         {
           "paramID": "osc1_lfo1_gainAmt",
-          "name": "Level LFO amt",
+          "name": "LFO1 mod",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_lfo2_gainAmt",
+          "name": "LFO2 mod",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
@@ -356,7 +425,7 @@
         },
         {
           "paramID": "osc1_vel_scale",
-          "name": "Vel scale",
+          "name": "Vel scaling",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
@@ -364,7 +433,7 @@
         },
         {
           "paramID": "osc1_key_scale",
-          "name": "Key scale",
+          "name": "Key scaling",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
@@ -405,7 +474,7 @@
         },
         {
           "paramID": "osc1_env_trigMode",
-          "name": "Env Trig",
+          "name": "Trigger",
           "groupName": "Osc B",
           "parameterType": "intParam",
           "minValue": 0,
@@ -426,7 +495,15 @@
         },
         {
           "paramID": "osc1_lfo1PanAmt",
-          "name": "LFO Pan amt",
+          "name": "LFO1 mod",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_lfo2PanAmt",
+          "name": "LFO2 mod",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
@@ -434,7 +511,7 @@
         },
         {
           "paramID": "osc1_env1PanAmt",
-          "name": "Env pan amt",
+          "name": "ENV mod",
           "groupName": "Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,

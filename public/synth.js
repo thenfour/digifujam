@@ -20,8 +20,8 @@ class DigifuSynth {
 
 	//this.masterGain = 1.0;// 0 = mute, 1.0 = unity, >1=amplify
 	set masterGain(val) {
-		if (!this.masterGain) return;
-		this.masterGain.gain.value = val;
+		if (!this.masterGainNode) return;
+		this.masterGainNode.gain.value = val;
 	}
 
 	get masterGain() {
