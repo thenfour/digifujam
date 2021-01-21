@@ -14,7 +14,6 @@ class MiniFMSynthOsc {
         this.midiNote = 0;
         this.velocity = 0;
         this.timestamp = null; // when did the note on start?
-        this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
 
         this.isConnected = false;
     }
@@ -226,12 +225,13 @@ class MiniFMSynthOsc {
 
         //console.log(`ramping from ${this.osc.frequency.value} to ${freq[0]} in ${portamentoDurationS} sec`);
 
+        this.osc.frequency.cancelScheduledValues(this.audioCtx.currentTime);
         this.osc.frequency.linearRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
         this.lfo1FreqAmt.gain.linearRampToValueAtTime(freq[1], this.audioCtx.currentTime + this.minGlideS);
         this.env1FreqAmt.gain.linearRampToValueAtTime(freq[2], this.audioCtx.currentTime + this.minGlideS);
     }
 
-    noteOn(midiNote, velocity) {
+    noteOn(midiNote, velocity, isLegato) {
         this.midiNote = midiNote;
         this.velocity = velocity;
         this.updateEnvPeakLevel();
@@ -241,7 +241,9 @@ class MiniFMSynthOsc {
         // this.lfo1FreqAmt.gain.setValueAtTime(freq[1], 0);
         // this.env1FreqAmt.gain.setValueAtTime(freq[2], 0);
         //console.log(`setting env1 freq amt to ${freq[2]}`);
-        this.env.trigger();
+        if (!isLegato || (this.paramValue("env_trigMode") == 0)) {
+            this.env.trigger();
+        }
     }
 
     release() {
@@ -319,7 +321,6 @@ class MiniFMSynthVoice {
         this.midiNote = 0;
         this.velocity = 0;
         this.timestamp = null; // when did the note on start?
-        this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
 
         this.oscillators = [
             new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc0_"),
@@ -464,7 +465,7 @@ class MiniFMSynthVoice {
     }
 
     get IsPlaying() {
-        return !!this.timestamp;
+        return this.isConnected && !!this.timestamp;
     }
 
     SetParamValue(paramID, newVal) {
@@ -517,20 +518,19 @@ class MiniFMSynthVoice {
         this.oscillators.forEach(o => { o.updateOscFreq(); });
     }
 
-    physicalAndMusicalNoteOn(midiNote, velocity) {
-        this.isPhysicallyHeld = true;
+    physicalAndMusicalNoteOn(midiNote, velocity, isLegato) {
         this.timestamp = new Date();
         this.midiNote = midiNote;
         this.velocity = velocity;
 
-        this.env1.trigger();
-        this.oscillators.forEach(o => {
-            o.noteOn(midiNote, velocity);
-        });
-    }
+        //console.log(`note on ${midiNote} islegato? ${isLegato} trigmode=${9}`);
 
-    physicallyRelease() {
-        this.isPhysicallyHeld = false;
+        if (!isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
+            this.env1.trigger();
+        }
+        this.oscillators.forEach(o => {
+            o.noteOn(midiNote, velocity, isLegato);
+        });
     }
 
     musicallyRelease(midiNote) {
@@ -554,7 +554,6 @@ class MiniFMSynthVoice {
         });
         this.midiNote = 0;
         this.timestamp = null;
-        this.isPhysicallyHeld = false;
         this.velocity = 0;
     }
 

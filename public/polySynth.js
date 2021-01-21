@@ -14,7 +14,6 @@ class PolySynthVoice {
         this.pitchBend = 0; // semitones
 
         this.timestamp = null; // when did the note on start?
-        this.isPhysicallyHeld = false; // differentiate notes sustaining due to pedal or physically playing
 
         this.detune = this.instrumentSpec.GetParamByID("detune").currentValue;
         this.cutoff = this.instrumentSpec.GetParamByID("cutoff").currentValue;
@@ -229,7 +228,6 @@ class PolySynthVoice {
     }
 
     physicalAndMusicalNoteOn(midiNote, velocity) {
-        this.isPhysicallyHeld = true;
         this.timestamp = new Date();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -244,10 +242,6 @@ class PolySynthVoice {
         this.gainEnvelope.trigger();
     }
 
-    physicallyRelease() {
-        this.isPhysicallyHeld = false;
-    }
-
     musicallyRelease() {
         this.timestamp = null;
         this.midiNote = 0;
@@ -260,7 +254,6 @@ class PolySynthVoice {
         if (this.gainEnvelope) this.gainEnvelope.reset();
         this.midiNote = 0;
         this.timestamp = null;
-        this.isPhysicallyHeld = false;
         this.velocity = 0;
         this.pitchBend = 0;
     }
@@ -288,6 +281,8 @@ class GeneralPolySynth {
         this.isConnected = false;
 
         this.isPoly = true; // poly or monophonic mode.
+
+        this.physicallyHeldNotes = []; // array of [midiNote, velocity, voiceIndex] in order of note on.
     }
 
     connect() {
@@ -307,54 +302,71 @@ class GeneralPolySynth {
         this.isConnected = false;
     }
 
+    // sent when there's a MIDI note on event.
     NoteOn(midiNote, velocity) {
         if (!this.isConnected) this.connect();
 
         // find a free voice and delegate.
-        let suitableVoice = null;
+        //let suitableVoice = null;
+        let suitableVoiceIndex = -1;
 
         if (this.isPoly) {
             for (let i = 0; i < this.voices.length; ++i) {
                 let v = this.voices[i];
                 if (!v.IsPlaying) {
-                    suitableVoice = v; // found a free voice; use it.
+                    suitableVoiceIndex = i;// found a free voice; use it.
                     break;
                 }
 
                 // voice is playing, but in this case find the oldest voice.
                 if (!suitableVoice) {
-                    suitableVoice = v;
+                    suitableVoiceIndex = i;
                 } else {
                     if (v.timestamp < suitableVoice.timestamp) {
-                        suitableVoice = v;
+                        suitableVoiceIndex = i;
                     }
                 }
             }
+            this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
+            this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, false);
         } else {
             // monophonic always just uses the 1st voice.
-            suitableVoice = this.voices[0];
+            suitableVoiceIndex = 0;
         }
 
-        suitableVoice.physicalAndMusicalNoteOn(midiNote, velocity);
+        let isLegato = this.physicallyHeldNotes.length > 0;
+        this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
+        this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, isLegato);
     }
 
     NoteOff(midiNote) {
         if (!this.isConnected) this.connect();
 
-        let v = null;
+        this.physicallyHeldNotes.removeIf(n => n[0] == midiNote);
+        if (this.isSustainPedalDown) return;
+
         if (this.isPoly) {
-            v = this.voices.find(v => v.midiNote == midiNote);
+            let v = this.voices.find(v => v.midiNote == midiNote && v.IsPlaying);
             if (!v) return;
-            v.physicallyRelease(midiNote);
-            if (!this.isSustainPedalDown) {
-                v.musicallyRelease(midiNote);
-            }
+            v.musicallyRelease(midiNote);
             return;
         }
-        v.physicallyRelease(midiNote);
-        if (!this.isSustainPedalDown) {
-            v.musicallyRelease(midiNote);
+
+        // monophonic doesn't need a search.
+        if (this.physicallyHeldNotes.length == 0) {
+            this.voices[0].musicallyRelease(midiNote);
+            return;
         }
+
+        // if the note off is'nt the one the voice is currently playing then nothing else needs to be done.
+        if (midiNote != this.voices[0].midiNote) {
+            return;
+        }
+
+        // for monophonic here we always act like "triller" triggering. this lets oscillators pop the queue of freqs, 
+        // and decide whether to trigger envelopes based on trigger behavior.
+        let n = this.physicallyHeldNotes[this.physicallyHeldNotes.length - 1];
+        this.voices[0].physicalAndMusicalNoteOn(n[0], n[1], true);
     }
 
     PedalDown() {
@@ -362,24 +374,23 @@ class GeneralPolySynth {
         this.isSustainPedalDown = true;
     }
 
+    VoiceIsPhysicalyHeld(voiceIndex) {
+        return this.physicallyHeldNotes.find(x => x[2] == voiceIndex) != null;
+    }
+
     PedalUp() {
         if (!this.isConnected) this.connect();
         this.isSustainPedalDown = false;
-        if (this.isPoly) {
-            this.voices.forEach(v => {
-                if (!v.isPhysicallyHeld && v.IsPlaying) {
-                    v.musicallyRelease();
-                }
-            });
-        } else {
-            let v = this.voices[0];
-            if (!v.isPhysicallyHeld && v.IsPlaying) {
+        // for each voice that's NOT physically held, but is playing, release the note.
+        this.voices.forEach((v, vindex) => {
+            if (v.IsPlaying && !this.VoiceIsPhysicalyHeld(vindex)) {
                 v.musicallyRelease();
             }
-        }
+        });
     }
 
     AllNotesOff() {
+        this.physicallyHeldNotes = [];
         this.voices.forEach(v => v.AllNotesOff());
     }
 
