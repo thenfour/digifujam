@@ -180,14 +180,49 @@
           "groupName": "Osc A",
           "parameterType": "intParam",
           "minValue": 0,
-          "maxValue": 3,
+          "maxValue": 4,
           "enumNames": [
             "Sine",
             "Square",
             "Saw",
-            "Tri"
+            "Tri",
+            "PWM"
           ]
         },
+        {
+          "paramID": "osc0_pwm_base",
+          "name": "Duty cycle",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_pwmLFO1",
+          "name": "LFO1 mod",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_pwmLFO2",
+          "name": "LFO2 mod",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc0_pwmENV",
+          "name": "ENV mod",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+
+
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc0_freq_mult",
@@ -362,14 +397,49 @@
           "groupName": "Osc B",
           "parameterType": "intParam",
           "minValue": 0,
-          "maxValue": 3,
+          "maxValue": 4,
           "enumNames": [
             "Sine",
             "Square",
             "Saw",
-            "Tri"
+            "Tri",
+            "PWM"
           ]
         },
+
+        {
+          "paramID": "osc1_pwm_base",
+          "name": "Duty cycle",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_pwmLFO1",
+          "name": "LFO1 mod",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_pwmLFO2",
+          "name": "LFO2 mod",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc1_pwmENV",
+          "name": "ENV mod",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc1_freq_mult",
@@ -544,14 +614,51 @@
           "groupName": "Osc C",
           "parameterType": "intParam",
           "minValue": 0,
-          "maxValue": 3,
+          "maxValue": 4,
           "enumNames": [
             "Sine",
             "Square",
             "Saw",
-            "Tri"
+            "Tri",
+            "PWM"
           ]
         },
+
+
+        {
+          "paramID": "osc2_pwm_base",
+          "name": "Duty cycle",
+          "groupName": "Osc C",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc2_pwmLFO1",
+          "name": "LFO1 mod",
+          "groupName": "Osc C",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc2_pwmLFO2",
+          "name": "LFO2 mod",
+          "groupName": "Osc C",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc2_pwmENV",
+          "name": "ENV mod",
+          "groupName": "Osc C",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+
+
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc2_freq_mult",
@@ -726,14 +833,49 @@
           "groupName": "Osc D",
           "parameterType": "intParam",
           "minValue": 0,
-          "maxValue": 3,
+          "maxValue": 4,
           "enumNames": [
             "Sine",
             "Square",
             "Saw",
-            "Tri"
+            "Tri",
+            "PWM"
           ]
         },
+
+        {
+          "paramID": "osc3_pwm_base",
+          "name": "Duty cycle",
+          "groupName": "Osc D",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc3_pwmLFO1",
+          "name": "LFO1 mod",
+          "groupName": "Osc D",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc3_pwmLFO2",
+          "name": "LFO2 mod",
+          "groupName": "Osc D",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "osc3_pwmENV",
+          "name": "ENV mod",
+          "groupName": "Osc D",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 1.0
+        },
+
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc3_freq_mult",
@@ -902,7 +1044,6 @@
           "minValue": -1.0,
           "maxValue": 1.0
         },
-
         {
           "paramID": "filterType",
           "name": "Type",
@@ -917,7 +1058,6 @@
             "BP"
           ]
         },
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "filterFreq",
@@ -951,7 +1091,6 @@
           "minValue": -5000.0,
           "maxValue": 5000.0
         },
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "filterQ",
@@ -985,55 +1124,120 @@
           "minValue": -20.0,
           "maxValue": 20.0
         }
-
-
-
-
       ],
       "presets": [
         {
-          "patchName": "musicbox",
-          "masterGain": 0.678,
+          "patchName": "basic wave",
+          "masterGain": 1,
           "verbMix": 0.458,
-          "algo": "0",
+          "algo": "4",
+          "voicing": "1",
+          "enable_osc0": true,
+          "enable_osc1": 0,
+          "enable_osc2": 0,
+          "enable_osc3": 0,
           "lfo1_wave": "0",
           "lfo1_speed": 3.46,
+          "lfo2_wave": 0,
+          "lfo2_speed": 0,
           "env1_a": 0.01,
           "env1_d": 1.82,
           "env1_s": 0,
           "env1_r": 0.4,
-          "osc0_wave": "0",
-          "osc0_freq_mult": 12,
+          "env1_trigMode": 0,
+          "osc0_wave": "1",
+          "osc0_freq_mult": 1,
           "osc0_freq_abs": 0,
           "osc0_lfo1_pitchDepth": 0,
-          "osc0_env1_pitchDepth": 0.38400000000000034,
+          "osc0_lfo2_pitchDepth": 0,
+          "osc0_env1_pitchDepth": 0,
+          "osc0_portamento": 0,
           "osc0_level": 0.238,
           "osc0_lfo1_gainAmt": 0,
+          "osc0_lfo2_gainAmt": 0,
           "osc0_vel_scale": 1,
           "osc0_key_scale": 1,
           "osc0_a": 0.01,
           "osc0_d": 0.5880000000000001,
           "osc0_s": 0.09,
           "osc0_r": 0.01,
+          "osc0_env_trigMode": 0,
           "osc0_pan": 0,
           "osc0_lfo1PanAmt": 0,
+          "osc0_lfo2PanAmt": 0,
           "osc0_env1PanAmt": -0.01200000000000001,
           "osc1_wave": 0,
           "osc1_freq_mult": 1,
           "osc1_freq_abs": 0,
           "osc1_lfo1_pitchDepth": 0.12,
+          "osc1_lfo2_pitchDepth": 0,
           "osc1_env1_pitchDepth": -0.28800000000000026,
+          "osc1_portamento": 0,
           "osc1_level": 1,
           "osc1_lfo1_gainAmt": 0,
+          "osc1_lfo2_gainAmt": 0,
           "osc1_vel_scale": 0,
           "osc1_key_scale": -0.08399999999999996,
           "osc1_a": 0.01,
           "osc1_d": 3.8080000000000003,
           "osc1_s": 0,
           "osc1_r": 0.01,
+          "osc1_env_trigMode": 0,
           "osc1_pan": 0.17199999999999993,
           "osc1_lfo1PanAmt": 0.524,
-          "osc1_env1PanAmt": -0.14
+          "osc1_lfo2PanAmt": 0,
+          "osc1_env1PanAmt": -0.14,
+          "osc2_wave": 0,
+          "osc2_freq_mult": 0,
+          "osc2_freq_abs": 0,
+          "osc2_lfo1_pitchDepth": 0,
+          "osc2_lfo2_pitchDepth": 0,
+          "osc2_env1_pitchDepth": 0,
+          "osc2_portamento": 0,
+          "osc2_level": 0,
+          "osc2_lfo1_gainAmt": 0,
+          "osc2_lfo2_gainAmt": 0,
+          "osc2_vel_scale": 0,
+          "osc2_key_scale": 0,
+          "osc2_a": 0,
+          "osc2_d": 0,
+          "osc2_s": 0,
+          "osc2_r": 0,
+          "osc2_env_trigMode": 0,
+          "osc2_pan": 0,
+          "osc2_lfo1PanAmt": 0,
+          "osc2_lfo2PanAmt": 0,
+          "osc2_env1PanAmt": 0,
+          "osc3_wave": 0,
+          "osc3_freq_mult": 0,
+          "osc3_freq_abs": 0,
+          "osc3_lfo1_pitchDepth": 0,
+          "osc3_lfo2_pitchDepth": 0,
+          "osc3_env1_pitchDepth": 0,
+          "osc3_portamento": 0,
+          "osc3_level": 0,
+          "osc3_lfo1_gainAmt": 0,
+          "osc3_lfo2_gainAmt": 0,
+          "osc3_vel_scale": 0,
+          "osc3_key_scale": 0,
+          "osc3_a": 0,
+          "osc3_d": 0,
+          "osc3_s": 0,
+          "osc3_r": 0,
+          "osc3_env_trigMode": 0,
+          "osc3_pan": 0,
+          "osc3_lfo1PanAmt": 0,
+          "osc3_lfo2PanAmt": 0,
+          "osc3_env1PanAmt": 0,
+          "filterType": 0,
+          "filterFreq": 0,
+          "filterFreqLFO1": 0,
+          "filterFreqLFO2": 0,
+          "filterFreqENV": 0,
+          "filterQ": 0,
+          "filterQLFO1": 0,
+          "filterQLFO2": 0,
+          "filterQENV": 0
         },
         {
           "patchName": "sine",
@@ -1168,7 +1372,6 @@
             "Poly"
           ]
         },
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "lfo1_wave",
@@ -1248,7 +1451,6 @@
           "minValue": 0.00,
           "maxValue": 7.0
         },
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "a",

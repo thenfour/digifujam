@@ -28,10 +28,12 @@ class MiniFMSynthOsc {
         each oscillator has                                                          
 
 
-                                                                                                                      |gain          |gain     |gain
-                                                                                   |gain               |gain     [lfo1PanAmt]+[lfo2PanAmt]+[env1PanAmt]
-                                                                            [lfo1LevelAmt]       [lfo2LevelAmt]              |
-        [env1 0 to 1]-->[env1FreqAmt] -->                                      |gain                |gain                    |pan
+                          [lfo1PWMAmt]+[lfo2PWMAmt]+[env1PWMAmt]
+                                            |
+                                            |                                                                        |gain          |gain     |gain
+                                            |                                      |gain               |gain     [lfo1PanAmt]+[lfo2PanAmt]+[env1PanAmt]
+                                            |width                          [lfo1LevelAmt]       [lfo2LevelAmt]              |
+        [env1 0 to 1]-->[env1FreqAmt] -->   |                                  |gain                |gain                    |pan
          [lfo-1 to 1]-->[lfo1FreqAmt] --> [osc] ----> [envGainer]   ---> [lfo1gainer]  -----> [lfo2gainer]  ------------> [panner]  ---> dest
          [lfo-1 to 1]-->[lfo2FreqAmt] -->               | <gain>
                                            [env]--> [envPeak]
@@ -64,13 +66,33 @@ class MiniFMSynthOsc {
         this.lfo2FreqAmt.gain.value = 1.0;
         lfo2.connect(this.lfo2FreqAmt);
 
+        // lfo1PWMAmt
+        this.lfo1PWMAmt = this.audioCtx.createGain();
+        this.lfo1PWMAmt.gain.value = this.paramValue("pwmLFO1");
+        lfo1.connect(this.lfo1PWMAmt);
+
+        // lfo2PWMAmt
+        this.lfo2PWMAmt = this.audioCtx.createGain();
+        this.lfo2PWMAmt.gain.value = this.paramValue("pwmLFO2");
+        lfo2.connect(this.lfo2PWMAmt);
+
+        // env1PWMAmt
+        this.env1PWMAmt = this.audioCtx.createGain();
+        this.env1PWMAmt.gain.value = this.paramValue("pwmENV");
+        env1.connect(this.env1PWMAmt);
+
         // osc
-        this.osc = this.audioCtx.createOscillator();
+        this.osc = this.audioCtx.createPulseOscillator();
         this._setOscWaveform();
         this.osc.start();
         this.lfo1FreqAmt.connect(this.osc.frequency);
         this.lfo2FreqAmt.connect(this.osc.frequency);
         this.env1FreqAmt.connect(this.osc.frequency);
+
+        this.osc.width.value = this.paramValue("pwm_base");
+        this.lfo1PWMAmt.connect(this.osc.width);
+        this.lfo2PWMAmt.connect(this.osc.width);
+        this.env1PWMAmt.connect(this.osc.width);
 
         // env
         this.env = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
@@ -161,6 +183,13 @@ class MiniFMSynthOsc {
         this.lfo2FreqAmt.disconnect();
         this.lfo2FreqAmt = null;
 
+        this.lfo1PWMAmt.disconnect();
+        this.lfo1PWMAmt = null;
+        this.lfo2PWMAmt.disconnect();
+        this.lfo2PWMAmt = null;
+        this.env1PWMAmt.disconnect();
+        this.env1PWMAmt = null;
+
         // osc
         this.osc.stop();
         this.osc.disconnect();
@@ -219,8 +248,8 @@ class MiniFMSynthOsc {
     }
 
     _setOscWaveform() {
-        const shapes = ["sine", "square", "sawtooth", "triangle", "sine"];
-        this.osc.type = shapes[this.paramValue("wave")];
+        const shapes = ["sine", "square", "sawtooth", "triangle", "pwm"];
+        this.osc.setWaveformType(shapes[this.paramValue("wave")]);
     }
 
     // returns [frequency of note,
@@ -344,6 +373,18 @@ class MiniFMSynthOsc {
                 break;
             case "lfo2_gainAmt":
                 this.lfo2LevelAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "pwm_base":
+                this.osc.width.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "pwmLFO1":
+                this.lfo1PWMAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "pwmLFO2":
+                this.lfo2PWMAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "pwmENV":
+                this.env1PWMAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }
