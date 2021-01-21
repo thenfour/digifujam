@@ -59,11 +59,17 @@ class MiniFMSynthOsc {
         this.lfo1FreqAmt.gain.value = 1.0;
         lfo1.connect(this.lfo1FreqAmt);
 
+        // lfo2FreqAmt
+        this.lfo2FreqAmt = this.audioCtx.createGain();
+        this.lfo2FreqAmt.gain.value = 1.0;
+        lfo2.connect(this.lfo2FreqAmt);
+
         // osc
         this.osc = this.audioCtx.createOscillator();
         this._setOscWaveform();
         this.osc.start();
         this.lfo1FreqAmt.connect(this.osc.frequency);
+        this.lfo2FreqAmt.connect(this.osc.frequency);
         this.env1FreqAmt.connect(this.osc.frequency);
 
         // env
@@ -99,10 +105,25 @@ class MiniFMSynthOsc {
         this.lfo1LevelAmt.connect(this.lfo1gainer.gain);
         this.envGainer.connect(this.lfo1gainer);
 
+        // lfo2LevelAmt
+        this.lfo2LevelAmt = this.audioCtx.createGain();
+        this.lfo2LevelAmt.gain.value = this.paramValue("lfo2_gainAmt");
+        lfo2_01.connect(this.lfo2LevelAmt);
+
+        // lfo2gainer
+        this.lfo2gainer = this.audioCtx.createGain();
+        this.lfo2LevelAmt.connect(this.lfo2gainer.gain);
+        this.lfo1gainer.connect(this.lfo2gainer);
+
         // lfo1PanAmt
         this.lfo1PanAmt = this.audioCtx.createGain();
         this.lfo1PanAmt.gain.value = this.paramValue("lfo1PanAmt");
         lfo1.connect(this.lfo1PanAmt);
+
+        // lfo2PanAmt
+        this.lfo2PanAmt = this.audioCtx.createGain();
+        this.lfo2PanAmt.gain.value = this.paramValue("lfo2PanAmt");
+        lfo2.connect(this.lfo2PanAmt);
 
         // env1PanAmt
         this.env1PanAmt = this.audioCtx.createGain();
@@ -113,8 +134,9 @@ class MiniFMSynthOsc {
         this.panner = this.audioCtx.createStereoPanner();
         this.panner.pan.value = this.paramValue("pan");
         this.lfo1PanAmt.connect(this.panner.pan);
+        this.lfo2PanAmt.connect(this.panner.pan);
         this.env1PanAmt.connect(this.panner.pan);
-        this.lfo1gainer.connect(this.panner);
+        this.lfo2gainer.connect(this.panner);
 
 
         // allow FM and output connections
@@ -134,6 +156,10 @@ class MiniFMSynthOsc {
         // lfo1FreqAmt
         this.lfo1FreqAmt.disconnect();
         this.lfo1FreqAmt = null;
+
+        // lfo2FreqAmt
+        this.lfo2FreqAmt.disconnect();
+        this.lfo2FreqAmt = null;
 
         // osc
         this.osc.stop();
@@ -161,9 +187,21 @@ class MiniFMSynthOsc {
         this.lfo1gainer.disconnect();
         this.lfo1gainer = null;
 
+        // lfo2LevelAmt
+        this.lfo2LevelAmt.disconnect();
+        this.lfo2LevelAmt = null;
+
+        // lfo2gainer
+        this.lfo2gainer.disconnect();
+        this.lfo2gainer = null;
+
         // lfo1PanAmt
         this.lfo1PanAmt.disconnect();
         this.lfo1PanAmt = null;
+
+        // lfo1PanAmt
+        this.lfo2PanAmt.disconnect();
+        this.lfo2PanAmt = null;
 
         // env1PanAmt
         this.env1PanAmt.disconnect();
@@ -188,6 +226,7 @@ class MiniFMSynthOsc {
     // returns [frequency of note,
     //   lfo1_pitchDepth frequency delta,
     //   env1_pitchDepth frequency delta,
+    //   lfo2_pitchDepth frequency delta,
     // ]
     getFreqs() {
         let pbsemis = this.instrumentSpec.GetParamByID("pb").currentValue;
@@ -197,10 +236,12 @@ class MiniFMSynthOsc {
             FrequencyFromMidiNote(this.midiNote + pbsemis) * freqmul + freqabs,
             FrequencyFromMidiNote(this.midiNote + pbsemis + this.paramValue("lfo1_pitchDepth")) * freqmul + freqabs,
             FrequencyFromMidiNote(this.midiNote + pbsemis + this.paramValue("env1_pitchDepth")) * freqmul + freqabs,
+            FrequencyFromMidiNote(this.midiNote + pbsemis + this.paramValue("lfo2_pitchDepth")) * freqmul + freqabs,
         ];
         // since the modulated pitches modulate the osc, subtract.
         ret[1] -= ret[0];
         ret[2] -= ret[0];
+        ret[3] -= ret[0];
         return ret;
     }
 
@@ -229,6 +270,7 @@ class MiniFMSynthOsc {
         //this.osc.frequency.cancelAndHoldAtTime(this.audioCtx.currentTime);
         //this.osc.frequency.exponentialRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
         this.lfo1FreqAmt.gain.linearRampToValueAtTime(freq[1], this.audioCtx.currentTime + this.minGlideS);
+        this.lfo2FreqAmt.gain.linearRampToValueAtTime(freq[3], this.audioCtx.currentTime + this.minGlideS);
         this.env1FreqAmt.gain.linearRampToValueAtTime(freq[2], this.audioCtx.currentTime + this.minGlideS);
     }
 
@@ -263,6 +305,7 @@ class MiniFMSynthOsc {
                 break;
             case "env1_pitchDepth":
             case "lfo1_pitchDepth":
+            case "lfo2_pitchDepth":
             case "freq_mult":
             case "freq_abs":
                 this.updateOscFreq(true);
@@ -290,11 +333,17 @@ class MiniFMSynthOsc {
             case "lfo1PanAmt":
                 this.lfo1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
+            case "lfo2PanAmt":
+                this.lfo2PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
             case "env1PanAmt":
                 this.env1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "lfo1_gainAmt":
                 this.lfo1LevelAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "lfo2_gainAmt":
+                this.lfo2LevelAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }
@@ -466,7 +515,7 @@ class MiniFMSynthVoice {
                 let lfo1_01 = this.lfo1_01;
                 let lfo2 = this.lfo2;
                 let lfo2_01 = this.lfo2_01;
-                
+
                 this.disconnect();
                 this.connect(lfo1, lfo1_01, lfo2, lfo2_01);
                 break;

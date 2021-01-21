@@ -210,7 +210,6 @@
           "minValue": 0.004,
           "maxValue": 0.25
         },
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc0_level",
@@ -330,8 +329,6 @@
           "minValue": -1.0,
           "maxValue": 1.0
         },
-
-
         {
           "paramID": "osc1_wave",
           "name": "Wave",
@@ -395,9 +392,6 @@
           "minValue": 0.004,
           "maxValue": 0.25
         },
-
-
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "osc1_level",
@@ -564,53 +558,61 @@
           "osc1_env1PanAmt": -0.14
         },
         {
-          "patchName": "basic",
+          "patchName": "sine",
           "masterGain": 1,
           "verbMix": 0.122,
           "algo": "1",
-          "voicing": "0",
+          "voicing": "1",
           "lfo1_wave": "0",
           "lfo1_speed": 3.46,
+          "lfo2_wave": "1",
+          "lfo2_speed": 0,
           "env1_a": 0.01,
           "env1_d": 0.406,
           "env1_s": 0,
           "env1_r": 0.4,
           "env1_trigMode": "0",
           "osc0_wave": "0",
-          "osc0_freq_mult": 12,
+          "osc0_freq_mult": 1,
           "osc0_freq_abs": 0,
-          "osc0_portamento": 0.474,
           "osc0_lfo1_pitchDepth": 0,
-          "osc0_env1_pitchDepth": 0.38400000000000034,
-          "osc0_level": 0,
+          "osc0_lfo2_pitchDepth": 0,
+          "osc0_env1_pitchDepth": 0,
+          "osc0_portamento": 0.004,
+          "osc0_level": 1,
           "osc0_lfo1_gainAmt": 0,
-          "osc0_vel_scale": 1,
-          "osc0_key_scale": 1,
-          "osc0_a": 0.01,
-          "osc0_d": 0.5880000000000001,
-          "osc0_s": 0.09,
+          "osc0_lfo2_gainAmt": 0,
+          "osc0_vel_scale": 0,
+          "osc0_key_scale": 0,
+          "osc0_a": 0.004,
+          "osc0_d": 0,
+          "osc0_s": 1,
           "osc0_r": 0.01,
           "osc0_env_trigMode": "0",
           "osc0_pan": 0,
           "osc0_lfo1PanAmt": 0,
-          "osc0_env1PanAmt": -0.01200000000000001,
-          "osc1_wave": "0",
+          "osc0_lfo2PanAmt": 0,
+          "osc0_env1PanAmt": 0,
+          "osc1_wave": "2",
           "osc1_freq_mult": 1,
           "osc1_freq_abs": 0,
-          "osc1_portamento": 0.01,
           "osc1_lfo1_pitchDepth": 0.12,
+          "osc1_lfo2_pitchDepth": 0,
           "osc1_env1_pitchDepth": 0,
-          "osc1_level": 1,
+          "osc1_portamento": 0.01,
+          "osc1_level": 0,
           "osc1_lfo1_gainAmt": 0,
+          "osc1_lfo2_gainAmt": 0,
           "osc1_vel_scale": 0,
           "osc1_key_scale": -0.08399999999999996,
           "osc1_a": 0.01,
-          "osc1_d": 0.9520000000000001,
-          "osc1_s": 0.95,
+          "osc1_d": 4.452,
+          "osc1_s": 1,
           "osc1_r": 0.01,
           "osc1_env_trigMode": "1",
           "osc1_pan": 0.17199999999999993,
-          "osc1_lfo1PanAmt": 0.524,
+          "osc1_lfo1PanAmt": 0,
+          "osc1_lfo2PanAmt": 0.1279999999999999,
           "osc1_env1PanAmt": -0.14
         }
       ]
