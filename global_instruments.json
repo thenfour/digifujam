@@ -901,7 +901,78 @@
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
+        },
+
+        {
+          "paramID": "filterType",
+          "name": "Type",
+          "groupName": "Filter",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Off",
+            "LP",
+            "HP",
+            "BP"
+          ]
+        },
+
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterFreq",
+          "name": "Freq",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 15000.0
+        },
+        {
+          "paramID": "filterFreqLFO1",
+          "name": "LFO1 mod",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -5000.0,
+          "maxValue": 5000.0
+        },
+        {
+          "paramID": "filterFreqLFO2",
+          "name": "LFO2 mod",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -5000.0,
+          "maxValue": 5000.0
+        },
+        {
+          "paramID": "filterFreqENV",
+          "name": "ENV mod",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -5000.0,
+          "maxValue": 5000.0
+        },
+
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterQ",
+          "name": "Q",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 15.0
+        },
+        {
+          "paramID": "filterQENV",
+          "name": "ENV mod",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -15.0,
+          "maxValue": 15.0
         }
+
+
+
+
       ],
       "presets": [
         {
