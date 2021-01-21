@@ -592,6 +592,18 @@
           "maxValue": 0.5
         },
         {
+          "paramID": "voicing",
+          "name": "Voicing",
+          "groupName": "master",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Mono",
+            "Poly"
+          ]
+        },
+        {
           "cssClassName": "paramSpacer",
           "paramID": "a",
           "name": "A",
