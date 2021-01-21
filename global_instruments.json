@@ -959,15 +959,31 @@
           "groupName": "Filter",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 15.0
+          "maxValue": 20.0
+        },
+        {
+          "paramID": "filterQLFO1",
+          "name": "LFO1 mod",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -20.0,
+          "maxValue": 20.0
+        },
+        {
+          "paramID": "filterQLFO2",
+          "name": "LFO2 mod",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -20.0,
+          "maxValue": 20.0
         },
         {
           "paramID": "filterQENV",
           "name": "ENV mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
-          "minValue": -15.0,
-          "maxValue": 15.0
+          "minValue": -20.0,
+          "maxValue": 20.0
         }
 
 
@@ -1116,14 +1132,22 @@
           "name": "Wave",
           "parameterType": "intParam",
           "minValue": 0,
-          "maxValue": 3,
+          "maxValue": 4,
           "currentValue": 1,
           "enumNames": [
             "Sine",
             "Square",
             "Saw",
-            "Tri"
+            "Tri",
+            "PWM"
           ]
+        },
+        {
+          "paramID": "dutyCycle",
+          "name": "Duty cyle",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
         },
         {
           "paramID": "detune",
@@ -1144,6 +1168,87 @@
             "Poly"
           ]
         },
+
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "lfo1_wave",
+          "name": "LFO1 wave",
+          "groupName": "Mod LFO1",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
+        },
+        {
+          "paramID": "lfo1_speed",
+          "name": "LFO1 speed",
+          "groupName": "Mod LFO1",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 10.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "lfo2_wave",
+          "name": "LFO2 wave",
+          "groupName": "Mod LFO2",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
+        },
+        {
+          "paramID": "lfo2_speed",
+          "name": "LFO2 speed",
+          "groupName": "Mod LFO2",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 10.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "env1_a",
+          "name": "Attack",
+          "groupName": "Mod Envelope",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 4.0
+        },
+        {
+          "paramID": "env1_d",
+          "name": "Decay",
+          "groupName": "Mod Envelope",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "env1_s",
+          "name": "Sustain",
+          "groupName": "Mod Envelope",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "env1_r",
+          "name": "Release",
+          "groupName": "Mod Envelope",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+
         {
           "cssClassName": "paramSpacer",
           "paramID": "a",

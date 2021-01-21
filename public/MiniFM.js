@@ -377,6 +377,7 @@ class MiniFMSynthVoice {
 
         this.modulationGainers = [];
 
+        this.isFilterConnected = false;
         this.isConnected = false;
     }
 
@@ -389,12 +390,12 @@ class MiniFMSynthVoice {
 
         /*
           (lfos)------->
-          [env1]------->[child oscillators] --------------> [filter] -----------> [masterDryGain]
+          [env1]------->[child oscillators] -->[oscSum]--> [filter] -----------> [masterDryGain]
                                                             |    |              > [masterWetGain]
                                                        freq |   | Q
-                                          [filterFreqLFO1Amt]   [filterQENVAmt]
-                                         +[filterFreqLFO2Amt]
-                                         +[filterFreqENVAmt]
+                                          [filterFreqLFO1Amt]   [filterQLFO1Amt]
+                                         +[filterFreqLFO2Amt]   [filterQLFO2Amt]
+                                         +[filterFreqENVAmt]   [filterQENVAmt]
         
         */
 
@@ -424,6 +425,10 @@ class MiniFMSynthVoice {
             this.oscillators[3].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
         }
 
+        // oscSum
+        this.oscSum = this.audioCtx.createGain();
+        this.oscSum.gain.value = 1;
+
         // filterFreqLFO1Amt
         this.filterFreqLFO1Amt = this.audioCtx.createGain();
         this.filterFreqLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
@@ -439,6 +444,16 @@ class MiniFMSynthVoice {
         this.filterFreqENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
         this.env1.connect(this.filterFreqENVAmt);
 
+        // filterQLFO1Amt
+        this.filterQLFO1Amt = this.audioCtx.createGain();
+        this.filterQLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
+        this.lfo1.connect(this.filterQLFO1Amt);
+
+        // filterQLFO2Amt
+        this.filterQLFO2Amt = this.audioCtx.createGain();
+        this.filterQLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
+        this.lfo2.connect(this.filterQLFO2Amt);
+
         // filterQENVAmt
         this.filterQENVAmt = this.audioCtx.createGain();
         this.filterQENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
@@ -446,7 +461,7 @@ class MiniFMSynthVoice {
 
         // filter
         this.filter = this.audioCtx.createBiquadFilter();
-        this._SetFiltType();
+        // type set later.
         this.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         this.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
 
@@ -454,7 +469,13 @@ class MiniFMSynthVoice {
         this.filterFreqLFO2Amt.connect(this.filter.frequency);
         this.filterFreqENVAmt.connect(this.filter.frequency);
 
+        this.filterQLFO1Amt.connect(this.filter.Q);
+        this.filterQLFO2Amt.connect(this.filter.Q);
         this.filterQENVAmt.connect(this.filter.Q);
+
+        this.oscSum.connect(this.filter);
+
+        this.isFilterConnected = true;
 
         // masterDryGain
         this.masterDryGain = this.audioCtx.createGain();
@@ -485,7 +506,7 @@ class MiniFMSynthVoice {
         };
         let out = (osc) => {
             if (!osc.isConnected) return;
-            osc.outputNode.connect(this.filter);
+            osc.outputNode.connect(this.oscSum);
         };
 
         //   "enumNames": [
@@ -529,6 +550,9 @@ class MiniFMSynthVoice {
         // connect to outside.
         this.masterDryGain.connect(this.dryDestination);
         this.masterWetGain.connect(this.wetDestination);
+
+        this._SetFiltType();
+
         this.isConnected = true;
     }
 
@@ -540,6 +564,9 @@ class MiniFMSynthVoice {
         this.lfo2 = null;
         this.lfo2_01 = null;
 
+        this.oscSum.disconnect();
+        this.oscSum = null;
+
         this.filterFreqLFO1Amt.disconnect();
         this.filterFreqLFO1Amt = null;
 
@@ -548,6 +575,12 @@ class MiniFMSynthVoice {
 
         this.filterFreqENVAmt.disconnect();
         this.filterFreqENVAmt = null;
+
+        this.filterQLFO1Amt.disconnect();
+        this.filterQLFO1Amt = null;
+
+        this.filterQLFO2Amt.disconnect();
+        this.filterQLFO2Amt = null;
 
         this.filterQENVAmt.disconnect();
         this.filterQENVAmt = null;
@@ -576,15 +609,43 @@ class MiniFMSynthVoice {
     }
 
     _SetFiltType() {
+        let disableFilter = () => {
+            if (!this.isFilterConnected) return;
+            // oscSum] --> [masterDryGain
+            //           > [masterWetGain
+            this.filter.disconnect();
+
+            this.oscSum.disconnect();
+            this.oscSum.connect(this.masterDryGain);
+            this.oscSum.connect(this.masterWetGain);
+
+            this.isFilterConnected = false;
+        };
+        let enableFilter = () => {
+            if (this.isFilterConnected) return;
+            this.oscSum.disconnect();
+            this.oscSum.connect(this.filter);
+
+            this.filter.disconnect();
+            this.filter.connect(this.masterDryGain);
+            this.filter.connect(this.masterWetGain);
+
+            this.isFilterConnected = true;
+        };
         switch (parseInt(this.instrumentSpec.GetParamByID("filterType").currentValue)) {
             case 0: // off
+                disableFilter();
+                return;
             case 1:
+                enableFilter();
                 this.filter.type = "lowpass";
                 return;
             case 2:
+                enableFilter();
                 this.filter.type = "highpass";
                 return;
             case 3:
+                enableFilter();
                 this.filter.type = "bandpass";
                 return;
         }
@@ -636,6 +697,12 @@ class MiniFMSynthVoice {
             case "filterFreqENV":
                 this.filterFreqENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
+            case "filterQLFO1":
+                this.filterQLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "filterQLFO2":
+                this.filterQLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
             case "filterQENV":
                 this.filterQENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
@@ -685,8 +752,6 @@ class MiniFMSynthVoice {
         this.timestamp = new Date();
         this.midiNote = midiNote;
         this.velocity = velocity;
-
-        //console.log(`note on ${midiNote} islegato? ${isLegato} trigmode=${9}`);
 
         if (!isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
             this.env1.trigger();

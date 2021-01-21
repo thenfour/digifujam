@@ -38,22 +38,10 @@ class PolySynthVoice {
         
         */
 
-        // oscillators
-        this.oscillator1 = this.audioCtx.createOscillator();
-        this.oscillator2 = this.audioCtx.createOscillator();
-        this.oscillator3 = this.audioCtx.createOscillator();
-        this._setOscWaveform(this.instrumentSpec.GetParamByID("wave").currentValue);
-        this.oscillator1.start(0);  // Go ahead and start up the oscillator
-        this.oscillator2.start(0);  // Go ahead and start up the oscillator
-        this.oscillator3.start(0);  // Go ahead and start up the oscillator
-
         // panners
         this.osc1Panner = this.audioCtx.createStereoPanner();
-        this.oscillator1.connect(this.osc1Panner);
         this.osc2Panner = this.audioCtx.createStereoPanner();
-        this.oscillator2.connect(this.osc2Panner);
         this.osc3Panner = this.audioCtx.createStereoPanner();
-        this.oscillator3.connect(this.osc3Panner);
         this.osc1Panner.pan.value = -.5;
         this.osc2Panner.pan.value = 0.0;
         this.osc3Panner.pan.value = +.5;
@@ -101,6 +89,8 @@ class PolySynthVoice {
         this.masterWetGain.connect(this.wetDestination);
 
         this.isConnected = true;
+
+        this._setOscWaveform();
     }
 
     disconnect() {
@@ -109,15 +99,10 @@ class PolySynthVoice {
 
         this.gainEnvelope.stop();
 
-        this.oscillator1.stop();
-        this.oscillator2.stop();
-        this.oscillator3.stop();
+        this._disconnectOscillators();
 
         this.gainEnvelope.stop();
 
-        this.oscillator1.disconnect();
-        this.oscillator2.disconnect();
-        this.oscillator3.disconnect();
 
         this.osc1Panner.disconnect();
         this.osc2Panner.disconnect();
@@ -137,9 +122,6 @@ class PolySynthVoice {
 
         // set to null
         this.gainEnvelope = null;
-        this.oscillator1 = null;
-        this.oscillator2 = null;
-        this.oscillator3 = null;
         this.osc1Panner = null;
         this.osc2Panner = null;
         this.osc3Panner = null;
@@ -154,11 +136,53 @@ class PolySynthVoice {
         return !!this.timestamp;
     }
 
-    _setOscWaveform(specVal) {
-        const shapes = ["sine", "square", "sawtooth", "triangle", "sine"];
-        this.oscillator1.type = shapes[specVal];
-        this.oscillator2.type = shapes[specVal];
-        this.oscillator3.type = shapes[specVal];
+    _createOscillators() {
+        // oscillators
+        let waveType = this.instrumentSpec.GetParamByID("wave").currentValue
+        const shapes = ["sine", "square", "sawtooth", "triangle", "pwm"];
+        let shape = shapes[waveType];
+        if (shape == "pwm") {
+            this.oscillator1 = this.audioCtx.createPulseOscillator();
+            this.oscillator2 = this.audioCtx.createPulseOscillator();
+            this.oscillator3 = this.audioCtx.createPulseOscillator();
+            let dc = this.instrumentSpec.GetParamByID("dutyCycle").currentValue;
+            this.oscillator1.width.value = dc;
+            this.oscillator2.width.value = dc;
+            this.oscillator3.width.value = dc;
+        } else {
+            this.oscillator1 = this.audioCtx.createOscillator();
+            this.oscillator2 = this.audioCtx.createOscillator();
+            this.oscillator3 = this.audioCtx.createOscillator();
+            this.oscillator1.type = shape;
+            this.oscillator2.type = shape;
+            this.oscillator3.type = shape;
+        }
+
+        // set wave not yet.
+        this.oscillator1.start(0);  // Go ahead and start up the oscillator
+        this.oscillator2.start(0);  // Go ahead and start up the oscillator
+        this.oscillator3.start(0);  // Go ahead and start up the oscillator
+        this.oscillator1.connect(this.osc1Panner);
+        this.oscillator2.connect(this.osc2Panner);
+        this.oscillator3.connect(this.osc3Panner);
+    }
+
+    _disconnectOscillators() {
+        if (!this.oscillator1) return;
+        this.oscillator1.stop();
+        this.oscillator2.stop();
+        this.oscillator3.stop();
+        this.oscillator1.disconnect();
+        this.oscillator2.disconnect();
+        this.oscillator3.disconnect();
+        this.oscillator1 = null;
+        this.oscillator2 = null;
+        this.oscillator3 = null;
+    }
+
+    _setOscWaveform() {
+        this._disconnectOscillators();
+        this._createOscillators();
     }
 
     // returns [drygain, wetgain]
@@ -175,6 +199,13 @@ class PolySynthVoice {
             case "pb":
                 this.PitchBend(newVal);
                 break;
+            case "dutyCycle":
+                if (this.oscillator1.width) {
+                    this.oscillator1.width.value = newVal;
+                    this.oscillator2.width.value = newVal;
+                    this.oscillator3.width.value = newVal;
+                }
+                break;
             case "masterGain":
             case "verbMix":
                 let levels = this.getGainLevels();
@@ -189,7 +220,7 @@ class PolySynthVoice {
                 this.oscillator3.frequency.linearRampToValueAtTime(freqs[2], ClientSettings.InstrumentParamIntervalMS / 1000);
                 break;
             case "wave":
-                this._setOscWaveform(newVal);
+                this._setOscWaveform();
                 break;
             case "q":
                 this.filter.Q.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);

@@ -165,6 +165,8 @@ class DigifuSynth {
 			reverbjs.extend(this.audioCtx);
 		}
 
+		initPWM(this.audioCtx);
+
 		//
 		// (instruments) --> (instrumentDryGainers) --------------------------> [masterGainNode] -->  (destination)
 		//               --> (instrumentWetGainers) ----> [masterReverb] ----->
