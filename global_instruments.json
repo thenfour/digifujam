@@ -56,6 +56,15 @@
             "Poly"
           ]
         },
+        
+        {
+          "paramID": "enable_osc1",
+          "name": "A",
+          "groupName": "Oscillators enabled",
+          "parameterType": "cbxParam"
+        },
+
+        
         {
           "cssClassName": "paramSpacer",
           "paramID": "lfo1_wave",

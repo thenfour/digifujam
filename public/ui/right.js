@@ -118,6 +118,44 @@ class InstTextParam extends React.Component {
 
 
 
+// props.instrument
+class InstCbxParam extends React.Component {
+    constructor(props) {
+        super(props);
+        this.inputID = "cbxparam_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.renderedValue = false;
+    }
+    onChange = (e) => {
+        let val = e.target.checked;
+        this.renderedValue = val;
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
+    }
+    componentDidMount() {
+        // set initial values.
+        let val = !!this.props.param.currentValue;
+        $("#" + this.inputID).prop("checked", val);
+        this.renderedValue = val;
+    }
+    render() {
+        if (this.renderedValue != this.props.param.currentValue) {
+            //has been externally modified. update ui.
+            let val = !!this.props.param.currentValue;
+            this.renderedValue = val;
+            $("#" + this.inputID).prop("checked", val);
+        }
+
+        return (
+            <li className={this.props.param.cssClassName} style={{display:"inline"}}>
+                <input id={this.inputID} type="checkbox" onChange={this.onChange}
+                //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
+                />
+                <label>{this.props.param.name}</label>
+            </li>
+        );
+    }
+}
+
+
 
 
 // props.instrument
@@ -315,6 +353,8 @@ class InstrumentParamGroup extends React.Component {
                     return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
                 case InstrumentParamType.textParam:
                     return (<InstTextParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstTextParam>);
+                case InstrumentParamType.cbxParam:
+                    return (<InstCbxParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstCbxParam>);
             }
         };
 
@@ -426,20 +466,20 @@ class InstrumentParams extends React.Component {
 
         return (
             <div className="component">
-                <h2 style={{cursor: 'pointer'}} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
+                <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
                 <div style={shownStyle}>
-                <ul className="instParamList">
-                    <li>
-                        <button onClick={this.onOpenClicked}>Presets {arrowText}</button>
-                        <button onClick={this.onReleaseClick}>Release</button>
-                    </li>
-                    {presetControls}
-                    {presetList}
-                    <li>
-                        Params🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
-                    </li>
-                </ul>
-                {groups}
+                    <ul className="instParamList">
+                        <li>
+                            <button onClick={this.onOpenClicked}>Presets {arrowText}</button>
+                            <button onClick={this.onReleaseClick}>Release</button>
+                        </li>
+                        {presetControls}
+                        {presetList}
+                        <li>
+                            Params🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
+                        </li>
+                    </ul>
+                    {groups}
                 </div>
             </div>
         );

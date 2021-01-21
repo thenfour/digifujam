@@ -119,6 +119,7 @@ const InstrumentParamType = {
     intParam: "intParam",
     floatParam: "floatParam",
     textParam: "textParam",
+    cbxParam: "cbxParam",
 };
 
 class InstrumentParam {
@@ -493,6 +494,9 @@ let sanitizeInstrumentParamVal = function (param, newVal) {
         if (typeof (newVal) != 'string') return "";
         let ret = newVal.trim();
         return ret.substring(0, param.maxTextLength);
+    }
+    if (param.parameterType == InstrumentParamType.cbxParam) {
+        return !!newVal;
     }
     // numeric types...
     // just clamp to the range.
