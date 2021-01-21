@@ -225,8 +225,10 @@ class MiniFMSynthOsc {
 
         //console.log(`ramping from ${this.osc.frequency.value} to ${freq[0]} in ${portamentoDurationS} sec`);
 
-        this.osc.frequency.cancelScheduledValues(this.audioCtx.currentTime);
-        this.osc.frequency.linearRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
+        // for some reason, calling exponentialRampToValueAtTime or linearRampToValueAtTime will make a sudden jump of the current value. setTargetAtTime is the only one that works smoothly.
+        this.osc.frequency.setTargetAtTime(freq[0], this.audioCtx.currentTime, portamentoDurationS);
+        //this.osc.frequency.cancelAndHoldAtTime(this.audioCtx.currentTime);
+        //this.osc.frequency.exponentialRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
         this.lfo1FreqAmt.gain.linearRampToValueAtTime(freq[1], this.audioCtx.currentTime + this.minGlideS);
         this.env1FreqAmt.gain.linearRampToValueAtTime(freq[2], this.audioCtx.currentTime + this.minGlideS);
     }

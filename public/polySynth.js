@@ -319,10 +319,10 @@ class GeneralPolySynth {
                 }
 
                 // voice is playing, but in this case find the oldest voice.
-                if (!suitableVoice) {
+                if (suitableVoiceIndex == -1) {
                     suitableVoiceIndex = i;
                 } else {
-                    if (v.timestamp < suitableVoice.timestamp) {
+                    if (v.timestamp < this.voices[suitableVoiceIndex].timestamp) {
                         suitableVoiceIndex = i;
                     }
                 }

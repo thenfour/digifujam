@@ -113,8 +113,11 @@
                 return sustain;
             if (time > lastRelease.reltime)
                 return base;
-            return curveValue(rcurve, lastRelease.v,
+            let ret = curveValue(rcurve, lastRelease.v,
                 adjustCurve(rcurve, lastRelease.v, base), time, lastRelease.reltime);
+            if (isNaN(ret))
+                return 0;
+            return ret;
         }
     
         function curveTo(param, type, value, time, duration){
@@ -155,11 +158,12 @@
                     this.offset.setValueAtTime(triggeredValue(i), when + i);
                 return this;
             }
-    
+
             if (interruptedLine)
                 this.offset.linearRampToValueAtTime(v, when);
-            else
+            else {
                 this.offset.setTargetAtTime(v, when, 0.001);
+            }
             curveTo(this.offset, acurve, adjustCurve(acurve, v, peak), when, atktime);
             this.offset.setTargetAtTime(peak, when + atktime, 0.001);
             if (hold > 0)
