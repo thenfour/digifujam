@@ -286,10 +286,18 @@ class GeneralPolySynth {
         }
         this.isSustainPedalDown = false;
         this.isConnected = false;
+
+        this.isPoly = true; // poly or monophonic mode.
     }
 
     connect() {
-        this.voices.forEach(v => { v.connect(); });
+        this.isPoly = (this.instrumentSpec.GetParamByID("voicing").currentValue == 1);
+        if (this.isPoly) {
+            this.voices.forEach(v => { v.connect(); });
+        } else {
+            this.isPoly = false;
+            this.voices[0].connect();
+        }
         this.isConnected = true;
     }
 
@@ -305,21 +313,26 @@ class GeneralPolySynth {
         // find a free voice and delegate.
         let suitableVoice = null;
 
-        for (let i = 0; i < this.voices.length; ++i) {
-            let v = this.voices[i];
-            if (!v.IsPlaying) {
-                suitableVoice = v; // found a free voice; use it.
-                break;
-            }
+        if (this.isPoly) {
+            for (let i = 0; i < this.voices.length; ++i) {
+                let v = this.voices[i];
+                if (!v.IsPlaying) {
+                    suitableVoice = v; // found a free voice; use it.
+                    break;
+                }
 
-            // voice is playing, but in this case find the oldest voice.
-            if (!suitableVoice) {
-                suitableVoice = v;
-            } else {
-                if (v.timestamp < suitableVoice.timestamp) {
+                // voice is playing, but in this case find the oldest voice.
+                if (!suitableVoice) {
                     suitableVoice = v;
+                } else {
+                    if (v.timestamp < suitableVoice.timestamp) {
+                        suitableVoice = v;
+                    }
                 }
             }
+        } else {
+            // monophonic always just uses the 1st voice.
+            suitableVoice = this.voices[0];
         }
 
         suitableVoice.physicalAndMusicalNoteOn(midiNote, velocity);
@@ -328,28 +341,42 @@ class GeneralPolySynth {
     NoteOff(midiNote) {
         if (!this.isConnected) this.connect();
 
-        let v = this.voices.find(v => v.midiNote == midiNote);
-        if (!v) return;
-        v.physicallyRelease();
+        let v = null;
+        if (this.isPoly) {
+            v = this.voices.find(v => v.midiNote == midiNote);
+            if (!v) return;
+            v.physicallyRelease(midiNote);
+            if (!this.isSustainPedalDown) {
+                v.musicallyRelease(midiNote);
+            }
+            return;
+        }
+        v.physicallyRelease(midiNote);
         if (!this.isSustainPedalDown) {
-            v.musicallyRelease();
+            v.musicallyRelease(midiNote);
         }
     }
 
     PedalDown() {
         if (!this.isConnected) this.connect();
-
         this.isSustainPedalDown = true;
     }
 
     PedalUp() {
         if (!this.isConnected) this.connect();
         this.isSustainPedalDown = false;
-        this.voices.forEach(v => {
+        if (this.isPoly) {
+            this.voices.forEach(v => {
+                if (!v.isPhysicallyHeld && v.IsPlaying) {
+                    v.musicallyRelease();
+                }
+            });
+        } else {
+            let v = this.voices[0];
             if (!v.isPhysicallyHeld && v.IsPlaying) {
                 v.musicallyRelease();
             }
-        });
+        }
     }
 
     AllNotesOff() {
@@ -358,11 +385,36 @@ class GeneralPolySynth {
 
     SetParamValues(patchObj) {
         let keys = Object.keys(patchObj);
-        this.voices.forEach(voice => {
-            keys.forEach(paramID => { voice.SetParamValue(paramID, patchObj[paramID]); });
+        keys.forEach(paramID => {
+            switch (paramID) {
+                case "voicing":
+                    {
+                        let willBePoly = (patchObj[paramID] == 1);
+                        if (!!willBePoly != !!this.isPoly) {
+                            // transition from/to poly or monophonic.
+                            this.isPoly = willBePoly;
+                            if (willBePoly) {
+                                // connect voices [1->]
+                                for (let i = 1; i < this.voices.length; ++i) {
+                                    this.voices[i].connect();
+                                }
+                            } else {
+                                // disconnect voices [1->]
+                                for (let i = 1; i < this.voices.length; ++i) {
+                                    this.voices[i].disconnect();
+                                }
+                            }
+                        }
+                        break;
+                    }
+                default:
+                    this.voices.forEach(voice => {
+                        voice.SetParamValue(paramID, patchObj[paramID]);
+                    });
+                    break;
+            }
         });
-    }
-
+    };
 };
 
 

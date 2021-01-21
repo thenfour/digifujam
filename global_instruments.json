@@ -34,7 +34,7 @@
         },
         {
           "paramID": "algo",
-          "name": "algo",
+          "name": "FM algo",
           "groupName": "master",
           "parameterType": "intParam",
           "minValue": 0,
@@ -45,10 +45,22 @@
           ]
         },
         {
+          "paramID": "voicing",
+          "name": "Voicing",
+          "groupName": "master",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Mono",
+            "Poly"
+          ]
+        },
+        {
           "cssClassName": "paramSpacer",
           "paramID": "lfo1_wave",
           "name": "LFO1 wave",
-          "groupName": "master",
+          "groupName": "Mod LFO1",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 3,
@@ -62,7 +74,7 @@
         {
           "paramID": "lfo1_speed",
           "name": "LFO1 speed",
-          "groupName": "master",
+          "groupName": "Mod LFO1",
           "parameterType": "floatParam",
           "minValue": 0.0,
           "maxValue": 10.0
@@ -71,7 +83,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "env1_a",
           "name": "Env1 A",
-          "groupName": "master",
+          "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -79,7 +91,7 @@
         {
           "paramID": "env1_d",
           "name": "Env1 D",
-          "groupName": "master",
+          "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -87,7 +99,7 @@
         {
           "paramID": "env1_s",
           "name": "Env1 S",
-          "groupName": "master",
+          "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -95,10 +107,22 @@
         {
           "paramID": "env1_r",
           "name": "Env1 R",
-          "groupName": "master",
+          "groupName": "Mod Envelope",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
+        },
+        {
+          "paramID": "env1_trigMode",
+          "name": "Env1 Trig",
+          "groupName": "Mod Envelope",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Always",
+            "Triller"
+          ]
         },
         {
           "paramID": "osc0_wave",
@@ -130,6 +154,14 @@
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 10000.0
+        },
+        {
+          "paramID": "osc0_portamento",
+          "name": "Portamento",
+          "groupName": "Osc A",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 3.0
         },
         {
           "paramID": "osc0_lfo1_pitchDepth",
@@ -214,6 +246,18 @@
           "maxValue": 7.0
         },
         {
+          "paramID": "osc0_env_trigMode",
+          "name": "Env Trig",
+          "groupName": "Osc A",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Always",
+            "Triller"
+          ]
+        },
+        {
           "cssClassName": "paramSpacer",
           "paramID": "osc0_pan",
           "name": "Pan",
@@ -268,6 +312,14 @@
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 10000.0
+        },
+        {
+          "paramID": "osc1_portamento",
+          "name": "Portamento",
+          "groupName": "Osc B",
+          "parameterType": "floatParam",
+          "minValue": 0,
+          "maxValue": 3.0
         },
         {
           "paramID": "osc1_lfo1_pitchDepth",
@@ -350,6 +402,18 @@
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
+        },
+        {
+          "paramID": "osc1_env_trigMode",
+          "name": "Env Trig",
+          "groupName": "Osc B",
+          "parameterType": "intParam",
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Always",
+            "Triller"
+          ]
         },
         {
           "cssClassName": "paramSpacer",

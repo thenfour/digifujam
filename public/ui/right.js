@@ -337,6 +337,7 @@ class InstrumentParams extends React.Component {
         this.state = {
             presetListShown: false,
             filterTxt: "",
+            isShown: true,
         };
     }
 
@@ -378,6 +379,10 @@ class InstrumentParams extends React.Component {
         this.setState({ filterTxt: txt });
     };
 
+    onToggleShownClick = () => {
+        this.setState({ isShown: !this.state.isShown });
+    };
+
     render() {
 
         //if (!this.props.instrument.ShouldShowEditor) return null;
@@ -416,10 +421,13 @@ class InstrumentParams extends React.Component {
             filteredParams={filteredParams}
         />));
 
+        const shownStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
+        const mainArrowText = this.state.isShown ? '⯆' : '⯈';
+
         return (
             <div className="component">
-                <h2>{this.props.instrument.getDisplayName()}</h2>
-
+                <h2 style={{cursor: 'pointer'}} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
+                <div style={shownStyle}>
                 <ul className="instParamList">
                     <li>
                         <button onClick={this.onOpenClicked}>Presets {arrowText}</button>
@@ -428,10 +436,11 @@ class InstrumentParams extends React.Component {
                     {presetControls}
                     {presetList}
                     <li>
-                        🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
+                        Params🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
                     </li>
                 </ul>
                 {groups}
+                </div>
             </div>
         );
     }

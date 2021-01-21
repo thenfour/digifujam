@@ -430,6 +430,9 @@ ul.instParamList input[type="range" i] {
 .instParamList .paramSpacer {
     margin-top:15px;
 }
+.instParamList .paramSpacer:first-child {
+    margin-top:0;
+}
 
 .presetList,
 .presetListControls {

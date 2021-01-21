@@ -9,6 +9,8 @@ class MiniFMSynthOsc {
         //this.destination = destination;
         this.paramPrefix = paramPrefix;
 
+        this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
+
         this.midiNote = 0;
         this.velocity = 0;
         this.timestamp = null; // when did the note on start?
@@ -213,24 +215,31 @@ class MiniFMSynthOsc {
         const halfKeyScaleRangeSemis = 12 * 4;
         let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.paramValue("level") * ks * vs;
-        this.envPeak.gain.linearRampToValueAtTime(p, ClientSettings.InstrumentParamIntervalMS / 1000);;
+        this.envPeak.gain.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
     }
 
-    updateOscFreq() {
+    updateOscFreq(alwaysSmooth) {
         let freq = this.getFreqs();
-        this.osc.frequency.linearRampToValueAtTime(freq[0], ClientSettings.InstrumentParamIntervalMS / 1000);
-        this.lfo1FreqAmt.gain.linearRampToValueAtTime(freq[1], ClientSettings.InstrumentParamIntervalMS / 1000);
-        this.env1FreqAmt.gain.linearRampToValueAtTime(freq[2], ClientSettings.InstrumentParamIntervalMS / 1000);
+        //let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
+        let portamentoDurationS = this.paramValue("portamento");
+        if (alwaysSmooth && portamentoDurationS < this.minGlideS) portamentoDurationS = this.minGlideS;
+
+        //console.log(`ramping from ${this.osc.frequency.value} to ${freq[0]} in ${portamentoDurationS} sec`);
+
+        this.osc.frequency.linearRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
+        this.lfo1FreqAmt.gain.linearRampToValueAtTime(freq[1], this.audioCtx.currentTime + this.minGlideS);
+        this.env1FreqAmt.gain.linearRampToValueAtTime(freq[2], this.audioCtx.currentTime + this.minGlideS);
     }
 
     noteOn(midiNote, velocity) {
         this.midiNote = midiNote;
         this.velocity = velocity;
         this.updateEnvPeakLevel();
-        let freq = this.getFreqs();
-        this.osc.frequency.setValueAtTime(freq[0], 0);
-        this.lfo1FreqAmt.gain.setValueAtTime(freq[1], 0);
-        this.env1FreqAmt.gain.setValueAtTime(freq[2], 0);
+        this.updateOscFreq(false);
+        // let freq = this.getFreqs();
+        // this.osc.frequency.setValueAtTime(freq[0], 0);
+        // this.lfo1FreqAmt.gain.setValueAtTime(freq[1], 0);
+        // this.env1FreqAmt.gain.setValueAtTime(freq[2], 0);
         //console.log(`setting env1 freq amt to ${freq[2]}`);
         this.env.trigger();
     }
@@ -248,6 +257,7 @@ class MiniFMSynthOsc {
     }
 
     SetParamValue(strippedParamID, newVal) {
+        if (!this.isConnected) return;
         switch (strippedParamID) {
             case "wave":
                 this._setOscWaveform();
@@ -256,7 +266,7 @@ class MiniFMSynthOsc {
             case "lfo1_pitchDepth":
             case "freq_mult":
             case "freq_abs":
-                this.updateOscFreq();
+                this.updateOscFreq(true);
                 break;
             case "key_scale":
             case "vel_scale":
@@ -276,16 +286,16 @@ class MiniFMSynthOsc {
                 this.env.update({ release: newVal });
                 break;
             case "pan":
-                this.panner.pan.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.panner.pan.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "lfo1PanAmt":
-                this.lfo1PanAmt.gain.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.lfo1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "env1PanAmt":
-                this.env1PanAmt.gain.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.env1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "lfo1_gainAmt":
-                this.lfo1LevelAmt.gain.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.lfo1LevelAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }
@@ -303,6 +313,8 @@ class MiniFMSynthVoice {
         this.audioCtx = audioCtx;
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
+
+        this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
 
         this.midiNote = 0;
         this.velocity = 0;
@@ -456,6 +468,7 @@ class MiniFMSynthVoice {
     }
 
     SetParamValue(paramID, newVal) {
+        if (!this.isConnected) return;
         //console.log(`setting ${paramID} to ${newVal}`);
         if (paramID.startsWith("osc")) {
             let oscid = parseInt(paramID[3]);
@@ -469,8 +482,8 @@ class MiniFMSynthVoice {
             case "masterGain":
             case "verbMix":
                 let levels = this.getGainLevels();
-                this.masterDryGain.gain.linearRampToValueAtTime(levels[0], ClientSettings.InstrumentParamIntervalMS / 1000);
-                this.masterWetGain.gain.linearRampToValueAtTime(levels[1], ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
+                this.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "algo": {
                 this.disconnect();
@@ -482,7 +495,7 @@ class MiniFMSynthVoice {
                 break;
             }
             case "lfo1_speed": {
-                this.lfo1.frequency.linearRampToValueAtTime(newVal, ClientSettings.InstrumentParamIntervalMS / 1000);
+                this.lfo1.frequency.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             }
             case "env1_s":
@@ -520,7 +533,11 @@ class MiniFMSynthVoice {
         this.isPhysicallyHeld = false;
     }
 
-    musicallyRelease() {
+    musicallyRelease(midiNote) {
+        // it's possible you get note off events when you haven't note-on, in case of holding multiple monophonic keys, for example.
+        // or in that case you can even get note off events for notes we're not playing. if it doesn't match, don't note off.
+        if (midiNote != this.midiNote) return;
+
         this.env1.release();
         this.oscillators.forEach(o => {
             o.release();
