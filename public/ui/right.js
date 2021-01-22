@@ -145,7 +145,7 @@ class InstCbxParam extends React.Component {
         }
 
         return (
-            <li className={this.props.param.cssClassName} style={{display:"inline"}}>
+            <li className={this.props.param.cssClassName} style={{ display: "inline" }}>
                 <input id={this.inputID} type="checkbox" onChange={this.onChange}
                 //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
                 />
@@ -330,19 +330,8 @@ class InstrumentPresetList extends React.Component {
 // props.app
 // props.filteredParams
 class InstrumentParamGroup extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            expanded: false,
-        };
-    }
-
-    onLegendClick = () => {
-        this.setState({ expanded: !this.state.expanded });
-    };
-
     render() {
-        const arrowText = this.state.expanded ? '⯆' : '⯈';
+        const arrowText = this.props.isShown ? '⯆' : '⯈';
 
         let createParam = (p) => {
             if (p.hidden) return null;
@@ -360,8 +349,8 @@ class InstrumentParamGroup extends React.Component {
 
         return (
             <fieldset key={this.props.groupName} className="instParamGroup">
-                <legend onClick={this.onLegendClick}>{this.props.groupName} {arrowText}</legend>
-                {this.state.expanded && <ul className="instParamList">
+                <legend onClick={() => this.props.onToggleShown()}>{this.props.groupName} {arrowText}</legend>
+                {this.props.isShown && <ul className="instParamList">
                     {this.props.filteredParams.filter(p => p.groupName == this.props.groupName).map(p => createParam(p))}
                 </ul>}
             </fieldset>
@@ -378,7 +367,9 @@ class InstrumentParams extends React.Component {
             presetListShown: false,
             filterTxt: "",
             isShown: true,
+            shownGroupNames: []
         };
+        this.state.shownGroupNames = this.props.instrument.GetDefaultShownGroupsForInstrument();
     }
 
     onOpenClicked = () => {
@@ -423,6 +414,31 @@ class InstrumentParams extends React.Component {
         this.setState({ isShown: !this.state.isShown });
     };
 
+    clickFocusGroupName(groupName) {
+        if (this.isGroupNameShown(groupName) && this.state.shownGroupNames.length == 1) {
+            // if you click on a showing group name and there are others shown, focus it.
+            // if you click on a showing group name it's the only one shown, then hide all.
+            this.setState({ shownGroupNames: [] });
+            return;
+        }
+        this.setState({ shownGroupNames: [groupName] });
+    };
+    onToggleGroupShown(groupName) {
+        if (this.isGroupNameShown(groupName)) {
+            let x = this.state.shownGroupNames.filter(gn => gn != groupName);
+            this.setState({ shownGroupNames: x });
+            return;
+        }
+
+        this.state.shownGroupNames.push(groupName);
+        this.setState({ shownGroupNames: this.state.shownGroupNames });
+        return;
+    };
+
+    isGroupNameShown(groupName) {
+        return this.state.shownGroupNames.some(gn => gn == groupName);
+    }
+
     render() {
 
         //if (!this.props.instrument.ShouldShowEditor) return null;
@@ -454,10 +470,16 @@ class InstrumentParams extends React.Component {
         let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
         groupNames = groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
 
+        let groupFocusButtons = groupNames.map(groupName => (
+            <button key={groupName} className={this.isGroupNameShown(groupName) ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickFocusGroupName(groupName)}>{groupName}</button>
+        ));
+
         let groups = groupNames.map(groupName => (<InstrumentParamGroup
             groupName={groupName}
             app={this.props.app}
             instrument={this.props.instrument}
+            isShown={this.isGroupNameShown(groupName)}
+            onToggleShown={() => this.onToggleGroupShown(groupName)}
             filteredParams={filteredParams}
         />));
 
@@ -475,10 +497,9 @@ class InstrumentParams extends React.Component {
                         </li>
                         {presetControls}
                         {presetList}
-                        <li>
-                            Params🔎 <TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState>
-                        </li>
                     </ul>
+                    {groupFocusButtons}
+                    <div className="paramFilter">Param filter:<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
                     {groups}
                 </div>
             </div>
@@ -819,13 +840,13 @@ class UserList extends React.Component {
         return (
             <div className="component">
                 <h2>{this.props.app.roomState.roomTitle}</h2>
-                {room && 
-                <ul className="roomStats">
-                    <li>🧑{room.users.length}</li>
-                    <li>🎵{room.stats.noteOns}</li>
-                    <li>👏{room.stats.cheers}</li>
-                    <li>📝{room.stats.messages}</li>
-                </ul>
+                {room &&
+                    <ul className="roomStats">
+                        <li>🧑{room.users.length}</li>
+                        <li>🎵{room.stats.noteOns}</li>
+                        <li>👏{room.stats.cheers}</li>
+                        <li>📝{room.stats.messages}</li>
+                    </ul>
                 }
                 <ul>
                     {users}

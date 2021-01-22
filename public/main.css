@@ -547,5 +547,21 @@ ul.instParamList input[type="range" i] {
 }
 
 
+div.paramFilter
+{
+    
+}
 
+.paramGroupFocusBtn,
+.paramGroupFocusBtn:active,
+.paramGroupFocusBtn:focus
+{
+    border:0;
+    font-weight: normal;
+}
+
+
+.paramGroupFocusBtn.active {
+    background-color: #077;
+}
 

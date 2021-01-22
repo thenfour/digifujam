@@ -211,6 +211,10 @@ class DigifuInstrumentSpec {
             return n;
         });
     }
+
+    GetDefaultShownGroupsForInstrument() {
+        return ["master"];
+    }
 };
 
 const ChatMessageType = {
