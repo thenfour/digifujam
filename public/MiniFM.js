@@ -23,7 +23,7 @@ class MiniFMSynthOsc {
 
     // lfo1 is -1 to 1 range
     // lfo1_01 is 0 to 1 range.
-    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1) {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1, detune) {
         /*
         each oscillator has                                                          
 
@@ -36,6 +36,7 @@ class MiniFMSynthOsc {
         [env1 0 to 1]-->[env1FreqAmt] -->   |                                  |gain                |gain                    |pan
          [lfo-1 to 1]-->[lfo1FreqAmt] --> [osc] ----> [envGainer]   ---> [lfo1gainer]  -----> [lfo2gainer]  ------------> [panner]  ---> dest
          [lfo-1 to 1]-->[lfo2FreqAmt] -->               | <gain>
+         detune --> [detuneScale]------->
                                            [env]--> [envPeak]
 
         
@@ -66,6 +67,11 @@ class MiniFMSynthOsc {
         this.lfo2FreqAmt.gain.value = 1.0;
         lfo2.connect(this.lfo2FreqAmt);
 
+        // detuneScale
+        this.detuneScale = this.audioCtx.createGain();
+        this.detuneScale.gain.value = 1.0; // this is also based on frequency so don't set now.
+        detune.connect(this.detuneScale);
+
         // lfo1PWMAmt
         this.lfo1PWMAmt = this.audioCtx.createGain();
         this.lfo1PWMAmt.gain.value = this.paramValue("pwmLFO1");
@@ -88,6 +94,7 @@ class MiniFMSynthOsc {
         this.lfo1FreqAmt.connect(this.osc.frequency);
         this.lfo2FreqAmt.connect(this.osc.frequency);
         this.env1FreqAmt.connect(this.osc.frequency);
+        this.detuneScale.connect(this.osc.frequency);
 
         this.osc.width.value = this.paramValue("pwm_base");
         this.lfo1PWMAmt.connect(this.osc.width);
@@ -182,6 +189,9 @@ class MiniFMSynthOsc {
         // lfo2FreqAmt
         this.lfo2FreqAmt.disconnect();
         this.lfo2FreqAmt = null;
+
+        this.detuneScale.disconnect();
+        this.detuneScale = null;
 
         this.lfo1PWMAmt.disconnect();
         this.lfo1PWMAmt = null;
@@ -291,13 +301,15 @@ class MiniFMSynthOsc {
         //let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
         let portamentoDurationS = this.paramValue("portamento");
         if (alwaysSmooth && portamentoDurationS < this.minGlideS) portamentoDurationS = this.minGlideS;
-
-        //console.log(`ramping from ${this.osc.frequency.value} to ${freq[0]} in ${portamentoDurationS} sec`);
-
         // for some reason, calling exponentialRampToValueAtTime or linearRampToValueAtTime will make a sudden jump of the current value. setTargetAtTime is the only one that works smoothly.
-        this.osc.frequency.setTargetAtTime(freq[0], this.audioCtx.currentTime, portamentoDurationS);
+        if (portamentoDurationS <= this.minGlideS) {
+            this.osc.frequency.linearRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
+        } else {
+            this.osc.frequency.setTargetAtTime(freq[0], this.audioCtx.currentTime, portamentoDurationS);
+        }
         //this.osc.frequency.cancelAndHoldAtTime(this.audioCtx.currentTime);
         //this.osc.frequency.exponentialRampToValueAtTime(freq[0], this.audioCtx.currentTime + portamentoDurationS);
+        this.detuneScale.gain.linearRampToValueAtTime(this.paramValue("freq_mult"), this.audioCtx.currentTime + this.minGlideS);
         this.lfo1FreqAmt.gain.linearRampToValueAtTime(freq[1], this.audioCtx.currentTime + this.minGlideS);
         this.lfo2FreqAmt.gain.linearRampToValueAtTime(freq[3], this.audioCtx.currentTime + this.minGlideS);
         this.env1FreqAmt.gain.linearRampToValueAtTime(freq[2], this.audioCtx.currentTime + this.minGlideS);
@@ -391,11 +403,7 @@ class MiniFMSynthOsc {
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-algo: ...
-lfo: wave, speed, delay, pitch mod depth 1 2 3 4, amp mod depth 1 2 3 4
-pitch env a, d, s, r, depth 1 2 3 4 
-*/
+
 class MiniFMSynthVoice {
     constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
@@ -437,7 +445,21 @@ class MiniFMSynthVoice {
                                           [filterFreqLFO1Amt]   [filterQLFO1Amt]
                                          +[filterFreqLFO2Amt]   [filterQLFO2Amt]
                                          +[filterFreqENVAmt]   [filterQENVAmt]
-        
+
+
+            so detune is slightly tricky, because it should be controlled at the voice level.
+            it depends on the FM algorithm as well. if A modulates B, then detune them both the same.
+            and it depends how many oscillator groups there are.
+            1 oscillator group = no detuning possible.
+            2 oscillator groups = +detune, -detune
+            3 oscillator groups = +detune, 0, -detune
+            4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
+
+     [detuneLFO1amt]                 
+    +[detuneLFO2amt] --> [detuneSemis] -->[detuneSemisToFreq] -----------------------> [detuneFreq]----------------------> (osc group x)
+    +[detuneENVamt]         +[midiNoteNode]-^                                     |                -->[detuneVar1]------> (osc group x)
+    +[detuneBase]                          -->[midiNoteFreq]-->[midiNoteFreqInv]--                 -->[detuneVar2]------> (osc group x)
+                                                                                                   -->[detuneVar3]------> (osc group x)
         */
 
         // env1
@@ -451,20 +473,6 @@ class MiniFMSynthVoice {
             releaseCurve: 3,
         });
         this.env1.start();
-
-        // child oscillators
-        if (this.instrumentSpec.GetParamByID("enable_osc0").currentValue) {
-            this.oscillators[0].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
-        }
-        if (this.instrumentSpec.GetParamByID("enable_osc1").currentValue) {
-            this.oscillators[1].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
-        }
-        if (this.instrumentSpec.GetParamByID("enable_osc2").currentValue) {
-            this.oscillators[2].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
-        }
-        if (this.instrumentSpec.GetParamByID("enable_osc3").currentValue) {
-            this.oscillators[3].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1);
-        }
 
         // oscSum
         this.oscSum = this.audioCtx.createGain();
@@ -530,8 +538,79 @@ class MiniFMSynthVoice {
         this.masterDryGain.gain.value = gainLevels[0];
         this.masterWetGain.gain.value = gainLevels[1];
 
+
+        // SET UP DETUNE GRAPH
+
+        // detuneLFO1amt
+        this.detuneLFO1amt = this.audioCtx.createGain();
+        this.detuneLFO1amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO1").currentValue;
+        this.lfo1.connect(this.detuneLFO1amt);
+
+        // detuneLFO2amt
+        this.detuneLFO2amt = this.audioCtx.createGain();
+        this.detuneLFO2amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO2").currentValue;
+        this.lfo2.connect(this.detuneLFO2amt);
+
+        // detuneENVamt
+        this.detuneENVamt = this.audioCtx.createGain();
+        this.detuneENVamt.gain.value = this.instrumentSpec.GetParamByID("detuneENV1").currentValue;
+        this.env1.connect(this.detuneENVamt);
+
+        // detuneBase
+        this.detuneBase = this.audioCtx.createConstantSource();
+        this.detuneBase.start();
+        this.detuneBase.offset.value = this.instrumentSpec.GetParamByID("detuneBase").currentValue;
+
+        // detuneSemis
+        this.detuneSemis = this.audioCtx.createGain();
+        this.detuneSemis.gain.value = 1.0;// constant; this just sums up detune semis values.
+        this.detuneBase.connect(this.detuneSemis);
+        this.detuneLFO1amt.connect(this.detuneSemis);
+        this.detuneLFO2amt.connect(this.detuneSemis);
+        this.detuneENVamt.connect(this.detuneSemis);
+
+        // midiNoteNode
+        this.midiNoteNode = this.audioCtx.createConstantSource();
+        this.midiNoteNode.start();
+        this.midiNoteNode.offset.value = 0;
+
+        // detuneSemisToFreq
+        this.detuneSemisToFreq = this.audioCtx.createMidiNoteToFrequencyNode();
+        this.midiNoteNode.connect(this.detuneSemisToFreq);
+        this.detuneSemis.connect(this.detuneSemisToFreq);
+
+        // midiNoteFreq
+        this.midiNoteFreq = this.audioCtx.createMidiNoteToFrequencyNode();
+        this.midiNoteNode.connect(this.midiNoteFreq);
+
+        // midiNoteFreqInv
+        this.midiNoteFreqInv = this.audioCtx.createGain();
+        this.midiNoteFreqInv.gain.value = -1.0;
+        this.midiNoteFreq.connect(this.midiNoteFreqInv);
+
+        // detuneFreq
+        this.detuneFreq = this.audioCtx.createGain();
+        this.detuneFreq.gain.value = 1.0; // constant
+        this.midiNoteFreqInv.connect(this.detuneFreq);
+        this.detuneSemisToFreq.connect(this.detuneFreq);
+
+        // detuneVar1
+        this.detuneVar1 = this.audioCtx.createGain();
+        this.detuneVar1.gain.value = 1.0;// set later in setting up algo.
+        this.detuneFreq.connect(this.detuneVar1);
+
+        // detuneVar2
+        this.detuneVar2 = this.audioCtx.createGain();
+        this.detuneVar2.gain.value = 1.0;// set later in setting up algo.
+        this.detuneFreq.connect(this.detuneVar2);
+
+        // detuneVar3
+        this.detuneVar3 = this.audioCtx.createGain();
+        this.detuneVar3.gain.value = 1.0;// set later in setting up algo.
+        this.detuneFreq.connect(this.detuneVar3);
+
         // set up algo
-        let algo = this.instrumentSpec.GetParamByID("algo").currentValue;
+        let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
 
         let mod = (src, dest) => {
             if (!src.isConnected) return;
@@ -550,13 +629,53 @@ class MiniFMSynthVoice {
             osc.outputNode.connect(this.oscSum);
         };
 
-        //   "enumNames": [
-        //     "[1🡄2🡄3🡄4]",
-        //     "[1🡄2🡄3][4]",
-        //     "[1🡄2][3🡄4]",
-        //     "[1🡄2][3][4]",
-        //     "[1][2][3][4]"
-        switch (parseInt(algo)) {
+        let detuneSources = null;// array of the source nodes for detuning the 4 oscillators
+
+        switch (algo) {
+            case 0: // "[1🡄2🡄3🡄4]",
+                this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
+                detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
+                break;
+            case 1: // "[1🡄2🡄3][4]",
+                this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
+                detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneFreq, this.detuneVar1];
+                break;
+            case 2: // "[1🡄2][3🡄4]",
+                this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
+                detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar1];
+                break;
+            case 3: // "[1🡄2][3][4]",
+                this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
+                this.detuneVar2.gain.value = 0;
+                detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar2];
+                break;
+            case 4: // "[1][2][3][4]"
+                this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
+                this.detuneVar2.gain.value = -0.5;
+                this.detuneVar3.gain.value = -1;
+                detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneVar2, this.detuneVar3];
+                break;
+            default:
+                console.log(`unknown algorithm ${algo}`);
+                break;
+        }
+
+        // create the child oscillators
+        if (this.instrumentSpec.GetParamByID("enable_osc0").currentValue) {
+            this.oscillators[0].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[0]);
+        }
+        if (this.instrumentSpec.GetParamByID("enable_osc1").currentValue) {
+            this.oscillators[1].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[1]);
+        }
+        if (this.instrumentSpec.GetParamByID("enable_osc2").currentValue) {
+            this.oscillators[2].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[2]);
+        }
+        if (this.instrumentSpec.GetParamByID("enable_osc3").currentValue) {
+            this.oscillators[3].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[3]);
+        }
+
+        // and make the FM matrix connections
+        switch (algo) {
             case 0: // "[1🡄2🡄3🡄4]",
                 mod(this.oscillators[3], this.oscillators[2]);
                 mod(this.oscillators[2], this.oscillators[1]);
@@ -638,6 +757,40 @@ class MiniFMSynthVoice {
         this.env1.stop();
         this.env1.disconnect();
         this.env1 = null;
+
+        
+        this.detuneBase.stop();
+        this.midiNoteNode.stop();
+
+        this.detuneLFO1amt.disconnect();
+        this.detuneLFO1amt = null;
+        this.detuneLFO2amt.disconnect();
+        this.detuneLFO2amt = null;
+        this.detuneENVamt.disconnect();
+        this.detuneENVamt = null;
+        this.detuneBase.disconnect();
+        this.detuneBase = null;
+        this.detuneFreq.disconnect();
+        this.detuneFreq = null;
+        this.detuneVar1.disconnect();
+        this.detuneVar1 = null;
+        this.detuneVar2.disconnect();
+        this.detuneVar2 = null;
+        this.detuneVar3.disconnect();
+        this.detuneVar3 = null;
+
+
+        this.detuneSemis.disconnect();
+        this.detuneSemis = null;
+        this.detuneSemisToFreq.disconnect();
+        this.detuneSemisToFreq = null;
+        this.midiNoteNode.disconnect();
+        this.midiNoteNode = null;
+        this.midiNoteFreq.disconnect();
+        this.midiNoteFreq = null;
+        this.midiNoteFreqInv.disconnect();
+        this.midiNoteFreqInv = null;
+
 
         this.oscillators.forEach(o => o.disconnect());
 
@@ -779,20 +932,43 @@ class MiniFMSynthVoice {
             case "env1_r":
                 this.env1.update({ release: newVal });
                 break;
+            case "detuneBase":
+                //console.log(`setting detune base ${newVal}`);
+                this.detuneBase.offset.value = newVal;
+                break;
+            case "detuneLFO1":
+                this.detuneLFO1amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "detuneLFO2":
+                this.detuneLFO2amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "detuneENV1":
+                this.detuneENVamt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
         }
     }
 
     PitchBend(semis) {
+        this._updateBaseFreq();
         this.oscillators.forEach(o => {
             if (!o.isConnected) return;
             o.updateOscFreq();
         });
     }
 
+    _updateBaseFreq() {
+        let pbsemis = this.instrumentSpec.GetParamByID("pb").currentValue;
+        //let freq = FrequencyFromMidiNote(this.midiNote + pbsemis);
+        this.midiNoteNode.offset.value = this.midiNote + pbsemis;
+        //this.detuneFreq.gain.linearRampToValueAtTime(freq, this.audioCtx.currentTime + this.minGlideS);
+    }
+
     physicalAndMusicalNoteOn(midiNote, velocity, isLegato) {
         this.timestamp = new Date();
         this.midiNote = midiNote;
         this.velocity = velocity;
+
+        this._updateBaseFreq();
 
         if (!isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
             this.env1.trigger();

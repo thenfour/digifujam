@@ -166,6 +166,7 @@ class DigifuSynth {
 		}
 
 		initPWM(this.audioCtx);
+		initSynthTools(this.audioCtx);
 
 		//
 		// (instruments) --> (instrumentDryGainers) --------------------------> [masterGainNode] -->  (destination)
