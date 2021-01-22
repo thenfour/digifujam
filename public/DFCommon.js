@@ -90,7 +90,7 @@ const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
     MinCheerIntervalMS: 200,
     InstrumentParamIntervalMS: 50,
-    InstrumentFloatParamDiscreteValues: 500,
+    InstrumentFloatParamDiscreteValues: 64000,
 };
 
 class DigifuUser {
@@ -236,14 +236,50 @@ class DigifuInstrumentSpec {
         let osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
         let osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
         let osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
+        let osc_enabled = [osc0_enabled, osc1_enabled, osc2_enabled, osc3_enabled];
+        let algo = this.GetParamByID("algo").currentValue;
+        // "[1🡄2🡄3🡄4]",
+        //     "[1🡄2🡄3][4]",
+        //     "[1🡄2][3🡄4]",
+        //     "[1🡄2][3][4]",
+        //     "[1][2][3][4]"
+        let oscGroups = [
+            [[0,1,2,3]],
+            [[0,1,2],[3]],
+            [[0,1],[2,3]],
+            [[0,1],[2],[3]],
+            [[0],[1],[2],[3]]
+        ];
+        oscGroups = oscGroups[algo];
+        // now remove oscillators not in use.
+        oscGroups = oscGroups.filter(grp => {
+            return grp.some(osc => osc_enabled[osc]); // at least 1 oscillator in the group is enabled? then keep it.
+        });
+
+        let oscIsPWM = [
+            this.GetParamByID("osc0_wave").currentValue == 4,
+            this.GetParamByID("osc1_wave").currentValue == 4,
+            this.GetParamByID("osc2_wave").currentValue == 4,
+            this.GetParamByID("osc3_wave").currentValue == 4,
+        ];
+
         let ret = this.params.filter(p => {
 
             if (p.paramID === "patchName") return false; // because this is rendered specially.
 
-            if (p.groupName === "Osc A" && !osc0_enabled) return false;
-            if (p.groupName === "Osc B" && !osc1_enabled) return false;
-            if (p.groupName === "Osc C" && !osc2_enabled) return false;
-            if (p.groupName === "Osc D" && !osc3_enabled) return false;
+            if (p.groupName === "∿ Osc A" && !osc0_enabled) return false;
+            if (p.groupName === "∿ Osc B" && !osc1_enabled) return false;
+            if (p.groupName === "∿ Osc C" && !osc2_enabled) return false;
+            if (p.groupName === "∿ Osc D" && !osc3_enabled) return false;
+
+            // detune is not relevant for a single osc or osc group.
+            if (oscGroups.length < 2 && p.groupName === "Detune") return false;
+
+            //duty cycle is pretty intrusive if you're not using PWM
+            if (p.paramID.startsWith("osc0_pwm")) return oscIsPWM[0];
+            if (p.paramID.startsWith("osc1_pwm")) return oscIsPWM[1];
+            if (p.paramID.startsWith("osc2_pwm")) return oscIsPWM[2];
+            if (p.paramID.startsWith("osc3_pwm")) return oscIsPWM[3];
 
             if (p.groupName.toLowerCase().includes(filterTxt)) return true;
             if (p.name.toLowerCase().includes(filterTxt)) return true;

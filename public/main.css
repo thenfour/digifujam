@@ -80,6 +80,14 @@ button:focus {
         "leftArea chatArea rightArea"
         "leftArea pianoArea rightArea";
 }
+#grid-container.wide {
+    grid-template-columns: 270px minmax(0, 1fr) 550px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
+}
+
+#grid-container.wide input[type="range"]
+{
+    width:350px;
+}
 
 #grid-container>* {
     background-color: #222;
@@ -424,8 +432,9 @@ ul.instParamList input[type="range" i] {
     margin: 0;
     padding: 1px;
     min-inline-size: auto;
-    border: 2px solid #066;
+    border: 2px solid #003838;
     border-radius: 15px;
+    background-color:#00cccc0f;
 }
 .instParamGroup legend {
     cursor: pointer;
@@ -437,6 +446,8 @@ ul.instParamList input[type="range" i] {
 .instParamList .paramSpacer:first-child {
     margin-top:0;
 }
+
+
 
 
 .presetList li,
@@ -590,3 +601,30 @@ div.paramFilter input[type="text"]
 }
 
 
+
+input[type="range"].floatParam {
+    border: 0;
+    border-radius: 8px;
+    height: 8px;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+input[type="range"].floatParam::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #0aa;
+    height: 14px;
+    width: 14px;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+.modAmtParam input[type="range"].floatParam {
+    height: 4px;
+}
+
+.modAmtParam input[type="range"].floatParam::-webkit-slider-thumb {
+    background: #aaa;
+    height: 9px;
+    width: 9px;
+}

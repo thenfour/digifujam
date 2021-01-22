@@ -274,6 +274,35 @@ class InstFloatParam extends React.Component {
         this.setSliderVal(p.currentValue);
         this.setCaption(p.currentValue);
         this.setInputTextVal(p.currentValue);
+        switch (p.cssClassName) {
+            case "modAmtParam":
+                stylizeRangeInput(this.sliderID, {
+                    bgNegColorSpec: "#444",
+                    negColorSpec: "#66c",
+                    posColorSpec: "#66c",
+                    bgPosColorSpec: "#444",
+                    zeroVal: this._realValToSliderVal(0),
+                });
+                break;
+            default:
+                stylizeRangeInput(this.sliderID, {
+                    bgNegColorSpec: "#044",
+                    negColorSpec: "#088",
+                    posColorSpec: "#088",
+                    bgPosColorSpec: "#044",
+                    zeroVal: this._realValToSliderVal(0),
+                });
+                break;
+        }
+    }
+
+    _realValToSliderVal(rv) {
+        const p = this.props.param;
+        let sv = rv;
+        sv -= p.minValue;
+        sv /= p.maxValue - p.minValue;
+        sv *= ClientSettings.InstrumentFloatParamDiscreteValues;
+        return sv;
     }
 
     setInputTextVal(val) {
@@ -284,10 +313,7 @@ class InstFloatParam extends React.Component {
     }
     setSliderVal(val) {
         const p = this.props.param;
-        let currentSliderValue = val;
-        currentSliderValue -= p.minValue;
-        currentSliderValue /= p.maxValue - p.minValue;
-        currentSliderValue *= ClientSettings.InstrumentFloatParamDiscreteValues;
+        let currentSliderValue = this._realValToSliderVal(val);
         $("#" + this.sliderID).val(currentSliderValue);
     }
 
@@ -298,10 +324,13 @@ class InstFloatParam extends React.Component {
         } else {
             q.toggle(true);
             // this never works and i don't know why.
-            // setTimeout(() => {
-            //     q.focus();
-            //     q.select();
-            // }, 100);
+            //             setTimeout(() => {
+            //                 let t = document.getElementById(this.valueTextDivID);
+            //                 t.focus();
+            //                 //t.select();
+            // //                    q.focus();
+            //             //    q.select();
+            //             }, 100);
         }
     }
 
@@ -325,7 +354,7 @@ class InstFloatParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.sliderID} type="range" min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
+                <input id={this.sliderID} className="floatParam" type="range" min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
                 />
@@ -372,16 +401,16 @@ class InstrumentParamGroup extends React.Component {
             switch (p.parameterType) {
                 case InstrumentParamType.intParam:
                     if (p.renderAs == "buttons") {
-                        return (<InstButtonsParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstButtonsParam>);
+                        return (<InstButtonsParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstButtonsParam>);
                     } else {
-                        return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
+                        return (<InstIntParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
                     }
                 case InstrumentParamType.floatParam:
-                    return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
+                    return (<InstFloatParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
                 case InstrumentParamType.textParam:
-                    return (<InstTextParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstTextParam>);
+                    return (<InstTextParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstTextParam>);
                 case InstrumentParamType.cbxParam:
-                    return (<InstCbxParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstCbxParam>);
+                    return (<InstCbxParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstCbxParam>);
             }
         };
 
@@ -491,6 +520,10 @@ class InstrumentParams extends React.Component {
         return this.state.showingAllGroups || this.state.shownGroupNames.some(gn => gn == groupName);
     }
 
+    onPanicClick = () => {
+        this.props.app.instrumentPanic();
+    };
+
     render() {
 
         //if (!this.props.instrument.ShouldShowEditor) return null;
@@ -535,7 +568,9 @@ class InstrumentParams extends React.Component {
             <div className="component">
                 <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
                 <div style={shownStyle}>
-                    <button onClick={this.onReleaseClick}>Release</button>
+                <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯇ Wide" : "⯈ Narrow"}</button>
+                <button onClick={this.onPanicClick}>Panic</button>
+                <button onClick={this.onReleaseClick}>Release</button>
 
                     <fieldset className="instParamGroup presetsGroup">
                         <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
@@ -1019,7 +1054,7 @@ class RightArea extends React.Component {
             if (myInstrument) myInstrument = myInstrument.instrument;
         }
         if (myInstrument && myInstrument.params.length > 0) {
-            instParams = (<InstrumentParams app={this.props.app} instrument={myInstrument}></InstrumentParams>);
+            instParams = (<InstrumentParams app={this.props.app} instrument={myInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
         }
         return (
             <div id="rightArea" style={{ gridArea: "rightArea" }}>
@@ -1618,10 +1653,15 @@ class RootArea extends React.Component {
         });
     }
 
+    toggleWideMode = () => {
+        this.setState({ wideMode: !this.state.wideMode });
+    };
+
     constructor(props) {
         super(props);
         this.state = {
-            app: null
+            app: null,
+            wideMode: false,
         };
 
         gStateChangeHandler = this;
@@ -1651,9 +1691,15 @@ class RootArea extends React.Component {
             document.title = title;
         }
 
+        if (this.state.wideMode && (!this.state.app || !this.state.app.myInstrument)) {
+            setTimeout(() => {
+                this.setState({ wideMode: false });
+            }, 1);            
+        }
+
         const url = window.location.href.split('?')[0];
         return (
-            <div id="grid-container">
+            <div id="grid-container" className={this.state.wideMode && "wide"}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span style={{ float: 'left' }}>
                         <a target="_blank" href="https://github.com/thenfour/digifujam">github</a>
@@ -1667,7 +1713,7 @@ class RootArea extends React.Component {
                 <RoomArea app={this.state.app} handleConnect={this.HandleConnect}
                     handleDisconnect={() => this.HandleDisconnect()}
                     ref={this.roomRef} />
-                <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
+                <RightArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
                 <LeftArea app={this.state.app} handleConnect={this.HandleConnect} handleDisconnect={() => this.HandleDisconnect()} />
 
             </div>

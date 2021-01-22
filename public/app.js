@@ -124,7 +124,7 @@ class DigifuApp {
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
     NET_OnPleaseIdentify() {
         // send your details
-        log(`sending identify as ${JSON.stringify(this.myUser)}`);
+        //log(`sending identify as ${JSON.stringify(this.myUser)}`);
         this.net.SendIdentify(this.myUser);
     };
 
@@ -304,7 +304,7 @@ class DigifuApp {
     {
         let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
         if (foundInstrument == null) {
-            log(`NET_OnInstrumentParam instrument not found`);
+            //log(`NET_OnInstrumentParam instrument not found`);
             return;
         }
         this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj);
@@ -481,6 +481,12 @@ class DigifuApp {
 
         presetObj[param.paramID] = newVal;
         this.LoadPresetObj(presetObj);
+    };
+
+    instrumentPanic() {
+        if (this.myInstrument) {
+            this.synth.AllNotesOff(this.myInstrument);
+        }
     };
 
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer, handleRoomWelcome) {

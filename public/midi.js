@@ -76,7 +76,7 @@ DigifuMidi.prototype.OnMIDIMessage = function (message) {
 DigifuMidi.prototype.ListenOnDevice = function (midiInputDeviceName) {
   for (var input of gMidiAccess.inputs.values()) {
     if (input.name == midiInputDeviceName) {
-      log(`attaching to device ${input.name}`);
+      //log(`attaching to device ${input.name}`);
       this.currentlyListeningOn.push(midiInputDeviceName);
       input.onmidimessage = this.OnMIDIMessage.bind(this);
       this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
@@ -87,7 +87,7 @@ DigifuMidi.prototype.ListenOnDevice = function (midiInputDeviceName) {
 DigifuMidi.prototype.StopListeningOnDevice = function (midiInputDeviceName) {
   for (var input of gMidiAccess.inputs.values()) {
     if (input.name == midiInputDeviceName) {
-      log(`detaching from device ${input.name}`);
+      //log(`detaching from device ${input.name}`);
       input.onmidimessage = null;
       this.currentlyListeningOn.removeIf(o => o == midiInputDeviceName);
       this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
@@ -135,7 +135,7 @@ let GetMidiInputDeviceList = function () {
         gMidiAccess = midiAccess;
         resolve(formResult());
       }, () => {
-        log('Could not access your MIDI devices.');
+        //log('Could not access your MIDI devices.');
         reject();
       });
   });

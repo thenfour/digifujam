@@ -81,7 +81,7 @@
         },
         {
           "paramID": "enable_osc3",
-          "name": "D",
+          "name": "D <-- osc enable",
           "groupName": "master",
           "parameterType": "cbxParam"
         },
@@ -182,7 +182,7 @@
         {
           "paramID": "osc0_wave",
           "name": "Wave",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -198,31 +198,34 @@
         {
           "paramID": "osc0_pwm_base",
           "name": "Duty cycle",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_pwmLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_pwmLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_pwmENV",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -231,7 +234,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc0_freq_mult",
           "name": "Freq mul",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 20.0
@@ -239,31 +242,34 @@
         {
           "paramID": "osc0_freq_abs",
           "name": "Freq offset",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1000,
           "maxValue": 9000.0
         },
         {
           "paramID": "osc0_lfo1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc0_lfo2_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc0_env1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
@@ -271,7 +277,7 @@
         {
           "paramID": "osc0_portamento",
           "name": "Portamento",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 0.25
@@ -280,23 +286,25 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc0_level",
           "name": "Gain",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_lfo1_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_lfo2_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -304,7 +312,7 @@
         {
           "paramID": "osc0_vel_scale",
           "name": "Vel scaling",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -312,7 +320,7 @@
         {
           "paramID": "osc0_key_scale",
           "name": "Key scaling",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -321,7 +329,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc0_a",
           "name": "Attack",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -329,7 +337,7 @@
         {
           "paramID": "osc0_d",
           "name": "Decay",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -337,7 +345,7 @@
         {
           "paramID": "osc0_s",
           "name": "Sustain",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -345,7 +353,7 @@
         {
           "paramID": "osc0_r",
           "name": "Release",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -353,7 +361,7 @@
         {
           "paramID": "osc0_env_trigMode",
           "name": "Trigger",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -367,31 +375,34 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc0_pan",
           "name": "Pan",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_lfo1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_lfo2PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc0_env1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc A",
+          "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -399,7 +410,7 @@
         {
           "paramID": "osc1_wave",
           "name": "Wave",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -415,31 +426,34 @@
         {
           "paramID": "osc1_pwm_base",
           "name": "Duty cycle",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_pwmLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_pwmLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_pwmENV",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -448,7 +462,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc1_freq_mult",
           "name": "Freq mul",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 20.0
@@ -456,31 +470,34 @@
         {
           "paramID": "osc1_freq_abs",
           "name": "Freq offset",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1000,
           "maxValue": 9000.0
         },
         {
           "paramID": "osc1_lfo1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc1_lfo2_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc1_env1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
@@ -488,7 +505,7 @@
         {
           "paramID": "osc1_portamento",
           "name": "Portamento",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 0.25
@@ -497,23 +514,25 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc1_level",
           "name": "Gain",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_lfo1_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_lfo2_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -521,7 +540,7 @@
         {
           "paramID": "osc1_vel_scale",
           "name": "Vel scaling",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -529,7 +548,7 @@
         {
           "paramID": "osc1_key_scale",
           "name": "Key scaling",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -538,7 +557,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc1_a",
           "name": "Attack",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -546,7 +565,7 @@
         {
           "paramID": "osc1_d",
           "name": "Decay",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -554,7 +573,7 @@
         {
           "paramID": "osc1_s",
           "name": "Sustain",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -562,7 +581,7 @@
         {
           "paramID": "osc1_r",
           "name": "Release",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -570,7 +589,7 @@
         {
           "paramID": "osc1_env_trigMode",
           "name": "Trigger",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -584,31 +603,34 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc1_pan",
           "name": "Pan",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_lfo1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_lfo2PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc1_env1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc B",
+          "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -616,7 +638,7 @@
         {
           "paramID": "osc2_wave",
           "name": "Wave",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -632,31 +654,34 @@
         {
           "paramID": "osc2_pwm_base",
           "name": "Duty cycle",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_pwmLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_pwmLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_pwmENV",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -665,7 +690,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc2_freq_mult",
           "name": "Freq mul",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 20.0
@@ -673,31 +698,34 @@
         {
           "paramID": "osc2_freq_abs",
           "name": "Freq offset",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1000,
           "maxValue": 9000.0
         },
         {
           "paramID": "osc2_lfo1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc2_lfo2_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc2_env1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
@@ -705,7 +733,7 @@
         {
           "paramID": "osc2_portamento",
           "name": "Portamento",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 0.25
@@ -714,23 +742,25 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc2_level",
           "name": "Gain",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_lfo1_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_lfo2_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -738,7 +768,7 @@
         {
           "paramID": "osc2_vel_scale",
           "name": "Vel scaling",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -746,7 +776,7 @@
         {
           "paramID": "osc2_key_scale",
           "name": "Key scaling",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -755,7 +785,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc2_a",
           "name": "Attack",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -763,7 +793,7 @@
         {
           "paramID": "osc2_d",
           "name": "Decay",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -771,7 +801,7 @@
         {
           "paramID": "osc2_s",
           "name": "Sustain",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -779,7 +809,7 @@
         {
           "paramID": "osc2_r",
           "name": "Release",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -787,7 +817,7 @@
         {
           "paramID": "osc2_env_trigMode",
           "name": "Trigger",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -801,31 +831,34 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc2_pan",
           "name": "Pan",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_lfo1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_lfo2PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc2_env1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc C",
+          "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -833,7 +866,7 @@
         {
           "paramID": "osc3_wave",
           "name": "Wave",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -849,31 +882,34 @@
         {
           "paramID": "osc3_pwm_base",
           "name": "Duty cycle",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_pwmLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_pwmLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_pwmENV",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -882,7 +918,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc3_freq_mult",
           "name": "Freq mul",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 20.0
@@ -890,31 +926,34 @@
         {
           "paramID": "osc3_freq_abs",
           "name": "Freq offset",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1000,
           "maxValue": 9000.0
         },
         {
           "paramID": "osc3_lfo1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc3_lfo2_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
         },
         {
           "paramID": "osc3_env1_pitchDepth",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -24.0,
           "maxValue": 24.0
@@ -922,7 +961,7 @@
         {
           "paramID": "osc3_portamento",
           "name": "Portamento",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 0.25
@@ -931,23 +970,25 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc3_level",
           "name": "Gain",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_lfo1_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_lfo2_gainAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1.0
@@ -955,7 +996,7 @@
         {
           "paramID": "osc3_vel_scale",
           "name": "Vel scaling",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -963,7 +1004,7 @@
         {
           "paramID": "osc3_key_scale",
           "name": "Key scaling",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -972,7 +1013,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc3_a",
           "name": "Attack",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -980,7 +1021,7 @@
         {
           "paramID": "osc3_d",
           "name": "Decay",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -988,7 +1029,7 @@
         {
           "paramID": "osc3_s",
           "name": "Sustain",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -996,7 +1037,7 @@
         {
           "paramID": "osc3_r",
           "name": "Release",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -1004,7 +1045,7 @@
         {
           "paramID": "osc3_env_trigMode",
           "name": "Trigger",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "intParam",
           "renderAs": "buttons",
           "minValue": 0,
@@ -1018,31 +1059,34 @@
           "cssClassName": "paramSpacer",
           "paramID": "osc3_pan",
           "name": "Pan",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_lfo1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_lfo2PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
         },
         {
           "paramID": "osc3_env1PanAmt",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
-          "groupName": "Osc D",
+          "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "minValue": -1.0,
           "maxValue": 1.0
@@ -1089,6 +1133,7 @@
         },
         {
           "paramID": "filterFreqLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
@@ -1097,6 +1142,7 @@
         },
         {
           "paramID": "filterFreqLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
@@ -1105,6 +1151,7 @@
         },
         {
           "paramID": "filterFreqENV",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
@@ -1122,6 +1169,7 @@
         },
         {
           "paramID": "filterQLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
@@ -1130,6 +1178,7 @@
         },
         {
           "paramID": "filterQLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
@@ -1138,6 +1187,7 @@
         },
         {
           "paramID": "filterQENV",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
@@ -1155,6 +1205,7 @@
         },
         {
           "paramID": "detuneLFO1",
+          "cssClassName": "modAmtParam",
           "name": "LFO1 mod",
           "groupName": "Detune",
           "parameterType": "floatParam",
@@ -1163,6 +1214,7 @@
         },
         {
           "paramID": "detuneLFO2",
+          "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
           "groupName": "Detune",
           "parameterType": "floatParam",
@@ -1171,6 +1223,7 @@
         },
         {
           "paramID": "detuneENV1",
+          "cssClassName": "modAmtParam",
           "name": "ENV mod",
           "groupName": "Detune",
           "parameterType": "floatParam",
