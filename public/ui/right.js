@@ -568,7 +568,7 @@ class InstrumentParams extends React.Component {
             <div className="component">
                 <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
                 <div style={shownStyle}>
-                <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯇ Wide" : "⯈ Narrow"}</button>
+                <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow": "⯇ Wide" }</button>
                 <button onClick={this.onPanicClick}>Panic</button>
                 <button onClick={this.onReleaseClick}>Release</button>
 
@@ -583,12 +583,12 @@ class InstrumentParams extends React.Component {
                         {presetList}
                     </fieldset>
                     <div className="paramGroupCtrl">
-                        <div className="groupFocusButtons">
-                            Param groups:
+                        <fieldset className="groupFocusButtons">
+                            <legend>Param groups</legend>
                             <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
                             {groupFocusButtons}
                             <div className="paramFilter">Param filter🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
-                        </div>
+                        </fieldset>
                     </div>
                     {groups}
                 </div>

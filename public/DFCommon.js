@@ -285,7 +285,7 @@ class DigifuInstrumentSpec {
             if (p.name.toLowerCase().includes(filterTxt)) return true;
             if (p.tags.toLowerCase().includes(filterTxt)) return true;
 
-            return true;
+            return false;
         });
         return ret;
     }
