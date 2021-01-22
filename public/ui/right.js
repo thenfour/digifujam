@@ -367,7 +367,8 @@ class InstrumentParams extends React.Component {
             presetListShown: false,
             filterTxt: "",
             isShown: true,
-            shownGroupNames: []
+            shownGroupNames: [],
+            showingAllGroups: false,
         };
         this.state.shownGroupNames = this.props.instrument.GetDefaultShownGroupsForInstrument();
     }
@@ -408,6 +409,11 @@ class InstrumentParams extends React.Component {
 
     onFilterChange = (txt) => {
         this.setState({ filterTxt: txt });
+        this.showAllGroups();
+    };
+
+    showAllGroups = () => {
+        this.setState({showingAllGroups:true});
     };
 
     onToggleShownClick = () => {
@@ -415,28 +421,36 @@ class InstrumentParams extends React.Component {
     };
 
     clickFocusGroupName(groupName) {
-        if (this.isGroupNameShown(groupName) && this.state.shownGroupNames.length == 1) {
+        if (!this.state.showingAllGroups &&  this.isGroupNameShown(groupName) && this.state.shownGroupNames.length == 1) {
             // if you click on a showing group name and there are others shown, focus it.
             // if you click on a showing group name it's the only one shown, then hide all.
-            this.setState({ shownGroupNames: [] });
+            this.setState({ shownGroupNames: [], showingAllGroups:false });
             return;
         }
-        this.setState({ shownGroupNames: [groupName] });
+        this.setState({ shownGroupNames: [groupName], showingAllGroups:false });
     };
     onToggleGroupShown(groupName) {
         if (this.isGroupNameShown(groupName)) {
             let x = this.state.shownGroupNames.filter(gn => gn != groupName);
-            this.setState({ shownGroupNames: x });
+            this.setState({ shownGroupNames: x, showingAllGroups:false });
             return;
         }
 
         this.state.shownGroupNames.push(groupName);
-        this.setState({ shownGroupNames: this.state.shownGroupNames });
+        this.setState({ shownGroupNames: this.state.shownGroupNames, showingAllGroups:false });
         return;
     };
 
+    clickAllGroup = () => {
+        if (this.state.showingAllGroups) {
+            // then show NONE.
+            this.setState({ shownGroupNames: [] });
+        }
+        this.setState({ showingAllGroups: !this.state.showingAllGroups });
+    }
+
     isGroupNameShown(groupName) {
-        return this.state.shownGroupNames.some(gn => gn == groupName);
+        return this.state.showingAllGroups || this.state.shownGroupNames.some(gn => gn == groupName);
     }
 
     render() {
@@ -445,21 +459,13 @@ class InstrumentParams extends React.Component {
 
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
-        let presetControls = this.state.presetListShown && (
-            <li>
-                <ul className="presetListControls">
-                    <li onClick={this.onExportClicked}>Export to clipboard...</li>
-                    <li onClick={this.onImportClicked}>Import from clipboard...</li>
-                </ul>
-            </li>
-        );
-
         let presetList = this.state.presetListShown && (
-            <li><InstrumentPresetList instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList></li>
+            <InstrumentPresetList instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList>
         );
 
         let filterTxt = this.state.filterTxt.toLowerCase();
         let filteredParams = this.props.instrument.params.filter(p => {
+            if (p.paramID == "patchName") return false; // because this is rendered specially.
             if (p.groupName.toLowerCase().includes(filterTxt)) return true;
             if (p.name.toLowerCase().includes(filterTxt)) return true;
             if (p.tags.toLowerCase().includes(filterTxt)) return true;
@@ -490,16 +496,26 @@ class InstrumentParams extends React.Component {
             <div className="component">
                 <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
                 <div style={shownStyle}>
-                    <ul className="instParamList">
-                        <li>
-                            <button onClick={this.onOpenClicked}>Presets {arrowText}</button>
-                            <button onClick={this.onReleaseClick}>Release</button>
-                        </li>
-                        {presetControls}
+                    <button onClick={this.onReleaseClick}>Release</button>
+
+                    <fieldset className="instParamGroup presetsGroup">
+                        <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
+                        {this.state.presetListShown && (<ul className="instParamList">
+                            <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
+                            <li><button onClick={this.onExportClicked}>Export to clipboard...</button></li>
+                            <li><button onClick={this.onImportClicked}>Import from clipboard...</button></li>
+                        </ul>)}
+
                         {presetList}
-                    </ul>
-                    {groupFocusButtons}
-                    <div className="paramFilter">Param filter:<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
+                    </fieldset>
+                    <div className="paramGroupCtrl">
+                        <div className="groupFocusButtons">
+                            Param groups:
+                            <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
+                            {groupFocusButtons}
+                            <div className="paramFilter">Param filter🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
+                        </div>
+                    </div>
                     {groups}
                 </div>
             </div>

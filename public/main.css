@@ -438,10 +438,7 @@ ul.instParamList input[type="range" i] {
     margin-top:0;
 }
 
-.presetList,
-.presetListControls {
-    padding:5px;
-}
+
 .presetList li,
 .presetListControls li {
     cursor: pointer;
@@ -547,9 +544,9 @@ ul.instParamList input[type="range" i] {
 }
 
 
-div.paramFilter
+div.paramFilter input[type="text"]
 {
-    
+    width: 100px;
 }
 
 .paramGroupFocusBtn,
@@ -565,3 +562,14 @@ div.paramFilter
     background-color: #077;
 }
 
+.paramGroupCtrl {
+    background-color: #000;
+    margin: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    border: 0;
+    font-size: small;
+}
+
+.groupFocusButtons {
+}

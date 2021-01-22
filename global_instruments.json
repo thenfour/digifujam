@@ -47,7 +47,7 @@
         {
           "paramID": "algo",
           "name": "FM algo",
-          "groupName": "Oscillators enabled",
+          "groupName": "Oscillator enable",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 4,
@@ -62,25 +62,25 @@
         {
           "paramID": "enable_osc0",
           "name": "A",
-          "groupName": "Oscillators enabled",
+          "groupName": "Oscillator enable",
           "parameterType": "cbxParam"
         },
         {
           "paramID": "enable_osc1",
           "name": "B",
-          "groupName": "Oscillators enabled",
+          "groupName": "Oscillator enable",
           "parameterType": "cbxParam"
         },
         {
           "paramID": "enable_osc2",
           "name": "C",
-          "groupName": "Oscillators enabled",
+          "groupName": "Oscillator enable",
           "parameterType": "cbxParam"
         },
         {
           "paramID": "enable_osc3",
           "name": "D",
-          "groupName": "Oscillators enabled",
+          "groupName": "Oscillator enable",
           "parameterType": "cbxParam"
         },
         {
@@ -133,7 +133,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "env1_a",
           "name": "Attack",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -141,7 +141,7 @@
         {
           "paramID": "env1_d",
           "name": "Decay",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -149,7 +149,7 @@
         {
           "paramID": "env1_s",
           "name": "Sustain",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -157,7 +157,7 @@
         {
           "paramID": "env1_r",
           "name": "Release",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -165,7 +165,7 @@
         {
           "paramID": "env1_trigMode",
           "name": "Trigger",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 1,
@@ -1448,7 +1448,7 @@
           "cssClassName": "paramSpacer",
           "paramID": "env1_a",
           "name": "Attack",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.004,
           "maxValue": 4.0
@@ -1456,7 +1456,7 @@
         {
           "paramID": "env1_d",
           "name": "Decay",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
@@ -1464,7 +1464,7 @@
         {
           "paramID": "env1_s",
           "name": "Sustain",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 1.0
@@ -1472,7 +1472,7 @@
         {
           "paramID": "env1_r",
           "name": "Release",
-          "groupName": "Mod Envelope",
+          "groupName": "Mod Env",
           "parameterType": "floatParam",
           "minValue": 0.00,
           "maxValue": 7.0
