@@ -73,8 +73,8 @@ const ServerSettings = {
     PingIntervalMS: 2000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
 
-    InstrumentIdleTimeoutMS: (1000 * 60),
-    InstrumentAutoReleaseTimeoutMS: (1000 * 60 * 5),
+    InstrumentIdleTimeoutMS: 99999999,// (1000 * 60),
+    InstrumentAutoReleaseTimeoutMS: 99999999,//(1000 * 60 * 5),
 
     UsernameLengthMax: 20,
     UsernameLengthMin: 1,
@@ -172,7 +172,7 @@ class DigifuInstrumentSpec {
         }
         let pn = this.GetParamByID("patchName");
         if (!pn) return this.name;
-        
+
         if (pn.currentValue && pn.currentValue.length > 0 && this.namePrefix && this.namePrefix.length > 0) {
             return this.namePrefix + pn.currentValue;
         }
@@ -214,6 +214,44 @@ class DigifuInstrumentSpec {
 
     GetDefaultShownGroupsForInstrument() {
         return ["master"];
+    }
+
+    ParamChangeCausesRender(p) {
+        if (this.engine != "minifm") return false;
+        switch (p.paramID) {
+            case "enable_osc0":
+            case "enable_osc1":
+            case "enable_osc2":
+            case "enable_osc3":
+                return true;
+        }
+        return false;
+    }
+
+    // filters the list of presets to include only ones which are useful.
+    // for example if OSC B is disabled, don't show any settings from OSC B.
+    GetUsablePresetListMinusPatchName(filterTxt) {
+        if (this.engine != "minifm") return this.params;
+        let osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
+        let osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
+        let osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
+        let osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
+        let ret = this.params.filter(p => {
+
+            if (p.paramID === "patchName") return false; // because this is rendered specially.
+
+            if (p.groupName === "Osc A" && !osc0_enabled) return false;
+            if (p.groupName === "Osc B" && !osc1_enabled) return false;
+            if (p.groupName === "Osc C" && !osc2_enabled) return false;
+            if (p.groupName === "Osc D" && !osc3_enabled) return false;
+
+            if (p.groupName.toLowerCase().includes(filterTxt)) return true;
+            if (p.name.toLowerCase().includes(filterTxt)) return true;
+            if (p.tags.toLowerCase().includes(filterTxt)) return true;
+
+            return true;
+        });
+        return ret;
     }
 };
 

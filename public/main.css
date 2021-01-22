@@ -557,10 +557,25 @@ div.paramFilter input[type="text"]
     font-weight: normal;
 }
 
-
 .paramGroupFocusBtn.active {
     background-color: #077;
 }
+
+
+
+
+.buttonParam,
+.buttonParam:active,
+.buttonParam:focus
+{
+    border:0;
+    font-weight: normal;
+}
+
+.buttonParam.active {
+    background-color: #077;
+}
+
 
 .paramGroupCtrl {
     background-color: #000;
@@ -573,3 +588,5 @@ div.paramFilter input[type="text"]
 
 .groupFocusButtons {
 }
+
+

@@ -1,4 +1,6 @@
 
+let gStateChangeHandler = null;
+
 let getRoomID = function (app) {
     if (!app) return window.DFRoomID;
     if (!app.roomState) return window.DFRoomID;
@@ -116,6 +118,34 @@ class InstTextParam extends React.Component {
 }
 
 
+// int parameter, but rendered as buttons using enum titles
+// props.instrument
+class InstButtonsParam extends React.Component {
+    constructor(props) {
+        super(props);
+        this.inputID = "buttonsparam_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
+        this.renderedValue = 0;
+    }
+    onClickButton = (val) => {
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
+        gStateChangeHandler.OnStateChange();
+    };
+    render() {
+        const buttons = (this.props.param.enumNames.map((e, val) => (
+            <button className={"buttonParam " + ((this.props.param.currentValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</button>
+        )));
+
+        return (
+            <li className={this.props.param.cssClassName}>
+                {buttons}
+                <label>{this.props.param.name}</label>
+            </li>
+        );
+    }
+}
+
+
+
 
 // CHECKBOX instrument
 // props.instrument
@@ -129,6 +159,10 @@ class InstCbxParam extends React.Component {
         let val = e.target.checked;
         this.renderedValue = val;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
+        if (this.props.instrument.ParamChangeCausesRender(this.props.param)) {
+            //setTimeout(() => this.setState(this.state), 0);
+            gStateChangeHandler.OnStateChange();
+        }
     }
     componentDidMount() {
         // set initial values.
@@ -337,7 +371,11 @@ class InstrumentParamGroup extends React.Component {
             if (p.hidden) return null;
             switch (p.parameterType) {
                 case InstrumentParamType.intParam:
-                    return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
+                    if (p.renderAs == "buttons") {
+                        return (<InstButtonsParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstButtonsParam>);
+                    } else {
+                        return (<InstIntParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
+                    }
                 case InstrumentParamType.floatParam:
                     return (<InstFloatParam key={p.name} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
                 case InstrumentParamType.textParam:
@@ -413,7 +451,7 @@ class InstrumentParams extends React.Component {
     };
 
     showAllGroups = () => {
-        this.setState({showingAllGroups:true});
+        this.setState({ showingAllGroups: true });
     };
 
     onToggleShownClick = () => {
@@ -421,23 +459,23 @@ class InstrumentParams extends React.Component {
     };
 
     clickFocusGroupName(groupName) {
-        if (!this.state.showingAllGroups &&  this.isGroupNameShown(groupName) && this.state.shownGroupNames.length == 1) {
+        if (!this.state.showingAllGroups && this.isGroupNameShown(groupName) && this.state.shownGroupNames.length == 1) {
             // if you click on a showing group name and there are others shown, focus it.
             // if you click on a showing group name it's the only one shown, then hide all.
-            this.setState({ shownGroupNames: [], showingAllGroups:false });
+            this.setState({ shownGroupNames: [], showingAllGroups: false });
             return;
         }
-        this.setState({ shownGroupNames: [groupName], showingAllGroups:false });
+        this.setState({ shownGroupNames: [groupName], showingAllGroups: false });
     };
     onToggleGroupShown(groupName) {
         if (this.isGroupNameShown(groupName)) {
             let x = this.state.shownGroupNames.filter(gn => gn != groupName);
-            this.setState({ shownGroupNames: x, showingAllGroups:false });
+            this.setState({ shownGroupNames: x, showingAllGroups: false });
             return;
         }
 
         this.state.shownGroupNames.push(groupName);
-        this.setState({ shownGroupNames: this.state.shownGroupNames, showingAllGroups:false });
+        this.setState({ shownGroupNames: this.state.shownGroupNames, showingAllGroups: false });
         return;
     };
 
@@ -464,13 +502,14 @@ class InstrumentParams extends React.Component {
         );
 
         let filterTxt = this.state.filterTxt.toLowerCase();
-        let filteredParams = this.props.instrument.params.filter(p => {
-            if (p.paramID == "patchName") return false; // because this is rendered specially.
-            if (p.groupName.toLowerCase().includes(filterTxt)) return true;
-            if (p.name.toLowerCase().includes(filterTxt)) return true;
-            if (p.tags.toLowerCase().includes(filterTxt)) return true;
-            return false;
-        });
+        let filteredParams = this.props.instrument.GetUsablePresetListMinusPatchName(filterTxt)
+        // .filter(p => {
+        //     if (p.paramID == "patchName") return false; // because this is rendered specially.
+        //     if (p.groupName.toLowerCase().includes(filterTxt)) return true;
+        //     if (p.name.toLowerCase().includes(filterTxt)) return true;
+        //     if (p.tags.toLowerCase().includes(filterTxt)) return true;
+        //     return false;
+        // });
 
         // unique group names.
         let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
@@ -1584,6 +1623,8 @@ class RootArea extends React.Component {
         this.state = {
             app: null
         };
+
+        gStateChangeHandler = this;
 
         this.notesOn = []; // not part of state because it's pure jquery
         this.activityCount = 0;

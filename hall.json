@@ -10,7 +10,7 @@
   "roomItems": [
     {
       "itemID": "doorToPub",
-      "name": "#PUB",
+      "name": "#DigiLounge",
       "itemType": "door",
       "style": {
         "fontSize": 32

@@ -37,6 +37,7 @@
           "name": "Voicing",
           "groupName": "master",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -45,9 +46,10 @@
           ]
         },
         {
+          "cssClassName": "paramSpacer",
           "paramID": "algo",
           "name": "FM algo",
-          "groupName": "Oscillator enable",
+          "groupName": "master",
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 4,
@@ -62,25 +64,25 @@
         {
           "paramID": "enable_osc0",
           "name": "A",
-          "groupName": "Oscillator enable",
+          "groupName": "master",
           "parameterType": "cbxParam"
         },
         {
           "paramID": "enable_osc1",
           "name": "B",
-          "groupName": "Oscillator enable",
+          "groupName": "master",
           "parameterType": "cbxParam"
         },
         {
           "paramID": "enable_osc2",
           "name": "C",
-          "groupName": "Oscillator enable",
+          "groupName": "master",
           "parameterType": "cbxParam"
         },
         {
           "paramID": "enable_osc3",
           "name": "D",
-          "groupName": "Oscillator enable",
+          "groupName": "master",
           "parameterType": "cbxParam"
         },
         {
@@ -89,6 +91,7 @@
           "name": "LFO1 wave",
           "groupName": "Mod LFO1",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 3,
           "enumNames": [
@@ -112,6 +115,7 @@
           "name": "LFO2 wave",
           "groupName": "Mod LFO2",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 3,
           "enumNames": [
@@ -167,6 +171,7 @@
           "name": "Trigger",
           "groupName": "Mod Env",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -179,6 +184,7 @@
           "name": "Wave",
           "groupName": "Osc A",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 4,
           "enumNames": [
@@ -349,6 +355,7 @@
           "name": "Trigger",
           "groupName": "Osc A",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -394,6 +401,7 @@
           "name": "Wave",
           "groupName": "Osc B",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 4,
           "enumNames": [
@@ -564,6 +572,7 @@
           "name": "Trigger",
           "groupName": "Osc B",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -609,6 +618,7 @@
           "name": "Wave",
           "groupName": "Osc C",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 4,
           "enumNames": [
@@ -779,6 +789,7 @@
           "name": "Trigger",
           "groupName": "Osc C",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -824,6 +835,7 @@
           "name": "Wave",
           "groupName": "Osc D",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 4,
           "enumNames": [
@@ -994,6 +1006,7 @@
           "name": "Trigger",
           "groupName": "Osc D",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -1039,6 +1052,7 @@
           "name": "Type",
           "groupName": "Filter",
           "parameterType": "intParam",
+          "renderAs": "buttons",
           "minValue": 0,
           "maxValue": 3,
           "enumNames": [

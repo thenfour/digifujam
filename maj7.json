@@ -10,11 +10,10 @@
   "roomItems": [
     {
       "itemID": "roomItem1",
-      "name": "#PUB",
+      "name": "#DigiLounge",
       "itemType": "door",
       "style": {
-        "transform": "skewY(45deg)",
-        "fontSize": 32
+        "transform": "skewY(45deg)"
       },
       "rect": {
         "x":1230,
