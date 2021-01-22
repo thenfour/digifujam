@@ -29,7 +29,7 @@ let generateID = function () {
 
 let gGlobalInstruments = [];
 
-let SetGlobalInstrumentList = function(x) {
+let SetGlobalInstrumentList = function (x) {
     gGlobalInstruments = x;
     console.log(`Global instrument closet now has ${x.length} instruments defined`);
 }
