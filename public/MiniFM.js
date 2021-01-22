@@ -286,7 +286,6 @@ class MiniFMSynthOsc {
 
     // account for key & vel scaling
     updateEnvPeakLevel() {
-
         let vsAmt = this.paramValue("vel_scale");
         let vs = 1.0 - remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let ksAmt = this.paramValue("key_scale");
@@ -965,6 +964,18 @@ class MiniFMSynthVoice {
         this.waveshape.curve = makeDistortionCurve(this.instrumentSpec.GetParamByID("waveShape_curve").currentValue);
     }
 
+    _updateFilterBaseFreq()
+    {
+        let vsAmt = this.instrumentSpec.GetParamByID("filterFreqVS").currentValue;        
+        let vs = 1.0 - remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let ksAmt = this.instrumentSpec.GetParamByID("filterFreqKS").currentValue;        
+        const halfKeyScaleRangeSemis = 12 * 4;
+        let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
+        p = p * ks * vs;
+        this.filter.frequency.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
+    }
+
     SetParamValue(paramID, newVal) {
         if (!this.isConnected) return;
         //console.log(`setting ${paramID} to ${newVal}`);
@@ -982,8 +993,10 @@ class MiniFMSynthVoice {
             case "filterType":
                 this._SetFiltType();
                 break;
+            case "filterFreqVS":
+            case "filterFreqKS":
             case "filterFreq":
-                this.filter.frequency.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this._updateFilterBaseFreq();
                 break;
             case "filterQ":
                 this.filter.Q.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
@@ -1083,6 +1096,7 @@ class MiniFMSynthVoice {
         this.velocity = velocity;
 
         this._updateBaseFreq();
+        this._updateFilterBaseFreq();
 
         if (!isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
             this.env1.trigger();

@@ -1058,6 +1058,22 @@
           "maxValue": 15000.0
         },
         {
+          "paramID": "filterFreqVS",
+          "name": "Vel. Scale",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "filterFreqKS",
+          "name": "Key Scale",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
           "paramID": "filterFreqLFO1",
           "name": "LFO1 mod",
           "groupName": "Filter",
@@ -1114,6 +1130,7 @@
           "minValue": -20.0,
           "maxValue": 20.0
         },
+
         {
           "paramID": "detuneBase",
           "name": "Semis",
