@@ -1148,8 +1148,31 @@
           "parameterType": "floatParam",
           "minValue": 0.0,
           "maxValue": 1.0
-        }
+        },
 
+
+        {
+          "paramID": "waveShape_enabled",
+          "name": "Enabled",
+          "groupName": "Distortion",
+          "parameterType": "cbxParam"
+        },
+        {
+          "paramID": "waveShape_curve",
+          "name": "Curve",
+          "groupName": "Distortion",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 100.0
+        },
+        {
+          "paramID": "waveShape_gain",
+          "name": "Gain",
+          "groupName": "Distortion",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 4.0
+        }
 
 
 

@@ -439,12 +439,12 @@ class MiniFMSynthVoice {
 
         /*
           (lfos)------->
-          [env1]------->[child oscillators] -->[oscSum]--> [filter] -----------> [masterDryGain]
-                                                            |    |              > [masterWetGain]
-                                                       freq |   | Q
-                                          [filterFreqLFO1Amt]   [filterQLFO1Amt]
-                                         +[filterFreqLFO2Amt]   [filterQLFO2Amt]
-                                         +[filterFreqENVAmt]   [filterQENVAmt]
+          [env1]------->[child oscillators] -->[oscSum]--> [waveshapeGain] --> [waveshape]----------------------------> [filter] -----------> [masterDryGain]
+                                                                                                                        |    |              > [masterWetGain]
+                                                                                                                   freq |   | Q
+                                                                                                      [filterFreqLFO1Amt]   [filterQLFO1Amt]
+                                                                                                     +[filterFreqLFO2Amt]   [filterQLFO2Amt]
+                                                                                                     +[filterFreqENVAmt]   [filterQENVAmt]
 
 
             so detune is slightly tricky, because it should be controlled at the voice level.
@@ -477,6 +477,16 @@ class MiniFMSynthVoice {
         // oscSum
         this.oscSum = this.audioCtx.createGain();
         this.oscSum.gain.value = 1;
+
+        // waveshapeGain
+        this.waveshapeGain = this.audioCtx.createGain();
+        this.waveshapeGain.gain.value = this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
+        this.oscSum.connect(this.waveshapeGain);
+
+        // waveshape
+        this.waveshape = this.audioCtx.createWaveShaper();
+        this.waveshapeGain.connect(this.waveshape);
+        this._setWaveshapeCurve();
 
         // filterFreqLFO1Amt
         this.filterFreqLFO1Amt = this.audioCtx.createGain();
@@ -522,7 +532,7 @@ class MiniFMSynthVoice {
         this.filterQLFO2Amt.connect(this.filter.Q);
         this.filterQENVAmt.connect(this.filter.Q);
 
-        this.oscSum.connect(this.filter);
+        this.waveshape.connect(this.filter);
 
         this.isFilterConnected = true;
 
@@ -758,7 +768,7 @@ class MiniFMSynthVoice {
         this.env1.disconnect();
         this.env1 = null;
 
-        
+
         this.detuneBase.stop();
         this.midiNoteNode.stop();
 
@@ -791,6 +801,10 @@ class MiniFMSynthVoice {
         this.midiNoteFreqInv.disconnect();
         this.midiNoteFreqInv = null;
 
+        this.waveshape.disconnect();
+        this.waveshape = null;
+        this.waveshapeGain.disconnect();
+        this.waveshapeGain = null;
 
         this.oscillators.forEach(o => o.disconnect());
 
@@ -805,20 +819,20 @@ class MiniFMSynthVoice {
     _SetFiltType() {
         let disableFilter = () => {
             if (!this.isFilterConnected) return;
-            // oscSum] --> [masterDryGain
-            //           > [masterWetGain
+            // waveshape] --> [masterDryGain
+            //              > [masterWetGain
             this.filter.disconnect();
 
-            this.oscSum.disconnect();
-            this.oscSum.connect(this.masterDryGain);
-            this.oscSum.connect(this.masterWetGain);
+            this.waveshape.disconnect();
+            this.waveshape.connect(this.masterDryGain);
+            this.waveshape.connect(this.masterWetGain);
 
             this.isFilterConnected = false;
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return;
-            this.oscSum.disconnect();
-            this.oscSum.connect(this.filter);
+            this.waveshape.disconnect();
+            this.waveshape.connect(this.filter);
 
             this.filter.disconnect();
             this.filter.connect(this.masterDryGain);
@@ -857,6 +871,26 @@ class MiniFMSynthVoice {
 
     get IsPlaying() {
         return this.isConnected && !!this.timestamp;
+    }
+
+    _setWaveshapeCurve() {
+        // https://stackoverflow.com/a/52472603/402169
+
+        if (!this.instrumentSpec.GetParamByID("waveShape_enabled").currentValue) {
+            this.waveshape.curve = null;
+            return;
+        }
+
+        let makeDistortionCurve = (amount) => {
+            let n_samples = 256, curve = new Float32Array(n_samples);
+            for (let i = 0; i < n_samples; ++i) {
+                let x = i * 2 / n_samples - 1;
+                curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+            }
+            return curve;
+        };
+
+        this.waveshape.curve = makeDistortionCurve(this.instrumentSpec.GetParamByID("waveShape_curve").currentValue);
     }
 
     SetParamValue(paramID, newVal) {
@@ -944,6 +978,13 @@ class MiniFMSynthVoice {
                 break;
             case "detuneENV1":
                 this.detuneENVamt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                break;
+            case "waveShape_enabled":
+            case "waveShape_curve":
+                this._setWaveshapeCurve();
+                break;
+            case "waveShape_gain":
+                this.waveshapeGain.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }
