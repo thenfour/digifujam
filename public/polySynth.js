@@ -189,7 +189,8 @@ class GeneralPolySynth {
         // for each voice that's NOT physically held, but is playing, release the note.
         this.voices.forEach((v, vindex) => {
             if (v.IsPlaying && !this.VoiceIsPhysicalyHeld(vindex)) {
-                v.musicallyRelease();
+                //console.log(`musically release note ${v.midiNote}`);
+                v.musicallyRelease(v.midiNote);
             }
         });
     }

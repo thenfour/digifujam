@@ -439,7 +439,7 @@ class MiniFMSynthVoice {
 
         /*
           (lfos)------->
-          [env1]------->[child oscillators] -->[oscSum]--> [waveshapeGain] --> [waveshape]----------------------------> [filter] -----------> [masterDryGain]
+          [env1]------->[child oscillators] -->[oscSum]--> [waveshapeGain] --> [waveshape]-[waveshapePostGain]--------> [filter] -----------> [masterDryGain]
                                                                                                                         |    |              > [masterWetGain]
                                                                                                                    freq |   | Q
                                                                                                       [filterFreqLFO1Amt]   [filterQLFO1Amt]
@@ -488,6 +488,11 @@ class MiniFMSynthVoice {
         this.waveshapeGain.connect(this.waveshape);
         this._setWaveshapeCurve();
 
+        // waveshapePostGain
+        this.waveshapePostGain = this.audioCtx.createGain();
+        this.waveshapePostGain.gain.value = 1.0 / this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
+        this.waveshape.connect(this.waveshapePostGain);
+
         // filterFreqLFO1Amt
         this.filterFreqLFO1Amt = this.audioCtx.createGain();
         this.filterFreqLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
@@ -532,7 +537,7 @@ class MiniFMSynthVoice {
         this.filterQLFO2Amt.connect(this.filter.Q);
         this.filterQENVAmt.connect(this.filter.Q);
 
-        this.waveshape.connect(this.filter);
+        this.waveshapePostGain.connect(this.filter);
 
         this.isFilterConnected = true;
 
@@ -641,46 +646,110 @@ class MiniFMSynthVoice {
 
         let detuneSources = null;// array of the source nodes for detuning the 4 oscillators
 
+        let oscEnabled = [
+            this.instrumentSpec.GetParamByID("enable_osc0").currentValue,
+            this.instrumentSpec.GetParamByID("enable_osc1").currentValue,
+            this.instrumentSpec.GetParamByID("enable_osc2").currentValue,
+            this.instrumentSpec.GetParamByID("enable_osc3").currentValue,
+        ];
+
         switch (algo) {
             case 0: // "[1🡄2🡄3🡄4]",
                 this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
                 detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
                 break;
             case 1: // "[1🡄2🡄3][4]",
+                if (!oscEnabled[3] || !oscEnabled[0]) {
+                    // ok only 1 param group really
+                    this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
+                    detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
+                    break;
+                }
                 this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
                 detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneFreq, this.detuneVar1];
                 break;
             case 2: // "[1🡄2][3🡄4]",
+                if (!oscEnabled[0] || !oscEnabled[2]) {
+                    // ok only 1 param group really
+                    this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
+                    detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
+                    break;
+                }
                 this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
                 detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar1];
                 break;
             case 3: // "[1🡄2][3][4]",
+                if (!oscEnabled[0]) { // 2 or 1 groups
+                    if (!oscEnabled[2] || !oscEnabled[3]) {
+                        // only 1 param group really
+                        this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
+                        detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
+                        break;
+                    }
+                    // 2 param groups osc 3 & 4
+                    this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
+                    detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneFreq, this.detuneVar1];
+                    break;
+                }
                 this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
                 this.detuneVar2.gain.value = 0;
                 detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar2];
                 break;
             case 4: // "[1][2][3][4]"
-                this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
-                this.detuneVar2.gain.value = -0.5;
-                this.detuneVar3.gain.value = -1;
-                detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneVar2, this.detuneVar3];
+                // ONE GROUP:  1--- -2-- --3- ---4                aaaa
+                // TWO groups: 12-- 1-3- 1--4 -23- -2-4 --34      ABAB AABB
+                // THREE       123- 12-4 1-34 -234                ABCC AABC
+                // FOUR        1234                               abcd
+                let oscEnabledCount = (oscEnabled[0] ? 1 : 0) + (oscEnabled[1] ? 1 : 0) + (oscEnabled[2] ? 1 : 0) + (oscEnabled[3] ? 1 : 0);
+                if (oscEnabledCount == 1) {
+                    // only 1 param group really
+                    this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
+                    detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
+                    break;
+                }
+                if (oscEnabledCount == 4) {
+                    this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
+                    this.detuneVar2.gain.value = -0.5;
+                    this.detuneVar3.gain.value = -1;
+                    detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneVar2, this.detuneVar3];
+                    break;
+                }
+                if (oscEnabledCount == 3) {
+                    this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
+                    this.detuneVar2.gain.value = 0;
+                    if (!oscEnabled[3] || !oscEnabled[2]) {
+                        detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneVar2, this.detuneVar2]; // ABCC
+                        break;
+                    }
+                    detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar2]; // AABC
+                    break;
+                }
+
+                // two voices enabled
+                this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
+                if (oscEnabled[0] != oscEnabled[1]) { // AA 1-3- 1--4 -23- -2-4
+                    detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar1];
+                    break;
+                }
+                detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneFreq, this.detuneVar1]; // ABAB
                 break;
+
             default:
                 console.log(`unknown algorithm ${algo}`);
                 break;
         }
 
         // create the child oscillators
-        if (this.instrumentSpec.GetParamByID("enable_osc0").currentValue) {
+        if (oscEnabled[0]) {
             this.oscillators[0].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[0]);
         }
-        if (this.instrumentSpec.GetParamByID("enable_osc1").currentValue) {
+        if (oscEnabled[1]) {
             this.oscillators[1].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[1]);
         }
-        if (this.instrumentSpec.GetParamByID("enable_osc2").currentValue) {
+        if (oscEnabled[2]) {
             this.oscillators[2].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[2]);
         }
-        if (this.instrumentSpec.GetParamByID("enable_osc3").currentValue) {
+        if (oscEnabled[3]) {
             this.oscillators[3].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[3]);
         }
 
@@ -801,6 +870,9 @@ class MiniFMSynthVoice {
         this.midiNoteFreqInv.disconnect();
         this.midiNoteFreqInv = null;
 
+        this.waveshapePostGain.disconnect();
+        this.waveshapePostGain = null;
+
         this.waveshape.disconnect();
         this.waveshape = null;
         this.waveshapeGain.disconnect();
@@ -819,20 +891,20 @@ class MiniFMSynthVoice {
     _SetFiltType() {
         let disableFilter = () => {
             if (!this.isFilterConnected) return;
-            // waveshape] --> [masterDryGain
-            //              > [masterWetGain
+            // waveshapePostGain] --> [masterDryGain
+            //                      > [masterWetGain
             this.filter.disconnect();
 
-            this.waveshape.disconnect();
-            this.waveshape.connect(this.masterDryGain);
-            this.waveshape.connect(this.masterWetGain);
+            this.waveshapePostGain.disconnect();
+            this.waveshapePostGain.connect(this.masterDryGain);
+            this.waveshapePostGain.connect(this.masterWetGain);
 
             this.isFilterConnected = false;
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return;
-            this.waveshape.disconnect();
-            this.waveshape.connect(this.filter);
+            this.waveshapePostGain.disconnect();
+            this.waveshapePostGain.connect(this.filter);
 
             this.filter.disconnect();
             this.filter.connect(this.masterDryGain);
@@ -985,6 +1057,7 @@ class MiniFMSynthVoice {
                 break;
             case "waveShape_gain":
                 this.waveshapeGain.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.waveshapePostGain.gain.linearRampToValueAtTime(1.0 / newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }
@@ -1023,7 +1096,10 @@ class MiniFMSynthVoice {
     musicallyRelease(midiNote) {
         // it's possible you get note off events when you haven't note-on, in case of holding multiple monophonic keys, for example.
         // or in that case you can even get note off events for notes we're not playing. if it doesn't match, don't note off.
-        if (midiNote != this.midiNote) return;
+        if (midiNote != this.midiNote) {
+            //console.log(`midi note ${midiNote} doesn't match mine ${this.midiNote}`);
+            return;
+        } 
 
         this.env1.release();
         this.oscillators.forEach(o => {
