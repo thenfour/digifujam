@@ -226,6 +226,10 @@ button:focus {
 	transition: top 0s, left 0s;
 }
 
+.userAvatar .userAvatarInstrument button {
+    pointer-events: all;
+}
+
 #chatArea {
     padding: 10px;
     display:flex;
@@ -520,12 +524,16 @@ ul.instParamList input[type="range" i] {
     display: inline;
 }
 
-.worldStatus .room ul.roomStats {
+.roomStats,
+.worldStatus .room ul.roomStats
+{
     display: inline;
     list-style: none;
 }
 
-.worldStatus .room ul.roomStats li {
+.roomStats li,
+.worldStatus .room ul.roomStats li
+{
     display: inline;
 }
 

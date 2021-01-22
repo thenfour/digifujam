@@ -2,7 +2,7 @@
   "roomID": "hall",
   "roomTitle": "#hall",
   "route": "/hall",
-  "img": "./hall.png",
+  "img": "./roomart/hall.png",
   "width": 1030,
   "height": 282,
   "internalMasterGain": 2.0,

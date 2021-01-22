@@ -117,7 +117,7 @@ class InstTextParam extends React.Component {
 
 
 
-
+// CHECKBOX instrument
 // props.instrument
 class InstCbxParam extends React.Component {
     constructor(props) {
@@ -333,7 +333,7 @@ class InstrumentParamGroup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            expanded: true,
+            expanded: false,
         };
     }
 
@@ -809,13 +809,24 @@ class UserList extends React.Component {
         }
         //         let meText = (u.userID == digifuApp.myUser.userID) ? "<ME>" : "";
 
+        const room = this.props.app.rooms && this.props.app.rooms.find(r => r.roomID == this.props.app.roomState.roomID);
+
+
         const users = this.props.app.roomState.users.map(u => (
             <li key={u.userID}><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
         ));
 
         return (
             <div className="component">
-                <h2>{this.props.app.roomState.roomTitle} members</h2>
+                <h2>{this.props.app.roomState.roomTitle}</h2>
+                {room && 
+                <ul className="roomStats">
+                    <li>🧑{room.users.length}</li>
+                    <li>🎵{room.stats.noteOns}</li>
+                    <li>👏{room.stats.cheers}</li>
+                    <li>📝{room.stats.messages}</li>
+                </ul>
+                }
                 <ul>
                     {users}
                 </ul>

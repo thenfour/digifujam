@@ -335,6 +335,9 @@ class DigifuApp {
         this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
             return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
         });
+        this.shortChatLog = this.shortChatLog.filter(msg => {
+            return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
+        });
 
         this.stateChangeHandler();
     };

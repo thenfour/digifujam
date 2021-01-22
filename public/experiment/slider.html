@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <style>
+        body {text-align:center;height:100vh;vertical-align: middle;}
+        #hi {
+            width:600px;
+            margin-top:100px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+
+
+<input type="range" id="hi" />
+
+<script type="text/javascript">
+  
+  $(document).ready(() => {
+    $("#hi").click((e) => {
+          let a = 0;
+          console.log(`click`);
+      });
+      $("#hi").click((e) => {
+        console.log(`change`);
+      });
+  });
+
+</script>
+
+</body>
+
+</html>
