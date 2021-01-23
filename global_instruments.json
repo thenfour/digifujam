@@ -86,100 +86,6 @@
           "parameterType": "cbxParam"
         },
         {
-          "cssClassName": "paramSpacer",
-          "paramID": "lfo1_wave",
-          "name": "LFO1 wave",
-          "groupName": "Mod LFO1",
-          "parameterType": "intParam",
-          "renderAs": "buttons",
-          "minValue": 0,
-          "maxValue": 3,
-          "enumNames": [
-            "Sine",
-            "Square",
-            "Saw",
-            "Tri"
-          ]
-        },
-        {
-          "paramID": "lfo1_speed",
-          "name": "LFO1 speed",
-          "groupName": "Mod LFO1",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 10.0
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "lfo2_wave",
-          "name": "LFO2 wave",
-          "groupName": "Mod LFO2",
-          "parameterType": "intParam",
-          "renderAs": "buttons",
-          "minValue": 0,
-          "maxValue": 3,
-          "enumNames": [
-            "Sine",
-            "Square",
-            "Saw",
-            "Tri"
-          ]
-        },
-        {
-          "paramID": "lfo2_speed",
-          "name": "LFO2 speed",
-          "groupName": "Mod LFO2",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 10.0
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "env1_a",
-          "name": "Attack",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.004,
-          "maxValue": 4.0
-        },
-        {
-          "paramID": "env1_d",
-          "name": "Decay",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 7.0
-        },
-        {
-          "paramID": "env1_s",
-          "name": "Sustain",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "env1_r",
-          "name": "Release",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 7.0
-        },
-        {
-          "paramID": "env1_trigMode",
-          "name": "Trigger",
-          "groupName": "Mod Env",
-          "parameterType": "intParam",
-          "renderAs": "buttons",
-          "minValue": 0,
-          "maxValue": 1,
-          "enumNames": [
-            "Always",
-            "Legato"
-          ]
-        },
-        {
           "paramID": "osc0_wave",
           "name": "Wave",
           "groupName": "∿ Osc A",
@@ -1116,6 +1022,157 @@
           "maxValue": 1.0
         },
         {
+          "cssClassName": "paramSpacer",
+          "paramID": "lfo1_wave",
+          "name": "LFO1 wave",
+          "groupName": "Mod LFO1",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
+        },
+        {
+          "paramID": "lfo1_speed",
+          "name": "LFO1 speed",
+          "groupName": "Mod LFO1",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 10.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "lfo2_wave",
+          "name": "LFO2 wave",
+          "groupName": "Mod LFO2",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Sine",
+            "Square",
+            "Saw",
+            "Tri"
+          ]
+        },
+        {
+          "paramID": "lfo2_speed",
+          "name": "LFO2 speed",
+          "groupName": "Mod LFO2",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 10.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "env1_a",
+          "name": "Attack",
+          "groupName": "Mod Env",
+          "parameterType": "floatParam",
+          "minValue": 0.004,
+          "maxValue": 4.0
+        },
+        {
+          "paramID": "env1_d",
+          "name": "Decay",
+          "groupName": "Mod Env",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "env1_s",
+          "name": "Sustain",
+          "groupName": "Mod Env",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "env1_r",
+          "name": "Release",
+          "groupName": "Mod Env",
+          "parameterType": "floatParam",
+          "minValue": 0.00,
+          "maxValue": 7.0
+        },
+        {
+          "paramID": "env1_trigMode",
+          "name": "Trigger",
+          "groupName": "Mod Env",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Always",
+            "Legato"
+          ]
+        },
+        {
+          "paramID": "detuneBase",
+          "name": "Semis",
+          "groupName": "Detune",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "detuneLFO1",
+          "cssClassName": "modAmtParam",
+          "name": "LFO1 mod",
+          "groupName": "Detune",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "detuneLFO2",
+          "cssClassName": "modAmtParam",
+          "name": "LFO2 mod",
+          "groupName": "Detune",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "detuneENV1",
+          "cssClassName": "modAmtParam",
+          "name": "ENV mod",
+          "groupName": "Detune",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
+        {
+          "paramID": "waveShape_enabled",
+          "name": "Enabled",
+          "groupName": "Saturation",
+          "parameterType": "cbxParam"
+        },
+        {
+          "paramID": "waveShape_gain",
+          "name": "Gain",
+          "groupName": "Saturation",
+          "parameterType": "floatParam",
+          "minValue": 1.0,
+          "maxValue": 4.0
+        },
+        {
+          "paramID": "waveShape_curve",
+          "name": "Curve",
+          "groupName": "Saturation",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
+        {
           "paramID": "filterType",
           "name": "Type",
           "groupName": "Filter",
@@ -1221,64 +1278,6 @@
           "parameterType": "floatParam",
           "minValue": -20.0,
           "maxValue": 20.0
-        },
-
-        {
-          "paramID": "detuneBase",
-          "name": "Semis",
-          "groupName": "Detune",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "detuneLFO1",
-          "cssClassName": "modAmtParam",
-          "name": "LFO1 mod",
-          "groupName": "Detune",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "detuneLFO2",
-          "cssClassName": "modAmtParam",
-          "name": "LFO2 mod",
-          "groupName": "Detune",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "detuneENV1",
-          "cssClassName": "modAmtParam",
-          "name": "ENV mod",
-          "groupName": "Detune",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "waveShape_enabled",
-          "name": "Enabled",
-          "groupName": "Distortion",
-          "parameterType": "cbxParam"
-        },
-        {
-          "paramID": "waveShape_curve",
-          "name": "Curve",
-          "groupName": "Distortion",
-          "parameterType": "floatParam",
-          "minValue": 5.0,
-          "maxValue": 80.0
-        },
-        {
-          "paramID": "waveShape_gain",
-          "name": "Gain",
-          "groupName": "Distortion",
-          "parameterType": "floatParam",
-          "minValue": 1.0,
-          "maxValue": 4.0
         }
       ],
       "presets": [

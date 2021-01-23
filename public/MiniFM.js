@@ -952,11 +952,32 @@ class MiniFMSynthVoice {
             return;
         }
 
-        let makeDistortionCurve = (amount) => {
+        // let makeDistortionCurve = (amount) => {
+        //     let n_samples = 256, curve = new Float32Array(n_samples);
+        //     for (let i = 0; i < n_samples; ++i) {
+        //         let x = i * 2 / n_samples - 1;
+        //         curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+        //     }
+        //     return curve;
+        // };
+
+        // p is 0-
+        // let transf = (x, p) => {
+        //     return Math.sign(x) * Math.pow(Math.abs(x), p);
+        // };
+
+        
+        let transf = (x, p) => {
+            return remap(p, 0, 1, 0, Math.sin(x));
+        };
+
+
+        let makeDistortionCurve = (amt) => {
             let n_samples = 256, curve = new Float32Array(n_samples);
             for (let i = 0; i < n_samples; ++i) {
                 let x = i * 2 / n_samples - 1;
-                curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+                //curve[i] = Math.sign(x)*(1-0.25/(Math.abs(x)+0.25));// http://www.carbon111.com/waveshaping1.html
+                curve[i] = transf(x, amt);
             }
             return curve;
         };
@@ -964,11 +985,10 @@ class MiniFMSynthVoice {
         this.waveshape.curve = makeDistortionCurve(this.instrumentSpec.GetParamByID("waveShape_curve").currentValue);
     }
 
-    _updateFilterBaseFreq()
-    {
-        let vsAmt = this.instrumentSpec.GetParamByID("filterFreqVS").currentValue;        
+    _updateFilterBaseFreq() {
+        let vsAmt = this.instrumentSpec.GetParamByID("filterFreqVS").currentValue;
         let vs = 1.0 - remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
-        let ksAmt = this.instrumentSpec.GetParamByID("filterFreqKS").currentValue;        
+        let ksAmt = this.instrumentSpec.GetParamByID("filterFreqKS").currentValue;
         const halfKeyScaleRangeSemis = 12 * 4;
         let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
@@ -1113,7 +1133,7 @@ class MiniFMSynthVoice {
         if (midiNote != this.midiNote) {
             //console.log(`midi note ${midiNote} doesn't match mine ${this.midiNote}`);
             return;
-        } 
+        }
 
         this.env1.release();
         this.oscillators.forEach(o => {
