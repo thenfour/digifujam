@@ -79,7 +79,7 @@ const ServerSettings = {
 
     UsernameLengthMax: 20,
     UsernameLengthMin: 1,
-    UserColorLengthMax: 20,
+    UserColorLengthMax: 100,
     UserColorLengthMin: 1,
 
     ChatMessageLengthMax: 288,

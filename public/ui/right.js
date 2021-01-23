@@ -562,9 +562,9 @@ class InstrumentParams extends React.Component {
             <div className="component">
                 <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
                 <div style={shownStyle}>
-                <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow": "⯇ Wide" }</button>
-                <button onClick={this.onPanicClick}>Panic</button>
-                <button onClick={this.onReleaseClick}>Release</button>
+                    <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
+                    <button onClick={this.onPanicClick}>Panic</button>
+                    <button onClick={this.onReleaseClick}>Release</button>
 
                     <fieldset className="instParamGroup presetsGroup">
                         <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
@@ -922,16 +922,12 @@ class UserList extends React.Component {
         ));
 
         return (
-            <div className="component">
-                <h2>{this.props.app.roomState.roomTitle}</h2>
-                {room &&
-                    <ul className="roomStats">
-                        <li>🧑{room.users.length}</li>
-                        <li>🎵{room.stats.noteOns}</li>
-                        <li>👏{room.stats.cheers}</li>
-                        <li>📝{room.stats.messages}</li>
-                    </ul>
-                }
+            <div className="component userList">
+                <h2><span className="roomName">{this.props.app.roomState.roomTitle}</span>
+                    {room &&
+                        <span>[<span class="userCount">{room.users.length}</span>] ♫<span class="noteOns">{room.stats.noteOns}</span></span>
+                    }
+                </h2>
                 <ul>
                     {users}
                 </ul>
@@ -955,18 +951,14 @@ class WorldStatus extends React.Component {
         ));
 
         const roomsMarkup = rooms.map(room => (
-            <div className="room">
-                <h2>{room.roomName}</h2>
-                <ul className="roomStats">
-                    <li>🧑{room.users.length}</li>
-                    <li>🎵{room.stats.noteOns}</li>
-                    <li>👏{room.stats.cheers}</li>
-                    <li>📝{room.stats.messages}</li>
-                </ul>
-                <ul className="userList">
-                    {userList(room)}
-                </ul>
-            </div>
+            <dl className="room">
+                {/* <dt className="roomStats"> */}
+                <dt><span class="roomName">{room.roomName}</span> [<span class="userCount">{room.users.length}</span>] ♫<span class="noteOns">{room.stats.noteOns}</span></dt>
+                {room.users.length > 0 &&
+                    <dd>
+                        <ul className="userList">{userList(room)}</ul>
+                    </dd>}
+            </dl>
         ));
 
         return (
@@ -1688,7 +1680,7 @@ class RootArea extends React.Component {
         if (this.state.wideMode && (!this.state.app || !this.state.app.myInstrument)) {
             setTimeout(() => {
                 this.setState({ wideMode: false });
-            }, 1);            
+            }, 1);
         }
 
         const url = window.location.href.split('?')[0];
