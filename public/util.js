@@ -30,6 +30,7 @@ let stylizeRangeInput = (elementID, opts) => {
 
     };
     $("#" + elementID).on('input', e => stylize(e.target));
+    $("#" + elementID).on('change', e => stylize(e.target));
     stylize(document.getElementById(elementID));
 };
 

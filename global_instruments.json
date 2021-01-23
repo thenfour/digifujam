@@ -244,6 +244,7 @@
           "name": "Freq offset",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "valueScaling": "2",
           "minValue": -1000,
           "maxValue": 9000.0
         },

@@ -14,6 +14,7 @@ let FrequencyFromMidiNote = function (midiNote) {
 };
 
 
+// linear mapping
 let remap = function (value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
@@ -133,10 +134,36 @@ class InstrumentParam {
         this.cssClassName = "";
         this.minValue = 0;// inclusive
         this.maxValue = 0;// inclusive
+        this.valueScaling = 1; // 1 = linear slider, higher values = more concave curve. 10 would be very extreme, 2 is usable
+        this.zeroPoint = null;// 0-1 of output range, when scaling to external range, when neg & pos ranges are different, it's a bit fuzzy to know where "0" is on the output range. We calculate it and put it here.
 
         this.currentValue = 0;
     }
     thaw() { /* no child objects to thaw. */ }
+
+    ensureZeroPoint() {
+        if (this.zeroPoint != null) return;
+        //
+    }
+
+    // you can have param ranges like from -1000 to 20000; we need to make sure we scale the negative stuff nicely.
+    // but where is the 0 point in the output range? i feel like the zero point should be calculated as a proportion of scaled neg:pos
+    // so for example -1000 to 20000 range, to scale into a 100px range, with pow=2, take the whole range 0-max, and find the 1000 point.
+    // total range = 21000.
+    // val=1000 which scaled 0-1, is 0.047
+    // hm this isn't going to go well. now pow(2) and this is way too small. well it all depensd on the situation.
+    // maybe you can just specify the zero point manually. or we take the linear position and bring it closer to the center a bit.
+    exportValue(outpMin, outpMax) {
+        this.ensureZeroPoint();
+        if (paramValue < paramMin) paramValue = paramMin;
+        if (paramValue > paramMax) paramValue = paramMax;
+        // scale inp 0-1, pow(inp, 1/p), scale to our range.
+
+    };
+    importValue(inp, inpMin, inpMax) {
+        this.ensureZeroPoint();
+        // based on simple val=range * pow(inpval01, power)
+    };
 };
 
 class DigifuInstrumentSpec {
@@ -244,11 +271,11 @@ class DigifuInstrumentSpec {
         //     "[1🡄2][3][4]",
         //     "[1][2][3][4]"
         let oscGroups = [
-            [[0,1,2,3]],
-            [[0,1,2],[3]],
-            [[0,1],[2,3]],
-            [[0,1],[2],[3]],
-            [[0],[1],[2],[3]]
+            [[0, 1, 2, 3]],
+            [[0, 1, 2], [3]],
+            [[0, 1], [2, 3]],
+            [[0, 1], [2], [3]],
+            [[0], [1], [2], [3]]
         ];
         oscGroups = oscGroups[algo];
         // now remove oscillators not in use.

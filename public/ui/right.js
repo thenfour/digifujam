@@ -315,6 +315,7 @@ class InstFloatParam extends React.Component {
         const p = this.props.param;
         let currentSliderValue = this._realValToSliderVal(val);
         $("#" + this.sliderID).val(currentSliderValue);
+        $("#" + this.sliderID).trigger("change");
     }
 
     toggleShowTxt = () => {
@@ -521,12 +522,10 @@ class InstrumentParams extends React.Component {
     }
 
     onPanicClick = () => {
-        this.props.app.instrumentPanic();
+        this.props.app.MIDI_AllNotesOff();
     };
 
     render() {
-
-        //if (!this.props.instrument.ShouldShowEditor) return null;
 
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
@@ -536,13 +535,6 @@ class InstrumentParams extends React.Component {
 
         let filterTxt = this.state.filterTxt.toLowerCase();
         let filteredParams = this.props.instrument.GetUsablePresetListMinusPatchName(filterTxt)
-        // .filter(p => {
-        //     if (p.paramID == "patchName") return false; // because this is rendered specially.
-        //     if (p.groupName.toLowerCase().includes(filterTxt)) return true;
-        //     if (p.name.toLowerCase().includes(filterTxt)) return true;
-        //     if (p.tags.toLowerCase().includes(filterTxt)) return true;
-        //     return false;
-        // });
 
         // unique group names.
         let groupNames = [...new Set(filteredParams.map(p => p.groupName))];

@@ -483,12 +483,6 @@ class DigifuApp {
         this.LoadPresetObj(presetObj);
     };
 
-    instrumentPanic() {
-        if (this.myInstrument) {
-            this.synth.AllNotesOff(this.myInstrument);
-        }
-    };
-
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer, handleRoomWelcome) {
         this.myUser = new DigifuUser();
         this.myUser.name = userName;
