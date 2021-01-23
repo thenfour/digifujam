@@ -384,9 +384,12 @@ class InstrumentPresetList extends React.Component {
             <li key={preset.patchName} onClick={() => this.presetClick(preset)}>{preset.patchName}</li>
         ));
         return (
+            <div>
+                Load a preset...
             <ul className="presetList">
                 {lis}
             </ul>
+            </div>
         );
     }
 };
@@ -450,7 +453,7 @@ class InstrumentParams extends React.Component {
 
     onExportClicked = () => {
         let presetObj = this.props.instrument.exportPresetObj();
-        let txt = JSON.stringify(presetObj);
+        let txt = JSON.stringify(presetObj, null, 2);
         navigator.clipboard.writeText(txt).then(() => {
             alert('Patch was copied to the clipboard.')
         }, () => {
@@ -1508,6 +1511,13 @@ class RootArea extends React.Component {
     };
 
     handleRoomWelcome = () => {
+
+        if (this.state.app.roomState.softwareVersion != gDigifujamVersion) {
+            alert("New version released; this page will reload...");
+            location.reload();
+            return;
+        }
+
         // throw up a screen and it fades out, then we remove it.
         var room = document.getElementById("roomArea");
         var screen = document.createElement("div");

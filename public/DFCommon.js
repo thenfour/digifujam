@@ -1,5 +1,7 @@
 'use strict';
 
+let gDigifujamVersion = 1;
+
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
     while (i--) {
@@ -74,8 +76,8 @@ const ServerSettings = {
     PingIntervalMS: 2000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
 
-    InstrumentIdleTimeoutMS: 99999999,// (1000 * 60),
-    InstrumentAutoReleaseTimeoutMS: 99999999,//(1000 * 60 * 5),
+    InstrumentIdleTimeoutMS: (1000 * 60),
+    InstrumentAutoReleaseTimeoutMS: (1000 * 60 * 5),
 
     UsernameLengthMax: 20,
     UsernameLengthMin: 1,
@@ -512,6 +514,7 @@ class DigifuRoomState {
         this.width = 16;
         this.height = 9;
         this.roomTitle = "";
+        this.softwareVersion = gDigifujamVersion;
 
         this.stats = {
             noteOns: 0,
