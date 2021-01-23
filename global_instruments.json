@@ -246,6 +246,7 @@
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "valueCurve": "4.5",
+          "zeroPoint": 0.33,
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -479,6 +480,7 @@
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "valueCurve": "4.5",
+          "zeroPoint": 0.33,
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -712,6 +714,7 @@
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
           "valueCurve": "4.5",
+          "zeroPoint": 0.33,
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -945,6 +948,7 @@
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
           "valueCurve": "4.5",
+          "zeroPoint": 0.33,
           "minValue": -1000,
           "maxValue": 9000.0
         },

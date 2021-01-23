@@ -145,7 +145,7 @@ class InstrumentParam {
         if (this.zeroPoint != null) return;
         let doesInpRangeCrossZero = (this.minValue < 0 && this.maxValue > 0);
         if (!doesInpRangeCrossZero) {
-            // without 2 poles, it's just a simple 
+            // without 2 poles, it's just a simple ..
             this.zeroPoint = 0.0;
             return;
         }

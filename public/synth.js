@@ -176,7 +176,7 @@ class DigifuSynth {
 		this.masterGainNode.connect(this.audioCtx.destination);
 
 		// see other possible impulses: https://github.com/burnson/Reverb.js
-		this.masterReverb = this.audioCtx.createReverbFromUrl("./LadyChapelStAlbansCathedral.m4a", () => {
+		this.masterReverb = this.audioCtx.createReverbFromUrl("./reaper_stems_MidiverbMark2Preset29.m4a", () => { ////./MidiverbMark2Preset29.m4a", () => { // ./LadyChapelStAlbansCathedral.m4a
 
 			for (let inst in this.instrumentWetGainers) {
 				this.instrumentWetGainers[inst].connect(this.masterReverb);

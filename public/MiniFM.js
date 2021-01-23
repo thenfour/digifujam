@@ -937,7 +937,7 @@ class MiniFMSynthVoice {
         let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
         // when verb mix is 0, drygain is the real master gain.
         // when verb mix is 1, drygain is 0 and verbmix is mastergain
-        return [(1.0 - vg) * ms, vg * ms * 1.1]; // multiply verb gain to compensate, try and make wet as loud as dry.
+        return [(1.0 - vg) * ms, vg * ms * 1.2]; // multiply verb gain to compensate, try and make wet as loud as dry.
     }
 
     get IsPlaying() {
