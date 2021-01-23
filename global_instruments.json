@@ -236,6 +236,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
         },
@@ -244,7 +245,7 @@
           "name": "Freq offset",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "valueScaling": "2",
+          "valueCurve": "4.5",
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -254,6 +255,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -263,6 +265,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -272,6 +275,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -465,6 +469,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
         },
@@ -473,6 +478,7 @@
           "name": "Freq offset",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -482,6 +488,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -491,6 +498,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -500,6 +508,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -693,6 +702,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
         },
@@ -701,6 +711,7 @@
           "name": "Freq offset",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -710,6 +721,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -719,6 +731,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -728,6 +741,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -921,6 +935,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
         },
@@ -929,6 +944,7 @@
           "name": "Freq offset",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -1000,
           "maxValue": 9000.0
         },
@@ -938,6 +954,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -947,6 +964,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -956,6 +974,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -24.0,
           "maxValue": 24.0
         },
@@ -1113,6 +1132,7 @@
           "name": "Freq",
           "groupName": "Filter",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": 0.0,
           "maxValue": 15000.0
         },
@@ -1138,6 +1158,7 @@
           "name": "LFO1 mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -5000.0,
           "maxValue": 5000.0
         },
@@ -1147,6 +1168,7 @@
           "name": "LFO2 mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -5000.0,
           "maxValue": 5000.0
         },
@@ -1156,6 +1178,7 @@
           "name": "ENV mod",
           "groupName": "Filter",
           "parameterType": "floatParam",
+          "valueCurve": "4.5",
           "minValue": -5000.0,
           "maxValue": 5000.0
         },

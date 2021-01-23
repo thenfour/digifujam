@@ -257,10 +257,11 @@ class InstFloatParam extends React.Component {
     }
     onChange = (e) => {
         this.setState(this.state);
-        let realVal = parseFloat(e.target.value) / ClientSettings.InstrumentFloatParamDiscreteValues; // 0-1 within target range.
         const p = this.props.param;
-        realVal *= p.maxValue - p.minValue; // scaled to range.
-        realVal += p.minValue;// shifted to correct value.
+        let realVal = p.foreignToNativeValue(e.target.value, 0, ClientSettings.InstrumentFloatParamDiscreteValues);
+        //let realVal = parseFloat(e.target.value) / ClientSettings.InstrumentFloatParamDiscreteValues; // 0-1 within target range.
+        //realVal *= p.maxValue - p.minValue; // scaled to range.
+        //realVal += p.minValue;// shifted to correct value.
 
         this.renderedValue = realVal;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
@@ -298,6 +299,7 @@ class InstFloatParam extends React.Component {
 
     _realValToSliderVal(rv) {
         const p = this.props.param;
+        return p.nativeToForeignValue(rv, 0, ClientSettings.InstrumentFloatParamDiscreteValues);
         let sv = rv;
         sv -= p.minValue;
         sv /= p.maxValue - p.minValue;
@@ -306,10 +308,10 @@ class InstFloatParam extends React.Component {
     }
 
     setInputTextVal(val) {
-        $("#" + this.valueTextInputID).val(this.props.param.currentValue.toFixed(3));
+        $("#" + this.valueTextInputID).val(this.props.param.currentValue.toFixed(4));
     }
     setCaption(val) {
-        $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(2));
+        $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(3));
     }
     setSliderVal(val) {
         const p = this.props.param;

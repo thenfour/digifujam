@@ -120,7 +120,7 @@ const InstrumentParamType = {
     intParam: "intParam",
     floatParam: "floatParam",
     textParam: "textParam",
-    cbxParam: "cbxParam",
+    cbxParam: "cbxParam", // checkbox bool. you can also do enum-style params with intParam
 };
 
 class InstrumentParam {
@@ -134,7 +134,7 @@ class InstrumentParam {
         this.cssClassName = "";
         this.minValue = 0;// inclusive
         this.maxValue = 0;// inclusive
-        this.valueScaling = 1; // 1 = linear slider, higher values = more concave curve. 10 would be very extreme, 2 is usable
+        this.valueCurve = 1; // 1 = linear slider, higher values = more concave curve. 10 would be very extreme, 2 is usable
         this.zeroPoint = null;// 0-1 of output range, when scaling to external range, when neg & pos ranges are different, it's a bit fuzzy to know where "0" is on the output range. We calculate it and put it here.
 
         this.currentValue = 0;
@@ -143,26 +143,68 @@ class InstrumentParam {
 
     ensureZeroPoint() {
         if (this.zeroPoint != null) return;
-        //
+        let doesInpRangeCrossZero = (this.minValue < 0 && this.maxValue > 0);
+        if (!doesInpRangeCrossZero) {
+            // without 2 poles, it's just a simple 
+            this.zeroPoint = 0.0;
+            return;
+        }
+
+        this.zeroPoint = 0.5;
     }
 
-    // you can have param ranges like from -1000 to 20000; we need to make sure we scale the negative stuff nicely.
-    // but where is the 0 point in the output range? i feel like the zero point should be calculated as a proportion of scaled neg:pos
-    // so for example -1000 to 20000 range, to scale into a 100px range, with pow=2, take the whole range 0-max, and find the 1000 point.
-    // total range = 21000.
-    // val=1000 which scaled 0-1, is 0.047
-    // hm this isn't going to go well. now pow(2) and this is way too small. well it all depensd on the situation.
-    // maybe you can just specify the zero point manually. or we take the linear position and bring it closer to the center a bit.
-    exportValue(outpMin, outpMax) {
-        this.ensureZeroPoint();
-        if (paramValue < paramMin) paramValue = paramMin;
-        if (paramValue > paramMax) paramValue = paramMax;
-        // scale inp 0-1, pow(inp, 1/p), scale to our range.
+    // I KNOW THE CORRECT THING TO DO is to tailor each curve perfectly with a log scale to the specific ranges at hand.
+    // HOWEVER using pow() i find it more flexible for tweaking the UI regardless of mathematical perfection,
+    // --> and simpler to manage for my non-mathematical pea brain.
 
+    // you can have param ranges like from -1000 to 20000; we need to make sure we scale the negative stuff nicely.
+    // but where is the 0 point in the output range? in a general sense i could choose to either put it at 0.5 (centered in the output range),
+    nativeToForeignValue(v, outpMin, outpMax) {
+        this.ensureZeroPoint();
+        if (v < this.minValue) v = this.minValue; // clamp to ensure pow() will produce valid results.
+        if (v > this.maxValue) v = this.maxValue;
+        let outpZero = this.zeroPoint * (outpMax - outpMin) + outpMin; // this is the output VALUE which represents inp of 0.
+        if (v == 0) return outpZero; // eliminate div0 with a shortcut
+
+        if (v > 0) { // positive range.
+            v /= this.maxValue; // scale v 0-1, and throw out negative part of the range.
+            outpMin = outpZero; // correspondingly eliminate negative portion of output range by bringing outpMin to zeroPoint
+            v = Math.pow(v, 1.0 / this.valueCurve); // map 0-1 to  0-1 with curve
+            v *= (outpMax - outpZero); // scale to output range zero-max
+            v += outpZero;// and shift into positive side
+            return v;
+        }
+
+        // negative range.
+        v /= this.minValue; // ignore other pole. minvalue must also be negative in this case; this makes the result positive 0-1 where 1 is the min value.
+        v = Math.pow(v, 1.0 / this.valueCurve); // still 0-1 where 1 is min value and 0 is zero
+        v = 1.0 - v;// 0-1 = outpMin-outpZero
+        v *= (outpZero - outpMin); // scale from [0-1] to [min-zero]
+        v += outpMin;
+        return v;
     };
-    importValue(inp, inpMin, inpMax) {
+
+    // basically inverse of above. unifying them into 1 function is not perfectly simple, because the zero point concept is not the same for both sides of the equation.
+    foreignToNativeValue(v, inpMin, inpMax) {
         this.ensureZeroPoint();
         // based on simple val=range * pow(inpval01, power)
+        if (v < inpMin) v = inpMin; // clamp to ensure pow() will produce valid results.
+        if (v > inpMax) v = inpMax;
+        let inpZero = this.zeroPoint * (inpMax - inpMin) + inpMin; // this is the output VALUE which represents inp of 0.
+        if (v >= inpZero) { // positive
+            v -= inpZero;
+            v /= inpMax - inpZero; // now scaled to 0-1 throwing out neg range
+            v = Math.pow(v, this.valueCurve); // map 0-1 to  0-1 with curve
+            v *= this.maxValue; // scale to our positive range ignoring negative
+            return v;
+        }
+
+        // negative range.
+        v -= inpMin; // inpmin - inpzero => 0->neginprange
+        v /= (inpZero - inpMin); // scale to 0-1 where 1 is min
+        v = Math.pow(1 - v, this.valueCurve);
+        v *= this.minValue;
+        return v;
     };
 };
 

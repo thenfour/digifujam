@@ -43,3 +43,17 @@ let stylizeRangeInput = (elementID, opts) => {
 //     bgPosColorSpec: "white",
 //     zeroVal: 3,
 // });
+
+
+
+let testExportValue = (min, max, v) => {
+    let p = Object.assign(new InstrumentParam(), {
+        valueCurve: 2,
+        minValue: min,
+        maxValue: max
+    });
+    let x = p.nativeToForeignValue(v, 0, 100);
+    let x2 = p.foreignToNativeValue(x, 0, 100);
+    console.log(`${v} => ${x} => ${x2}`);
+    //return x;
+};
