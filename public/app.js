@@ -310,6 +310,66 @@ class DigifuApp {
         this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj);
     }
 
+    NET_OnInstrumentPresetDelete(data) { // instrumentID, presetID
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+        foundInstrument.instrument.presets.removeIf(p => p.presetID == data.presetID);
+        this.stateChangeHandler();
+    }
+
+    NET_OnInstrumentFactoryReset(data) { // instrumentID, presets:[presets]
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.importAllPresetsArray(data.presets);
+        let initPreset = foundInstrument.instrument.GetInitPreset();
+        if (initPreset) {
+            this.synth.SetInstrumentParams(this.myInstrument, initPreset);
+        }
+
+        this.stateChangeHandler();
+    }
+
+    NET_OnInstrumentBankReplace(data) { // [presets]
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.importAllPresetsArray(data.presets);
+
+        this.stateChangeHandler();
+    }
+
+    NET_OnInstrumentPresetSave(data) { // instrumentID, patchObj:{params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        let existing = foundInstrument.instrument.presets.find(p => p.presetID == data.patchObj.presetID);
+        if (existing) {
+            Object.assign(existing, data.patchObj);
+        } else {
+            foundInstrument.instrument.presets.push(data.patchObj);
+        }
+
+        // if you saved as a NEW preset, integrate the new ID.
+        if (this.myInstrument) {
+            if (foundInstrument.instrument.instrumentID == this.myInstrument.instrumentID) {
+                if (!this.myInstrument.GetParamByID("presetID").currentValue) {
+                    this.myInstrument.GetParamByID("presetID").currentValue = data.patchObj.presetID;
+                }
+            }
+        }
+
+        this.stateChangeHandler();
+    }
+
     NET_OnPing(data) {
         this.net.SendPong(data.token);
         if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
@@ -325,8 +385,6 @@ class DigifuApp {
             if (!foundUser) return; // this is possible because the server may be latent in sending this user data.
             foundUser.user.pingMS = u.pingMS;
         });
-
-
 
         // pings are a great time to do some cleanup.
 
@@ -466,7 +524,7 @@ class DigifuApp {
         this.net.SendCheer(text, x, y);
     };
 
-    LoadPresetObj(presetObj) {
+    loadPatchObj(presetObj) {
         if (!this.myInstrument) return;
         Object.keys(presetObj).forEach(k => {
             presetObj[k] = sanitizeInstrumentParamVal(k, presetObj[k]);
@@ -475,13 +533,63 @@ class DigifuApp {
         this.synth.SetInstrumentParams(this.myInstrument, presetObj);
     };
 
+
     SetInstrumentParam(inst, param, newVal) {
         let presetObj = {};
         newVal = sanitizeInstrumentParamVal(param, newVal);
 
         presetObj[param.paramID] = newVal;
-        this.LoadPresetObj(presetObj);
+        this.loadPatchObj(presetObj);
     };
+
+
+    deletePreset(presetObj) {
+        if (!this.myInstrument) return;
+        if (!presetObj) return;
+        if (!presetObj.presetID) return;
+        this.net.SendDeletePreset(presetObj.presetID);
+    }
+
+    savePreset(patchObj) {
+        if (!this.myInstrument) return;
+        this.net.SendInstrumentPresetSave(patchObj);
+    }
+
+    // saves the live patch. if it's a loaded preset, then it will overwrite the orig. if it's not, then it will be saved as new
+    saveLoadedPreset() {
+        if (!this.myInstrument) return;
+        this.savePreset(this.myInstrument.exportPatchObj());
+    }
+
+    // save live as a new preset, even if the current patch is an existing one.
+    savePatchAsNewPreset() {
+        if (!this.myInstrument) return;
+        // force saving as new. IT ALSO allows us to know that when the server comes back with a presetID, we should use it live.
+        this.myInstrument.GetParamByID("presetID").currentValue = null;
+        this.saveLoadedPreset();
+    }
+
+    saveOverwriteExistingPreset(presetIDToOverwrite) {
+        if (!this.myInstrument) return;
+        this.myInstrument.GetParamByID("presetID").currentValue = presetIDToOverwrite;
+        this.saveLoadedPreset();
+    }
+
+    // return true/false success
+    importAllPresetsJSON(bankJSON) {
+        if (!IsValidJSONString(bankJSON)) return false;
+        if (!this.myInstrument) return false;
+        //this.myInstrument.importAllPresetsJSON(bankJSON);
+        this.net.SendInstrumentBankReplace(bankJSON);
+    }
+
+    factoryResetInstrument() {
+        if (!this.myInstrument) return false;
+        this.net.SendInstrumentFactoryReset();
+    }
+
+
+
 
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer, handleRoomWelcome) {
         this.myUser = new DigifuUser();

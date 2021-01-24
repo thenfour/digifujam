@@ -63,6 +63,12 @@ const ClientMessages = {
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
     InstrumentParams: "InstParams",// {} object mapping paramID => newVal -- pitch bend is a special param called "pb"
+
+    InstrumentPresetDelete: "InstrumentPresetDelete", // presetID
+    InstrumentPresetSave: "InstrumentPresetSave", // {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite.
+    InstrumentBankReplace: "InstrumentBankReplace", // [{preset},{preset...}]
+    InstrumentFactoryReset: "InstrumentFactoryReset",
+
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 };
@@ -81,6 +87,12 @@ const ServerMessages = {
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
     InstrumentParams: "InstParams",// { userID, instrumentID, patchObj:{object mapping paramID to newVal} } ] -- pitch bend is a special param called "pb"
+
+    InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
+    InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
+    InstrumentBankReplace: "InstrumentBankReplace", // [{preset},{preset...}]
+    InstrumentFactoryReset: "InstrumentFactoryReset", // instrumentID, [presets]
+
     UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y
 };
@@ -219,10 +231,6 @@ class DigifuInstrumentSpec {
         this.maxTextLength = 100;
     }
 
-    // get ShouldShowEditor() {
-    //     return this.engine != "soundfont";
-    // }
-
     getDisplayName() {
         switch (this.engine) {
             case "soundfont":
@@ -245,19 +253,49 @@ class DigifuInstrumentSpec {
         return this.params.find(p => p.paramID == paramID);
     }
 
-    loadPreset(presetObj) {
+    // can return null!
+    GetInitPreset() {
+        let ret = this.presets.find(p => p.name == "init");
+        if (!ret && this.presets.length > 0) ret = this.presets[0];
+        return ret;
+    }
+
+    loadPatchObj(presetObj) {
+        if (!presetObj) return;
         Object.keys(presetObj).forEach(k => {
             let param = this.params.find(p => p.paramID == k);
             if (!param) {
-                console.log(`loadPreset: ParamID ${k} was not found, its value will be ignored.`);
+                console.log(`loadPatchObj: "${k}" was not found, its value will be ignored.`);
                 return;
             }
             param.currentValue = presetObj[k];
-            //console.log(`setting param ${k} to ${presetObj[k]}`);
         });
     }
 
-    exportPresetObj() {
+    exportAllPresetsJSON() {
+        return JSON.stringify(this.presets);
+    }
+
+    // return true/false success
+    importAllPresetsArray(a) {
+        if (!Array.isArray(a)) return false;
+        // TODO: other validation.
+        this.presets = a;
+        return true;
+    }
+
+    // return true/false success
+    importAllPresetsJSON(js) {
+        try {
+            this.importAllPresetsArray(JSON.parse(js));
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // exports LIVE params as a patch
+    exportPatchObj() {
         let ret = {};
         this.params.forEach(param => {
             if (param.paramID == "pb") { return; } // pitch bend is not something we want to store in presets
@@ -296,7 +334,7 @@ class DigifuInstrumentSpec {
 
     // filters the list of presets to include only ones which are useful.
     // for example if OSC B is disabled, don't show any settings from OSC B.
-    GetUsablePresetListMinusPatchName(filterTxt) {
+    GetDisplayablePresetList(filterTxt) {
         if (this.engine != "minifm") return this.params;
         let osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
         let osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
@@ -331,7 +369,13 @@ class DigifuInstrumentSpec {
 
         let ret = this.params.filter(p => {
 
-            if (p.paramID === "patchName") return false; // because this is rendered specially.
+            // internal params which aren't part of the normal param editing zone.
+            if (p.paramID === "presetID") return false;
+            if (p.paramID === "isReadOnly") return false;
+            if (p.paramID === "author") return false;
+            if (p.paramID === "savedDate") return false;
+            if (p.paramID === "tags") return false;
+            if (p.paramID === "patchName") return false;
 
             if (p.groupName === "∿ Osc A" && !osc0_enabled) return false;
             if (p.groupName === "∿ Osc B" && !osc1_enabled) return false;

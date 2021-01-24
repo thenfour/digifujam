@@ -1,5 +1,14 @@
 'use strict';
 
+function IsValidJSONString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
+
 // based on
 // https://stackoverflow.com/questions/18389224/how-to-style-html5-range-input-to-have-different-color-before-and-after-slider
 let stylizeRangeInput = (elementID, opts) => {

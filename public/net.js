@@ -1,7 +1,5 @@
 'use strict';
 
-//const { ServerMessages } = require("./DFCommon");
-
 function DigifuNet() {
     this.serverUri = null;
     this.isConnected = false;
@@ -113,6 +111,21 @@ DigifuNet.prototype.SendCheer = function (text, x, y) {
     this.socket.emit(ClientMessages.Cheer, { text, x, y });
 };
 
+DigifuNet.prototype.SendDeletePreset = function (presetID) {
+    this.socket.emit(ClientMessages.InstrumentPresetDelete, { presetID });
+};
+DigifuNet.prototype.SendInstrumentFactoryReset = function () {
+    this.socket.emit(ClientMessages.InstrumentFactoryReset, { });
+};
+DigifuNet.prototype.SendInstrumentPresetSave = function (patchObj) {
+    this.socket.emit(ClientMessages.InstrumentPresetSave, patchObj);
+};
+DigifuNet.prototype.SendInstrumentBankReplace = function (bankJSON) {
+    let obj = JSON.parse(bankJSON);
+    this.socket.emit(ClientMessages.InstrumentBankReplace, obj);
+};
+
+
 DigifuNet.prototype.Disconnect = function () {
     this.ResetInternalState();
     this.socket.disconnect(true);
@@ -143,6 +156,11 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
     this.socket.on(ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
     this.socket.on(ServerMessages.InstrumentParams, data => this.handler.NET_OnInstrumentParams(data));
+
+    this.socket.on(ServerMessages.InstrumentPresetDelete, data => this.handler.NET_OnInstrumentPresetDelete(data));
+    this.socket.on(ServerMessages.InstrumentFactoryReset, data => this.handler.NET_OnInstrumentFactoryReset(data));
+    this.socket.on(ServerMessages.InstrumentPresetSave, data => this.handler.NET_OnInstrumentPresetSave(data));
+    this.socket.on(ServerMessages.InstrumentBankReplace, data => this.handler.NET_OnInstrumentBankReplace(data));
 
     this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
 

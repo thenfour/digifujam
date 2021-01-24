@@ -370,20 +370,63 @@ class InstFloatParam extends React.Component {
 
 
 
-class InstrumentPresetList extends React.Component {
-    presetClick(presetObj) {
-        this.props.app.LoadPresetObj(presetObj);
+class InstrumentPreset extends React.Component {
+    onClickLoad = () => {
+        this.props.app.loadPatchObj(this.props.presetObj);
+        gStateChangeHandler.OnStateChange();
+    }
+    onClickDelete = () => {
+        this.props.app.deletePreset(this.props.presetObj);
+    }
+    onClickOverwrite = () => {
+        this.props.app.saveOverwriteExistingPreset(this.props.presetObj.presetID);
     }
     render() {
+        let dt = this.props.presetObj.savedDate;
+        if (dt) {
+            dt = new Date(dt);
+        }
+        let tags = null;
+        if (this.props.presetObj.tags && this.props.presetObj.tags.length > 0) {
+            tags = this.props.presetObj.tags;
+        }
+        return (
+            <li key={this.props.presetObj.patchName}>
+                <div className="buttonContainer">
+                    <button onClick={() => this.onClickLoad()}>📂</button>
+                    { !this.props.presetObj.isReadOnly && <button onClick={this.onClickOverwrite}>💾</button>}
+                    { !this.props.presetObj.isReadOnly && <button onClick={this.onClickDelete}>🗑</button>}
+                </div>
+                <span className="presetName">{this.props.presetObj.patchName}</span>
+                <span className="author">by {this.props.presetObj.author}</span>
+                {
+                    dt &&
+                    <span className="savedDate">{dt.toLocaleString()}</span>
+                }
+                {
+                    tags &&
+                    <span className="tags">tags: {tags}</span>
+                }
+
+            </li>
+        );
+    }
+};
+
+
+
+
+class InstrumentPresetList extends React.Component {
+    render() {
         const lis = this.props.instrument.presets.map(preset => (
-            <li key={preset.patchName} onClick={() => this.presetClick(preset)}>{preset.patchName}</li>
+            <InstrumentPreset key={preset.presetID} app={this.props.app} presetObj={preset}></InstrumentPreset>
         ));
         return (
-            <div>
-                Load a preset...
-            <ul className="presetList">
-                {lis}
-            </ul>
+            <div className="presetList">
+                Presets
+                <ul>
+                    {lis}
+                </ul>
             </div>
         );
     }
@@ -452,7 +495,7 @@ class InstrumentParams extends React.Component {
     };
 
     onExportClicked = () => {
-        let presetObj = this.props.instrument.exportPresetObj();
+        let presetObj = this.props.instrument.exportPatchObj();
         let txt = JSON.stringify(presetObj, null, 2);
         navigator.clipboard.writeText(txt).then(() => {
             alert('Patch was copied to the clipboard.')
@@ -463,12 +506,13 @@ class InstrumentParams extends React.Component {
 
     onImportClicked = () => {
         navigator.clipboard.readText().then(text => {
-            console.log('Pasted content: ', text);
+            //console.log('Pasted content: ', text);
             try {
                 let presetObj = JSON.parse(text);
-                this.props.app.LoadPresetObj(presetObj);
+                this.props.app.loadPatchObj(presetObj);
+                gStateChangeHandler.OnStateChange();
             } catch (e) {
-                alert(`Unable to import; maybe badly formatted text... Exception: ${e}`);
+                alert(`Unable to import; probably badly formatted text... Exception: ${e}`);
             }
         })
             .catch(err => {
@@ -530,6 +574,42 @@ class InstrumentParams extends React.Component {
         this.props.app.MIDI_AllNotesOff();
     };
 
+    onExportBankClicked = () => {
+        let txt = this.props.instrument.exportAllPresetsJSON();
+        navigator.clipboard.writeText(txt).then(() => {
+            alert('Bank was copied to the clipboard.')
+        }, () => {
+            alert('Unable to copy bank.')
+        });
+    };
+
+    onSaveNewPreset = () => {
+        this.props.app.savePatchAsNewPreset();
+    }
+    onFactoryReset = () => {
+        this.props.app.factoryResetInstrument();
+    }
+
+    onSaveAsExistingPreset = () => {
+        this.props.app.saveLoadedPreset();
+    }
+    
+
+    onImportBankClicked = () => {
+        navigator.clipboard.readText().then(text => {
+            //console.log('Pasted content: ', text);
+            try {
+                this.props.app.importAllPresetsJSON(text);
+                gStateChangeHandler.OnStateChange();
+            } catch (e) {
+                alert(`Unable to import; probably badly formatted text... Exception: ${e}`);
+            }
+        })
+            .catch(err => {
+                alert('Unable to read clipboard');
+            });
+    };
+
     render() {
 
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
@@ -539,7 +619,7 @@ class InstrumentParams extends React.Component {
         );
 
         let filterTxt = this.state.filterTxt.toLowerCase();
-        let filteredParams = this.props.instrument.GetUsablePresetListMinusPatchName(filterTxt)
+        let filteredParams = this.props.instrument.GetDisplayablePresetList(filterTxt)
 
         // unique group names.
         let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
@@ -561,6 +641,12 @@ class InstrumentParams extends React.Component {
         const shownStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const mainArrowText = this.state.isShown ? '⯆' : '⯈';
 
+        let presetID = this.props.instrument.GetParamByID("presetID").currentValue;
+        let existingPreset = null;
+        if (presetID) {
+            existingPreset = this.props.instrument.presets.find(p => !p.isReadOnly && p.presetID == presetID);
+        }
+
         return (
             <div className="component">
                 <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
@@ -571,11 +657,19 @@ class InstrumentParams extends React.Component {
 
                     <fieldset className="instParamGroup presetsGroup">
                         <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
-                        {this.state.presetListShown && (<ul className="instParamList">
-                            <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
-                            <li><button onClick={this.onExportClicked}>Export to clipboard...</button></li>
-                            <li><button onClick={this.onImportClicked}>Import from clipboard...</button></li>
-                        </ul>)}
+                        {this.state.presetListShown && (
+                            <ul className="instParamList">
+                                <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
+                                <li className="instPresetButtons">
+                                    <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
+                                    <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
+                                    <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
+                                    <button onClick={this.onImportBankClicked}>Import preset bank to clipboard</button><br />
+                                    {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}
+                                    <button onClick={this.onSaveNewPreset}>💾 Save settings as new preset</button><br />
+                                    <button onClick={this.onFactoryReset}>⚠ Factory reset</button>
+                                </li>
+                            </ul>)}
 
                         {presetList}
                     </fieldset>

@@ -56,6 +56,7 @@ button {
     font-size: small;
     margin: 2px;
     border-radius: 4px;
+    cursor:pointer;
 }
 button:focus {
     border: 3px solid #0ff;
@@ -319,6 +320,8 @@ button.switchChatView
     font-size: 32px;
     font-weight: bold;
     margin-top: 5px;
+    z-index: 100000;
+    position: relative;
 }
 #roomAlertArea button {
     font-size: large;
@@ -459,37 +462,78 @@ ul.instParamList input[type="range" i] {
 
 
 
+.presetList {
+    padding:15px;
+}
+
+.presetList ul {
+    padding:0;
+}
+
 
 .presetList li,
 .presetListControls li {
-    cursor: pointer;
     font-size: smaller;
     color: #aaa;
-    border: 2px solid #044;
     background-color: #044;
-    padding: 2px;
+    padding: 6px;
     margin: 0;
-    padding-left: 6px;
+    margin-bottom: 2px;
 }
 
 .presetList li:hover,
-.presetList li:active,
-.presetListControls li:hover,
-.presetListControls li:active
+.presetList li:active
  {
     background-color: #066;
 }
 
-
-.presetListControls li {
-    background-color: #444;
+.presetList .presetName
+{
+    font-weight: bold;
+    white-space: nowrap;
+}
+.presetList .author,
+.presetList .savedDate
+{
+    font-weight: normal;
     font-style: italic;
+    font-size: x-small;
+    color:#888;
+    display:block;
 }
-.presetListControls li:hover,
-.presetListControls li:active
- {
-    background-color: #666;
+
+
+.presetList ul {
+    position:relative;
 }
+
+.presetList ul .buttonContainer {
+    position:absolute;
+    right:0;
+}
+
+.presetList li button
+{
+    visibility: hidden;
+    border:0;
+    font-weight: normal;
+}
+.presetList li:hover button
+{
+    visibility: visible;
+}
+
+.presetList li button:active
+{
+    background-color:#088;
+}
+.presetList li button:hover,
+.presetList li button:focus
+{
+    background-color:#033;
+}
+
+
 
 .roomItem {
     border:5px solid blue;
@@ -630,3 +674,17 @@ input[type="range"].floatParam::-webkit-slider-thumb {
     height: 9px;
     width: 9px;
 }
+
+.instPresetButtons {
+    white-space: normal;
+}
+
+.instPresetButtons button {
+    border:0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+
+
+

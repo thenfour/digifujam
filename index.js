@@ -20,21 +20,75 @@ class RoomServer {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(data);
 
+    const internalParams = [
+      {
+        "paramID": "patchName",
+        "name": "Patch name",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
+      },
+      {
+        "paramID": "presetID",
+        "name": "Preset ID",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
+      },
+      {
+        "paramID": "author",
+        "name": "Author",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
+      },
+      {
+        "paramID": "savedDate",
+        "name": "Saved date",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
+      },
+      {
+        "paramID": "tags",
+        "name": "Tags",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 500
+      },
+      {
+        "paramID": "isReadOnly",
+        "name": "Tags",
+        "parameterType": "intParam",
+        "isInternal": true,
+      },
+    ];
+
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     this.roomState.instrumentCloset.forEach(i => {
       i.instrumentID = DF.generateID();
 
-      // make sure all params have a group name
-      // i.params.forEach(p => {
-      //   if (!p.groupName) p.groupName = "Params";
-      // });
+      // make sure internal params are there.
+      let paramsToAdd = [];
+      internalParams.forEach(ip => {
+        if (!i.params.some(p => p.paramID == ip.paramID)) {
+          let n = Object.assign(new DF.InstrumentParam(), ip);
+          n.thaw();
+          //console.log(`adding internal param ${n.name}`);
+          paramsToAdd.push(n);
+        }
+      });
+      i.params = paramsToAdd.concat(i.params);
 
-      // load a preset
-      if (!i.presets.length) {
-        console.assert(!i.params.length, `${i.name} ${i.presets.length} ${i.params.length} WARN: if you have any params, you must have a preset. ${JSON.stringify(i)}`);
-        return;
-      }
-      i.loadPreset(i.presets[0]);
+      // make sure all presets have a presetID
+      i.presets.forEach(preset => {
+        if (!preset.presetID) {
+          preset.presetID = DF.generateID();
+          //console.log(`generated presetID ${preset.presetID}`);
+        }
+      });
+
+      i.loadPatchObj(i.GetInitPreset());
 
       // add special param values...
       i.params.push(Object.assign(new DF.InstrumentParam(), {
@@ -46,6 +100,14 @@ class RoomServer {
         maxValue: 48,
         currentValue: 0,
       }));
+    });
+
+    // remember this stuff for our "reset to factory defaults" function.
+    this.factorySettings = this.roomState.instrumentCloset.map(i => {
+      return {
+        instrumentID: i.instrumentID,
+        presetsJSON: i.exportAllPresetsJSON()
+      };
     });
 
     setTimeout(() => {
@@ -415,6 +477,121 @@ class RoomServer {
     }
   };
 
+
+  OnClientInstrumentPresetDelete(ws, data) {
+    try {
+      //console.log(`OnClientInstrumentPresetDelete(${data.presetID})`);
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) throw `unknown user`;
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) throw (`user not controlling an instrument.`);
+      if (!data.presetID) throw `no presetID`;
+      let foundp = foundInstrument.instrument.presets.find(p => p.presetID == data.presetID);
+      if (!foundp) throw `unable to find the preset ${data.presetID}`;
+      if (foundp.isReadOnly) throw `don't try to delete a read-only preset.`;
+
+      // delete
+      foundInstrument.instrument.presets.removeIf(p => p.presetID == data.presetID);
+
+      // broadcast
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentPresetDelete, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        presetID: data.presetID
+      });
+
+    } catch (e) {
+      console.log(`OnClientInstrumentPresetDelete exception occurred`);
+      console.log(e);
+    }
+  }
+
+  OnClientInstrumentFactoryReset(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) throw `unknown user`;
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) throw (`user not controlling an instrument.`);
+
+      let factorySettings = this.factorySettings.find(o => o.instrumentID == foundInstrument.instrument.instrumentID);
+      if (!factorySettings) throw `no factory settings found for instrument ${foundInstrument.instrument.instrumentID}`;
+
+      // a factory reset means importing the factory presets list and loading an init preset.
+      if (!foundInstrument.instrument.importAllPresetsJSON(factorySettings.presetsJSON)) {
+        throw `error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`;
+      }
+      let initPreset = foundInstrument.instrument.GetInitPreset();
+      if (initPreset) {
+        foundInstrument.instrument.loadPatchObj(initPreset);
+      }
+
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentFactoryReset, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        presets: foundInstrument.instrument.presets,
+      });
+
+    } catch (e) {
+      console.log(`OnClientInstrumentFactoryReset exception occurred`);
+      console.log(e);
+    }
+  }
+
+  OnClientInstrumentBankReplace(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) throw `unknown user`;
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) throw (`user not controlling an instrument.`);
+
+      // TODO: we don't really verify this at any stage. from the clipboard straight to the server's memory is a bit iffy, despite not really having any consequence.
+      if (!foundInstrument.instrument.importAllPresetsArray(data)) {
+        throw `data was not in the correct format probably.`;
+      }
+
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentBankReplace, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        presets: foundInstrument.instrument.presets,
+      });
+
+    } catch (e) {
+      console.log(`OnClientInstrumentBankReplace exception occurred`);
+      console.log(e);
+    }
+  }
+
+  OnClientInstrumentPresetSave(ws, patchObj) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) throw `unknown user`;
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) throw (`user not controlling an instrument.`);
+
+      // fix some things up.
+      patchObj.author = foundUser.user.name;
+      patchObj.savedDate = new Date();
+      if (!patchObj.presetID) patchObj.presetID = DF.generateID();
+      patchObj.isReadOnly = false;
+
+      // if there's an existing preset with the same ID, then overwrite. otherwise push.
+      let existing = foundInstrument.instrument.presets.find(p => p.presetID == patchObj.presetID);
+      if (existing) {
+        Object.assign(existing, patchObj);
+      } else {
+        foundInstrument.instrument.presets.push(patchObj);
+      }
+
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentPresetSave, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        patchObj,
+      });
+
+    } catch (e) {
+      console.log(`OnClientInstrumentPresetSave exception occurred`);
+      console.log(e);
+    }
+  }
+
+
+
   OnClientChatMessage(ws, msg) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
@@ -767,6 +944,11 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.PedalDown, data => ForwardToRoom(ws, room => room.OnClientPedalDown(ws, data)));
       ws.on(DF.ClientMessages.PedalUp, data => ForwardToRoom(ws, room => room.OnClientPedalUp(ws, data)));
       ws.on(DF.ClientMessages.InstrumentParams, data => ForwardToRoom(ws, room => room.OnClientInstrumentParams(ws, data)));
+
+      ws.on(DF.ClientMessages.InstrumentPresetDelete, data => ForwardToRoom(ws, room => room.OnClientInstrumentPresetDelete(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentFactoryReset, data => ForwardToRoom(ws, room => room.OnClientInstrumentFactoryReset(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentPresetSave, data => ForwardToRoom(ws, room => room.OnClientInstrumentPresetSave(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentBankReplace, data => ForwardToRoom(ws, room => room.OnClientInstrumentBankReplace(ws, data)));
 
       ws.on(DF.ClientMessages.ChatMessage, data => ForwardToRoom(ws, room => room.OnClientChatMessage(ws, data)));
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
