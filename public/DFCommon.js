@@ -21,6 +21,19 @@ let remap = function (value, low1, high1, low2, high2) {
     return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
+let remapWithPowCurve = (value, inpMin, inpMax, p, outpMin, outpMax) => {
+    // map to 0-1
+    value -= inpMin;
+    value /= inpMax - inpMin;
+    if (value < 0) value = 0;
+    if (value > 1) value = 1;
+    // curve
+    value = Math.pow(value, p);
+    // map to outpMin-outpMax
+    value *= outpMax - outpMin;
+    return value + outpMin;
+};
+
 // make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
 let gNextID = 1;
 let generateID = function () {
@@ -143,71 +156,49 @@ class InstrumentParam {
     }
     thaw() { /* no child objects to thaw. */ }
 
+    // returns true if a zero point exists.
     ensureZeroPoint() {
-        if (this.zeroPoint != null) return;
         let doesInpRangeCrossZero = (this.minValue < 0 && this.maxValue > 0);
-        if (!doesInpRangeCrossZero) {
-            // without 2 poles, it's just a simple ..
-            this.zeroPoint = 0.0;
-            return;
-        }
-
+        if (!doesInpRangeCrossZero) return false;
+        if (this.zeroPoint != null) return true;
         this.zeroPoint = 0.5;
+        return true;
     }
 
     // I KNOW THE CORRECT THING TO DO is to tailor each curve perfectly with a log scale to the specific ranges at hand.
     // HOWEVER using pow() i find it more flexible for tweaking the UI regardless of mathematical perfection,
     // --> and simpler to manage for my non-mathematical pea brain.
 
-    // you can have param ranges like from -1000 to 20000; we need to make sure we scale the negative stuff nicely.
-    // but where is the 0 point in the output range? in a general sense i could choose to either put it at 0.5 (centered in the output range),
     nativeToForeignValue(v, outpMin, outpMax) {
-        this.ensureZeroPoint();
-        if (v < this.minValue) v = this.minValue; // clamp to ensure pow() will produce valid results.
-        if (v > this.maxValue) v = this.maxValue;
+        if (!this.ensureZeroPoint()) {
+            // only 1 pole; simple mapping with curve.
+            return remapWithPowCurve(v, this.minValue, this.maxValue, 1.0 / this.valueCurve, outpMin, outpMax);
+        }
+        // we know zero point is valid from here.
+
         let outpZero = this.zeroPoint * (outpMax - outpMin) + outpMin; // this is the output VALUE which represents inp of 0.
         if (v == 0) return outpZero; // eliminate div0 with a shortcut
-
-        if (v > 0) { // positive range.
-            v /= this.maxValue; // scale v 0-1, and throw out negative part of the range.
-            outpMin = outpZero; // correspondingly eliminate negative portion of output range by bringing outpMin to zeroPoint
-            v = Math.pow(v, 1.0 / this.valueCurve); // map 0-1 to  0-1 with curve
-            v *= (outpMax - outpZero); // scale to output range zero-max
-            v += outpZero;// and shift into positive side
-            return v;
+        if (v > 0) {
+            // positive
+            return remapWithPowCurve(v, 0, this.maxValue, 1.0 / this.valueCurve, outpZero, outpMax);
         }
+        return remapWithPowCurve(v, 0, this.minValue, 1.0 / this.valueCurve, outpZero, outpMin);
+    }
 
-        // negative range.
-        v /= this.minValue; // ignore other pole. minvalue must also be negative in this case; this makes the result positive 0-1 where 1 is the min value.
-        v = Math.pow(v, 1.0 / this.valueCurve); // still 0-1 where 1 is min value and 0 is zero
-        v = 1.0 - v;// 0-1 = outpMin-outpZero
-        v *= (outpZero - outpMin); // scale from [0-1] to [min-zero]
-        v += outpMin;
-        return v;
-    };
-
-    // basically inverse of above. unifying them into 1 function is not perfectly simple, because the zero point concept is not the same for both sides of the equation.
     foreignToNativeValue(v, inpMin, inpMax) {
-        this.ensureZeroPoint();
-        // based on simple val=range * pow(inpval01, power)
-        if (v < inpMin) v = inpMin; // clamp to ensure pow() will produce valid results.
-        if (v > inpMax) v = inpMax;
-        let inpZero = this.zeroPoint * (inpMax - inpMin) + inpMin; // this is the output VALUE which represents inp of 0.
-        if (v >= inpZero) { // positive
-            v -= inpZero;
-            v /= inpMax - inpZero; // now scaled to 0-1 throwing out neg range
-            v = Math.pow(v, this.valueCurve); // map 0-1 to  0-1 with curve
-            v *= this.maxValue; // scale to our positive range ignoring negative
-            return v;
+        if (!this.ensureZeroPoint()) {
+            // only 1 pole; simple mapping with curve.
+            return remapWithPowCurve(v, inpMin, inpMax, this.valueCurve, this.minValue, this.maxValue);
         }
+        // we know zero point is valid from here.
+        let inpZero = this.zeroPoint * (inpMax - inpMin) + inpMin; // foreign value represting native zero.
+        if (v == inpZero) return 0;
+        if (v > inpZero) {
+            return remapWithPowCurve(v, inpZero, inpMax, this.valueCurve, 0, this.maxValue);
+        }
+        return remapWithPowCurve(v, inpZero, inpMin, this.valueCurve, 0, this.minValue);
+    }
 
-        // negative range.
-        v -= inpMin; // inpmin - inpzero => 0->neginprange
-        v /= (inpZero - inpMin); // scale to 0-1 where 1 is min
-        v = Math.pow(1 - v, this.valueCurve);
-        v *= this.minValue;
-        return v;
-    };
 };
 
 class DigifuInstrumentSpec {
@@ -297,6 +288,10 @@ class DigifuInstrumentSpec {
                 return true;
         }
         return false;
+    }
+
+    groupIsModulation(groupName) {
+        return groupName.toLowerCase().startsWith("mod ");
     }
 
     // filters the list of presets to include only ones which are useful.
@@ -441,8 +436,12 @@ class DigifuChatMessage {
         this.messages = [];
 
         // todo: group by userID not name, but it depends on having consistent userIDs across joins/parts which for the moment is not happening.
-        if (Object.keys(joins).length > 0) this.messages.push(`Joined: ${Object.keys(joins).map(k => joins[k].name).join(', ')}`);
-        if (Object.keys(parts).length > 0) this.messages.push(`Left: ${Object.keys(parts).map(k => parts[k].name).join(', ')}`);
+        let msgText = [];
+        if (Object.keys(joins).length > 0) msgText.push(`Joined: ${Object.keys(joins).map(k => joins[k].name).join(', ')}`);
+        if (Object.keys(parts).length > 0) msgText.push(`Left: ${Object.keys(parts).map(k => parts[k].name).join(', ')}`);
+        if (msgText.length) {
+            this.messages.push(msgText.join(", "));
+        }
     }
 };
 

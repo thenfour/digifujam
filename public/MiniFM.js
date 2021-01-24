@@ -966,11 +966,23 @@ class MiniFMSynthVoice {
         //     return Math.sign(x) * Math.pow(Math.abs(x), p);
         // };
 
-        
-        let transf = (x, p) => {
-            return remap(p, 0, 1, 0, Math.sin(x));
-        };
+        // // x is -1 to 1
+        // let transf = (x, p) => {
+        //     return remap(p, -1, 1, 0, Math.sin(x));
+        // };
 
+        // x is -1 to 1, a is 0-1
+        let transf = (x, a) => {
+            let s = Math.sin(x / 2 * Math.PI); // a sine curve from 0-1
+            a *= 3;
+            let c = a * s + (1 - a) * x; // blend between linear & sine.
+            let t = Math.sin(c * Math.PI / 2);// when a is >1, clipping occurs; this "folds" back.
+            if (a < 1) {
+                // but we want 0 to be linear, so blend between linear & folded for lower values.
+                t = a * t + (1 - a) * x;
+            }
+            return t;
+        };
 
         let makeDistortionCurve = (amt) => {
             let n_samples = 256, curve = new Float32Array(n_samples);

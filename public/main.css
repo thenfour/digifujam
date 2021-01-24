@@ -84,7 +84,7 @@ button:focus {
     grid-template-columns: 270px minmax(0, 1fr) 550px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
-#grid-container.wide input[type="range"]
+#grid-container.wide #rightArea input[type="range"]
 {
     width:350px;
 }
@@ -436,6 +436,13 @@ ul.instParamList input[type="range" i] {
     border-radius: 15px;
     background-color:#00cccc0f;
 }
+.instParamGroup.modulation {
+    background-color: #333;
+    }
+    .instParamGroup.modulation legend {
+        color: #66c;
+    }
+
 .wide .instParamGroup {
     margin:10px;
 }

@@ -300,11 +300,6 @@ class InstFloatParam extends React.Component {
     _realValToSliderVal(rv) {
         const p = this.props.param;
         return p.nativeToForeignValue(rv, 0, ClientSettings.InstrumentFloatParamDiscreteValues);
-        let sv = rv;
-        sv -= p.minValue;
-        sv /= p.maxValue - p.minValue;
-        sv *= ClientSettings.InstrumentFloatParamDiscreteValues;
-        return sv;
     }
 
     setInputTextVal(val) {
@@ -420,8 +415,13 @@ class InstrumentParamGroup extends React.Component {
             }
         };
 
+        let className = "instParamGroup";
+        if (this.props.instrument.groupIsModulation(this.props.groupName)) {
+            className += " modulation";
+        }
+
         return (
-            <fieldset key={this.props.groupName} className="instParamGroup">
+            <fieldset key={this.props.groupName} className={className}>
                 <legend onClick={() => this.props.onToggleShown()}>{this.props.groupName} {arrowText}</legend>
                 {this.props.isShown && <ul className="instParamList">
                     {this.props.filteredParams.filter(p => p.groupName == this.props.groupName).map(p => createParam(p))}
