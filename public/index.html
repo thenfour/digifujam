@@ -52,6 +52,27 @@
 
     <script type="text/babel">
 
+        let gShiftKey = false;
+        let gCtrlKey = false;
+
+        $(document).on('keydown', function (e) {
+            if (e.shiftKey) {
+                gShiftKey = true;
+            }
+            if (e.ctrlKey) {
+                gCtrlKey = true;
+            }
+        });
+        $(document).on('keyup', function (e) {
+            if (e.shiftKey == false) {
+                gShiftKey = false;
+            }
+            if (e.ctrlKey == false) {
+                gCtrlKey = false;
+            }
+        });
+
+
         // prefix for client-side generated IDs.
         let gIDDomain = "client";
 

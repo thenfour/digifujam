@@ -341,6 +341,22 @@ class InstFloatParam extends React.Component {
         this.setCaption(realVal);
         this.setSliderVal(realVal);
     }
+
+    onClickSlider = (e) => {
+        let a = 0;
+        if (gCtrlKey) {
+            let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
+            //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
+
+            this.setState(this.state);
+            this.renderedValue = realVal;
+            this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+            this.setCaption(realVal);
+            this.setInputTextVal(realVal);
+            this.setSliderVal(realVal);
+        }
+    };
+
     render() {
         if (this.renderedValue != this.props.param.currentValue) {
             //has been externally modified. update ui.
@@ -352,7 +368,7 @@ class InstFloatParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.sliderID} className="floatParam" type="range" min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
+                <input id={this.sliderID} className="floatParam" type="range" onClick={this.onClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
                 />
@@ -397,7 +413,7 @@ class InstrumentPreset extends React.Component {
         this.props.app.deletePreset(this.props.presetObj);
         this.setState({ showingDeleteConfirmation: false });
     }
-    onBeginDelete = () =>  {
+    onBeginDelete = () => {
         this.setState({ showingDeleteConfirmation: true });
     }
     onCancelDelete = () => {
@@ -433,18 +449,18 @@ class InstrumentPreset extends React.Component {
                 }
                 {this.state.showingOverwriteConfirmation &&
                     <div className="confirmationBox">
-                    Click 'OK' to overwrite "{this.props.presetObj.patchName}" with the live patch
+                        Click 'OK' to overwrite "{this.props.presetObj.patchName}" with the live patch
                     <br />
-                    <button className="OK" onClick={this.onClickOverwrite}>OK</button>
-                    <button className="Cancel" onClick={this.onCancelOverwrite}>Cancel</button>
+                        <button className="OK" onClick={this.onClickOverwrite}>OK</button>
+                        <button className="Cancel" onClick={this.onCancelOverwrite}>Cancel</button>
                     </div>
                 }
                 {this.state.showingDeleteConfirmation &&
                     <div className="confirmationBox">
-                    Click 'OK' to delete "{this.props.presetObj.patchName}".
+                        Click 'OK' to delete "{this.props.presetObj.patchName}".
                     <br />
-                    <button className="OK" onClick={this.onClickDelete}>OK</button>
-                    <button className="Cancel" onClick={this.onCancelDelete}>Cancel</button>
+                        <button className="OK" onClick={this.onClickDelete}>OK</button>
+                        <button className="Cancel" onClick={this.onCancelDelete}>Cancel</button>
                     </div>
                 }
 

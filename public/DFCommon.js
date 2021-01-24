@@ -308,6 +308,17 @@ class DigifuInstrumentSpec {
         return this.params.find(p => p.paramID == paramID);
     }
 
+    // tries hard to find a "default" or "safe" value (used for ctrl+click a param)
+    GetDefaultValueForParam(param) {
+        if (param.defaultValue) return param.defaultValue;
+        let preset = this.GetInitPreset();
+        if (preset) {
+            if (preset[param.paramID]) return preset[param.paramID];
+        }
+        if (param.minValue <= 0 && param.maxValue >= 0) return 0;
+        return param.minValue;
+    }
+
     // can return null!
     GetInitPreset() {
         let ret = this.presets.find(p => p.name == "init");
