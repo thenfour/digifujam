@@ -52,7 +52,7 @@ let SetGlobalInstrumentList = function (x) {
 
 
 const ClientMessages = {
-    Identify: "Identify", // user info
+    Identify: "Identify", // user info, and optional admin password
     InstrumentRequest: "InstrumentRequest", // instid
     InstrumentRelease: "InstrumentRelease",
     ChatMessage: "ChatMessage",// (to_userID_null, msg)
@@ -68,6 +68,8 @@ const ClientMessages = {
     InstrumentPresetSave: "InstrumentPresetSave", // {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite.
     InstrumentBankReplace: "InstrumentBankReplace", // [{preset},{preset...}]
     InstrumentFactoryReset: "InstrumentFactoryReset",
+    DownloadServerState: "DownloadServerState",
+    UploadServerState: "UploadServerState",
 
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
@@ -75,7 +77,8 @@ const ClientMessages = {
 
 const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
-    Welcome: "Welcome",// (your UserID & room state)
+    PleaseReconnect: "PleaseReconnect",
+    Welcome: "Welcome",// (your UserID & room state, and whether you are an admin)
     UserEnter: "UserEnter",// (user data), <oldRoomName>
     UserLeave: "UserLeave",// UserID, <newRoomName>
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
@@ -87,6 +90,7 @@ const ServerMessages = {
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
     InstrumentParams: "InstParams",// { userID, instrumentID, patchObj:{object mapping paramID to newVal} } ] -- pitch bend is a special param called "pb"
+    ServerStateDump: "ServerStateDump",
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
@@ -121,6 +125,11 @@ const ClientSettings = {
     InstrumentFloatParamDiscreteValues: 64000,
 };
 
+const AccessLevels = {
+    User: 0,
+    Admin: 1,
+};
+
 class DigifuUser {
     constructor() {
         this.userID = null;
@@ -149,6 +158,52 @@ const InstrumentParamType = {
     textParam: "textParam",
     cbxParam: "cbxParam", // checkbox bool. you can also do enum-style params with intParam
 };
+
+const InternalInstrumentParams = [
+    {
+      "paramID": "patchName",
+      "name": "Patch name",
+      "parameterType": "textParam",
+      "isInternal": true,
+      "maxTextLength": 100
+    },
+    {
+      "paramID": "presetID",
+      "name": "Preset ID",
+      "parameterType": "textParam",
+      "isInternal": true,
+      "maxTextLength": 100
+    },
+    {
+      "paramID": "author",
+      "name": "Author",
+      "parameterType": "textParam",
+      "isInternal": true,
+      "maxTextLength": 100
+    },
+    {
+      "paramID": "savedDate",
+      "name": "Saved date",
+      "parameterType": "textParam",
+      "isInternal": true,
+      "maxTextLength": 100
+    },
+    {
+      "paramID": "tags",
+      "name": "Tags",
+      "parameterType": "textParam",
+      "isInternal": true,
+      "maxTextLength": 500
+    },
+    {
+      "paramID": "isReadOnly",
+      "name": "Tags",
+      "parameterType": "intParam",
+      "isInternal": true,
+    },
+  ];
+
+
 
 class InstrumentParam {
     constructor() {
@@ -280,6 +335,21 @@ class DigifuInstrumentSpec {
     importAllPresetsArray(a) {
         if (!Array.isArray(a)) return false;
         // TODO: other validation.
+        // do a cursory check of all require params existing.
+        const requiredParamKeys = ["presetID", "patchName"];
+        a.forEach(p => {
+            // does p contain ALL paramIDs in 
+            let count = 0;
+            requiredParamKeys.forEach(requiredKey => {
+                if (Object.keys(p).some(k => k == requiredKey)) {
+                    count ++;
+                }
+            });
+            if (count < requiredParamKeys.length) {
+                console.log(`Trying to import a preset with too few required params (${count} < ${requiredParamKeys.length})`);
+                return false;
+            }
+        });
         this.presets = a;
         return true;
     }
@@ -590,6 +660,31 @@ class DigifuRoomState {
         });
     }
 
+    adminExportRoomState() {
+        return {
+            instrumentCloset: this.instrumentCloset,
+            chatLog: this.chatLog,
+            stats: this.stats,
+        };
+    }
+    adminImportRoomState(data) {
+        this.instrumentCloset = data.instrumentCloset.map(o => {
+            let n = Object.assign(new DigifuInstrumentSpec(), o);
+            n.thaw();
+            return n;
+        });
+        this.chatLog = data.chatLog.map(o => {
+            let n = Object.assign(new DigifuChatMessage(), o);
+            n.thaw();
+            return n;
+        });
+        this.stats = data.stats;
+        
+        // remove "live" references to users.
+        this.users = [];
+        this.instrumentCloset.forEach(i => { i.controlledByUserID = null; });
+    }
+
     // returns { user, index } or null.
     FindUserByID(userID) {
         let idx = this.users.findIndex(user => user.userID == userID);
@@ -720,5 +815,7 @@ module.exports = {
     RoomFn,
     RoomFns,
     DFRoomItemType,
-    SetGlobalInstrumentList
+    AccessLevels,
+    SetGlobalInstrumentList,
+    InternalInstrumentParams,
 };

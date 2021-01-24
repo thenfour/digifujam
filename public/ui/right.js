@@ -546,7 +546,6 @@ class InstrumentParams extends React.Component {
 
     onImportClicked = () => {
         navigator.clipboard.readText().then(text => {
-            //console.log('Pasted content: ', text);
             try {
                 let presetObj = JSON.parse(text);
                 this.props.app.loadPatchObj(presetObj);
@@ -714,7 +713,7 @@ class InstrumentParams extends React.Component {
                                     <button onClick={this.onExportBankClicked}>📋Export preset bank to clipboard</button>
                                     <button onClick={this.onImportBankClicked}>📋Import preset bank to clipboard</button><br />
                                     <div style={{ height: 15 }}></div>
-                                    <button onClick={this.onSaveNewPreset}>💾 Save live settings as new preset</button>
+                                    <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
                                     {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}<br />
                                     <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
                                     {this.state.showingFactoryResetConfirmation &&
@@ -1212,9 +1211,13 @@ class LeftArea extends React.Component {
         const userState = (!this.props.app) ? null : (
             <UserState app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
         );
+        const adminControls = (this.props.app && this.props.app.isAdmin) && (
+            <AdminControls app={this.props.app}></AdminControls>
+        );
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
+                {adminControls}
                 <InstrumentList app={this.props.app} />
             </div>
         );
@@ -1652,7 +1655,7 @@ class RootArea extends React.Component {
 
         app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
             this.handleUserAllNotesOff, this.handleAllNotesOff,
-            this.handleUserLeave, this.HandleNetworkDisconnected,
+            this.handleUserLeave, this.HandlePleaseReconnect,
             this.HandleCheer, this.handleRoomWelcome);
         this.setState({ app });
     }
@@ -1734,12 +1737,12 @@ class RootArea extends React.Component {
         }, Math.max(durx, dury) * 1000);
     }
 
-    HandleNetworkDisconnected = () => {
-        // actually at this point socket.io will attempt to reconnect again and when it does, 
-        // the flow of events just replays regarding handshake and welcome msg etc. so nothing needs to be done.
-    };
+    HandlePleaseReconnect = () => {
+        this.state.app.Disconnect();
+        this.setState({ app: null });
+    }
 
-    // called for "user clicked disconnect button".
+    // called for "user clicked disconnect button"
     HandleDisconnect = () => {
         this.state.app.Disconnect();
         this.setState({ app: null });

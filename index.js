@@ -13,6 +13,14 @@ gIDDomain = "srv";
 
 let gRooms = {}; // map roomID to RoomServer
 
+gAdminUserIDs = [];
+
+let IsAdminUser = (userID) => {
+  return gAdminUserIDs.some(x => x == userID);
+};
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
 
@@ -20,57 +28,13 @@ class RoomServer {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(data);
 
-    const internalParams = [
-      {
-        "paramID": "patchName",
-        "name": "Patch name",
-        "parameterType": "textParam",
-        "isInternal": true,
-        "maxTextLength": 100
-      },
-      {
-        "paramID": "presetID",
-        "name": "Preset ID",
-        "parameterType": "textParam",
-        "isInternal": true,
-        "maxTextLength": 100
-      },
-      {
-        "paramID": "author",
-        "name": "Author",
-        "parameterType": "textParam",
-        "isInternal": true,
-        "maxTextLength": 100
-      },
-      {
-        "paramID": "savedDate",
-        "name": "Saved date",
-        "parameterType": "textParam",
-        "isInternal": true,
-        "maxTextLength": 100
-      },
-      {
-        "paramID": "tags",
-        "name": "Tags",
-        "parameterType": "textParam",
-        "isInternal": true,
-        "maxTextLength": 500
-      },
-      {
-        "paramID": "isReadOnly",
-        "name": "Tags",
-        "parameterType": "intParam",
-        "isInternal": true,
-      },
-    ];
-
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     this.roomState.instrumentCloset.forEach(i => {
       i.instrumentID = DF.generateID();
 
       // make sure internal params are there.
       let paramsToAdd = [];
-      internalParams.forEach(ip => {
+      DF.InternalInstrumentParams.forEach(ip => {
         if (!i.params.some(p => p.paramID == ip.paramID)) {
           let n = Object.assign(new DF.InstrumentParam(), ip);
           n.thaw();
@@ -113,6 +77,10 @@ class RoomServer {
     setTimeout(() => {
       this.OnPingInterval();
     }, DF.ServerSettings.PingIntervalMS);
+  }
+
+  adminImportRoomState(data) {
+    this.roomState.adminImportRoomState(data);
   }
 
   // returns { user, index } or null.
@@ -209,13 +177,20 @@ class RoomServer {
       chatMessageEntry.timestampUTC = new Date();
       chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
       this.roomState.chatLog.push(chatMessageEntry);
-      //console.log(`chatLog.push => joined from room ${clientSocket.DFFromRoomName}`);
 
-      //console.log(`User identified id=${u.userID} name=${u.name}. Send welcome package.`)
+      //console.log(`${JSON.stringify(clientSocket.handshake.query)}`);
+
+      if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
+        console.log(`An admin has been identified id=${u.userID} name=${u.name}.`);
+        gAdminUserIDs.push(u.userID);
+      } else {
+        console.log(`Welcoming user id=${u.userID} name=${u.name}.`);
+      }
 
       // notify this 1 user of their user id & room state
       clientSocket.emit(DF.ServerMessages.Welcome, {
         yourUserID: clientSocket.id,
+        accessLevel: IsAdminUser(clientSocket.id) ? DF.AccessLevels.Admin : DF.AccessLevels.User,
         roomState: this.roomState
       });
 
@@ -769,7 +744,6 @@ class RoomServer {
     }
   }
 
-
   // every X seconds, this is called. here we can just do a generic push to clients and they're expected
   // to return a pong. for now used for timing, and reporting user ping.
   OnPingInterval() {
@@ -915,6 +889,63 @@ let OnDisconnect = function (ws) {
   });
 };
 
+
+let OnClientDownloadServerState = (ws) => {
+  try {
+    if (!IsAdminUser(ws.id)) throw `User isn't an admin.`;
+
+    // the server state dump is really just everything except users.
+    let allRooms = [];
+    Object.keys(gRooms).forEach(roomID => {
+      allRooms.push({
+        roomID: roomID,
+        dump: gRooms[roomID].roomState.adminExportRoomState()
+      });
+    });
+    ws.emit(DF.ServerMessages.ServerStateDump, allRooms);
+
+  } catch (e) {
+    console.log(`OnClientDownloadServerState exception occurred`);
+    console.log(e);
+  }
+}
+
+
+let OnClientUploadServerState = (ws, data) => {
+  try {
+    if (!IsAdminUser(ws.id)) throw `User isn't an admin.`;
+
+    console.log(`uploaded server state with len=${JSON.stringify(data).length}`);
+    data.forEach(rs => {
+      if (!rs.roomID) throw `no room ID. maybe you're importing some bad format?`;
+      let room = gRooms[rs.roomID];//.find(r => r.roomState.roomID == rs.roomID);
+      if (!room) throw `unable to find a room during import. odd.`;
+      room.adminImportRoomState(rs.dump);
+    });
+
+    io.of('/').sockets.forEach(ws => {
+      ws.emit(DF.ServerMessages.PleaseReconnect); // much safer to just force them out.
+      // tell client to rejoin the room.
+      // let roomID = Object.keys(gRooms).find(roomID => {
+      //   let foundUser = gRooms[roomID].FindUserFromSocket(ws);
+      //   return !!foundUser;
+      // });
+      // if (roomID) {
+      //   console.log(`Re-welcoming user with id ${ws.id} to ${roomState.roomTitle}`);
+      //   //newRoom.ClientJoin(ws, gRooms[roomID].roomState.roomTitle);
+      // }
+
+    });
+
+  } catch (e) {
+    console.log(`OnClientUploadServerState exception occurred`);
+    console.log(e);
+  }
+}
+
+
+
+
 // load configs
 let roomsAreLoaded = function () {
   // serve the rooms
@@ -954,6 +985,9 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
+
+      ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));
+      ws.on(DF.ClientMessages.UploadServerState, data => OnClientUploadServerState(ws, data));
 
       room.ClientJoin(ws);
 

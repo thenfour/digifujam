@@ -126,6 +126,16 @@ DigifuNet.prototype.SendInstrumentBankReplace = function (bankJSON) {
 };
 
 
+DigifuNet.prototype.downloadServerState = function (responseHandler) {
+    this.serverDumpHandler = responseHandler;
+    this.socket.emit(ClientMessages.DownloadServerState);
+};
+
+DigifuNet.prototype.uploadServerState = function (data) {
+    this.socket.emit(ClientMessages.UploadServerState, data);
+};
+
+
 DigifuNet.prototype.Disconnect = function () {
     this.ResetInternalState();
     this.socket.disconnect(true);
@@ -135,10 +145,9 @@ DigifuNet.prototype.Disconnect = function () {
 DigifuNet.prototype.Connect = function (handler) {
     this.handler = handler;
     this.ResetInternalState();
+    let query = Object.assign({jamroom: window.location.pathname}, Object.fromEntries(new URLSearchParams(location.search)));
     this.socket = io({
-        query: {
-            jamroom: window.location.pathname
-        }
+        query
     });
 
     this.socket.on(ServerMessages.PleaseIdentify, (data) => this.handler.NET_OnPleaseIdentify(data));
@@ -163,6 +172,8 @@ DigifuNet.prototype.Connect = function (handler) {
     this.socket.on(ServerMessages.InstrumentBankReplace, data => this.handler.NET_OnInstrumentBankReplace(data));
 
     this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
+    this.socket.on(ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
+    this.socket.on(ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
 
     this.socket.on('disconnect', () => { this.ResetInternalState(); this.handler.NET_OnDisconnect(); });
 };

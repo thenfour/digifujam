@@ -13,7 +13,7 @@ class DigifuApp {
         this.handleUserLeave = null;
         this.handleUserAllNotesOff = null;
         this.handleAllNotesOff = null;
-        this.handleDisconnect = null;
+        this.pleaseReconnectHandler = null;
         this.handleCheer = null; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
 
         this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
@@ -21,6 +21,8 @@ class DigifuApp {
 
         this._pitchBendRange = 2;
         this._midiPBValue = 0; // -1 to 1
+
+        this.accessLevel = AccessLevels.User; // on the client of course this doesn't allow you to do anything except send the commands to the server who will reject them.
 
         this.midi = new DigifuMidi();
         this.synth = new DigifuSynth(); // contains all music-making stuff.
@@ -34,6 +36,10 @@ class DigifuApp {
                 this.stateChangeHandler();
             }
         });
+    }
+
+    get isAdmin() {
+        return this.accessLevel == AccessLevels.Admin;
     }
 
     get RoomID() {
@@ -123,18 +129,16 @@ class DigifuApp {
 
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
     NET_OnPleaseIdentify() {
-        // send your details
-        //log(`sending identify as ${JSON.stringify(this.myUser)}`);
         this.net.SendIdentify(this.myUser);
     };
 
     NET_OnWelcome(data) {
         // get user & room state
-        // {"yourUserID":1,
-        // "roomState":{"InstrumentCloset":[{"Name":"piano","Color":"#884400","InstrumentID":69,"ControlledByUserID":null},{"Name":"marimba","Color":"#00ff00","InstrumentID":420,"ControlledByUserID":null}],"Users":[{"Name":"tenfour","Color":"#ff00ff","UserID":1}]}
         let myUserID = data.yourUserID;
 
         this.roomState = DigifuRoomState.FromJSONData(data.roomState);
+
+        this.accessLevel = data.accessLevel;
 
         // find "you"
         this.myUser = this.roomState.FindUserByID(myUserID).user;
@@ -158,7 +162,6 @@ class DigifuApp {
         this.handleAllNotesOff();
 
         this.handleRoomWelcome();
-        //this.stateChangeHandler();
     };
 
     NET_OnUserEnter(data) {
@@ -451,9 +454,14 @@ class DigifuApp {
         this.stateChangeHandler();
     }
 
+    NET_pleaseReconnectHandler() {
+        this.pleaseReconnectHandler();
+    }
+
 
     NET_OnDisconnect() {
-        this.handleDisconnect();
+        //console.log(`what is iths`);
+        //this.handleDisconnect();
     }
 
     // --------------------------------------------------------------------------------------
@@ -591,7 +599,7 @@ class DigifuApp {
 
 
 
-    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, disconnectHandler, handleCheer, handleRoomWelcome) {
+    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome) {
         this.myUser = new DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
@@ -602,7 +610,7 @@ class DigifuApp {
         this.handleUserLeave = handleUserLeave;
         this.handleAllNotesOff = handleAllNotesOff;
         this.handleUserAllNotesOff = handleUserAllNotesOff;
-        this.handleDisconnect = disconnectHandler;
+        this.pleaseReconnectHandler = pleaseReconnectHandler;
         this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.handleRoomWelcome = handleRoomWelcome;
 
