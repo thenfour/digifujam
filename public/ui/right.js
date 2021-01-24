@@ -710,6 +710,8 @@ class InstrumentParams extends React.Component {
             existingPreset = this.props.instrument.presets.find(p => !p.isReadOnly && p.presetID == presetID);
         }
 
+        const instrumentSupportsPresets = this.props.instrument.supportsPresets;
+
         return (
             <div className="component">
                 <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
@@ -718,33 +720,35 @@ class InstrumentParams extends React.Component {
                     <button onClick={this.onPanicClick}>Panic</button>
                     <button onClick={this.onReleaseClick}>Release</button>
 
-                    <fieldset className="instParamGroup presetsGroup">
-                        <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
-                        {this.state.presetListShown && (
-                            <ul className="instParamList">
-                                <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
-                                <li className="instPresetButtons">
-                                    <button onClick={this.onExportClicked}>📋Copy live settings to clipboard</button>
-                                    <button onClick={this.onImportClicked}>📋Paste live settings from clipboard</button><br />
-                                    <button onClick={this.onExportBankClicked}>📋Export preset bank to clipboard</button>
-                                    <button onClick={this.onImportBankClicked}>📋Import preset bank to clipboard</button><br />
-                                    <div style={{ height: 15 }}></div>
-                                    <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
-                                    {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}<br />
-                                    <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
-                                    {this.state.showingFactoryResetConfirmation &&
-                                        <div className="confirmationBox">
-                                            Click OK to reset all presets to factory defaults. It applies only to this instrument.
+                    {instrumentSupportsPresets &&
+                        <fieldset className="instParamGroup presetsGroup">
+                            <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
+                            {this.state.presetListShown && (
+                                <ul className="instParamList">
+                                    <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
+                                    <li className="instPresetButtons">
+                                        <button onClick={this.onExportClicked}>📋Copy live settings to clipboard</button>
+                                        <button onClick={this.onImportClicked}>📋Paste live settings from clipboard</button><br />
+                                        <button onClick={this.onExportBankClicked}>📋Export preset bank to clipboard</button>
+                                        <button onClick={this.onImportBankClicked}>📋Import preset bank to clipboard</button><br />
+                                        <div style={{ height: 15 }}></div>
+                                        <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
+                                        {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}<br />
+                                        <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
+                                        {this.state.showingFactoryResetConfirmation &&
+                                            <div className="confirmationBox">
+                                                Click OK to reset all presets to factory defaults. It applies only to this instrument.
                                         <br />
-                                            <button className="ok" onClick={this.onFactoryReset}>OK</button>
-                                            <button className="cancel" onClick={this.cancelFactoryReset}>Cancel</button>
-                                        </div>
-                                    }
-                                </li>
-                            </ul>)}
+                                                <button className="ok" onClick={this.onFactoryReset}>OK</button>
+                                                <button className="cancel" onClick={this.cancelFactoryReset}>Cancel</button>
+                                            </div>
+                                        }
+                                    </li>
+                                </ul>)}
 
-                        {presetList}
-                    </fieldset>
+                            {presetList}
+                        </fieldset>
+                    }
                     <div className="paramGroupCtrl">
                         <fieldset className="groupFocusButtons">
                             <legend>Param groups</legend>

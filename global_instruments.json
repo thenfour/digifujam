@@ -1783,6 +1783,7 @@
       "sfinstrumentName": "acoustic_grand_piano",
       "color": "rgb(73, 137, 255)",
       "engine": "soundfont",
+      "supportsPresets": false,
       "activityDisplay": "keyboard",
       "params": [
         {

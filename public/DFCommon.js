@@ -283,6 +283,7 @@ class DigifuInstrumentSpec {
         this.params = [];// instrument parameter value map
         this.presets = []; // a preset is just a param:value pair
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
+        this.supportsPresets = true;
         this.maxTextLength = 100;
     }
 
@@ -416,7 +417,24 @@ class DigifuInstrumentSpec {
     // filters the list of presets to include only ones which are useful.
     // for example if OSC B is disabled, don't show any settings from OSC B.
     GetDisplayablePresetList(filterTxt) {
-        if (this.engine != "minifm") return this.params;
+        if (this.engine != "minifm") {
+            let ret = this.params.filter(p => {
+                // internal params which aren't part of the normal param editing zone.
+                if (p.paramID === "presetID") return false;
+                if (p.paramID === "isReadOnly") return false;
+                if (p.paramID === "author") return false;
+                if (p.paramID === "savedDate") return false;
+                if (p.paramID === "tags") return false;
+                if (p.paramID === "patchName") return false;
+    
+                if (p.groupName.toLowerCase().includes(filterTxt)) return true;
+                if (p.name.toLowerCase().includes(filterTxt)) return true;
+                if (p.tags.toLowerCase().includes(filterTxt)) return true;
+    
+                return false;
+            });
+            return ret;
+        }
         let osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
         let osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
         let osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
