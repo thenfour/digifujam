@@ -437,7 +437,7 @@ ul.instParamList input[type="range" i] {
     min-inline-size: auto;
     border: 2px solid #003838;
     border-radius: 15px;
-    background-color:#00cccc0f;
+    background: linear-gradient(to bottom, #00cccc15, #00cccc07);
 }
 .instParamGroup.modulation {
     background-color: #333;
@@ -684,6 +684,37 @@ input[type="range"].floatParam::-webkit-slider-thumb {
     cursor: pointer;
     font-weight: normal;
 }
+
+.instPresetButtons .confirmationBox,
+.presetList .confirmationBox
+{
+    color: #8cc;
+    padding: 10px;
+    border-radius: 0;
+    border: 1px solid #a00;
+    background-color: #200;
+    border-left: 7px solid #a00;
+}
+
+.instPresetButtons .confirmationBox button,
+.presetList .confirmationBox button
+{
+    visibility: visible;
+    background-color: #266;
+    color: #000;
+    padding: 5px;
+}
+
+.instPresetButtons .confirmationBox button:hover,
+.instPresetButtons .confirmationBox button:focus,
+.presetList .confirmationBox button:hover,
+.presetList .confirmationBox button:focus
+{
+    background-color: #acc;
+}
+
+
+
 
 
 

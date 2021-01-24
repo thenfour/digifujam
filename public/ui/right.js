@@ -371,16 +371,40 @@ class InstFloatParam extends React.Component {
 
 
 class InstrumentPreset extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            showingOverwriteConfirmation: false,
+            showingDeleteConfirmation: false,
+        };
+    }
     onClickLoad = () => {
         this.props.app.loadPatchObj(this.props.presetObj);
         gStateChangeHandler.OnStateChange();
     }
-    onClickDelete = () => {
-        this.props.app.deletePreset(this.props.presetObj);
-    }
     onClickOverwrite = () => {
         this.props.app.saveOverwriteExistingPreset(this.props.presetObj.presetID);
+        this.setState({ showingOverwriteConfirmation: false });
     }
+    onBeginOverwrite = () => {
+        this.setState({ showingOverwriteConfirmation: true });
+    };
+    onCancelOverwrite = () => {
+        this.setState({ showingOverwriteConfirmation: false });
+    }
+
+    onClickDelete = () => {
+        this.props.app.deletePreset(this.props.presetObj);
+        this.setState({ showingDeleteConfirmation: false });
+    }
+    onBeginDelete = () =>  {
+        this.setState({ showingDeleteConfirmation: true });
+    }
+    onCancelDelete = () => {
+        this.setState({ showingDeleteConfirmation: false });
+    }
+
+
     render() {
         let dt = this.props.presetObj.savedDate;
         if (dt) {
@@ -393,9 +417,9 @@ class InstrumentPreset extends React.Component {
         return (
             <li key={this.props.presetObj.patchName}>
                 <div className="buttonContainer">
-                    <button onClick={() => this.onClickLoad()}>📂</button>
-                    { !this.props.presetObj.isReadOnly && <button onClick={this.onClickOverwrite}>💾</button>}
-                    { !this.props.presetObj.isReadOnly && <button onClick={this.onClickDelete}>🗑</button>}
+                    <button onClick={() => this.onClickLoad()}>📂Load</button>
+                    {!this.props.presetObj.isReadOnly && <button onClick={this.onBeginOverwrite}>💾Save</button>}
+                    {!this.props.presetObj.isReadOnly && <button onClick={this.onBeginDelete}>🗑Delete</button>}
                 </div>
                 <span className="presetName">{this.props.presetObj.patchName}</span>
                 <span className="author">by {this.props.presetObj.author}</span>
@@ -406,6 +430,22 @@ class InstrumentPreset extends React.Component {
                 {
                     tags &&
                     <span className="tags">tags: {tags}</span>
+                }
+                {this.state.showingOverwriteConfirmation &&
+                    <div className="confirmationBox">
+                    Click 'OK' to overwrite "{this.props.presetObj.patchName}" with the live patch
+                    <br />
+                    <button className="OK" onClick={this.onClickOverwrite}>OK</button>
+                    <button className="Cancel" onClick={this.onCancelOverwrite}>Cancel</button>
+                    </div>
+                }
+                {this.state.showingDeleteConfirmation &&
+                    <div className="confirmationBox">
+                    Click 'OK' to delete "{this.props.presetObj.patchName}".
+                    <br />
+                    <button className="OK" onClick={this.onClickDelete}>OK</button>
+                    <button className="Cancel" onClick={this.onCancelDelete}>Cancel</button>
+                    </div>
                 }
 
             </li>
@@ -485,13 +525,13 @@ class InstrumentParams extends React.Component {
             isShown: true,
             shownGroupNames: [],
             showingAllGroups: false,
+            showingFactoryResetConfirmation: false,
         };
         this.state.shownGroupNames = this.props.instrument.GetDefaultShownGroupsForInstrument();
     }
 
     onOpenClicked = () => {
         this.setState({ presetListShown: !this.state.presetListShown });
-        //this.props.app.ResetInstrumentParams();
     };
 
     onExportClicked = () => {
@@ -586,14 +626,22 @@ class InstrumentParams extends React.Component {
     onSaveNewPreset = () => {
         this.props.app.savePatchAsNewPreset();
     }
+
     onFactoryReset = () => {
         this.props.app.factoryResetInstrument();
+        this.setState({ showingFactoryResetConfirmation: false });
+    }
+    onBeginFactoryReset = () => {
+        this.setState({ showingFactoryResetConfirmation: true });
+    }
+    cancelFactoryReset = () => {
+        this.setState({ showingFactoryResetConfirmation: false });
     }
 
     onSaveAsExistingPreset = () => {
         this.props.app.saveLoadedPreset();
     }
-    
+
 
     onImportBankClicked = () => {
         navigator.clipboard.readText().then(text => {
@@ -661,13 +709,22 @@ class InstrumentParams extends React.Component {
                             <ul className="instParamList">
                                 <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
                                 <li className="instPresetButtons">
-                                    <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
-                                    <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
-                                    <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
-                                    <button onClick={this.onImportBankClicked}>Import preset bank to clipboard</button><br />
-                                    {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}
-                                    <button onClick={this.onSaveNewPreset}>💾 Save settings as new preset</button><br />
-                                    <button onClick={this.onFactoryReset}>⚠ Factory reset</button>
+                                    <button onClick={this.onExportClicked}>📋Copy live settings to clipboard</button>
+                                    <button onClick={this.onImportClicked}>📋Paste live settings from clipboard</button><br />
+                                    <button onClick={this.onExportBankClicked}>📋Export preset bank to clipboard</button>
+                                    <button onClick={this.onImportBankClicked}>📋Import preset bank to clipboard</button><br />
+                                    <div style={{ height: 15 }}></div>
+                                    <button onClick={this.onSaveNewPreset}>💾 Save live settings as new preset</button>
+                                    {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}<br />
+                                    <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
+                                    {this.state.showingFactoryResetConfirmation &&
+                                        <div className="confirmationBox">
+                                            Click OK to reset all presets to factory defaults. It applies only to this instrument.
+                                        <br />
+                                            <button className="ok" onClick={this.onFactoryReset}>OK</button>
+                                            <button className="cancel" onClick={this.cancelFactoryReset}>Cancel</button>
+                                        </div>
+                                    }
                                 </li>
                             </ul>)}
 
