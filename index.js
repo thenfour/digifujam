@@ -1,3 +1,4 @@
+//console.log(`note on ${foundUser.user.stats.noteOns}`);
 const express = require('express')
 const app = express()
 const http = require('http').Server(app);
@@ -18,7 +19,6 @@ gAdminUserIDs = [];
 let IsAdminUser = (userID) => {
   return gAdminUserIDs.some(x => x == userID);
 };
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -626,7 +626,7 @@ class RoomServer {
 
   DoUserRoomChange(ws, user, params) {
     let newRoom = gRooms[params.roomID];
-    console.log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
+    //console.log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
     // send user part to everyone else in old room
     this.ClientLeaveRoom(ws, user.userID, newRoom.roomState.roomTitle);
     // enter the new room
@@ -819,14 +819,14 @@ class RoomServer {
   // call this to leave the socket from this room.
   ClientLeaveRoom(ws/* may be null */, userID, newRoomName) {
     try {
-      //console.log(`ClientLeaveRoom => ${userID}`)
-
       // find the user object and remove it.
       let foundUser = this.roomState.FindUserByID(userID);
       if (foundUser == null) {
         // this is normal
         return;
       }
+
+      console.log(`ClientLeaveRoom => ${userID} ${foundUser.user.name} after ${foundUser.user.stats.noteOns++} notes and ${foundUser.user.stats.messages} msgs`);
 
       // remove references to this user.
       this.roomState.instrumentCloset.forEach(inst => {
