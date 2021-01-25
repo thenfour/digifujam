@@ -733,7 +733,7 @@ class InstrumentParams extends React.Component {
                                         <button onClick={this.onImportBankClicked}>📋Import preset bank to clipboard</button><br />
                                         <div style={{ height: 15 }}></div>
                                         <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
-                                        {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save "{existingPreset.patchName}"</button>}<br />
+                                        {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save to "{existingPreset.patchName}"</button>}<br />
                                         <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
                                         {this.state.showingFactoryResetConfirmation &&
                                             <div className="confirmationBox">

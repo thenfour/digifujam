@@ -251,7 +251,7 @@ class RoomServer {
 
   OnClientInstrumentRelease(ws) {
     try {
-      console.log(`OnClientInstrumentRelease => ${ws.id}`)
+      //console.log(`OnClientInstrumentRelease => ${ws.id}`)
 
       // find the user object.
       let foundUser = this.FindUserFromSocket(ws);

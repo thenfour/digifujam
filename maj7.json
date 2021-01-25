@@ -2,7 +2,7 @@
   "roomID": "maj7",
   "roomTitle": "#maj7",
   "route": "/maj7",
-  "img": "./roomart/tony00_1750.jpg",
+  "img": "./roomart/tony01_directional_1750.jpg",
   "width": 1750,
   "height": 1280,
   "internalMasterGain": 2.0,
@@ -52,9 +52,12 @@
       "params": {
         "message": "Artwork for #maj7 by Tony Thai<br /><a target=\"_blank\" href=\"https://twitter.com/uewipiw\">twitter/@uewipiw</a>.",
         "style": {
-          "transform": "skewY(26deg) translate(-60%, -40%)",
+          "transform": "skewY(26deg) translateX(-200px)",
           "border": "5px solid #925113eb",
-          "fontSize": 18
+          "fontSize": 18,
+          "backgroundColor": "black",
+          "width": 200,
+          "height": 100
         }
       },
       "onAvatarEnter": {

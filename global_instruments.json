@@ -108,7 +108,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -117,7 +117,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -126,7 +126,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -202,7 +202,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -211,7 +211,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -342,7 +342,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -351,7 +351,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -360,7 +360,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -436,7 +436,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -445,7 +445,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -576,7 +576,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -585,7 +585,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -594,7 +594,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -670,7 +670,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -679,7 +679,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -810,7 +810,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -819,7 +819,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -828,7 +828,7 @@
           "name": "ENV mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -904,7 +904,7 @@
           "name": "LFO1 mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -913,7 +913,7 @@
           "name": "LFO2 mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": 0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -1122,7 +1122,7 @@
           "name": "LFO1 mod",
           "groupName": "Detune",
           "parameterType": "floatParam",
-          "minValue": 0.0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -1131,7 +1131,7 @@
           "name": "LFO2 mod",
           "groupName": "Detune",
           "parameterType": "floatParam",
-          "minValue": 0.0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
@@ -1140,7 +1140,7 @@
           "name": "ENV mod",
           "groupName": "Detune",
           "parameterType": "floatParam",
-          "minValue": 0.0,
+          "minValue": -1.0,
           "maxValue": 1.0
         },
         {
