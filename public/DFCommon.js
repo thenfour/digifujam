@@ -708,17 +708,23 @@ class DigifuRoomState {
 
     adminExportRoomState() {
         return {
-            instrumentCloset: this.instrumentCloset,
+            instrumentPresets: this.instrumentCloset.map(i => { return { instrumentID: i.instrumentID, presets: i.presets } }),
             chatLog: this.chatLog,
             stats: this.stats,
         };
     }
+
     adminImportRoomState(data) {
-        this.instrumentCloset = data.instrumentCloset.map(o => {
-            let n = Object.assign(new DigifuInstrumentSpec(), o);
-            n.thaw();
-            return n;
+        // don't import all instrument DEFINITIONS. just the presets.
+        data.instrumentPresets.forEach(ip => {
+            const f = this.FindInstrumentById(ip.instrumentID);
+            if (!f) {
+                console.log(`instrument ${ip.instrumentID} was not found; couldn't import its presets. Make sure instruments all have constant IDs set.`);
+                return;
+            }
+            f.instrument.importAllPresetsArray(ip.presets);
         });
+
         this.chatLog = data.chatLog.map(o => {
             let n = Object.assign(new DigifuChatMessage(), o);
             n.thaw();

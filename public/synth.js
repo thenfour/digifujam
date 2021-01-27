@@ -166,18 +166,18 @@ class DigifuSynth {
 		initPWM(this.audioCtx);
 		initSynthTools(this.audioCtx);
 
-		//                                                                                     ->[analysis]
+		//                                                                                                                ->[analysis]
 		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
 		//               --> (instrumentWetGainers) ----> [masterReverb] ----->
 		//
 		this.preMasterGain = this.audioCtx.createGain();
 		this.preMasterGain.gain.value = gGainBoost;
 
-		this.analysisNode = this.audioCtx.createAnalyser();
-		this.preMasterGain.connect(this.analysisNode);
-
 		this.masterGainNode = this.audioCtx.createGain();
 		this.preMasterGain.connect(this.masterGainNode);
+
+		this.analysisNode = this.audioCtx.createAnalyser();
+		this.masterGainNode.connect(this.analysisNode);
 
 		this.masterGainNode.connect(this.audioCtx.destination);
 

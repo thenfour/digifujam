@@ -29,8 +29,16 @@ class RoomServer {
     this.roomState = DF.DigifuRoomState.FromJSONData(data);
 
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
+    let usedInstrumentIDs = [];
     this.roomState.instrumentCloset.forEach(i => {
-      i.instrumentID = DF.generateID();
+      if (usedInstrumentIDs.some(x => x == i.instrumentID)) {
+        console.log(`${i.name} warning: duplicate instrument ID '${i.instrumentID}' found.`);
+      }
+      if (!i.instrumentID) {
+        console.log(`${i.name} warning: Instruments need a constant instrumentID.`);
+        i.instrumentID = DF.generateID();
+      }
+      usedInstrumentIDs.push(i.instrumentID);
 
       // make sure internal params are there.
       let paramsToAdd = [];

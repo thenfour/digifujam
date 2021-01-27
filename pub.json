@@ -64,7 +64,7 @@
       "itemType": "audioVisualization",
       "style": {
         "transform": "skewY(-30deg)",
-        "border":"0"
+        "border": "0"
       },
       "rect": {
         "x": 540,
@@ -78,24 +78,29 @@
   "chatLog": [],
   "instrumentCloset": [
     {
+      "instrumentID": "fm4a",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",
       "name": "Mini FM A"
     },
     {
+      "instrumentID": "fm4b",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4b: ",
       "name": "Mini FM B"
     },
     {
+      "instrumentID": "msa",
       "copyOfInstrumentID": "minisynth",
       "name": "Minisynth A"
     },
     {
+      "instrumentID": "msb",
       "copyOfInstrumentID": "minisynth",
       "name": "Minisynth B"
     },
     {
+      "instrumentID": "sf1",
       "copyOfInstrumentID": "soundfont",
       "name": "Piano",
       "sfinstrumentName": "acoustic_grand_piano",
@@ -106,6 +111,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf2",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "electric_piano_1",
       "gain": 1,
@@ -116,6 +122,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf3",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "electric_piano_2",
       "gain": 1,
@@ -126,6 +133,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf4",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "acoustic_guitar_steel",
       "gain": 1,
@@ -136,6 +144,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf5",
       "copyOfInstrumentID": "soundfont",
       "name": "Marimba",
       "sfinstrumentName": "marimba",
@@ -146,6 +155,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf6",
       "copyOfInstrumentID": "soundfont",
       "name": "Soundtrack",
       "sfinstrumentName": "fx_2_soundtrack",
@@ -156,6 +166,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf7",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "tango_accordion",
       "name": "Accordion",
@@ -166,6 +177,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf8",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "string_ensemble_1",
       "gain": 0.8,
@@ -176,6 +188,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf9",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "synth_brass_1",
       "gain": 0.7,
@@ -186,6 +199,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf10",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "muted_trumpet",
       "gain": 1,
@@ -196,6 +210,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf11",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "acoustic_bass",
       "gain": 1,
@@ -206,6 +221,7 @@
       "activityDisplay": "keyboard"
     },
     {
+      "instrumentID": "sf12",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "slap_bass_2",
       "gain": 1,
