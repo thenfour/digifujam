@@ -73,6 +73,7 @@ let initPWM = (ac) => {
                 if (this.isPWM) return;
                 // we need to switch to PWM mode.
                 this.isPWM = true;
+                this.type = "sawtooth";
                 this.oscDisconnect();
                 this.pulseShaper.disconnect();
                 this.oscConnect(this.constantOneShaper);
