@@ -32,7 +32,6 @@
         }
       }
     },
-
     {
       "itemID": "roomCredits",
       "name": "i",
@@ -57,6 +56,21 @@
       "onAvatarEnter": {
         "processor": "client",
         "fn": "toggleSign"
+      }
+    },
+    {
+      "itemID": "visualization",
+      "name": "vis",
+      "itemType": "audioVisualization",
+      "style": {
+        "transform": "skewY(-30deg)",
+        "border":"0"
+      },
+      "rect": {
+        "x": 540,
+        "y": 430,
+        "w": 220,
+        "h": 140
       }
     }
   ],
@@ -203,4 +217,3 @@
     }
   ]
 }
-

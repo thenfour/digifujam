@@ -159,9 +159,6 @@ class InstCbxParam extends React.Component {
         let val = e.target.checked;
         this.renderedValue = val;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
-        // if (this.props.instrument.ParamChangeCausesRender(this.props.param)) {
-        //     //setTimeout(() => this.setState(this.state), 0);
-        // }
         gStateChangeHandler.OnStateChange();
     }
     componentDidMount() {
@@ -1145,26 +1142,6 @@ class WorldStatus extends React.Component {
 }
 
 
-class Vis extends React.Component {
-    componentDidMount() {
-        this.audioVis = new AudioVis(document.getElementById('audioVisCanvas'), this.props.app.synth.analysisNode);
-    }
-    componentWillUnmount() {
-        if (this.audioVis) {
-            this.audioVis.stop();
-            this.audioVis = null;
-        }
-    }
-    render() {
-        return (
-            <div className="component">
-                <canvas id="audioVisCanvas"></canvas>
-            </div>
-        );
-    }
-}
-
-
 class InstrumentList extends React.Component {
 
     renderInstrument(i) {
@@ -1255,13 +1232,9 @@ class LeftArea extends React.Component {
         const adminControls = (this.props.app && this.props.app.isAdmin) && (
             <AdminControls app={this.props.app}></AdminControls>
         );
-        const vis = this.props.app && (
-            <Vis app={this.props.app}></Vis>
-        );
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
-                {vis}
                 {adminControls}
                 <InstrumentList app={this.props.app} />
             </div>
@@ -1323,6 +1296,39 @@ class UserAvatar extends React.Component {
 };
 
 
+class UIAudioVisualizationRoomItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+        this.canvID = "canv_" + this.props.item.itemID;
+    }
+
+    componentDidMount() {
+        this.audioVis = new AudioVis(document.getElementById(this.canvID), this.props.app.synth.analysisNode);
+    }
+    componentWillUnmount() {
+        if (this.audioVis) {
+            this.audioVis.stop();
+            this.audioVis = null;
+        }
+    }
+
+    render() {
+        const pos = this.props.displayHelper().roomToScreenPosition(this.props.item.rect);
+
+        let style = Object.assign({
+            left: pos.x,
+            top: pos.y,
+            width: this.props.item.rect.w,
+            height: this.props.item.rect.h,
+        }, this.props.item.style);
+
+        return (
+            <canvas className="roomItem" style={style} id={this.canvID}></canvas>
+        );
+    }
+};
+
 
 
 class UIRoomItem extends React.Component {
@@ -1346,7 +1352,6 @@ class UIRoomItem extends React.Component {
 
         let signMarkup = null;
         if (this.props.item.itemType == DFRoomItemType.sign) {
-
             let signStyle = Object.assign({
                 left: pos.x,
                 top: pos.y,
@@ -1356,6 +1361,8 @@ class UIRoomItem extends React.Component {
             signMarkup = (<div className="roomSign" onClick={this.onClickSign} style={signStyle}
                 dangerouslySetInnerHTML={{ __html: this.props.item.params.message }}></div>
             );
+        } else if (this.props.item.itemType == DFRoomItemType.audioVisualization) {
+            return (<UIAudioVisualizationRoomItem item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
         }
 
         return (

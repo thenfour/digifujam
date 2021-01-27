@@ -398,18 +398,6 @@ class DigifuInstrumentSpec {
         return ["master"];
     }
 
-    // ParamChangeCausesRender(p) {
-    //     if (this.engine != "minifm") return false;
-    //     switch (p.paramID) {
-    //         case "enable_osc0":
-    //         case "enable_osc1":
-    //         case "enable_osc2":
-    //         case "enable_osc3":
-    //             return true;
-    //     }
-    //     return false;
-    // }
-
     // return { cssClassName, annotation }
     getGroupInfo(groupName) {
         let ret = { cssClassName: "", annotation: "" };
@@ -641,6 +629,7 @@ const RoomFns = {
 const DFRoomItemType = {
     door: "door",
     sign: "sign",
+    audioVisualization: "audioVisualization",
 };
 
 // a function that can be invoked by room items.

@@ -60,7 +60,7 @@ class AudioToFFTConverter {
                 zeroCrossing01 = i / this.byteTimeDomainData.length;
             }
             prev = lvl;
-    }
+        }
         const rms = 10 * Math.log10(sumOfSquares / this.byteTimeDomainData.length);
         const peak = 10 * Math.log10(peakInstantaneousPower);
         this.lastPeak = peak;
@@ -84,7 +84,7 @@ class AudioVis {
         this.isRunning = true;
 
         //const canvas = document.querySelector('#c');
-        const renderer = new THREE.WebGLRenderer({ canvas });
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, premultipliedAlpha: false });
 
         let fftData = this.fftProvider.Update();
         const texture = new THREE.DataTexture(
@@ -111,23 +111,29 @@ uniform float iTime;
 uniform float iZeroCrossingX;
 uniform float iRMS;
 uniform float iPeak;
+uniform float iVisType;
 
 const float OscilloscopeXScale = 1.0;
 
 void main() {
     vec2 uv = gl_FragCoord.xy / iResolution.xy;
 
-    if (gl_FragCoord.x > iResolution.x - 20.0) {
+    vec2 uvx = uv*2.-1.;// uv is now -1 to 1.
+    uvx = 1.-abs(uvx); // distance to edge, 0-1
+    float vign = pow(uvx.y, .6) * pow(uvx.x, .6);
+
+    const float MeterWidth = 2.0;
+/*
+    if (gl_FragCoord.x > iResolution.x - MeterWidth) {
         // level meter
         gl_FragColor = vec4(step(uv.y - iRMS, 0.), step(uv.y - iPeak, 0.),.5,1);
         return;
     }
-    uv = gl_FragCoord.xy / vec2(iResolution.x - 20., iResolution.y);
-    if (uv.x > 0.5) {
+    uv = gl_FragCoord.xy / vec2(iResolution.x - MeterWidth, iResolution.y);
+*/
 
+    if (iVisType == 1.0) {
         // FFT
-        uv.x -= 0.5;
-        uv.x *= 2.0;
 
         float r = texture2D(u_fft, vec2(pow(uv.x, 3.5), 0.)).r;
         //r = step(uv.y, r);
@@ -137,19 +143,12 @@ void main() {
         if (uv.y > r) {
             h += (1.-sqrt(uv.y-r))*.1;
         }
-        gl_FragColor = vec4(0, h,h,1);
+        gl_FragColor = vec4(0, h,h,vign);
         return;
     }
-    
-    uv.x *= 2.0;
 
     // OSCILLOSCOPE
     float y = uv.y * 2.0 - 1.0; // also -1 to 1.
-
-    if (abs(y)<1.5/iResolution.y) {
-        gl_FragColor = vec4(0,.5,.5,1);
-        return;
-    }
 
     float c = texture2D(u_tex, (gl_FragCoord.xy / iOscWidth * OscilloscopeXScale) + iZeroCrossingX).r * 2.0 - 1.0; // -1 to 1
     if (iOscMax > (1./128.)) {
@@ -165,7 +164,14 @@ void main() {
 
     h *= .5;
     h += (1.-d)*.2;
-    gl_FragColor = vec4(0, h,h,1);
+
+    if (abs(y)<1.5/iResolution.y) {
+        gl_FragColor = vec4(0,.5,.5,1);
+        h = 1.0;
+    }
+
+    h *= vign;
+    gl_FragColor = vec4(0, 1,1,h*h);
 }
 `;
         const uniforms = {
@@ -178,15 +184,22 @@ void main() {
             iResolution: { value: new THREE.Vector3() },
             iZeroCrossingX: { value: 0 },
             iOscMax: { value: 0 },
+            iVisType: { value: 0 },
         };
 
         const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
         const scene = new THREE.Scene();
+        scene.background = null;
         const plane = new THREE.PlaneBufferGeometry(2, 2);
         const material = new THREE.ShaderMaterial({ fragmentShader, uniforms });
+
+        material.transparent = true;
+        material.blending = THREE.NoBlending;
+
         scene.add(new THREE.Mesh(plane, material));
 
         let startTime = new Date();
+        renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
         let onFrame = () => {
             if (!this.isRunning) {
@@ -206,7 +219,7 @@ void main() {
             uniforms.iPeak.value = 1.0 + fftData.peak / 50.0;
             uniforms.iOscMax.value = fftData.peakLevel01 * 2.1; // *2.1 because it's 0-1 but will scale only 1/2 the screen.
 
-            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            // renderer.setSize(canvas.clientWidth, canvas.clientHeight);
             renderer.render(scene, camera);
         }
         window.requestAnimationFrame(onFrame);
