@@ -26,8 +26,8 @@
         "fn": "roomChange",
         "params": {
           "roomID": "hall",
-          "x": 100,
-          "y": 140
+          "x": 400,
+          "y": 825
         }
       }
     },
@@ -71,10 +71,12 @@
   "instrumentCloset": [
     {
       "copyOfInstrumentID": "minifm",
+      "namePrefix": "FM4a: ",
       "name": "Mini FM A"
     },
     {
       "copyOfInstrumentID": "minifm",
+      "namePrefix": "FM4b: ",
       "name": "Mini FM B"
     },
     {

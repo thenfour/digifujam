@@ -2,9 +2,9 @@
   "roomID": "hall",
   "roomTitle": "#hall",
   "route": "/hall",
-  "img": "./roomart/hall.png",
-  "width": 1030,
-  "height": 282,
+  "img": "./roomart/DigifuJam_Hallway2_1920x1080.jpg",
+  "width": 1920,
+  "height": 1080,
   "internalMasterGain": 2.0,
   "announcementHTML": "yep.",
   "roomItems": [
@@ -13,12 +13,13 @@
       "name": "#DigiLounge",
       "itemType": "door",
       "style": {
-        "fontSize": 32
+        "fontSize": 32,
+        "transform": "skewY(42deg)"
       },
       "rect": {
-        "x":950,
-        "y": 0,
-        "w": 80,
+        "x":1550,
+        "y": 160,
+        "w": 110,
         "h": 292
       },
       "onAvatarEnter": {
@@ -36,12 +37,13 @@
       "name": "#MAJ7",
       "itemType": "door",
       "style": {
-        "fontSize": 32
+        "fontSize": 32,
+        "transform": "skewY(42deg)"
       },
       "rect": {
-        "x":0,
-        "y": 0,
-        "w": 80,
+        "x":150,
+        "y": 645,
+        "w": 110,
         "h": 292
       },
       "onAvatarEnter": {
