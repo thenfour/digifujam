@@ -415,7 +415,7 @@ class DigifuInstrumentSpec {
             switch (groupName) {
                 case "Saturation":
                     const satIsEnabled = !!this.GetParamByID("waveShape_enabled").currentValue;
-                    console.log(`satIsEnabled: ${satIsEnabled}`);
+                    //console.log(`satIsEnabled: ${satIsEnabled}`);
                     ret.annotation = satIsEnabled ? "(On)" : "(Off)";
                     ret.cssClassName = satIsEnabled ? "" : "disabled";
                     break;
