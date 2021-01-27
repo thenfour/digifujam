@@ -1,4 +1,12 @@
 <!doctype html>
+<!-- some things i've learned:
+
+    R32F is not practical; seems there's little support for it (WHY)
+    passing FFT as array *will not work* because fragshaders cannot index with non-constants. you cannot do like fftdata[my_y_uv_coord]. that's a showstopper without much to make up for it.
+    RGBA is well-supported but contains 4 channels and we only want 1.
+
+
+-->
 <html>
 
 <head>
@@ -8,12 +16,80 @@
 
 <body id="body">
 
-    <canvas id="glBody" style="border:5px solid blue; width:200px;height:200px;transform:skewY(20deg)"></canvas>
+    <canvas id="glBody" style="border:5px solid blue; width:500px;height:500px;"></canvas>
 
     <script type="text/javascript">
+        const fftsize = 2048;
+        const sampleBuffer = new Float32Array(fftsize);
+        let rms = 0;
+        let peak = 0;
+
+
+
+
+        const context = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = context.createOscillator();
+        oscillator.type = 'square';
+        oscillator.frequency.value = 440;
+        oscillator.start();
+
+        const gain1 = context.createGain();
+        const analyser = context.createAnalyser();
+        analyser.fftSize = fftsize;
+
+        // Reduce output level to not hurt your ears.
+        const gain2 = context.createGain();
+        gain2.gain.value = 0.01;
+
+        // [osc] -> [gain] -> [analyzer] -> [gain] -> dest
+        oscillator.connect(gain1);
+        gain1.connect(analyser);
+        analyser.connect(gain2);
+        gain2.connect(context.destination);
+
+
+        function updateAudioVis() {
+            // Vary power of input to analyser. Linear in amplitude, so
+            // nonlinear in dB power.
+            //gain1.gain.value = 0.5 * (1 + Math.sin(Date.now() / 4e2));
+
+            analyser.getFloatTimeDomainData(sampleBuffer);
+
+            // Compute average power over the interval.
+            let sumOfSquares = 0;
+            let peakInstantaneousPower = 0;
+            for (let i = 0; i < sampleBuffer.length; i++) {
+                sumOfSquares += sampleBuffer[i] ** 2;
+
+                const power = sampleBuffer[i] ** 2;
+                peakInstantaneousPower = Math.max(power, peakInstantaneousPower);
+            }
+            const rms = 10 * Math.log10(sumOfSquares / sampleBuffer.length);
+            const peak = 10 * Math.log10(peakInstantaneousPower);
+
+            // Note that you should then add or subtract as appropriate to
+            // get the _reference level_ suitable for your application.
+
+            // Display value.
+            //displayNumber('avg', avgPowerDecibels);
+            //displayNumber('inst', peakInstantaneousPowerDecibels);
+
+            //requestAnimationFrame(loop);
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         class Vis {
-            constructor(canv, audioCtx, nodeSrc, nodeDest) {
+            constructor(canv, analyzerNode) {
 
                 const vs = `
     attribute vec4 v_position;
@@ -25,20 +101,30 @@
                 const fs = `
     precision mediump float;
 
-    uniform sampler2D fft;
+    uniform float fftArray[${fftsize}];
+    uniform float iRMS;
+    uniform float iPeak;
     uniform float iTime;
     uniform vec2 iResolution;
 
     void main() {
         vec2 uv = gl_FragCoord.xy / iResolution;
-        float h = texture2D(fft, uv.xx).r;
-       gl_FragColor = vec4(uv.y > h ? 1 : 0, 0, 0,1.0); 
+        float h =  // float fi = uv.x * ${fftsize}.0;
+       gl_FragColor = vec4(h - uv.y, iRMS, iPeak, 1.0); 
     }
 `;
 
                 // https://stackoverflow.com/questions/19592850/how-to-bind-an-array-of-textures-to-a-webgl-shader-uniform
                 // https://webgl2fundamentals.org/webgl/lessons/webgl-data-textures.html
+                // https://jsfiddle.net/greggman/jBU4K/  <-- live demo of float32
                 var gl = canv.getContext("webgl");
+                var f = gl.getExtension("OES_texture_float"); // required for float textures
+                if (!f) {
+                    alert("no OES_texture_float");
+                    return;
+                }
+
+
                 var shader_program = twgl.createProgram(gl, [vs, fs]);
                 gl.useProgram(shader_program);
                 var vertexPositionAttribute = gl.getAttribLocation(shader_program, "v_position");
@@ -56,6 +142,9 @@
                 gl.enableVertexAttribArray(vertexPositionAttribute);
                 var locationOfTime = gl.getUniformLocation(shader_program, "iTime");
                 var locationOfResolution = gl.getUniformLocation(shader_program, "iResolution");
+                var locationOfRMS = gl.getUniformLocation(shader_program, "iRMS");
+                var locationOfPeak = gl.getUniformLocation(shader_program, "iPeak");
+                var locationOfFFT = gl.getUniformLocation(shader_program, "fftArray");
 
                 // Create a data texture.
                 var texture = gl.createTexture();
@@ -69,24 +158,36 @@
 
                 let onFrame = function () {
                     window.requestAnimationFrame(onFrame);
+
+                    for (let i = 0; i < sampleBuffer.length; ++ i) {
+                        sampleBuffer[i] = Math.random();
+                    }
+                    // const t = new Float32Array(sampleBuffer.length * 4);
+                    // for (let i = 0; i < sampleBuffer.length; ++ i) {
+                    //     t[i*4] = sampleBuffer[i];
+                    //     t[i*4+1] = sampleBuffer[i];
+                    //     t[i*4+2] = sampleBuffer[i];
+                    //     t[i*4+3] = sampleBuffer[i];
+                    // }
+
+                    //updateAudioVis();
                     gl.uniform1f(locationOfTime, (new Date()).getMilliseconds());
                     gl.uniform2f(locationOfResolution, canv.clientWidth, canv.clientHeight);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 8/*width*/, 1/*height*/, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-                        new Uint8Array([
-                            16, 0, 0, 0,
-                            32, 0, 0, 0,
-                            128, 0, 0, 0,
-                            192, 0, 0, 0,
-                            32, 0, 0, 0,
-                            0, 0, 0, 0,
-                            1, 0, 0, 0,
-                            24, 0, 0, 0,
-                        ]));
+
+                    gl.uniform1f(locationOfRMS, canv.clientHeight);
+                    gl.uniform1f(locationOfPeak, canv.clientHeight);
+                    gl.uniform1fv(location, sampleBuffer);
+
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, sampleBuffer.length / 4, 1, 0, gl.RGBA, gl.FLOAT, sampleBuffer);
+
                     gl.drawArrays(gl.TRIANGLES, 0, 6);
                 }
                 window.requestAnimationFrame(onFrame);
             }
         };
+
+
+
 
         window.gApp = new Vis(document.getElementById("glBody"));
 

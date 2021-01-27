@@ -1,0 +1,202 @@
+<!doctype html>
+<!-- some things i've learned:
+
+    R32F is not practical; seems there's little support for it (WHY)
+    passing FFT as array *will not work* because fragshaders cannot index with non-constants. you cannot do like fftdata[my_y_uv_coord]. that's a showstopper without much to make up for it.
+    RGBA is well-supported but contains 4 channels and we only want 1.
+
+
+-->
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
+
+</head>
+
+<body id="body">
+
+    <button onclick="main()">main.</button>
+    <button onclick="window.src.oscillator.type='sine';">sine</button>
+    <button onclick="window.src.oscillator.type='sawtooth';">saw</button>
+    <button onclick="window.src.oscillator.type='square';">square</button>
+    <br />
+    <canvas id="c" style="width:100%;height:100px;"></canvas>
+
+    <script type="text/javascript">
+
+        // sets up an audio graph.
+        class TestAudioSrc {
+
+            constructor(context) {
+                this.context = context;
+                this.oscillator = context.createOscillator();
+                this.oscillator.type = 'square';
+                this.oscillator.frequency.value = 1440;
+                this.oscillator.start();
+
+                this.gain1 = context.createGain();
+                this.gain1.gain.value = .95;
+                this.analysisNode = context.createAnalyser();
+
+                // Reduce output level to not hurt your ears.
+                this.gain2 = context.createGain();
+                this.gain2.gain.value = .0;
+
+                // [osc] -> [gain] -> [analyzer] -> [gain] -> dest
+                this.oscillator.connect(this.gain1);
+                this.gain1.connect(this.analysisNode);
+                this.analysisNode.connect(this.gain2);
+                this.gain2.connect(this.context.destination);
+            }
+
+        };
+
+        class AudioToFFTConverter {
+            constructor(analysisNode) {
+                //this.fftsize = 512;
+                this.freqData = new Uint8Array(analysisNode.frequencyBinCount);
+                this.analysisNode = analysisNode;
+                //this.analysisNode.fftSize = this.fftsize;
+                this.byteTimeDomainData = new Uint8Array(this.analysisNode.fftSize);
+            }
+
+            Update() {
+                this.analysisNode.getByteFrequencyData(this.freqData);
+                this.analysisNode.getByteTimeDomainData(this.byteTimeDomainData);
+
+                // Compute average power over the interval.
+                let sumOfSquares = 0;
+                let peakInstantaneousPower = 0;
+                for (let i = 0; i < this.byteTimeDomainData.length; i++) {
+                    const power = ((this.byteTimeDomainData[i] / 255.0) - .5) ** 2;
+                    sumOfSquares += power; // db
+                    peakInstantaneousPower = Math.max(power, peakInstantaneousPower); // db
+                }
+                const rms = 10 * Math.log10(sumOfSquares / this.byteTimeDomainData.length);
+                const peak = 10 * Math.log10(peakInstantaneousPower);
+                return {
+                    rms, // in db, so <0 for normal audio
+                    peak, // in db also.
+                    byteFreqDomainData: this.freqData, // in db (generally < 0) for each bin.
+                    byteTimeDomainData: this.byteTimeDomainData,
+                };
+            }
+        };
+
+
+        class AudioVis {
+            constructor(canv, fftSrc) {
+
+                const canvas = document.querySelector('#c');
+                const renderer = new THREE.WebGLRenderer({ canvas });
+
+                let fftData = fftSrc.Update();
+                const texture = new THREE.DataTexture(
+                    fftData.byteTimeDomainData,
+                    fftData.byteTimeDomainData.length, 1,
+                    THREE.LuminanceFormat, THREE.UnsignedByteType);
+
+                const fftTex = new THREE.DataTexture(
+                    fftData.byteFreqDomainData,
+                    fftData.byteFreqDomainData.length, 1,
+                    THREE.LuminanceFormat, THREE.UnsignedByteType);
+
+                const fragmentShader = `
+#include <common>
+
+    uniform sampler2D u_tex;
+    uniform sampler2D u_fft;
+uniform float iOscWidth;
+uniform vec3 iResolution;
+uniform float iTime;
+uniform float iZeroCrossingX;
+uniform float iRMS;
+uniform float iPeak;
+
+const float OscilloscopeXScale = 0.7;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / iResolution.xy;
+
+    if (gl_FragCoord.x > iResolution.x - 200.0) {
+        gl_FragColor = vec4(step(uv.y - iRMS, 0.), step(uv.y - iPeak, 0.),.5,1);
+        return;
+    }
+
+    float c = texture2D(u_tex, (gl_FragCoord.xy / iOscWidth * OscilloscopeXScale) + iZeroCrossingX).r * 2.0 - 1.0; // -1 to 1
+    float y = uv.y * 2.0 - 1.0; // also -1 to 1.
+
+    // for loud signals this looks worse, however it's more accurate and reveals the zero crossing so we use it.
+    float d = sign(y)*y-sign(y)*c;  
+    //float d = y - c; // this i think looks better at high levels but ok.
+    float h = step(d, 0.);
+
+    float r = texture2D(u_fft, uv).r;
+    r = step(uv.y, r);
+
+    gl_FragColor = vec4(r, h,0,1);
+}
+`;
+                const uniforms = {
+                    u_tex: { value: texture },
+                    u_fft: { value: fftTex },
+                    iTime: { value: 0 },
+                    iRMS: {value: 0},
+                    iPeak: {value: 0},
+                    iOscWidth: { value: fftData.byteTimeDomainData.length },
+                    iResolution: { value: new THREE.Vector3() },
+                    iZeroCrossingX: { value: 0 },
+                };
+
+                const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
+                const scene = new THREE.Scene();
+                const plane = new THREE.PlaneBufferGeometry(2, 2);
+                const material = new THREE.ShaderMaterial({ fragmentShader, uniforms });
+                scene.add(new THREE.Mesh(plane, material));
+
+                let startTime = new Date();
+
+                let onFrame = function () {
+                    window.requestAnimationFrame(onFrame);
+
+                    let fftData = fftSrc.Update();
+                    texture.needsUpdate = true;
+                    fftTex.needsUpdate = true;
+
+                    let zc = 0.0;
+                    for (let i = 1; i < fftData.byteTimeDomainData.length; ++i) {
+                        if (fftData.byteTimeDomainData[i - 1] < 128 && fftData.byteTimeDomainData[i] >= 128) {
+                            zc = i / fftData.byteTimeDomainData.length;
+                            break;
+                        }
+                    }
+                    uniforms.iZeroCrossingX.value = zc;
+
+                    const canvas = document.querySelector('#c');
+
+                    uniforms.iResolution.value.set(canvas.clientWidth, canvas.clientHeight, 1);
+                    uniforms.iTime.value = (new Date()) - startTime; 
+                    uniforms.iRMS.value = 1.0 + fftData.rms / 50.0;
+                    uniforms.iPeak.value = 1.0 + fftData.peak / 50.0;
+
+                    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+                    renderer.render(scene, camera);
+                }
+                window.requestAnimationFrame(onFrame);
+            }
+        };
+
+
+        let main = function () {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            window.src = new TestAudioSrc(context);
+            window.fft = new AudioToFFTConverter(window.src.analysisNode);
+            window.vis = new AudioVis(document.getElementById("glBody"), window.fft);
+        }
+
+    </script>
+
+</body>
+
+</html>

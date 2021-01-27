@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- some things i've learned:
+
+    R32F is not practical; seems there's little support for it (WHY)
+    passing FFT as array *will not work* because fragshaders cannot index with non-constants. you cannot do like fftdata[my_y_uv_coord]. that's a showstopper without much to make up for it.
+    RGBA is well-supported but contains 4 channels and we only want 1.
+
+-->
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r124/three.min.js"></script>
+</head>
+
+<body id="body">
+
+    <canvas id="c" style="width:500px;height:500px;"></canvas>
+
+    <script>
+
+        const canvas = document.querySelector('#c');
+        const renderer = new THREE.WebGLRenderer({ canvas });
+
+        const width = 512;
+        const height = 512;
+        const size = width * height;
+        const data = new Uint8Array(3 * size);
+        for (let i = 0; i < size; i++) {
+            const stride = i * 3;
+            data[stride] = i / size * 255;
+            data[stride + 1] = i / size * 255;
+            data[stride + 2] = i / size * 255;
+        }
+        const texture = new THREE.DataTexture(data, width, height, THREE.RGBFormat);
+
+
+        const fragmentShader = `
+#include <common>
+
+    uniform sampler2D u_tex;
+uniform vec3 iResolution;
+uniform float iTime;
+
+void main() {
+    vec2 uv = gl_FragCoord.xy / iResolution.xy;
+    vec4 c = texture2D(u_tex, uv);
+    gl_FragColor = c;// vec4(uv.xy, 0, 1);
+}
+`;
+        const uniforms = {
+            u_tex: { value: texture },
+            iTime: { value: 0 },
+            iResolution: { value: new THREE.Vector3() },
+        };
+
+        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, -1, 1);
+        const scene = new THREE.Scene();
+        const plane = new THREE.PlaneBufferGeometry(2, 2);
+        const material = new THREE.ShaderMaterial({ fragmentShader, uniforms });
+        scene.add(new THREE.Mesh(plane, material));
+
+        uniforms.iResolution.value.set(canvas.width, canvas.height, 1);
+        uniforms.iTime.value = 0;
+
+        renderer.render(scene, camera);
+    </script>
+
+</body>
+
+</html>

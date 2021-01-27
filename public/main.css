@@ -408,7 +408,10 @@ button.muteButton:focus
     to {opacity: 0;}
   }
   
-  
+  #audioVisCanvas {
+      width:200px;
+      height:128px;
+  }
   
 .idleIndicator {
     color: #aaa;

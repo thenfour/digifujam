@@ -1,5 +1,6 @@
 'use strict';
 
+const gGainBoost = 2.0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DigifuSynth {
@@ -11,9 +12,6 @@ class DigifuSynth {
 
 		this.instrumentSpecs = null;
 		this.internalMasterGain = null;
-
-		this.masterGainNode = null;
-		this.masterReverb = null;
 
 		this._isMuted = false;
 	}
@@ -44,7 +42,7 @@ class DigifuSynth {
 			});
 		} else {
 			this.masterGainNode.connect(this.audioCtx.destination);
-			this.masterReverb.connect(this.masterGainNode);
+			this.masterReverb.connect(this.preMasterGain);
 		}
 		this._isMuted = !!val;
 	}
@@ -110,7 +108,7 @@ class DigifuSynth {
 				dryGainer.gain.value = spec.gain;
 			}
 			dryGainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
-			dryGainer.connect(this.masterGainNode);
+			dryGainer.connect(this.preMasterGain);
 			this.instrumentDryGainers[spec.instrumentID] = dryGainer;
 
 			let wetGainer = this.audioCtx.createGain();
@@ -168,11 +166,19 @@ class DigifuSynth {
 		initPWM(this.audioCtx);
 		initSynthTools(this.audioCtx);
 
-		//
-		// (instruments) --> (instrumentDryGainers) --------------------------> [masterGainNode] -->  (destination)
+		//                                                                                     ->[analysis]
+		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
 		//               --> (instrumentWetGainers) ----> [masterReverb] ----->
 		//
+		this.preMasterGain = this.audioCtx.createGain();
+		this.preMasterGain.gain.value = gGainBoost;
+
+		this.analysisNode = this.audioCtx.createAnalyser();
+		this.preMasterGain.connect(this.analysisNode);
+
 		this.masterGainNode = this.audioCtx.createGain();
+		this.preMasterGain.connect(this.masterGainNode);
+
 		this.masterGainNode.connect(this.audioCtx.destination);
 
 		// see other possible impulses: https://github.com/burnson/Reverb.js
@@ -183,7 +189,7 @@ class DigifuSynth {
 			}
 
 			// create wet signal path
-			this.masterReverb.connect(this.masterGainNode);
+			this.masterReverb.connect(this.preMasterGain);
 
 		});
 	};

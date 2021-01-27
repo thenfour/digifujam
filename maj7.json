@@ -5,7 +5,7 @@
   "img": "./roomart/tony01_directional_1750.jpg",
   "width": 1750,
   "height": 1280,
-  "internalMasterGain": 2.0,
+  "internalMasterGain": 3.0,
   "announcementHTML": "",
   "roomItems": [
     {

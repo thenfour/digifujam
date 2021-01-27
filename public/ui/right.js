@@ -727,10 +727,10 @@ class InstrumentParams extends React.Component {
                                 <ul className="instParamList">
                                     <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
                                     <li className="instPresetButtons">
-                                        <button onClick={this.onExportClicked}>📋Copy live settings to clipboard</button>
-                                        <button onClick={this.onImportClicked}>📋Paste live settings from clipboard</button><br />
-                                        <button onClick={this.onExportBankClicked}>📋Export preset bank to clipboard</button>
-                                        <button onClick={this.onImportBankClicked}>📋Import preset bank to clipboard</button><br />
+                                        <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
+                                        <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
+                                        <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
+                                        <button onClick={this.onImportBankClicked}>Import preset bank to clipboard</button><br />
                                         <div style={{ height: 15 }}></div>
                                         <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
                                         {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save to "{existingPreset.patchName}"</button>}<br />
@@ -1144,6 +1144,26 @@ class WorldStatus extends React.Component {
 }
 
 
+class Vis extends React.Component {
+    componentDidMount() {
+        this.audioVis = new AudioVis(document.getElementById('audioVisCanvas'), this.props.app.synth.analysisNode);
+    }
+    componentWillUnmount() {
+        if (this.audioVis) {
+            this.audioVis.stop();
+            this.audioVis = null;
+        }
+    }
+    render() {
+        return (
+            <div className="component">
+                <canvas id="audioVisCanvas"></canvas>
+            </div>
+        );
+    }
+}
+
+
 class InstrumentList extends React.Component {
 
     renderInstrument(i) {
@@ -1234,9 +1254,13 @@ class LeftArea extends React.Component {
         const adminControls = (this.props.app && this.props.app.isAdmin) && (
             <AdminControls app={this.props.app}></AdminControls>
         );
+        const vis = this.props.app && (
+            <Vis app={this.props.app}></Vis>
+        );
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
+                {vis}
                 {adminControls}
                 <InstrumentList app={this.props.app} />
             </div>

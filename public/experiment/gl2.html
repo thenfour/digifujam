@@ -1,0 +1,107 @@
+<!doctype html>
+<!-- https://jsfiddle.net/greggman/jBU4K -->
+
+<html>
+
+<head>
+
+    <script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
+    <script id="2d-vertex-shader" type="x-shader/x-vertex">
+    attribute vec2 a_position;
+    void main() {
+        gl_Position = vec4(a_position, 0, 1);
+    }
+    </script>
+    <script id="2d-fragment-shader" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform vec2 u_resolution;
+    uniform sampler2D u_tex;
+    void main() {
+        vec2 texCoord = gl_FragCoord.xy / u_resolution;
+        vec4 floatColor = texture2D(u_tex, texCoord);
+        gl_FragColor = floatColor / 256000.0;  
+    }
+    </script>
+</head>
+
+<body id="body">
+    <canvas id="canvas" width="400" height="300"></canvas>
+    <script type="text/javascript">
+        main();
+        function main() {
+            var canvas = document.getElementById("canvas");
+            var gl = canvas.getContext("webgl2");
+            if (!gl) {
+                alert("no WebGL");
+                return;
+            }
+            var ext = gl.getExtension('EXT_color_buffer_float');
+            // var f = gl.getExtension("OES_texture_float");
+            // if (!f) {
+            //     alert("no OES_texture_float");
+            //     return;
+            // }
+
+            var program = webglUtils.createProgramFromScripts(gl, ["2d-vertex-shader", "2d-fragment-shader"]);
+            gl.useProgram(program);
+
+            var positionLocation = gl.getAttribLocation(program, "a_position");
+            var resolutionLocation = gl.getUniformLocation(program, "u_resolution");
+            gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+
+            var buffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1, 1, -1, -1, 2,
+                -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            var tex = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, tex);
+            var width = 64;
+            var height = 64;
+            var pixels = new Float32Array(width * height * 4);
+            for (var y = 0; y < height; ++y) {
+                for (var x = 0; x < width; ++x) {
+                    var offset = (y * width + x) * 4;
+                    pixels[offset + 0] = (x * 256 / width) * 1000;
+                    pixels[offset + 1] = (y * 256 / height) * 1000;
+                    pixels[offset + 2] = (x * y / (width * height)) * 1000;
+                    pixels[offset + 3] = 256000;
+                }
+            }
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT,
+                pixels);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+            var randInt = function (range) {
+                return Math.floor(Math.random() * range);
+            };
+
+            var render = function () {
+                // update a random pixel
+                var x = randInt(width);
+                var y = randInt(height);
+                var offset = (y * width + x) * 4;
+                pixels[offset + 0] = randInt(256000); //honestly what the hell range is expected here???
+                pixels[offset + 1] = randInt(256000);
+                pixels[offset + 2] = randInt(256000);
+
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.R32F, width, height, 0, gl.R32F, gl.FLOAT,
+                    pixels);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+                requestAnimationFrame(render);
+            };
+            render();
+
+            console.log(gl.getError());
+        }
+    </script>
+</body>
+
+</html>
