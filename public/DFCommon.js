@@ -482,6 +482,8 @@ class DigifuInstrumentSpec {
             this.GetParamByID("osc3_wave").currentValue == 4,
         ];
 
+        let isPoly = this.GetParamByID("voicing").currentValue == 1;
+
         let ret = this.params.filter(p => {
 
             // internal params which aren't part of the normal param editing zone.
@@ -491,6 +493,12 @@ class DigifuInstrumentSpec {
             if (p.paramID === "savedDate") return false;
             if (p.paramID === "tags") return false;
             if (p.paramID === "patchName") return false;
+
+            if (isPoly) {
+                if (p.paramID.endsWith("_env1_trigMode")) return false;
+                if (p.paramID.endsWith("_portamento")) return false;
+                if (p.paramID.endsWith("_env_trigMode")) return false;
+            }
 
             if (p.groupName === "∿ Osc A" && !osc0_enabled) return false;
             if (p.groupName === "∿ Osc B" && !osc1_enabled) return false;

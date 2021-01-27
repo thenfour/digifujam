@@ -297,8 +297,8 @@ class MiniFMSynthOsc {
 
     updateOscFreq(alwaysSmooth) {
         let freq = this.getFreqs();
-        //let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
-        let portamentoDurationS = this.paramValue("portamento");
+        let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
+        let portamentoDurationS = isPoly ? 0 : this.paramValue("portamento");
         if (alwaysSmooth && portamentoDurationS < this.minGlideS) portamentoDurationS = this.minGlideS;
         // for some reason, calling exponentialRampToValueAtTime or linearRampToValueAtTime will make a sudden jump of the current value. setTargetAtTime is the only one that works smoothly.
         if (portamentoDurationS <= this.minGlideS) {
@@ -319,7 +319,8 @@ class MiniFMSynthOsc {
         this.velocity = velocity;
         this.updateEnvPeakLevel();
         this.updateOscFreq(false);
-        if (!isLegato || (this.paramValue("env_trigMode") == 0)) {
+        let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
+        if (isPoly || !isLegato || (this.paramValue("env_trigMode") == 0)) {
             this.env.trigger();
         }
     }
@@ -1130,7 +1131,8 @@ class MiniFMSynthVoice {
         this._updateBaseFreq();
         this._updateFilterBaseFreq();
 
-        if (!isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
+        let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
+        if (isPoly || !isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
             this.env1.trigger();
         }
         this.oscillators.forEach(o => {

@@ -671,7 +671,6 @@ class InstrumentParams extends React.Component {
     };
 
     render() {
-
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
         let presetList = this.state.presetListShown && (
@@ -679,7 +678,7 @@ class InstrumentParams extends React.Component {
         );
 
         let filterTxt = this.state.filterTxt.toLowerCase();
-        let filteredParams = this.props.instrument.GetDisplayablePresetList(filterTxt)
+        let filteredParams = this.props.instrument.GetDisplayablePresetList(filterTxt);
 
         // unique group names.
         let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
@@ -703,9 +702,11 @@ class InstrumentParams extends React.Component {
 
         let presetID = this.props.instrument.GetParamByID("presetID").currentValue;
         let writableExistingPreset = null;
-        const canWrite = this.props.app.isAdmin || !p.isReadOnly;
         if (presetID) {
-            writableExistingPreset = this.props.instrument.presets.find(p => canWrite && p.presetID == presetID);
+            writableExistingPreset = this.props.instrument.presets.find(p => {
+                const canWrite = this.props.app.isAdmin || !p.isReadOnly;
+                return canWrite && p.presetID == presetID
+            });
         }
 
         const instrumentSupportsPresets = this.props.instrument.supportsPresets;
