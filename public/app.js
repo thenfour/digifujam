@@ -138,6 +138,13 @@ class DigifuApp {
 
         this.roomState = DigifuRoomState.FromJSONData(data.roomState);
 
+        // room-specific CSS is loaded at startup, so your initial room is also the CSS you load. joining new rooms doesn't load new CSS.
+        const stylesheet = document.getElementById('roomcss');
+        if (stylesheet) {
+            stylesheet.parentNode.removeChild(stylesheet);
+        }
+        $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomID + ".css' type='text/css' />");
+
         this.accessLevel = data.accessLevel;
 
         // find "you"

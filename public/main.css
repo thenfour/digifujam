@@ -119,6 +119,10 @@ button:focus {
     100% { opacity: 0%; }
 }
 
+#roomArea {
+    background-color: black;
+}
+
 #roomArea .screen {
     background-color: black;
     position: absolute;

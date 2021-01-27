@@ -2,7 +2,7 @@
   "roomID": "pub",
   "roomTitle": "#DigiLounge",
   "route": "/",
-  "img": "./roomart/matt00x1200.jpg",
+  "img": "./roomart/matt01x1200.jpg",
   "width": 1200,
   "height": 1200,
   "internalMasterGain": 3.0,
@@ -18,7 +18,7 @@
       },
       "rect": {
         "x": 80,
-        "y": 590,
+        "y": 550,
         "w": 70,
         "h": 150
       },
@@ -43,8 +43,8 @@
         "transform": "skewY(30deg)"
       },
       "rect": {
-        "x": 870,
-        "y": 490,
+        "x": 885,
+        "y": 445,
         "w": 40,
         "h": 40
       },
