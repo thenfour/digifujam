@@ -448,16 +448,32 @@ ul.instParamList input[type="range" i] {
 }
 .instParamGroup.modulation {
     background-color: #333;
-    }
-    .instParamGroup.modulation legend {
-        color: #66c;
-    }
+}
+.instParamGroup.modulation legend {
+    color: #66c;
+}
+
+.instParamGroup.disabled {
+    background-color: #222;
+    border: 2px solid #333;
+    background: none;
+}
+.instParamGroup.disabled legend {
+    color: #555;
+}
+
 
 .wide .instParamGroup {
     margin:10px;
 }
 .instParamGroup legend {
     cursor: pointer;
+}
+
+.instParamGroup  .instParamGroupNameAnnotation {
+    color: #888;
+    font-style: italic;
+    font-size: small;
 }
 
 .instParamList .paramSpacer {

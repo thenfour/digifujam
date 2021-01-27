@@ -159,10 +159,10 @@ class InstCbxParam extends React.Component {
         let val = e.target.checked;
         this.renderedValue = val;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
-        if (this.props.instrument.ParamChangeCausesRender(this.props.param)) {
-            //setTimeout(() => this.setState(this.state), 0);
-            gStateChangeHandler.OnStateChange();
-        }
+        // if (this.props.instrument.ParamChangeCausesRender(this.props.param)) {
+        //     //setTimeout(() => this.setState(this.state), 0);
+        // }
+        gStateChangeHandler.OnStateChange();
     }
     componentDidMount() {
         // set initial values.
@@ -516,14 +516,12 @@ class InstrumentParamGroup extends React.Component {
             }
         };
 
-        let className = "instParamGroup";
-        if (this.props.instrument.groupIsModulation(this.props.groupName)) {
-            className += " modulation";
-        }
+        let groupInfo = this.props.instrument.getGroupInfo(this.props.groupName);
+        let className = "instParamGroup " + groupInfo.cssClassName;
 
         return (
             <fieldset key={this.props.groupName} className={className}>
-                <legend onClick={() => this.props.onToggleShown()}>{this.props.groupName} {arrowText}</legend>
+                <legend onClick={() => this.props.onToggleShown()}>{this.props.groupName} <span className="instParamGroupNameAnnotation">{groupInfo.annotation}</span> {arrowText}</legend>
                 {this.props.isShown && <ul className="instParamList">
                     {this.props.filteredParams.filter(p => p.groupName == this.props.groupName).map(p => createParam(p))}
                 </ul>}

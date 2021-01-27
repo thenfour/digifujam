@@ -161,47 +161,47 @@ const InstrumentParamType = {
 
 const InternalInstrumentParams = [
     {
-      "paramID": "patchName",
-      "name": "Patch name",
-      "parameterType": "textParam",
-      "isInternal": true,
-      "maxTextLength": 100
+        "paramID": "patchName",
+        "name": "Patch name",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
     },
     {
-      "paramID": "presetID",
-      "name": "Preset ID",
-      "parameterType": "textParam",
-      "isInternal": true,
-      "maxTextLength": 100
+        "paramID": "presetID",
+        "name": "Preset ID",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
     },
     {
-      "paramID": "author",
-      "name": "Author",
-      "parameterType": "textParam",
-      "isInternal": true,
-      "maxTextLength": 100
+        "paramID": "author",
+        "name": "Author",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
     },
     {
-      "paramID": "savedDate",
-      "name": "Saved date",
-      "parameterType": "textParam",
-      "isInternal": true,
-      "maxTextLength": 100
+        "paramID": "savedDate",
+        "name": "Saved date",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 100
     },
     {
-      "paramID": "tags",
-      "name": "Tags",
-      "parameterType": "textParam",
-      "isInternal": true,
-      "maxTextLength": 500
+        "paramID": "tags",
+        "name": "Tags",
+        "parameterType": "textParam",
+        "isInternal": true,
+        "maxTextLength": 500
     },
     {
-      "paramID": "isReadOnly",
-      "name": "Tags",
-      "parameterType": "intParam",
-      "isInternal": true,
+        "paramID": "isReadOnly",
+        "name": "Tags",
+        "parameterType": "intParam",
+        "isInternal": true,
     },
-  ];
+];
 
 
 
@@ -354,7 +354,7 @@ class DigifuInstrumentSpec {
             let count = 0;
             requiredParamKeys.forEach(requiredKey => {
                 if (Object.keys(p).some(k => k == requiredKey)) {
-                    count ++;
+                    count++;
                 }
             });
             if (count < requiredParamKeys.length) {
@@ -398,20 +398,48 @@ class DigifuInstrumentSpec {
         return ["master"];
     }
 
-    ParamChangeCausesRender(p) {
-        if (this.engine != "minifm") return false;
-        switch (p.paramID) {
-            case "enable_osc0":
-            case "enable_osc1":
-            case "enable_osc2":
-            case "enable_osc3":
-                return true;
-        }
-        return false;
-    }
+    // ParamChangeCausesRender(p) {
+    //     if (this.engine != "minifm") return false;
+    //     switch (p.paramID) {
+    //         case "enable_osc0":
+    //         case "enable_osc1":
+    //         case "enable_osc2":
+    //         case "enable_osc3":
+    //             return true;
+    //     }
+    //     return false;
+    // }
 
-    groupIsModulation(groupName) {
-        return groupName.toLowerCase().startsWith("mod ");
+    // return { cssClassName, annotation }
+    getGroupInfo(groupName) {
+        let ret = { cssClassName: "", annotation: "" };
+        switch (this.engine) {
+            case "soundfont":
+                return ret;
+            case "minifm":
+                // fall through to calculate the name.
+                break;
+        }
+        let isModulation = groupName.toLowerCase().startsWith("mod ");
+        if (isModulation) {
+            ret.cssClassName = "modulation";
+        } else {
+            switch (groupName) {
+                case "Saturation":
+                    const satIsEnabled = !!this.GetParamByID("waveShape_enabled").currentValue;
+                    console.log(`satIsEnabled: ${satIsEnabled}`);
+                    ret.annotation = satIsEnabled ? "(On)" : "(Off)";
+                    ret.cssClassName = satIsEnabled ? "" : "disabled";
+                    break;
+                case "Filter":
+                    const filtIsEnabled = !!this.GetParamByID("filterType").currentValue;
+                    ret.annotation = filtIsEnabled ? "(On)" : "(Off)";
+                    ret.cssClassName = filtIsEnabled ? "" : "disabled";
+                    break;
+            }
+        }
+
+        return ret;
     }
 
     // filters the list of presets to include only ones which are useful.
@@ -426,11 +454,11 @@ class DigifuInstrumentSpec {
                 if (p.paramID === "savedDate") return false;
                 if (p.paramID === "tags") return false;
                 if (p.paramID === "patchName") return false;
-    
+
                 if (p.groupName.toLowerCase().includes(filterTxt)) return true;
                 if (p.name.toLowerCase().includes(filterTxt)) return true;
                 if (p.tags.toLowerCase().includes(filterTxt)) return true;
-    
+
                 return false;
             });
             return ret;
@@ -708,7 +736,7 @@ class DigifuRoomState {
             return n;
         });
         this.stats = data.stats;
-        
+
         // remove "live" references to users.
         this.users = [];
         this.instrumentCloset.forEach(i => { i.controlledByUserID = null; });
