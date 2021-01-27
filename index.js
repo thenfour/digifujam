@@ -463,7 +463,11 @@ class RoomServer {
       if (!data.presetID) throw `no presetID`;
       let foundp = foundInstrument.instrument.presets.find(p => p.presetID == data.presetID);
       if (!foundp) throw `unable to find the preset ${data.presetID}`;
-      if (foundp.isReadOnly) throw `don't try to delete a read-only preset.`;
+      if (IsAdminUser(foundUser.user.userID)) {
+        if (foundp.isReadOnly) console.log(`An admin user ${foundUser.user.userID} | ${foundUser.user.name} is deleting a read-only preset ${data.presetID}`);
+      } else {
+        if (foundp.isReadOnly) throw `don't try to delete a read-only preset.`;
+      }
 
       // delete
       foundInstrument.instrument.presets.removeIf(p => p.presetID == data.presetID);
@@ -549,6 +553,15 @@ class RoomServer {
       // if there's an existing preset with the same ID, then overwrite. otherwise push.
       let existing = foundInstrument.instrument.presets.find(p => p.presetID == patchObj.presetID);
       if (existing) {
+        if (existing.isReadOnly) {
+          if (IsAdminUser(foundUser.user.userID)) {
+            // if you're an admin user, overwriting a READ-ONLY preset, then keep it read-only.
+            patchObj.isReadOnly = true;
+            console.log(`An admin user ${foundUser.user.userID} ${foundUser.user.name} is overwriting read-only preset ${patchObj.presetID}. Keeping it read-only.`);
+          } else {
+            throw `Don't try to overwrite readonly presets U:${foundUser.user.userID} ${foundUser.user.name}, presetID ${patchObj.presetID}`;
+          }
+        }
         Object.assign(existing, patchObj);
       } else {
         foundInstrument.instrument.presets.push(patchObj);

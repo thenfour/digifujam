@@ -422,6 +422,8 @@ class InstrumentPreset extends React.Component {
 
 
     render() {
+        const canWrite = !this.props.presetObj.isReadOnly || this.props.app.isAdmin;
+
         let dt = this.props.presetObj.savedDate;
         if (dt) {
             dt = new Date(dt);
@@ -434,8 +436,8 @@ class InstrumentPreset extends React.Component {
             <li key={this.props.presetObj.patchName}>
                 <div className="buttonContainer">
                     <button onClick={() => this.onClickLoad()}>📂Load</button>
-                    {!this.props.presetObj.isReadOnly && <button onClick={this.onBeginOverwrite}>💾Save</button>}
-                    {!this.props.presetObj.isReadOnly && <button onClick={this.onBeginDelete}>🗑Delete</button>}
+                    {canWrite && <button onClick={this.onBeginOverwrite}>💾Save</button>}
+                    {canWrite && <button onClick={this.onBeginDelete}>🗑Delete</button>}
                 </div>
                 <span className="presetName">{this.props.presetObj.patchName}</span>
                 <span className="author">by {this.props.presetObj.author}</span>
@@ -705,9 +707,10 @@ class InstrumentParams extends React.Component {
         const mainArrowText = this.state.isShown ? '⯆' : '⯈';
 
         let presetID = this.props.instrument.GetParamByID("presetID").currentValue;
-        let existingPreset = null;
+        let writableExistingPreset = null;
+        const canWrite = this.props.app.isAdmin || !p.isReadOnly;
         if (presetID) {
-            existingPreset = this.props.instrument.presets.find(p => !p.isReadOnly && p.presetID == presetID);
+            writableExistingPreset = this.props.instrument.presets.find(p => canWrite && p.presetID == presetID);
         }
 
         const instrumentSupportsPresets = this.props.instrument.supportsPresets;
@@ -733,7 +736,7 @@ class InstrumentParams extends React.Component {
                                         <button onClick={this.onImportBankClicked}>Import preset bank to clipboard</button><br />
                                         <div style={{ height: 15 }}></div>
                                         <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
-                                        {existingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save to "{existingPreset.patchName}"</button>}<br />
+                                        {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save to "{writableExistingPreset.patchName}"</button>}<br />
                                         <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
                                         {this.state.showingFactoryResetConfirmation &&
                                             <div className="confirmationBox">
