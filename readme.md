@@ -36,3 +36,15 @@ So, tip #1: Don't expect millisecond latency. You're a musician, find a creative
 
 Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But Edge feels significantly more responsive.
 
+
+
+# tech stuff
+
+## deployment process
+
+- if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1;
+- copy the previous server state before deployment using admin tools
+- openode deploy
+- paste the previous server state after the site is back up; everyone will have to log back in.
+- openode logs for sanity
+
