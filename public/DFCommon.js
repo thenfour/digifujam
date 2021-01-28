@@ -291,6 +291,9 @@ class DigifuInstrumentSpec {
         switch (this.engine) {
             case "soundfont":
                 return this.name;
+            case "drumkit":
+                let kit = this.GetParamByID("kit");
+                return this.namePrefix + " " + kit.enumNames[kit.currentValue];
             case "minisynth":
             case "minifm":
                 // fall through to calculate the name.

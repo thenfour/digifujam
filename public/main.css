@@ -244,7 +244,6 @@ button:focus {
 }
 
 #chatArea {
-    padding: 10px;
     display:flex;
 }
 
@@ -298,7 +297,7 @@ button.switchChatView
 
 #pianoArea {
     overflow-y:hidden;
-    height:130px;
+    height:110px;
 
     display: flex;
     align-items: center;
@@ -436,6 +435,11 @@ ul.instParamList label {
 
 ul.instParamList input[type="range" i] {
     margin:0;
+}
+
+ul.instParamList li.buttonsParam {
+    /* allow button types to wrap */
+    white-space: normal;
 }
 
 .instParamGroup {

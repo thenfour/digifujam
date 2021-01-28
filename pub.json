@@ -78,6 +78,12 @@
   "chatLog": [],
   "instrumentCloset": [
     {
+      "instrumentID": "drumkit1",
+      "copyOfInstrumentID": "drumkit",
+      "namePrefix": "Drums: ",
+      "name": "Drums"
+    },
+    {
       "instrumentID": "fm4a",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",

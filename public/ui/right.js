@@ -136,7 +136,7 @@ class InstButtonsParam extends React.Component {
         )));
 
         return (
-            <li className={this.props.param.cssClassName}>
+            <li className={"buttonsParam " + this.props.param.cssClassName}>
                 {buttons}
                 <label>{this.props.param.name}</label>
             </li>
@@ -748,14 +748,18 @@ class InstrumentParams extends React.Component {
                             {presetList}
                         </fieldset>
                     }
-                    <div className="paramGroupCtrl">
-                        <fieldset className="groupFocusButtons">
-                            <legend>Param groups</legend>
-                            <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
-                            {groupFocusButtons}
-                            <div className="paramFilter">Param filter🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
-                        </fieldset>
-                    </div>
+                    {
+                        groupNames.length > 1 && (
+                            <div className="paramGroupCtrl">
+                                <fieldset className="groupFocusButtons">
+                                    <legend>Param groups</legend>
+                                    <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
+                                    {groupFocusButtons}
+                                    <div className="paramFilter">Param filter🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
+                                </fieldset>
+                            </div>
+                        )
+                    }
                     {groups}
                 </div>
             </div>
@@ -1802,6 +1806,8 @@ class RootArea extends React.Component {
     }
 
     handleNoteOn = (user, instrument, midiNote, velocity) => {
+        if (instrument.activityDisplay != "keyboard") return;
+
         $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
 
         this.notesOn[midiNote].push({ userID: user.userID, color: user.color });
@@ -1828,6 +1834,8 @@ class RootArea extends React.Component {
     }
 
     handleNoteOff = (user, instrument, midiNote) => {
+        if (instrument.activityDisplay != "keyboard") return;
+
         let refs = this.notesOn[midiNote];
         if (refs.length < 1) return;
 

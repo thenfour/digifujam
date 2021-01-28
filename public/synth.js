@@ -14,6 +14,7 @@ class DigifuSynth {
 		this.internalMasterGain = null;
 
 		this._isMuted = false;
+		this.sampleLibrarian = null;
 	}
 
 	//this.masterGain = 1.0;// 0 = mute, 1.0 = unity, >1=amplify
@@ -132,6 +133,12 @@ class DigifuSynth {
 				case "soundfont":
 					this.instruments[spec.instrumentID] = new SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
 					break;
+				case "drumkit":
+					this.instruments[spec.instrumentID] = new OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DrumKitVoice(s, l));
+					break;
+				default:
+					alert(`Unknown synth engine '${spec.engine}'`);
+					break;
 			}
 		});
 	};
@@ -157,6 +164,8 @@ class DigifuSynth {
 	// call as a sort of ctor
 	Init(audioCtx) {
 		console.assert(!this.audioCtx); // don't init more than once
+
+		this.sampleLibrarian = new SampleCache(audioCtx);
 
 		this.audioCtx = audioCtx;
 		if (!this.audioCtx.createReverbFromUrl) {

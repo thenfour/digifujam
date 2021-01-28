@@ -137,11 +137,11 @@ class GeneralPolySynth {
         } else {
             // monophonic always just uses the 1st voice.
             suitableVoiceIndex = 0;
-        }
 
-        let isLegato = this.physicallyHeldNotes.length > 0;
-        this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
-        this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, isLegato);
+            let isLegato = this.physicallyHeldNotes.length > 0;
+            this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
+            this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, isLegato);
+        }
     }
 
     NoteOff(midiNote) {

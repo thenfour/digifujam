@@ -1,6 +1,154 @@
 {
   "globalInstruments": [
     {
+      "instrumentID": "drumkit",
+      "name": "DrumKit",
+      "namePrefix": "Drums: ",
+      "gain": 0.1,
+      "supportsPresets": false,
+      "color": "#11c",
+      "engine": "drumkit",
+      "activityDisplay": "drums",
+      "params": [
+        {
+          "paramID": "masterGain",
+          "name": "Master gain",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0.5
+        },
+        {
+          "paramID": "verbMix",
+          "name": "Reverb mix",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0.2
+        },
+        {
+          "paramID": "kit",
+          "name": "Kit",
+          "groupName": "master",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "defaultValue": 0,
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "LINN",
+            "SC88"
+          ]
+        }
+      ],
+      "drumKits": {
+        "LINN": {
+          "samples": [
+            {
+              "url": "/drum-samples/LINN/Acoustic_Bass_Drum.m4a",
+              "midiNotes": [
+                35,
+                36
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/Closed_Hi_Hat.m4a",
+              "midiNotes": [
+                42
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/Acoustic_Snare.m4a",
+              "midiNotes": [
+                38,
+                40
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/Low_Floor_Tom.m4a",
+              "midiNotes": [
+                45
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/High_Floor_Tom.m4a",
+              "midiNotes": [
+                43
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/LowMidTom.m4a",
+              "midiNotes": [
+                41
+              ]
+            }
+          ]
+        },
+        "SC88":{
+          "samples": [
+            {
+              "url": "/drum-samples/SC88/KICK_1.m4a",
+              "midiNotes": [
+                35
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/KICK_2.m4a",
+              "midiNotes": [
+                36
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/SNARE_1.m4a",
+              "midiNotes": [
+                38
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/SNARE_2.m4a",
+              "midiNotes": [
+                40
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/SM64_Closed_Hat.m4a",
+              "midiNotes": [
+                42
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/openhat.m4a",
+              "midiNotes": [
+                46
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/CRASH_1.m4a",
+              "midiNotes": [
+                49
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/ride.m4a",
+              "midiNotes": [
+                51
+              ]
+            },
+            {
+              "url": "/drum-samples/SC88/CRASH_2.m4a",
+              "midiNotes": [
+                55
+              ]
+            }
+
+
+          ]
+        }
+      }
+    },
+    {
       "instrumentID": "minifm",
       "name": "FM4",
       "namePrefix": "FM4: ",
@@ -1550,7 +1698,8 @@
           "waveShape_enabled": 0,
           "waveShape_curve": 27.65,
           "waveShape_gain": 1
-        }      ]
+        }
+      ]
     },
     {
       "instrumentID": "minisynth",
