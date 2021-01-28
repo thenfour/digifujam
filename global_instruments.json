@@ -6,7 +6,7 @@
       "namePrefix": "Drums: ",
       "gain": 0.1,
       "supportsPresets": false,
-      "color": "#11c",
+      "color": "#44F",
       "engine": "drumkit",
       "activityDisplay": "drums",
       "params": [
@@ -69,11 +69,25 @@
             {
               "url": "/drum-samples/LINN/Low_Floor_Tom.m4a",
               "midiNotes": [
+                48
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/Low_Floor_Tom.m4a",
+              "detune": -200,
+              "midiNotes": [
+                47
+              ]
+            },
+            {
+              "url": "/drum-samples/LINN/High_Floor_Tom.m4a",
+              "midiNotes": [
                 45
               ]
             },
             {
               "url": "/drum-samples/LINN/High_Floor_Tom.m4a",
+              "detune": -200,
               "midiNotes": [
                 43
               ]
@@ -86,7 +100,7 @@
             }
           ]
         },
-        "SC88":{
+        "SC88": {
           "samples": [
             {
               "url": "/drum-samples/SC88/KICK_1.m4a",
@@ -116,6 +130,9 @@
               "url": "/drum-samples/SC88/SM64_Closed_Hat.m4a",
               "midiNotes": [
                 42
+              ],
+              "sendNoteOffToNotes": [
+                46
               ]
             },
             {
@@ -142,8 +159,6 @@
                 55
               ]
             }
-
-
           ]
         }
       }

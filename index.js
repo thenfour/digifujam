@@ -507,9 +507,7 @@ class RoomServer {
         throw `error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`;
       }
       let initPreset = foundInstrument.instrument.GetInitPreset();
-      if (initPreset) {
-        foundInstrument.instrument.loadPatchObj(initPreset);
-      }
+      foundInstrument.instrument.loadPatchObj(initPreset);
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentFactoryReset, {
         instrumentID: foundInstrument.instrument.instrumentID,

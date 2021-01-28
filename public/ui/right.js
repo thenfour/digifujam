@@ -1806,9 +1806,9 @@ class RootArea extends React.Component {
     }
 
     handleNoteOn = (user, instrument, midiNote, velocity) => {
-        if (instrument.activityDisplay != "keyboard") return;
-
         $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
+
+        if (instrument.activityDisplay != "keyboard") return;
 
         this.notesOn[midiNote].push({ userID: user.userID, color: user.color });
         this.activityCount++;

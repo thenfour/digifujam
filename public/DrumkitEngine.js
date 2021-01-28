@@ -29,11 +29,11 @@ class SampleCache {
         if (existing) {
             if (existing.buffer) {
                 //console.log(`SampleCache: returning existing buffer for ${url}`);
-                onSuccess(existing);
+                onSuccess(existing.buffer);
                 return;
             }
             // it's still loading; just add the completion handlers.
-            //console.log(`SampleCache: still loading; adding handler for ${url}`);
+            console.log(`SampleCache: still loading; adding handler for ${url}`);
             existing.completions.push({ onSuccess, onError });
             return;
         }
@@ -44,8 +44,10 @@ class SampleCache {
         gLoadSample(this.audioCtx, url, buffer => {
             this.sampleMap[url].buffer = buffer;
             this.sampleMap[url].completions.forEach(h => h.onSuccess(buffer));
+            this.sampleMap[url].completions = [];
         }, err => {
             this.sampleMap[url].completions.forEach(e => e.onError(err));
+            this.sampleMap[url].completions = [];
         });
     };
 };
@@ -55,10 +57,6 @@ class SampleCache {
 // handles the musical work (note ons etc)
 class DrumKitVoice {
     constructor(instrumentSpec, sampleLibrarian) {
-        /*
-        (buffer)--> [velocityGainer] --> dryDestination
-                                     --> wetDestination
-        */
         this.instrumentSpec = instrumentSpec;
         this.sampleLibrarian = sampleLibrarian;
 
@@ -84,15 +82,30 @@ class DrumKitVoice {
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
 
+        /*
+        (buffer)--> [velocityGainer] --> dryDestination
+                                     --> wetDestination
+        */
+        this.velocityGainer = audioCtx.createGain();
+
+        this.velocityGainer.connect(this.dryDestination);
+        this.velocityGainer.connect(this.wetDestination);
+
         this.ensureKitLoaded();
+        this.isConnected = true;
     }
 
     disconnect() {
         if (!this.isConnected) return;
         this.AllNotesOff();
+
+        this.velocityGainer.disconnect();
+        this.velocityGainer = null;
+        this.isConnected = false;
     }
 
     NoteOn(midiNote, velocity /* 0-127 */) {
+        let spec = this.midiNoteMap[midiNote].spec;
         let buffer = this.midiNoteMap[midiNote].buffer;
         if (!buffer) return; // probably not loaded yet; ignore.
         let newBufferNode = this.audioCtx.createBufferSource();
@@ -100,23 +113,35 @@ class DrumKitVoice {
         this.AllNotesOff();
 
         this.timestamp = new Date();
+        this.noteDurationMS = buffer.duration * 1000; // TODO: adjust the duration to account for detune.
+
         this.midiNote = midiNote;
         this.velocity = velocity;
 
+        this.velocityGainer.gain.value = velocity / 127;
+
         this.bufferSourceNode = newBufferNode;
-        //this.bufferSourceNode.detune
+
+        if (spec.detune) {
+            this.bufferSourceNode.detune.value = spec.detune;
+        }
         //this.bufferSourceNode.playbackRate
-        this.bufferSourceNode.connect(this.dryDestination);
-        this.bufferSourceNode.connect(this.wetDestination);
+        this.bufferSourceNode.connect(this.velocityGainer);
         this.bufferSourceNode.start();
+
+        return spec.sendNoteOffToNotes;
     };
 
     NoteOff(midiNote) { }
+    ForceNoteOff() {
+        // for the moment just panic(). but eventually this should release an envelope.
+        this.AllNotesOff();
+    }
     PedalDown() { }
     PedalUp() { }
 
     get IsPlaying() {
-        return this.isConnected && !!this.timestamp;
+        return this.isConnected && !!this.timestamp && ((new Date() - this.timestamp) < this.noteDurationMS);
     }
 
     // makes sure the librarian is caching the samples of this kit, and populate buffers as they load.
@@ -146,7 +171,7 @@ class DrumKitVoice {
             // load sample and on completion, fill those buffers in.
             // { "url": "/drum-samples/LINN/Acoustic_Snare.m4a", "midiNotes": [ 38, 40 ] },
             this.sampleLibrarian.loadSampleFromURL(sampleSpec.url, buffer => {
-                console.log(`Loaded sample ${sampleSpec.url}`);
+                //console.log(`Loaded sample ${sampleSpec.url}`);
                 // make sure this is not an obsolete call; these can come out of order.
                 let updatedKit = this.instrumentSpec.GetParamByID("kit").currentValue;
                 if (updatedKit != loadingKitID) {
@@ -257,10 +282,24 @@ class OneShotInstrument {
                 }
             }
         }
-        this.voices[suitableVoiceIndex].NoteOn(midiNote, velocity, false);
+        const sendNoteOffToNotes = this.voices[suitableVoiceIndex].NoteOn(midiNote, velocity, false);
+        if (sendNoteOffToNotes) {
+            sendNoteOffToNotes.forEach(noteToKill => {
+                this.ForceNoteOff(noteToKill);
+            });
+        }
     }
 
+    // MIDI note offs don't do anything; these are one-shots. we do though do note-offs in ForceNoteOff
     NoteOff(midiNote) { }
+
+    ForceNoteOff(midiNote) {
+        this.voices.forEach(v => {
+            if (v.IsPlaying && v.midiNote == midiNote) {
+                v.ForceNoteOff();
+            }
+        });
+    }
 
     PedalDown() { }
 

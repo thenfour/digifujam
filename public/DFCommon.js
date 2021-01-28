@@ -276,7 +276,7 @@ class DigifuInstrumentSpec {
         this.color = "rgb(138, 224, 153)";
         this.instrumentID = null;
         this.controlledByUserID = null;
-        this.engine = null; // soundfont, minisynth, megasynth
+        this.engine = null; // soundfont, minisynth, drumkit
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
         this.maxPolyphony = 10;
@@ -316,17 +316,26 @@ class DigifuInstrumentSpec {
     GetDefaultValueForParam(param) {
         if (param.defaultValue) return param.defaultValue;
         let preset = this.GetInitPreset();
-        if (preset) {
-            if (preset[param.paramID]) return preset[param.paramID];
-        }
+        if (preset[param.paramID]) return preset[param.paramID];
+        return this.CalculateDefaultValue(param);
+    }
+
+    // like getdefaultvalueforparam, except does'nt consult any init preset.
+    CalculateDefaultValue(param) {
+        if (param.defaultValue) return param.defaultValue;
         if (param.minValue <= 0 && param.maxValue >= 0) return 0;
         return param.minValue;
     }
 
-    // can return null!
+    // always return a valid preset.
     GetInitPreset() {
         let ret = this.presets.find(p => p.name == "init");
-        if (!ret && this.presets.length > 0) ret = this.presets[0];
+        if (ret) return ret;
+        // we have to generate one.
+        ret = {};
+        this.params.forEach(param => {
+            ret[param.paramID] = this.CalculateDefaultValue(param);
+        });
         return ret;
     }
 
