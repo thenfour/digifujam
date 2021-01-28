@@ -178,7 +178,8 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0
+          "maxValue": 1.0,
+          "defaultValue": 0.5
         },
         {
           "paramID": "verbMix",
@@ -186,7 +187,8 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0
+          "maxValue": 1.0,
+          "defaultValue": 0.2
         },
         {
           "paramID": "voicing",
@@ -1737,7 +1739,8 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0
+          "maxValue": 1.0,
+          "defaultValue": 0.5
         },
         {
           "paramID": "verbMix",
@@ -1745,7 +1748,8 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0
+          "maxValue": 1.0,
+          "defaultValue": 0.2
         },
         {
           "cssClassName": "paramSpacer",
@@ -1963,7 +1967,8 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0
+          "maxValue": 1.0,
+          "defaultValue": 0.5
         },
         {
           "paramID": "verbMix",
@@ -1971,7 +1976,8 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0
+          "maxValue": 1.0,
+          "defaultValue": 0.2
         }
       ],
       "presets": [
