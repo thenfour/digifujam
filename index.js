@@ -27,7 +27,7 @@ let log = (msg) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
 
-  constructor(data) {
+  constructor(data, serverStateObj) {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(data);
 
@@ -63,8 +63,6 @@ class RoomServer {
         }
       });
 
-      i.loadPatchObj(i.GetInitPreset());
-
       // add special param values...
       i.params.push(Object.assign(new DF.InstrumentParam(), {
         paramID: "pb",
@@ -75,6 +73,17 @@ class RoomServer {
         maxValue: 48,
         currentValue: 0,
       }));
+    });
+
+    // integrate the server state for this room, and load a preset.
+    const roomRestoreState = serverStateObj.find(r => r.roomID === this.roomState.roomID);
+    if (roomRestoreState && roomRestoreState.dump) {
+      this.roomState.adminImportRoomState(roomRestoreState.dump);
+      log(`Imported room state for ${this.roomState.roomID}`);
+    }
+
+    this.roomState.instrumentCloset.forEach(i => {
+      i.loadPatchObj(i.GetInitPreset());
     });
 
     // remember this stuff for our "reset to factory defaults" function.
@@ -1024,22 +1033,25 @@ let roomsAreLoaded = function () {
   });
 };
 
-let loadRoom = function (jsonTxt) {
+let loadRoom = function (jsonTxt, serverRestoreState) {
   roomState = JSON.parse(jsonTxt);
-  gRooms[roomState.roomID] = new RoomServer(roomState);
+  gRooms[roomState.roomID] = new RoomServer(roomState, serverRestoreState);
   log(`serving room ${roomState.roomID} on route ${roomState.route}`);
   app.use(roomState.route, express.static('public'));
 }
 
 fsp.readFile("global_instruments.json")
-  .then(data1 => {
-    let i = JSON.parse(data1);
-    DF.SetGlobalInstrumentList(i.globalInstruments);
-    fsp.readFile("pub.json")
-      .then(data2 => loadRoom(data2))
-      .then(() => fsp.readFile("maj7.json"))
-      .then(data3 => loadRoom(data3))
-      .then(() => fsp.readFile("hall.json"))
-      .then(data4 => loadRoom(data4))
-      .then(() => roomsAreLoaded());
+  .then(globalInstruments => {
+    DF.SetGlobalInstrumentList(JSON.parse(globalInstruments).globalInstruments);
+    fsp.readFile("server_state.json")
+      .then(serverRestoreState => {
+        serverRestoreState = JSON.parse(serverRestoreState);
+        fsp.readFile("pub.json")
+          .then(data2 => loadRoom(data2, serverRestoreState))
+          .then(() => fsp.readFile("maj7.json"))
+          .then(data3 => loadRoom(data3, serverRestoreState))
+          .then(() => fsp.readFile("hall.json"))
+          .then(data4 => loadRoom(data4, serverRestoreState))
+          .then(() => roomsAreLoaded());
+      });
   });
