@@ -480,7 +480,8 @@ class MiniFMSynthVoice {
 
         // waveshapeGain
         this.waveshapeGain = this.audioCtx.createGain();
-        this.waveshapeGain.gain.value = this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
+        const waveshapeGainValue = this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
+        this.waveshapeGain.gain.value = waveshapeGainValue;
         this.oscSum.connect(this.waveshapeGain);
 
         // waveshape
@@ -490,7 +491,7 @@ class MiniFMSynthVoice {
 
         // waveshapePostGain
         this.waveshapePostGain = this.audioCtx.createGain();
-        this.waveshapePostGain.gain.value = 1.0 / this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
+        this.waveshapePostGain.gain.value = 1.0 / Math.max(0.01, waveshapeGainValue);
         this.waveshape.connect(this.waveshapePostGain);
 
         // filterFreqLFO1Amt

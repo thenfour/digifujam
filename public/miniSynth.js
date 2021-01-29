@@ -195,6 +195,7 @@ class PolySynthVoice {
     }
 
     SetParamValue(paramID, newVal) {
+        if (!this.isConnected) return;
         switch (paramID) {
             case "pb":
                 this.PitchBend(newVal);
@@ -253,6 +254,7 @@ class PolySynthVoice {
     }
 
     PitchBend(val /*semis*/) {
+        if (!this.isConnected) return;
         this.pitchBend = val;//((val / 0x3fff) * 2) - 1;
         let freqs = this._getOscFreqs();
         this.oscillator1.frequency.linearRampToValueAtTime(freqs[0], ClientSettings.InstrumentParamIntervalMS / 1000);
@@ -261,6 +263,7 @@ class PolySynthVoice {
     }
 
     physicalAndMusicalNoteOn(midiNote, velocity) {
+        if (!this.isConnected) return;
         this.timestamp = new Date();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -276,6 +279,7 @@ class PolySynthVoice {
     }
 
     musicallyRelease() {
+        if (!this.isConnected) return;
         this.timestamp = null;
         this.midiNote = 0;
 
@@ -284,6 +288,7 @@ class PolySynthVoice {
     }
 
     AllNotesOff() {
+        if (!this.isConnected) return;
         if (this.gainEnvelope) this.gainEnvelope.reset();
         this.midiNote = 0;
         this.timestamp = null;
