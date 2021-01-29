@@ -1,4 +1,3 @@
-//console.log(`note on ${foundUser.user.stats.noteOns}`);
 const express = require('express')
 const app = express()
 const http = require('http').Server(app);
@@ -20,6 +19,10 @@ let IsAdminUser = (userID) => {
   return gAdminUserIDs.some(x => x == userID);
 };
 
+let log = (msg) => {
+  console.log(`${(new Date()).toISOString()} ${msg}`);
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
@@ -32,10 +35,10 @@ class RoomServer {
     let usedInstrumentIDs = [];
     this.roomState.instrumentCloset.forEach(i => {
       if (usedInstrumentIDs.some(x => x == i.instrumentID)) {
-        console.log(`${i.name} warning: duplicate instrument ID '${i.instrumentID}' found.`);
+        log(`${i.name} warning: duplicate instrument ID '${i.instrumentID}' found.`);
       }
       if (!i.instrumentID) {
-        console.log(`${i.name} warning: Instruments need a constant instrumentID.`);
+        log(`${i.name} warning: Instruments need a constant instrumentID.`);
         i.instrumentID = DF.generateID();
       }
       usedInstrumentIDs.push(i.instrumentID);
@@ -46,7 +49,7 @@ class RoomServer {
         if (!i.params.some(p => p.paramID == ip.paramID)) {
           let n = Object.assign(new DF.InstrumentParam(), ip);
           n.thaw();
-          //console.log(`adding internal param ${n.name}`);
+          //log(`adding internal param ${n.name}`);
           paramsToAdd.push(n);
         }
       });
@@ -56,7 +59,7 @@ class RoomServer {
       i.presets.forEach(preset => {
         if (!preset.presetID) {
           preset.presetID = DF.generateID();
-          //console.log(`generated presetID ${preset.presetID}`);
+          //log(`generated presetID ${preset.presetID}`);
         }
       });
 
@@ -97,7 +100,7 @@ class RoomServer {
   };
 
   Idle_CheckIdlenessAndEmit() {
-    //console.log("Idle_CheckIdlenessAndEmit");
+    //log("Idle_CheckIdlenessAndEmit");
     // check idleness of users holding instruments.
     let now = new Date();
     this.roomState.instrumentCloset.forEach(i => {
@@ -108,7 +111,7 @@ class RoomServer {
       // check auto-release instrument timeout
       if (u.user.idle) {
         if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentAutoReleaseTimeoutMS) {
-          //console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID} ==> AUTO RELEASE`);
+          //log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID} ==> AUTO RELEASE`);
           io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
             instrumentID: i.instrumentID,
             userID: null,
@@ -121,7 +124,7 @@ class RoomServer {
       if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentIdleTimeoutMS) {
         u.user.idle = true;
         // user is considered idle on their instrument.
-        //console.log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
+        //log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID}`);
         io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
           instrumentID: i.instrumentID,
           userID: u.user.userID,
@@ -143,8 +146,8 @@ class RoomServer {
         });
       }
     } catch (e) {
-      console.log(`UnidleInstrument exception occurred`);
-      console.log(e);
+      log(`UnidleInstrument exception occurred`);
+      log(e);
     }
   }
 
@@ -156,13 +159,13 @@ class RoomServer {
       u.name = DF.sanitizeUsername(clientUserSpec.name);
       if (u.name == null) {
         clientSocket.disconnect();
-        console.log(`OnClientIdentify: Client had invalid username ${clientUserSpec.name}; disconnecting them.`);
+        log(`OnClientIdentify: Client had invalid username ${clientUserSpec.name}; disconnecting them.`);
         return;
       }
       u.color = DF.sanitizeUserColor(clientUserSpec.color);
       if (u.color == null) {
         clientSocket.disconnect();
-        console.log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
+        log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
         return;
       }
 
@@ -186,13 +189,13 @@ class RoomServer {
       chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
       this.roomState.chatLog.push(chatMessageEntry);
 
-      //console.log(`${JSON.stringify(clientSocket.handshake.query)}`);
+      //log(`${JSON.stringify(clientSocket.handshake.query)}`);
 
       if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
-        console.log(`An admin has been identified id=${u.userID} name=${u.name}.`);
+        log(`An admin has been identified id=${u.userID} name=${u.name}.`);
         gAdminUserIDs.push(u.userID);
       } else {
-        console.log(`Welcoming user id=${u.userID} name=${u.name}.`);
+        log(`Welcoming user id=${u.userID} name=${u.name}.`);
       }
 
       // notify this 1 user of their user id & room state
@@ -205,8 +208,8 @@ class RoomServer {
       // broadcast user enter to all clients except the user.
       clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
     } catch (e) {
-      console.log(`OnClientIdentify exception occurred`);
-      console.log(e);
+      log(`OnClientIdentify exception occurred`);
+      log(e);
     }
   };
 
@@ -214,7 +217,7 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser === null) {
-        console.log(`instrument request for unknown user`);
+        log(`instrument request for unknown user`);
         return;
       }
 
@@ -237,7 +240,7 @@ class RoomServer {
       // find the new instrument.
       let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
       if (foundInstrument === null) {
-        console.log(`instrument request for unknown instrument ${instrumentID}`);
+        log(`instrument request for unknown instrument ${instrumentID}`);
         return;
       }
 
@@ -252,26 +255,26 @@ class RoomServer {
         idle: false
       });
     } catch (e) {
-      console.log(`OnClientInstrumentRequest exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentRequest exception occurred`);
+      log(e);
     }
   };
 
   OnClientInstrumentRelease(ws) {
     try {
-      //console.log(`OnClientInstrumentRelease => ${ws.id}`)
+      //log(`OnClientInstrumentRelease => ${ws.id}`)
 
       // find the user object.
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`=> unknown user`);
+        log(`=> unknown user`);
         return;
       }
 
       // find their instrument.
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
-        console.log(`=> not controlling an instrument.`);
+        log(`=> not controlling an instrument.`);
         return;
       }
 
@@ -284,8 +287,8 @@ class RoomServer {
         idle: false
       });
     } catch (e) {
-      console.log(`OnClientInstrumentRelease exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentRelease exception occurred`);
+      log(e);
     }
   };
 
@@ -294,14 +297,14 @@ class RoomServer {
       // find the user object.
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`=> unknown user`);
+        log(`=> unknown user`);
         return;
       }
 
       // find user's instrument; if we have broadcast an IDLE for this instrument, now revoke it.
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
-        console.log(`=> not controlling an instrument.`);
+        log(`=> not controlling an instrument.`);
         return;
       }
 
@@ -317,8 +320,8 @@ class RoomServer {
         velocity: data.velocity
       });
     } catch (e) {
-      console.log(`OnClientNoteOn exception occurred`);
-      console.log(e);
+      log(`OnClientNoteOn exception occurred`);
+      log(e);
     }
   };
 
@@ -327,13 +330,13 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientNoteOff => unknown user`);
+        log(`OnClientNoteOff => unknown user`);
         return;
       }
 
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
-        console.log(`=> not controlling an instrument.`);
+        log(`=> not controlling an instrument.`);
         return;
       }
 
@@ -345,8 +348,8 @@ class RoomServer {
         note: note
       });
     } catch (e) {
-      console.log(`OnClientNoteOff exception occurred`);
-      console.log(e);
+      log(`OnClientNoteOff exception occurred`);
+      log(e);
     }
   };
 
@@ -354,13 +357,13 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientAllNotesOff => unknown user`);
+        log(`OnClientAllNotesOff => unknown user`);
         return;
       }
 
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
-        console.log(`=> not controlling an instrument.`);
+        log(`=> not controlling an instrument.`);
         return;
       }
 
@@ -369,8 +372,8 @@ class RoomServer {
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
     } catch (e) {
-      console.log(`OnClientAllNotesOff exception occurred`);
-      console.log(e);
+      log(`OnClientAllNotesOff exception occurred`);
+      log(e);
     }
   };
 
@@ -379,7 +382,7 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientPedalUp => unknown user`);
+        log(`OnClientPedalUp => unknown user`);
         return;
       }
       // broadcast to all clients except foundUser
@@ -387,8 +390,8 @@ class RoomServer {
         userID: foundUser.user.userID
       });
     } catch (e) {
-      console.log(`OnClientPedalUp exception occurred`);
-      console.log(e);
+      log(`OnClientPedalUp exception occurred`);
+      log(e);
     }
   };
 
@@ -397,7 +400,7 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientPedalDown => unknown user`);
+        log(`OnClientPedalDown => unknown user`);
         return;
       }
       // broadcast to all clients except foundUser
@@ -405,8 +408,8 @@ class RoomServer {
         userID: foundUser.user.userID
       });
     } catch (e) {
-      console.log(`OnClientPedalDown exception occurred`);
-      console.log(e);
+      log(`OnClientPedalDown exception occurred`);
+      log(e);
     }
   };
 
@@ -415,15 +418,15 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientInstrumentParams => unknown user`);
+        log(`OnClientInstrumentParams => unknown user`);
         return;
       }
 
-      //console.log(`OnClientInstrumentParams ${JSON.stringify(data)}`);
+      //log(`OnClientInstrumentParams ${JSON.stringify(data)}`);
 
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
-        console.log(`=> not controlling an instrument.`);
+        log(`=> not controlling an instrument.`);
         return;
       }
 
@@ -442,12 +445,12 @@ class RoomServer {
         } else {
           let p = foundInstrument.instrument.params.find(o => o.paramID == paramID);
           if (!p) {
-            console.log(`=> param ${x.paramID} not found.`);
+            log(`=> param ${x.paramID} not found.`);
             return;
           }
 
           p.currentValue = DF.sanitizeInstrumentParamVal(p, data[paramID]);
-          //console.log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
+          //log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
           ret.patchObj[paramID] = p.currentValue;
         }
       });
@@ -455,15 +458,15 @@ class RoomServer {
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, ret);
     } catch (e) {
-      console.log(`OnClientInstrumentParams exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentParams exception occurred`);
+      log(e);
     }
   };
 
 
   OnClientInstrumentPresetDelete(ws, data) {
     try {
-      //console.log(`OnClientInstrumentPresetDelete(${data.presetID})`);
+      //log(`OnClientInstrumentPresetDelete(${data.presetID})`);
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) throw `unknown user`;
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
@@ -472,7 +475,7 @@ class RoomServer {
       let foundp = foundInstrument.instrument.presets.find(p => p.presetID == data.presetID);
       if (!foundp) throw `unable to find the preset ${data.presetID}`;
       if (IsAdminUser(foundUser.user.userID)) {
-        if (foundp.isReadOnly) console.log(`An admin user ${foundUser.user.userID} | ${foundUser.user.name} is deleting a read-only preset ${data.presetID}`);
+        if (foundp.isReadOnly) log(`An admin user ${foundUser.user.userID} | ${foundUser.user.name} is deleting a read-only preset ${data.presetID}`);
       } else {
         if (foundp.isReadOnly) throw `don't try to delete a read-only preset.`;
       }
@@ -487,8 +490,8 @@ class RoomServer {
       });
 
     } catch (e) {
-      console.log(`OnClientInstrumentPresetDelete exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentPresetDelete exception occurred`);
+      log(e);
     }
   }
 
@@ -515,8 +518,8 @@ class RoomServer {
       });
 
     } catch (e) {
-      console.log(`OnClientInstrumentFactoryReset exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentFactoryReset exception occurred`);
+      log(e);
     }
   }
 
@@ -538,8 +541,8 @@ class RoomServer {
       });
 
     } catch (e) {
-      console.log(`OnClientInstrumentBankReplace exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentBankReplace exception occurred`);
+      log(e);
     }
   }
 
@@ -563,7 +566,7 @@ class RoomServer {
           if (IsAdminUser(foundUser.user.userID)) {
             // if you're an admin user, overwriting a READ-ONLY preset, then keep it read-only.
             patchObj.isReadOnly = true;
-            console.log(`An admin user ${foundUser.user.userID} ${foundUser.user.name} is overwriting read-only preset ${patchObj.presetID}. Keeping it read-only.`);
+            log(`An admin user ${foundUser.user.userID} ${foundUser.user.name} is overwriting read-only preset ${patchObj.presetID}. Keeping it read-only.`);
           } else {
             throw `Don't try to overwrite readonly presets U:${foundUser.user.userID} ${foundUser.user.name}, presetID ${patchObj.presetID}`;
           }
@@ -579,8 +582,8 @@ class RoomServer {
       });
 
     } catch (e) {
-      console.log(`OnClientInstrumentPresetSave exception occurred`);
-      console.log(e);
+      log(`OnClientInstrumentPresetSave exception occurred`);
+      log(e);
     }
   }
 
@@ -590,7 +593,7 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientChatMessage => unknown user`);
+        log(`OnClientChatMessage => unknown user`);
         return;
       }
 
@@ -626,8 +629,8 @@ class RoomServer {
       // this allows simpler handling of incorporating the messageID.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.UserChatMessage, nm);
     } catch (e) {
-      console.log(`OnClientChatMessage exception occurred`);
-      console.log(e);
+      log(`OnClientChatMessage exception occurred`);
+      log(e);
     }
   };
 
@@ -638,14 +641,14 @@ class RoomServer {
         return ((now - new Date(msg.timestampUTC)) < DF.ServerSettings.ChatHistoryMaxMS);
       });
     } catch (e) {
-      console.log(`CleanUpChatLog exception occurred`);
-      console.log(e);
+      log(`CleanUpChatLog exception occurred`);
+      log(e);
     }
   }
 
   DoUserRoomChange(ws, user, params) {
     let newRoom = gRooms[params.roomID];
-    //console.log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
+    //log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
     // send user part to everyone else in old room
     this.ClientLeaveRoom(ws, user.userID, newRoom.roomState.roomTitle);
     // enter the new room
@@ -659,7 +662,7 @@ class RoomServer {
   DoUserItemInteraction(ws, user, item, interactionType) {
     let interactionSpec = item[interactionType];
     if (!interactionSpec) {
-      console.log(`Item ${item.itemID} has no interaction type ${interactionType}`);
+      log(`Item ${item.itemID} has no interaction type ${interactionType}`);
       return;
     }
     if (interactionSpec.processor != "server") {
@@ -670,7 +673,7 @@ class RoomServer {
         this.DoUserRoomChange(ws, user, interactionSpec.params);
         break;
       default:
-        console.log(`Item ${item.itemID} / interaction type ${interactionType} has unknown interaction FN ${interactionSpec.fn}`);
+        log(`Item ${item.itemID} / interaction type ${interactionType} has unknown interaction FN ${interactionSpec.fn}`);
         break;
     }
   };
@@ -679,7 +682,7 @@ class RoomServer {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientUserState => unknown user`);
+        log(`OnClientUserState => unknown user`);
         return;
       }
 
@@ -687,12 +690,12 @@ class RoomServer {
       let origPayload = JSON.stringify(data);
       data.name = DF.sanitizeUsername(data.name);
       if (data.name == null) {
-        console.log(`OnClientUserState: invalid username ${origPayload.name}.`);
+        log(`OnClientUserState: invalid username ${origPayload.name}.`);
         return;
       }
       data.color = DF.sanitizeUserColor(data.color);
       if (data.color == null) {
-        console.log(`OnClientUserState: invalid color ${origPayload.color}.`);
+        log(`OnClientUserState: invalid color ${origPayload.color}.`);
         return;
       }
 
@@ -710,7 +713,7 @@ class RoomServer {
         nm.toUserColor = foundUser.user.color;
         nm.toUserName = data.name;
         this.roomState.chatLog.push(nm);
-        //console.log(`chatLog.push => nick`);
+        //log(`chatLog.push => nick`);
       }
 
       foundUser.user.name = data.name;
@@ -732,24 +735,24 @@ class RoomServer {
       });
 
     } catch (e) {
-      console.log(`OnClientUserState exception occurred`);
-      console.log(e);
+      log(`OnClientUserState exception occurred`);
+      log(e);
     }
   };
 
   // text, x, y
   OnClientCheer(ws, data) {
-    //console.log(`OnClientCheer => ${JSON.stringify(data)} ${data.text.length}`);
+    //log(`OnClientCheer => ${JSON.stringify(data)} ${data.text.length}`);
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientCheer => unknown user`);
+        log(`OnClientCheer => unknown user`);
         return;
       }
 
       let txt = DF.sanitizeCheerText(data.text);
       if (txt == null) {
-        console.log(`OnClientCheer: invalid cheer ${data.text}.`);
+        log(`OnClientCheer: invalid cheer ${data.text}.`);
         return;
       }
 
@@ -758,8 +761,8 @@ class RoomServer {
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
     } catch (e) {
-      console.log(`OnClientCheer exception occurred`);
-      console.log(e);
+      log(`OnClientCheer exception occurred`);
+      log(e);
     }
   }
 
@@ -781,7 +784,7 @@ class RoomServer {
         let ws = io.of('/').sockets.get(u.userID);
         let shouldDelete = !ws;
         if (shouldDelete) {
-          console.log(`PING USER CLEANUP removing userid ${u.userID}`);
+          log(`PING USER CLEANUP removing userid ${u.userID}`);
           deletedUsers.push(u);
         }
         return shouldDelete;
@@ -810,28 +813,28 @@ class RoomServer {
       // ping ALL clients on the room
       io.to(this.roomState.roomID).emit(DF.ServerMessages.Ping, payload);
     } catch (e) {
-      console.log(`OnPingInterval exception occurred`);
-      console.log(e);
+      log(`OnPingInterval exception occurred`);
+      log(e);
     }
   };
 
   OnClientPong(ws, data) {
     try {
       // data is the token we sent, a date iso string.
-      //console.log(`OnClientPong data=${data}`);
+      //log(`OnClientPong data=${data}`);
       let a = new Date(data);
       let b = new Date();
 
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) {
-        console.log(`OnClientPong => unknown user`);
+        log(`OnClientPong => unknown user`);
         return;
       }
 
       foundUser.user.pingMS = (b - a);
     } catch (e) {
-      console.log(`OnClientPong exception occurred`);
-      console.log(e);
+      log(`OnClientPong exception occurred`);
+      log(e);
     }
   };
 
@@ -845,7 +848,7 @@ class RoomServer {
         return;
       }
 
-      console.log(`ClientLeaveRoom => ${userID} ${foundUser.user.name} after ${foundUser.user.stats.noteOns++} notes and ${foundUser.user.stats.messages} msgs`);
+      log(`ClientLeaveRoom => ${userID} ${foundUser.user.name} after ${foundUser.user.stats.noteOns++} notes and ${foundUser.user.stats.messages} msgs`);
 
       // remove references to this user.
       this.roomState.instrumentCloset.forEach(inst => {
@@ -873,8 +876,8 @@ class RoomServer {
       }
       io.to(this.roomState.roomID).emit(DF.ServerMessages.UserLeave, { userID, chatMessageEntry });
     } catch (e) {
-      console.log(`ClientLeaveRoom exception occurred`);
-      console.log(e);
+      log(`ClientLeaveRoom exception occurred`);
+      log(e);
     }
   };
 
@@ -882,13 +885,13 @@ class RoomServer {
   ClientJoin(ws, fromRoomName) {
     // NB! Client may already be connected but just joining this room.
     try {
-      //console.log(`CLIENT JOINING ${this.roomState.roomID}`);
+      //log(`CLIENT JOINING ${this.roomState.roomID}`);
       ws.DFFromRoomName = fromRoomName; // convenience so you can persist through the room change workflow.
       ws.join(this.roomState.roomID);
       ws.emit(DF.ServerMessages.PleaseIdentify); // ask user to identify
     } catch (e) {
-      console.log(`OnClientConnect exception occurred`);
-      console.log(e);
+      log(`OnClientConnect exception occurred`);
+      log(e);
     }
   }
 
@@ -897,7 +900,7 @@ class RoomServer {
 
 let ForwardToRoom = function (ws, fn) {
   let roomArray = [...ws.rooms];
-  //console.log(`ROOMS=${roomArray} FN=${fn.toString()}`);
+  //log(`ROOMS=${roomArray} FN=${fn.toString()}`);
   fn(gRooms[roomArray[1]]); // room[0] is always your socket id.
 };
 
@@ -924,8 +927,8 @@ let OnClientDownloadServerState = (ws) => {
     ws.emit(DF.ServerMessages.ServerStateDump, allRooms);
 
   } catch (e) {
-    console.log(`OnClientDownloadServerState exception occurred`);
-    console.log(e);
+    log(`OnClientDownloadServerState exception occurred`);
+    log(e);
   }
 }
 
@@ -934,7 +937,7 @@ let OnClientUploadServerState = (ws, data) => {
   try {
     if (!IsAdminUser(ws.id)) throw `User isn't an admin.`;
 
-    console.log(`uploaded server state with len=${JSON.stringify(data).length}`);
+    log(`uploaded server state with len=${JSON.stringify(data).length}`);
     data.forEach(rs => {
       if (!rs.roomID) throw `no room ID. maybe you're importing some bad format?`;
       let room = gRooms[rs.roomID];//.find(r => r.roomState.roomID == rs.roomID);
@@ -950,15 +953,15 @@ let OnClientUploadServerState = (ws, data) => {
       //   return !!foundUser;
       // });
       // if (roomID) {
-      //   console.log(`Re-welcoming user with id ${ws.id} to ${roomState.roomTitle}`);
+      //   log(`Re-welcoming user with id ${ws.id} to ${roomState.roomTitle}`);
       //   //newRoom.ClientJoin(ws, gRooms[roomID].roomState.roomTitle);
       // }
 
     });
 
   } catch (e) {
-    console.log(`OnClientUploadServerState exception occurred`);
-    console.log(e);
+    log(`OnClientUploadServerState exception occurred`);
+    log(e);
   }
 }
 
@@ -1011,20 +1014,20 @@ let roomsAreLoaded = function () {
       room.ClientJoin(ws);
 
     } catch (e) {
-      console.log("Exception on connection: " + e);
+      log("Exception on connection: " + e);
     }
   });
 
   let port = process.env.PORT || 8081;
   http.listen(port, () => {
-    console.log(`listening on *:${port}`);
+    log(`listening on *:${port}`);
   });
 };
 
 let loadRoom = function (jsonTxt) {
   roomState = JSON.parse(jsonTxt);
   gRooms[roomState.roomID] = new RoomServer(roomState);
-  console.log(`serving room ${roomState.roomID} on route ${roomState.route}`);
+  log(`serving room ${roomState.roomID} on route ${roomState.route}`);
   app.use(roomState.route, express.static('public'));
 }
 
