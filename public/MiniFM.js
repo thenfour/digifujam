@@ -13,6 +13,7 @@ class MiniFMSynthOsc {
         this.midiNote = 0;
         this.velocity = 0;
         this.timestamp = null; // when did the note on start?
+        this.noteOffTimestamp = null; // when did the note release ? 
 
         this.isConnected = false;
     }
@@ -317,6 +318,7 @@ class MiniFMSynthOsc {
     noteOn(midiNote, velocity, isLegato) {
         this.midiNote = midiNote;
         this.velocity = velocity;
+        this.timestamp = new Date();
         this.updateEnvPeakLevel();
         this.updateOscFreq(false);
         let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
@@ -327,9 +329,19 @@ class MiniFMSynthOsc {
 
     release() {
         if (!this.midiNote) return null;
+        this.timestamp = null;
+        this.noteOffTimestamp = new Date();
         this.midiNote = 0;
         this.velocity = 0;
         this.env.release();
+    }
+
+    get IsPlaying() {
+        if (!this.isConnected) return false;
+        if (this.timestamp) return true; // note is definitely playing.
+        if (!this.noteOffTimestamp) return false;
+        // note is off; check if we're still in envelope "release" stage.
+        return (new Date() - this.noteOffTimestamp) < (this.paramValue("r") * 1000);
     }
 
     AllNotesOff() {
@@ -415,7 +427,6 @@ class MiniFMSynthVoice {
 
         this.midiNote = 0;
         this.velocity = 0;
-        this.timestamp = null; // when did the note on start?
 
         this.oscillators = [
             new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc0_"),
@@ -943,7 +954,8 @@ class MiniFMSynthVoice {
     }
 
     get IsPlaying() {
-        return this.isConnected && !!this.timestamp;
+        if (!this.isConnected) return false;
+        return this.oscillators.some(o => o.IsPlaying);
     }
 
     _setWaveshapeCurve() {
@@ -953,25 +965,6 @@ class MiniFMSynthVoice {
             this.waveshape.curve = null;
             return;
         }
-
-        // let makeDistortionCurve = (amount) => {
-        //     let n_samples = 256, curve = new Float32Array(n_samples);
-        //     for (let i = 0; i < n_samples; ++i) {
-        //         let x = i * 2 / n_samples - 1;
-        //         curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
-        //     }
-        //     return curve;
-        // };
-
-        // p is 0-
-        // let transf = (x, p) => {
-        //     return Math.sign(x) * Math.pow(Math.abs(x), p);
-        // };
-
-        // // x is -1 to 1
-        // let transf = (x, p) => {
-        //     return remap(p, -1, 1, 0, Math.sin(x));
-        // };
 
         // x is -1 to 1, a is 0-1
         let transf = (x, a) => {
@@ -1157,6 +1150,7 @@ class MiniFMSynthVoice {
         });
 
         this.timestamp = null;
+        this.noteOffTimestamp = new Date();
         this.midiNote = 0;
         this.velocity = 0;
     }
@@ -1167,6 +1161,7 @@ class MiniFMSynthVoice {
         });
         this.midiNote = 0;
         this.timestamp = null;
+        this.noteOffTimestamp = null;
         this.velocity = 0;
     }
 
