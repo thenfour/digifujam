@@ -214,6 +214,7 @@ class InstIntParam extends React.Component {
         this.renderedValue = val;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
         this.setCaption();
+        gStateChangeHandler.OnStateChange();
     }
     componentDidMount() {
         // set initial values.
@@ -221,6 +222,13 @@ class InstIntParam extends React.Component {
         $("#" + this.sliderID).val(val);
         this.setCaption();
         this.renderedValue = val;
+        stylizeRangeInput(this.sliderID, {
+            bgNegColorSpec: "#044",
+            negColorSpec: "#044",
+            posColorSpec: "#044",
+            bgPosColorSpec: "#044",
+            zeroVal: 0,
+        });
     }
     render() {
         if (this.renderedValue != this.props.param.currentValue) {
@@ -233,7 +241,7 @@ class InstIntParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.sliderID} type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
+                <input id={this.sliderID} className="intParam" type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
                 //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
                 />
                 <label>{this.props.param.name}: <span id={this.valueTextID}></span></label>

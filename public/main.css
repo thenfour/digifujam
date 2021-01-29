@@ -715,7 +715,9 @@ div.paramFilter input[type="text"]
 
 
 
-input[type="range"].floatParam {
+input[type="range"].floatParam,
+input[type="range"].intParam
+ {
     border: 0;
     border-radius: 8px;
     height: 8px;
@@ -723,7 +725,9 @@ input[type="range"].floatParam {
     -webkit-appearance: none;
 }
 
-input[type="range"].floatParam::-webkit-slider-thumb {
+input[type="range"].floatParam::-webkit-slider-thumb,
+input[type="range"].intParam::-webkit-slider-thumb
+{
     -webkit-appearance: none;
     background: #0aa;
     height: 14px;
@@ -732,11 +736,15 @@ input[type="range"].floatParam::-webkit-slider-thumb {
     border-radius: 100%;
 }
 
-.modAmtParam input[type="range"].floatParam {
+.modAmtParam input[type="range"].floatParam,
+.modAmtParam input[type="range"].intParam
+{
     height: 4px;
 }
 
-.modAmtParam input[type="range"].floatParam::-webkit-slider-thumb {
+.modAmtParam input[type="range"].floatParam::-webkit-slider-thumb,
+.modAmtParam input[type="range"].intParam::-webkit-slider-thumb
+{
     background: #aaa;
     height: 9px;
     width: 9px;
