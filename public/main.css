@@ -151,6 +151,26 @@ button:focus {
     margin: 0;
     border: 0;
     font-size: larger;
+    overflow: hidden; /* allows floated content to increase div height https://stackoverflow.com/questions/2159843/how-to-make-div-height-increase-to-include-floated-image*/
+}
+
+.component>h2 .buttonContainer {
+    float:right;
+    line-height: 10px;
+}
+
+.component>h2 button {
+    font-weight: normal;
+    background-color: #033;
+    border: 1px solid #066;
+    font-size: x-small;
+}
+
+.clipboardControls {
+    border: 0;
+    background-color: #022;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 #roomArea .component {
@@ -642,7 +662,9 @@ ul.instParamList li.buttonsParam {
 
 div.paramFilter input[type="text"]
 {
-    width: 100px;
+    width: 50px;
+    display:inline;
+
 }
 
 .paramGroupFocusBtn,
@@ -674,10 +696,16 @@ div.paramFilter input[type="text"]
 
 
 .paramGroupCtrl {
-    margin: 10px;
     border: 0;
     font-size: small;
+    position:sticky;
+    position:-webkit-sticky;
+    top:0px;
+    padding-top:4px;
+    background-color: #222;
+    z-index: 9999;
 }
+
 
 .groupFocusButtons {
     background-color: black;

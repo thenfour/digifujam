@@ -165,7 +165,9 @@ const InternalInstrumentParams = [
         "name": "Patch name",
         "parameterType": "textParam",
         "isInternal": true,
-        "maxTextLength": 100
+        "maxTextLength": 100,
+        "currentValue": "init",
+        "defaultValue": "init"
     },
     {
         "paramID": "presetID",
@@ -322,7 +324,19 @@ class DigifuInstrumentSpec {
 
     // like getdefaultvalueforparam, except does'nt consult any init preset.
     CalculateDefaultValue(param) {
+        switch (param.paramID) {
+            case "pb":
+                return 0;
+            case "patchName":
+                return "init";
+            case "presetID":
+                return generateID();
+        }
         if (param.defaultValue) return param.defaultValue;
+        switch (param.parameterType) {
+            case "textParam":
+                return "";
+        }
         if (param.minValue <= 0 && param.maxValue >= 0) return 0;
         return param.minValue;
     }
@@ -334,6 +348,12 @@ class DigifuInstrumentSpec {
         // we have to generate one.
         ret = {};
         this.params.forEach(param => {
+            switch (param.paramID) {
+                case "pb":
+                case "patchName":
+                case "presetID":
+                    return;
+            }
             ret[param.paramID] = this.CalculateDefaultValue(param);
         });
         return ret;

@@ -93,6 +93,7 @@ class InstTextParam extends React.Component {
         let val = e.target.value;
         this.renderedValue = val;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
+        gStateChangeHandler.OnStateChange();
     }
     componentDidMount() {
         // set initial values.
@@ -539,6 +540,7 @@ class InstrumentParams extends React.Component {
             shownGroupNames: [],
             showingAllGroups: false,
             showingFactoryResetConfirmation: false,
+            showingClipboardControls: false,
         };
         this.state.shownGroupNames = this.props.instrument.GetDefaultShownGroupsForInstrument();
     }
@@ -585,7 +587,10 @@ class InstrumentParams extends React.Component {
         this.setState({ showingAllGroups: true });
     };
 
-    onToggleShownClick = () => {
+    onToggleShownClick = (e) => {
+        if (e.target.id != "showInstrumentPanel") {
+            return; // ignore clicks on children; only accept direct clicks.
+        }
         this.setState({ isShown: !this.state.isShown });
     };
 
@@ -670,6 +675,10 @@ class InstrumentParams extends React.Component {
             });
     };
 
+    onClipboardShownClick = () => {
+        this.setState({ showingClipboardControls: !this.state.showingClipboardControls });
+    }
+
     render() {
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
@@ -711,13 +720,31 @@ class InstrumentParams extends React.Component {
 
         const instrumentSupportsPresets = this.props.instrument.supportsPresets;
 
+        const groupFocusButtonStuff = this.state.isShown && (groupNames.length > 1) && (
+            <div className="paramGroupCtrl">
+                <fieldset className="groupFocusButtons">
+                    <legend>Param groups</legend>
+                    <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
+                    {groupFocusButtons}
+                    <div className="paramFilter">Param filter🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
+                </fieldset>
+            </div>
+        );
+
+
         return (
             <div className="component">
-                <h2 style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>{this.props.instrument.getDisplayName()} {mainArrowText}</h2>
+                <h2 id="showInstrumentPanel" style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>
+                    {this.props.instrument.getDisplayName()}
+                    {mainArrowText}
+                    <div className="buttonContainer">
+                        <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
+                        <button onClick={this.onPanicClick}>Panic</button>
+                        <button onClick={this.onReleaseClick}>Release</button>
+                    </div>
+                </h2>
                 <div style={shownStyle}>
-                    <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
-                    <button onClick={this.onPanicClick}>Panic</button>
-                    <button onClick={this.onReleaseClick}>Release</button>
+                    {groupFocusButtonStuff}
 
                     {instrumentSupportsPresets &&
                         <fieldset className="instParamGroup presetsGroup">
@@ -726,13 +753,8 @@ class InstrumentParams extends React.Component {
                                 <ul className="instParamList">
                                     <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
                                     <li className="instPresetButtons">
-                                        <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
-                                        <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
-                                        <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
-                                        <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button><br />
-                                        <div style={{ height: 15 }}></div>
-                                        <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
-                                        {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save to "{writableExistingPreset.patchName}"</button>}<br />
+                                        {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}<br />
+                                        <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
                                         <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
                                         {this.state.showingFactoryResetConfirmation &&
                                             <div className="confirmationBox">
@@ -743,22 +765,24 @@ class InstrumentParams extends React.Component {
                                             </div>
                                         }
                                     </li>
+                                    {presetList}
+
+                                    <li className="instPresetButtons">
+                                        <fieldset className="clipboardControls">
+                                            <legend onClick={this.onClipboardShownClick}>Clipboard</legend>
+                                            {this.state.showingClipboardControls && (
+                                                <div>
+                                                    <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
+                                                    <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
+                                                    <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
+                                                    <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button><br />
+                                                </div>
+                                            )}
+                                        </fieldset>
+                                    </li>
                                 </ul>)}
 
-                            {presetList}
                         </fieldset>
-                    }
-                    {
-                        groupNames.length > 1 && (
-                            <div className="paramGroupCtrl">
-                                <fieldset className="groupFocusButtons">
-                                    <legend>Param groups</legend>
-                                    <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
-                                    {groupFocusButtons}
-                                    <div className="paramFilter">Param filter🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
-                                </fieldset>
-                            </div>
-                        )
                     }
                     {groups}
                 </div>
@@ -1221,8 +1245,6 @@ class RightArea extends React.Component {
         return (
             <div id="rightArea" style={{ gridArea: "rightArea" }}>
                 {instParams}
-                <UserList app={this.props.app} />
-                <WorldStatus app={this.props.app} />
             </div>
         );
     }
@@ -1242,6 +1264,8 @@ class LeftArea extends React.Component {
                 {userState}
                 {adminControls}
                 <InstrumentList app={this.props.app} />
+                <UserList app={this.props.app} />
+                <WorldStatus app={this.props.app} />
             </div>
         );
     }
@@ -1309,7 +1333,7 @@ class UIAudioVisualizationRoomItem extends React.Component {
     }
 
     componentDidMount() {
-        this.audioVis = new AudioVis(document.getElementById(this.canvID), this.props.app.synth.analysisNode);
+        //this.audioVis = new AudioVis(document.getElementById(this.canvID), this.props.app.synth.analysisNode);
     }
     componentWillUnmount() {
         if (this.audioVis) {
@@ -1319,6 +1343,7 @@ class UIAudioVisualizationRoomItem extends React.Component {
     }
 
     render() {
+        return null; // for the moment don't show vis. it needs refinement and i don't want to refine until we use WebGL more.
         const pos = this.props.displayHelper().roomToScreenPosition(this.props.item.rect);
 
         let style = Object.assign({
