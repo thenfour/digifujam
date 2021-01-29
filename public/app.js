@@ -4,6 +4,7 @@ class DigifuApp {
     constructor() {
         window.gDFApp = this; // for debugging, so i can access this class in the JS console.
         this.roomState = null;
+        this.worldPopulation = 0; // calculated on ping
         this.shortChatLog = []; // contains aggregated entries instead of the full thing
 
         this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
@@ -393,6 +394,7 @@ class DigifuApp {
             if (!foundUser) return; // this is possible because the server may be latent in sending this user data.
             foundUser.user.pingMS = u.pingMS;
         });
+        this.worldPopulation = data.rooms.reduce((a,b) => a + b.users.length, 0);
 
         // pings are a great time to do some cleanup.
 

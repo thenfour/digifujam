@@ -605,10 +605,19 @@ ul.instParamList li.buttonsParam {
 .component.userList h2 {
     color:#066;
 }
-.component.userList h2 .roomName,
+.component.userList h2 .roomName{
+    color:#0aa;
+}
 .component.userList h2 .userCount,
 .component.userList h2 .noteOns {
-    color:#0aa;
+    color:#088;
+}
+
+.component.userList .roomHeaderStats
+{
+    color: #066;
+    font-size: medium;
+    margin-left: 10px;
 }
 
 
@@ -620,11 +629,14 @@ ul.instParamList li.buttonsParam {
 {
     font-weight: bold;
 }
-.worldStatus .room .roomName,
+.worldStatus .room .roomName
+{
+    color:#0aa;
+}
 .worldStatus .room .userCount,
 .worldStatus .room .noteOns
 {
-    color:#0aa;
+    color:#088;
 }
 
 

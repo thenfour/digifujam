@@ -729,7 +729,7 @@ class InstrumentParams extends React.Component {
                                         <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
                                         <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
                                         <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
-                                        <button onClick={this.onImportBankClicked}>Import preset bank to clipboard</button><br />
+                                        <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button><br />
                                         <div style={{ height: 15 }}></div>
                                         <button onClick={this.onSaveNewPreset}>💾 New preset with current patch</button>
                                         {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Save to "{writableExistingPreset.patchName}"</button>}<br />
@@ -1101,7 +1101,7 @@ class UserList extends React.Component {
             <div className="component userList">
                 <h2><span className="roomName">{this.props.app.roomState.roomTitle}</span>
                     {room &&
-                        <span>[<span class="userCount">{room.users.length}</span>] ♫<span class="noteOns">{room.stats.noteOns}</span></span>
+                        <span className="roomHeaderStats">[<span className="userCount">{room.users.length}</span>] ♫<span className="noteOns">{room.stats.noteOns}</span></span>
                     }
                 </h2>
                 <ul>
@@ -1896,7 +1896,7 @@ class RootArea extends React.Component {
                 const i = this.activityCount % window.gSpinners[spinnerName].frames.length;
                 activityTxt = window.gSpinners[spinnerName].frames[i];
             }
-            title = `${this.state.app.roomState.roomTitle} ${activityTxt} [${this.state.app.roomState.users.length}]`;
+            title = `${this.state.app.roomState.roomTitle} ${activityTxt} [${this.state.app.roomState.users.length}/${this.state.app.worldPopulation}]`;
         }
         if (document.title != title) {
             document.title = title;
