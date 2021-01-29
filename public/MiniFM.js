@@ -341,7 +341,11 @@ class MiniFMSynthOsc {
         if (this.timestamp) return true; // note is definitely playing.
         if (!this.noteOffTimestamp) return false;
         // note is off; check if we're still in envelope "release" stage.
-        return (new Date() - this.noteOffTimestamp) < (this.paramValue("r") * 1000);
+        if ( (new Date() - this.noteOffTimestamp) < (this.paramValue("r") * 1000)) {
+            return true;
+        }
+        this.noteOffTimestamp = null;
+        return false;
     }
 
     AllNotesOff() {
