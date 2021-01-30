@@ -341,7 +341,7 @@ class MiniFMSynthOsc {
         if (this.timestamp) return true; // note is definitely playing.
         if (!this.noteOffTimestamp) return false;
         // note is off; check if we're still in envelope "release" stage.
-        if ( (new Date() - this.noteOffTimestamp) < (this.paramValue("r") * 1000)) {
+        if ((new Date() - this.noteOffTimestamp) < (this.paramValue("r") * 1000)) {
             return true;
         }
         this.noteOffTimestamp = null;
@@ -669,104 +669,41 @@ class MiniFMSynthVoice {
             this.instrumentSpec.GetParamByID("enable_osc3").currentValue,
         ];
 
-        switch (algo) {
-            case 0: // "[1🡄2🡄3🡄4]",
-                this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
-                detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
+        const oscTuneGroups = this.instrumentSpec.GetFMAlgoSpec();
+
+        // detuneFreq is always the "+1" detune value
+        // use detuneVar1, 2, 3 for variations of this, including "0" for center if needed.
+        switch (oscTuneGroups.length) {
+            case 0:
+                break; // nothing to do.
+            case 1:
+                this.detuneVar1.gain.value = 0; // no detuning, single osc group. give all oscillators the same "0" detune value.
+                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
                 break;
-            case 1: // "[1🡄2🡄3][4]",
-                if (!oscEnabled[3] || !oscEnabled[0]) {
-                    // ok only 1 param group really
-                    this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
-                    detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
-                    break;
-                }
+            case 2:
                 this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneFreq, this.detuneVar1];
+                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneFreq); });
+                oscTuneGroups[1].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
                 break;
-            case 2: // "[1🡄2][3🡄4]",
-                if (!oscEnabled[0] || !oscEnabled[2]) {
-                    // ok only 1 param group really
-                    this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
-                    detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
-                    break;
-                }
-                this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar1];
-                break;
-            case 3: // "[1🡄2][3][4]",
-                if (!oscEnabled[0]) { // 2 or 1 groups
-                    if (!oscEnabled[2] || !oscEnabled[3]) {
-                        // only 1 param group really
-                        this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
-                        detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
-                        break;
-                    }
-                    // 2 param groups osc 3 & 4
-                    this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                    detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneFreq, this.detuneVar1];
-                    break;
-                }
+            case 3:
                 this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
                 this.detuneVar2.gain.value = 0;
-                detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar2];
+                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar2); });
+                oscTuneGroups[1].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
+                oscTuneGroups[2].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneFreq); });
                 break;
-            case 4: // "[1][2][3][4]"
-                // ONE GROUP:  1--- -2-- --3- ---4                aaaa
-                // TWO groups: 12-- 1-3- 1--4 -23- -2-4 --34      ABAB AABB
-                // THREE       123- 12-4 1-34 -234                ABCC AABC
-                // FOUR        1234                               abcd
-                let oscEnabledCount = (oscEnabled[0] ? 1 : 0) + (oscEnabled[1] ? 1 : 0) + (oscEnabled[2] ? 1 : 0) + (oscEnabled[3] ? 1 : 0);
-                if (oscEnabledCount == 1) {
-                    // only 1 param group really
-                    this.detuneVar1.gain.value = 0; // no detuning, 1 osc group.
-                    detuneSources = [this.detuneVar1, this.detuneVar1, this.detuneVar1, this.detuneVar1];
-                    break;
-                }
-                if (oscEnabledCount == 4) {
-                    this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
-                    this.detuneVar2.gain.value = -0.5;
-                    this.detuneVar3.gain.value = -1;
-                    detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneVar2, this.detuneVar3];
-                    break;
-                }
-                if (oscEnabledCount == 3) {
-                    this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
-                    this.detuneVar2.gain.value = 0;
-                    if (!oscEnabled[3] || !oscEnabled[2]) {
-                        detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneVar2, this.detuneVar2]; // ABCC
-                        break;
-                    }
-                    detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar2]; // AABC
-                    break;
-                }
-
-                // two voices enabled
-                this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                if (oscEnabled[0] != oscEnabled[1]) { // AA 1-3- 1--4 -23- -2-4
-                    detuneSources = [this.detuneFreq, this.detuneFreq, this.detuneVar1, this.detuneVar1];
-                    break;
-                }
-                detuneSources = [this.detuneFreq, this.detuneVar1, this.detuneFreq, this.detuneVar1]; // ABAB
+            case 4:
+                this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
+                this.detuneVar2.gain.value = -0.5;
+                this.detuneVar3.gain.value = -1;
+                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
+                oscTuneGroups[1].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar2); });
+                oscTuneGroups[2].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneFreq); });
+                oscTuneGroups[3].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar3); });
                 break;
-
             default:
-                console.log(`unknown algorithm ${algo}`);
+                console.warn(`invalid osc tuning group amt`);
                 break;
-        }
-
-        // create the child oscillators
-        if (oscEnabled[0]) {
-            this.oscillators[0].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[0]);
-        }
-        if (oscEnabled[1]) {
-            this.oscillators[1].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[1]);
-        }
-        if (oscEnabled[2]) {
-            this.oscillators[2].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[2]);
-        }
-        if (oscEnabled[3]) {
-            this.oscillators[3].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSources[3]);
         }
 
         // and make the FM matrix connections

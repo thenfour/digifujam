@@ -462,27 +462,8 @@ class DigifuInstrumentSpec {
         return ret;
     }
 
-    // filters the list of presets to include only ones which are useful.
-    // for example if OSC B is disabled, don't show any settings from OSC B.
-    GetDisplayablePresetList(filterTxt) {
-        if (this.engine != "minifm") {
-            let ret = this.params.filter(p => {
-                // internal params which aren't part of the normal param editing zone.
-                if (p.paramID === "presetID") return false;
-                if (p.paramID === "isReadOnly") return false;
-                if (p.paramID === "author") return false;
-                if (p.paramID === "savedDate") return false;
-                if (p.paramID === "tags") return false;
-                if (p.paramID === "patchName") return false;
-
-                if (p.groupName.toLowerCase().includes(filterTxt)) return true;
-                if (p.name.toLowerCase().includes(filterTxt)) return true;
-                if (p.tags.toLowerCase().includes(filterTxt)) return true;
-
-                return false;
-            });
-            return ret;
-        }
+    // returns an array of oscillator groups which are enabled, and according to the algorithm specified.
+    GetFMAlgoSpec() {
         let osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
         let osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
         let osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
@@ -506,6 +487,35 @@ class DigifuInstrumentSpec {
         oscGroups = oscGroups.filter(grp => {
             return grp.some(osc => osc_enabled[osc]); // at least 1 oscillator in the group is enabled? then keep it.
         });
+        return oscGroups;
+    }
+
+    // filters the list of presets to include only ones which are useful.
+    // for example if OSC B is disabled, don't show any settings from OSC B.
+    GetDisplayablePresetList(filterTxt) {
+        if (this.engine != "minifm") {
+            let ret = this.params.filter(p => {
+                // internal params which aren't part of the normal param editing zone.
+                if (p.paramID === "presetID") return false;
+                if (p.paramID === "isReadOnly") return false;
+                if (p.paramID === "author") return false;
+                if (p.paramID === "savedDate") return false;
+                if (p.paramID === "tags") return false;
+                if (p.paramID === "patchName") return false;
+
+                if (p.groupName.toLowerCase().includes(filterTxt)) return true;
+                if (p.name.toLowerCase().includes(filterTxt)) return true;
+                if (p.tags.toLowerCase().includes(filterTxt)) return true;
+
+                return false;
+            });
+            return ret;
+        }
+        const osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
+        const osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
+        const osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
+        const osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
+        const oscGroups = this.GetFMAlgoSpec();
 
         let oscIsPWM = [
             this.GetParamByID("osc0_wave").currentValue == 4,
