@@ -64,7 +64,10 @@ class SoundfontInstrument {
 	NoteOn(midiNote, velocity) {
 		if (!this.sfinstrument) return;
 		this.voices[midiNote] = this.sfinstrument.play(midiNote, null, { gain: velocity / 128 }); // https://www.npmjs.com/package/soundfont-player
-		this.voices[midiNote].DFHolding = true;
+		if (this.voices[midiNote]) {
+			// i don't know why but very rarely .play() returns null. NBD we drop a note.
+			this.voices[midiNote].DFHolding = true;
+		}
 		//log(`note on ${midiNote} holding=${this.voices[midiNote].DFHolding}`);
 	};
 
