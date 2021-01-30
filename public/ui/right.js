@@ -366,7 +366,7 @@ class InstFloatParam extends React.Component {
         }
     };
 
-    onDoubleClickSlider = (e) =>  {
+    onDoubleClickSlider = (e) => {
         let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
         //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
 
@@ -376,7 +376,7 @@ class InstFloatParam extends React.Component {
         this.setCaption(realVal);
         this.setInputTextVal(realVal);
         this.setSliderVal(realVal);
-};
+    };
 
     render() {
         if (this.renderedValue != this.props.param.currentValue) {
@@ -517,7 +517,7 @@ class InstrumentPresetList extends React.Component {
 // props.filteredParams
 class InstrumentParamGroup extends React.Component {
     render() {
-        const arrowText = this.props.isShown ? '⯆' : '⯈';
+        const arrowText = getArrowText(this.props.isShown)
 
         let createParam = (p) => {
             if (p.hidden) return null;
@@ -542,7 +542,7 @@ class InstrumentParamGroup extends React.Component {
 
         return (
             <fieldset key={this.props.groupName} className={className}>
-                <legend onClick={() => this.props.onToggleShown()}>{this.props.groupName} <span className="instParamGroupNameAnnotation">{groupInfo.annotation}</span> {arrowText}</legend>
+                <legend onClick={() => this.props.onToggleShown()}>{arrowText} {this.props.groupName} <span className="instParamGroupNameAnnotation">{groupInfo.annotation}</span></legend>
                 {this.props.isShown && <ul className="instParamList">
                     {this.props.filteredParams.filter(p => p.groupName == this.props.groupName).map(p => createParam(p))}
                 </ul>}
@@ -758,8 +758,8 @@ class InstrumentParams extends React.Component {
         return (
             <div className="component">
                 <h2 id="showInstrumentPanel" style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>
-                    {this.props.instrument.getDisplayName()}
                     {mainArrowText}
+                    {this.props.instrument.getDisplayName()}
                     <div className="buttonContainer">
                         <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
                         <button onClick={this.onPanicClick}>Panic</button>
@@ -771,7 +771,7 @@ class InstrumentParams extends React.Component {
 
                     {instrumentSupportsPresets &&
                         <fieldset className="instParamGroup presetsGroup">
-                            <legend onClick={this.onOpenClicked}>Presets {arrowText}</legend>
+                            <legend onClick={this.onOpenClicked}>{arrowText} Presets</legend>
                             {this.state.presetListShown && (
                                 <ul className="instParamList">
                                     <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
@@ -924,7 +924,7 @@ class UserState extends React.Component {
         this.state = {
             userName: '',
             userColor: '',
-            isShown: true,
+            isShown: false,
         };
 
         if (this.props.app && this.props.app.myUser) {
@@ -937,33 +937,8 @@ class UserState extends React.Component {
         this.props.app.SetUserNameColor(this.state.userName, this.state.userColor);
     };
 
-    setVolumeVal = (v) => {
-        let realVal = parseFloat(v.target.value) / 100;
-        this.setState(this.state);
-        this.props.app.synth.masterGain = realVal;
-    }
-
-    // setReverbVal = (v) => {
-    //     let realVal = parseFloat(v.target.value) / 100;
-    //     this.setState(this.state);
-    //     this.props.app.synth.reverbGain = realVal;
-    // }
-
-    setPBRange = (v) => {
-        this.setState(this.state);
-        this.props.app.pitchBendRange = v.target.value;
-    }
-
     handleToggleShownClick = () => {
         this.setState({ isShown: !this.state.isShown });
-    };
-
-    onClickMute = () => {
-        // this op takes a while so do async
-        setTimeout(() => {
-            this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
-            this.setState(this.state);
-        }, 0);
     };
 
     render() {
@@ -991,9 +966,6 @@ class UserState extends React.Component {
         }
 
         let connectCaption = "You";
-        // if (this.props.app && this.props.app.roomState && this.props.app.roomState.roomTitle.length) {
-        //     connectCaption = this.props.app.roomState.roomTitle;
-        // }
 
         const disconnectBtn = this.props.app ? (
             <li><button onClick={this.props.handleDisconnect}>Disconnect</button><div style={{ height: 20 }}>&nbsp;</div></li>
@@ -1005,33 +977,6 @@ class UserState extends React.Component {
 
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
 
-        const muteMarkup = this.props.app && this.props.app.synth ? (
-            <button className="muteButton" onClick={this.onClickMute}>{this.props.app.synth.isMuted ? "🔇" : "🔊"}</button>
-        ) : null;
-
-        // volume from 0 to 1(unity) to 2
-        const volumeMarkup = this.props.app && this.props.app.synth ? (
-            <li>
-                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
-                <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
-                {muteMarkup}
-            </li>
-        ) : null;
-
-        // const verbMarkup = this.props.app && this.props.app.synth ? (
-        //     <li>
-        //         <input type="range" id="verbGain" name="verbGain" min="0" max="200" onChange={this.setReverbVal} value={this.props.app.synth.reverbGain * 100} disabled={this.props.app.synth.isMuted} />
-        //         <label htmlFor="verbGain">verb:{Math.trunc(this.props.app.synth.reverbGain * 100)}</label>
-        //     </li>
-        // ) : null;
-
-        const pbrangeMarkup = this.props.app && this.props.app.synth ? (
-            <li>
-                <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
-                <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
-            </li>
-        ) : null;
-
         const ulStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const arrowText = this.state.isShown ? '⯆' : '⯈';
 
@@ -1042,7 +987,7 @@ class UserState extends React.Component {
 
         return (
             <div className="component">
-                <h2 style={{ cursor: 'pointer' }} onClick={this.handleToggleShownClick}>{connectCaption} {arrowText}</h2>
+                <h2 style={{ cursor: 'pointer' }} onClick={this.handleToggleShownClick}>{arrowText} {connectCaption}</h2>
                 <ul style={ulStyle}>
                     {disconnectBtn}
                     <li><TextInputField style={{ width: 80 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /> name</li>
@@ -1056,9 +1001,6 @@ class UserState extends React.Component {
                     {validationMarkup}
                     {changeUserStateBtn}
                     {inputList}
-                    {volumeMarkup}
-                    {/* {verbMarkup} */}
-                    {pbrangeMarkup}
                 </ul>
             </div>
         );
@@ -1198,6 +1140,17 @@ class WorldStatus extends React.Component {
 
 class InstrumentList extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShowing: true
+        };
+    }
+
+    onClickHeader = () => {
+        this.setState({ isShowing: !this.state.isShowing });
+    }
+
     renderInstrument(i) {
         let app = this.props.app;
         if (i.controlledByUserID == app.myUser.userID) {
@@ -1246,10 +1199,12 @@ class InstrumentList extends React.Component {
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
             <div className="component" style={{ whiteSpace: "nowrap" }}>
-                <h2>Instrument Closet</h2>
-                <ul>
-                    {instruments}
-                </ul>
+                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{getArrowText(this.state.isShowing)} Instrument Closet</h2>
+                {this.state.isShowing &&
+                    <ul>
+                        {instruments}
+                    </ul>
+                }
             </div>
         );
     }
@@ -1745,6 +1700,68 @@ class ChatArea extends React.Component {
     }
 }
 
+
+class UpperRightControls extends React.Component {
+
+
+    setVolumeVal = (v) => {
+        let realVal = parseFloat(v.target.value) / 100;
+        this.props.app.synth.masterGain = realVal;
+        gStateChangeHandler.OnStateChange();
+    }
+
+    setPBRange = (v) => {
+        this.props.app.pitchBendRange = v.target.value;
+        gStateChangeHandler.OnStateChange();
+    }
+
+    onClickMute = () => {
+        // this op takes a while so do async
+        setTimeout(() => {
+            this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
+            gStateChangeHandler.OnStateChange();
+        }, 0);
+    };
+
+
+    componentDidMount() {
+        stylizeRangeInput("volume", {
+            bgNegColorSpec: "#044",
+            negColorSpec: "#044",
+            posColorSpec: "#044",
+            bgPosColorSpec: "#044",
+            zeroVal: 0,
+        });
+        stylizeRangeInput("pbrange", {
+            bgNegColorSpec: "#044",
+            negColorSpec: "#044",
+            posColorSpec: "#044",
+            bgPosColorSpec: "#044",
+            zeroVal: 0,
+        });
+    }
+
+    render() {
+
+        return (
+            <span className="topRightControls">
+                <span className="pbContainer">
+                    <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
+                    <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
+                </span>
+                <span className="volumeContainer">
+                    <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
+                    <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
+                </span>
+                <button className="muteButton" onClick={this.onClickMute}>{this.props.app.synth.isMuted ? "🔇" : "🔊"}</button>
+            </span>
+
+        );
+    }
+
+}
+
+
 class RootArea extends React.Component {
     OnStateChange() {
         this.setState(this.state);
@@ -1918,6 +1935,7 @@ class RootArea extends React.Component {
         this.setState({ wideMode: !this.state.wideMode });
     };
 
+
     constructor(props) {
         super(props);
         this.state = {
@@ -1958,16 +1976,14 @@ class RootArea extends React.Component {
             }, 1);
         }
 
-        const url = window.location.href.split('?')[0];
         return (
             <div id="grid-container" className={this.state.wideMode && "wide"}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
-                    <span style={{ float: 'left' }}>
+                    <span>
+                        <a target="_blank" href="https://twitter.com/tenfour2">Made by tenfour</a> // 
                         <a target="_blank" href="https://github.com/thenfour/digifujam">github</a>
-                        {/* <a target="_blank" href="{url}">{url}</a> */}</span>
-                    <span style={{ float: 'right' }}>
-                        <a target="_blank" href="https://twitter.com/tenfour2">Made by tenfour</a>
                     </span>
+                    {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                 </div>
                 <PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />

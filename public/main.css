@@ -189,10 +189,12 @@ button:focus {
 
 .headerArea {
     padding: 3px;
+    display: flex;
+    justify-content: space-between;
 }
 .headerArea span {
     margin:0;
-    font-size: medium;
+    font-size: small;
 }
 
 .headerArea a:link,
@@ -720,7 +722,9 @@ div.paramFilter input[type="text"]
 
 
 input[type="range"].floatParam,
-input[type="range"].intParam
+input[type="range"].intParam,
+#volume,
+#pbrange
  {
     border: 0;
     border-radius: 8px;
@@ -730,7 +734,9 @@ input[type="range"].intParam
 }
 
 input[type="range"].floatParam::-webkit-slider-thumb,
-input[type="range"].intParam::-webkit-slider-thumb
+input[type="range"].intParam::-webkit-slider-thumb,
+#volume::-webkit-slider-thumb,
+#pbrange::-webkit-slider-thumb
 {
     -webkit-appearance: none;
     background: #0aa;
@@ -793,8 +799,13 @@ input[type="range"].intParam::-webkit-slider-thumb
     background-color: #acc;
 }
 
-
-
+.topRightControls {
+    white-space: nowrap;
+}
+.topRightControls label {
+    display: inline-block;
+    width: 80px;
+}
 
 
 
