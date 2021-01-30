@@ -1,6 +1,6 @@
 'use strict';
 
-let gDigifujamVersion = 1;
+let gDigifujamVersion = 2;
 
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
@@ -464,40 +464,49 @@ class DigifuInstrumentSpec {
         return ret;
     }
 
-    // returns an array of oscillator groups which are enabled, and according to the algorithm specified.
+    // returns {
+    //   oscGroups, // an array of oscillator groups which are enabled, and according to the algorithm specified.
+    //   oscEnabled: [,,,]
+    // }
     GetFMAlgoSpec() {
         let osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
         let osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
         let osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
         let osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
-        let osc_enabled = [osc0_enabled, osc1_enabled, osc2_enabled, osc3_enabled];
+        let oscEnabled = [osc0_enabled, osc1_enabled, osc2_enabled, osc3_enabled];
+        //console.log(`GetFMAlgoSpec esc enabled?`);
+        //console.log(osc_enabled);
         let algo = this.GetParamByID("algo").currentValue;
+
         // "[1🡄2🡄3🡄4]",
-        //  "[1🡄2🡄3][4]",
-        //  "[1🡄2][3🡄4]",
-        //  "[1🡄2][3][4]",
-        //  "[1][2][3][4]"
-
-        // "[1🡄(2+3)] [4]"
-        // "[1🡄(2+3+4)]"
-        // "[1🡄2🡄(3+4)]"
-
+        // "[1🡄2🡄3][4]",
+        // "[1🡄(2+3)][4]",
+        // "[1🡄(2+3+4)]",
+        // "[1🡄2🡄(3+4)]",
+        // "[1🡄2][3🡄4]",
+        // "[1🡄2][3][4]",
+        // "[1][2][3][4]",
+        
         let oscGroups = [
-            [[0, 1, 2, 3]],
-            [[0, 1, 2], [3]],
-            [[0, 1], [2, 3]],
-            [[0, 1], [2], [3]],
-            [[0], [1], [2], [3]],
-            [[0, 1, 2], [3]],
-            [[0, 1, 2, 3]],
-            [[0, 1, 2, 3]],
+            [[0, 1, 2, 3]], // 0
+            [[0, 1, 2], [3]], // 1
+            [[0, 1, 2], [3]], // 5
+            [[0, 1, 2, 3]], // 6
+            [[0, 1, 2, 3]], // 7
+            [[0, 1], [2, 3]], // 2
+            [[0, 1], [2], [3]], // 3
+            [[0], [1], [2], [3]], // 4
         ];
+
         oscGroups = oscGroups[algo];
         // now remove oscillators not in use.
         oscGroups = oscGroups.filter(grp => {
-            return grp.some(osc => osc_enabled[osc]); // at least 1 oscillator in the group is enabled? then keep it.
+            return grp.some(osc => oscEnabled[osc]); // at least 1 oscillator in the group is enabled? then keep it.
         });
-        return oscGroups;
+        return {
+            oscGroups,
+            oscEnabled
+        };
     }
 
     // filters the list of presets to include only ones which are useful.

@@ -643,37 +643,48 @@ class MiniFMSynthVoice {
         // set up algo
         let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
 
-        const oscTuneGroups = this.instrumentSpec.GetFMAlgoSpec();
+        const algoSpec = this.instrumentSpec.GetFMAlgoSpec();
+
+        // console.log(`=======applying detune stuff`);
+        // console.log(algoSpec.oscGroups);
+
+        let applyDetune = (oscGroup, detuneSrc) => {
+            algoSpec.oscGroups[oscGroup].forEach(oscIndex => {
+                if (algoSpec.oscEnabled[oscIndex]) {
+                    this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSrc);
+                }
+            });
+        };
 
         // detuneFreq is always the "+1" detune value
         // use detuneVar1, 2, 3 for variations of this, including "0" for center if needed.
-        switch (oscTuneGroups.length) {
+        switch (algoSpec.oscGroups.length) {
             case 0:
                 break; // nothing to do.
             case 1:
                 this.detuneVar1.gain.value = 0; // no detuning, single osc group. give all oscillators the same "0" detune value.
-                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
+                applyDetune(0, this.detuneVar1);
                 break;
             case 2:
                 this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneFreq); });
-                oscTuneGroups[1].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
+                applyDetune(0, this.detuneFreq);
+                applyDetune(1, this.detuneVar1);
                 break;
             case 3:
                 this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
                 this.detuneVar2.gain.value = 0;
-                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar2); });
-                oscTuneGroups[1].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
-                oscTuneGroups[2].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneFreq); });
+                applyDetune(0, this.detuneVar2);
+                applyDetune(1, this.detuneVar1);
+                applyDetune(2, this.detuneFreq);
                 break;
             case 4:
                 this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
                 this.detuneVar2.gain.value = -0.5;
                 this.detuneVar3.gain.value = -1;
-                oscTuneGroups[0].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar1); });
-                oscTuneGroups[1].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar2); });
-                oscTuneGroups[2].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneFreq); });
-                oscTuneGroups[3].forEach(oscIndex => { this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, this.detuneVar3); });
+                applyDetune(0, this.detuneVar1);
+                applyDetune(1, this.detuneVar2);
+                applyDetune(2, this.detuneFreq);
+                applyDetune(3, this.detuneVar3);
                 break;
             default:
                 console.warn(`invalid osc tuning group amt`);
@@ -709,35 +720,36 @@ class MiniFMSynthVoice {
                 mod(this.oscillators[2], this.oscillators[1]);
                 mod(this.oscillators[1], this.oscillators[0]);
                 break;
-            case 2: // "[1🡄2][3🡄4]",
-                mod(this.oscillators[3], this.oscillators[2]);
-                out(this.oscillators[2]);
-                mod(this.oscillators[1], this.oscillators[0]);
-                break;
-            case 3: // "[1🡄2][3][4]",
-                out(this.oscillators[3]);
-                out(this.oscillators[2]);
-                mod(this.oscillators[1], this.oscillators[0]);
-                break;
-            case 4: // "[1][2][3][4]"
-                out(this.oscillators[3]);
-                out(this.oscillators[2]);
-                out(this.oscillators[1]);
-                break;
-            case 5: // "[1🡄(2+3)] [4]"
+            case 2: // "[1🡄(2+3)] [4]"
                 mod(this.oscillators[1], this.oscillators[0]);
                 mod(this.oscillators[2], this.oscillators[0]);
                 out(this.oscillators[3]);
                 break;
-            case 6: // "[1🡄(2+3+4)]"
+            case 3: // "[1🡄(2+3+4)]"
                 mod(this.oscillators[1], this.oscillators[0]);
                 mod(this.oscillators[2], this.oscillators[0]);
                 mod(this.oscillators[3], this.oscillators[0]);
                 break;
-            case 7: // "[1🡄2🡄(3+4)]"
+            case 4: // "[1🡄2🡄(3+4)]"
                 mod(this.oscillators[2], this.oscillators[1]);
                 mod(this.oscillators[3], this.oscillators[1]);
                 mod(this.oscillators[1], this.oscillators[0]);
+                break;
+
+            case 5: // "[1🡄2][3🡄4]",
+                mod(this.oscillators[3], this.oscillators[2]);
+                out(this.oscillators[2]);
+                mod(this.oscillators[1], this.oscillators[0]);
+                break;
+            case 6: // "[1🡄2][3][4]",
+                out(this.oscillators[3]);
+                out(this.oscillators[2]);
+                mod(this.oscillators[1], this.oscillators[0]);
+                break;
+            case 7: // "[1][2][3][4]"
+                out(this.oscillators[3]);
+                out(this.oscillators[2]);
+                out(this.oscillators[1]);
                 break;
 
             default:
