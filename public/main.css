@@ -173,6 +173,10 @@ button:focus {
     margin-bottom: 10px;
 }
 
+
+.clipboardControls legend {
+    font-size: small;}
+
 #roomArea .component {
     margin-top:30px;
 }
@@ -510,7 +514,7 @@ ul.instParamList li.buttonsParam {
 
 
 .presetList {
-    padding:15px;
+    padding:8px;
 }
 
 .presetList ul {
@@ -768,6 +772,7 @@ input[type="range"].intParam::-webkit-slider-thumb
     border-radius: 0;
     border: 1px solid #a00;
     background-color: #200;
+    white-space: normal;
     border-left: 7px solid #a00;
 }
 

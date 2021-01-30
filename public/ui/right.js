@@ -1,6 +1,9 @@
 
 let gStateChangeHandler = null;
 
+let getArrowText = shown => shown ? '⯆' : '⯈';
+
+
 let getRoomID = function (app) {
     if (!app) return window.DFRoomID;
     if (!app.roomState) return window.DFRoomID;
@@ -363,6 +366,18 @@ class InstFloatParam extends React.Component {
         }
     };
 
+    onDoubleClickSlider = (e) =>  {
+        let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
+        //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
+
+        this.setState(this.state);
+        this.renderedValue = realVal;
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+        this.setCaption(realVal);
+        this.setInputTextVal(realVal);
+        this.setSliderVal(realVal);
+};
+
     render() {
         if (this.renderedValue != this.props.param.currentValue) {
             //has been externally modified. update ui.
@@ -374,7 +389,7 @@ class InstFloatParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.sliderID} className="floatParam" type="range" onClick={this.onClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
+                <input id={this.sliderID} className="floatParam" type="range" onClick={this.onClickSlider} onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
                 />
@@ -761,7 +776,7 @@ class InstrumentParams extends React.Component {
                                 <ul className="instParamList">
                                     <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
                                     <li className="instPresetButtons">
-                                        {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}<br />
+                                        {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
                                         <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
                                         <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
                                         {this.state.showingFactoryResetConfirmation &&
@@ -773,11 +788,10 @@ class InstrumentParams extends React.Component {
                                             </div>
                                         }
                                     </li>
-                                    {presetList}
 
                                     <li className="instPresetButtons">
                                         <fieldset className="clipboardControls">
-                                            <legend onClick={this.onClipboardShownClick}>Clipboard</legend>
+                                            <legend onClick={this.onClipboardShownClick}>{getArrowText(this.state.showingClipboardControls)} Clipboard</legend>
                                             {this.state.showingClipboardControls && (
                                                 <div>
                                                     <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
@@ -788,6 +802,9 @@ class InstrumentParams extends React.Component {
                                             )}
                                         </fieldset>
                                     </li>
+
+                                    {presetList}
+
                                 </ul>)}
 
                         </fieldset>
