@@ -499,7 +499,7 @@ class DigifuApp {
     _DoUserItemInteraction(item, interactionType) {
         let interactionSpec = item[interactionType];
         if (!interactionSpec) {
-            console.log(`Item ${item.itemID} has no interaction type ${interactionType}`);
+            //console.log(`Item ${item.itemID} has no interaction type ${interactionType}`);
             return;
         }
         if (interactionSpec.processor != "client") {

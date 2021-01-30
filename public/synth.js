@@ -128,7 +128,7 @@ class DigifuSynth {
 					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, d1, d2, s) => new PolySynthVoice(c, d1, d2, s));
 					break;
 				case "minifm":
-					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, d1, d2, s) => new MiniFMSynthVoice(c, d1, d2, s));
+					this.instruments[spec.instrumentID] = new FMPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, d1, d2, s) => new MiniFMSynthVoice(c, d1, d2, s));
 					break;
 				case "soundfont":
 					this.instruments[spec.instrumentID] = new SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);

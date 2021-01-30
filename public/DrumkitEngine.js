@@ -33,7 +33,7 @@ class SampleCache {
                 return;
             }
             // it's still loading; just add the completion handlers.
-            console.log(`SampleCache: still loading; adding handler for ${url}`);
+            //console.log(`SampleCache: still loading; adding handler for ${url}`);
             existing.completions.push({ onSuccess, onError });
             return;
         }
@@ -175,7 +175,7 @@ class DrumKitVoice {
                 // make sure this is not an obsolete call; these can come out of order.
                 let updatedKit = this.instrumentSpec.GetParamByID("kit").currentValue;
                 if (updatedKit != loadingKitID) {
-                    console.warn(`Kit has changed since loading the sample! Whoooah`);
+                    //console.warn(`Kit has changed since loading the sample! Whoooah`);
                     return;
                 }
                 sampleSpec.midiNotes.forEach(midiNote => {

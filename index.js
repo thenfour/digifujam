@@ -75,16 +75,12 @@ class RoomServer {
       }));
     });
 
-    // integrate the server state for this room, and load a preset.
+    // integrate the server state for this room
     const roomRestoreState = serverStateObj.find(r => r.roomID === this.roomState.roomID);
     if (roomRestoreState && roomRestoreState.dump) {
       this.roomState.adminImportRoomState(roomRestoreState.dump);
       log(`Imported room state for ${this.roomState.roomID}`);
     }
-
-    this.roomState.instrumentCloset.forEach(i => {
-      i.loadPatchObj(i.GetInitPreset());
-    });
 
     // remember this stuff for our "reset to factory defaults" function.
     this.factorySettings = this.roomState.instrumentCloset.map(i => {
@@ -92,6 +88,11 @@ class RoomServer {
         instrumentID: i.instrumentID,
         presetsJSON: i.exportAllPresetsJSON()
       };
+    });
+
+    // do factory resets
+    this.roomState.instrumentCloset.forEach(i => {
+      i.loadPatchObj(i.GetInitPreset());
     });
 
     setTimeout(() => {
@@ -671,7 +672,7 @@ class RoomServer {
   DoUserItemInteraction(ws, user, item, interactionType) {
     let interactionSpec = item[interactionType];
     if (!interactionSpec) {
-      log(`Item ${item.itemID} has no interaction type ${interactionType}`);
+      //log(`Item ${item.itemID} has no interaction type ${interactionType}`);
       return;
     }
     if (interactionSpec.processor != "server") {

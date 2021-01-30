@@ -343,14 +343,16 @@ class DigifuInstrumentSpec {
 
     // always return a valid preset.
     GetInitPreset() {
-        let ret = this.presets.find(p => p.name == "init");
-        if (ret) return ret;
+        let ret = this.presets.find(p => { return p.patchName == "init"; });
+        if (ret) {
+            //console.log(`loading init patch called 'init' for instrument ${this.name}`);
+            return ret;
+        } 
+        console.log(`WARNING: generating init patch for instrument ${this.name}. Better to just have an 'init' preset.`);
         // we have to generate one.
         ret = {};
         this.params.forEach(param => {
             switch (param.paramID) {
-                case "pb":
-                case "patchName":
                 case "presetID":
                     return;
             }
