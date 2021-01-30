@@ -36,8 +36,9 @@
           "renderAs": "buttons",
           "defaultValue": 0,
           "minValue": 0,
-          "maxValue": 1,
+          "maxValue": 2,
           "enumNames": [
+            "SecretOfManaExt",
             "LINN",
             "SC88"
           ]
@@ -159,6 +160,114 @@
                 55
               ]
             }
+          ]
+        },
+        "SecretOfManaExt" : {
+          "samples": [
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_kick.m4a",
+              "midiNotes": [
+                35, 36
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_stick.m4a",
+              "midiNotes": [
+                37
+              ]
+            },            
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_clap.m4a",
+              "midiNotes": [
+                39
+              ]
+            },            
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_snare.m4a",
+              "midiNotes": [
+                38, 40
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_HHclosed.m4a",
+              "midiNotes": [
+                42
+              ],
+              "sendNoteOffToNotes": [
+                46
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_HHpedal.m4a",
+              "midiNotes": [
+                44
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_HHopen.m4a",
+              "midiNotes": [
+                46
+              ]
+            },
+
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_crash.m4a",
+              "midiNotes": [
+                49
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_ride.m4a",
+              "midiNotes": [
+                51
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_ride_bell.m4a",
+              "midiNotes": [
+                53
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_crash_2.m4a",
+              "midiNotes": [
+                52, 55, 57
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_tom_low.m4a",
+              "midiNotes": [
+                41
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_tom_mid.m4a",
+              "detune": -200,
+              "midiNotes": [
+                43
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_tom_mid.m4a",
+              "midiNotes": [
+                45
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_tom_high.m4a",
+              "detune": -200,
+              "midiNotes": [
+                47
+              ]
+            },
+
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_tom_high.m4a",
+              "midiNotes": [
+                48
+              ]
+            }
+
           ]
         }
       }
