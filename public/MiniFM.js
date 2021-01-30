@@ -643,32 +643,6 @@ class MiniFMSynthVoice {
         // set up algo
         let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
 
-        let mod = (src, dest) => {
-            if (!src.isConnected) return;
-            if (!dest.isConnected) return;
-
-            let m0 = this.audioCtx.createGain();
-            this.modulationGainers.push(m0);
-            m0.gain.value = 20000;
-
-            // 0 => 1
-            src.outputNode.connect(m0);
-            m0.connect(dest.inputNode.frequency);
-        };
-        let out = (osc) => {
-            if (!osc.isConnected) return;
-            osc.outputNode.connect(this.oscSum);
-        };
-
-        let detuneSources = null;// array of the source nodes for detuning the 4 oscillators
-
-        let oscEnabled = [
-            this.instrumentSpec.GetParamByID("enable_osc0").currentValue,
-            this.instrumentSpec.GetParamByID("enable_osc1").currentValue,
-            this.instrumentSpec.GetParamByID("enable_osc2").currentValue,
-            this.instrumentSpec.GetParamByID("enable_osc3").currentValue,
-        ];
-
         const oscTuneGroups = this.instrumentSpec.GetFMAlgoSpec();
 
         // detuneFreq is always the "+1" detune value
@@ -706,6 +680,23 @@ class MiniFMSynthVoice {
                 break;
         }
 
+        let mod = (src, dest) => {
+            if (!src.isConnected) return;
+            if (!dest.isConnected) return;
+
+            let m0 = this.audioCtx.createGain();
+            this.modulationGainers.push(m0);
+            m0.gain.value = 20000;
+
+            // 0 => 1
+            src.outputNode.connect(m0);
+            m0.connect(dest.inputNode.frequency);
+        };
+        let out = (osc) => {
+            if (!osc.isConnected) return;
+            osc.outputNode.connect(this.oscSum);
+        };
+
         // and make the FM matrix connections
         switch (algo) {
             case 0: // "[1🡄2🡄3🡄4]",
@@ -733,8 +724,24 @@ class MiniFMSynthVoice {
                 out(this.oscillators[2]);
                 out(this.oscillators[1]);
                 break;
+            case 5: // "[1🡄(2+3)] [4]"
+                mod(this.oscillators[1], this.oscillators[0]);
+                mod(this.oscillators[2], this.oscillators[0]);
+                out(this.oscillators[3]);
+                break;
+            case 6: // "[1🡄(2+3+4)]"
+                mod(this.oscillators[1], this.oscillators[0]);
+                mod(this.oscillators[2], this.oscillators[0]);
+                mod(this.oscillators[3], this.oscillators[0]);
+                break;
+            case 7: // "[1🡄2🡄(3+4)]"
+                mod(this.oscillators[2], this.oscillators[1]);
+                mod(this.oscillators[3], this.oscillators[1]);
+                mod(this.oscillators[1], this.oscillators[0]);
+                break;
+
             default:
-                console.log(`unknown algorithm ${algo}`);
+                console.warn(`unknown FM algorithm ${algo}`);
                 break;
         }
         out(this.oscillators[0]);

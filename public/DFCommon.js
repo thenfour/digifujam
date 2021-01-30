@@ -347,7 +347,7 @@ class DigifuInstrumentSpec {
         if (ret) {
             //console.log(`loading init patch called 'init' for instrument ${this.name}`);
             return ret;
-        } 
+        }
         console.log(`WARNING: generating init patch for instrument ${this.name}. Better to just have an 'init' preset.`);
         // we have to generate one.
         ret = {};
@@ -473,16 +473,24 @@ class DigifuInstrumentSpec {
         let osc_enabled = [osc0_enabled, osc1_enabled, osc2_enabled, osc3_enabled];
         let algo = this.GetParamByID("algo").currentValue;
         // "[1🡄2🡄3🡄4]",
-        //     "[1🡄2🡄3][4]",
-        //     "[1🡄2][3🡄4]",
-        //     "[1🡄2][3][4]",
-        //     "[1][2][3][4]"
+        //  "[1🡄2🡄3][4]",
+        //  "[1🡄2][3🡄4]",
+        //  "[1🡄2][3][4]",
+        //  "[1][2][3][4]"
+
+        // "[1🡄(2+3)] [4]"
+        // "[1🡄(2+3+4)]"
+        // "[1🡄2🡄(3+4)]"
+
         let oscGroups = [
             [[0, 1, 2, 3]],
             [[0, 1, 2], [3]],
             [[0, 1], [2, 3]],
             [[0, 1], [2], [3]],
-            [[0], [1], [2], [3]]
+            [[0], [1], [2], [3]],
+            [[0, 1, 2], [3]],
+            [[0, 1, 2, 3]],
+            [[0, 1, 2, 3]],
         ];
         oscGroups = oscGroups[algo];
         // now remove oscillators not in use.
