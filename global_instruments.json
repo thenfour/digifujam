@@ -266,6 +266,18 @@
               "midiNotes": [
                 48
               ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_castanet.m4a",
+              "midiNotes": [
+                85
+              ]
+            },
+            {
+              "url": "/drum-samples/SecretOfManaExt/SoM_click.m4a",
+              "midiNotes": [
+                86
+              ]
             }
 
           ]
