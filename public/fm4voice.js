@@ -4,11 +4,9 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class MiniFMSynthVoice {
-    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
+    constructor(audioCtx, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
-        this.dryDestination = dryDestination;
-        this.wetDestination = wetDestination;
 
         this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
 
@@ -28,17 +26,19 @@ class MiniFMSynthVoice {
         this.isConnected = false;
     }
 
-    connect(lfo1, lfo1_01, lfo2, lfo2_01) {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01, dryDestination, wetDestination) {
         if (this.isConnected) return;
         this.lfo1 = lfo1;
         this.lfo1_01 = lfo1_01;
         this.lfo2 = lfo2;
         this.lfo2_01 = lfo2_01;
+        this.dryDestination = dryDestination;
+        this.wetDestination = wetDestination;
 
         /*
           (lfos)------->
-          [env1]------->[child oscillators] -->[oscSum]--> [waveshapeGain] --> [waveshape]-[waveshapePostGain]--------> [filter] -----------> [masterDryGain]
-                                                                                                                        |    |              > [masterWetGain]
+          [env1]------->[child oscillators] -->[oscSum]--> [waveshapeGain] --> [waveshape]-[waveshapePostGain]--------> [filter] -----------> (wetdest)
+                                                                                                                        |    |              > (drydest)
                                                                                                                    freq |   | Q
                                                                                                       [filterFreqLFO1Amt]   [filterQLFO1Amt]
                                                                                                      +[filterFreqLFO2Amt]   [filterQLFO2Amt]
@@ -139,19 +139,6 @@ class MiniFMSynthVoice {
         this.waveshapePostGain.connect(this.filter);
 
         this.isFilterConnected = true;
-
-        // masterDryGain
-        this.masterDryGain = this.audioCtx.createGain();
-        this.filter.connect(this.masterDryGain);
-
-        // masterWetGain
-        this.masterWetGain = this.audioCtx.createGain();
-        this.filter.connect(this.masterWetGain);
-
-        let gainLevels = this.getGainLevels();
-        this.masterDryGain.gain.value = gainLevels[0];
-        this.masterWetGain.gain.value = gainLevels[1];
-
 
         // SET UP DETUNE GRAPH
 
@@ -342,8 +329,8 @@ class MiniFMSynthVoice {
         out(this.oscillators[0]);
 
         // connect to outside.
-        this.masterDryGain.connect(this.dryDestination);
-        this.masterWetGain.connect(this.wetDestination);
+        this.filter.connect(dryDestination);
+        this.filter.connect(wetDestination);
 
         this._SetFiltType();
 
@@ -381,12 +368,6 @@ class MiniFMSynthVoice {
 
         this.filter.disconnect();
         this.filter = null;
-
-        this.masterDryGain.disconnect();
-        this.masterDryGain = null;
-
-        this.masterWetGain.disconnect();
-        this.masterWetGain = null;
 
         this.env1.stop();
         this.env1.disconnect();
@@ -446,13 +427,13 @@ class MiniFMSynthVoice {
     _SetFiltType() {
         let disableFilter = () => {
             if (!this.isFilterConnected) return;
-            // waveshapePostGain] --> [masterDryGain
-            //                      > [masterWetGain
+            // waveshapePostGain] --> drydest
+            //                      > wetdest
             this.filter.disconnect();
 
             this.waveshapePostGain.disconnect();
-            this.waveshapePostGain.connect(this.masterDryGain);
-            this.waveshapePostGain.connect(this.masterWetGain);
+            this.waveshapePostGain.connect(this.dryDestination);
+            this.waveshapePostGain.connect(this.wetDestination);
 
             this.isFilterConnected = false;
         };
@@ -462,8 +443,8 @@ class MiniFMSynthVoice {
             this.waveshapePostGain.connect(this.filter);
 
             this.filter.disconnect();
-            this.filter.connect(this.masterDryGain);
-            this.filter.connect(this.masterWetGain);
+            this.filter.connect(this.dryDestination);
+            this.filter.connect(this.wetDestination);
 
             this.isFilterConnected = true;
         };
@@ -485,15 +466,6 @@ class MiniFMSynthVoice {
                 return;
         }
         console.assert(false, `unknown filter type ${this.instrumentSpec.GetParamByID("filterType").currentValue}`);
-    }
-
-    // returns [drygain, wetgain]
-    getGainLevels() {
-        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
-        let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
-        // when verb mix is 0, drygain is the real master gain.
-        // when verb mix is 1, drygain is 0 and verbmix is mastergain
-        return [(1.0 - vg) * ms, vg * ms * 1.];
     }
 
     get IsPlaying() {
@@ -588,12 +560,6 @@ class MiniFMSynthVoice {
                 break;
             case "filterQENV":
                 this.filterQENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
-                break;
-            case "masterGain":
-            case "verbMix":
-                let levels = this.getGainLevels();
-                this.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
-                this.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "enable_osc0":
             case "enable_osc1":

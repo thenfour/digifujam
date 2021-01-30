@@ -13,7 +13,7 @@ class FMPolySynth {
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
-            this.voices.push(createVoiceFn(audioCtx, dryDestination, wetDestination, instrumentSpec));
+            this.voices.push(createVoiceFn(audioCtx, instrumentSpec));
         }
         this.isSustainPedalDown = false;
         this.isConnected = false;
@@ -25,8 +25,8 @@ class FMPolySynth {
 
     connect() {
         if (this.isConnected) return;
-        // [LFO1] ------------------------------------> (voices)
-        //           |
+        // [LFO1] ------------------------------------> (voices)  --> [masterDryGain] -> dryDestination
+        //           |                                            --> [masterWetGain] -> wetDestination
         //           `->[lfo1Offset] ---> [lfo1_01] -->
         // [LFO2] ------------------------------------>
         //           |
@@ -65,22 +65,35 @@ class FMPolySynth {
         this.lfo2Offset.connect(this.lfo2_01);
         this.lfo2.connect(this.lfo2_01);
 
+        // masterDryGain
+        this.masterDryGain = this.audioCtx.createGain();
+
+        // masterWetGain
+        this.masterWetGain = this.audioCtx.createGain();
+
+        let gainLevels = this.getGainLevels();
+        this.masterDryGain.gain.value = gainLevels[0];
+        this.masterWetGain.gain.value = gainLevels[1];
+
         this.isPoly = (this.instrumentSpec.GetParamByID("voicing").currentValue == 1);
         if (this.isPoly) {
             this.voices.forEach(v => {
-                v.connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01);
+                v.connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01, this.masterDryGain, this.masterWetGain);
             });
         } else {
             this.isPoly = false;
-            this.voices[0].connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01);
+            this.voices[0].connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01, this.masterDryGain, this.masterWetGain);
         }
+
+        this.masterDryGain.connect(this.dryDestination);
+        this.masterWetGain.connect(this.wetDestination);
+
         this.isConnected = true;
     }
 
     disconnect() {
         this.AllNotesOff();
         if (!this.isConnected) return;
-
 
         this.lfo1.stop();
         this.lfo1.disconnect();
@@ -104,6 +117,13 @@ class FMPolySynth {
         this.lfo2_01 = null;
 
         this.voices.forEach(v => { v.disconnect(); });
+
+        this.masterDryGain.disconnect();
+        this.masterDryGain = null;
+
+        this.masterWetGain.disconnect();
+        this.masterWetGain = null;
+
         this.isConnected = false;
     }
 
@@ -206,6 +226,15 @@ class FMPolySynth {
         this.lfo2.type = shapes[this.instrumentSpec.GetParamByID("lfo2_wave").currentValue];
     }
 
+    // returns [drygain, wetgain]
+    getGainLevels() {
+        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
+        let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        // when verb mix is 0, drygain is the real master gain.
+        // when verb mix is 1, drygain is 0 and verbmix is mastergain
+        return [(1.0 - vg) * ms, vg * ms * 1.];
+    }
+
     SetParamValues(patchObj) {
         let keys = Object.keys(patchObj);
         keys.forEach(paramID => {
@@ -230,6 +259,12 @@ class FMPolySynth {
                         }
                         break;
                     }
+                case "masterGain":
+                case "verbMix":
+                    let levels = this.getGainLevels();
+                    this.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
+                    this.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
+                    break;
                 case "lfo1_wave":
                 case "lfo2_wave":
                     this._setLFOWaveforms();
