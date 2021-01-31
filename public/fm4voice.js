@@ -365,6 +365,9 @@ class MiniFMSynthVoice {
             //console.log(`midi note ${midiNote} doesn't match mine ${this.midiNote}`);
             return;
         }
+        if (!this.timestamp) {
+            return; // some odd synth state can cause releases without note ons (pedal up after taking the instrument for example)
+        }
 
         this.nodes.env1.release();
         this.oscillators.forEach(o => {
