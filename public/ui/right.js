@@ -1512,7 +1512,7 @@ class RoomAlertArea extends React.Component {
                 <div id="roomAlertArea">
                     <div>Select a MIDI input device to start playing</div>
                     {this.props.app.deviceNameList.map(i => (
-                        <button onClick={() => this.props.app.midi.ListenOnDevice(i)}>Start using {i}</button>
+                        <button onClick={() => { this.props.app.midi.ListenOnDevice(i); gStateChangeHandler.OnStateChange(); } }>Start using {i}</button>
                     ))}
                 </div>
             );

@@ -41,6 +41,7 @@ class GeneralPolySynth {
         // lfo1Offset
         this.lfo1Offset = this.audioCtx.createConstantSource();
         this.lfo1Offset.offset.value = 1.0;
+        this.lfo1Offset.start();
 
         // lfo1_01
         this.lfo1_01 = this.audioCtx.createGain();
@@ -57,6 +58,7 @@ class GeneralPolySynth {
 
         // lfo2Offset
         this.lfo2Offset = this.audioCtx.createConstantSource();
+        this.lfo2Offset.start();
         this.lfo2Offset.offset.value = 1.0;
 
         // lfo2_01
