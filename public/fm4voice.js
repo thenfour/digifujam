@@ -217,7 +217,7 @@ class MiniFMSynthVoice {
             // [oscSum]---------> (wetdest)
             //                  > (drydest)
             this.nodes.filter.disconnect();
-            console.log(`disabling filter`);
+            ///console.log(`disabling filter`);
 
             this.nodes.oscSum.disconnect();
             this.nodes.oscSum.connect(this.dryDestination);
@@ -228,7 +228,7 @@ class MiniFMSynthVoice {
         let enableFilter = () => {
             // [oscSum]------> [filter] -----------> (wetdest)
             //                                     > (drydest)
-            console.log(`enabling filter`);
+            //console.log(`enabling filter`);
 
             this.nodes.oscSum.disconnect();
             this.nodes.oscSum.connect(this.nodes.filter);

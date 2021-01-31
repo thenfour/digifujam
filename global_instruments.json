@@ -334,7 +334,7 @@
           "groupName": "master",
           "parameterType": "intParam",
           "renderAs": "dropdown",
-          "defaultValue": 7,
+          "defaultValue": 0,
           "minValue": 0,
           "maxValue": 13,
           "enumNames": [

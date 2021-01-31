@@ -528,7 +528,12 @@ class DigifuInstrumentSpec {
     }
 
     getOscLinkingSpec() {
+        const par = this.GetParamByID("linkosc");
+        if (!par) {
+            return null;
+        }
         const spec = this.GetParamByID("linkosc").currentValue;
+
         // 0 "◯◯◯◯",
         // 1 "🔵🔵◯◯",
         // 2 "🔵◯🔵◯",
