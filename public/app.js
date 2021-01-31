@@ -338,7 +338,7 @@ class DigifuApp {
 
         foundInstrument.instrument.importAllPresetsArray(data.presets);
         let initPreset = foundInstrument.instrument.GetInitPreset();
-        this.synth.SetInstrumentParams(this.myInstrument, initPreset);
+        this.synth.SetInstrumentParams(foundInstrument.instrument, initPreset);
 
         this.stateChangeHandler();
     }
