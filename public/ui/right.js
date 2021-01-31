@@ -543,6 +543,13 @@ class InstrumentPresetList extends React.Component {
 // props.app
 // props.filteredParams
 class InstrumentParamGroup extends React.Component {
+
+    clickCopyToOsc(destOscIndex) {
+        const patchObj = this.props.instrument.getPatchObjectToCopyOscillatorParams(this.props.groupSpec.oscillatorSource, destOscIndex);
+        this.props.app.loadPatchObj(patchObj);
+        gStateChangeHandler.OnStateChange();
+    };
+
     render() {
         const arrowText = getArrowText(this.props.isShown)
 
@@ -572,10 +579,19 @@ class InstrumentParamGroup extends React.Component {
         if (!this.props.groupSpec.shown) return null;
         let className = "instParamGroup " + this.props.groupSpec.cssClassName;
 
+        let groupControls = this.props.groupSpec.groupControls === "osc" && (
+            <div className="groupControls">
+                {this.props.groupSpec.oscillatorDestinations.map(destOscIndex => (
+                    <button key={destOscIndex} onClick={() => this.clickCopyToOsc(destOscIndex)}>Copy to OSC {["A", "B", "C", "D"][destOscIndex]}</button>
+                ))}
+            </div>
+        );
+
         return (
             <fieldset key={this.props.groupSpec.displayName} className={className}>
                 <legend onClick={() => this.props.onToggleShown()}>{arrowText} {this.props.groupSpec.displayName} <span className="instParamGroupNameAnnotation">{this.props.groupSpec.annotation}</span></legend>
                 {this.props.isShown && <ul className="instParamList">
+                    {groupControls}
                     {this.props.filteredParams.filter(p => p.groupName == this.props.groupSpec.internalName).map(p => createParam(p))}
                 </ul>}
             </fieldset>

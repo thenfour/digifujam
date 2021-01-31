@@ -497,7 +497,12 @@ ul.instParamList li.buttonsParam {
     margin:10px;
 }
 .instParamGroup legend {
+    border-radius: 6px;
     cursor: pointer;
+    padding-right: 20px;
+}
+.instParamGroup legend:hover {
+    background-color: #00666660;
 }
 
 .instParamGroup  .instParamGroupNameAnnotation {
@@ -697,8 +702,14 @@ div.paramFilter input[type="text"]
 }
 
 .buttonParam.active {
-    background-color: #077;
+    background-color: #066;
 }
+
+.buttonParam:hover
+{
+    background-color: #088;
+}
+
 
 
 .paramGroupCtrl {
@@ -864,6 +875,10 @@ li.cbxparam.on button {
 }
 
 
+li.cbxparam button:hover {
+    background-color: #066;
+}
+
 
 
 li.oscEnableButton {
@@ -874,4 +889,23 @@ li.oscEnableButton {
 ul.instParamList li.inlineLabel
 {
     display:inline;
+}
+
+.instParamGroup .groupControls {
+    white-space: normal;
+    margin-bottom: 4px;
+    border-bottom: 2px dotted #055;
+    padding-bottom: 4px;
+}
+
+.instParamGroup .groupControls button {
+    border: 0;
+    font-weight: normal;
+    font-size: x-small;
+    color: #888;
+    line-height: 15px;
+}
+
+.instParamGroup .groupControls button:hover {
+    background-color:#066;
 }

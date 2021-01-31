@@ -228,6 +228,17 @@ class InstrumentParam {
     }
     thaw() { /* no child objects to thaw. */ }
 
+    isParamForOscillator(i) {
+        if (!this.paramID.startsWith("osc")) return false;
+        if (parseInt(this.paramID[3]) != i) return false;
+        return true;
+    }
+
+    getCurrespondingParamIDForOscillator(destOscIndex) {
+        let ret = "osc" + destOscIndex + this.paramID.substring(4);
+        return ret;
+    }
+
     // returns true if a zero point exists.
     ensureZeroPoint() {
         let doesInpRangeCrossZero = (this.minValue < 0 && this.maxValue > 0);
@@ -435,6 +446,18 @@ class DigifuInstrumentSpec {
     }
 
 
+    getPatchObjectToCopyOscillatorParams(srcOscIndex, destOscIndex) {
+        console.assert(this.engine == "minifm");
+        let srcParams = this.params.filter(param => param.isParamForOscillator(srcOscIndex));
+        // construct a patch object.
+        let patch = {};
+        srcParams.forEach(srcParam => {
+            let destParamID = srcParam.getCurrespondingParamIDForOscillator(destOscIndex);
+            patch[destParamID] = srcParam.currentValue;
+        });
+        return patch;
+    }
+
     getOscLinkingSpec() {
         const spec = this.GetParamByID("linkosc").currentValue;
         // 0 "◯◯◯◯",
@@ -627,14 +650,8 @@ class DigifuInstrumentSpec {
                 if (dependentOscIndex == i) return false; // doesn't count.
                 if (linkMasterOscIndex != i) return false; // target is not this oscillator, not relevant.
                 return algoSpec.oscEnabled[dependentOscIndex];
-                //(masterOscIndex == i) && algoSpec.oscEnabled[dependentOscIndex]
             });
         }
-
-        // const osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
-        // const osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
-        // const osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
-        // const osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
 
         let oscIsPWM = [
             this.GetParamByID("osc0_wave").currentValue == 4,
