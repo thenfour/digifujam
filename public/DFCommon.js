@@ -433,9 +433,9 @@ class DigifuInstrumentSpec {
         return ["master"];
     }
 
-    // return { cssClassName, annotation }
+    // return { cssClassName, annotation, shown, displayName }
     getGroupInfo(groupName) {
-        let ret = { cssClassName: "", annotation: "" };
+        let ret = { cssClassName: "", annotation: "", displayName: groupName, shown: true, internalName: groupName };
         switch (this.engine) {
             case "soundfont":
                 return ret;
@@ -447,17 +447,28 @@ class DigifuInstrumentSpec {
         if (isModulation) {
             ret.cssClassName = "modulation";
         } else {
+            const oscLinkSpec = getOscLinkingSpec(this.GetParamByID("linkosc").currentValue);
             switch (groupName) {
-                case "Saturation":
-                    const satIsEnabled = !!this.GetParamByID("waveShape_enabled").currentValue;
-                    //console.log(`satIsEnabled: ${satIsEnabled}`);
-                    ret.annotation = satIsEnabled ? "(On)" : "(Off)";
-                    ret.cssClassName = satIsEnabled ? "" : "disabled";
-                    break;
                 case "Filter":
                     const filtIsEnabled = !!this.GetParamByID("filterType").currentValue;
                     ret.annotation = filtIsEnabled ? "(On)" : "(Off)";
                     ret.cssClassName = filtIsEnabled ? "" : "disabled";
+                    break;
+                case "∿ Osc A":
+                    ret.shown = oscLinkSpec.oscParamUsed[0];
+                    ret.displayName = oscLinkSpec.groupNames[0];
+                    break;
+                case "∿ Osc B":
+                    ret.shown = oscLinkSpec.oscParamUsed[1];
+                    ret.displayName = oscLinkSpec.groupNames[1];
+                    break;
+                case "∿ Osc C":
+                    ret.shown = oscLinkSpec.oscParamUsed[2];
+                    ret.displayName = oscLinkSpec.groupNames[2];
+                    break;
+                case "∿ Osc D":
+                    ret.shown = oscLinkSpec.oscParamUsed[3];
+                    ret.displayName = oscLinkSpec.groupNames[3];
                     break;
             }
         }
@@ -914,6 +925,57 @@ let sanitizeInstrumentParamVal = function (param, newVal) {
     if (newVal > param.maxValue) return param.maxValue;
     return newVal;
 };
+
+let getOscLinkingSpec = (spec) => {
+    // 0 "◯◯◯◯",
+    // 1 "🔵🔵◯◯",
+    // 2 "🔵◯🔵◯",
+    // 3 "🔵🔵🔵◯",
+    // 4 "🔵◯◯🔵",
+    // 5 "🔵🔵◯🔵",
+    // 6 "🔵◯🔵🔵",
+    // 7 "🔵🔵🔵🔵",
+    // 8 "🔵🔵🔴🔴",
+    // 9 "🔵🔴🔵🔴",
+    // 10 "🔵🔴🔴🔵",
+    // 11 "◯🔵🔵◯",
+    // 12 "◯🔵◯🔵",
+    // 13 "◯◯🔵🔵"
+    switch (spec) {
+
+        case 0: // 0 "◯◯◯◯",
+            return { sources: [0, 1, 2, 3], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, true, true, true] };
+        case 1: // 1 "🔵🔵◯◯",
+            return { sources: [0, 0, 2, 3], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, false, true, true] };
+        case 2: // 2 "🔵◯🔵◯",
+            return { sources: [0, 1, 0, 3], groupNames: ["∿ Osc A & C", "∿ Osc B", "(n/a)", "∿ Osc D"], oscParamUsed: [true, true, false, true] };
+        case 3: // 3 "🔵🔵🔵◯",
+            return { sources: [0, 0, 0, 3], groupNames: ["∿ Osc A & B & C", "(n/a)", "(n/a)", "∿ Osc D"], oscParamUsed: [true, false, false, true] };
+        case 4: // 4 "🔵◯◯🔵",
+            return { sources: [0, 1, 2, 0], groupNames: ["∿ Osc A & D", "∿ Osc B", "∿ Osc C", "(n/a)"], oscParamUsed: [true, true, true, false] };
+        case 5: // 5 "🔵🔵◯🔵",
+            return { sources: [0, 0, 2, 0], groupNames: ["∿ Osc A & B & D", "(n/a)", "∿ Osc C", "(n/a)"], oscParamUsed: [true, false, true, false] };
+        case 6: // 6 "🔵◯🔵🔵",
+            return { sources: [0, 1, 0, 0], groupNames: ["∿ Osc A & C & D", "∿ Osc B", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
+        case 7: // 7 "🔵🔵🔵🔵",
+            return { sources: [0, 0, 0, 0], groupNames: ["∿ Oscillators", "(n/a)", "(n/a)", "(n/a)"], oscParamUsed: [true, false, false, false] };
+        case 8: // 8 "🔵🔵🔴🔴",
+            return { sources: [0, 0, 2, 2], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, false, true, false] };
+        case 9: // 9 "🔵🔴🔵🔴",
+            return { sources: [0, 1, 0, 1], groupNames: ["∿ Osc A & C", "∿ Osc B & D", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
+        case 10: // 10 "🔵🔴🔴🔵",
+            return { sources: [0, 1, 1, 0], groupNames: ["∿ Osc A & D", "∿ Osc B & C", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
+        case 11: // 11 "◯🔵🔵◯",
+            return { sources: [0, 1, 1, 3], groupNames: ["∿ Osc A", "∿ Osc B & C", "(n/a)", "∿ Osc D"], oscParamUsed: [true, true, false, true] };
+        case 12: // 12 "◯🔵◯🔵",
+            return { sources: [0, 1, 2, 1], groupNames: ["∿ Osc A", "∿ Osc B & D", "∿ Osc C", "(n/a)"], oscParamUsed: [true, true, true, false] };
+        case 13: // 13 "◯◯🔵🔵"
+            return { sources: [0, 1, 2, 2], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, true, true, false] };
+    }
+
+    console.error(`unknown oscillator linking spec ${spec}`);
+
+}
 
 module.exports = {
     ClientMessages,

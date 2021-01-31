@@ -512,7 +512,7 @@ class InstrumentPresetList extends React.Component {
 };
 
 
-// props.groupName
+// props.groupSpec
 // props.app
 // props.filteredParams
 class InstrumentParamGroup extends React.Component {
@@ -537,14 +537,14 @@ class InstrumentParamGroup extends React.Component {
             }
         };
 
-        let groupInfo = this.props.instrument.getGroupInfo(this.props.groupName);
-        let className = "instParamGroup " + groupInfo.cssClassName;
+        if (!this.props.groupSpec.shown) return null;
+        let className = "instParamGroup " + this.props.groupSpec.cssClassName;
 
         return (
-            <fieldset key={this.props.groupName} className={className}>
-                <legend onClick={() => this.props.onToggleShown()}>{arrowText} {this.props.groupName} <span className="instParamGroupNameAnnotation">{groupInfo.annotation}</span></legend>
+            <fieldset key={this.props.groupSpec.displayName} className={className}>
+                <legend onClick={() => this.props.onToggleShown()}>{arrowText} {this.props.groupSpec.displayName} <span className="instParamGroupNameAnnotation">{this.props.groupSpec.annotation}</span></legend>
                 {this.props.isShown && <ul className="instParamList">
-                    {this.props.filteredParams.filter(p => p.groupName == this.props.groupName).map(p => createParam(p))}
+                    {this.props.filteredParams.filter(p => p.groupName == this.props.groupSpec.internalName).map(p => createParam(p))}
                 </ul>}
             </fieldset>
         );
@@ -713,19 +713,21 @@ class InstrumentParams extends React.Component {
         let filteredParams = this.props.instrument.GetDisplayablePresetList(filterTxt);
 
         // unique group names.
-        let groupNames = [...new Set(filteredParams.map(p => p.groupName))];
-        groupNames = groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
+        let _groupNames = [...new Set(filteredParams.map(p => p.groupName))];
+        //groupNames = groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
+        let groupSpecs = _groupNames.map(gn => this.props.instrument.getGroupInfo(gn));
+        groupSpecs = groupSpecs.filter(gs => gs.shown);
 
-        let groupFocusButtons = groupNames.map(groupName => (
-            <button key={groupName} className={this.isGroupNameShown(groupName) ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickFocusGroupName(groupName)}>{groupName}</button>
+        let groupFocusButtons = groupSpecs.map(gs => (
+            <button key={gs.internalName} className={this.isGroupNameShown(gs.internalName) ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickFocusGroupName(gs.internalName)}>{gs.displayName}</button>
         ));
 
-        let groups = groupNames.map(groupName => (<InstrumentParamGroup
-            groupName={groupName}
+        let groups = groupSpecs.map(gs => (<InstrumentParamGroup
+            groupSpec={gs}
             app={this.props.app}
             instrument={this.props.instrument}
-            isShown={this.isGroupNameShown(groupName)}
-            onToggleShown={() => this.onToggleGroupShown(groupName)}
+            isShown={this.isGroupNameShown(gs.internalName)}
+            onToggleShown={() => this.onToggleGroupShown(gs.internalName)}
             filteredParams={filteredParams}
         />));
 
@@ -743,7 +745,7 @@ class InstrumentParams extends React.Component {
 
         const instrumentSupportsPresets = this.props.instrument.supportsPresets;
 
-        const groupFocusButtonStuff = this.state.isShown && (groupNames.length > 1) && (
+        const groupFocusButtonStuff = this.state.isShown && (groupSpecs.length > 1) && (
             <div className="paramGroupCtrl">
                 <fieldset className="groupFocusButtons">
                     <legend>Param groups</legend>

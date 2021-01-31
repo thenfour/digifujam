@@ -14,10 +14,10 @@ class MiniFMSynthVoice {
         this.velocity = 0;
 
         this.oscillators = [
-            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc0_"),
-            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc1_"),
-            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc2_"),
-            new MiniFMSynthOsc(audioCtx, instrumentSpec, "osc3_"),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new MiniFMSynthOsc(audioCtx, instrumentSpec),
         ];
 
         this.modulationGainers = [];
@@ -34,13 +34,15 @@ class MiniFMSynthVoice {
         this.wetDestination = wetDestination;
 
         /*
-          (lfos)------->
-          [env1]------->[child oscillators] -->[oscSum]------> [filter] -----------> (wetdest)
-                                                               |    |              > (drydest)
-                                                          freq |   | Q
-                                             [filterFreqLFO1Amt]   [filterQLFO1Amt]
-                                            +[filterFreqLFO2Amt]   [filterQLFO2Amt]
-                                            +[filterFreqENVAmt]   [filterQENVAmt]
+          (pitchBendSemisNode)----->
+          (oscDetuneSemisMap[i])--->
+                      (lfos)------->
+                      [env1]------->[child oscillators] -->[oscSum]------> [filter] -----------> (wetdest)
+                                                                           |    |              > (drydest)
+                                                                      freq |   | Q
+                                                         [filterFreqLFO1Amt]   [filterQLFO1Amt]
+                                                        +[filterFreqLFO2Amt]   [filterQLFO2Amt]
+                                                        +[filterFreqENVAmt]   [filterQENVAmt]
 
         */
 
@@ -107,9 +109,11 @@ class MiniFMSynthVoice {
         this.isFilterConnected = true;
 
         // connect oscillators
+        const oscLinkSpec = getOscLinkingSpec(this.instrumentSpec.GetParamByID("linkosc").currentValue);
         algoSpec.oscEnabled.forEach((e, i) => {
             if (!e) return;
-            this.oscillators[i].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i]);
+            // param prefixes are like "osc0_"
+            this.oscillators[i].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i], `osc${oscLinkSpec.sources[i]}_`);
         });
 
         let mod = (src, dest) => {

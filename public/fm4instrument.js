@@ -355,9 +355,6 @@ class FMPolySynth {
                 case "detuneLFO2":
                     this.nodes.detuneLFO2amt.gain.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
                     break;
-                // case "detuneENV1":
-                //     //this.nodes.detuneENVamt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
-                //     break;
 
                 // these must be processed here because they do a full disconnect / reconnect.
                 case "enable_osc0":
@@ -366,6 +363,7 @@ class FMPolySynth {
                 case "enable_osc2":
                 case "enable_osc3":
                 case "voicing":
+                case "linkosc":
                 case "algo": {
                     this.disconnect();
                     this.connect();

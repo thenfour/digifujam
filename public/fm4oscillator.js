@@ -3,10 +3,9 @@
 
 
 class MiniFMSynthOsc {
-    constructor(audioCtx, instrumentSpec, paramPrefix) {
+    constructor(audioCtx, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
-        this.paramPrefix = paramPrefix;
 
         this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
 
@@ -26,12 +25,12 @@ class MiniFMSynthOsc {
 
     // lfo1 is -1 to 1 range
     // lfo1_01 is 0 to 1 range.
-    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1, pitchBendSemisNode, detuneSemisNode) {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1, pitchBendSemisNode, detuneSemisNode, paramPrefix) {
         this.isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
+        this.paramPrefix = paramPrefix;
 
         /*
         each oscillator has                                                          
-
 
           [lfo1PWMAmt]+[lfo2PWMAmt]+[env1PWMAmt]
                                              |
@@ -53,7 +52,7 @@ class MiniFMSynthOsc {
             [env1 0 to 1]-->[env1SemisAmt] ---------->
              [lfo-1 to 1]-->[lfo1SemisAmt] ---------->
              [lfo-1 to 1]-->[lfo2SemisAmt] ---------->
-                               [baseFreqMidiNote]  --> [semisToHz]
+                               [baseFreqMidiNote]  --> [semisToHz] -><freq>[osc]
 
          UNFORTUNATELY the webaudio oscillator does not have a way to self-feedback or modulate phase. it can feedback on its frequency, but that's not working like an FM synth.
          maybe we can hack together some waveshaping to give a continuous alterantive; for now "waveform" select is enough.
