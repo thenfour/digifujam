@@ -160,7 +160,7 @@ class InstDropdownParam extends React.Component {
         };
     }
     onClickShown = () => {
-        this.setState({listShown:!this.state.listShown});
+        this.setState({ listShown: !this.state.listShown });
     }
     onClickButton = (val) => {
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
@@ -182,7 +182,7 @@ class InstDropdownParam extends React.Component {
                     <ul className="dropdown">
                         {buttons}
                     </ul>
-                    )}
+                )}
             </li>
         );
     }
@@ -311,25 +311,22 @@ class InstFloatParam extends React.Component {
         this.setSliderVal(p.currentValue);
         this.setCaption(p.currentValue);
         this.setInputTextVal(p.currentValue);
-        switch (p.cssClassName) {
-            case "modAmtParam":
-                stylizeRangeInput(this.sliderID, {
-                    bgNegColorSpec: "#444",
-                    negColorSpec: "#66c",
-                    posColorSpec: "#66c",
-                    bgPosColorSpec: "#444",
-                    zeroVal: this._realValToSliderVal(0),
-                });
-                break;
-            default:
-                stylizeRangeInput(this.sliderID, {
-                    bgNegColorSpec: "#044",
-                    negColorSpec: "#088",
-                    posColorSpec: "#088",
-                    bgPosColorSpec: "#044",
-                    zeroVal: this._realValToSliderVal(0),
-                });
-                break;
+        if (p.cssClassName.includes("modAmtParam")) {
+            stylizeRangeInput(this.sliderID, {
+                bgNegColorSpec: "#444",
+                negColorSpec: "#66c",
+                posColorSpec: "#66c",
+                bgPosColorSpec: "#444",
+                zeroVal: this._realValToSliderVal(0),
+            });
+        } else {
+            stylizeRangeInput(this.sliderID, {
+                bgNegColorSpec: "#044",
+                negColorSpec: "#088",
+                posColorSpec: "#088",
+                bgPosColorSpec: "#044",
+                zeroVal: this._realValToSliderVal(0),
+            });
         }
     }
 
@@ -1563,7 +1560,7 @@ class RoomAlertArea extends React.Component {
                 <div id="roomAlertArea">
                     <div>Select a MIDI input device to start playing</div>
                     {this.props.app.deviceNameList.map(i => (
-                        <button onClick={() => { this.props.app.midi.ListenOnDevice(i); gStateChangeHandler.OnStateChange(); } }>Start using {i}</button>
+                        <button onClick={() => { this.props.app.midi.ListenOnDevice(i); gStateChangeHandler.OnStateChange(); }}>Start using {i}</button>
                     ))}
                 </div>
             );

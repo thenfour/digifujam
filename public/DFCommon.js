@@ -1,6 +1,6 @@
 'use strict';
 
-let gDigifujamVersion = 2;
+let gDigifujamVersion = 3;
 
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
@@ -384,7 +384,8 @@ class DigifuInstrumentSpec {
                 console.log(`loadPatchObj: "${k}" was not found, its value will be ignored.`);
                 return;
             }
-            param.currentValue = presetObj[k];
+            let newVal = this.sanitizeInstrumentParamVal(param, presetObj[k]);
+            param.currentValue = newVal;
         });
     }
 
@@ -453,9 +454,63 @@ class DigifuInstrumentSpec {
             n.thaw();
             return n;
         });
+
+        // for restrictive behaviorStyles, we force params to a certain value and hide from gui always.
+        this.paramsToForceAndHide = {};
+
+        if (this.engine === "minifm" && this.behaviorStyle === "microSub") {
+            this.paramsToForceAndHide = {
+                enable_osc0: true,
+                enable_osc1: true,
+                enable_osc2: true,
+                enable_osc3: false,
+                voicing: 1,
+                linkosc: 3, // A&B&C linked together
+                algo: 7, // independent
+                label_enableOsc: false, // don't show that label
+                osc0_freq_mult: 1.0,
+                osc1_freq_mult: 1.0,
+                osc2_freq_mult: 1.0,
+                osc3_freq_mult: 1.0,
+                osc0_freq_abs: 0,
+                osc1_freq_abs: 0,
+                osc2_freq_abs: 0,
+                osc3_freq_abs: 0,
+                osc0_level: 0.5, // there's not much reason to change oscillator gain when they're all in sync
+                osc1_level: 0.5,
+                osc2_level: 0.5,
+                osc3_level: 0.5,
+            };
+            // and make modifications to certain params:
+            this.GetParamByID("osc0_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
+            this.GetParamByID("osc1_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
+            this.GetParamByID("osc2_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
+            this.GetParamByID("osc3_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
+
+            this.GetParamByID("osc0_lfo1_gainAmt").name = "Gain LFO1 mod";
+            this.GetParamByID("osc1_lfo1_gainAmt").name = "Gain LFO1 mod";
+            this.GetParamByID("osc2_lfo1_gainAmt").name = "Gain LFO1 mod";
+            this.GetParamByID("osc3_lfo1_gainAmt").name = "Gain LFO1 mod";
+
+            this.GetParamByID("osc0_lfo2_gainAmt").name = "Gain LFO2 mod";
+            this.GetParamByID("osc1_lfo2_gainAmt").name = "Gain LFO2 mod";
+            this.GetParamByID("osc2_lfo2_gainAmt").name = "Gain LFO2 mod";
+            this.GetParamByID("osc3_lfo2_gainAmt").name = "Gain LFO2 mod";
+
+            // move detune stuff to just below osc transpose
+            this.GetParamByID("detuneBase").cssClassName = "paramSpacer";
+            this.GetParamByID("detuneBase").groupName = "∿ Osc A";
+            this.GetParamByID("detuneBase").name = "Detune semis";
+            this.GetParamByID("detuneLFO1").groupName = "∿ Osc A";
+            this.GetParamByID("detuneLFO2").groupName = "∿ Osc A";
+            this.GetParamByID("detuneENV1").groupName = "∿ Osc A";
+        }
     }
 
     GetDefaultShownGroupsForInstrument() {
+        if (this.engine === "minifm" && this.behaviorStyle === "microSub") {
+            return ["master", "∿ Osc A"];
+        }
         return ["master"];
     }
 
@@ -540,6 +595,7 @@ class DigifuInstrumentSpec {
             ret.cssClassName = "modulation";
         } else {
             const oscLinkSpec = this.getOscLinkingSpec();
+            let oscGroupControlsAllowed = !(this.engine === "minifm" && this.behaviorStyle === "microSub");
             switch (groupName) {
                 case "Filter":
                     const filtIsEnabled = !!this.GetParamByID("filterType").currentValue;
@@ -549,28 +605,28 @@ class DigifuInstrumentSpec {
                 case "∿ Osc A":
                     ret.shown = oscLinkSpec.oscParamUsed[0];
                     ret.displayName = oscLinkSpec.groupNames[0];
-                    ret.groupControls = "osc";
+                    ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 0;
                     ret.oscillatorDestinations = [1,2,3];
                     break;
                 case "∿ Osc B":
                     ret.shown = oscLinkSpec.oscParamUsed[1];
                     ret.displayName = oscLinkSpec.groupNames[1];
-                    ret.groupControls = "osc";
+                    ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 1;
                     ret.oscillatorDestinations = [0,2,3];
                     break;
                 case "∿ Osc C":
                     ret.shown = oscLinkSpec.oscParamUsed[2];
                     ret.displayName = oscLinkSpec.groupNames[2];
-                    ret.groupControls = "osc";
+                    ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 2;
                     ret.oscillatorDestinations = [0,1,3];
                     break;
                 case "∿ Osc D":
                     ret.shown = oscLinkSpec.oscParamUsed[3];
                     ret.displayName = oscLinkSpec.groupNames[3];
-                    ret.groupControls = "osc";
+                    ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 3;
                     ret.oscillatorDestinations = [0,1,2];
                     break;
@@ -676,17 +732,14 @@ class DigifuInstrumentSpec {
 
         let isPoly = this.GetParamByID("voicing").currentValue == 1;
 
-        let ret = this.params.filter(p => {
+        let forcedKeysToHide = Object.keys(this.paramsToForceAndHide);
 
-            // internal params which aren't part of the normal param editing zone.
-            if (p.paramID === "presetID") return false;
-            if (p.paramID === "isReadOnly") return false;
-            if (p.paramID === "author") return false;
-            if (p.paramID === "savedDate") return false;
-            if (p.paramID === "tags") return false;
-            if (p.paramID === "patchName") return false;
+        let ret = this.params.filter(p => {
+            if (p.isInternal) return false;// internal params which aren't part of the normal param editing GUI.
+            if (forcedKeysToHide.some(k => k == p.paramID)) return false;
 
             if (isPoly) {
+                if (p.paramID === "env1_trigMode") return false;
                 if (p.paramID.endsWith("_env1_trigMode")) return false;
                 if (p.paramID.endsWith("_portamento")) return false;
                 if (p.paramID.endsWith("_env_trigMode")) return false;
@@ -714,7 +767,28 @@ class DigifuInstrumentSpec {
         });
         return ret;
     }
-};
+
+    sanitizeInstrumentParamVal(param, newVal) {
+        if (Object.keys(this.paramsToForceAndHide).some(k => k == param.paramID)) {
+            return this.paramsToForceAndHide[param.paramID];
+        }
+
+        if (param.parameterType == InstrumentParamType.textParam) {
+            if (typeof (newVal) != 'string') return "";
+            let ret = newVal.trim();
+            return ret.substring(0, param.maxTextLength);
+        }
+        if (param.parameterType == InstrumentParamType.cbxParam) {
+            return !!newVal;
+        }
+        // numeric types...
+        // just clamp to the range.
+        if (newVal < param.minValue) return param.minValue;
+        if (newVal > param.maxValue) return param.maxValue;
+        return newVal;
+    };
+    
+}; // InstrumentSpec
 
 const ChatMessageType = {
     chat: "chat",
@@ -1029,22 +1103,6 @@ let sanitizeCheerText = function (n) {
     return String.fromCodePoint(n.codePointAt(0));
 }
 
-let sanitizeInstrumentParamVal = function (param, newVal) {
-    if (param.parameterType == InstrumentParamType.textParam) {
-        if (typeof (newVal) != 'string') return "";
-        let ret = newVal.trim();
-        return ret.substring(0, param.maxTextLength);
-    }
-    if (param.parameterType == InstrumentParamType.cbxParam) {
-        return !!newVal;
-    }
-    // numeric types...
-    // just clamp to the range.
-    if (newVal < param.minValue) return param.minValue;
-    if (newVal > param.maxValue) return param.maxValue;
-    return newVal;
-};
-
 module.exports = {
     ClientMessages,
     ServerMessages,
@@ -1062,7 +1120,6 @@ module.exports = {
     sanitizeUserColor,
     sanitizeCheerText,
     generateID,
-    sanitizeInstrumentParamVal,
     RoomItem,
     RoomFn,
     RoomFns,

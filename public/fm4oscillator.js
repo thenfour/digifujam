@@ -20,7 +20,10 @@ class MiniFMSynthOsc {
     }
 
     paramValue(paramID) {
-        return this.instrumentSpec.GetParamByID(this.paramPrefix + paramID).currentValue;
+        const fullParamID = this.paramPrefix + paramID;
+        const val = this.instrumentSpec.GetParamByID(fullParamID).currentValue;
+        //console.log(`fullParamID = ${fullParamID} = ${val}`);
+        return val;
     }
 
     // lfo1 is -1 to 1 range

@@ -542,7 +542,7 @@ class DigifuApp {
     loadPatchObj(presetObj) {
         if (!this.myInstrument) return;
         Object.keys(presetObj).forEach(k => {
-            presetObj[k] = sanitizeInstrumentParamVal(k, presetObj[k]);
+            presetObj[k] = this.myInstrument.sanitizeInstrumentParamVal(k, presetObj[k]);
         });
         this.net.SendInstrumentParams(presetObj);
         this.synth.SetInstrumentParams(this.myInstrument, presetObj);
@@ -551,7 +551,7 @@ class DigifuApp {
 
     SetInstrumentParam(inst, param, newVal) {
         let presetObj = {};
-        newVal = sanitizeInstrumentParamVal(param, newVal);
+        newVal = inst.sanitizeInstrumentParamVal(param, newVal);
 
         presetObj[param.paramID] = newVal;
         this.loadPatchObj(presetObj);

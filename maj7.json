@@ -79,11 +79,18 @@
       "name": "Mini FM B"
     },
     {
-      "instrumentID": "fm4c",
+      "instrumentID": "microA",
       "copyOfInstrumentID": "minifm",
-      "namePrefix": "Noog: ",
-      "name": "Noog 1",
-      "GUI": "mini"
+      "namePrefix": "MicroA: ",
+      "name": "MicroA",
+      "behaviorStyle": "microSub"
+    },
+    {
+      "instrumentID": "microB",
+      "copyOfInstrumentID": "minifm",
+      "namePrefix": "MicroB: ",
+      "name": "MicroB",
+      "behaviorStyle": "microSub"
     },
     {
       "instrumentID": "sf1",

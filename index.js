@@ -459,7 +459,7 @@ class RoomServer {
             return;
           }
 
-          p.currentValue = DF.sanitizeInstrumentParamVal(p, data[paramID]);
+          p.currentValue = foundInstrument.instrument.sanitizeInstrumentParamVal(p, data[paramID]);
           //log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
           ret.patchObj[paramID] = p.currentValue;
         }

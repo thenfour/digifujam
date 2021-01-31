@@ -22,7 +22,6 @@ class MiniFMSynthVoice {
 
         this.modulationGainers = [];
 
-        this.isFilterConnected = false;
         this.isConnected = false;
 
         this.nodes = {};
@@ -32,6 +31,7 @@ class MiniFMSynthVoice {
         if (this.isConnected) return;
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
+        this.algoSpec = algoSpec;
 
         /*
           (pitchBendSemisNode)----->
@@ -106,14 +106,14 @@ class MiniFMSynthVoice {
         this.nodes.filterQLFO2Amt.connect(this.nodes.filter.Q);
         this.nodes.filterQENVAmt.connect(this.nodes.filter.Q);
 
-        this.isFilterConnected = true;
-
         // connect oscillators
-        const oscLinkSpec = this.instrumentSpec.getOscLinkingSpec();
+        this.oscLinkSpec = this.instrumentSpec.getOscLinkingSpec();
         algoSpec.oscEnabled.forEach((e, i) => {
             if (!e) return;
             // param prefixes are like "osc0_"
-            this.oscillators[i].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i], `osc${oscLinkSpec.sources[i]}_`);
+            const paramPrefix = `osc${this.oscLinkSpec.sources[i]}_`;
+            //console.log(`paramPrefix: ${paramPrefix}`);
+            this.oscillators[i].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i], paramPrefix);
         });
 
         let mod = (src, dest) => {
@@ -186,9 +186,6 @@ class MiniFMSynthVoice {
         out(this.oscillators[0]);
 
         // connect to outside.
-        this.nodes.filter.connect(dryDestination);
-        this.nodes.filter.connect(wetDestination);
-
         this._SetFiltType();
 
         this.isConnected = true;
@@ -217,10 +214,10 @@ class MiniFMSynthVoice {
 
     _SetFiltType() {
         let disableFilter = () => {
-            if (!this.isFilterConnected) return;
-            // oscSum] --> drydest
-            //                      > wetdest
+            // [oscSum]---------> (wetdest)
+            //                  > (drydest)
             this.nodes.filter.disconnect();
+            console.log(`disabling filter`);
 
             this.nodes.oscSum.disconnect();
             this.nodes.oscSum.connect(this.dryDestination);
@@ -229,9 +226,12 @@ class MiniFMSynthVoice {
             this.isFilterConnected = false;
         };
         let enableFilter = () => {
-            if (this.isFilterConnected) return;
+            // [oscSum]------> [filter] -----------> (wetdest)
+            //                                     > (drydest)
+            console.log(`enabling filter`);
+
             this.nodes.oscSum.disconnect();
-            this.nodes.oscSum.connect(this.filter);
+            this.nodes.oscSum.connect(this.nodes.filter);
 
             this.nodes.filter.disconnect();
             this.nodes.filter.connect(this.dryDestination);
@@ -273,7 +273,8 @@ class MiniFMSynthVoice {
         let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         p = p * ks * vs;
-        this.nodes.filter.frequency.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
+        //console.log(`filter freq: ${p}`);
+        this.nodes.filter.frequency.value = p;//, this.audioCtx.currentTime + this.minGlideS);
     }
 
     SetParamValue(paramID, newVal) {
@@ -281,9 +282,15 @@ class MiniFMSynthVoice {
         //console.log(`setting ${paramID} to ${newVal}`);
         if (paramID.startsWith("osc")) {
             let oscid = parseInt(paramID[3]);
-            if (this.oscillators[oscid].isConnected) {
-                this.oscillators[oscid].SetParamValue(paramID.substring(5), newVal);
-            }
+            let strippedParamID = paramID.substring(5);
+            // send param change to all oscillators that depend on this value.
+            this.oscLinkSpec.sources.forEach((masterOscIndex, dependentOscIndex) => {
+                if (masterOscIndex == oscid) {
+                    if (this.oscillators[dependentOscIndex].isConnected) {
+                        this.oscillators[dependentOscIndex].SetParamValue(strippedParamID, newVal);
+                    }
+                }
+            });
             return;
         }
         switch (paramID) {

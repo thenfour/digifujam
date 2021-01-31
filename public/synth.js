@@ -82,7 +82,9 @@ class DigifuSynth {
 		Object.keys(patchObj).forEach(paramID => {
 			let param = instrumentSpec.params.find(p => p.paramID == paramID);
 			if (param) {
-				param.currentValue = patchObj[paramID];
+				let newVal = instrumentSpec.sanitizeInstrumentParamVal(param, patchObj[paramID]);
+				patchObj[paramID] = newVal;
+				param.currentValue = newVal;
 			}
 		});
 		if (this._isMuted) return;

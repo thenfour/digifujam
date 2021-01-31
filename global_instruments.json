@@ -610,6 +610,7 @@
           "name": "Release",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "defaultValue": 0.1,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -858,6 +859,7 @@
           "name": "Release",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "defaultValue": 0.1,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -1106,6 +1108,7 @@
           "name": "Release",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "defaultValue": 0.1,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -1354,6 +1357,7 @@
           "name": "Release",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "defaultValue": 0.1,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -1487,6 +1491,7 @@
           "name": "Release",
           "groupName": "Mod Env",
           "parameterType": "floatParam",
+          "defaultValue": 0.1,
           "minValue": 0.00,
           "maxValue": 7.0
         },
