@@ -319,6 +319,7 @@
           "groupName": "master",
           "parameterType": "intParam",
           "renderAs": "buttons",
+          "defaultValue": "1",
           "minValue": 0,
           "maxValue": 1,
           "enumNames": [
@@ -590,6 +591,7 @@
           "name": "Sustain",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 1.0
         },
@@ -827,6 +829,7 @@
           "name": "Sustain",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 1.0
         },
@@ -1064,6 +1067,7 @@
           "name": "Sustain",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 1.0
         },
@@ -1301,6 +1305,7 @@
           "name": "Sustain",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 1.0
         },
@@ -1425,7 +1430,7 @@
           "name": "Decay",
           "groupName": "Mod Env",
           "parameterType": "floatParam",
-          "defaultValue": 0.3,
+          "defaultValue": 1.0,
           "minValue": 0.00,
           "maxValue": 7.0
         },

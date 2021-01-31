@@ -82,17 +82,17 @@ class RoomServer {
       log(`Imported room state for ${this.roomState.roomID}`);
     }
 
+    // do factory resets
+    this.roomState.instrumentCloset.forEach(i => {
+      i.loadPatchObj(i.GetInitPreset());
+    });
+
     // remember this stuff for our "reset to factory defaults" function.
     this.factorySettings = this.roomState.instrumentCloset.map(i => {
       return {
         instrumentID: i.instrumentID,
         presetsJSON: i.exportAllPresetsJSON()
       };
-    });
-
-    // do factory resets
-    this.roomState.instrumentCloset.forEach(i => {
-      i.loadPatchObj(i.GetInitPreset());
     });
 
     setTimeout(() => {

@@ -356,22 +356,24 @@ class DigifuInstrumentSpec {
 
     // always return a valid preset.
     GetInitPreset() {
-        let ret = this.presets.find(p => { return p.patchName == "init"; });
+        let ret = this.presets.find(p => p.patchName == "init");
         if (ret) {
             //console.log(`loading init patch called 'init' for instrument ${this.name}`);
             return ret;
         }
-        console.log(`WARNING: generating init patch for instrument ${this.name}. Better to just have an 'init' preset.`);
-        // we have to generate one.
+
+        // if an INIT patch does not exist, then one is generated
         ret = {};
         this.params.forEach(param => {
-            switch (param.paramID) {
-                case "presetID":
-                    return;
-            }
             ret[param.paramID] = this.CalculateDefaultValue(param);
         });
-        return ret;
+
+        ret.patchName = "init";
+        ret.presetID = generateID();
+        ret.isReadOnly = true;
+        this.presets.unshift(ret);
+
+        return this.presets[0];
     }
 
     loadPatchObj(presetObj) {
@@ -387,15 +389,19 @@ class DigifuInstrumentSpec {
     }
 
     exportAllPresetsJSON() {
-        return JSON.stringify(this.presets);
+        return JSON.stringify(this.presets.filter(p => p.patchName != "init"));
     }
 
     // return true/false success
     importAllPresetsArray(a) {
-        if (!Array.isArray(a)) return false;
+        if (!Array.isArray(a)) {
+            console.log(`importing presets array but 'a' is not an array; it's a ${typeof(a)}`);
+            return false;
+        } 
         // TODO: other validation.
         // do a cursory check of all require params existing.
         const requiredParamKeys = ["presetID", "patchName"];
+        let pass = true;
         a.forEach(p => {
             // does p contain ALL paramIDs in 
             let count = 0;
@@ -406,10 +412,18 @@ class DigifuInstrumentSpec {
             });
             if (count < requiredParamKeys.length) {
                 console.log(`Trying to import a preset with too few required params (${count} < ${requiredParamKeys.length})`);
-                return false;
+                pass = false;
+                return;
             }
         });
-        this.presets = a;
+        if (!pass) {
+            console.log(`=> Can't import presets.`);
+            return false;
+        }
+        // import everything except init, and add our own init.
+        let init = this.GetInitPreset();
+        this.presets = a.filter(p => p.patchName != "init");
+        this.presets.unshift(init);
         return true;
     }
 
@@ -894,7 +908,7 @@ class DigifuRoomState {
 
     adminExportRoomState() {
         return {
-            instrumentPresets: this.instrumentCloset.map(i => { return { instrumentID: i.instrumentID, presets: i.presets } }),
+            instrumentPresets: this.instrumentCloset.map(i => { return { instrumentID: i.instrumentID, presets: i.presets.filter(p => p.patchName != "init") } }),
             chatLog: this.chatLog,
             stats: this.stats,
         };
