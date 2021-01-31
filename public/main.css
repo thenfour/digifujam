@@ -810,3 +810,68 @@ input[type="range"].intParam::-webkit-slider-thumb,
 
 
 
+
+li.dropdownParam {
+    font-size: small;
+}
+
+li.dropdownParam .mainButton {
+    cursor:pointer;
+    margin: 4px;
+    background-color: #022;
+}
+li.dropdownParam .mainButton:hover {
+    background:#066;
+}
+li.dropdownParam .mainButton .arrow {
+    
+}
+li.dropdownParam .mainButton .currentValue {
+    
+}
+li.dropdownParam ul.dropdown {
+    background-color: #022;
+    margin-left: 15px;  
+    padding: 0;
+    padding-left: 10px;  
+}
+li.dropdownParam ul.dropdown li {
+    padding: 2px;
+    cursor: pointer;
+}
+li.dropdownParam ul.dropdown li.active {
+    background-color: #044;
+}
+
+li.dropdownParam ul.dropdown li:hover {
+    background-color: #066;
+}
+li.dropdownParam ul.dropdown li.active:hover {
+    background-color: #066;
+}
+
+
+li.cbxparam {
+    display:inline;
+}
+
+li.cbxparam button {
+    border: 0;
+}
+
+li.cbxparam.on button {
+    background-color: #088;
+}
+
+
+
+
+li.oscEnableButton {
+    display: inline-block;
+    margin: 3px;
+}
+
+ul.instParamList li.inlineLabel
+{
+    display:inline;
+}

@@ -159,6 +159,7 @@ const InstrumentParamType = {
     floatParam: "floatParam",
     textParam: "textParam",
     cbxParam: "cbxParam", // checkbox bool. you can also do enum-style params with intParam
+    inlineLabel: "inlineLabel", // just a label, inline positioning
 };
 
 const InternalInstrumentParams = [
@@ -457,18 +458,30 @@ class DigifuInstrumentSpec {
                 case "∿ Osc A":
                     ret.shown = oscLinkSpec.oscParamUsed[0];
                     ret.displayName = oscLinkSpec.groupNames[0];
+                    ret.groupControls = "osc";
+                    ret.oscillatorSource = 0;
+                    ret.oscillatorDestinations = [1,2,3];
                     break;
                 case "∿ Osc B":
                     ret.shown = oscLinkSpec.oscParamUsed[1];
                     ret.displayName = oscLinkSpec.groupNames[1];
+                    ret.groupControls = "osc";
+                    ret.oscillatorSource = 1;
+                    ret.oscillatorDestinations = [0,2,3];
                     break;
                 case "∿ Osc C":
                     ret.shown = oscLinkSpec.oscParamUsed[2];
                     ret.displayName = oscLinkSpec.groupNames[2];
+                    ret.groupControls = "osc";
+                    ret.oscillatorSource = 2;
+                    ret.oscillatorDestinations = [0,1,3];
                     break;
                 case "∿ Osc D":
                     ret.shown = oscLinkSpec.oscParamUsed[3];
                     ret.displayName = oscLinkSpec.groupNames[3];
+                    ret.groupControls = "osc";
+                    ret.oscillatorSource = 3;
+                    ret.oscillatorDestinations = [0,1,2];
                     break;
             }
         }
@@ -958,7 +971,7 @@ let getOscLinkingSpec = (spec) => {
         case 6: // 6 "🔵◯🔵🔵",
             return { sources: [0, 1, 0, 0], groupNames: ["∿ Osc A & C & D", "∿ Osc B", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
         case 7: // 7 "🔵🔵🔵🔵",
-            return { sources: [0, 0, 0, 0], groupNames: ["∿ Oscillators", "(n/a)", "(n/a)", "(n/a)"], oscParamUsed: [true, false, false, false] };
+            return { sources: [0, 0, 0, 0], groupNames: ["∿ Osc A & B & C & D", "(n/a)", "(n/a)", "(n/a)"], oscParamUsed: [true, false, false, false] };
         case 8: // 8 "🔵🔵🔴🔴",
             return { sources: [0, 0, 2, 2], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, false, true, false] };
         case 9: // 9 "🔵🔴🔵🔴",

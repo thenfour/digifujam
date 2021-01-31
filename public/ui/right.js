@@ -150,45 +150,72 @@ class InstButtonsParam extends React.Component {
 
 
 
-
-// CHECKBOX instrument
+// int parameter, but rendered as buttons using enum titles
 // props.instrument
-class InstCbxParam extends React.Component {
+class InstDropdownParam extends React.Component {
     constructor(props) {
         super(props);
-        this.inputID = "cbxparam_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
-        this.renderedValue = false;
+        this.state = {
+            listShown: false
+        };
     }
-    onChange = (e) => {
-        let val = e.target.checked;
-        this.renderedValue = val;
+    onClickShown = () => {
+        this.setState({listShown:!this.state.listShown});
+    }
+    onClickButton = (val) => {
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
         gStateChangeHandler.OnStateChange();
-    }
-    componentDidMount() {
-        // set initial values.
-        let val = !!this.props.param.currentValue;
-        $("#" + this.inputID).prop("checked", val);
-        this.renderedValue = val;
-    }
+    };
     render() {
-        if (this.renderedValue != this.props.param.currentValue) {
-            //has been externally modified. update ui.
-            let val = !!this.props.param.currentValue;
-            this.renderedValue = val;
-            $("#" + this.inputID).prop("checked", val);
-        }
+        const buttons = (this.props.param.enumNames.map((e, val) => (
+            <li className={"item " + ((this.props.param.currentValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</li>
+        )));
 
         return (
-            <li className={this.props.param.cssClassName} style={{ display: "inline" }}>
-                <input id={this.inputID} type="checkbox" onChange={this.onChange}
-                //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
-                />
-                <label>{this.props.param.name}</label>
+            <li className={"dropdownParam " + this.props.param.cssClassName}>
+                <div className="mainButton" onClick={this.onClickShown}>
+                    <span className="arrow">{getArrowText(this.state.listShown)}</span>
+                    <span className="currentValue">{this.props.param.enumNames[this.props.param.currentValue]}</span>
+                    <label>{this.props.param.name}</label>
+                </div>
+                {this.state.listShown && (
+                    <ul className="dropdown">
+                        {buttons}
+                    </ul>
+                    )}
             </li>
         );
     }
 }
+
+
+
+
+
+
+
+
+// CHECKBOX instrument
+// props.instrument
+class InstCbxParam extends React.Component {
+    onClick = () => {
+        let val = !!this.props.param.currentValue;
+        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, !val);
+        gStateChangeHandler.OnStateChange();
+    }
+    render() {
+        let val = !!this.props.param.currentValue;
+        let className = "cbxparam " + (val ? "on " : "off ") + this.props.param.cssClassName;
+
+        return (
+            <li className={className}>
+                <button onClick={this.onClick}>{this.props.param.name}</button>
+            </li>
+        );
+    }
+}
+
+
 
 
 
@@ -521,10 +548,13 @@ class InstrumentParamGroup extends React.Component {
 
         let createParam = (p) => {
             if (p.hidden) return null;
+
             switch (p.parameterType) {
                 case InstrumentParamType.intParam:
                     if (p.renderAs == "buttons") {
                         return (<InstButtonsParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstButtonsParam>);
+                    } else if (p.renderAs == "dropdown") {
+                        return (<InstDropdownParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstDropdownParam>);
                     } else {
                         return (<InstIntParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
                     }
@@ -534,6 +564,8 @@ class InstrumentParamGroup extends React.Component {
                     return (<InstTextParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstTextParam>);
                 case InstrumentParamType.cbxParam:
                     return (<InstCbxParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstCbxParam>);
+                case InstrumentParamType.inlineLabel:
+                    return (<li className="inlineLabel">{p.inlineLabel}</li>);
             }
         };
 
@@ -714,7 +746,8 @@ class InstrumentParams extends React.Component {
 
         // unique group names.
         let _groupNames = [...new Set(filteredParams.map(p => p.groupName))];
-        //groupNames = groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
+        _groupNames = _groupNames.filter(gn => filteredParams.find(p => p.groupName == gn && !p.hidden));
+
         let groupSpecs = _groupNames.map(gn => this.props.instrument.getGroupInfo(gn));
         groupSpecs = groupSpecs.filter(gs => gs.shown);
 

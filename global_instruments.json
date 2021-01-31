@@ -332,7 +332,7 @@
           "name": "Osc param link",
           "groupName": "master",
           "parameterType": "intParam",
-          "renderAs": "buttons",
+          "renderAs": "dropdown",
           "defaultValue": 7,
           "minValue": 0,
           "maxValue": 13,
@@ -358,6 +358,7 @@
           "name": "FM algo",
           "groupName": "master",
           "parameterType": "intParam",
+          "renderAs": "dropdown",
           "minValue": 0,
           "maxValue": 7,
           "defaultValue": 7,
@@ -376,12 +377,14 @@
           "paramID": "enable_osc0",
           "name": "A",
           "groupName": "master",
+          "cssClassName": "oscEnableButton",
           "parameterType": "cbxParam",
           "defaultValue": 1
         },
         {
           "paramID": "enable_osc1",
           "name": "B",
+          "cssClassName": "oscEnableButton",
           "groupName": "master",
           "parameterType": "cbxParam",
           "defaultValue": 0
@@ -390,14 +393,24 @@
           "paramID": "enable_osc2",
           "name": "C",
           "groupName": "master",
+          "cssClassName": "oscEnableButton",
           "parameterType": "cbxParam",
           "defaultValue": 0
         },
         {
           "paramID": "enable_osc3",
-          "name": "D <-- osc enable",
+          "name": "D",
           "groupName": "master",
+          "cssClassName": "oscEnableButton",
           "parameterType": "cbxParam",
+          "defaultValue": 0
+        },
+        {
+          "paramID": "label_enableOsc",
+          "name": "label after osc enabled buttons",
+          "groupName": "master",
+          "parameterType": "inlineLabel",
+          "inlineLabel": "osc enable",
           "defaultValue": 0
         },
         {
