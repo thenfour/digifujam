@@ -467,6 +467,16 @@
         },
         {
           "cssClassName": "paramSpacer",
+          "paramID": "osc0_freq_transp",
+          "name": "Transpose",
+          "groupName": "∿ Osc A",
+          "parameterType": "floatParam",
+          "valueCurve": "3.0",
+          "defaultValue": 0,
+          "minValue": -48,
+          "maxValue": 48.0
+        },
+        {
           "paramID": "osc0_freq_mult",
           "name": "Freq mul",
           "groupName": "∿ Osc A",
@@ -705,6 +715,16 @@
         },
         {
           "cssClassName": "paramSpacer",
+          "paramID": "osc1_freq_transp",
+          "name": "Transpose",
+          "groupName": "∿ Osc B",
+          "parameterType": "floatParam",
+          "valueCurve": "3.0",
+          "defaultValue": 0,
+          "minValue": -48,
+          "maxValue": 48.0
+        },
+        {
           "paramID": "osc1_freq_mult",
           "name": "Freq mul",
           "groupName": "∿ Osc B",
@@ -943,6 +963,16 @@
         },
         {
           "cssClassName": "paramSpacer",
+          "paramID": "osc2_freq_transp",
+          "name": "Transpose",
+          "groupName": "∿ Osc C",
+          "parameterType": "floatParam",
+          "valueCurve": "3.0",
+          "defaultValue": 0,
+          "minValue": -48,
+          "maxValue": 48.0
+        },
+        {
           "paramID": "osc2_freq_mult",
           "name": "Freq mul",
           "groupName": "∿ Osc C",
@@ -1181,6 +1211,16 @@
         },
         {
           "cssClassName": "paramSpacer",
+          "paramID": "osc3_freq_transp",
+          "name": "Transpose",
+          "groupName": "∿ Osc D",
+          "parameterType": "floatParam",
+          "valueCurve": "3.0",
+          "defaultValue": 0,
+          "minValue": -48,
+          "maxValue": 48.0
+        },
+        {
           "paramID": "osc3_freq_mult",
           "name": "Freq mul",
           "groupName": "∿ Osc D",

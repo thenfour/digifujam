@@ -52,6 +52,7 @@ class MiniFMSynthOsc {
             [env1 0 to 1]-->[env1SemisAmt] ---------->
              [lfo-1 to 1]-->[lfo1SemisAmt] ---------->
              [lfo-1 to 1]-->[lfo2SemisAmt] ---------->
+                                  [transposeSemis] -->
                                [baseFreqMidiNote]  --> [semisToHz] -><freq>[osc]
 
          UNFORTUNATELY the webaudio oscillator does not have a way to self-feedback or modulate phase. it can feedback on its frequency, but that's not working like an FM synth.
@@ -81,6 +82,11 @@ class MiniFMSynthOsc {
         this.nodes.lfo2SemisAmt.gain.value = this.paramValue("lfo2_pitchDepth");
         lfo2.connect(this.nodes.lfo2SemisAmt);
 
+        // transposeSemis
+        this.nodes.transposeSemis = this.audioCtx.createConstantSource();
+        this.nodes.transposeSemis.offset.value = this.paramValue("freq_transp");
+        this.nodes.transposeSemis.start();
+
         // baseFreqToMidiNote
         this.nodes.baseFreqMidiNote = this.audioCtx.createConstantSource();
         this.nodes.baseFreqMidiNote.start();
@@ -92,6 +98,7 @@ class MiniFMSynthOsc {
         this.nodes.env1SemisAmt.connect(this.nodes.semisToHz);
         this.nodes.lfo1SemisAmt.connect(this.nodes.semisToHz);
         this.nodes.lfo2SemisAmt.connect(this.nodes.semisToHz);
+        this.nodes.transposeSemis.connect(this.nodes.semisToHz);
         this.nodes.baseFreqMidiNote.connect(this.nodes.semisToHz);
 
         // lfo1PWMAmt
@@ -301,6 +308,9 @@ class MiniFMSynthOsc {
                 break;
             case "freq_abs":
                 this.nodes.osc.frequency.value = this.paramValue("freq_abs");
+                break;
+            case "freq_transp":
+                this.nodes.transposeSemis.offset.value = this.paramValue("freq_transp");
                 break;
             case "key_scale":
             case "vel_scale":
