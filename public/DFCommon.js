@@ -298,7 +298,6 @@ class DigifuInstrumentSpec {
             case "drumkit":
                 let kit = this.GetParamByID("kit");
                 return this.namePrefix + " " + kit.enumNames[kit.currentValue];
-            case "minisynth":
             case "minifm":
                 // fall through to calculate the name.
                 break;

@@ -90,14 +90,11 @@
       "name": "Mini FM B"
     },
     {
-      "instrumentID": "msa",
-      "copyOfInstrumentID": "minisynth",
-      "name": "Minisynth A"
-    },
-    {
-      "instrumentID": "msb",
-      "copyOfInstrumentID": "minisynth",
-      "name": "Minisynth B"
+      "instrumentID": "fm4c",
+      "copyOfInstrumentID": "minifm",
+      "namePrefix": "Noog: ",
+      "name": "Noog 1",
+      "GUI": "mini"
     },
     {
       "instrumentID": "sf1",

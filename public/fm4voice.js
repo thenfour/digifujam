@@ -35,12 +35,12 @@ class MiniFMSynthVoice {
 
         /*
           (lfos)------->
-          [env1]------->[child oscillators] -->[oscSum]--> [waveshapeGain] --> [waveshape]-[waveshapePostGain]--------> [filter] -----------> (wetdest)
-                                                                                                                        |    |              > (drydest)
-                                                                                                                   freq |   | Q
-                                                                                                      [filterFreqLFO1Amt]   [filterQLFO1Amt]
-                                                                                                     +[filterFreqLFO2Amt]   [filterQLFO2Amt]
-                                                                                                     +[filterFreqENVAmt]   [filterQENVAmt]
+          [env1]------->[child oscillators] -->[oscSum]------> [filter] -----------> (wetdest)
+                                                               |    |              > (drydest)
+                                                          freq |   | Q
+                                             [filterFreqLFO1Amt]   [filterQLFO1Amt]
+                                            +[filterFreqLFO2Amt]   [filterQLFO2Amt]
+                                            +[filterFreqENVAmt]   [filterQENVAmt]
 
         */
 
@@ -59,22 +59,6 @@ class MiniFMSynthVoice {
         // oscSum
         this.nodes.oscSum = this.audioCtx.createGain();
         this.nodes.oscSum.gain.value = 1;
-
-        // waveshapeGain
-        this.nodes.waveshapeGain = this.audioCtx.createGain();
-        const waveshapeGainValue = this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
-        this.nodes.waveshapeGain.gain.value = waveshapeGainValue;
-        this.nodes.oscSum.connect(this.nodes.waveshapeGain);
-
-        // waveshape
-        this.nodes.waveshape = this.audioCtx.createWaveShaper();
-        this.nodes.waveshapeGain.connect(this.nodes.waveshape);
-        this._setWaveshapeCurve();
-
-        // waveshapePostGain
-        this.nodes.waveshapePostGain = this.audioCtx.createGain();
-        this.nodes.waveshapePostGain.gain.value = 1.0 / Math.max(0.01, waveshapeGainValue);
-        this.nodes.waveshape.connect(this.nodes.waveshapePostGain);
 
         // filterFreqLFO1Amt
         this.nodes.filterFreqLFO1Amt = this.audioCtx.createGain();
@@ -119,8 +103,6 @@ class MiniFMSynthVoice {
         this.nodes.filterQLFO1Amt.connect(this.nodes.filter.Q);
         this.nodes.filterQLFO2Amt.connect(this.nodes.filter.Q);
         this.nodes.filterQENVAmt.connect(this.nodes.filter.Q);
-
-        this.nodes.waveshapePostGain.connect(this.nodes.filter);
 
         this.isFilterConnected = true;
 
@@ -232,20 +214,20 @@ class MiniFMSynthVoice {
     _SetFiltType() {
         let disableFilter = () => {
             if (!this.isFilterConnected) return;
-            // waveshapePostGain] --> drydest
+            // oscSum] --> drydest
             //                      > wetdest
             this.nodes.filter.disconnect();
 
-            this.nodes.waveshapePostGain.disconnect();
-            this.nodes.waveshapePostGain.connect(this.dryDestination);
-            this.nodes.waveshapePostGain.connect(this.wetDestination);
+            this.nodes.oscSum.disconnect();
+            this.nodes.oscSum.connect(this.dryDestination);
+            this.nodes.oscSum.connect(this.wetDestination);
 
             this.isFilterConnected = false;
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return;
-            this.nodes.waveshapePostGain.disconnect();
-            this.nodes.waveshapePostGain.connect(this.filter);
+            this.nodes.oscSum.disconnect();
+            this.nodes.oscSum.connect(this.filter);
 
             this.nodes.filter.disconnect();
             this.nodes.filter.connect(this.dryDestination);
@@ -278,39 +260,6 @@ class MiniFMSynthVoice {
         return this.oscillators.some(o => o.IsPlaying);
     }
 
-    _setWaveshapeCurve() {
-        // https://stackoverflow.com/a/52472603/402169
-
-        if (!this.instrumentSpec.GetParamByID("waveShape_enabled").currentValue) {
-            this.nodes.waveshape.curve = null;
-            return;
-        }
-
-        // x is -1 to 1, a is 0-1
-        let transf = (x, a) => {
-            let s = Math.sin(x / 2 * Math.PI); // a sine curve from 0-1
-            a *= 3;
-            let c = a * s + (1 - a) * x; // blend between linear & sine.
-            let t = Math.sin(c * Math.PI / 2);// when a is >1, clipping occurs; this "folds" back.
-            if (a < 1) {
-                // but we want 0 to be linear, so blend between linear & folded for lower values.
-                t = a * t + (1 - a) * x;
-            }
-            return t;
-        };
-
-        let makeDistortionCurve = (amt) => {
-            let n_samples = 256, curve = new Float32Array(n_samples);
-            for (let i = 0; i < n_samples; ++i) {
-                let x = i * 2 / n_samples - 1;
-                //curve[i] = Math.sign(x)*(1-0.25/(Math.abs(x)+0.25));// http://www.carbon111.com/waveshaping1.html
-                curve[i] = transf(x, amt);
-            }
-            return curve;
-        };
-
-        this.nodes.waveshape.curve = makeDistortionCurve(this.instrumentSpec.GetParamByID("waveShape_curve").currentValue);
-    }
 
     _updateFilterBaseFreq() {
         let vsAmt = this.instrumentSpec.GetParamByID("filterFreqVS").currentValue;
@@ -374,14 +323,6 @@ class MiniFMSynthVoice {
                 break;
             case "env1_r":
                 this.nodes.env1.update({ release: newVal });
-                break;
-            case "waveShape_enabled":
-            case "waveShape_curve":
-                this._setWaveshapeCurve();
-                break;
-            case "waveShape_gain":
-                this.nodes.waveshapeGain.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
-                this.nodes.waveshapePostGain.gain.linearRampToValueAtTime(1.0 / newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }

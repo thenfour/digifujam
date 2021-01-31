@@ -124,9 +124,6 @@ class DigifuSynth {
 			this.instrumentWetGainers[spec.instrumentID] = wetGainer;
 
 			switch (spec.engine) {
-				case "minisynth":
-					this.instruments[spec.instrumentID] = new GeneralPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, d1, d2, s) => new PolySynthVoice(c, d1, d2, s));
-					break;
 				case "minifm":
 					this.instruments[spec.instrumentID] = new FMPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, s) => new MiniFMSynthVoice(c, s));
 					break;

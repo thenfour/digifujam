@@ -334,6 +334,7 @@
           "parameterType": "intParam",
           "minValue": 0,
           "maxValue": 7,
+          "defaultValue": 7,
           "enumNames": [
             "[1🡄2🡄3🡄4]",
             "[1🡄2🡄3][4]",
@@ -431,6 +432,7 @@
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
           "valueCurve": "3.0",
+          "defaultValue": 1,
           "minValue": 0,
           "maxValue": 20.0
         },
@@ -488,6 +490,7 @@
           "name": "Gain",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "defaultValue": 1,
           "minValue": 0,
           "maxValue": 1.0
         },
@@ -539,6 +542,7 @@
           "name": "Decay",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -664,6 +668,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "defaultValue": 1,
           "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
@@ -723,6 +728,7 @@
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
           "minValue": 0,
+          "defaultValue": 1,
           "maxValue": 1.0
         },
         {
@@ -773,6 +779,7 @@
           "name": "Decay",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -898,6 +905,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "defaultValue": 1,
           "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
@@ -956,6 +964,7 @@
           "name": "Gain",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "defaultValue": 1,
           "minValue": 0,
           "maxValue": 1.0
         },
@@ -1007,6 +1016,7 @@
           "name": "Decay",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -1132,6 +1142,7 @@
           "name": "Freq mul",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "defaultValue": 1,
           "valueCurve": "3.0",
           "minValue": 0,
           "maxValue": 20.0
@@ -1190,6 +1201,7 @@
           "name": "Gain",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "defaultValue": 1,
           "minValue": 0,
           "maxValue": 1.0
         },
@@ -1241,6 +1253,7 @@
           "name": "Decay",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -1330,6 +1343,7 @@
           "name": "LFO1 speed",
           "groupName": "Mod LFO1",
           "parameterType": "floatParam",
+          "defaultValue": 1.5,
           "minValue": 0.0,
           "maxValue": 10.0
         },
@@ -1354,6 +1368,7 @@
           "name": "LFO2 speed",
           "groupName": "Mod LFO2",
           "parameterType": "floatParam",
+          "defaultValue": 1.5,
           "minValue": 0.0,
           "maxValue": 10.0
         },
@@ -1371,6 +1386,7 @@
           "name": "Decay",
           "groupName": "Mod Env",
           "parameterType": "floatParam",
+          "defaultValue": 0.3,
           "minValue": 0.00,
           "maxValue": 7.0
         },
@@ -1440,28 +1456,6 @@
           "maxValue": 1.0
         },
         {
-          "paramID": "waveShape_enabled",
-          "name": "Enabled",
-          "groupName": "Saturation",
-          "parameterType": "cbxParam"
-        },
-        {
-          "paramID": "waveShape_gain",
-          "name": "Gain",
-          "groupName": "Saturation",
-          "parameterType": "floatParam",
-          "minValue": 1.0,
-          "maxValue": 4.0
-        },
-        {
-          "paramID": "waveShape_curve",
-          "name": "Curve",
-          "groupName": "Saturation",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0
-        },
-        {
           "paramID": "filterType",
           "name": "Type",
           "groupName": "Filter",
@@ -1483,6 +1477,7 @@
           "groupName": "Filter",
           "parameterType": "floatParam",
           "valueCurve": "4.5",
+          "defaultValue": 800,
           "minValue": 0.0,
           "maxValue": 15000.0
         },
@@ -1567,207 +1562,6 @@
           "parameterType": "floatParam",
           "minValue": -20.0,
           "maxValue": 20.0
-        }
-      ],
-      "presets": []
-    },
-    {
-      "instrumentID": "minisynth",
-      "name": "Minisynth",
-      "gain": 1.0,
-      "color": "rgb(138, 224, 153)",
-      "engine": "minisynth",
-      "activityDisplay": "keyboard",
-      "params": [
-        {
-          "paramID": "patchName",
-          "name": "Patch name",
-          "groupName": "master",
-          "parameterType": "textParam",
-          "maxTextLength": 100
-        },
-        {
-          "paramID": "masterGain",
-          "name": "Master gain",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 0.5
-        },
-        {
-          "paramID": "verbMix",
-          "name": "Reverb mix",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 0.2
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "wave",
-          "name": "Wave",
-          "parameterType": "intParam",
-          "minValue": 0,
-          "maxValue": 4,
-          "currentValue": 1,
-          "enumNames": [
-            "Sine",
-            "Square",
-            "Saw",
-            "Tri",
-            "PWM"
-          ]
-        },
-        {
-          "paramID": "dutyCycle",
-          "name": "Duty cyle",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "detune",
-          "name": "Detune",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 0.5
-        },
-        {
-          "paramID": "voicing",
-          "name": "Voicing",
-          "groupName": "master",
-          "parameterType": "intParam",
-          "minValue": 0,
-          "maxValue": 1,
-          "enumNames": [
-            "Mono",
-            "Poly"
-          ]
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "lfo1_wave",
-          "name": "LFO1 wave",
-          "groupName": "Mod LFO1",
-          "parameterType": "intParam",
-          "minValue": 0,
-          "maxValue": 3,
-          "enumNames": [
-            "Sine",
-            "Square",
-            "Saw",
-            "Tri"
-          ]
-        },
-        {
-          "paramID": "lfo1_speed",
-          "name": "LFO1 speed",
-          "groupName": "Mod LFO1",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 10.0
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "lfo2_wave",
-          "name": "LFO2 wave",
-          "groupName": "Mod LFO2",
-          "parameterType": "intParam",
-          "minValue": 0,
-          "maxValue": 3,
-          "enumNames": [
-            "Sine",
-            "Square",
-            "Saw",
-            "Tri"
-          ]
-        },
-        {
-          "paramID": "lfo2_speed",
-          "name": "LFO2 speed",
-          "groupName": "Mod LFO2",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 10.0
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "env1_a",
-          "name": "Attack",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.004,
-          "maxValue": 4.0
-        },
-        {
-          "paramID": "env1_d",
-          "name": "Decay",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 7.0
-        },
-        {
-          "paramID": "env1_s",
-          "name": "Sustain",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "env1_r",
-          "name": "Release",
-          "groupName": "Mod Env",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 7.0
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "a",
-          "name": "A",
-          "parameterType": "floatParam",
-          "minValue": 0.004,
-          "maxValue": 4.0
-        },
-        {
-          "paramID": "d",
-          "name": "D",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 7.0
-        },
-        {
-          "paramID": "s",
-          "name": "S",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "r",
-          "name": "R",
-          "parameterType": "floatParam",
-          "minValue": 0.00,
-          "maxValue": 7.0
-        },
-        {
-          "cssClassName": "paramSpacer",
-          "paramID": "q",
-          "name": "Filt Q",
-          "parameterType": "floatParam",
-          "minValue": 0.001,
-          "maxValue": 20.0
-        },
-        {
-          "paramID": "cutoff",
-          "name": "Tone",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 12000.0
         }
       ],
       "presets": []
