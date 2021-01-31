@@ -11,10 +11,12 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
-let FrequencyFromMidiNote = function (midiNote) {
+let MidiNoteToFrequency = function (midiNote) {
     return 440 * Math.pow(2, (midiNote - 69) / 12);
 };
-
+let FrequencyToMidiNote = (hz) => {
+    return 12.0 * Math.log2(Math.max(8, hz) / 440) + 69;
+};
 
 // linear mapping
 let remap = function (value, low1, high1, low2, high2) {
@@ -486,7 +488,7 @@ class DigifuInstrumentSpec {
         // "[1🡄2][3🡄4]",
         // "[1🡄2][3][4]",
         // "[1][2][3][4]",
-        
+
         let oscGroups = [
             [[0, 1, 2, 3]], // 0
             [[0, 1, 2], [3]], // 1

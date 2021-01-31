@@ -21,6 +21,7 @@ class FMPolySynth {
         this.isPoly = true; // poly or monophonic mode.
 
         this.physicallyHeldNotes = []; // array of [midiNote, velocity, voiceIndex] in order of note on.
+        this.nodes = {};
     }
 
     connect() {
@@ -32,61 +33,166 @@ class FMPolySynth {
         //           |
         //           `->[lfo2Offset] ---> [lfo2_01] -->
 
+        /*
+        
+     [detuneLFO1amt]                 
+    +[detuneLFO2amt] --> [detuneSemis] ----------------------> (osc group x)
+    +[detuneBaseSemis]->               --->[detuneVar1]------> (osc group x)
+                                       --->[detuneVar2]------> (osc group x)
+                                       --->[detuneVar3]------> (osc group x)
+        
+                                       [pitchbendSemis]------> (voices)
+        
+        */
+
         // lfo1
-        this.lfo1 = this.audioCtx.createOscillator();
+        this.nodes.lfo1 = this.audioCtx.createOscillator();
         //this._setLFOWaveforms();
-        this.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
-        this.lfo1.start();
+        this.nodes.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
+        this.nodes.lfo1.start();
 
         // lfo1Offset
-        this.lfo1Offset = this.audioCtx.createConstantSource();
-        this.lfo1Offset.offset.value = 1.0;
+        this.nodes.lfo1Offset = this.audioCtx.createConstantSource();
+        this.nodes.lfo1Offset.start();
+        this.nodes.lfo1Offset.offset.value = 1.0;
 
         // lfo1_01
-        this.lfo1_01 = this.audioCtx.createGain();
-        this.lfo1_01.gain.value = .5;
-        this.lfo1Offset.connect(this.lfo1_01);
-        this.lfo1.connect(this.lfo1_01);
+        this.nodes.lfo1_01 = this.audioCtx.createGain();
+        this.nodes.lfo1_01.gain.value = .5;
+        this.nodes.lfo1Offset.connect(this.nodes.lfo1_01);
+        this.nodes.lfo1.connect(this.nodes.lfo1_01);
 
 
         // lfo2
-        this.lfo2 = this.audioCtx.createOscillator();
+        this.nodes.lfo2 = this.audioCtx.createOscillator();
         this._setLFOWaveforms();
-        this.lfo2.frequency.value = this.instrumentSpec.GetParamByID("lfo2_speed").currentValue;
-        this.lfo2.start();
+        this.nodes.lfo2.frequency.value = this.instrumentSpec.GetParamByID("lfo2_speed").currentValue;
+        this.nodes.lfo2.start();
 
         // lfo2Offset
-        this.lfo2Offset = this.audioCtx.createConstantSource();
-        this.lfo2Offset.offset.value = 1.0;
+        this.nodes.lfo2Offset = this.audioCtx.createConstantSource();
+        this.nodes.lfo2Offset.start();
+        this.nodes.lfo2Offset.offset.value = 1.0;
 
         // lfo2_01
-        this.lfo2_01 = this.audioCtx.createGain();
-        this.lfo2_01.gain.value = .5;
-        this.lfo2Offset.connect(this.lfo2_01);
-        this.lfo2.connect(this.lfo2_01);
+        this.nodes.lfo2_01 = this.audioCtx.createGain();
+        this.nodes.lfo2_01.gain.value = .5;
+        this.nodes.lfo2Offset.connect(this.nodes.lfo2_01);
+        this.nodes.lfo2.connect(this.nodes.lfo2_01);
+
+
+        // SET UP DETUNE GRAPH
+
+        // detuneLFO1amt
+        this.nodes.detuneLFO1amt = this.audioCtx.createGain();
+        this.nodes.detuneLFO1amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO1").currentValue;
+        this.nodes.lfo1.connect(this.nodes.detuneLFO1amt);
+
+        // detuneLFO2amt
+        this.nodes.detuneLFO2amt = this.audioCtx.createGain();
+        this.nodes.detuneLFO2amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO2").currentValue;
+        this.nodes.lfo2.connect(this.nodes.detuneLFO2amt);
+
+        // detuneBaseSemis
+        this.nodes.detuneBaseSemis = this.audioCtx.createConstantSource();
+        this.nodes.detuneBaseSemis.start();
+        this.nodes.detuneBaseSemis.offset.value = this.instrumentSpec.GetParamByID("detuneBase").currentValue;
+
+        // detuneSemis
+        this.nodes.detuneSemis = this.audioCtx.createGain();
+        this.nodes.detuneSemis.gain.value = 1.0;
+        this.nodes.detuneLFO1amt.connect(this.nodes.detuneSemis);
+        this.nodes.detuneLFO2amt.connect(this.nodes.detuneSemis);
+        this.nodes.detuneBaseSemis.connect(this.nodes.detuneSemis);
+
+        // detuneVar1
+        this.nodes.detuneVar1 = this.audioCtx.createGain();
+        this.nodes.detuneVar1.gain.value = 1.0;// set later in setting up algo.
+        this.nodes.detuneSemis.connect(this.nodes.detuneVar1);
+
+        // detuneVar2
+        this.nodes.detuneVar2 = this.audioCtx.createGain();
+        this.nodes.detuneVar2.gain.value = 1.0;// set later in setting up algo.
+        this.nodes.detuneSemis.connect(this.nodes.detuneVar2);
+
+        // detuneVar3
+        this.nodes.detuneVar3 = this.audioCtx.createGain();
+        this.nodes.detuneVar3.gain.value = 1.0;// set later in setting up algo.
+        this.nodes.detuneSemis.connect(this.nodes.detuneVar3);
+
+        this.nodes.pitchbendSemis = this.audioCtx.createConstantSource();
+        this.nodes.pitchbendSemis.start();
+        this.nodes.pitchbendSemis.offset.value = this.instrumentSpec.GetParamByID("pb").currentValue;
 
         // masterDryGain
-        this.masterDryGain = this.audioCtx.createGain();
+        this.nodes.masterDryGain = this.audioCtx.createGain();
 
         // masterWetGain
-        this.masterWetGain = this.audioCtx.createGain();
+        this.nodes.masterWetGain = this.audioCtx.createGain();
 
         let gainLevels = this.getGainLevels();
-        this.masterDryGain.gain.value = gainLevels[0];
-        this.masterWetGain.gain.value = gainLevels[1];
+        this.nodes.masterDryGain.gain.value = gainLevels[0];
+        this.nodes.masterWetGain.gain.value = gainLevels[1];
+
+        // set up algo
+        let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
+
+        const algoSpec = this.instrumentSpec.GetFMAlgoSpec();
+        let detuners = [null, null, null, null]; // maps oscillator to detune variation node.
+
+        let applyDetune = (oscGroup, detuneSrc) => {
+            algoSpec.oscGroups[oscGroup].forEach(oscIndex => {
+                detuners[oscIndex] = detuneSrc;
+            });
+        };
+
+        // detuneSemis is always the detune value
+        // use detuneVar1, 2, 3 for variations of this, including "0" for center if needed.
+        switch (algoSpec.oscGroups.length) {
+            case 0:
+                break; // nothing to do.
+            case 1:
+                this.nodes.detuneVar1.gain.value = 0; // no detuning, single osc group. give all oscillators the same "0" detune value.
+                applyDetune(0, this.nodes.detuneVar1);
+                break;
+            case 2:
+                this.nodes.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
+                applyDetune(0, this.nodes.detuneSemis);
+                applyDetune(1, this.nodes.detuneVar1);
+                break;
+            case 3:
+                this.nodes.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
+                this.nodes.detuneVar2.gain.value = 0;
+                applyDetune(0, this.nodes.detuneVar2);
+                applyDetune(1, this.nodes.detuneVar1);
+                applyDetune(2, this.nodes.detuneSemis);
+                break;
+            case 4:
+                this.nodes.detuneVar1.gain.value = 0; // 4 oscillator groups = +detune, 0, +detune*.5, -detune
+                this.nodes.detuneVar2.gain.value = 0.5;
+                this.nodes.detuneVar3.gain.value = -1;
+                applyDetune(0, this.nodes.detuneVar1);
+                applyDetune(1, this.nodes.detuneVar2);
+                applyDetune(2, this.nodes.detuneSemis);
+                applyDetune(3, this.nodes.detuneVar3);
+                break;
+            default:
+                console.warn(`invalid osc tuning group amt`);
+                break;
+        }
 
         this.isPoly = (this.instrumentSpec.GetParamByID("voicing").currentValue == 1);
         if (this.isPoly) {
             this.voices.forEach(v => {
-                v.connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01, this.masterDryGain, this.masterWetGain);
+                v.connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners);
             });
         } else {
             this.isPoly = false;
-            this.voices[0].connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01, this.masterDryGain, this.masterWetGain);
+            this.voices[0].connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners);
         }
 
-        this.masterDryGain.connect(this.dryDestination);
-        this.masterWetGain.connect(this.wetDestination);
+        this.nodes.masterDryGain.connect(this.dryDestination);
+        this.nodes.masterWetGain.connect(this.wetDestination);
 
         this.isConnected = true;
     }
@@ -95,34 +201,14 @@ class FMPolySynth {
         this.AllNotesOff();
         if (!this.isConnected) return;
 
-        this.lfo1.stop();
-        this.lfo1.disconnect();
-        this.lfo1 = null;
-
-        this.lfo1Offset.disconnect();
-        this.lfo1Offset = null;
-
-        this.lfo1_01.disconnect();
-        this.lfo1_01 = null;
-
-
-        this.lfo2.stop();
-        this.lfo2.disconnect();
-        this.lfo2 = null;
-
-        this.lfo2Offset.disconnect();
-        this.lfo2Offset = null;
-
-        this.lfo2_01.disconnect();
-        this.lfo2_01 = null;
+        Object.keys(this.nodes).forEach(k => {
+            let n = this.nodes[k];
+            if (n.stop) n.stop();
+            n.disconnect();
+        });
+        this.nodes = {};
 
         this.voices.forEach(v => { v.disconnect(); });
-
-        this.masterDryGain.disconnect();
-        this.masterDryGain = null;
-
-        this.masterWetGain.disconnect();
-        this.masterWetGain = null;
 
         this.isConnected = false;
     }
@@ -222,8 +308,8 @@ class FMPolySynth {
 
     _setLFOWaveforms() {
         const shapes = ["sine", "square", "sawtooth", "triangle", "sine"];
-        this.lfo1.type = shapes[this.instrumentSpec.GetParamByID("lfo1_wave").currentValue];
-        this.lfo2.type = shapes[this.instrumentSpec.GetParamByID("lfo2_wave").currentValue];
+        this.nodes.lfo1.type = shapes[this.instrumentSpec.GetParamByID("lfo1_wave").currentValue];
+        this.nodes.lfo2.type = shapes[this.instrumentSpec.GetParamByID("lfo2_wave").currentValue];
     }
 
     // returns [drygain, wetgain]
@@ -239,42 +325,50 @@ class FMPolySynth {
         let keys = Object.keys(patchObj);
         keys.forEach(paramID => {
             switch (paramID) {
-                case "voicing":
-                    {
-                        let willBePoly = (patchObj[paramID] == 1);
-                        if (!!willBePoly != !!this.isPoly) {
-                            // transition from/to poly or monophonic.
-                            this.isPoly = willBePoly;
-                            if (willBePoly) {
-                                // connect voices [1->]
-                                for (let i = 1; i < this.voices.length; ++i) {
-                                    this.voices[i].connect(this.lfo1, this.lfo1_01, this.lfo2, this.lfo2_01);
-                                }
-                            } else {
-                                // disconnect voices [1->]
-                                for (let i = 1; i < this.voices.length; ++i) {
-                                    this.voices[i].disconnect();
-                                }
-                            }
-                        }
-                        break;
-                    }
+                case "pb":
+                    this.nodes.pitchbendSemis.offset.value = patchObj[paramID];
+                    break;
                 case "masterGain":
                 case "verbMix":
                     let levels = this.getGainLevels();
-                    this.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
-                    this.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
+                    this.nodes.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
+                    this.nodes.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
                     break;
                 case "lfo1_wave":
                 case "lfo2_wave":
                     this._setLFOWaveforms();
                     break;
                 case "lfo1_speed": {
-                    this.lfo1.frequency.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
+                    this.nodes.lfo1.frequency.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
                     break;
                 }
                 case "lfo2_speed": {
-                    this.lfo2.frequency.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
+                    this.nodes.lfo2.frequency.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
+                    break;
+                }
+                case "detuneBase":
+                    this.nodes.detuneBaseSemis.offset.value = this.instrumentSpec.GetParamByID("detuneBase").currentValue;
+                    break;
+                case "detuneLFO1":
+                    this.nodes.detuneLFO1amt.gain.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
+                    break;
+                case "detuneLFO2":
+                    this.nodes.detuneLFO2amt.gain.linearRampToValueAtTime(patchObj[paramID], this.audioCtx.currentTime + this.minGlideS);
+                    break;
+                // case "detuneENV1":
+                //     //this.nodes.detuneENVamt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                //     break;
+
+                // these must be processed here because they do a full disconnect / reconnect.
+                case "enable_osc0":
+                //console.log(`enable_osc0 ${this.instrumentSpec.GetParamByID("enable_osc0").currentValue}`);
+                case "enable_osc1":
+                case "enable_osc2":
+                case "enable_osc3":
+                case "voicing":
+                case "algo": {
+                    this.disconnect();
+                    this.connect();
                     break;
                 }
                 default:
@@ -286,6 +380,4 @@ class FMPolySynth {
         });
     };
 };
-
-
 

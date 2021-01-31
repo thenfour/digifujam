@@ -247,9 +247,9 @@ class PolySynthVoice {
 
     _getOscFreqs() {
         return [
-            FrequencyFromMidiNote(this.pitchBend + this.midiNote + this.detune),
-            FrequencyFromMidiNote(this.pitchBend + this.midiNote),
-            FrequencyFromMidiNote(this.pitchBend + this.midiNote - this.detune),
+            MidiNoteToFrequency(this.pitchBend + this.midiNote + this.detune),
+            MidiNoteToFrequency(this.pitchBend + this.midiNote),
+            MidiNoteToFrequency(this.pitchBend + this.midiNote - this.detune),
         ];
     }
 

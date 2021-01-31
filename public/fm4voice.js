@@ -24,14 +24,12 @@ class MiniFMSynthVoice {
 
         this.isFilterConnected = false;
         this.isConnected = false;
+
+        this.nodes = {};
     }
 
-    connect(lfo1, lfo1_01, lfo2, lfo2_01, dryDestination, wetDestination) {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01, dryDestination, wetDestination, algoSpec, pitchBendSemisNode, oscDetuneSemisMap) {
         if (this.isConnected) return;
-        this.lfo1 = lfo1;
-        this.lfo1_01 = lfo1_01;
-        this.lfo2 = lfo2;
-        this.lfo2_01 = lfo2_01;
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
 
@@ -44,24 +42,10 @@ class MiniFMSynthVoice {
                                                                                                      +[filterFreqLFO2Amt]   [filterQLFO2Amt]
                                                                                                      +[filterFreqENVAmt]   [filterQENVAmt]
 
-
-            so detune is slightly tricky, because it should be controlled at the voice level.
-            it depends on the FM algorithm as well. if A modulates B, then detune them both the same.
-            and it depends how many oscillator groups there are.
-            1 oscillator group = no detuning possible.
-            2 oscillator groups = +detune, -detune
-            3 oscillator groups = +detune, 0, -detune
-            4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
-
-     [detuneLFO1amt]                 
-    +[detuneLFO2amt] --> [detuneSemis] -->[detuneSemisToFreq] -----------------------> [detuneFreq]----------------------> (osc group x)
-    +[detuneENVamt]         +[midiNoteNode]-^                                     |                -->[detuneVar1]------> (osc group x)
-    +[detuneBase]                          -->[midiNoteFreq]-->[midiNoteFreqInv]--                 -->[detuneVar2]------> (osc group x)
-                                                                                                   -->[detuneVar3]------> (osc group x)
         */
 
         // env1
-        this.env1 = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
+        this.nodes.env1 = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
             attack: this.instrumentSpec.GetParamByID("env1_a").currentValue,
             peak: 1.0,
             decay: this.instrumentSpec.GetParamByID("env1_d").currentValue,
@@ -70,196 +54,81 @@ class MiniFMSynthVoice {
             release: this.instrumentSpec.GetParamByID("env1_r").currentValue,
             releaseCurve: 3,
         });
-        this.env1.start();
+        this.nodes.env1.start();
 
         // oscSum
-        this.oscSum = this.audioCtx.createGain();
-        this.oscSum.gain.value = 1;
+        this.nodes.oscSum = this.audioCtx.createGain();
+        this.nodes.oscSum.gain.value = 1;
 
         // waveshapeGain
-        this.waveshapeGain = this.audioCtx.createGain();
+        this.nodes.waveshapeGain = this.audioCtx.createGain();
         const waveshapeGainValue = this.instrumentSpec.GetParamByID("waveShape_gain").currentValue;
-        this.waveshapeGain.gain.value = waveshapeGainValue;
-        this.oscSum.connect(this.waveshapeGain);
+        this.nodes.waveshapeGain.gain.value = waveshapeGainValue;
+        this.nodes.oscSum.connect(this.nodes.waveshapeGain);
 
         // waveshape
-        this.waveshape = this.audioCtx.createWaveShaper();
-        this.waveshapeGain.connect(this.waveshape);
+        this.nodes.waveshape = this.audioCtx.createWaveShaper();
+        this.nodes.waveshapeGain.connect(this.nodes.waveshape);
         this._setWaveshapeCurve();
 
         // waveshapePostGain
-        this.waveshapePostGain = this.audioCtx.createGain();
-        this.waveshapePostGain.gain.value = 1.0 / Math.max(0.01, waveshapeGainValue);
-        this.waveshape.connect(this.waveshapePostGain);
+        this.nodes.waveshapePostGain = this.audioCtx.createGain();
+        this.nodes.waveshapePostGain.gain.value = 1.0 / Math.max(0.01, waveshapeGainValue);
+        this.nodes.waveshape.connect(this.nodes.waveshapePostGain);
 
         // filterFreqLFO1Amt
-        this.filterFreqLFO1Amt = this.audioCtx.createGain();
-        this.filterFreqLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
-        this.lfo1.connect(this.filterFreqLFO1Amt);
+        this.nodes.filterFreqLFO1Amt = this.audioCtx.createGain();
+        this.nodes.filterFreqLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
+        lfo1.connect(this.nodes.filterFreqLFO1Amt);
 
         // filterFreqLFO2Amt
-        this.filterFreqLFO2Amt = this.audioCtx.createGain();
-        this.filterFreqLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO2").currentValue;
-        this.lfo2.connect(this.filterFreqLFO2Amt);
+        this.nodes.filterFreqLFO2Amt = this.audioCtx.createGain();
+        this.nodes.filterFreqLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO2").currentValue;
+        lfo2.connect(this.nodes.filterFreqLFO2Amt);
 
         // filterFreqENVAmt
-        this.filterFreqENVAmt = this.audioCtx.createGain();
-        this.filterFreqENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
-        this.env1.connect(this.filterFreqENVAmt);
+        this.nodes.filterFreqENVAmt = this.audioCtx.createGain();
+        this.nodes.filterFreqENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
+        this.nodes.env1.connect(this.nodes.filterFreqENVAmt);
 
         // filterQLFO1Amt
-        this.filterQLFO1Amt = this.audioCtx.createGain();
-        this.filterQLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
-        this.lfo1.connect(this.filterQLFO1Amt);
+        this.nodes.filterQLFO1Amt = this.audioCtx.createGain();
+        this.nodes.filterQLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
+        lfo1.connect(this.nodes.filterQLFO1Amt);
 
         // filterQLFO2Amt
-        this.filterQLFO2Amt = this.audioCtx.createGain();
-        this.filterQLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
-        this.lfo2.connect(this.filterQLFO2Amt);
+        this.nodes.filterQLFO2Amt = this.audioCtx.createGain();
+        this.nodes.filterQLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
+        lfo2.connect(this.nodes.filterQLFO2Amt);
 
         // filterQENVAmt
-        this.filterQENVAmt = this.audioCtx.createGain();
-        this.filterQENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
-        this.env1.connect(this.filterQENVAmt);
+        this.nodes.filterQENVAmt = this.audioCtx.createGain();
+        this.nodes.filterQENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
+        this.nodes.env1.connect(this.nodes.filterQENVAmt);
 
         // filter
-        this.filter = this.audioCtx.createBiquadFilter();
+        this.nodes.filter = this.audioCtx.createBiquadFilter();
         // type set later.
-        this.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
-        this.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
+        this.nodes.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
+        this.nodes.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
 
-        this.filterFreqLFO1Amt.connect(this.filter.frequency);
-        this.filterFreqLFO2Amt.connect(this.filter.frequency);
-        this.filterFreqENVAmt.connect(this.filter.frequency);
+        this.nodes.filterFreqLFO1Amt.connect(this.nodes.filter.frequency);
+        this.nodes.filterFreqLFO2Amt.connect(this.nodes.filter.frequency);
+        this.nodes.filterFreqENVAmt.connect(this.nodes.filter.frequency);
 
-        this.filterQLFO1Amt.connect(this.filter.Q);
-        this.filterQLFO2Amt.connect(this.filter.Q);
-        this.filterQENVAmt.connect(this.filter.Q);
+        this.nodes.filterQLFO1Amt.connect(this.nodes.filter.Q);
+        this.nodes.filterQLFO2Amt.connect(this.nodes.filter.Q);
+        this.nodes.filterQENVAmt.connect(this.nodes.filter.Q);
 
-        this.waveshapePostGain.connect(this.filter);
+        this.nodes.waveshapePostGain.connect(this.nodes.filter);
 
         this.isFilterConnected = true;
 
-        // SET UP DETUNE GRAPH
-
-        // detuneLFO1amt
-        this.detuneLFO1amt = this.audioCtx.createGain();
-        this.detuneLFO1amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO1").currentValue;
-        this.lfo1.connect(this.detuneLFO1amt);
-
-        // detuneLFO2amt
-        this.detuneLFO2amt = this.audioCtx.createGain();
-        this.detuneLFO2amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO2").currentValue;
-        this.lfo2.connect(this.detuneLFO2amt);
-
-        // detuneENVamt
-        this.detuneENVamt = this.audioCtx.createGain();
-        this.detuneENVamt.gain.value = this.instrumentSpec.GetParamByID("detuneENV1").currentValue;
-        this.env1.connect(this.detuneENVamt);
-
-        // detuneBase
-        this.detuneBase = this.audioCtx.createConstantSource();
-        this.detuneBase.start();
-        this.detuneBase.offset.value = this.instrumentSpec.GetParamByID("detuneBase").currentValue;
-
-        // detuneSemis
-        this.detuneSemis = this.audioCtx.createGain();
-        this.detuneSemis.gain.value = 1.0;// constant; this just sums up detune semis values.
-        this.detuneBase.connect(this.detuneSemis);
-        this.detuneLFO1amt.connect(this.detuneSemis);
-        this.detuneLFO2amt.connect(this.detuneSemis);
-        this.detuneENVamt.connect(this.detuneSemis);
-
-        // midiNoteNode
-        this.midiNoteNode = this.audioCtx.createConstantSource();
-        this.midiNoteNode.start();
-        this.midiNoteNode.offset.value = 0;
-
-        // detuneSemisToFreq
-        this.detuneSemisToFreq = this.audioCtx.createMidiNoteToFrequencyNode();
-        this.midiNoteNode.connect(this.detuneSemisToFreq);
-        this.detuneSemis.connect(this.detuneSemisToFreq);
-
-        // midiNoteFreq
-        this.midiNoteFreq = this.audioCtx.createMidiNoteToFrequencyNode();
-        this.midiNoteNode.connect(this.midiNoteFreq);
-
-        // midiNoteFreqInv
-        this.midiNoteFreqInv = this.audioCtx.createGain();
-        this.midiNoteFreqInv.gain.value = -1.0;
-        this.midiNoteFreq.connect(this.midiNoteFreqInv);
-
-        // detuneFreq
-        this.detuneFreq = this.audioCtx.createGain();
-        this.detuneFreq.gain.value = 1.0; // constant
-        this.midiNoteFreqInv.connect(this.detuneFreq);
-        this.detuneSemisToFreq.connect(this.detuneFreq);
-
-        // detuneVar1
-        this.detuneVar1 = this.audioCtx.createGain();
-        this.detuneVar1.gain.value = 1.0;// set later in setting up algo.
-        this.detuneFreq.connect(this.detuneVar1);
-
-        // detuneVar2
-        this.detuneVar2 = this.audioCtx.createGain();
-        this.detuneVar2.gain.value = 1.0;// set later in setting up algo.
-        this.detuneFreq.connect(this.detuneVar2);
-
-        // detuneVar3
-        this.detuneVar3 = this.audioCtx.createGain();
-        this.detuneVar3.gain.value = 1.0;// set later in setting up algo.
-        this.detuneFreq.connect(this.detuneVar3);
-
-        // set up algo
-        let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
-
-        const algoSpec = this.instrumentSpec.GetFMAlgoSpec();
-
-        // console.log(`=======applying detune stuff`);
-        // console.log(algoSpec.oscGroups);
-
-        let applyDetune = (oscGroup, detuneSrc) => {
-            algoSpec.oscGroups[oscGroup].forEach(oscIndex => {
-                if (algoSpec.oscEnabled[oscIndex]) {
-                    this.oscillators[oscIndex].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.env1, detuneSrc);
-                }
-            });
-        };
-
-        // detuneFreq is always the "+1" detune value
-        // use detuneVar1, 2, 3 for variations of this, including "0" for center if needed.
-        switch (algoSpec.oscGroups.length) {
-            case 0:
-                break; // nothing to do.
-            case 1:
-                this.detuneVar1.gain.value = 0; // no detuning, single osc group. give all oscillators the same "0" detune value.
-                applyDetune(0, this.detuneVar1);
-                break;
-            case 2:
-                this.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                applyDetune(0, this.detuneFreq);
-                applyDetune(1, this.detuneVar1);
-                break;
-            case 3:
-                this.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
-                this.detuneVar2.gain.value = 0;
-                applyDetune(0, this.detuneVar2);
-                applyDetune(1, this.detuneVar1);
-                applyDetune(2, this.detuneFreq);
-                break;
-            case 4:
-                this.detuneVar1.gain.value = 0.5; // 4 oscillator groups = +detune, +detune*.5, -detune*.5, -detune
-                this.detuneVar2.gain.value = -0.5;
-                this.detuneVar3.gain.value = -1;
-                applyDetune(0, this.detuneVar1);
-                applyDetune(1, this.detuneVar2);
-                applyDetune(2, this.detuneFreq);
-                applyDetune(3, this.detuneVar3);
-                break;
-            default:
-                console.warn(`invalid osc tuning group amt`);
-                break;
-        }
+        // connect oscillators
+        algoSpec.oscEnabled.forEach((e, i) => {
+            if (!e) return;
+            this.oscillators[i].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i]);
+        });
 
         let mod = (src, dest) => {
             if (!src.isConnected) return;
@@ -273,12 +142,14 @@ class MiniFMSynthVoice {
             src.outputNode.connect(m0);
             m0.connect(dest.inputNode.frequency);
         };
+
         let out = (osc) => {
             if (!osc.isConnected) return;
-            osc.outputNode.connect(this.oscSum);
+            osc.outputNode.connect(this.nodes.oscSum);
         };
 
         // and make the FM matrix connections
+        let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
         switch (algo) {
             case 0: // "[1🡄2🡄3🡄4]",
                 mod(this.oscillators[3], this.oscillators[2]);
@@ -329,8 +200,8 @@ class MiniFMSynthVoice {
         out(this.oscillators[0]);
 
         // connect to outside.
-        this.filter.connect(dryDestination);
-        this.filter.connect(wetDestination);
+        this.nodes.filter.connect(dryDestination);
+        this.nodes.filter.connect(wetDestination);
 
         this._SetFiltType();
 
@@ -340,79 +211,13 @@ class MiniFMSynthVoice {
     disconnect() {
         this.AllNotesOff();
         if (!this.isConnected) return;
-        this.lfo1 = null;
-        this.lfo1_01 = null;
-        this.lfo2 = null;
-        this.lfo2_01 = null;
 
-        this.oscSum.disconnect();
-        this.oscSum = null;
-
-        this.filterFreqLFO1Amt.disconnect();
-        this.filterFreqLFO1Amt = null;
-
-        this.filterFreqLFO2Amt.disconnect();
-        this.filterFreqLFO2Amt = null;
-
-        this.filterFreqENVAmt.disconnect();
-        this.filterFreqENVAmt = null;
-
-        this.filterQLFO1Amt.disconnect();
-        this.filterQLFO1Amt = null;
-
-        this.filterQLFO2Amt.disconnect();
-        this.filterQLFO2Amt = null;
-
-        this.filterQENVAmt.disconnect();
-        this.filterQENVAmt = null;
-
-        this.filter.disconnect();
-        this.filter = null;
-
-        this.env1.stop();
-        this.env1.disconnect();
-        this.env1 = null;
-
-
-        this.detuneBase.stop();
-        this.midiNoteNode.stop();
-
-        this.detuneLFO1amt.disconnect();
-        this.detuneLFO1amt = null;
-        this.detuneLFO2amt.disconnect();
-        this.detuneLFO2amt = null;
-        this.detuneENVamt.disconnect();
-        this.detuneENVamt = null;
-        this.detuneBase.disconnect();
-        this.detuneBase = null;
-        this.detuneFreq.disconnect();
-        this.detuneFreq = null;
-        this.detuneVar1.disconnect();
-        this.detuneVar1 = null;
-        this.detuneVar2.disconnect();
-        this.detuneVar2 = null;
-        this.detuneVar3.disconnect();
-        this.detuneVar3 = null;
-
-
-        this.detuneSemis.disconnect();
-        this.detuneSemis = null;
-        this.detuneSemisToFreq.disconnect();
-        this.detuneSemisToFreq = null;
-        this.midiNoteNode.disconnect();
-        this.midiNoteNode = null;
-        this.midiNoteFreq.disconnect();
-        this.midiNoteFreq = null;
-        this.midiNoteFreqInv.disconnect();
-        this.midiNoteFreqInv = null;
-
-        this.waveshapePostGain.disconnect();
-        this.waveshapePostGain = null;
-
-        this.waveshape.disconnect();
-        this.waveshape = null;
-        this.waveshapeGain.disconnect();
-        this.waveshapeGain = null;
+        Object.keys(this.nodes).forEach(k => {
+            let n = this.nodes[k];
+            if (n.stop) n.stop();
+            n.disconnect();
+        });
+        this.nodes = {};
 
         this.oscillators.forEach(o => o.disconnect());
 
@@ -429,22 +234,22 @@ class MiniFMSynthVoice {
             if (!this.isFilterConnected) return;
             // waveshapePostGain] --> drydest
             //                      > wetdest
-            this.filter.disconnect();
+            this.nodes.filter.disconnect();
 
-            this.waveshapePostGain.disconnect();
-            this.waveshapePostGain.connect(this.dryDestination);
-            this.waveshapePostGain.connect(this.wetDestination);
+            this.nodes.waveshapePostGain.disconnect();
+            this.nodes.waveshapePostGain.connect(this.dryDestination);
+            this.nodes.waveshapePostGain.connect(this.wetDestination);
 
             this.isFilterConnected = false;
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return;
-            this.waveshapePostGain.disconnect();
-            this.waveshapePostGain.connect(this.filter);
+            this.nodes.waveshapePostGain.disconnect();
+            this.nodes.waveshapePostGain.connect(this.filter);
 
-            this.filter.disconnect();
-            this.filter.connect(this.dryDestination);
-            this.filter.connect(this.wetDestination);
+            this.nodes.filter.disconnect();
+            this.nodes.filter.connect(this.dryDestination);
+            this.nodes.filter.connect(this.wetDestination);
 
             this.isFilterConnected = true;
         };
@@ -454,18 +259,18 @@ class MiniFMSynthVoice {
                 return;
             case 1:
                 enableFilter();
-                this.filter.type = "lowpass";
+                this.nodes.filter.type = "lowpass";
                 return;
             case 2:
                 enableFilter();
-                this.filter.type = "highpass";
+                this.nodes.filter.type = "highpass";
                 return;
             case 3:
                 enableFilter();
-                this.filter.type = "bandpass";
+                this.nodes.filter.type = "bandpass";
                 return;
         }
-        console.assert(false, `unknown filter type ${this.instrumentSpec.GetParamByID("filterType").currentValue}`);
+        console.warn(`unknown filter type ${this.instrumentSpec.GetParamByID("filterType").currentValue}`);
     }
 
     get IsPlaying() {
@@ -477,7 +282,7 @@ class MiniFMSynthVoice {
         // https://stackoverflow.com/a/52472603/402169
 
         if (!this.instrumentSpec.GetParamByID("waveShape_enabled").currentValue) {
-            this.waveshape.curve = null;
+            this.nodes.waveshape.curve = null;
             return;
         }
 
@@ -504,7 +309,7 @@ class MiniFMSynthVoice {
             return curve;
         };
 
-        this.waveshape.curve = makeDistortionCurve(this.instrumentSpec.GetParamByID("waveShape_curve").currentValue);
+        this.nodes.waveshape.curve = makeDistortionCurve(this.instrumentSpec.GetParamByID("waveShape_curve").currentValue);
     }
 
     _updateFilterBaseFreq() {
@@ -515,7 +320,7 @@ class MiniFMSynthVoice {
         let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         p = p * ks * vs;
-        this.filter.frequency.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
+        this.nodes.filter.frequency.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
     }
 
     SetParamValue(paramID, newVal) {
@@ -529,9 +334,6 @@ class MiniFMSynthVoice {
             return;
         }
         switch (paramID) {
-            case "pb":
-                this.PitchBend(newVal);
-                break;
             case "filterType":
                 this._SetFiltType();
                 break;
@@ -541,106 +343,66 @@ class MiniFMSynthVoice {
                 this._updateFilterBaseFreq();
                 break;
             case "filterQ":
-                this.filter.Q.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filter.Q.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "filterFreqLFO1":
-                this.filterFreqLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterFreqLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "filterFreqLFO2":
-                this.filterFreqLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterFreqLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "filterFreqENV":
-                this.filterFreqENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterFreqENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "filterQLFO1":
-                this.filterQLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterQLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "filterQLFO2":
-                this.filterQLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterQLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
             case "filterQENV":
-                this.filterQENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterQENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
-            case "enable_osc0":
-            case "enable_osc1":
-            case "enable_osc2":
-            case "enable_osc3":
-            case "algo": {
-                let lfo1 = this.lfo1;
-                let lfo1_01 = this.lfo1_01;
-                let lfo2 = this.lfo2;
-                let lfo2_01 = this.lfo2_01;
-
-                this.disconnect();
-                this.connect(lfo1, lfo1_01, lfo2, lfo2_01);
-                break;
-            }
             case "env1_s":
-                this.env1.update({ sustain: newVal });
+                this.nodes.env1.update({ sustain: newVal });
                 break;
             case "env1_a":
-                this.env1.update({ attack: newVal });
+                this.nodes.env1.update({ attack: newVal });
                 break;
             case "env1_d":
-                this.env1.update({ decay: newVal });
+                this.nodes.env1.update({ decay: newVal });
                 break;
             case "env1_r":
-                this.env1.update({ release: newVal });
-                break;
-            case "detuneBase":
-                //console.log(`setting detune base ${newVal}`);
-                this.detuneBase.offset.value = newVal;
-                break;
-            case "detuneLFO1":
-                this.detuneLFO1amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
-                break;
-            case "detuneLFO2":
-                this.detuneLFO2amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
-                break;
-            case "detuneENV1":
-                this.detuneENVamt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.env1.update({ release: newVal });
                 break;
             case "waveShape_enabled":
             case "waveShape_curve":
                 this._setWaveshapeCurve();
                 break;
             case "waveShape_gain":
-                this.waveshapeGain.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
-                this.waveshapePostGain.gain.linearRampToValueAtTime(1.0 / newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.waveshapeGain.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.waveshapePostGain.gain.linearRampToValueAtTime(1.0 / newVal, this.audioCtx.currentTime + this.minGlideS);
                 break;
         }
     }
 
-    PitchBend(semis) {
-        this._updateBaseFreq();
-        this.oscillators.forEach(o => {
-            if (!o.isConnected) return;
-            o.updateOscFreq();
-        });
-    }
-
-    _updateBaseFreq() {
-        let pbsemis = this.instrumentSpec.GetParamByID("pb").currentValue;
-        //let freq = FrequencyFromMidiNote(this.midiNote + pbsemis);
-        this.midiNoteNode.offset.value = this.midiNote + pbsemis;
-        //this.detuneFreq.gain.linearRampToValueAtTime(freq, this.audioCtx.currentTime + this.minGlideS);
-    }
 
     physicalAndMusicalNoteOn(midiNote, velocity, isLegato) {
         this.timestamp = new Date();
         this.midiNote = midiNote;
         this.velocity = velocity;
 
-        this._updateBaseFreq();
+        let baseFreq = MidiNoteToFrequency(midiNote);
+
         this._updateFilterBaseFreq();
 
         let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
         if (isPoly || !isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
-            this.env1.trigger();
+            this.nodes.env1.trigger();
         }
         this.oscillators.forEach(o => {
             if (!o.isConnected) return;
-            o.noteOn(midiNote, velocity, isLegato);
+            o.noteOn(midiNote, velocity, isLegato, baseFreq);
         });
     }
 
@@ -652,7 +414,7 @@ class MiniFMSynthVoice {
             return;
         }
 
-        this.env1.release();
+        this.nodes.env1.release();
         this.oscillators.forEach(o => {
             if (!o.isConnected) return;
             o.release();
