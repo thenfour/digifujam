@@ -109,7 +109,7 @@ class MiniFMSynthVoice {
         this.isFilterConnected = true;
 
         // connect oscillators
-        const oscLinkSpec = getOscLinkingSpec(this.instrumentSpec.GetParamByID("linkosc").currentValue);
+        const oscLinkSpec = this.instrumentSpec.getOscLinkingSpec();
         algoSpec.oscEnabled.forEach((e, i) => {
             if (!e) return;
             // param prefixes are like "osc0_"

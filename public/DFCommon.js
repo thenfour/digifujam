@@ -434,6 +434,60 @@ class DigifuInstrumentSpec {
         return ["master"];
     }
 
+
+    getOscLinkingSpec() {
+        const spec = this.GetParamByID("linkosc").currentValue;
+        // 0 "◯◯◯◯",
+        // 1 "🔵🔵◯◯",
+        // 2 "🔵◯🔵◯",
+        // 3 "🔵🔵🔵◯",
+        // 4 "🔵◯◯🔵",
+        // 5 "🔵🔵◯🔵",
+        // 6 "🔵◯🔵🔵",
+        // 7 "🔵🔵🔵🔵",
+        // 8 "🔵🔵🔴🔴",
+        // 9 "🔵🔴🔵🔴",
+        // 10 "🔵🔴🔴🔵",
+        // 11 "◯🔵🔵◯",
+        // 12 "◯🔵◯🔵",
+        // 13 "◯◯🔵🔵"
+        switch (spec) {
+    
+            case 0: // 0 "◯◯◯◯",
+                return { sources: [0, 1, 2, 3], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, true, true, true] };
+            case 1: // 1 "🔵🔵◯◯",
+                return { sources: [0, 0, 2, 3], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, false, true, true] };
+            case 2: // 2 "🔵◯🔵◯",
+                return { sources: [0, 1, 0, 3], groupNames: ["∿ Osc A & C", "∿ Osc B", "(n/a)", "∿ Osc D"], oscParamUsed: [true, true, false, true] };
+            case 3: // 3 "🔵🔵🔵◯",
+                return { sources: [0, 0, 0, 3], groupNames: ["∿ Osc A & B & C", "(n/a)", "(n/a)", "∿ Osc D"], oscParamUsed: [true, false, false, true] };
+            case 4: // 4 "🔵◯◯🔵",
+                return { sources: [0, 1, 2, 0], groupNames: ["∿ Osc A & D", "∿ Osc B", "∿ Osc C", "(n/a)"], oscParamUsed: [true, true, true, false] };
+            case 5: // 5 "🔵🔵◯🔵",
+                return { sources: [0, 0, 2, 0], groupNames: ["∿ Osc A & B & D", "(n/a)", "∿ Osc C", "(n/a)"], oscParamUsed: [true, false, true, false] };
+            case 6: // 6 "🔵◯🔵🔵",
+                return { sources: [0, 1, 0, 0], groupNames: ["∿ Osc A & C & D", "∿ Osc B", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
+            case 7: // 7 "🔵🔵🔵🔵",
+                return { sources: [0, 0, 0, 0], groupNames: ["∿ Osc A & B & C & D", "(n/a)", "(n/a)", "(n/a)"], oscParamUsed: [true, false, false, false] };
+            case 8: // 8 "🔵🔵🔴🔴",
+                return { sources: [0, 0, 2, 2], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, false, true, false] };
+            case 9: // 9 "🔵🔴🔵🔴",
+                return { sources: [0, 1, 0, 1], groupNames: ["∿ Osc A & C", "∿ Osc B & D", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
+            case 10: // 10 "🔵🔴🔴🔵",
+                return { sources: [0, 1, 1, 0], groupNames: ["∿ Osc A & D", "∿ Osc B & C", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
+            case 11: // 11 "◯🔵🔵◯",
+                return { sources: [0, 1, 1, 3], groupNames: ["∿ Osc A", "∿ Osc B & C", "(n/a)", "∿ Osc D"], oscParamUsed: [true, true, false, true] };
+            case 12: // 12 "◯🔵◯🔵",
+                return { sources: [0, 1, 2, 1], groupNames: ["∿ Osc A", "∿ Osc B & D", "∿ Osc C", "(n/a)"], oscParamUsed: [true, true, true, false] };
+            case 13: // 13 "◯◯🔵🔵"
+                return { sources: [0, 1, 2, 2], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, true, true, false] };
+        }
+    
+        console.error(`unknown oscillator linking spec ${spec}`);
+    
+    }
+    
+
     // return { cssClassName, annotation, shown, displayName }
     getGroupInfo(groupName) {
         let ret = { cssClassName: "", annotation: "", displayName: groupName, shown: true, internalName: groupName };
@@ -448,7 +502,7 @@ class DigifuInstrumentSpec {
         if (isModulation) {
             ret.cssClassName = "modulation";
         } else {
-            const oscLinkSpec = getOscLinkingSpec(this.GetParamByID("linkosc").currentValue);
+            const oscLinkSpec = this.getOscLinkingSpec();
             switch (groupName) {
                 case "Filter":
                     const filtIsEnabled = !!this.GetParamByID("filterType").currentValue;
@@ -555,11 +609,32 @@ class DigifuInstrumentSpec {
             });
             return ret;
         }
-        const osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
-        const osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
-        const osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
-        const osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
-        const oscGroups = this.GetFMAlgoSpec();
+
+        // but do show oscillators even if they're disabled, but any other oscillators are linked to it.
+        // so if osc A is disabled, but A & B are linked, then show A.
+        const oscLinkSpec = this.getOscLinkingSpec();
+        const algoSpec = this.GetFMAlgoSpec();
+        let oscEnabled = [false, false, false, false];
+
+        for (let i = 0; i < algoSpec.oscEnabled.length; ++ i) {
+            if (algoSpec.oscEnabled[i]) {
+                oscEnabled[i] = true;
+                continue; // if it's explicitly enabled, fine.
+            }
+            oscEnabled[i] = oscLinkSpec.sources.some((linkMasterOscIndex, dependentOscIndex) => {
+                // if this oscillator is disabled by checkbox, it should still be shown if
+                // it's the target oscillator for any enabled oscillators.
+                if (dependentOscIndex == i) return false; // doesn't count.
+                if (linkMasterOscIndex != i) return false; // target is not this oscillator, not relevant.
+                return algoSpec.oscEnabled[dependentOscIndex];
+                //(masterOscIndex == i) && algoSpec.oscEnabled[dependentOscIndex]
+            });
+        }
+
+        // const osc0_enabled = !!this.GetParamByID("enable_osc0").currentValue;
+        // const osc1_enabled = !!this.GetParamByID("enable_osc1").currentValue;
+        // const osc2_enabled = !!this.GetParamByID("enable_osc2").currentValue;
+        // const osc3_enabled = !!this.GetParamByID("enable_osc3").currentValue;
 
         let oscIsPWM = [
             this.GetParamByID("osc0_wave").currentValue == 4,
@@ -586,13 +661,13 @@ class DigifuInstrumentSpec {
                 if (p.paramID.endsWith("_env_trigMode")) return false;
             }
 
-            if (p.groupName === "∿ Osc A" && !osc0_enabled) return false;
-            if (p.groupName === "∿ Osc B" && !osc1_enabled) return false;
-            if (p.groupName === "∿ Osc C" && !osc2_enabled) return false;
-            if (p.groupName === "∿ Osc D" && !osc3_enabled) return false;
+            if (p.groupName === "∿ Osc A" && !oscEnabled[0]) return false;
+            if (p.groupName === "∿ Osc B" && !oscEnabled[1]) return false;
+            if (p.groupName === "∿ Osc C" && !oscEnabled[2]) return false;
+            if (p.groupName === "∿ Osc D" && !oscEnabled[3]) return false;
 
             // detune is not relevant for a single osc or osc group.
-            if (oscGroups.length < 2 && p.groupName === "Detune") return false;
+            if (algoSpec.oscGroups.length < 2 && p.groupName === "Detune") return false;
 
             //duty cycle is pretty intrusive if you're not using PWM
             if (p.paramID.startsWith("osc0_pwm")) return oscIsPWM[0];
@@ -938,57 +1013,6 @@ let sanitizeInstrumentParamVal = function (param, newVal) {
     if (newVal > param.maxValue) return param.maxValue;
     return newVal;
 };
-
-let getOscLinkingSpec = (spec) => {
-    // 0 "◯◯◯◯",
-    // 1 "🔵🔵◯◯",
-    // 2 "🔵◯🔵◯",
-    // 3 "🔵🔵🔵◯",
-    // 4 "🔵◯◯🔵",
-    // 5 "🔵🔵◯🔵",
-    // 6 "🔵◯🔵🔵",
-    // 7 "🔵🔵🔵🔵",
-    // 8 "🔵🔵🔴🔴",
-    // 9 "🔵🔴🔵🔴",
-    // 10 "🔵🔴🔴🔵",
-    // 11 "◯🔵🔵◯",
-    // 12 "◯🔵◯🔵",
-    // 13 "◯◯🔵🔵"
-    switch (spec) {
-
-        case 0: // 0 "◯◯◯◯",
-            return { sources: [0, 1, 2, 3], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, true, true, true] };
-        case 1: // 1 "🔵🔵◯◯",
-            return { sources: [0, 0, 2, 3], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, false, true, true] };
-        case 2: // 2 "🔵◯🔵◯",
-            return { sources: [0, 1, 0, 3], groupNames: ["∿ Osc A & C", "∿ Osc B", "(n/a)", "∿ Osc D"], oscParamUsed: [true, true, false, true] };
-        case 3: // 3 "🔵🔵🔵◯",
-            return { sources: [0, 0, 0, 3], groupNames: ["∿ Osc A & B & C", "(n/a)", "(n/a)", "∿ Osc D"], oscParamUsed: [true, false, false, true] };
-        case 4: // 4 "🔵◯◯🔵",
-            return { sources: [0, 1, 2, 0], groupNames: ["∿ Osc A & D", "∿ Osc B", "∿ Osc C", "(n/a)"], oscParamUsed: [true, true, true, false] };
-        case 5: // 5 "🔵🔵◯🔵",
-            return { sources: [0, 0, 2, 0], groupNames: ["∿ Osc A & B & D", "(n/a)", "∿ Osc C", "(n/a)"], oscParamUsed: [true, false, true, false] };
-        case 6: // 6 "🔵◯🔵🔵",
-            return { sources: [0, 1, 0, 0], groupNames: ["∿ Osc A & C & D", "∿ Osc B", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
-        case 7: // 7 "🔵🔵🔵🔵",
-            return { sources: [0, 0, 0, 0], groupNames: ["∿ Osc A & B & C & D", "(n/a)", "(n/a)", "(n/a)"], oscParamUsed: [true, false, false, false] };
-        case 8: // 8 "🔵🔵🔴🔴",
-            return { sources: [0, 0, 2, 2], groupNames: ["∿ Osc A & B", "(n/a)", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, false, true, false] };
-        case 9: // 9 "🔵🔴🔵🔴",
-            return { sources: [0, 1, 0, 1], groupNames: ["∿ Osc A & C", "∿ Osc B & D", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
-        case 10: // 10 "🔵🔴🔴🔵",
-            return { sources: [0, 1, 1, 0], groupNames: ["∿ Osc A & D", "∿ Osc B & C", "(n/a)", "(n/a)"], oscParamUsed: [true, true, false, false] };
-        case 11: // 11 "◯🔵🔵◯",
-            return { sources: [0, 1, 1, 3], groupNames: ["∿ Osc A", "∿ Osc B & C", "(n/a)", "∿ Osc D"], oscParamUsed: [true, true, false, true] };
-        case 12: // 12 "◯🔵◯🔵",
-            return { sources: [0, 1, 2, 1], groupNames: ["∿ Osc A", "∿ Osc B & D", "∿ Osc C", "(n/a)"], oscParamUsed: [true, true, true, false] };
-        case 13: // 13 "◯◯🔵🔵"
-            return { sources: [0, 1, 2, 2], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, true, true, false] };
-    }
-
-    console.error(`unknown oscillator linking spec ${spec}`);
-
-}
 
 module.exports = {
     ClientMessages,
