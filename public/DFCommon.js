@@ -11,6 +11,17 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
+function array_move(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    //return arr; // for testing
+};
+
 // https://stackoverflow.com/a/40407914/402169
 function baseClamp(number, lower, upper) {
     if (number === number) {
@@ -305,7 +316,7 @@ class DigifuInstrumentSpec {
         this.color = "rgb(138, 224, 153)";
         this.instrumentID = null;
         this.controlledByUserID = null;
-        this.engine = null; // soundfont, minisynth, drumkit
+        this.engine = null; // soundfont, minifm, drumkit
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
         this.maxPolyphony = 10;
@@ -314,6 +325,7 @@ class DigifuInstrumentSpec {
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
         this.supportsPresets = true;
         this.maxTextLength = 100;
+        this.behaviorAdjustmentsApplied = false; // upon thaw, based on teh behaviorstyle, we rearrange params and stuff. but once it's done, don't do it again (on the client)
     }
 
     getDisplayName() {
@@ -468,6 +480,8 @@ class DigifuInstrumentSpec {
             return n;
         });
 
+        if (this.behaviorAdjustmentsApplied) return;
+
         // for restrictive behaviorStyles, we force params to a certain value and hide from gui always.
         this.paramsToForceAndHide = {};
 
@@ -481,6 +495,7 @@ class DigifuInstrumentSpec {
                 linkosc: 3, // A&B&C linked together
                 algo: 7, // independent
                 label_enableOsc: false, // don't show that label
+                osc0_env1PanAmt: 0, // for reduced controls, i have to say this is really at the bottom of the list.
                 osc0_freq_mult: 1.0,
                 osc1_freq_mult: 1.0,
                 osc2_freq_mult: 1.0,
@@ -497,14 +512,16 @@ class DigifuInstrumentSpec {
                 osc1_freq_transp: 0,
                 osc2_freq_transp: 0,
                 osc3_freq_transp: 0,
-                osc0_vel_scale: 0,
-                osc0_key_scale:0,
-                osc1_vel_scale: 0,
-                osc1_key_scale:0,
-                osc2_vel_scale: 0,
-                osc2_key_scale:0,
-                osc3_vel_scale: 0,
-                osc3_key_scale:0,
+                osc0_lfo1_gainAmt: 0,// because gain is always 1, it makes the LFO control sorta hard to understand and limited.
+                osc0_lfo2_gainAmt: 0,// because gain is always 1, it makes the LFO control sorta hard to understand and limited. it's not especially useful anyway.
+                //osc0_vel_scale: 0,
+                // osc0_key_scale: 0,
+                // osc1_vel_scale: 0,
+                // osc1_key_scale: 0,
+                // osc2_vel_scale: 0,
+                // osc2_key_scale: 0,
+                // osc3_vel_scale: 0,
+                // osc3_key_scale: 0,
                 osc0_env_trigMode: 1,
                 osc1_env_trigMode: 1,
                 osc2_env_trigMode: 1,
@@ -512,44 +529,50 @@ class DigifuInstrumentSpec {
                 env1_trigMode: 1,
             };
             // and make modifications to certain params:
-            this.GetParamByID("osc0_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
-            this.GetParamByID("osc1_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
-            this.GetParamByID("osc2_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
-            this.GetParamByID("osc3_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
 
-            this.GetParamByID("osc0_lfo1_gainAmt").name = "Gain LFO1 mod";
-            this.GetParamByID("osc1_lfo1_gainAmt").name = "Gain LFO1 mod";
-            this.GetParamByID("osc2_lfo1_gainAmt").name = "Gain LFO1 mod";
-            this.GetParamByID("osc3_lfo1_gainAmt").name = "Gain LFO1 mod";
+            // rearrange some things
+            let moveToParam = (paramIDToMove, paramIDToShift) => {
+                array_move(this.params, this.params.findIndex(p => p.paramID == paramIDToMove), this.params.findIndex(p => p.paramID === paramIDToShift));
+            };
+            let moveToAfterParam = (paramIDToMove, paramIDToShift) => {
+                array_move(this.params, this.params.findIndex(p => p.paramID == paramIDToMove), 1 + this.params.findIndex(p => p.paramID === paramIDToShift));
+            };
 
-            this.GetParamByID("osc0_lfo2_gainAmt").name = "Gain LFO2 mod";
-            this.GetParamByID("osc1_lfo2_gainAmt").name = "Gain LFO2 mod";
-            this.GetParamByID("osc2_lfo2_gainAmt").name = "Gain LFO2 mod";
-            this.GetParamByID("osc3_lfo2_gainAmt").name = "Gain LFO2 mod";
+            moveToParam("detuneBase", "osc0_lfo1_pitchDepth");
+            moveToAfterParam("detuneLFO1", "detuneBase");
+            moveToAfterParam("detuneLFO2", "detuneBase");
+            moveToAfterParam("pan_spread", "osc0_pan");
 
-            this.GetParamByID("osc0_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
-            this.GetParamByID("osc1_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
-            this.GetParamByID("osc2_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
-            this.GetParamByID("osc3_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
+            moveToAfterParam("osc0_vel_scale", "osc0_r");
+            moveToAfterParam("osc0_key_scale", "osc0_r");
 
-            this.GetParamByID("osc0_lfo1_pitchDepth").name = "Pitch LFO1 mod";
-            this.GetParamByID("osc1_lfo1_pitchDepth").name = "Pitch LFO1 mod";
-            this.GetParamByID("osc2_lfo1_pitchDepth").name = "Pitch LFO1 mod";
-            this.GetParamByID("osc3_lfo1_pitchDepth").name = "Pitch LFO1 mod";
+            this.GetParamByID("osc0_vel_scale").cssClassName = "modAmtParam";
+            this.GetParamByID("osc0_key_scale").cssClassName = "modAmtParam";
 
-            // move detune stuff to just below osc transpose
+            this.GetParamByID("osc0_lfo1_gainAmt").name = "Gain LFO1";
+            this.GetParamByID("osc0_lfo2_gainAmt").name = "Gain LFO2";
+
+            this.GetParamByID("osc0_lfo1_pitchDepth").name = "Pitch LFO1";
+            this.GetParamByID("osc0_lfo2_pitchDepth").name = "Pitch LFO2";
+            this.GetParamByID("osc0_env1_pitchDepth").name = "Pitch ENV";
+
+            this.GetParamByID("osc0_lfo1PanAmt").name = "Pan LFO1";
+            this.GetParamByID("osc0_lfo2PanAmt").name = "Pan LFO2";
+            this.GetParamByID("osc0_env1PanAmt").name = "Pan ENV";
+
             this.GetParamByID("detuneBase").cssClassName = "paramSpacer";
             this.GetParamByID("detuneBase").groupName = "∿ Osc A";
             this.GetParamByID("detuneBase").name = "Detune semis";
             this.GetParamByID("detuneLFO1").groupName = "∿ Osc A";
             this.GetParamByID("detuneLFO2").groupName = "∿ Osc A";
-            this.GetParamByID("detuneENV1").groupName = "∿ Osc A";
+            this.GetParamByID("detuneLFO1").name = "Detune LFO1";
+            this.GetParamByID("detuneLFO2").name = "Detune LFO2";
 
-            this.GetParamByID("osc0_a").cssClassName = "";
-            this.GetParamByID("osc1_a").cssClassName = "";
-            this.GetParamByID("osc2_a").cssClassName = "";
-            this.GetParamByID("osc3_a").cssClassName = "";
-            
+            this.GetParamByID("osc0_a").cssClassName = "paramSpacer";
+            this.GetParamByID("pan_spread").groupName = "∿ Osc A";
+            this.GetParamByID("pan_spread").name = "Separation";
+
+            this.behaviorAdjustmentsApplied = true;
         }
     }
 

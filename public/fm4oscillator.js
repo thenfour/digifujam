@@ -229,7 +229,10 @@ class MiniFMSynthOsc {
     }
 
     GetPanBaseValue() {
-        return this.paramValue("pan") + (this.instrumentSpec.GetParamByID("pan_spread").currentValue * this.variationFactor);
+        return baseClamp(
+            this.paramValue("pan") + (this.instrumentSpec.GetParamByID("pan_spread").currentValue * this.variationFactor),
+            -1, 1
+        );
     }
 
     // account for key & vel scaling

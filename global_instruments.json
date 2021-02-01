@@ -660,8 +660,8 @@
           "name": "ENV mod",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": -1.0,
-          "maxValue": 1.0
+          "minValue": -2.0,
+          "maxValue": 2.0
         },
         {
           "paramID": "osc1_wave",
@@ -909,8 +909,8 @@
           "name": "ENV mod",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": -1.0,
-          "maxValue": 1.0
+          "minValue": -2.0,
+          "maxValue": 2.0
         },
         {
           "paramID": "osc2_wave",
@@ -1158,8 +1158,8 @@
           "name": "ENV mod",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": -1.0,
-          "maxValue": 1.0
+          "minValue": -2.0,
+          "maxValue": 2.0
         },
         {
           "paramID": "osc3_wave",
@@ -1407,8 +1407,8 @@
           "name": "ENV mod",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": -1.0,
-          "maxValue": 1.0
+          "minValue": -2.0,
+          "maxValue": 2.0
         },
         {
           "cssClassName": "paramSpacer",
@@ -1537,16 +1537,6 @@
           "paramID": "detuneLFO2",
           "cssClassName": "modAmtParam",
           "name": "LFO2 mod",
-          "groupName": "Detune",
-          "parameterType": "floatParam",
-          "minValue": -1.0,
-          "maxValue": 1.0
-        },
-        {
-          "paramID": "detuneENV1",
-          "cssClassName": "modAmtParam",
-          "name": "ENV mod",
-          "hidden": 1,
           "groupName": "Detune",
           "parameterType": "floatParam",
           "minValue": -1.0,
