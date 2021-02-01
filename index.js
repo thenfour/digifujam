@@ -21,6 +21,10 @@ let IsAdminUser = (userID) => {
 
 let log = (msg) => {
   console.log(`${(new Date()).toISOString()} ${msg}`);
+  if (msg.stack) {
+    // assume error object.
+    console.log(`EXCEPTION stack: ${msg.stack}`);
+  }
 };
 
 
@@ -30,7 +34,7 @@ class RoomServer {
   constructor(data, serverStateObj) {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(data);
-
+    
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     let usedInstrumentIDs = [];
     this.roomState.instrumentCloset.forEach(i => {
@@ -455,7 +459,7 @@ class RoomServer {
         } else {
           let p = foundInstrument.instrument.params.find(o => o.paramID == paramID);
           if (!p) {
-            log(`=> param ${x.paramID} not found.`);
+            log(`=> param ${paramID} not found in instrument ${foundInstrument.instrument.name}.`);
             return;
           }
 
@@ -478,16 +482,16 @@ class RoomServer {
     try {
       //log(`OnClientInstrumentPresetDelete(${data.presetID})`);
       let foundUser = this.FindUserFromSocket(ws);
-      if (foundUser == null) throw `unknown user`;
+      if (foundUser == null) throw new Error(`unknown user`);
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) throw (`user not controlling an instrument.`);
-      if (!data.presetID) throw `no presetID`;
+      if (!data.presetID) throw new Error(`no presetID`);
       let foundp = foundInstrument.instrument.presets.find(p => p.presetID == data.presetID);
-      if (!foundp) throw `unable to find the preset ${data.presetID}`;
+      if (!foundp) throw new Error(`unable to find the preset ${data.presetID}`);
       if (IsAdminUser(foundUser.user.userID)) {
         if (foundp.isReadOnly) log(`An admin user ${foundUser.user.userID} | ${foundUser.user.name} is deleting a read-only preset ${data.presetID}`);
       } else {
-        if (foundp.isReadOnly) throw `don't try to delete a read-only preset.`;
+        if (foundp.isReadOnly) throw new Error(`don't try to delete a read-only preset.`);
       }
 
       // delete
@@ -508,16 +512,16 @@ class RoomServer {
   OnClientInstrumentFactoryReset(ws, data) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
-      if (foundUser == null) throw `unknown user`;
+      if (foundUser == null) throw new Error(`unknown user`);
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) throw (`user not controlling an instrument.`);
 
       let factorySettings = this.factorySettings.find(o => o.instrumentID == foundInstrument.instrument.instrumentID);
-      if (!factorySettings) throw `no factory settings found for instrument ${foundInstrument.instrument.instrumentID}`;
+      if (!factorySettings) throw new Error(`no factory settings found for instrument ${foundInstrument.instrument.instrumentID}`);
 
       // a factory reset means importing the factory presets list and loading an init preset.
       if (!foundInstrument.instrument.importAllPresetsJSON(factorySettings.presetsJSON)) {
-        throw `error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`;
+        throw new Error(`error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`);
       }
       let initPreset = foundInstrument.instrument.GetInitPreset();
       foundInstrument.instrument.loadPatchObj(initPreset);
@@ -536,13 +540,13 @@ class RoomServer {
   OnClientInstrumentBankReplace(ws, data) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
-      if (foundUser == null) throw `unknown user`;
+      if (foundUser == null) throw new Error(`unknown user`);
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) throw (`user not controlling an instrument.`);
 
       // TODO: we don't really verify this at any stage. from the clipboard straight to the server's memory is a bit iffy, despite not really having any consequence.
       if (!foundInstrument.instrument.importAllPresetsArray(data)) {
-        throw `data was not in the correct format probably.`;
+        throw new Error(`data was not in the correct format probably.`);
       }
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentBankReplace, {
@@ -559,7 +563,7 @@ class RoomServer {
   OnClientInstrumentPresetSave(ws, patchObj) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
-      if (foundUser == null) throw `unknown user`;
+      if (foundUser == null) throw new Error(`unknown user`);
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) throw (`user not controlling an instrument.`);
 
@@ -578,7 +582,7 @@ class RoomServer {
             patchObj.isReadOnly = true;
             log(`An admin user ${foundUser.user.userID} ${foundUser.user.name} is overwriting read-only preset ${patchObj.presetID}. Keeping it read-only.`);
           } else {
-            throw `Don't try to overwrite readonly presets U:${foundUser.user.userID} ${foundUser.user.name}, presetID ${patchObj.presetID}`;
+            throw new Error(`Don't try to overwrite readonly presets U:${foundUser.user.userID} ${foundUser.user.name}, presetID ${patchObj.presetID}`);
           }
         }
         Object.assign(existing, patchObj);
@@ -924,7 +928,7 @@ let OnDisconnect = function (ws) {
 
 let OnClientDownloadServerState = (ws) => {
   try {
-    if (!IsAdminUser(ws.id)) throw `User isn't an admin.`;
+    if (!IsAdminUser(ws.id)) throw new Error(`User isn't an admin.`);
 
     // the server state dump is really just everything except users.
     let allRooms = [];
@@ -945,13 +949,13 @@ let OnClientDownloadServerState = (ws) => {
 
 let OnClientUploadServerState = (ws, data) => {
   try {
-    if (!IsAdminUser(ws.id)) throw `User isn't an admin.`;
+    if (!IsAdminUser(ws.id)) throw new Error(`User isn't an admin.`);
 
     log(`uploaded server state with len=${JSON.stringify(data).length}`);
     data.forEach(rs => {
-      if (!rs.roomID) throw `no room ID. maybe you're importing some bad format?`;
+      if (!rs.roomID) throw new Error(`no room ID. maybe you're importing some bad format?`);
       let room = gRooms[rs.roomID];//.find(r => r.roomState.roomID == rs.roomID);
-      if (!room) throw `unable to find a room during import. odd.`;
+      if (!room) throw new Error(`unable to find a room during import. odd.`);
       room.adminImportRoomState(rs.dump);
     });
 
@@ -994,7 +998,7 @@ let roomsAreLoaded = function () {
       let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"]);
       let room = gRooms[requestedRoomID];
       if (!room) {
-        throw `user trying to connect to nonexistent roomID ${requestedRoomID}`
+        throw new Error(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
       }
 
       ws.on('disconnect', data => OnDisconnect(ws, data));
@@ -1040,6 +1044,8 @@ let loadRoom = function (jsonTxt, serverRestoreState) {
   log(`serving room ${roomState.roomID} on route ${roomState.route}`);
   app.use(roomState.route, express.static('public'));
 }
+
+
 
 fsp.readFile("global_instruments.json")
   .then(globalInstruments => {

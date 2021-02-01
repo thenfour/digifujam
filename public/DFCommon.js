@@ -11,6 +11,19 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
+// https://stackoverflow.com/a/40407914/402169
+function baseClamp(number, lower, upper) {
+    if (number === number) {
+        if (upper !== undefined) {
+            number = number <= upper ? number : upper;
+        }
+        if (lower !== undefined) {
+            number = number >= lower ? number : lower;
+        }
+    }
+    return number;
+}
+
 let MidiNoteToFrequency = function (midiNote) {
     return 440 * Math.pow(2, (midiNote - 69) / 12);
 };
@@ -396,9 +409,9 @@ class DigifuInstrumentSpec {
     // return true/false success
     importAllPresetsArray(a) {
         if (!Array.isArray(a)) {
-            console.log(`importing presets array but 'a' is not an array; it's a ${typeof(a)}`);
+            console.log(`importing presets array but 'a' is not an array; it's a ${typeof (a)}`);
             return false;
-        } 
+        }
         // TODO: other validation.
         // do a cursory check of all require params existing.
         const requiredParamKeys = ["presetID", "patchName"];
@@ -464,7 +477,7 @@ class DigifuInstrumentSpec {
                 enable_osc1: true,
                 enable_osc2: true,
                 enable_osc3: false,
-                voicing: 1,
+                //voicing: 1,
                 linkosc: 3, // A&B&C linked together
                 algo: 7, // independent
                 label_enableOsc: false, // don't show that label
@@ -480,6 +493,23 @@ class DigifuInstrumentSpec {
                 osc1_level: 0.5,
                 osc2_level: 0.5,
                 osc3_level: 0.5,
+                osc0_freq_transp: 0,
+                osc1_freq_transp: 0,
+                osc2_freq_transp: 0,
+                osc3_freq_transp: 0,
+                osc0_vel_scale: 0,
+                osc0_key_scale:0,
+                osc1_vel_scale: 0,
+                osc1_key_scale:0,
+                osc2_vel_scale: 0,
+                osc2_key_scale:0,
+                osc3_vel_scale: 0,
+                osc3_key_scale:0,
+                osc0_env_trigMode: 1,
+                osc1_env_trigMode: 1,
+                osc2_env_trigMode: 1,
+                osc3_env_trigMode: 1,
+                env1_trigMode: 1,
             };
             // and make modifications to certain params:
             this.GetParamByID("osc0_lfo1_gainAmt").cssClassName = "modAmtParam paramSpacer";
@@ -497,6 +527,16 @@ class DigifuInstrumentSpec {
             this.GetParamByID("osc2_lfo2_gainAmt").name = "Gain LFO2 mod";
             this.GetParamByID("osc3_lfo2_gainAmt").name = "Gain LFO2 mod";
 
+            this.GetParamByID("osc0_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
+            this.GetParamByID("osc1_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
+            this.GetParamByID("osc2_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
+            this.GetParamByID("osc3_lfo1_pitchDepth").cssClassName = "modAmtParam paramSpacer";
+
+            this.GetParamByID("osc0_lfo1_pitchDepth").name = "Pitch LFO1 mod";
+            this.GetParamByID("osc1_lfo1_pitchDepth").name = "Pitch LFO1 mod";
+            this.GetParamByID("osc2_lfo1_pitchDepth").name = "Pitch LFO1 mod";
+            this.GetParamByID("osc3_lfo1_pitchDepth").name = "Pitch LFO1 mod";
+
             // move detune stuff to just below osc transpose
             this.GetParamByID("detuneBase").cssClassName = "paramSpacer";
             this.GetParamByID("detuneBase").groupName = "∿ Osc A";
@@ -504,6 +544,12 @@ class DigifuInstrumentSpec {
             this.GetParamByID("detuneLFO1").groupName = "∿ Osc A";
             this.GetParamByID("detuneLFO2").groupName = "∿ Osc A";
             this.GetParamByID("detuneENV1").groupName = "∿ Osc A";
+
+            this.GetParamByID("osc0_a").cssClassName = "";
+            this.GetParamByID("osc1_a").cssClassName = "";
+            this.GetParamByID("osc2_a").cssClassName = "";
+            this.GetParamByID("osc3_a").cssClassName = "";
+            
         }
     }
 
@@ -549,7 +595,7 @@ class DigifuInstrumentSpec {
         // 12 "◯🔵◯🔵",
         // 13 "◯◯🔵🔵"
         switch (spec) {
-    
+
             case 0: // 0 "◯◯◯◯",
                 return { sources: [0, 1, 2, 3], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C", "∿ Osc D"], oscParamUsed: [true, true, true, true] };
             case 1: // 1 "🔵🔵◯◯",
@@ -579,11 +625,11 @@ class DigifuInstrumentSpec {
             case 13: // 13 "◯◯🔵🔵"
                 return { sources: [0, 1, 2, 2], groupNames: ["∿ Osc A", "∿ Osc B", "∿ Osc C & D", "(n/a)"], oscParamUsed: [true, true, true, false] };
         }
-    
+
         console.error(`unknown oscillator linking spec ${spec}`);
-    
+
     }
-    
+
 
     // return { cssClassName, annotation, shown, displayName }
     getGroupInfo(groupName) {
@@ -612,28 +658,28 @@ class DigifuInstrumentSpec {
                     ret.displayName = oscLinkSpec.groupNames[0];
                     ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 0;
-                    ret.oscillatorDestinations = [1,2,3];
+                    ret.oscillatorDestinations = [1, 2, 3];
                     break;
                 case "∿ Osc B":
                     ret.shown = oscLinkSpec.oscParamUsed[1];
                     ret.displayName = oscLinkSpec.groupNames[1];
                     ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 1;
-                    ret.oscillatorDestinations = [0,2,3];
+                    ret.oscillatorDestinations = [0, 2, 3];
                     break;
                 case "∿ Osc C":
                     ret.shown = oscLinkSpec.oscParamUsed[2];
                     ret.displayName = oscLinkSpec.groupNames[2];
                     ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 2;
-                    ret.oscillatorDestinations = [0,1,3];
+                    ret.oscillatorDestinations = [0, 1, 3];
                     break;
                 case "∿ Osc D":
                     ret.shown = oscLinkSpec.oscParamUsed[3];
                     ret.displayName = oscLinkSpec.groupNames[3];
                     ret.groupControls = oscGroupControlsAllowed ? "osc" : null;
                     ret.oscillatorSource = 3;
-                    ret.oscillatorDestinations = [0,1,2];
+                    ret.oscillatorDestinations = [0, 1, 2];
                     break;
             }
         }
@@ -714,7 +760,7 @@ class DigifuInstrumentSpec {
         const algoSpec = this.GetFMAlgoSpec();
         let oscEnabled = [false, false, false, false];
 
-        for (let i = 0; i < algoSpec.oscEnabled.length; ++ i) {
+        for (let i = 0; i < algoSpec.oscEnabled.length; ++i) {
             if (algoSpec.oscEnabled[i]) {
                 oscEnabled[i] = true;
                 continue; // if it's explicitly enabled, fine.
@@ -792,7 +838,7 @@ class DigifuInstrumentSpec {
         if (newVal > param.maxValue) return param.maxValue;
         return newVal;
     };
-    
+
 }; // InstrumentSpec
 
 const ChatMessageType = {

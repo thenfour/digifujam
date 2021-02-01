@@ -274,7 +274,9 @@ class MiniFMSynthVoice {
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         p = p * ks * vs;
         //console.log(`filter freq: ${p}`);
-        this.nodes.filter.frequency.value = p;//, this.audioCtx.currentTime + this.minGlideS);
+
+        const freqParam = this.nodes.filter.frequency;
+        freqParam.value = baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
     }
 
     SetParamValue(paramID, newVal) {
@@ -350,6 +352,10 @@ class MiniFMSynthVoice {
 
         let isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
         if (isPoly || !isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
+            //  env keytracking
+            let vsAmt = this.instrumentSpec.GetParamByID("env1_vel_scale").currentValue; // -1 to 1
+            let vs = 1.0 - remap(this.velocity, 0.0, 127.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+            this.nodes.env1.update({ peak: vs });
             this.nodes.env1.trigger();
         }
         this.oscillators.forEach(o => {

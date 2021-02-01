@@ -1496,6 +1496,14 @@
           "maxValue": 7.0
         },
         {
+          "paramID": "env1_vel_scale",
+          "name": "Vel scaling",
+          "groupName": "Mod Env",
+          "parameterType": "floatParam",
+          "minValue": -1.0,
+          "maxValue": 1.0
+        },
+        {
           "paramID": "env1_trigMode",
           "name": "Trigger",
           "groupName": "Mod Env",
