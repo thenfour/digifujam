@@ -114,7 +114,7 @@ class InstTextParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.inpID} type="text" maxlength={this.props.param.maxTextLength} onChange={this.onChange} />
+                <input readOnly={this.props.observerMode} id={this.inpID} type="text" maxlength={this.props.param.maxTextLength} onChange={this.onChange} />
                 <label>{this.props.param.name}</label>
             </li>
         );
@@ -131,6 +131,7 @@ class InstButtonsParam extends React.Component {
         this.renderedValue = 0;
     }
     onClickButton = (val) => {
+        if (this.props.observerMode) return;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
         gStateChangeHandler.OnStateChange();
     };
@@ -163,6 +164,7 @@ class InstDropdownParam extends React.Component {
         this.setState({ listShown: !this.state.listShown });
     }
     onClickButton = (val) => {
+        if (this.props.observerMode) return;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
         gStateChangeHandler.OnStateChange();
     };
@@ -199,6 +201,7 @@ class InstDropdownParam extends React.Component {
 // props.instrument
 class InstCbxParam extends React.Component {
     onClick = () => {
+        if (this.props.observerMode) return;
         let val = !!this.props.param.currentValue;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, !val);
         gStateChangeHandler.OnStateChange();
@@ -271,7 +274,7 @@ class InstIntParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.sliderID} className="intParam" type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
+                <input disabled={this.props.observerMode} id={this.sliderID} className="intParam" type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
                 //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
                 />
                 <label>{this.props.param.name}: <span id={this.valueTextID}></span></label>
@@ -349,6 +352,7 @@ class InstFloatParam extends React.Component {
     }
 
     toggleShowTxt = () => {
+        if (this.props.observerMode) return;
         let q = $("#" + this.valueTextDivID);
         if (q.is(':visible')) {
             q.toggle(false);
@@ -366,6 +370,7 @@ class InstFloatParam extends React.Component {
     }
 
     handleTextInputKeyDown = (e) => {
+        if (this.props.observerMode) return;
         if (e.key != 'Enter') return;
         this.setState(this.state);
         let realVal = parseFloat(e.target.value);
@@ -376,6 +381,7 @@ class InstFloatParam extends React.Component {
     }
 
     onClickSlider = (e) => {
+        if (this.props.observerMode) return;
         let a = 0;
         if (gCtrlKey) {
             let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
@@ -391,6 +397,7 @@ class InstFloatParam extends React.Component {
     };
 
     onDoubleClickSlider = (e) => {
+        if (this.props.observerMode) return;
         let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
         //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
 
@@ -413,13 +420,13 @@ class InstFloatParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input id={this.sliderID} className="floatParam" type="range" onClick={this.onClickSlider} onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
+                <input id={this.sliderID} disabled={this.props.observerMode} className="floatParam" type="range" onClick={this.onClickSlider} onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
                 />
                 <label onClick={this.toggleShowTxt}>{this.props.param.name}: <span id={this.valueTextID}></span></label>
                 <div style={{ display: "none" }} id={this.valueTextDivID}>
-                    <input type="text" id={this.valueTextInputID} onKeyDown={this.handleTextInputKeyDown} />
+                    <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} onKeyDown={this.handleTextInputKeyDown} />
                 </div>
             </li>
         );
@@ -467,7 +474,7 @@ class InstrumentPreset extends React.Component {
 
 
     render() {
-        const canWrite = !this.props.presetObj.isReadOnly || this.props.app.isAdmin;
+        const canWrite = !this.props.observerMode && (!this.props.presetObj.isReadOnly || this.props.app.isAdmin);
 
         let dt = this.props.presetObj.savedDate;
         if (dt) {
@@ -480,7 +487,7 @@ class InstrumentPreset extends React.Component {
         return (
             <li key={this.props.presetObj.patchName}>
                 <div className="buttonContainer">
-                    <button onClick={() => this.onClickLoad()}>📂Load</button>
+                    {!this.props.observerMode && <button onClick={() => this.onClickLoad()}>📂Load</button>}
                     {canWrite && <button onClick={this.onBeginOverwrite}>💾Save</button>}
                     {canWrite && <button onClick={this.onBeginDelete}>🗑Delete</button>}
                 </div>
@@ -522,7 +529,7 @@ class InstrumentPreset extends React.Component {
 class InstrumentPresetList extends React.Component {
     render() {
         const lis = this.props.instrument.presets.map(preset => (
-            <InstrumentPreset key={preset.presetID} app={this.props.app} presetObj={preset}></InstrumentPreset>
+            <InstrumentPreset observerMode={this.props.observerMode} key={preset.presetID} app={this.props.app} presetObj={preset}></InstrumentPreset>
         ));
         return (
             <div className="presetList">
@@ -556,18 +563,18 @@ class InstrumentParamGroup extends React.Component {
             switch (p.parameterType) {
                 case InstrumentParamType.intParam:
                     if (p.renderAs == "buttons") {
-                        return (<InstButtonsParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstButtonsParam>);
+                        return (<InstButtonsParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstButtonsParam>);
                     } else if (p.renderAs == "dropdown") {
-                        return (<InstDropdownParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstDropdownParam>);
+                        return (<InstDropdownParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstDropdownParam>);
                     } else {
-                        return (<InstIntParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstIntParam>);
+                        return (<InstIntParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstIntParam>);
                     }
                 case InstrumentParamType.floatParam:
-                    return (<InstFloatParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstFloatParam>);
+                    return (<InstFloatParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstFloatParam>);
                 case InstrumentParamType.textParam:
-                    return (<InstTextParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstTextParam>);
+                    return (<InstTextParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstTextParam>);
                 case InstrumentParamType.cbxParam:
-                    return (<InstCbxParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} param={p}></InstCbxParam>);
+                    return (<InstCbxParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstCbxParam>);
                 case InstrumentParamType.inlineLabel:
                     return (<li className="inlineLabel">{p.inlineLabel}</li>);
             }
@@ -576,7 +583,7 @@ class InstrumentParamGroup extends React.Component {
         if (!this.props.groupSpec.shown) return null;
         let className = "instParamGroup " + this.props.groupSpec.cssClassName;
 
-        let groupControls = this.props.groupSpec.groupControls === "osc" && (
+        let groupControls = this.props.groupSpec.groupControls === "osc" && !this.props.observerMode && (
             <div className="groupControls">
                 {this.props.groupSpec.oscillatorDestinations.map(destOscIndex => (
                     <button key={destOscIndex} onClick={() => this.clickCopyToOsc(destOscIndex)}>Copy to OSC {["A", "B", "C", "D"][destOscIndex]}</button>
@@ -751,7 +758,7 @@ class InstrumentParams extends React.Component {
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
         let presetList = this.state.presetListShown && (
-            <InstrumentPresetList instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList>
+            <InstrumentPresetList observerMode={this.props.observerMode} instrument={this.props.instrument} app={this.props.app}></InstrumentPresetList>
         );
 
         let filterTxt = this.state.filterTxt.toLowerCase();
@@ -772,6 +779,7 @@ class InstrumentParams extends React.Component {
             groupSpec={gs}
             app={this.props.app}
             instrument={this.props.instrument}
+            observerMode={this.props.observerMode}
             isShown={this.isGroupNameShown(gs.internalName)}
             onToggleShown={() => this.onToggleGroupShown(gs.internalName)}
             filteredParams={filteredParams}
@@ -810,8 +818,9 @@ class InstrumentParams extends React.Component {
                     {this.props.instrument.getDisplayName()}
                     <div className="buttonContainer">
                         <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
-                        <button onClick={this.onPanicClick}>Panic</button>
-                        <button onClick={this.onReleaseClick}>Release</button>
+                        {!this.props.observerMode && <button onClick={this.onPanicClick}>Panic</button>}
+                        {!this.props.observerMode && <button onClick={this.onReleaseClick}>Release</button>}
+                        {!!this.props.observerMode && <button onClick={() => { gStateChangeHandler.observingInstrument = null; }}>Stop Observing</button>}
                     </div>
                 </h2>
                 <div style={shownStyle}>
@@ -822,8 +831,8 @@ class InstrumentParams extends React.Component {
                             <legend onClick={this.onOpenClicked}>{arrowText} Presets</legend>
                             {this.state.presetListShown && (
                                 <ul className="instParamList">
-                                    <InstTextParam key="patchName" app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
-                                    <li className="instPresetButtons">
+                                    <InstTextParam key="patchName" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
+                                    {!this.props.observerMode && <li className="instPresetButtons">
                                         {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
                                         <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
                                         <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
@@ -835,7 +844,7 @@ class InstrumentParams extends React.Component {
                                                 <button className="cancel" onClick={this.cancelFactoryReset}>Cancel</button>
                                             </div>
                                         }
-                                    </li>
+                                    </li>}
 
                                     <li className="instPresetButtons">
                                         <fieldset className="clipboardControls">
@@ -843,9 +852,9 @@ class InstrumentParams extends React.Component {
                                             {this.state.showingClipboardControls && (
                                                 <div>
                                                     <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
-                                                    <button onClick={this.onImportClicked}>Paste live settings from clipboard</button><br />
+                                                    { !this.props.observerMode && <button onClick={this.onImportClicked}>Paste live settings from clipboard</button>}<br />
                                                     <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
-                                                    <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button><br />
+                                                    { !this.props.observerMode && <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button>}<br />
                                                 </div>
                                             )}
                                         </fieldset>
@@ -1199,54 +1208,68 @@ class InstrumentList extends React.Component {
         this.setState({ isShowing: !this.state.isShowing });
     }
 
+    observeInstrument(instrument) {
+        this.props.app.ReleaseInstrument();
+        gStateChangeHandler.observingInstrument = instrument;
+    }
+
+    stopObserving() {
+        gStateChangeHandler.observingInstrument = null;
+    }
+
     renderInstrument(i) {
         let app = this.props.app;
-        if (i.controlledByUserID == app.myUser.userID) {
-            return null;
-            // return (
-            //     <li key={i.instrumentID} style={{ color: i.color }}><button onClick={() => app.ReleaseInstrument()}>Release</button> {i.name} (#{i.instrumentID}) [yours]</li>
-            // );
-        }
 
-        let inUse = false;
+        let inUse = !!i.controlledByUserID;
         let idle = false;
-        if (i.controlledByUserID) {
-            inUse = true;
+        let ownedBy = null;
+        if (inUse) {
             let foundUser = this.props.app.roomState.FindUserByID(i.controlledByUserID);
-            //console.log(`rendering instrument controlled by ${i.controlledByUserID}`);
             if (foundUser) {
-                if (foundUser.user.idle) {
-                    // user is taken, but considered idle. so we can show it.
-                    idle = true;
-                    //console.log(` ==> idle = true inst ${i.instrumentID} user ${i.controlledByUserID}`);
-                }
+                ownedBy = (<span className="takenBy">(<span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span>)</span>);
+                idle = foundUser.user.idle;// user is taken, but considered idle. so we can show it.
             }
         }
 
-        let ownedByText = "";
-        if (inUse && !idle) {
-            return null;
-        }
+        const isYours = (i.controlledByUserID == app.myUser.userID);
+        const takeable = app.midi.AnyMidiDevicesAvailable() && (!inUse || idle);
+
+        const releaseBtn = isYours && (
+            <button className="release" onClick={() => this.props.app.ReleaseInstrument()}>release</button>
+        );
+
+        const isYourObserving = gStateChangeHandler.observingInstrument && gStateChangeHandler.observingInstrument.instrumentID == i.instrumentID;
+
+        const stopObservingBtn = isYourObserving && (<button className="stopObserving" onClick={() => this.stopObserving()}>stop obs</button>);
 
         idle = idle && (<span className="idleIndicator">(Idle)</span>);
 
-        const playBtn = app.midi.AnyMidiDevicesAvailable() ? (
-            <button onClick={() => app.RequestInstrument(i.instrumentID)}>Take</button>
-        ) : null;
+        const playBtn = takeable && (
+            <button onClick={() => {
+                this.stopObserving();
+                app.RequestInstrument(i.instrumentID);
+            }}>play</button>
+        );
+
+        const observeBtn = !gStateChangeHandler.observingInstrument && !isYours && i.supportsObservation && (
+            <button className="observe" onClick={() => this.observeInstrument(i)}>observe</button>
+        );
 
         return (
-            <li key={i.instrumentID} style={{ color: i.color }}>
-                {playBtn}
-                {idle} {i.getDisplayName()} {ownedByText}</li>
+            <li className="instrument" key={i.instrumentID} style={{ color: i.color }}>
+                <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
+                {idle} {i.getDisplayName()} {ownedBy}
+            </li>
         );
     }
+
     render() {
         if (!this.props.app || !this.props.app.roomState || (this.props.app.roomState.instrumentCloset.length < 1)) {
             return null;
         }
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
-            <div className="component" style={{ whiteSpace: "nowrap" }}>
+            <div className="component instrumentCloset" style={{ whiteSpace: "nowrap" }}>
                 <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{getArrowText(this.state.isShowing)} Instrument Closet</h2>
                 {this.state.isShowing &&
                     <ul>
@@ -1268,8 +1291,13 @@ class RightArea extends React.Component {
             if (myInstrument) myInstrument = myInstrument.instrument;
         }
         if (myInstrument && myInstrument.params.length > 0) {
-            instParams = (<InstrumentParams app={this.props.app} instrument={myInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
+            instParams = (<InstrumentParams app={this.props.app} observerMode={false} instrument={myInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
+        } else {
+            if (gStateChangeHandler.observingInstrument) {
+                instParams = (<InstrumentParams app={this.props.app} observerMode={true} instrument={gStateChangeHandler.observingInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
+            }
         }
+
         return (
             <div id="rightArea" style={{ gridArea: "rightArea" }}>
                 {instParams}
@@ -1983,12 +2011,20 @@ class RootArea extends React.Component {
         this.setState({ wideMode: !this.state.wideMode });
     };
 
+    get observingInstrument() {
+        return this.state.observingInstrument;
+    }
+    set observingInstrument(inst) {
+        this.state.app.observeInstrument(inst); // this will send change notifications on remote param changes.
+        this.setState({ observingInstrument: inst });
+    }
 
     constructor(props) {
         super(props);
         this.state = {
             app: null,
             wideMode: false,
+            observingInstrument: null,
         };
 
         gStateChangeHandler = this;

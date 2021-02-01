@@ -326,6 +326,7 @@ class DigifuInstrumentSpec {
         this.supportsPresets = true;
         this.maxTextLength = 100;
         this.behaviorAdjustmentsApplied = false; // upon thaw, based on teh behaviorstyle, we rearrange params and stuff. but once it's done, don't do it again (on the client)
+        this.supportsObservation = false; // there's no point allowing certain instruments' params to be observed like drum kit or sampler
     }
 
     getDisplayName() {

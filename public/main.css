@@ -909,3 +909,42 @@ ul.instParamList li.inlineLabel
 .instParamGroup .groupControls button:hover {
     background-color:#066;
 }
+
+
+.component.instrumentCloset>ul {
+    overflow-x: hidden;
+}
+
+.component.instrumentCloset li.instrument {
+    position:relative;
+    padding: 3px;}
+.component.instrumentCloset li.instrument:hover {
+    background-color:#044;
+}
+.component.instrumentCloset li.instrument button {
+    border:0;
+    background-color: #066;
+    color: #0cc;
+}
+.component.instrumentCloset li.instrument button:hover {
+    background-color: #088;
+    color: #0cc;
+}
+
+.component.instrumentCloset li.instrument .buttonContainer {
+    position:absolute;
+    right:0;
+    z-index: 9999;
+    visibility: hidden;
+}
+
+.component.instrumentCloset li.instrument:hover .buttonContainer {
+    visibility: visible;
+}
+
+.component.instrumentCloset li.instrument .takenBy {
+    font-size: small;
+    font-style: italic;
+    opacity: 50%;
+}
+

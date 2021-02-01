@@ -319,6 +319,9 @@ class DigifuApp {
             return;
         }
         this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj);
+        if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
+            this.stateChangeHandler();
+        }
     }
 
     NET_OnInstrumentPresetDelete(data) { // instrumentID, presetID
@@ -480,6 +483,10 @@ class DigifuApp {
     ReleaseInstrument() {
         this.net.SendReleaseInstrument();
     };
+
+    observeInstrument(inst) {
+        this.observingInstrument = inst;
+    }
 
     SendChatMessage(msgText, toUserID) {
         let msg = new DigifuChatMessage();

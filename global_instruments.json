@@ -293,6 +293,7 @@
       "color": "rgb(138, 224, 153)",
       "maxPolyphony": "8",
       "engine": "minifm",
+      "supportsObservation": true,
       "activityDisplay": "keyboard",
       "params": [
         {
