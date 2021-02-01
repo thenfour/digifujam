@@ -791,7 +791,7 @@ class InstrumentParams extends React.Component {
 
         const instrumentSupportsPresets = this.props.instrument.supportsPresets;
 
-        const groupFocusButtonStuff = this.state.isShown && (groupSpecs.length > 1) && (
+        const groupFocusButtonStuff = this.state.isShown && ((groupSpecs.length > 1) || (this.state.filterTxt.length > 0)) && (
             <div className="paramGroupCtrl">
                 <fieldset className="groupFocusButtons">
                     <legend>Param groups</legend>
