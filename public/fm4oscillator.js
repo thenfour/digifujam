@@ -28,17 +28,18 @@ class MiniFMSynthOsc {
 
     // lfo1 is -1 to 1 range
     // lfo1_01 is 0 to 1 range.
-    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1, pitchBendSemisNode, detuneSemisNode, paramPrefix) {
+    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1, pitchBendSemisNode, detuneSemisNode, paramPrefix, variationFactor) {
         this.isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
         this.paramPrefix = paramPrefix;
+        this.variationFactor = variationFactor;
 
         /*
         each oscillator has                                                          
 
           [lfo1PWMAmt]+[lfo2PWMAmt]+[env1PWMAmt]
                                              |
-                                             |                                                                        |gain          |gain     |gain
-                                             |                                    |gain               |gain     [lfo1PanAmt]+[lfo2PanAmt]+[env1PanAmt]
+                                             |                                                                              |gain          |gain     |gain
+                                             |                                    |gain               |gain          [lfo1PanAmt]+[lfo2PanAmt]+[env1PanAmt]
                                              |<width>                         [lfo1LevelAmt]       [lfo2LevelAmt]              |
                                              |                                   |                    |                        |
                                              |                                   |                    |                        |
@@ -191,7 +192,7 @@ class MiniFMSynthOsc {
 
         // panner
         this.nodes.panner = this.audioCtx.createStereoPanner();
-        this.nodes.panner.pan.value = this.paramValue("pan");
+        this.nodes.panner.pan.value = this.GetPanBaseValue();
         this.nodes.lfo1PanAmt.connect(this.nodes.panner.pan);
         this.nodes.lfo2PanAmt.connect(this.nodes.panner.pan);
         this.nodes.env1PanAmt.connect(this.nodes.panner.pan);
@@ -225,6 +226,10 @@ class MiniFMSynthOsc {
     _setOscWaveform() {
         const shapes = ["sine", "square", "sawtooth", "triangle", "pwm"];
         this.nodes.osc.setWaveformType(shapes[this.paramValue("wave")]);
+    }
+
+    GetPanBaseValue() {
+        return this.paramValue("pan") + (this.instrumentSpec.GetParamByID("pan_spread").currentValue * this.variationFactor);
     }
 
     // account for key & vel scaling
@@ -333,7 +338,8 @@ class MiniFMSynthOsc {
                 this.nodes.env.update({ release: newVal });
                 break;
             case "pan":
-                this.nodes.panner.pan.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                //this.nodes.panner.pan.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.panner.pan.value = this.GetPanBaseValue();
                 break;
             case "lfo1PanAmt":
                 this.nodes.lfo1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);

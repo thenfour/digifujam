@@ -1553,6 +1553,15 @@
           "maxValue": 1.0
         },
         {
+          "paramID": "pan_spread",
+          "name": "Width",
+          "groupName": "Stereo Sep",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "minValue": 0.0,
+          "maxValue": 1.0
+        },
+        {
           "paramID": "filterType",
           "name": "Type",
           "groupName": "Filter",

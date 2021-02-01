@@ -728,7 +728,7 @@ class DigifuInstrumentSpec {
         });
         return {
             oscGroups,
-            oscEnabled
+            oscEnabled,
         };
     }
 
@@ -803,6 +803,7 @@ class DigifuInstrumentSpec {
 
             // detune is not relevant for a single osc or osc group.
             if (algoSpec.oscGroups.length < 2 && p.groupName === "Detune") return false;
+            if (algoSpec.oscGroups.length < 2 && p.paramID === "pan_spread") return false; // same for other "variation" style params
 
             //duty cycle is pretty intrusive if you're not using PWM
             if (p.paramID.startsWith("osc0_pwm")) return oscIsPWM[0];

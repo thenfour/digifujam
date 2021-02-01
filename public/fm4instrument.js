@@ -139,12 +139,18 @@ class FMPolySynth {
 
         const algoSpec = this.instrumentSpec.GetFMAlgoSpec();
         let detuners = [null, null, null, null]; // maps oscillator to detune variation node.
+        let oscVariationMap = [0, 0, 0, 0]; // factors for spreadable parameters
 
-        let applyDetune = (oscGroup, detuneSrc) => {
+        let applyDetune = (oscGroup, detuneSrc, variationFactor) => {
+            if (variationFactor !== undefined) {
+                detuneSrc.gain.value = variationFactor;
+            }
             algoSpec.oscGroups[oscGroup].forEach(oscIndex => {
                 detuners[oscIndex] = detuneSrc;
+                oscVariationMap[oscIndex] = variationFactor;
             });
         };
+
 
         // detuneSemis is always the detune value
         // use detuneVar1, 2, 3 for variations of this, including "0" for center if needed.
@@ -152,29 +158,22 @@ class FMPolySynth {
             case 0:
                 break; // nothing to do.
             case 1:
-                this.nodes.detuneVar1.gain.value = 0; // no detuning, single osc group. give all oscillators the same "0" detune value.
-                applyDetune(0, this.nodes.detuneVar1);
+                applyDetune(0, this.nodes.detuneVar1, 0);// no detuning, single osc group. give all oscillators the same "0" detune value.
                 break;
             case 2:
-                this.nodes.detuneVar1.gain.value = -1; // 2 osc groups = + and - detune amt
-                applyDetune(0, this.nodes.detuneSemis);
-                applyDetune(1, this.nodes.detuneVar1);
+                applyDetune(0, this.nodes.detuneSemis, 1);
+                applyDetune(1, this.nodes.detuneVar1, -1); // 2 osc groups = + and - detune amt
                 break;
             case 3:
-                this.nodes.detuneVar1.gain.value = -1; // 3 osc groups = +, 0, - detune amt
-                this.nodes.detuneVar2.gain.value = 0;
-                applyDetune(0, this.nodes.detuneVar2);
-                applyDetune(1, this.nodes.detuneVar1);
-                applyDetune(2, this.nodes.detuneSemis);
+                applyDetune(0, this.nodes.detuneVar2, 0);// 3 osc groups = +, 0, - detune amt
+                applyDetune(1, this.nodes.detuneVar1, -1);
+                applyDetune(2, this.nodes.detuneSemis, 1);
                 break;
             case 4:
-                this.nodes.detuneVar1.gain.value = 0; // 4 oscillator groups = +detune, 0, +detune*.5, -detune
-                this.nodes.detuneVar2.gain.value = 0.5;
-                this.nodes.detuneVar3.gain.value = -1;
-                applyDetune(0, this.nodes.detuneVar1);
-                applyDetune(1, this.nodes.detuneVar2);
-                applyDetune(2, this.nodes.detuneSemis);
-                applyDetune(3, this.nodes.detuneVar3);
+                applyDetune(0, this.nodes.detuneVar1, 0); // 4 oscillator groups = +detune, 0, +detune*.5, -detune
+                applyDetune(1, this.nodes.detuneVar2, 0.5);
+                applyDetune(2, this.nodes.detuneSemis, 1);
+                applyDetune(3, this.nodes.detuneVar3, -1);
                 break;
             default:
                 console.warn(`invalid osc tuning group amt`);
@@ -184,11 +183,11 @@ class FMPolySynth {
         this.isPoly = (this.instrumentSpec.GetParamByID("voicing").currentValue == 1);
         if (this.isPoly) {
             this.voices.forEach(v => {
-                v.connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners);
+                v.connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
             });
         } else {
             this.isPoly = false;
-            this.voices[0].connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners);
+            this.voices[0].connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
         }
 
         this.nodes.masterDryGain.connect(this.dryDestination);
