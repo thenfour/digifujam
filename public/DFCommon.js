@@ -552,14 +552,19 @@ class DigifuInstrumentSpec {
 
     createParamMappingFromMacro(param, macroIndex) {
         let params = this.ensureParamMappingParams(param, eParamMappingSource.Macro0 + macroIndex);
+        params.mappingRange.currentValue = 0;
+        params.mappingRange.rawValue = 0;
     }
 
     createParamMappingFromCC(param, cc) {
         let params = this.ensureParamMappingParams(param, cc);
+        params.mappingRange.currentValue = 0;
+        params.mappingRange.rawValue = 0;
     }
 
     // returns a patchObj which the caller should apply updates with, including on this instrument.
     removeParamMapping(param) {
+        //console.log(`removing mapping for param ${param.paramID}`);
         let paramIDs = this.getParamMappingParamIDsForParam(param);
         this.params.removeIf(p => p.paramID === paramIDs.mappingSrc || p.paramID === paramIDs.mappingRange);
 
@@ -688,6 +693,7 @@ class DigifuInstrumentSpec {
                         midiCC: midiCC,
                         mappingSrcVal: midiCC,
                         minValue: 0,
+                        supportsMapping: false,
                         maxValue: 127,
                     });
                     this.params.push(param);
@@ -760,6 +766,7 @@ class DigifuInstrumentSpec {
         // PUSH CC changes to dependent params. And when the dependent param is a macro, then add to macros[] to be pushed to its dependents.
         Object.keys(midiCCs).forEach(k => {
             const param = midiCCs[k];
+            //console.log(`calculated value for midi CC ${param.midiCC}: ${param.currentValue.toFixed(3)}`);
             // find all params depending on this midi CC param directly, and calculate their currentValue.
             const specs = this.getMappingSpecsForSrcVal(param.mappingSrcVal); // { mappingSrc, mappingRange, param }
             specs.forEach(spec => {

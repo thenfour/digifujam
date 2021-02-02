@@ -297,7 +297,7 @@ class ParamMappingBox extends React.Component {
             if (cc < 0) return false;
             if (cc > 31) return false;
             // set up the mapping.
-            console.log(`setting up mapping for MIDI CC ${cc}`);
+            //console.log(`setting up mapping for MIDI CC ${cc}`);
             this.props.app.createParamMappingFromSrcVal(this.props.param, cc);
             this.setState({ isLearning: false });
             gStateChangeHandler.OnStateChange();
@@ -309,7 +309,7 @@ class ParamMappingBox extends React.Component {
         this.setState({ isLearning: false });
     };
     clickClearMapping = () => {
-        console.log(`clearing mapping.`);
+        //console.log(`clearing mapping.`);
         this.props.app.removeParamMapping(this.props.param);
         gStateChangeHandler.OnStateChange();
     }

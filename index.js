@@ -509,10 +509,11 @@ class RoomServer {
         return;
       }
 
-      //log(`RemoveParamMapping ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
       // paramID: param.paramID
       // todo: validate paramID.
       const patchObj = foundInstrument.instrument.removeParamMapping(foundInstrument.instrument.GetParamByID(data.paramID));
+      //log(`RemoveParamMapping inst ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
+      //log(`  -> and must recalc ${JSON.stringify(patchObj)}`);
       foundInstrument.instrument.integrateRawParamChanges(patchObj);
 
       // broadcast to all clients except foundUser

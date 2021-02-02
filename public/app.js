@@ -133,6 +133,7 @@ class DigifuApp {
         // ok we have a mapped CC. send to synth & net.
         let patchObj = {};
         patchObj["midicc_" + cc] = val;
+        //console.log(`MIDI_CC: ${JSON.stringify(patchObj)}`);
         this.net.SendInstrumentParams(patchObj);
         this.synth.SetInstrumentParams(this.myInstrument, patchObj);
     }
@@ -356,7 +357,7 @@ class DigifuApp {
     // instrumentID, paramID
     NET_OnRemoveParamMapping(data) {
         if (!this.roomState) return;
-        let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             //log(`NET_OnInstrumentParam instrument not found`);
             return;
