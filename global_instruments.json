@@ -1520,6 +1520,21 @@
           "maxValue": 10.0
         },
         {
+          "paramID": "lfo1_trigMode",
+          "name": "Trigger",
+          "groupName": "Mod LFO1",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "defaultValue": 0,
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Continuous",
+            "Retrig on Note"
+          ]
+        },
+
+        {
           "cssClassName": "paramSpacer",
           "paramID": "lfo2_wave",
           "name": "LFO2 wave",
@@ -1543,6 +1558,20 @@
           "defaultValue": 1.5,
           "minValue": 0.0,
           "maxValue": 10.0
+        },
+        {
+          "paramID": "lfo2_trigMode",
+          "name": "Trigger",
+          "groupName": "Mod LFO2",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "defaultValue": 0,
+          "minValue": 0,
+          "maxValue": 1,
+          "enumNames": [
+            "Continuous",
+            "Retrig on Note"
+          ]
         },
         {
           "cssClassName": "paramSpacer",

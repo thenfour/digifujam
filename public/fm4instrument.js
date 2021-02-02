@@ -24,14 +24,41 @@ class FMPolySynth {
         this.nodes = {};
     }
 
+    restartLFO1() {
+        if (this.nodes.lfo1) {
+            this.nodes.lfo1.stop();
+            this.nodes.lfo1.disconnect();
+            this.nodes.lfo1 = null;
+        }
+        this.nodes.lfo1 = this.audioCtx.createOscillator();
+        this.nodes.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
+        this.nodes.lfo1.start();
+        this.nodes.lfo1.connect(this.nodes.lfo1Gain);
+    }
+
+    restartLFO2() {
+        if (this.nodes.lfo2) {
+            this.nodes.lfo2.stop();
+            this.nodes.lfo2.disconnect();
+            this.nodes.lfo2 = null;
+        }
+        this.nodes.lfo2 = this.audioCtx.createOscillator();
+        this.nodes.lfo2.frequency.value = this.instrumentSpec.GetParamByID("lfo2_speed").currentValue;
+        this.nodes.lfo2.start();
+        this.nodes.lfo2.connect(this.nodes.lfo2Gain);
+    }
+
     connect() {
         if (this.isConnected) return;
-        // [LFO1] ------------------------------------> (voices)  --> [masterDryGain] -> dryDestination
-        //           |                                            --> [masterWetGain] -> wetDestination
-        //           `->[lfo1Offset] ---> [lfo1_01] -->
-        // [LFO2] ------------------------------------>
-        //           |
-        //           `->[lfo2Offset] ---> [lfo2_01] -->
+        // [LFO1] ----->[lfo1Gain] -------------------------------> (voices)  --> [masterDryGain] -> dryDestination
+        //                       |                                            --> [masterWetGain] -> wetDestination
+        //                       `--------------->                                 
+        //                       [lfo1Offset] ---> [lfo1_01] ----->
+        //
+        // [LFO2] ----->[lfo2Gain] ------------------------------->
+        //                       |
+        //                       `--------------->
+        //                       [lfo2Offset] ---> [lfo2_01] ----->
 
         /*
         
@@ -51,23 +78,32 @@ class FMPolySynth {
         this.nodes.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
         this.nodes.lfo1.start();
 
+        // lfo1Gain
+        this.nodes.lfo1Gain = this.audioCtx.createGain();
+        this.nodes.lfo1Gain.gain.value = 1.0;
+        this.nodes.lfo1.connect(this.nodes.lfo1Gain);
+
         // lfo1Offset
         this.nodes.lfo1Offset = this.audioCtx.createConstantSource();
         this.nodes.lfo1Offset.start();
-        this.nodes.lfo1Offset.offset.value = 1.0;
+        this.nodes.lfo1Offset.offset.value = 1.0; // so it's outputting 0-2
 
         // lfo1_01
         this.nodes.lfo1_01 = this.audioCtx.createGain();
         this.nodes.lfo1_01.gain.value = .5;
+        this.nodes.lfo1Gain.connect(this.nodes.lfo1_01);
         this.nodes.lfo1Offset.connect(this.nodes.lfo1_01);
-        this.nodes.lfo1.connect(this.nodes.lfo1_01);
-
 
         // lfo2
         this.nodes.lfo2 = this.audioCtx.createOscillator();
         this._setLFOWaveforms();
         this.nodes.lfo2.frequency.value = this.instrumentSpec.GetParamByID("lfo2_speed").currentValue;
         this.nodes.lfo2.start();
+
+        // lfo2Gain
+        this.nodes.lfo2Gain = this.audioCtx.createGain();
+        this.nodes.lfo2Gain.gain.value = 1.0;
+        this.nodes.lfo2.connect(this.nodes.lfo2Gain);
 
         // lfo2Offset
         this.nodes.lfo2Offset = this.audioCtx.createConstantSource();
@@ -78,7 +114,7 @@ class FMPolySynth {
         this.nodes.lfo2_01 = this.audioCtx.createGain();
         this.nodes.lfo2_01.gain.value = .5;
         this.nodes.lfo2Offset.connect(this.nodes.lfo2_01);
-        this.nodes.lfo2.connect(this.nodes.lfo2_01);
+        this.nodes.lfo2Gain.connect(this.nodes.lfo2_01);
 
 
         // SET UP DETUNE GRAPH
@@ -183,11 +219,11 @@ class FMPolySynth {
         this.isPoly = (this.instrumentSpec.GetParamByID("voicing").currentValue == 1);
         if (this.isPoly) {
             this.voices.forEach(v => {
-                v.connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
+                v.connect(this.nodes.lfo1Gain, this.nodes.lfo1_01, this.nodes.lfo2Gain, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
             });
         } else {
             this.isPoly = false;
-            this.voices[0].connect(this.nodes.lfo1, this.nodes.lfo1_01, this.nodes.lfo2, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
+            this.voices[0].connect(this.nodes.lfo1Gain, this.nodes.lfo1_01, this.nodes.lfo2Gain, this.nodes.lfo2_01, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
         }
 
         this.nodes.masterDryGain.connect(this.dryDestination);
@@ -212,9 +248,21 @@ class FMPolySynth {
         this.isConnected = false;
     }
 
+
+
     // sent when there's a MIDI note on event.
     NoteOn(midiNote, velocity) {
         if (!this.isConnected) this.connect();
+
+        if (this.instrumentSpec.GetParamByID("lfo1_trigMode").currentValue == 1) {
+            this.restartLFO1();
+        }
+
+        if (this.instrumentSpec.GetParamByID("lfo2_trigMode").currentValue == 1) {
+            this.restartLFO2();
+        }
+
+        this._setLFOWaveforms();
 
         // find a free voice and delegate.
         //let suitableVoice = null;
