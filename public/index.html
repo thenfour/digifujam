@@ -14,7 +14,7 @@
     <script src="ext/babel.min.js"></script>
     <script src="ext/js.cookie.min.js"></script>
 
-    <script src="ext/three.min.js"></script>
+    <script src="ext/nanoid.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="node_modules/soundfont-player/dist/soundfont-player.js"></script>
@@ -29,7 +29,6 @@
     <script src="DFCommon.js"></script>
     <script src="midi.js"></script>
     <script src="net.js"></script>
-    <script src="audioVis.js"></script>
     <script src="adhsr.js"></script>
     <script src="pwm.js"></script>
     <script src="synthTools.js"></script>
@@ -78,8 +77,8 @@
 
         // prefix for client-side generated IDs.
         let gIDDomain = "client";
-        
         let gIsServer = false;
+        let gNanoid = nanoid;
 
         // safari audiocontext support
         window.AudioContext = window.AudioContext || window.webkitAudioContext;

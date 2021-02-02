@@ -63,8 +63,7 @@ let remapWithPowCurve = (value, inpMin, inpMax, p, outpMin, outpMax) => {
 // make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
 let gNextID = 1;
 let generateID = function () {
-    console.assert(gIDDomain);
-    let ret = gIDDomain + gNextID;
+    let ret = gIDDomain + gNextID + "_" + gNanoid(8);
     gNextID++;
     return ret;
 }

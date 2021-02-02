@@ -1,9 +1,13 @@
 const express = require('express')
+const { nanoid } = require("nanoid");
 const app = express()
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const DF = require('./public/DFCommon')
 const fsp = require('fs').promises;
+
+gNanoid = nanoid;
+
 
 // id-generation prefix
 gIDDomain = "srv";
@@ -22,6 +26,7 @@ let IsAdminUser = (userID) => {
 };
 
 let log = (msg) => {
+  if (!msg) return;
   console.log(`${(new Date()).toISOString()} ${msg}`);
   if (msg.stack) {
     // assume error object.
