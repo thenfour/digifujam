@@ -127,6 +127,15 @@ class DigifuApp {
         this.synth.SetInstrumentParams(this.myInstrument, patchObj);
     };
 
+    MIDI_CC(cc, val) {
+        if (this.myInstrument == null) return;
+        if (!this.myInstrument.MIDICCHasMappings(cc)) return;
+        // ok we have a mapped CC. send to synth & net.
+        let patchObj = {};
+        patchObj["midicc_" + cc] = val;
+        this.net.SendInstrumentParams(patchObj);
+        this.synth.SetInstrumentParams(this.myInstrument, patchObj);
+    }
 
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
     NET_OnPleaseIdentify() {
@@ -173,6 +182,7 @@ class DigifuApp {
     };
 
     NET_OnUserEnter(data) {
+        if (!this.roomState) return;
 
         let nu = Object.assign(new DigifuUser(), data.user);
         nu.thaw();
@@ -188,6 +198,7 @@ class DigifuApp {
     };
 
     NET_OnUserLeave(data) {
+        if (!this.roomState) return;
 
         let foundUser = this.roomState.FindUserByID(data.userID);
         if (foundUser == null) {
@@ -207,6 +218,7 @@ class DigifuApp {
     };
 
     NET_OnInstrumentOwnership(instrumentID, userID /* may be null */, idle) {
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
         if (foundInstrument == null) {
             //log(`  instrument not found...`);
@@ -256,6 +268,7 @@ class DigifuApp {
     };
 
     NET_OnNoteOn(userID, note, velocity) {
+        if (!this.roomState) return;
         let foundUser = this.roomState.FindUserByID(userID);
         if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
@@ -268,6 +281,7 @@ class DigifuApp {
     };
 
     NET_OnNoteOff(userID, note) {
+        if (!this.roomState) return;
         let foundUser = this.roomState.FindUserByID(userID);
         if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
@@ -280,6 +294,7 @@ class DigifuApp {
     };
 
     NET_OnUserAllNotesOff(userID) {
+        if (!this.roomState) return;
         let foundUser = this.roomState.FindUserByID(userID);
         if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
@@ -294,6 +309,7 @@ class DigifuApp {
 
 
     NET_OnPedalDown(userID) {
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
         if (foundInstrument == null) {
             //log(`NET_OnPedalDown instrument not found`);
@@ -303,6 +319,7 @@ class DigifuApp {
     };
 
     NET_OnPedalUp(userID) {
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
         if (foundInstrument == null) {
             //log(`NET_OnPedalUp instrument not found`);
@@ -313,6 +330,7 @@ class DigifuApp {
 
     NET_OnInstrumentParams(data) // userID, instrumentID, patchObj
     {
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
         if (foundInstrument == null) {
             //log(`NET_OnInstrumentParam instrument not found`);
@@ -324,7 +342,31 @@ class DigifuApp {
         }
     }
 
+    // // instrumentID, paramID, srcVal
+    NET_OnCreateParamMapping(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
+        if (foundInstrument == null) {
+            //log(`NET_OnInstrumentParam instrument not found`);
+            return;
+        }
+        this.synth.createParamMapping(foundInstrument.instrument, foundInstrument.instrument.GetParamByID(data.paramID), data.srcVal);
+    }
+
+    // instrumentID, paramID
+    NET_OnRemoveParamMapping(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
+        if (foundInstrument == null) {
+            //log(`NET_OnInstrumentParam instrument not found`);
+            return;
+        }
+        this.synth.removeParamMapping(foundInstrument.instrument, foundInstrument.instrument.GetParamByID(data.paramID));
+    }
+
+
     NET_OnInstrumentPresetDelete(data) { // instrumentID, presetID
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             return;
@@ -334,6 +376,7 @@ class DigifuApp {
     }
 
     NET_OnInstrumentFactoryReset(data) { // instrumentID, presets:[presets]
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             return;
@@ -347,6 +390,7 @@ class DigifuApp {
     }
 
     NET_OnInstrumentBankReplace(data) { // [presets]
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             return;
@@ -358,6 +402,7 @@ class DigifuApp {
     }
 
     NET_OnInstrumentPresetSave(data) { // instrumentID, patchObj:{params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
+        if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             return;
@@ -383,6 +428,7 @@ class DigifuApp {
     }
 
     NET_OnPing(data) {
+        if (!this.roomState) return;
         this.net.SendPong(data.token);
         if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
 
@@ -397,7 +443,7 @@ class DigifuApp {
             if (!foundUser) return; // this is possible because the server may be latent in sending this user data.
             foundUser.user.pingMS = u.pingMS;
         });
-        this.worldPopulation = data.rooms.reduce((a,b) => a + b.users.length, 0);
+        this.worldPopulation = data.rooms.reduce((a, b) => a + b.users.length, 0);
 
         // pings are a great time to do some cleanup.
 
@@ -414,6 +460,7 @@ class DigifuApp {
     };
 
     NET_OnUserChatMessage(msg) {
+        if (!this.roomState) return;
 
         let ncm = Object.assign(new DigifuChatMessage(), msg);
         ncm.thaw();
@@ -423,6 +470,7 @@ class DigifuApp {
     }
 
     NET_OnUserState(data) {
+        if (!this.roomState) return;
         let u = this.roomState.FindUserByID(data.state.userID);
         if (!u.user) {
             console.log(`NET_OnUserState: unknown user ${data.state.userID}`);
@@ -454,6 +502,7 @@ class DigifuApp {
     }
 
     NET_OnUserCheer(data) {
+        if (!this.roomState) return;
         let u = this.roomState.FindUserByID(data.userID);
         if (!u.user) {
             console.log(`NET_OnUserState: unknown user ${data.userID}`);
@@ -546,11 +595,8 @@ class DigifuApp {
         this.net.SendCheer(text, x, y);
     };
 
-    loadPatchObj(presetObj) {
+    loadPatchObj(presetObj /* RAW values */) {
         if (!this.myInstrument) return;
-        Object.keys(presetObj).forEach(k => {
-            presetObj[k] = this.myInstrument.sanitizeInstrumentParamVal(k, presetObj[k]);
-        });
         this.net.SendInstrumentParams(presetObj);
         this.synth.SetInstrumentParams(this.myInstrument, presetObj);
     };
@@ -558,8 +604,6 @@ class DigifuApp {
 
     SetInstrumentParam(inst, param, newVal) {
         let presetObj = {};
-        newVal = inst.sanitizeInstrumentParamVal(param, newVal);
-
         presetObj[param.paramID] = newVal;
         this.loadPatchObj(presetObj);
     };
@@ -610,6 +654,19 @@ class DigifuApp {
         this.net.SendInstrumentFactoryReset();
     }
 
+    createParamMappingFromSrcVal(param, srcVal) { // srcVal is directly mapped to MIDI CC
+        if (!this.myInstrument) return;
+        this.net.SendCreateParamMapping(param, srcVal);
+        this.synth.createParamMapping(this.myInstrument, param, srcVal);
+    }
+    createParamMappingFromMacro(param, macroIndex) {
+        return this.createParamMappingFromSrcVal(param, macroIndex + eParamMappingSource.Macro0);
+    }
+    removeParamMapping(param) {
+        if (!this.myInstrument) return;
+        this.net.SendRemoveParamMapping(param);
+        this.synth.removeParamMapping(this.myInstrument, param);
+    }
 
 
 

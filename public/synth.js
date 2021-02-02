@@ -78,17 +78,19 @@ class DigifuSynth {
 		this.instruments[instrumentSpec.instrumentID].PedalDown();
 	};
 
-	SetInstrumentParams(instrumentSpec, patchObj) {
-		Object.keys(patchObj).forEach(paramID => {
-			let param = instrumentSpec.params.find(p => p.paramID == paramID);
-			if (param) {
-				let newVal = instrumentSpec.sanitizeInstrumentParamVal(param, patchObj[paramID]);
-				patchObj[paramID] = newVal;
-				param.currentValue = newVal;
-			}
-		});
+	createParamMapping(inst, param, srcVal) {
+		inst.ensureParamMappingParams(param, srcVal);
+	}
+
+	removeParamMapping(inst, param) {
+		let patchObj = inst.removeParamMapping(param);
+		this.SetInstrumentParams(inst, patchObj);
+	}
+
+	SetInstrumentParams(instrumentSpec, patchObj /* RAW values, not calculated */) {
+		let calculatedPatchObj = instrumentSpec.integrateRawParamChanges(patchObj);
 		if (this._isMuted) return;
-		this.instruments[instrumentSpec.instrumentID].SetParamValues(patchObj);
+		this.instruments[instrumentSpec.instrumentID].SetParamValues(calculatedPatchObj);
 	}
 
 	ConnectInstrument(instrumentSpec) {

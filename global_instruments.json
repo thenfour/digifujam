@@ -291,7 +291,6 @@
       "namePrefix": "FM4: ",
       "gain": 0.05,
       "color": "rgb(138, 224, 153)",
-      "maxPolyphony": "8",
       "engine": "minifm",
       "supportsObservation": true,
       "activityDisplay": "keyboard",
@@ -414,6 +413,54 @@
           "parameterType": "inlineLabel",
           "inlineLabel": "osc enable",
           "defaultValue": 0
+        },
+        {
+          "paramID": "macro0_value",
+          "name": "Macro 0",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "mappingSrcVal": 1000,
+          "isMacro": true,
+          "macroIdx": 0,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro1_value",
+          "name": "Macro 1",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "macroIdx": 1,
+          "mappingSrcVal": 1001,
+          "defaultValue": 0,
+          "isMacro": true,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro2_value",
+          "name": "Macro 2",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "macroIdx": 2,
+          "mappingSrcVal": 1002,
+          "defaultValue": 0,
+          "isMacro": true,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro3_value",
+          "name": "Macro 3",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "macroIdx": 3,
+          "mappingSrcVal": 1003,
+          "defaultValue": 0,
+          "isMacro": true,
+          "minValue": 0.0,
+          "maxValue": 127.0
         },
         {
           "paramID": "osc0_wave",

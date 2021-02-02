@@ -1,6 +1,6 @@
 'use strict';
 
-let gDigifujamVersion = 3;
+let gDigifujamVersion = 4;
 
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
@@ -89,6 +89,8 @@ const ClientMessages = {
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
     InstrumentParams: "InstParams",// {} object mapping paramID => newVal -- pitch bend is a special param called "pb"
+    CreateParamMapping: "CreateParamMapping", // paramID, eParamMappingSource
+    RemoveParamMapping: "RemoveParamMapping", // paramID
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // presetID
     InstrumentPresetSave: "InstrumentPresetSave", // {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite.
@@ -116,6 +118,9 @@ const ServerMessages = {
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
     InstrumentParams: "InstParams",// { userID, instrumentID, patchObj:{object mapping paramID to newVal} } ] -- pitch bend is a special param called "pb"
+    CreateParamMapping: "CreateParamMapping", // instrumentID, paramID, eParamMappingSource
+    RemoveParamMapping: "RemoveParamMapping", // instrumentID, paramID
+
     ServerStateDump: "ServerStateDump",
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
@@ -149,6 +154,24 @@ const ClientSettings = {
     MinCheerIntervalMS: 200,
     InstrumentParamIntervalMS: 50,
     InstrumentFloatParamDiscreteValues: 64000,
+};
+
+const eParamMappingSource = {
+    Macro0: 1000,
+    Macro1: 1001,
+    Macro2: 1002,
+    Macro3: 1003,
+    CC1: 1,
+    CC2: 2,
+    CC3: 3,
+    CC4: 4,
+    CC5: 5,
+    CC6: 6,
+    CC7: 7,
+    CC8: 8,
+    CC9: 9,
+    CC10: 10,
+    CC11: 11,
 };
 
 const AccessLevels = {
@@ -191,6 +214,7 @@ const InternalInstrumentParams = [
         "paramID": "patchName",
         "name": "Patch name",
         "parameterType": "textParam",
+        "supportsMapping": false,
         "isInternal": true,
         "maxTextLength": 100,
         "currentValue": "init",
@@ -200,6 +224,7 @@ const InternalInstrumentParams = [
         "paramID": "presetID",
         "name": "Preset ID",
         "parameterType": "textParam",
+        "supportsMapping": false,
         "isInternal": true,
         "maxTextLength": 100
     },
@@ -207,6 +232,7 @@ const InternalInstrumentParams = [
         "paramID": "author",
         "name": "Author",
         "parameterType": "textParam",
+        "supportsMapping": false,
         "isInternal": true,
         "maxTextLength": 100
     },
@@ -214,6 +240,7 @@ const InternalInstrumentParams = [
         "paramID": "savedDate",
         "name": "Saved date",
         "parameterType": "textParam",
+        "supportsMapping": false,
         "isInternal": true,
         "maxTextLength": 100
     },
@@ -221,6 +248,7 @@ const InternalInstrumentParams = [
         "paramID": "tags",
         "name": "Tags",
         "parameterType": "textParam",
+        "supportsMapping": false,
         "isInternal": true,
         "maxTextLength": 500
     },
@@ -228,6 +256,7 @@ const InternalInstrumentParams = [
         "paramID": "isReadOnly",
         "name": "Tags",
         "parameterType": "intParam",
+        "supportsMapping": false,
         "isInternal": true,
     },
 ];
@@ -248,7 +277,20 @@ class InstrumentParam {
         this.valueCurve = 1; // 1 = linear slider, higher values = more concave curve. 10 would be very extreme, 2 is usable
         this.zeroPoint = null;// 0-1 of output range, when scaling to external range, when neg & pos ranges are different, it's a bit fuzzy to know where "0" is on the output range. We calculate it and put it here.
 
-        this.currentValue = 0;
+        // stuff for mapping
+        this.supportsMapping = true;
+        this.mappingSrcVal = undefined;// eParamMappingSource
+        this.isMappingRange = undefined;
+        this.isMappingSrc = undefined;
+        this.dependentParamID = undefined;// for mapping sources or ranges, this is the paramID of the affected/dependent param.
+
+        this.isMidiCC = false;
+        this.midiCC = undefined; // which midi CC does this represent
+        this.isMacro = false;
+        this.macroIdx = undefined; // which macro index does tihs represent?
+
+        this.currentValue = 0; // the value with any mappings applied (MIDI CC, macro etc)
+        this.rawValue = 0;// the value with no mappings applied, as advertised by the GUI sliders for example
     }
     thaw() { /* no child objects to thaw. */ }
 
@@ -319,7 +361,7 @@ class DigifuInstrumentSpec {
         this.engine = null; // soundfont, minifm, drumkit
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
-        this.maxPolyphony = 10;
+        this.maxPolyphony = 8;
         this.params = [];// instrument parameter value map
         this.presets = []; // a preset is just a param:value pair
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
@@ -327,6 +369,8 @@ class DigifuInstrumentSpec {
         this.maxTextLength = 100;
         this.behaviorAdjustmentsApplied = false; // upon thaw, based on teh behaviorstyle, we rearrange params and stuff. but once it's done, don't do it again (on the client)
         this.supportsObservation = false; // there's no point allowing certain instruments' params to be observed like drum kit or sampler
+
+        this.paramMappings = [];
     }
 
     getDisplayName() {
@@ -402,17 +446,308 @@ class DigifuInstrumentSpec {
         return this.presets[0];
     }
 
-    loadPatchObj(presetObj) {
-        if (!presetObj) return;
-        Object.keys(presetObj).forEach(k => {
-            let param = this.params.find(p => p.paramID == k);
-            if (!param) {
-                console.log(`loadPatchObj: "${k}" was not found, its value will be ignored.`);
-                return;
-            }
-            let newVal = this.sanitizeInstrumentParamVal(param, presetObj[k]);
-            param.currentValue = newVal;
+    getParamMappingParamIDsForParam(param) {
+        return {
+            mappingSrc: "mappingSrc__" + param.paramID,
+            mappingRange: "mappingRange__" + param.paramID
+        };
+    }
+
+    // returns null if the param is not mapped.
+    getParamMappingSpec(param) {
+        // mappingSrc:osc0_level
+        // mappingRange:osc0_level
+        // midiCC_0
+        let paramIDs = this.getParamMappingParamIDsForParam(param);
+
+        let mappingSrc = this.GetParamByID(paramIDs.mappingSrc);
+        if (!mappingSrc) return null;
+        if (!mappingSrc.currentValue) {
+            return null;
+        }
+        let mappingRange = this.GetParamByID(paramIDs.mappingRange);
+        if (!mappingRange) {
+            return null;
+        }
+
+        return {
+            mappingSrc,
+            mappingRange,
+            param
+        };
+    }
+
+    // returns {mappingSrc, mappingRange, param }
+    ensureParamMappingParams(param, srcValue) {
+        let paramIDs = this.getParamMappingParamIDsForParam(param);
+        //console.log(`ensureParamMappingParams paramIDs: ${JSON.stringify(param)}`);
+        let mappingSrc = this.GetParamByID(paramIDs.mappingSrc);
+        if (!mappingSrc) {
+            mappingSrc = Object.assign(new InstrumentParam(), {
+                paramID: paramIDs.mappingSrc,
+                name: "Source",
+                parameterType: "intParam",
+                defaultValue: 0,
+                isInternal: true,
+                hidden: true,
+                isMappingSrc: true,
+                dependentParamID: param.paramID,
+                minValue: 0,
+                supportsMapping: false,
+                maxValue: 10000,
+                currentValue: srcValue,
+            });
+            this.params.push(mappingSrc);
+            console.log(`created mapping source param: ${mappingSrc.paramID}`);
+        }
+        let mappingRange = this.GetParamByID(paramIDs.mappingRange);
+        if (!mappingRange) {
+            mappingRange = Object.assign(new InstrumentParam(), {
+                paramID: paramIDs.mappingRange,
+                name: "Range",
+                parameterType: "floatParam",
+                defaultValue: 0,
+                isInternal: true,
+                hidden: true,
+                isMappingRange: true,
+                dependentParamID: param.paramID,
+                supportsMapping: false,
+                minValue: -1.0,
+                maxValue: 1.0,
+                currentValue: 0
+            });
+            console.log(`created mappingRange param: ${mappingRange.paramID}`);
+            this.params.push(mappingRange);
+        }
+        return { mappingSrc, mappingRange, param };
+    }
+
+    createParamMappingFromMacro(param, macroIndex) {
+        let params = this.ensureParamMappingParams(param, eParamMappingSource.Macro0 + macroIndex);
+    }
+
+    createParamMappingFromCC(param, cc) {
+        let params = this.ensureParamMappingParams(param, cc);
+    }
+
+    // returns a patchObj which the caller should apply updates with, including on this instrument.
+    removeParamMapping(param) {
+        let paramIDs = this.getParamMappingParamIDsForParam(param);
+        this.params.removeIf(p => p.paramID === paramIDs.mappingSrc || p.paramID === paramIDs.mappingRange);
+
+        // - when you remove mapping, recalc is needed
+        const patchObj = {};
+        patchObj[param.paramID] = param.rawValue;
+        return patchObj;
+    }
+
+    // spec is eParamMappingSource
+    FindMapSrcValueParamForMappingSrc(srcType) {
+        let mi = srcType - eParamMappingSource.Macro0;
+        if (mi >= 0 && mi <= 3) {
+            return this.params.find(p => p.macroIdx == mi);
+        }
+        return this.params.find(p => p.midiCC == srcType);
+    }
+
+    getMappingSrcDisplayName(mappingSpec) {
+        let mi = mappingSpec.mappingSrc.currentValue - eParamMappingSource.Macro0;
+        if (mi >= 0 && mi <= 3) {
+            return "Macro " + mi;
+        }
+        return "MIDI CC#" + mappingSpec.mappingSrc.currentValue;
+    }
+
+    // return all mapping specs for the given mappingSrc.currentValue.
+    // always valid, may be empty.
+    getMappingSpecsForSrcVal(val) {
+        let matchingSrcParams = this.params.filter(param => {
+            if (!param.isMappingSrc) return false;
+            if (param.currentValue != val) return false;
+            return true;
         });
+        return matchingSrcParams.map(mappingSrc => {
+            // find matching param
+            const paramID = mappingSrc.dependentParamID;
+            const param = this.GetParamByID(paramID);
+            const mappingRange = this.GetParamByID("mappingRange__" + param.paramID);
+            return {
+                mappingSrc,
+                mappingRange,
+                param
+            };
+        });
+    }
+
+    srcValueHasMappings(val) {
+        return this.params.some(param => {
+            if (!param.isMappingSrc) return false;
+            if (param.currentValue != val) return false;
+            return true;
+        });
+    }
+
+    MIDICCHasMappings(cc) {
+        return this.srcValueHasMappings(cc);
+    }
+
+    getMappingSpecsForMidiCC(cc) {
+        return this.getMappingSpecsForSrcVal(cc);
+    }
+
+    getMappingSpecsForMacro(macroIdx) {
+        return this.getMappingSpecsForSrcVal(eParamMappingSource.Macro0 + macroIdx);
+    }
+
+    // patchObj is a param/value map of RAW values.
+    // here is where we apply mappings and calculate the currentValue.
+    // mapping gives us a sort of dependency graph, and therefore it's important to process things in the correct order.
+    //
+    // this will PUSH mapping source values (like CC changes) to dependent params,
+    // and also PULL for dependent params. so it's possible that values get calculated twice here. but since that scenario
+    // only really happens during big patch changes, then don't bother optimizing it.
+    //
+    // RULE #1480: when a mapping range or source is being set here, it should also recalculate the dependent params.
+    //
+    // returns a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
+    integrateRawParamChanges(patchObj) {
+        if (!patchObj) return;
+
+        const ret = {};
+
+        const midiCCs = {};// map paramID to param
+        const macros = {};// map paramID to param
+        const otherMappableParams = {};// map paramID to param
+
+        // apply RAW values to all given params (which also will set the new dependency topology)
+        const keys = Object.keys(patchObj);
+        keys.forEach(k => {
+            let param = this.params.find(p => p.paramID === k);
+            if (!param) {
+                // is it a MIDI CC parameter? create it.
+                const midiCC = parseInt(k.substring("midicc_".length));
+                if (k.startsWith("midicc_")) {
+                    param = Object.assign(new InstrumentParam(), {
+                        paramID: k,
+                        name: k,
+                        parameterType: InstrumentParamType.intParam,
+                        defaultValue: 0,
+                        isInternal: true,
+                        hidden: true,
+                        isMidiCC: true,
+                        midiCC: midiCC,
+                        mappingSrcVal: midiCC,
+                        minValue: 0,
+                        maxValue: 127,
+                    });
+                    this.params.push(param);
+                    console.log(`created a new midi cc parameter: ${k} for midi CC ${param.midiCC}`);
+                } else {
+                    console.log(`integrateRawParamChanges: "${k}" was not found, its value will be ignored.`);
+                    return;
+                }
+            }
+            param.rawValue = patchObj[k];
+
+            // if this is a mapping src or mapping range, then the depenedent parameter needs to be recalculated.
+            if (param.isMappingSrc || param.isMappingRange) {
+                // find the dependent param obj.
+                let dp = this.GetParamByID(param.dependentParamID);
+                if (!dp) {
+                    throw new Error(`Param is mapped, but the source param '${param.dependentParamID}' is not found??`);
+                }
+                if (dp.isMacro) {
+                    macros[dp.paramID] = dp;
+                } else {
+                    otherMappableParams[dp.paramID] = dp;
+                }
+            }
+
+            if (param.isMidiCC) midiCCs[param.paramID] = param;
+            if (param.isMacro) macros[param.paramID] = param;
+
+            if (param.supportsMapping) {
+                otherMappableParams[param.paramID] = param;
+            } else {
+                param.currentValue = this.calculateParamCurrentValue(param, null, null);
+                ret[k] = param.currentValue;
+            }
+        });
+
+        // graph topology is set
+
+        // PUSH CC changes to dependent params. And when the dependent param is a macro, then add to macros[] to be pushed to its dependents.
+        Object.keys(midiCCs).forEach(k => {
+            const param = midiCCs[k];
+            // find all params depending on this midi CC param directly, and calculate their currentValue.
+            const specs = this.getMappingSpecsForSrcVal(param.mappingSrcVal); // { mappingSrc, mappingRange, param }
+            specs.forEach(spec => {
+                spec.param.currentValue = this.calculateParamCurrentValue(spec.param, spec, param);
+                ret[spec.param.paramID] = spec.param.currentValue;
+                // if it's a macro, then add it to macros
+                if (spec.param.isMacro) {
+                    macros.push(spec.param);
+                }
+            });
+        });
+
+        let calcOwnParamVal = (param) => {
+            const spec = this.getParamMappingSpec(param);
+            if (spec) {
+                param.currentValue = this.calculateParamCurrentValue(param, spec, this.FindMapSrcValueParamForMappingSrc(spec.mappingSrc.currentValue));
+            } else {
+                param.currentValue = this.calculateParamCurrentValue(param, null, null);
+            }
+            ret[param.paramID] = param.currentValue;
+        };
+
+        // calculate macro values
+        const macroKeys = Object.keys(macros);
+        macroKeys.forEach(k => {
+            calcOwnParamVal(macros[k]);
+        });
+
+        // PUSH MACRO changes.
+        macroKeys.forEach(k => {
+            const param = macros[k];
+            // find all params depending on this macro directly, and calculate them.
+            const specs = this.getMappingSpecsForSrcVal(param.mappingSrcVal); // { mappingSrc, mappingRange, param }
+            specs.forEach(spec => {
+                spec.param.currentValue = this.calculateParamCurrentValue(spec.param, spec, param);
+                ret[spec.param.paramID] = spec.param.currentValue;
+            });
+        });
+
+        // PULL changes for mapped params.
+        Object.keys(otherMappableParams).forEach(k => {
+            calcOwnParamVal(otherMappableParams[k]);
+        });
+
+        return ret;
+    }
+
+    // returns the value; doesn't set it. caller can do that.
+    // mappingSpec is { mappingSrc, mappingRange, param }
+    // mappingSrcValueParam should be NULL if mappingSpec is null, or it should be a midiCC or macro parameter which corresponds to the mapping
+    calculateParamCurrentValue(param, mappingSpec, mappingSrcValueParam) {
+        if (!mappingSpec || !mappingSrcValueParam) {
+            const ret = this.sanitizeInstrumentParamVal(param, param.rawValue);
+            // if (!gIsServer) {
+            //     console.log(`calculateParamCurrentValue: param ${param.paramID} raw:${param.rawValue} live:${ret} <no mapping>`);
+            // }
+            return ret;
+        }
+        // all mappingSrc values are 0-127 to imitate midi CC.
+        // and when CC is 0, we use the raw value.
+        // when CC is max, use the value at maximum range. what is that range?
+        const extent = mappingSpec.mappingRange.currentValue * (param.maxValue - param.minValue);
+        //const mappingSrcValueParam = mappingSpec.mappingSrc.currentValue;
+        const mappedVal = remap(mappingSrcValueParam.currentValue, 0, 127, param.rawValue, param.rawValue + extent);
+        const ret = this.sanitizeInstrumentParamVal(param, mappedVal);
+        // if (!gIsServer) {
+        //     console.log(`calculateParamCurrentValue: param ${param.paramID} raw:${param.rawValue} live:${ret} <mapping to ${mappingSrcValueParam.name} with ${mappingSrcValueParam.currentValue}>`);
+        // }
+        return ret;
     }
 
     exportAllPresetsJSON() {
@@ -469,9 +804,22 @@ class DigifuInstrumentSpec {
         let ret = {};
         this.params.forEach(param => {
             if (param.paramID == "pb") { return; } // pitch bend is not something we want to store in presets
-            ret[param.paramID] = param.currentValue;
+            if (param.isMidiCC) { return; } // also not helpful to store CC values which are live.
+            ret[param.paramID] = param.rawValue;
         });
         return ret;
+    }
+
+    ReleaseOwnership() {
+        this.controlledByUserID = null;
+        // - set pb and all CC values to 0 when instrument release/take
+        this.params.removeIf(p => {
+            if (p.midiCC) return true;
+            return false;
+        });
+        const pb = this.GetParamByID("pb");
+        pb.currentValue = 0;
+        pb.rawValue = 0;
     }
 
     thaw() {
@@ -515,14 +863,6 @@ class DigifuInstrumentSpec {
                 osc3_freq_transp: 0,
                 osc0_lfo1_gainAmt: 0,// because gain is always 1, it makes the LFO control sorta hard to understand and limited.
                 osc0_lfo2_gainAmt: 0,// because gain is always 1, it makes the LFO control sorta hard to understand and limited. it's not especially useful anyway.
-                //osc0_vel_scale: 0,
-                // osc0_key_scale: 0,
-                // osc1_vel_scale: 0,
-                // osc1_key_scale: 0,
-                // osc2_vel_scale: 0,
-                // osc2_key_scale: 0,
-                // osc3_vel_scale: 0,
-                // osc3_key_scale: 0,
                 osc0_env_trigMode: 1,
                 osc1_env_trigMode: 1,
                 osc2_env_trigMode: 1,
@@ -592,7 +932,7 @@ class DigifuInstrumentSpec {
         let patch = {};
         srcParams.forEach(srcParam => {
             let destParamID = srcParam.getCurrespondingParamIDForOscillator(destOscIndex);
-            patch[destParamID] = srcParam.currentValue;
+            patch[destParamID] = srcParam.rawValue;
         });
         return patch;
     }
@@ -1084,7 +1424,7 @@ class DigifuRoomState {
 
         // remove "live" references to users.
         this.users = [];
-        this.instrumentCloset.forEach(i => { i.controlledByUserID = null; });
+        this.instrumentCloset.forEach(i => { i.ReleaseOwnership(); });
     }
 
     // returns { user, index } or null.

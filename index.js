@@ -13,6 +13,8 @@ gIDDomain = "srv";
 
 let gRooms = {}; // map roomID to RoomServer
 
+gIsServer = true;
+
 gAdminUserIDs = [];
 
 let IsAdminUser = (userID) => {
@@ -88,7 +90,7 @@ class RoomServer {
 
     // do factory resets
     this.roomState.instrumentCloset.forEach(i => {
-      i.loadPatchObj(i.GetInitPreset());
+      i.integrateRawParamChanges(i.GetInitPreset());
     });
 
     // remember this stuff for our "reset to factory defaults" function.
@@ -241,7 +243,7 @@ class RoomServer {
       // find their instrument.
       let existingInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (existingInstrument != null) {
-        existingInstrument.instrument.controlledByUserID = null;
+        existingInstrument.instrument.ReleaseOwnership();
 
         // broadcast instrument change to all clients
         io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
@@ -292,7 +294,7 @@ class RoomServer {
         return;
       }
 
-      foundInstrument.instrument.controlledByUserID = null;
+      foundInstrument.instrument.ReleaseOwnership();
 
       // broadcast instrument change to all clients
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
@@ -445,37 +447,86 @@ class RoomServer {
       }
 
       // set the value.
-      let ret = {
-        userID: foundUser.user.userID,
-        instrumentID: foundInstrument.instrument.instrumentID,
-        patchObj: {}
-      };
-      Object.keys(data).forEach(paramID => {
-        //data.forEach(x => {
-        if (paramID == "pb") {
-          // special case: pitch bend is not a real param on an instrument but it's very convenient to use the param system for it.
-          // no need to store this locally.
-          ret.patchObj[paramID] = data[paramID];
-        } else {
-          let p = foundInstrument.instrument.params.find(o => o.paramID == paramID);
-          if (!p) {
-            log(`=> param ${paramID} not found in instrument ${foundInstrument.instrument.name}.`);
-            return;
-          }
-
-          p.currentValue = foundInstrument.instrument.sanitizeInstrumentParamVal(p, data[paramID]);
-          //log(`OnClientInstrumentParams ${p.name} => ${x.newVal} => ${p.currentValue}`);
-          ret.patchObj[paramID] = p.currentValue;
-        }
-      });
+      foundInstrument.instrument.integrateRawParamChanges(data);
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, ret);
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, {
+        userID: foundUser.user.userID,
+        instrumentID: foundInstrument.instrument.instrumentID,
+        patchObj: data
+      });
     } catch (e) {
       log(`OnClientInstrumentParams exception occurred`);
       log(e);
     }
   };
+
+
+  OnClientCreateParamMapping(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnClientCreateParamMapping => unknown user`);
+        return;
+      }
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      // paramID: param.paramID, srcVal });
+      // todo: validate paramID & srcValue.
+      const mapSpec = foundInstrument.instrument.ensureParamMappingParams(foundInstrument.instrument.GetParamByID(data.paramID), data.srcVal);
+
+      // "srcVal":1
+      log(`CreateParamMapping ${foundInstrument.instrument.name}, data=${JSON.stringify(data)}, mappingSrc value = ${mapSpec.mappingSrc.currentValue}}`);
+
+      // broadcast to all clients except foundUser
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.CreateParamMapping, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        paramID: data.paramID,
+        srcVal: data.srcVal,
+      });
+    } catch (e) {
+      log(`OnClientCreateParamMapping exception occurred`);
+      log(e);
+    }
+  };
+
+
+
+  OnClientRemoveParamMapping(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnClientRemoveParamMapping => unknown user`);
+        return;
+      }
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        log(`=> not controlling an instrument.`);
+        return;
+      }
+
+      log(`RemoveParamMapping ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
+      // paramID: param.paramID
+      // todo: validate paramID.
+      const patchObj = foundInstrument.instrument.removeParamMapping(foundInstrument.instrument.GetParamByID(data.paramID));
+      foundInstrument.instrument.integrateRawParamChanges(patchObj);
+
+      // broadcast to all clients except foundUser
+      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.RemoveParamMapping, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        paramID: data.paramID,
+      });
+    } catch (e) {
+      log(`OnClientRemoveParamMapping exception occurred`);
+      log(e);
+    }
+  };
+
+
 
 
   OnClientInstrumentPresetDelete(ws, data) {
@@ -524,7 +575,7 @@ class RoomServer {
         throw new Error(`error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`);
       }
       let initPreset = foundInstrument.instrument.GetInitPreset();
-      foundInstrument.instrument.loadPatchObj(initPreset);
+      foundInstrument.instrument.integrateRawParamChanges(initPreset);
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentFactoryReset, {
         instrumentID: foundInstrument.instrument.instrumentID,
@@ -867,7 +918,7 @@ class RoomServer {
       // remove references to this user.
       this.roomState.instrumentCloset.forEach(inst => {
         if (inst.controlledByUserID != foundUser.user.userID) return;
-        inst.controlledByUserID = null;
+        inst.ReleaseOwnership();
         // broadcast this to clients
         io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
       });
@@ -1011,6 +1062,8 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.PedalDown, data => ForwardToRoom(ws, room => room.OnClientPedalDown(ws, data)));
       ws.on(DF.ClientMessages.PedalUp, data => ForwardToRoom(ws, room => room.OnClientPedalUp(ws, data)));
       ws.on(DF.ClientMessages.InstrumentParams, data => ForwardToRoom(ws, room => room.OnClientInstrumentParams(ws, data)));
+      ws.on(DF.ClientMessages.CreateParamMapping, data => ForwardToRoom(ws, room => room.OnClientCreateParamMapping(ws, data)));
+      ws.on(DF.ClientMessages.RemoveParamMapping, data => ForwardToRoom(ws, room => room.OnClientRemoveParamMapping(ws, data)));
 
       ws.on(DF.ClientMessages.InstrumentPresetDelete, data => ForwardToRoom(ws, room => room.OnClientInstrumentPresetDelete(ws, data)));
       ws.on(DF.ClientMessages.InstrumentFactoryReset, data => ForwardToRoom(ws, room => room.OnClientInstrumentFactoryReset(ws, data)));

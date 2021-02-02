@@ -771,6 +771,8 @@ input[type="range"].intParam::-webkit-slider-thumb,
     width: 9px;
 }
 
+
+
 .instPresetButtons {
     white-space: normal;
 }
@@ -921,12 +923,16 @@ ul.instParamList li.inlineLabel
 .component.instrumentCloset li.instrument:hover {
     background-color:#044;
 }
-.component.instrumentCloset li.instrument button {
+.component.instrumentCloset li.instrument button,
+li.floatParam .paramMappingBox button
+{
     border:0;
     background-color: #066;
     color: #0cc;
 }
-.component.instrumentCloset li.instrument button:hover {
+.component.instrumentCloset li.instrument button:hover,
+li.floatParam .paramMappingBox button:hover
+{
     background-color: #088;
     color: #0cc;
 }
@@ -948,3 +954,23 @@ ul.instParamList li.inlineLabel
     opacity: 50%;
 }
 
+
+
+
+li.floatParam .paramMappingBox {
+    white-space: normal;
+    margin: 5px;
+    padding: 5px;
+    background-color: #650;
+    border-radius: 5px;
+}
+
+li.floatParam .paramMappingBox .learningIndicator {
+    color: #8cc;
+    padding: 10px;
+    border-radius: 0;
+    border: 1px solid #a00;
+    background-color: #200;
+    white-space: normal;
+    border-left: 7px solid #a00;
+}

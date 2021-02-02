@@ -9,109 +9,131 @@
 // pitch bend
 // expression
 // mod
-
-function DigifuMidi() {
-  this.EventHandler = null;
-  this.currentlyListeningOn = [];// list of device names we're attached to.
-};
-
 let gMidiAccess = null; // yea global...
 
-DigifuMidi.prototype.OnMIDIMessage = function (message) {
+class DigifuMidi {
+  constructor() {
+    this.EventHandler = null;
+    this.currentlyListeningOn = [];// list of device names we're attached to.
+    this.isLearning = false; // set while listening for a midi CC.
+    this.learningCompletionHandler = null;
+  }
 
-  // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
+  learnMIDICC(completion) {
+    this.isLearning = true;
+    this.learningCompletionHandler = completion;
+  }
 
-  let statusHi = message.data[0] >> 4;
-  let statusLo = message.data[0] & 0x0f;
-  let d1 = message.data[1];
-  let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
+  OnMIDIMessage(message) {
 
-  // if (statusHi != 15) { // pitch bend
-  //log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
-  // }
+    // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
 
-  switch (statusHi) {
-    case 9: // noteOn
-      if (d2 > 0) {
-        //log ("self note on");
-        this.EventHandler.MIDI_NoteOn(d1, d2);
-      } else {
+    let statusHi = message.data[0] >> 4;
+    let statusLo = message.data[0] & 0x0f;
+    let d1 = message.data[1];
+    let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
+
+    // if (statusHi != 15) { // pitch bend
+    //   console.log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
+    // }
+
+    switch (statusHi) {
+      case 9: // noteOn
+        if (d2 > 0) {
+          //log ("self note on");
+          this.EventHandler.MIDI_NoteOn(d1, d2);
+        } else {
+          //log ("self note off");
+          this.EventHandler.MIDI_NoteOff(d1);
+        }
+        break;
+      case 8: // noteOff
         //log ("self note off");
         this.EventHandler.MIDI_NoteOff(d1);
-      }
-      break;
-    case 8: // noteOff
-      //log ("self note off");
-      this.EventHandler.MIDI_NoteOff(d1);
-      break;
-    // pitch
-    // exp
-    // mod
-    // breath
-    case 14: {
-      // d1:7 | d2:7
-      let v = ((d2 & 0x7f) << 7) | (d1 & 0x7f);
-      //console.log(`PB: ${v & 0x3fff}`);
-      v = ((v / 0x3fff) * 2) - 1; // -1 to 1
-      if (v < -1) v = -1;
-      if (v > 1) v = 1;
+        break;
+      // pitch
+      // exp
+      // mod
+      // breath
+      case 14: {
+        // d1:7 | d2:7
+        let v = ((d2 & 0x7f) << 7) | (d1 & 0x7f);
+        //console.log(`PB: ${v & 0x3fff}`);
+        v = ((v / 0x3fff) * 2) - 1; // -1 to 1
+        if (v < -1) v = -1;
+        if (v > 1) v = 1;
 
-      this.EventHandler.MIDI_PitchBend(v);
-      break;
-    }
-    case 11: // cc
-      switch (d1) {
-        case 64:
-          if (d2 > 64) {
-            this.EventHandler.MIDI_PedalDown();
-          } else {
-            this.EventHandler.MIDI_PedalUp();
+        this.EventHandler.MIDI_PitchBend(v);
+        break;
+      }
+      case 11: // cc
+        if (this.isLearning) {
+          if (this.learningCompletionHandler(d1)) { // let the caller validate whether this counts.
+            this.isLearning = false;
+            this.learningCompletionHandler = null;
           }
-          break;
+          return;
+        }
+        switch (d1) {
+          case 64:
+            if (d2 > 64) {
+              this.EventHandler.MIDI_PedalDown();
+            } else {
+              this.EventHandler.MIDI_PedalUp();
+            }
+            break;
+          default:
+            // todo: combine MSB & LSB.
+            this.EventHandler.MIDI_CC(d1, d2);
+            break;
+        }
+        break;
+    }
+  };
+
+  ListenOnDevice(midiInputDeviceName) {
+    for (var input of gMidiAccess.inputs.values()) {
+      if (input.name == midiInputDeviceName) {
+        //log(`attaching to device ${input.name}`);
+        this.currentlyListeningOn.push(midiInputDeviceName);
+        input.onmidimessage = this.OnMIDIMessage.bind(this);
+        this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
       }
-      break;
-  }
-};
+    }
+  };
 
-DigifuMidi.prototype.ListenOnDevice = function (midiInputDeviceName) {
-  for (var input of gMidiAccess.inputs.values()) {
-    if (input.name == midiInputDeviceName) {
-      //log(`attaching to device ${input.name}`);
-      this.currentlyListeningOn.push(midiInputDeviceName);
-      input.onmidimessage = this.OnMIDIMessage.bind(this);
-      this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
+  StopListeningOnDevice(midiInputDeviceName) {
+    for (var input of gMidiAccess.inputs.values()) {
+      if (input.name == midiInputDeviceName) {
+        //log(`detaching from device ${input.name}`);
+        input.onmidimessage = null;
+        this.currentlyListeningOn.removeIf(o => o == midiInputDeviceName);
+        this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
+      }
     }
   }
-};
 
-DigifuMidi.prototype.StopListeningOnDevice = function (midiInputDeviceName) {
-  for (var input of gMidiAccess.inputs.values()) {
-    if (input.name == midiInputDeviceName) {
-      //log(`detaching from device ${input.name}`);
-      input.onmidimessage = null;
-      this.currentlyListeningOn.removeIf(o => o == midiInputDeviceName);
-      this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
-    }
+  IsListeningOnAnyDevice() {
+    return this.currentlyListeningOn.length > 0;
   }
-}
 
-DigifuMidi.prototype.IsListeningOnAnyDevice = function () {
-  return this.currentlyListeningOn.length > 0;
-}
+  IsListeningOnDevice(midiInputDeviceName) {
+    return -1 != this.currentlyListeningOn.findIndex(o => o == midiInputDeviceName);
+  };
 
-DigifuMidi.prototype.IsListeningOnDevice = function (midiInputDeviceName) {
-  return -1 != this.currentlyListeningOn.findIndex(o => o == midiInputDeviceName);
+  AnyMidiDevicesAvailable() {
+    if (!gMidiAccess) return false;
+    return gMidiAccess.inputs.size > 0;
+  };
+
+  Init(handler) {
+    this.EventHandler = handler;
+    this.currentlyListeningOn = [];
+  };
+
 };
 
-DigifuMidi.prototype.AnyMidiDevicesAvailable = function () {
-  if (!gMidiAccess) return false;
-  return gMidiAccess.inputs.size > 0;
-};
 
-DigifuMidi.prototype.Init = function (handler) {
-  this.EventHandler = handler;
-  this.currentlyListeningOn = [];
-};
 
 // returns a promise(array of names)
 let GetMidiInputDeviceList = function () {
@@ -141,4 +163,3 @@ let GetMidiInputDeviceList = function () {
   });
 
 };
-

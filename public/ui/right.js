@@ -100,14 +100,14 @@ class InstTextParam extends React.Component {
     }
     componentDidMount() {
         // set initial values.
-        let val = this.props.param.currentValue;
+        let val = this.props.param.rawValue;
         $("#" + this.inpID).val(val);
         this.renderedValue = val;
     }
     render() {
-        if (this.renderedValue != this.props.param.currentValue) {
+        if (this.renderedValue != this.props.param.rawValue) {
             //has been externally modified. update ui.
-            let val = this.props.param.currentValue;
+            let val = this.props.param.rawValue;
             this.renderedValue = val;
             $("#" + this.inpID).val(val);
         }
@@ -137,7 +137,7 @@ class InstButtonsParam extends React.Component {
     };
     render() {
         const buttons = (this.props.param.enumNames.map((e, val) => (
-            <button className={"buttonParam " + ((this.props.param.currentValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</button>
+            <button className={"buttonParam " + ((this.props.param.rawValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</button>
         )));
 
         return (
@@ -170,14 +170,14 @@ class InstDropdownParam extends React.Component {
     };
     render() {
         const buttons = (this.props.param.enumNames.map((e, val) => (
-            <li className={"item " + ((this.props.param.currentValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</li>
+            <li className={"item " + ((this.props.param.rawValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</li>
         )));
 
         return (
             <li className={"dropdownParam " + this.props.param.cssClassName}>
                 <div className="mainButton" onClick={this.onClickShown}>
                     <span className="arrow">{getArrowText(this.state.listShown)}</span>
-                    <span className="currentValue">{this.props.param.enumNames[this.props.param.currentValue]}</span>
+                    <span className="currentValue">{this.props.param.enumNames[this.props.param.rawValue]}</span>
                     <label>{this.props.param.name}</label>
                 </div>
                 {this.state.listShown && (
@@ -202,12 +202,12 @@ class InstDropdownParam extends React.Component {
 class InstCbxParam extends React.Component {
     onClick = () => {
         if (this.props.observerMode) return;
-        let val = !!this.props.param.currentValue;
+        let val = !!this.props.param.rawValue;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, !val);
         gStateChangeHandler.OnStateChange();
     }
     render() {
-        let val = !!this.props.param.currentValue;
+        let val = !!this.props.param.rawValue;
         let className = "cbxparam " + (val ? "on " : "off ") + this.props.param.cssClassName;
 
         return (
@@ -235,9 +235,9 @@ class InstIntParam extends React.Component {
         let cap = null;
         const p = this.props.param;
         if (p.enumNames) {
-            cap = p.enumNames[this.props.param.currentValue];
+            cap = p.enumNames[this.props.param.rawValue];
         } else {
-            cap = this.props.param.currentValue;
+            cap = this.props.param.rawValue;
         }
         $("#" + this.valueTextID).text(cap);
     }
@@ -251,7 +251,7 @@ class InstIntParam extends React.Component {
     }
     componentDidMount() {
         // set initial values.
-        let val = this.props.param.currentValue;
+        let val = this.props.param.rawValue;
         $("#" + this.sliderID).val(val);
         this.setCaption();
         this.renderedValue = val;
@@ -264,9 +264,9 @@ class InstIntParam extends React.Component {
         });
     }
     render() {
-        if (this.renderedValue != this.props.param.currentValue) {
+        if (this.renderedValue != this.props.param.rawValue) {
             //has been externally modified. update ui.
-            let val = this.props.param.currentValue;
+            let val = this.props.param.rawValue;
             this.renderedValue = val;
             $("#" + this.sliderID).val(val);
             this.setCaption();
@@ -275,12 +275,84 @@ class InstIntParam extends React.Component {
         return (
             <li className={this.props.param.cssClassName}>
                 <input disabled={this.props.observerMode} id={this.sliderID} className="intParam" type="range" min={this.props.param.minValue} max={this.props.param.maxValue} onChange={this.onChange}
-                //value={this.props.param.currentValue} <-- setting values like this causes massive slowness
+                //value={this.props.param.rawValue} <-- setting values like this causes massive slowness
                 />
                 <label>{this.props.param.name}: <span id={this.valueTextID}></span></label>
             </li>
         );
     }
+}
+
+// <ParamMappingBox app={this.props.app} instrument={this.props.instrument} param={this.props.param} observerMode></ParamMappingBox>
+class ParamMappingBox extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isLearning: false,
+        };
+    }
+
+    clickMidiLearn = () => {
+        this.props.app.midi.learnMIDICC(cc => {
+            if (cc < 0) return false;
+            if (cc > 31) return false;
+            // set up the mapping.
+            console.log(`setting up mapping for MIDI CC ${cc}`);
+            this.props.app.createParamMappingFromSrcVal(this.props.param, cc);
+            this.setState({ isLearning: false });
+            gStateChangeHandler.OnStateChange();
+            return true;
+        });
+        this.setState({ isLearning: true });
+    }
+    clickCancelLearning = () => {
+        this.setState({ isLearning: false });
+    };
+    clickClearMapping = () => {
+        console.log(`clearing mapping.`);
+        this.props.app.removeParamMapping(this.props.param);
+        gStateChangeHandler.OnStateChange();
+    }
+    clickMacro = (macroIndex) => {
+        this.props.app.createParamMappingFromMacro(this.props.param, macroIndex);
+        this.setState({ isLearning: false });
+        gStateChangeHandler.OnStateChange();
+        return true;
+    }
+    render() {
+        // is the param already mapped?
+        const mappingSpec = this.props.instrument.getParamMappingSpec(this.props.param);
+        const createMappingBtns = !this.state.isLearning && !mappingSpec && (
+            <div>
+                <button onClick={this.clickMidiLearn}>MIDI learn</button>
+                <button onClick={() => this.clickMacro(0)}>Macro0</button>
+                <button onClick={() => this.clickMacro(1)}>Macro1</button>
+                <button onClick={() => this.clickMacro(2)}>Macro2</button>
+                <button onClick={() => this.clickMacro(3)}>Macro3</button>
+            </div>
+        );
+        const learningIndicator = this.state.isLearning && (
+            <div className="learningIndicator">
+                Listening for MIDI CC changes...
+                <button onClick={this.clickCancelLearning}>Cancel</button>
+            </div>
+        );
+        const activeMappingBody = !!mappingSpec && (
+            <div>
+                Mapped to {this.props.instrument.getMappingSrcDisplayName(mappingSpec)}
+                <button onClick={this.clickClearMapping}>Clear</button>
+                <InstFloatParam app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={mappingSpec.mappingRange}></InstFloatParam>
+            </div>
+        );
+
+        return (
+            <div className="paramMappingBox">
+                {createMappingBtns}
+                {learningIndicator}
+                {activeMappingBody}
+            </div>
+        );
+    };
 }
 
 
@@ -304,16 +376,16 @@ class InstFloatParam extends React.Component {
 
         this.renderedValue = realVal;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
-        this.setCaption(this.props.param.currentValue);
-        this.setInputTextVal(p.currentValue);
+        this.setCaption(this.props.param.rawValue);
+        this.setInputTextVal(p.rawValue);
     }
     componentDidMount() {
         // set initial values.
         const p = this.props.param;
-        this.renderedValue = p.currentValue;
-        this.setSliderVal(p.currentValue);
-        this.setCaption(p.currentValue);
-        this.setInputTextVal(p.currentValue);
+        this.renderedValue = p.rawValue;
+        this.setSliderVal(p.rawValue);
+        this.setCaption(p.rawValue);
+        this.setInputTextVal(p.rawValue);
         if (p.cssClassName.includes("modAmtParam")) {
             stylizeRangeInput(this.sliderID, {
                 bgNegColorSpec: "#444",
@@ -339,10 +411,10 @@ class InstFloatParam extends React.Component {
     }
 
     setInputTextVal(val) {
-        $("#" + this.valueTextInputID).val(this.props.param.currentValue.toFixed(4));
+        $("#" + this.valueTextInputID).val(this.props.param.rawValue.toFixed(4));
     }
     setCaption(val) {
-        $("#" + this.valueTextID).text(this.props.param.currentValue.toFixed(3));
+        $("#" + this.valueTextID).text(this.props.param.rawValue.toFixed(3));
     }
     setSliderVal(val) {
         const p = this.props.param;
@@ -410,23 +482,26 @@ class InstFloatParam extends React.Component {
     };
 
     render() {
-        if (this.renderedValue != this.props.param.currentValue) {
+        if (this.renderedValue != this.props.param.rawValue) {
             //has been externally modified. update ui.
-            let val = this.props.param.currentValue;
+            let val = this.props.param.rawValue;
             this.renderedValue = val;
             this.setSliderVal(val);//$("#" + this.sliderID).val(val);
             this.setCaption(val);
         }
 
         return (
-            <li className={this.props.param.cssClassName}>
+            <li className={"floatParam " + this.props.param.cssClassName}>
                 <input id={this.sliderID} disabled={this.props.observerMode} className="floatParam" type="range" onClick={this.onClickSlider} onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
-                //value={Math.trunc(currentValue)} <-- setting values like this causes massive slowness
+                //value={Math.trunc(rawValue)} <-- setting values like this causes massive slowness
                 />
                 <label onClick={this.toggleShowTxt}>{this.props.param.name}: <span id={this.valueTextID}></span></label>
                 <div style={{ display: "none" }} id={this.valueTextDivID}>
                     <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} onKeyDown={this.handleTextInputKeyDown} />
+                    {!this.props.observerMode && this.props.param.supportsMapping &&
+                        <ParamMappingBox app={this.props.app} instrument={this.props.instrument} param={this.props.param} observerMode={this.props.observerMode}></ParamMappingBox>
+                    }
                 </div>
             </li>
         );
@@ -788,7 +863,7 @@ class InstrumentParams extends React.Component {
         const shownStyle = this.state.isShown ? { display: 'block' } : { display: "none" };
         const mainArrowText = this.state.isShown ? '⯆' : '⯈';
 
-        let presetID = this.props.instrument.GetParamByID("presetID").currentValue;
+        let presetID = this.props.instrument.GetParamByID("presetID").rawValue;
         let writableExistingPreset = null;
         if (presetID) {
             writableExistingPreset = this.props.instrument.presets.find(p => {
@@ -1251,7 +1326,7 @@ class InstrumentList extends React.Component {
             }}>play</button>
         );
 
-        const observeBtn = !gStateChangeHandler.observingInstrument && !isYours && i.supportsObservation && (
+        const observeBtn = !isYours && i.supportsObservation && inUse && (
             <button className="observe" onClick={() => this.observeInstrument(i)}>observe</button>
         );
 
