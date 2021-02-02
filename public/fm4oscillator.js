@@ -243,7 +243,8 @@ class MiniFMSynthOsc {
         const halfKeyScaleRangeSemis = 12 * 4;
         let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.paramValue("level") * ks * vs;
-        this.nodes.envPeak.gain.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
+        //this.nodes.envPeak.gain.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
+        this.nodes.envPeak.gain.value = p;
     }
 
     updateBaseFreq() {
@@ -341,35 +342,34 @@ class MiniFMSynthOsc {
                 this.nodes.env.update({ release: newVal });
                 break;
             case "pan":
-                //this.nodes.panner.pan.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
                 this.nodes.panner.pan.value = this.GetPanBaseValue();
                 break;
             case "lfo1PanAmt":
-                this.nodes.lfo1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.lfo1PanAmt.gain.value = newVal;
                 break;
             case "lfo2PanAmt":
-                this.nodes.lfo2PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.lfo2PanAmt.gain.value = newVal;
                 break;
             case "env1PanAmt":
-                this.nodes.env1PanAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.env1PanAmt.gain.value = newVal;
                 break;
             case "lfo1_gainAmt":
-                this.nodes.lfo1LevelAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.lfo1LevelAmt.gain.value = newVal;
                 break;
             case "lfo2_gainAmt":
-                this.nodes.lfo2LevelAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.lfo2LevelAmt.gain.value = newVal;
                 break;
             case "pwm_base":
-                this.nodes.osc.width.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.osc.width.value = newVal;
                 break;
             case "pwmLFO1":
-                this.nodes.lfo1PWMAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.lfo1PWMAmt.gain.value = newVal;
                 break;
             case "pwmLFO2":
-                this.nodes.lfo2PWMAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.lfo2PWMAmt.gain.value = newVal;
                 break;
             case "pwmENV":
-                this.nodes.env1PWMAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.env1PWMAmt.gain.value = newVal;
                 break;
         }
     }
