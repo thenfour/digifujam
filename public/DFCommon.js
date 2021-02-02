@@ -846,6 +846,12 @@ class DigifuInstrumentSpec {
         return this.params.some(p => p.isMacro);
     }
 
+    // returns an array of midi CC values (yes just numbers). then call getMappingSpecsForMidiCC to get more info.
+    getMappedMidiCCs() {
+        let f = this.params.filter(p => p.isMappingSrc && p.currentValue <= 31/* bad */);
+        return f.map(p => p.currentValue);
+    }
+
     exportAllPresetsJSON() {
         return JSON.stringify(this.presets.filter(p => p.patchName != "init"));
     }
@@ -1091,7 +1097,7 @@ class DigifuInstrumentSpec {
     }
 
 
-    // return { cssClassName, annotation, shown, displayName }
+    // return { cssClassName, annotation, shown, displayName, groupControls, isMacroGroup }
     getGroupInfo(groupName) {
         let ret = { cssClassName: "", annotation: "", displayName: groupName, shown: true, internalName: groupName };
         switch (this.engine) {
@@ -1103,6 +1109,8 @@ class DigifuInstrumentSpec {
         }
         if (groupName === "Macro") {
             ret.cssClassName = "macros";
+            ret.displayName = "Macros & MIDI";
+            ret.isMacroGroup = true;
         }
         let isModulation = groupName.toLowerCase().startsWith("mod ");
         if (isModulation) {

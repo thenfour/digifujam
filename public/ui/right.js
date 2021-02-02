@@ -516,7 +516,7 @@ class InstFloatParam extends React.Component {
         if (this.state.isExpanded) cssclass += "expanded ";
 
         let macroMappingList = null;
-        if (this.props.param.isMacro) {
+        if (this.state.isExpanded && this.props.param.isMacro) {
             const mappedParams = this.props.instrument.getMappingSpecsForMacro(this.props.param.macroIdx);
             macroMappingList = (<ul className="macroMappingList">
                 {mappedParams.map(spec => {
@@ -541,10 +541,11 @@ class InstFloatParam extends React.Component {
                 {macroMappingList}
                 { this.state.isExpanded && <div id={this.valueTextDivID}>
                     <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} value={this.state.inputTextValue} onChange={this.onChangeValInput} onKeyDown={this.handleTextInputKeyDown} />
+                    <label>Value</label>
                     {this.props.param.isMacro &&
                         <div className="macroNameInput">
                             <TextInputFieldExternalState onChange={this.onMacroNameTextChanged} value={this.props.instrument.getMacroDisplayName(this.props.param.macroIdx)}></TextInputFieldExternalState>
-                            Macro name
+                            <label>Macro name</label>
                         </div>
                     }
                     {!this.props.observerMode && this.props.param.supportsMapping &&
@@ -666,6 +667,28 @@ class InstrumentPresetList extends React.Component {
     }
 };
 
+// key={cc} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} cc={cc} />
+class MidiCCMappingInfo extends React.Component {
+    render() {
+        let mappingList = null;
+        const mappedParams = this.props.instrument.getMappingSpecsForMidiCC(this.props.cc);
+        mappingList = (<ul className="midiCCmappingList">
+            {mappedParams.map(spec => {
+                const effectiveRange = this.props.instrument.getEffectiveMappingRange(spec);
+                return (
+                    <li key={spec.param.paramID}>→ {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})</li>
+                )
+            }
+            )}
+        </ul>);
+
+        return (
+            <li>
+                MIDI CC #{this.props.cc}
+                {mappingList}
+            </li>);
+    }
+};
 
 // props.groupSpec
 // props.app
@@ -715,13 +738,27 @@ class InstrumentParamGroup extends React.Component {
             </div>
         );
 
+        let midiCClist = null;
+        if (this.props.isShown && this.props.groupSpec.isMacroGroup) {
+            // show a list of mapped midi CCs.
+            const ccs = this.props.instrument.getMappedMidiCCs();
+            midiCClist = (<ul className="midiCCList">
+                {ccs.map(cc => (
+                    <MidiCCMappingInfo key={"cc" + cc} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} cc={cc} />
+                ))}
+            </ul>)
+        }
+
         return (
             <fieldset key={this.props.groupSpec.displayName} className={className}>
                 <legend onClick={() => this.props.onToggleShown()}>{arrowText} {this.props.groupSpec.displayName} <span className="instParamGroupNameAnnotation">{this.props.groupSpec.annotation}</span></legend>
-                {this.props.isShown && <ul className="instParamList">
-                    {groupControls}
-                    {this.props.filteredParams.filter(p => p.groupName == this.props.groupSpec.internalName).map(p => createParam(p))}
-                </ul>}
+                {this.props.isShown &&
+                    <ul className="instParamList">
+                        {groupControls}
+                        {this.props.filteredParams.filter(p => p.groupName == this.props.groupSpec.internalName).map(p => createParam(p))}
+                    </ul>
+                }
+                {midiCClist}
             </fieldset>
         );
     }

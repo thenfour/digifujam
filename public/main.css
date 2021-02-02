@@ -1001,3 +1001,13 @@ li.floatParam.expanded.hasMapping
     font-size: x-small;
     margin-bottom: 8px;
 }
+
+.midiCCList {
+
+}
+.midiCCmappingList {
+    padding:5px;
+    padding: 5px;
+    font-size: x-small;
+    margin-bottom: 8px;
+}
