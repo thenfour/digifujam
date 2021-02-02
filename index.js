@@ -480,7 +480,7 @@ class RoomServer {
       const mapSpec = foundInstrument.instrument.ensureParamMappingParams(foundInstrument.instrument.GetParamByID(data.paramID), data.srcVal);
 
       // "srcVal":1
-      log(`CreateParamMapping ${foundInstrument.instrument.name}, data=${JSON.stringify(data)}, mappingSrc value = ${mapSpec.mappingSrc.currentValue}}`);
+      //log(`CreateParamMapping ${foundInstrument.instrument.name}, data=${JSON.stringify(data)}, mappingSrc value = ${mapSpec.mappingSrc.currentValue}}`);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.CreateParamMapping, {
@@ -509,7 +509,7 @@ class RoomServer {
         return;
       }
 
-      log(`RemoveParamMapping ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
+      //log(`RemoveParamMapping ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
       // paramID: param.paramID
       // todo: validate paramID.
       const patchObj = foundInstrument.instrument.removeParamMapping(foundInstrument.instrument.GetParamByID(data.paramID));

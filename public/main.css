@@ -959,10 +959,10 @@ li.floatParam .paramMappingBox button:hover
 
 li.floatParam .paramMappingBox {
     white-space: normal;
-    margin: 5px;
+    margin: 0;
     padding: 5px;
-    background-color: #650;
-    border-radius: 5px;
+    background-color: #ffb8002b;
+    font-size: small;
 }
 
 li.floatParam .paramMappingBox .learningIndicator {
@@ -973,4 +973,31 @@ li.floatParam .paramMappingBox .learningIndicator {
     background-color: #200;
     white-space: normal;
     border-left: 7px solid #a00;
+}
+
+
+li.floatParam.expanded { /* no mapping */
+    border: 1px solid #0aa;
+    border-radius: 5px;
+}
+
+li.floatParam.hasMapping,
+li.floatParam.expanded.hasMapping
+{
+    border-right: 10px solid #ffb800;
+}
+
+
+.instParamGroup.macros {
+    border: 2px solid #ffb80040;
+}
+.instParamGroup.macros legend {
+    color: #ffb80080;
+}
+
+.macroMappingList {
+    padding:5px;
+    padding: 5px;
+    font-size: x-small;
+    margin-bottom: 8px;
 }

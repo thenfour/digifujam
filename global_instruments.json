@@ -296,6 +296,90 @@
       "activityDisplay": "keyboard",
       "params": [
         {
+          "paramID": "macro0_value",
+          "name": "Macro 0",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "mappingSrcVal": 1000,
+          "isMacro": true,
+          "macroIdx": 0,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro0_name",
+          "name": "Macro0 name",
+          "groupName": "master",
+          "hidden": true,
+          "defaultValue": "Macro 1",
+          "parameterType": "textParam",
+          "maxTextLength": 100
+        },
+        {
+          "paramID": "macro1_value",
+          "name": "Macro 1",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "macroIdx": 1,
+          "mappingSrcVal": 1001,
+          "defaultValue": 0,
+          "isMacro": true,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro1_name",
+          "name": "Macro1 name",
+          "groupName": "master",
+          "hidden": true,
+          "defaultValue": "Macro 2",
+          "parameterType": "textParam",
+          "maxTextLength": 100
+        },
+        {
+          "paramID": "macro2_value",
+          "name": "Macro 2",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "macroIdx": 2,
+          "mappingSrcVal": 1002,
+          "defaultValue": 0,
+          "isMacro": true,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro2_name",
+          "name": "Macro2 name",
+          "groupName": "master",
+          "defaultValue": "Macro 3",
+          "hidden": true,
+          "parameterType": "textParam",
+          "maxTextLength": 100
+        },
+        {
+          "paramID": "macro3_value",
+          "name": "Macro 3",
+          "groupName": "Macro",
+          "parameterType": "floatParam",
+          "macroIdx": 3,
+          "mappingSrcVal": 1003,
+          "defaultValue": 0,
+          "isMacro": true,
+          "minValue": 0.0,
+          "maxValue": 127.0
+        },
+        {
+          "paramID": "macro3_name",
+          "name": "Macro3 name",
+          "groupName": "master",
+          "defaultValue": "Macro 4",
+          "parameterType": "textParam",
+          "hidden": true,
+          "maxTextLength": 100
+        },
+        {
           "paramID": "masterGain",
           "name": "Master gain",
           "groupName": "master",
@@ -413,54 +497,6 @@
           "parameterType": "inlineLabel",
           "inlineLabel": "osc enable",
           "defaultValue": 0
-        },
-        {
-          "paramID": "macro0_value",
-          "name": "Macro 0",
-          "groupName": "Macro",
-          "parameterType": "floatParam",
-          "defaultValue": 0,
-          "mappingSrcVal": 1000,
-          "isMacro": true,
-          "macroIdx": 0,
-          "minValue": 0.0,
-          "maxValue": 127.0
-        },
-        {
-          "paramID": "macro1_value",
-          "name": "Macro 1",
-          "groupName": "Macro",
-          "parameterType": "floatParam",
-          "macroIdx": 1,
-          "mappingSrcVal": 1001,
-          "defaultValue": 0,
-          "isMacro": true,
-          "minValue": 0.0,
-          "maxValue": 127.0
-        },
-        {
-          "paramID": "macro2_value",
-          "name": "Macro 2",
-          "groupName": "Macro",
-          "parameterType": "floatParam",
-          "macroIdx": 2,
-          "mappingSrcVal": 1002,
-          "defaultValue": 0,
-          "isMacro": true,
-          "minValue": 0.0,
-          "maxValue": 127.0
-        },
-        {
-          "paramID": "macro3_value",
-          "name": "Macro 3",
-          "groupName": "Macro",
-          "parameterType": "floatParam",
-          "macroIdx": 3,
-          "mappingSrcVal": 1003,
-          "defaultValue": 0,
-          "isMacro": true,
-          "minValue": 0.0,
-          "maxValue": 127.0
         },
         {
           "paramID": "osc0_wave",

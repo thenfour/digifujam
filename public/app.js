@@ -345,7 +345,7 @@ class DigifuApp {
     // // instrumentID, paramID, srcVal
     NET_OnCreateParamMapping(data) {
         if (!this.roomState) return;
-        let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             //log(`NET_OnInstrumentParam instrument not found`);
             return;
@@ -601,13 +601,17 @@ class DigifuApp {
         this.synth.SetInstrumentParams(this.myInstrument, presetObj);
     };
 
-
     SetInstrumentParam(inst, param, newVal) {
         let presetObj = {};
         presetObj[param.paramID] = newVal;
         this.loadPatchObj(presetObj);
     };
 
+    setMacroDisplayName(macroIdx, name) {
+        let presetObj = {};
+        presetObj[`macro${macroIdx}_name`] = name;
+        this.loadPatchObj(presetObj);
+    }
 
     deletePreset(presetObj) {
         if (!this.myInstrument) return;

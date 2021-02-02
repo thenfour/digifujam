@@ -322,13 +322,15 @@ class ParamMappingBox extends React.Component {
     render() {
         // is the param already mapped?
         const mappingSpec = this.props.instrument.getParamMappingSpec(this.props.param);
+        const allowMacros = this.props.instrument.hasMacros();
         const createMappingBtns = !this.state.isLearning && !mappingSpec && (
             <div>
+                Map to
                 <button onClick={this.clickMidiLearn}>MIDI learn</button>
-                <button onClick={() => this.clickMacro(0)}>Macro0</button>
-                <button onClick={() => this.clickMacro(1)}>Macro1</button>
-                <button onClick={() => this.clickMacro(2)}>Macro2</button>
-                <button onClick={() => this.clickMacro(3)}>Macro3</button>
+                {(!this.props.param.isMacro || this.props.param.macroIdx != 0) && allowMacros && <button onClick={() => this.clickMacro(0)}>{this.props.instrument.getMacroDisplayName(0)}</button>}
+                {(!this.props.param.isMacro || this.props.param.macroIdx != 1) && allowMacros && <button onClick={() => this.clickMacro(1)}>{this.props.instrument.getMacroDisplayName(1)}</button>}
+                {(!this.props.param.isMacro || this.props.param.macroIdx != 2) && allowMacros && <button onClick={() => this.clickMacro(2)}>{this.props.instrument.getMacroDisplayName(2)}</button>}
+                {(!this.props.param.isMacro || this.props.param.macroIdx != 3) && allowMacros && <button onClick={() => this.clickMacro(3)}>{this.props.instrument.getMacroDisplayName(3)}</button>}
             </div>
         );
         const learningIndicator = this.state.isLearning && (
@@ -337,11 +339,15 @@ class ParamMappingBox extends React.Component {
                 <button onClick={this.clickCancelLearning}>Cancel</button>
             </div>
         );
+
+        const effectiveRange = mappingSpec && this.props.instrument.getEffectiveMappingRange(mappingSpec);
+
         const activeMappingBody = !!mappingSpec && (
             <div>
                 Mapped to {this.props.instrument.getMappingSrcDisplayName(mappingSpec)}
                 <button onClick={this.clickClearMapping}>Clear</button>
                 <InstFloatParam app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={mappingSpec.mappingRange}></InstFloatParam>
+                Effective range: {effectiveRange[0].toFixed(3)} to {effectiveRange[1].toFixed(3)}
             </div>
         );
 
@@ -360,6 +366,10 @@ class ParamMappingBox extends React.Component {
 class InstFloatParam extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            isExpanded: false,
+            inputTextValue: this.props.param.rawValue.toFixed(4),
+        };
         this.valueTextInputID = "i_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.valueTextDivID = "idiv_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.valueTextID = "val_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
@@ -367,7 +377,6 @@ class InstFloatParam extends React.Component {
         this.renderedValue = -420.69;
     }
     onChange = (e) => {
-        this.setState(this.state);
         const p = this.props.param;
         let realVal = p.foreignToNativeValue(e.target.value, 0, ClientSettings.InstrumentFloatParamDiscreteValues);
         //let realVal = parseFloat(e.target.value) / ClientSettings.InstrumentFloatParamDiscreteValues; // 0-1 within target range.
@@ -378,6 +387,8 @@ class InstFloatParam extends React.Component {
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
         this.setCaption(this.props.param.rawValue);
         this.setInputTextVal(p.rawValue);
+        //this.setState(this.state);
+        gStateChangeHandler.OnStateChange();
     }
     componentDidMount() {
         // set initial values.
@@ -411,7 +422,8 @@ class InstFloatParam extends React.Component {
     }
 
     setInputTextVal(val) {
-        $("#" + this.valueTextInputID).val(this.props.param.rawValue.toFixed(4));
+        this.setState({ inputTextValue: this.props.param.rawValue.toFixed(4) });
+        //$("#" + this.valueTextInputID).val(this.props.param.rawValue.toFixed(4));
     }
     setCaption(val) {
         $("#" + this.valueTextID).text(this.props.param.rawValue.toFixed(3));
@@ -425,20 +437,19 @@ class InstFloatParam extends React.Component {
 
     toggleShowTxt = () => {
         if (this.props.observerMode) return;
-        let q = $("#" + this.valueTextDivID);
-        if (q.is(':visible')) {
-            q.toggle(false);
-        } else {
-            q.toggle(true);
-            // this never works and i don't know why.
-            //             setTimeout(() => {
-            //                 let t = document.getElementById(this.valueTextDivID);
-            //                 t.focus();
-            //                 //t.select();
-            // //                    q.focus();
-            //             //    q.select();
-            //             }, 100);
+
+        if (!this.state.isExpanded) {
+            let q = $("#" + this.valueTextInputID);
+            q.focus();
+            q.select();
         }
+
+        this.setState({ isExpanded: !this.state.isExpanded });
+    }
+
+    onChangeValInput = (e) => {
+        if (this.props.observerMode) return;
+        this.setState({ inputTextValue: e.target.value });
     }
 
     handleTextInputKeyDown = (e) => {
@@ -481,6 +492,15 @@ class InstFloatParam extends React.Component {
         this.setSliderVal(realVal);
     };
 
+    GetParamDisplayName() {
+        return this.props.instrument.getParamDisplayName(this.props.param);
+    }
+
+    onMacroNameTextChanged = (txt) => {
+        this.props.app.setMacroDisplayName(this.props.param.macroIdx, txt);
+        this.setState({});
+    }
+
     render() {
         if (this.renderedValue != this.props.param.rawValue) {
             //has been externally modified. update ui.
@@ -490,19 +510,48 @@ class InstFloatParam extends React.Component {
             this.setCaption(val);
         }
 
+        const mappingSpec = this.props.instrument.getParamMappingSpec(this.props.param);
+        let cssclass = "floatParam ";
+        if (!!mappingSpec) cssclass += "hasMapping ";
+        if (this.state.isExpanded) cssclass += "expanded ";
+
+        let macroMappingList = null;
+        if (this.props.param.isMacro) {
+            const mappedParams = this.props.instrument.getMappingSpecsForMacro(this.props.param.macroIdx);
+            macroMappingList = (<ul className="macroMappingList">
+                {mappedParams.map(spec => {
+                    const effectiveRange = this.props.instrument.getEffectiveMappingRange(spec);
+                    return (
+                        <li key={spec.param.paramID}>→ {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})</li>
+                    )
+                }
+                )}
+            </ul>);
+        }
+
         return (
-            <li className={"floatParam " + this.props.param.cssClassName}>
-                <input id={this.sliderID} disabled={this.props.observerMode} className="floatParam" type="range" onClick={this.onClickSlider} onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues} onChange={this.onChange}
+            <li className={cssclass + this.props.param.cssClassName}>
+                <input id={this.sliderID} disabled={this.props.observerMode} className="floatParam" type="range" onClick={this.onClickSlider}
+                    onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues}
+                    onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(rawValue)} <-- setting values like this causes massive slowness
                 />
-                <label onClick={this.toggleShowTxt}>{this.props.param.name}: <span id={this.valueTextID}></span></label>
-                <div style={{ display: "none" }} id={this.valueTextDivID}>
-                    <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} onKeyDown={this.handleTextInputKeyDown} />
+                <label onClick={this.toggleShowTxt}>{this.GetParamDisplayName()}: <span id={this.valueTextID}></span></label>
+                {macroMappingList}
+                { this.state.isExpanded && <div id={this.valueTextDivID}>
+                    <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} value={this.state.inputTextValue} onChange={this.onChangeValInput} onKeyDown={this.handleTextInputKeyDown} />
+                    {this.props.param.isMacro &&
+                        <div className="macroNameInput">
+                            <TextInputFieldExternalState onChange={this.onMacroNameTextChanged} value={this.props.instrument.getMacroDisplayName(this.props.param.macroIdx)}></TextInputFieldExternalState>
+                            Macro name
+                        </div>
+                    }
                     {!this.props.observerMode && this.props.param.supportsMapping &&
                         <ParamMappingBox app={this.props.app} instrument={this.props.instrument} param={this.props.param} observerMode={this.props.observerMode}></ParamMappingBox>
                     }
                 </div>
+                }
             </li>
         );
     }

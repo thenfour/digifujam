@@ -15,13 +15,11 @@ class DigifuMidi {
   constructor() {
     this.EventHandler = null;
     this.currentlyListeningOn = [];// list of device names we're attached to.
-    this.isLearning = false; // set while listening for a midi CC.
-    this.learningCompletionHandler = null;
+    this.learningCompletionHandlers = [];
   }
 
   learnMIDICC(completion) {
-    this.isLearning = true;
-    this.learningCompletionHandler = completion;
+    this.learningCompletionHandlers.push(completion);
   }
 
   OnMIDIMessage(message) {
@@ -67,13 +65,14 @@ class DigifuMidi {
         break;
       }
       case 11: // cc
-        if (this.isLearning) {
-          if (this.learningCompletionHandler(d1)) { // let the caller validate whether this counts.
-            this.isLearning = false;
-            this.learningCompletionHandler = null;
+
+        this.learningCompletionHandlers.forEach((handler, index) => {
+          if (handler(d1)) { // let the caller validate whether this counts.
+            this.learningCompletionHandlers[index] = null; // mark for deletion.
           }
-          return;
-        }
+        });
+        this.learningCompletionHandlers.removeIf(c => !c);
+
         switch (d1) {
           case 64:
             if (d2 > 64) {
