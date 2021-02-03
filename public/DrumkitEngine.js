@@ -231,6 +231,7 @@ class OneShotInstrument {
                   > [masterWetGain] --> wetDestination
         */
         if (this.isConnected) return;
+        this.audioCtx.beginScope(this.instrumentSpec.getDisplayName());
 
         this.masterDryGain = this.audioCtx.createGain();
         this.masterWetGain = this.audioCtx.createGain();
@@ -246,6 +247,7 @@ class OneShotInstrument {
             v.connect(this.audioCtx, this.masterDryGain, this.masterWetGain);
         });
         this.isConnected = true;
+        this.audioCtx.endScope();
     }
 
     disconnect() {

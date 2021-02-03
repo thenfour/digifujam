@@ -1,5 +1,19 @@
 'use strict';
 
+class AudioGraphHelper {
+	constructor() {
+		this.nodes = {};
+	}
+	disconnect() {
+		Object.keys(this.nodes).forEach(k => {
+			let n = this.nodes[k];
+			if (n.stop) n.stop();
+			n.disconnect();
+		});
+		this.nodes = {};
+	}
+};
+
 
 
 
@@ -17,33 +31,56 @@ class SoundfontInstrument {
 		this.voices = new Array(128); // map midi note number to a voice
 		this.sfinstrument = null;
 		this.sustainMode = false; // true = pedal down
+		this.isConnected = false;
 
-		this.sfOutput = this.audioCtx.createGain();
-		this.sfOutput.gain.value = 1.0;
+		this.dryDestination = dryDestination;
+		this.wetDestination = wetDestination;
+
+		this.graph = new AudioGraphHelper();
+	};
+
+	connect() {
+		if (this.isConnected) return;
+
+		this.audioCtx.beginScope(this.instrumentSpec.engine);
+
+		this.graph.nodes.sfOutput = this.audioCtx.createGain("sfOutput");
+		this.graph.nodes.sfOutput.gain.value = 1.0;
 
 		// masterDryGain
-		this.masterDryGain = this.audioCtx.createGain();
+		this.graph.nodes.masterDryGain = this.audioCtx.createGain("masterDryGain");
 		// masterWetGain
-		this.masterWetGain = this.audioCtx.createGain();
+		this.graph.nodes.masterWetGain = this.audioCtx.createGain("masterWetGain");
 		let gainLevels = this.getGainLevels();
-		this.masterDryGain.gain.value = gainLevels[0];
-		this.masterWetGain.gain.value = gainLevels[1];
+		this.graph.nodes.masterDryGain.gain.value = gainLevels[0];
+		this.graph.nodes.masterWetGain.gain.value = gainLevels[1];
 
-		Soundfont.instrument(audioCtx, instrumentSpec.sfinstrumentName, { destination: this.sfOutput })
+		Soundfont.instrument(this.audioCtx, this.instrumentSpec.sfinstrumentName, { destination: this.graph.nodes.sfOutput })
 			.then(function (inst) {
 				this.sfinstrument = inst;
 			}.bind(this));
 
-		this.sfOutput.connect(this.masterDryGain);
-		this.sfOutput.connect(this.masterWetGain);
+		this.graph.nodes.sfOutput.connect(this.graph.nodes.masterDryGain);
+		this.graph.nodes.sfOutput.connect(this.graph.nodes.masterWetGain);
 
-		this.masterDryGain.connect(dryDestination);
-		this.masterWetGain.connect(wetDestination);
+		this.graph.nodes.masterDryGain.connect(this.dryDestination);
+		this.graph.nodes.masterWetGain.connect(this.wetDestination);
 
-	};
+		this.audioCtx.endScope();
 
-	connect() {
-		// nothing to do here; disconnect doesn't really disconnect anything
+		this.isConnected = true;
+	}
+
+	disconnect() {
+		if (!this.isConnected) return;
+		if (this.sfinstrument) {
+			this.AllNotesOff();
+			this.sfinstrument.stop();
+			this.sfinstrument = null;
+		}
+		this.graph.disconnect();
+
+		this.isConnected = false;
 	}
 
 	// returns [drygain, wetgain]
@@ -53,12 +90,6 @@ class SoundfontInstrument {
 		// when verb mix is 0, drygain is the real master gain.
 		// when verb mix is 1, drygain is 0 and verbmix is mastergain
 		return [(1.0 - vg) * ms, vg * ms * 1.0];
-	}
-
-	disconnect() {
-		if (!this.sfinstrument) return;
-		this.AllNotesOff();
-		this.sfinstrument.stop();
 	}
 
 	NoteOn(midiNote, velocity) {
@@ -106,8 +137,8 @@ class SoundfontInstrument {
 				case "masterGain":
 				case "verbMix":
 					let levels = this.getGainLevels();
-					this.masterDryGain.gain.linearRampToValueAtTime(levels[0], ClientSettings.InstrumentParamIntervalMS / 1000);
-					this.masterWetGain.gain.linearRampToValueAtTime(levels[1], ClientSettings.InstrumentParamIntervalMS / 1000);
+					this.graph.nodes.masterDryGain.gain.value = levels[0];
+					this.graph.nodes.masterWetGain.gain.value = levels[1];
 					break;
 			}
 		});

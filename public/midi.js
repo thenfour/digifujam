@@ -31,7 +31,7 @@ class DigifuMidi {
     let d1 = message.data[1];
     let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
 
-    // if (statusHi != 15) { // pitch bend
+    // if (statusHi != 15) {
     //   console.log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
     // }
 

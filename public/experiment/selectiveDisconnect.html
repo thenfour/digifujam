@@ -1,0 +1,76 @@
+<!doctype html>
+
+<html>
+
+<head>
+</head>
+
+<body id="body" onclick="main()" style="background:url(../roomart/room.png)">
+
+    <button onclick="window.src.oscillator.type='sine';">sine</button>
+    <button onclick="window.src.oscillator.type='sawtooth';">saw</button>
+    <button onclick="window.src.oscillator.type='square';">square</button>
+    <br />
+    <canvas id="c" style="width:100%;height:100px;"></canvas>
+
+    <script type="text/javascript">
+
+        var _hasSelectiveDisconnect = function () {
+            var context = new OfflineAudioContext(1, 1, 44100)
+                , bufferNode = context.createBufferSource(), gain = context.createGain()
+                , buffer = context.createBuffer(1, 1, 44100)
+            buffer.getChannelData(0)[0] = 1
+            bufferNode.buffer = buffer
+            bufferNode.connect(gain)
+            bufferNode.connect(context.destination)
+            bufferNode.start(0)
+            gain.connect(context.destination)
+            bufferNode.disconnect(gain)
+            context.oncomplete = function (event) {
+                _hasSelectiveDisconnectResult = (!!event.renderedBuffer.getChannelData(0)[0])
+                alert(_hasSelectiveDisconnectResult);
+            }
+            context.startRendering()
+        }, _hasSelectiveDisconnectResult = null
+        _hasSelectiveDisconnect()
+
+        // sets up an audio graph.
+        class TestAudioSrc {
+
+            constructor(context) {
+                this.context = context;
+                this.oscillator = context.createOscillator();
+                this.oscillator.type = 'square';
+                this.oscillator.frequency.value = 1440;
+                this.oscillator.start();
+
+                this.gain1 = context.createGain();
+                this.gain1.gain.value = .95;
+                this.analysisNode = context.createAnalyser();
+
+                // Reduce output level to not hurt your ears.
+                this.gain2 = context.createGain();
+                this.gain2.gain.value = .0;
+
+                // [osc] -> [gain] -> [analyzer] -> [gain] -> dest
+                this.oscillator.connect(this.gain1);
+                this.gain1.connect(this.analysisNode);
+                this.analysisNode.connect(this.gain2);
+                this.gain2.connect(this.context.destination);
+            }
+
+        };
+
+
+        let main = function () {
+            const context = new (window.AudioContext || window.webkitAudioContext)();
+            window.src = new TestAudioSrc(context);
+            window.fft = new AudioToFFTConverter(window.src.analysisNode);
+            window.vis = new AudioVis(document.getElementById("glBody"), window.fft);
+        }
+
+    </script>
+
+</body>
+
+</html>

@@ -1,5 +1,175 @@
 'use strict';
 
+const gUseDebugCtx = false;
+
+// https://github.com/WebAudio/web-audio-api/issues/6
+function _hasSelectiveDisconnect() {
+    var c = new OfflineAudioContext(1, 1, 44100);
+    try {
+        c.createGain().disconnect(c.destination);
+        return false;
+    } catch (error) {
+        return true;
+    }
+}
+
+
+class AudioContextWrapper {
+    constructor() {
+        this.connectedNodes = [];
+        this.audioCtx = null;
+        this.scope = [];
+        this.byType = {};
+        this.byName = {};
+    }
+
+    beginScope(name) {
+        this.scope.push(name);
+    }
+    endScope() {
+        this.scope.pop();
+    }
+
+    getRedundantGainers() {
+        let count = 0;
+        let ret = {};
+        Object.keys(this.byName).forEach(k => {
+            ret[k] = this.byName[k].filter(n => {
+                if (n.DFType !== "Gain") return false;
+                //console.log(`${} val: ${n.gain.value}`);
+                if (Math.abs(n.gain.value) < 0.0001) return true;
+                if (Math.abs(1. - n.gain.value) < 0.0001) return true;
+                return false;
+            });
+            count += ret[k].length;
+        });
+        console.log(`i found ${count} redundant gainers out of ${this.connectedNodes.length} total nodes (${(count * 100 / this.connectedNodes.length).toFixed(2)}%).`);
+        return ret;
+    }
+
+    addTrackerForNode(node, nodeType, name) {
+        node.oldconnect = node.connect;
+        node.olddisconnect = node.disconnect;
+        node.DFID = generateID();
+        node.DFName = name;//this.scope.join(" > ") + " > " + (name || "unnamed");
+        node.DFType = nodeType;
+        node.DFConnectedTo = {};
+
+        node.connect = (dest) => {
+            dest.DFID = dest.DFID || generateID();
+            node.DFConnectedTo[dest.DFID] = true;
+
+            const idx = this.connectedNodes.findIndex(n => n.DFID == node.DFID);
+            // if you connect a node multiple times only count this as 1
+            if (idx == -1) {
+                this.connectedNodes.push(node);
+
+                if (this.byType[nodeType]) {
+                    this.byType[nodeType].push(node);
+                } else {
+                    this.byType[nodeType] = [node];
+                }
+
+                if (this.byName[node.DFName]) {
+                    this.byName[node.DFName].push(node);
+                } else {
+                    this.byName[node.DFName] = [node];
+                }
+            }
+
+            node.oldconnect(dest);
+        };
+
+        node.disconnect = (dest) => {
+            const idx = this.connectedNodes.findIndex(n => n.DFID == node.DFID);
+            if (idx != -1) {
+                //throw new Error(`Node not found...`);
+                this.connectedNodes.splice(idx, 1);
+            }
+
+            if (dest) {
+                delete node.DFConnectedTo[dest.DFID];
+            } else {
+                node.DFConnectedTo = {};
+            }
+
+            if (Object.keys(node.DFConnectedTo).length < 1) {
+                //console.log(`disconnecting ${node.DFID}, name ${node.DFName}, type ${node.DFType}`);
+                // remove from byType
+                if (this.byType[node.DFType]) {
+                    const idx = this.byType[node.DFType].findIndex(n => n.DFID == node.DFID);
+                    if (idx != -1) {
+                        this.byType[node.DFType].splice(idx, 1);
+                        if (this.byType[node.DFType].length == 0) {
+                            delete this.byType[node.DFType];
+                        }
+                    }
+                }
+
+                // remove from byName
+                if (this.byName[node.DFName]) {
+                    const idx = this.byName[node.DFName].findIndex(n => n.DFID == node.DFID);
+                    if (idx != -1) {
+                        this.byName[node.DFName].splice(idx, 1);
+                        if (this.byName[node.DFName].length == 0) {
+                            delete this.byName[node.DFName];
+                        }
+                    }
+                }
+            }
+
+            node.olddisconnect.bind(node)(dest);
+        };
+        return node;
+    }
+
+    createBuffer(a, b, c) {
+        return this.audioCtx.createBuffer(a, b, c);
+    }
+
+    createAnalyser(name) {
+        return this.addTrackerForNode(this.audioCtx.createAnalyser(), "Analyser", name);
+    }
+    createConstantSource(name) {
+        return this.addTrackerForNode(this.audioCtx.createConstantSource(), "ConstantSource", name);
+    }
+    createGain(name) {
+        return this.addTrackerForNode(this.audioCtx.createGain(), "Gain", name);
+    }
+    createBufferSource(name) {
+        return this.addTrackerForNode(this.audioCtx.createBufferSource(), "BufferSource", name);
+    }
+    createOscillator(name) {
+        return this.addTrackerForNode(this.audioCtx.createOscillator(), "Oscillator", name);
+    }
+    createStereoPanner(name) {
+        return this.addTrackerForNode(this.audioCtx.createStereoPanner(), "StereoPanner", name);
+    }
+    createWaveShaper(name) {
+        return this.addTrackerForNode(this.audioCtx.createWaveShaper(), "WaveShaper", name);
+    }
+    createConvolver(name) {
+        return this.addTrackerForNode(this.audioCtx.createConvolver(), "Convolver", name);
+    }
+    createBiquadFilter(name) {
+        return this.addTrackerForNode(this.audioCtx.createBiquadFilter(), "BiquadFilter", name);
+    }
+
+    get currentTime() {
+        return this.audioCtx.currentTime;
+    }
+    get destination() {
+        return this.audioCtx.destination;
+    }
+    get sampleRate() {
+        return this.audioCtx.sampleRate;
+    }
+
+    decodeAudioData(a, b, c) {
+        return this.audioCtx.decodeAudioData(a, b, c);
+    }
+};
+
 class DigifuApp {
     constructor() {
         window.gDFApp = this; // for debugging, so i can access this class in the JS console.
@@ -673,8 +843,6 @@ class DigifuApp {
         this.synth.removeParamMapping(this.myInstrument, param);
     }
 
-
-
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome) {
         this.myUser = new DigifuUser();
         this.myUser.name = userName;
@@ -693,9 +861,23 @@ class DigifuApp {
         this.midi.Init(this);
 
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        this.audioCtx = new AudioContext();
-        // this.audioCtx.audioWorklet.addModule("bitcrush.js").then(() => {
-        // });
+        if (gUseDebugCtx) {
+            this.audioCtx = new AudioContextWrapper();
+            this.audioCtx.audioCtx = new AudioContext();
+        } else {
+            this.audioCtx = new AudioContext();
+            this.audioCtx.beginScope = () => { };
+            this.audioCtx.endScope = () => { };
+        }
+
+        if (_hasSelectiveDisconnect()) {
+            //alert("selective disconnect supported");
+        } else {
+            alert("selective disconnect not supported. please report this as a bug.");
+
+        }
+
+
         this.synth.Init(this.audioCtx);
         this.net.Connect(this);
     };

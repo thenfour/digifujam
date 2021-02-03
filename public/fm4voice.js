@@ -29,6 +29,7 @@ class MiniFMSynthVoice {
 
     connect(lfo1, lfo1_01, lfo2, lfo2_01, dryDestination, wetDestination, algoSpec, pitchBendSemisNode, oscDetuneSemisMap, oscVariationMap) {
         if (this.isConnected) return;
+        this.audioCtx.beginScope("voice");
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
         this.algoSpec = algoSpec;
@@ -59,41 +60,41 @@ class MiniFMSynthVoice {
         this.nodes.env1.start();
 
         // oscSum
-        this.nodes.oscSum = this.audioCtx.createGain();
+        this.nodes.oscSum = this.audioCtx.createGain("voice>master");
         this.nodes.oscSum.gain.value = 1;
 
         // filterFreqLFO1Amt
-        this.nodes.filterFreqLFO1Amt = this.audioCtx.createGain();
+        this.nodes.filterFreqLFO1Amt = this.audioCtx.createGain("voice>filt");
         this.nodes.filterFreqLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
         lfo1.connect(this.nodes.filterFreqLFO1Amt);
 
         // filterFreqLFO2Amt
-        this.nodes.filterFreqLFO2Amt = this.audioCtx.createGain();
+        this.nodes.filterFreqLFO2Amt = this.audioCtx.createGain("voice>filt");
         this.nodes.filterFreqLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO2").currentValue;
         lfo2.connect(this.nodes.filterFreqLFO2Amt);
 
         // filterFreqENVAmt
-        this.nodes.filterFreqENVAmt = this.audioCtx.createGain();
+        this.nodes.filterFreqENVAmt = this.audioCtx.createGain("voice>filt");
         this.nodes.filterFreqENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
         this.nodes.env1.connect(this.nodes.filterFreqENVAmt);
 
         // filterQLFO1Amt
-        this.nodes.filterQLFO1Amt = this.audioCtx.createGain();
+        this.nodes.filterQLFO1Amt = this.audioCtx.createGain("voice>filt");
         this.nodes.filterQLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
         lfo1.connect(this.nodes.filterQLFO1Amt);
 
         // filterQLFO2Amt
-        this.nodes.filterQLFO2Amt = this.audioCtx.createGain();
+        this.nodes.filterQLFO2Amt = this.audioCtx.createGain("voice>filt");
         this.nodes.filterQLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
         lfo2.connect(this.nodes.filterQLFO2Amt);
 
         // filterQENVAmt
-        this.nodes.filterQENVAmt = this.audioCtx.createGain();
+        this.nodes.filterQENVAmt = this.audioCtx.createGain("voice>filt");
         this.nodes.filterQENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
         this.nodes.env1.connect(this.nodes.filterQENVAmt);
 
         // filter
-        this.nodes.filter = this.audioCtx.createBiquadFilter();
+        this.nodes.filter = this.audioCtx.createBiquadFilter("voice>filt");
         // type set later.
         this.nodes.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         this.nodes.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
@@ -120,7 +121,7 @@ class MiniFMSynthVoice {
             if (!src.isConnected) return;
             if (!dest.isConnected) return;
 
-            let m0 = this.audioCtx.createGain();
+            let m0 = this.audioCtx.createGain("voice>mod");
             this.modulationGainers.push(m0);
             m0.gain.value = 20000;
 
@@ -188,6 +189,7 @@ class MiniFMSynthVoice {
         // connect to outside.
         this._SetFiltType();
 
+        this.audioCtx.endScope("voice");
         this.isConnected = true;
     }
 

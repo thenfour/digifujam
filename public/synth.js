@@ -107,7 +107,7 @@ class DigifuSynth {
 		this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
 		instrumentSpecs.forEach(spec => {
-			let dryGainer = this.audioCtx.createGain();
+			let dryGainer = this.audioCtx.createGain("inst gainer");
 			dryGainer.gain.value = 1;
 			if (spec.gain) {
 				dryGainer.gain.value = spec.gain;
@@ -116,7 +116,7 @@ class DigifuSynth {
 			dryGainer.connect(this.preMasterGain);
 			this.instrumentDryGainers[spec.instrumentID] = dryGainer;
 
-			let wetGainer = this.audioCtx.createGain();
+			let wetGainer = this.audioCtx.createGain("inst gainer");
 			wetGainer.gain.value = 1;
 			if (spec.gain) {
 				wetGainer.gain.value = spec.gain;
@@ -180,14 +180,14 @@ class DigifuSynth {
 		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
 		//               --> (instrumentWetGainers) ----> [masterReverb] ----->
 		//
-		this.preMasterGain = this.audioCtx.createGain();
+		this.preMasterGain = this.audioCtx.createGain("master");
 		this.preMasterGain.gain.value = gGainBoost;
 
-		this.masterGainNode = this.audioCtx.createGain();
+		this.masterGainNode = this.audioCtx.createGain("master");
 		this.preMasterGain.connect(this.masterGainNode);
 
-		this.analysisNode = this.audioCtx.createAnalyser();
-		this.masterGainNode.connect(this.analysisNode);
+		// this.analysisNode = this.audioCtx.createAnalyser();
+		// this.masterGainNode.connect(this.analysisNode);
 
 		this.masterGainNode.connect(this.audioCtx.destination);
 

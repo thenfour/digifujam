@@ -32,6 +32,7 @@ class MiniFMSynthOsc {
         this.isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
         this.paramPrefix = paramPrefix;
         this.variationFactor = variationFactor;
+        this.audioCtx.beginScope("oscillator");
 
         /*
         each oscillator has                                                          
@@ -72,27 +73,27 @@ class MiniFMSynthOsc {
         // - connect FROM.
 
         // env1SemisAmt
-        this.nodes.env1SemisAmt = this.audioCtx.createGain();
-        this.nodes.env1SemisAmt.gain.value = this.paramValue("env1_pitchDepth");
-        env1.connect(this.nodes.env1SemisAmt);
+        this.nodes.env1SemisAmt = new OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
+        this.nodes.env1SemisAmt.gain = this.paramValue("env1_pitchDepth");
+        this.nodes.env1SemisAmt.connectFrom(env1);
 
         // lfo1SemisAmt
-        this.nodes.lfo1SemisAmt = this.audioCtx.createGain();
-        this.nodes.lfo1SemisAmt.gain.value = this.paramValue("lfo1_pitchDepth");
-        lfo1.connect(this.nodes.lfo1SemisAmt);
+        this.nodes.lfo1SemisAmt = new OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
+        this.nodes.lfo1SemisAmt.gain = this.paramValue("lfo1_pitchDepth");
+        this.nodes.lfo1SemisAmt.connectFrom(lfo1);
 
         // lfo2SemisAmt
-        this.nodes.lfo2SemisAmt = this.audioCtx.createGain();
-        this.nodes.lfo2SemisAmt.gain.value = this.paramValue("lfo2_pitchDepth");
-        lfo2.connect(this.nodes.lfo2SemisAmt);
+        this.nodes.lfo2SemisAmt = new OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
+        this.nodes.lfo2SemisAmt.gain = this.paramValue("lfo2_pitchDepth");
+        this.nodes.lfo2SemisAmt.connectFrom(lfo2);
 
         // transposeSemis
-        this.nodes.transposeSemis = this.audioCtx.createConstantSource();
+        this.nodes.transposeSemis = this.audioCtx.createConstantSource("osc>pitchmod");
         this.nodes.transposeSemis.offset.value = this.paramValue("freq_transp");
         this.nodes.transposeSemis.start();
 
         // baseFreqToMidiNote
-        this.nodes.baseFreqMidiNote = this.audioCtx.createConstantSource();
+        this.nodes.baseFreqMidiNote = this.audioCtx.createConstantSource("osc>pitch");
         this.nodes.baseFreqMidiNote.start();
 
         // semisToHz
@@ -106,19 +107,21 @@ class MiniFMSynthOsc {
         this.nodes.baseFreqMidiNote.connect(this.nodes.semisToHz);
 
         // lfo1PWMAmt
-        this.nodes.lfo1PWMAmt = this.audioCtx.createGain();
-        this.nodes.lfo1PWMAmt.gain.value = this.paramValue("pwmLFO1");
-        lfo1.connect(this.nodes.lfo1PWMAmt);
+        this.nodes.lfo1PWMAmt = new OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
+        this.nodes.lfo1PWMAmt.gain = this.paramValue("pwmLFO1");
+        this.nodes.lfo1PWMAmt.connectFrom(lfo1);
 
         // lfo2PWMAmt
-        this.nodes.lfo2PWMAmt = this.audioCtx.createGain();
-        this.nodes.lfo2PWMAmt.gain.value = this.paramValue("pwmLFO2");
-        lfo2.connect(this.nodes.lfo2PWMAmt);
+        this.nodes.lfo2PWMAmt = new OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
+        this.nodes.lfo2PWMAmt.gain = this.paramValue("pwmLFO2");
+        //lfo2.connect(this.nodes.lfo2PWMAmt);
+        this.nodes.lfo2PWMAmt.connectFrom(lfo2);
 
         // env1PWMAmt
-        this.nodes.env1PWMAmt = this.audioCtx.createGain();
-        this.nodes.env1PWMAmt.gain.value = this.paramValue("pwmENV");
-        env1.connect(this.nodes.env1PWMAmt);
+        this.nodes.env1PWMAmt = new OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
+        this.nodes.env1PWMAmt.gain = this.paramValue("pwmENV");
+        //env1.connect(this.nodes.env1PWMAmt);
+        this.nodes.env1PWMAmt.connectFrom(env1);
 
         // osc
         this.nodes.osc = this.audioCtx.createPulseOscillator();
@@ -145,53 +148,59 @@ class MiniFMSynthOsc {
         this.nodes.env.start();
 
         // envPeak
-        this.nodes.envPeak = this.audioCtx.createGain();
+        this.nodes.envPeak = this.audioCtx.createGain("osc>envpeak");
         this.nodes.envPeak.gain.value = this.paramValue("level");
         this.nodes.env.connect(this.nodes.envPeak);
 
         // envGainer
-        this.nodes.envGainer = this.audioCtx.createGain();
+        this.nodes.envGainer = this.audioCtx.createGain("osc>envgain");
         this.nodes.envGainer.gain.value = 0.0;
         this.nodes.osc.connect(this.nodes.envGainer);
         this.nodes.envPeak.connect(this.nodes.envGainer.gain);
 
         // lfo1LevelAmt
-        this.nodes.lfo1LevelAmt = this.audioCtx.createGain();
-        this.nodes.lfo1LevelAmt.gain.value = this.paramValue("lfo1_gainAmt");
-        lfo1_01.connect(this.nodes.lfo1LevelAmt);
+        this.nodes.lfo1LevelAmt = new OptimalGainer(this.audioCtx, "osc>gain_mod");
+        //this.nodes.lfo1LevelAmt = this.audioCtx.createGain("osc>gain_mod");
+        this.nodes.lfo1LevelAmt.gain = this.paramValue("lfo1_gainAmt");
+        //lfo1_01.connect(this.nodes.lfo1LevelAmt);
+        this.nodes.lfo1LevelAmt.connectFrom(lfo1_01);
 
         // lfo1gainer
-        this.nodes.lfo1gainer = this.audioCtx.createGain();
+        this.nodes.lfo1gainer = this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo1LevelAmt.connect(this.nodes.lfo1gainer.gain);
         this.nodes.envGainer.connect(this.nodes.lfo1gainer);
 
         // lfo2LevelAmt
-        this.nodes.lfo2LevelAmt = this.audioCtx.createGain();
-        this.nodes.lfo2LevelAmt.gain.value = this.paramValue("lfo2_gainAmt");
-        lfo2_01.connect(this.nodes.lfo2LevelAmt);
+        this.nodes.lfo2LevelAmt = new OptimalGainer(this.audioCtx, "osc>gain_mod");//this.audioCtx.createGain("osc>gain_mod");
+        this.nodes.lfo2LevelAmt.gain = this.paramValue("lfo2_gainAmt");
+        //lfo2_01.connect(this.nodes.lfo2LevelAmt);
+        this.nodes.lfo2LevelAmt.connectFrom(lfo2_01);
 
         // lfo2gainer
-        this.nodes.lfo2gainer = this.audioCtx.createGain();
+        this.nodes.lfo2gainer = this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo2LevelAmt.connect(this.nodes.lfo2gainer.gain);
         this.nodes.lfo1gainer.connect(this.nodes.lfo2gainer);
 
         // lfo1PanAmt
-        this.nodes.lfo1PanAmt = this.audioCtx.createGain();
-        this.nodes.lfo1PanAmt.gain.value = this.paramValue("lfo1PanAmt");
-        lfo1.connect(this.nodes.lfo1PanAmt);
+        this.nodes.lfo1PanAmt = new OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
+        this.nodes.lfo1PanAmt.gain = this.paramValue("lfo1PanAmt");
+        //lfo1.connect(this.nodes.lfo1PanAmt);
+        this.nodes.lfo1PanAmt.connectFrom(lfo1);
 
         // lfo2PanAmt
-        this.nodes.lfo2PanAmt = this.audioCtx.createGain();
-        this.nodes.lfo2PanAmt.gain.value = this.paramValue("lfo2PanAmt");
-        lfo2.connect(this.nodes.lfo2PanAmt);
+        this.nodes.lfo2PanAmt = new OptimalGainer(this.audioCtx, "osc>pan_mod");// this.audioCtx.createGain("osc>pan_mod");
+        this.nodes.lfo2PanAmt.gain = this.paramValue("lfo2PanAmt");
+        //lfo2.connect(this.nodes.lfo2PanAmt);
+        this.nodes.lfo2PanAmt.connectFrom(lfo2);
 
         // env1PanAmt
-        this.nodes.env1PanAmt = this.audioCtx.createGain();
-        this.nodes.env1PanAmt.gain.value = this.paramValue("env1PanAmt");
-        env1.connect(this.nodes.env1PanAmt);
+        this.nodes.env1PanAmt = new OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
+        this.nodes.env1PanAmt.gain = this.paramValue("env1PanAmt");
+        //env1.connect(this.nodes.env1PanAmt);
+        this.nodes.env1PanAmt.connectFrom(env1);
 
         // panner
-        this.nodes.panner = this.audioCtx.createStereoPanner();
+        this.nodes.panner = this.audioCtx.createStereoPanner("osc>stereopanner");
         this.nodes.panner.pan.value = this.GetPanBaseValue();
         this.nodes.lfo1PanAmt.connect(this.nodes.panner.pan);
         this.nodes.lfo2PanAmt.connect(this.nodes.panner.pan);
@@ -203,6 +212,7 @@ class MiniFMSynthOsc {
         this.outputNode = this.nodes.panner;
         this.inputNode = this.nodes.osc;
 
+        this.audioCtx.endScope();
         this.isConnected = true;
     }
 
@@ -307,13 +317,13 @@ class MiniFMSynthOsc {
                 this._setOscWaveform();
                 break;
             case "env1_pitchDepth":
-                this.nodes.env1SemisAmt.gain.value = this.paramValue("env1_pitchDepth");
+                this.nodes.env1SemisAmt.gain = this.paramValue("env1_pitchDepth");
                 break;
             case "lfo1_pitchDepth":
-                this.nodes.lfo1SemisAmt.gain.value = this.paramValue("lfo1_pitchDepth");
+                this.nodes.lfo1SemisAmt.gain = this.paramValue("lfo1_pitchDepth");
                 break;
             case "lfo2_pitchDepth":
-                this.nodes.lfo2SemisAmt.gain.value = this.paramValue("lfo2_pitchDepth");
+                this.nodes.lfo2SemisAmt.gain = this.paramValue("lfo2_pitchDepth");
                 break;
             case "freq_mult":
                 this.updateBaseFreq();
@@ -345,31 +355,31 @@ class MiniFMSynthOsc {
                 this.nodes.panner.pan.value = this.GetPanBaseValue();
                 break;
             case "lfo1PanAmt":
-                this.nodes.lfo1PanAmt.gain.value = newVal;
+                this.nodes.lfo1PanAmt.gain = newVal;
                 break;
             case "lfo2PanAmt":
-                this.nodes.lfo2PanAmt.gain.value = newVal;
+                this.nodes.lfo2PanAmt.gain = newVal;
                 break;
             case "env1PanAmt":
-                this.nodes.env1PanAmt.gain.value = newVal;
+                this.nodes.env1PanAmt.gain = newVal;
                 break;
             case "lfo1_gainAmt":
-                this.nodes.lfo1LevelAmt.gain.value = newVal;
+                this.nodes.lfo1LevelAmt.gain = newVal;
                 break;
             case "lfo2_gainAmt":
-                this.nodes.lfo2LevelAmt.gain.value = newVal;
+                this.nodes.lfo2LevelAmt.gain = newVal;
                 break;
             case "pwm_base":
                 this.nodes.osc.width.value = newVal;
                 break;
             case "pwmLFO1":
-                this.nodes.lfo1PWMAmt.gain.value = newVal;
+                this.nodes.lfo1PWMAmt.gain = newVal;
                 break;
             case "pwmLFO2":
-                this.nodes.lfo2PWMAmt.gain.value = newVal;
+                this.nodes.lfo2PWMAmt.gain = newVal;
                 break;
             case "pwmENV":
-                this.nodes.env1PWMAmt.gain.value = newVal;
+                this.nodes.env1PWMAmt.gain = newVal;
                 break;
         }
     }

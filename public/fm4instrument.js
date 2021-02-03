@@ -30,7 +30,7 @@ class FMPolySynth {
             this.nodes.lfo1.disconnect();
             this.nodes.lfo1 = null;
         }
-        this.nodes.lfo1 = this.audioCtx.createOscillator();
+        this.nodes.lfo1 = this.audioCtx.createOscillator("inst>LFO");
         this.nodes.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
         this.nodes.lfo1.start();
         this.nodes.lfo1.connect(this.nodes.lfo1Gain);
@@ -42,7 +42,7 @@ class FMPolySynth {
             this.nodes.lfo2.disconnect();
             this.nodes.lfo2 = null;
         }
-        this.nodes.lfo2 = this.audioCtx.createOscillator();
+        this.nodes.lfo2 = this.audioCtx.createOscillator("inst>LFO");
         this.nodes.lfo2.frequency.value = this.instrumentSpec.GetParamByID("lfo2_speed").currentValue;
         this.nodes.lfo2.start();
         this.nodes.lfo2.connect(this.nodes.lfo2Gain);
@@ -50,6 +50,7 @@ class FMPolySynth {
 
     connect() {
         if (this.isConnected) return;
+        this.audioCtx.beginScope(this.instrumentSpec.getDisplayName());
         // [LFO1] ----->[lfo1Gain] -------------------------------> (voices)  --> [masterDryGain] -> dryDestination
         //                       |                                            --> [masterWetGain] -> wetDestination
         //                       `--------------->                                 
@@ -73,45 +74,45 @@ class FMPolySynth {
         */
 
         // lfo1
-        this.nodes.lfo1 = this.audioCtx.createOscillator();
+        this.nodes.lfo1 = this.audioCtx.createOscillator("inst>LFO");
         //this._setLFOWaveforms();
         this.nodes.lfo1.frequency.value = this.instrumentSpec.GetParamByID("lfo1_speed").currentValue;
         this.nodes.lfo1.start();
 
         // lfo1Gain
-        this.nodes.lfo1Gain = this.audioCtx.createGain();
+        this.nodes.lfo1Gain = this.audioCtx.createGain("inst>LFO");
         this.nodes.lfo1Gain.gain.value = 1.0;
         this.nodes.lfo1.connect(this.nodes.lfo1Gain);
 
         // lfo1Offset
-        this.nodes.lfo1Offset = this.audioCtx.createConstantSource();
+        this.nodes.lfo1Offset = this.audioCtx.createConstantSource("inst>LFO_01stuff");
         this.nodes.lfo1Offset.start();
         this.nodes.lfo1Offset.offset.value = 1.0; // so it's outputting 0-2
 
         // lfo1_01
-        this.nodes.lfo1_01 = this.audioCtx.createGain();
+        this.nodes.lfo1_01 = this.audioCtx.createGain("inst>LFO_01stuff");
         this.nodes.lfo1_01.gain.value = .5;
         this.nodes.lfo1Gain.connect(this.nodes.lfo1_01);
         this.nodes.lfo1Offset.connect(this.nodes.lfo1_01);
 
         // lfo2
-        this.nodes.lfo2 = this.audioCtx.createOscillator();
+        this.nodes.lfo2 = this.audioCtx.createOscillator("inst>LFO");
         this._setLFOWaveforms();
         this.nodes.lfo2.frequency.value = this.instrumentSpec.GetParamByID("lfo2_speed").currentValue;
         this.nodes.lfo2.start();
 
         // lfo2Gain
-        this.nodes.lfo2Gain = this.audioCtx.createGain();
+        this.nodes.lfo2Gain = this.audioCtx.createGain("inst>LFO");
         this.nodes.lfo2Gain.gain.value = 1.0;
         this.nodes.lfo2.connect(this.nodes.lfo2Gain);
 
         // lfo2Offset
-        this.nodes.lfo2Offset = this.audioCtx.createConstantSource();
+        this.nodes.lfo2Offset = this.audioCtx.createConstantSource("inst>LFO_01stuff");
         this.nodes.lfo2Offset.start();
         this.nodes.lfo2Offset.offset.value = 1.0;
 
         // lfo2_01
-        this.nodes.lfo2_01 = this.audioCtx.createGain();
+        this.nodes.lfo2_01 = this.audioCtx.createGain("inst>LFO_01stuff");
         this.nodes.lfo2_01.gain.value = .5;
         this.nodes.lfo2Offset.connect(this.nodes.lfo2_01);
         this.nodes.lfo2Gain.connect(this.nodes.lfo2_01);
@@ -120,51 +121,51 @@ class FMPolySynth {
         // SET UP DETUNE GRAPH
 
         // detuneLFO1amt
-        this.nodes.detuneLFO1amt = this.audioCtx.createGain();
+        this.nodes.detuneLFO1amt = this.audioCtx.createGain("inst>detune");
         this.nodes.detuneLFO1amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO1").currentValue;
         this.nodes.lfo1.connect(this.nodes.detuneLFO1amt);
 
         // detuneLFO2amt
-        this.nodes.detuneLFO2amt = this.audioCtx.createGain();
+        this.nodes.detuneLFO2amt = this.audioCtx.createGain("inst>detune");
         this.nodes.detuneLFO2amt.gain.value = this.instrumentSpec.GetParamByID("detuneLFO2").currentValue;
         this.nodes.lfo2.connect(this.nodes.detuneLFO2amt);
 
         // detuneBaseSemis
-        this.nodes.detuneBaseSemis = this.audioCtx.createConstantSource();
+        this.nodes.detuneBaseSemis = this.audioCtx.createConstantSource("inst>detune");
         this.nodes.detuneBaseSemis.start();
         this.nodes.detuneBaseSemis.offset.value = this.instrumentSpec.GetParamByID("detuneBase").currentValue;
 
         // detuneSemis
-        this.nodes.detuneSemis = this.audioCtx.createGain();
+        this.nodes.detuneSemis = this.audioCtx.createGain("inst>detune");
         this.nodes.detuneSemis.gain.value = 1.0;
         this.nodes.detuneLFO1amt.connect(this.nodes.detuneSemis);
         this.nodes.detuneLFO2amt.connect(this.nodes.detuneSemis);
         this.nodes.detuneBaseSemis.connect(this.nodes.detuneSemis);
 
         // detuneVar1
-        this.nodes.detuneVar1 = this.audioCtx.createGain();
+        this.nodes.detuneVar1 = this.audioCtx.createGain("inst>detune");
         this.nodes.detuneVar1.gain.value = 1.0;// set later in setting up algo.
         this.nodes.detuneSemis.connect(this.nodes.detuneVar1);
 
         // detuneVar2
-        this.nodes.detuneVar2 = this.audioCtx.createGain();
+        this.nodes.detuneVar2 = this.audioCtx.createGain("inst>detune");
         this.nodes.detuneVar2.gain.value = 1.0;// set later in setting up algo.
         this.nodes.detuneSemis.connect(this.nodes.detuneVar2);
 
         // detuneVar3
-        this.nodes.detuneVar3 = this.audioCtx.createGain();
+        this.nodes.detuneVar3 = this.audioCtx.createGain("inst>detune");
         this.nodes.detuneVar3.gain.value = 1.0;// set later in setting up algo.
         this.nodes.detuneSemis.connect(this.nodes.detuneVar3);
 
-        this.nodes.pitchbendSemis = this.audioCtx.createConstantSource();
+        this.nodes.pitchbendSemis = this.audioCtx.createConstantSource("inst>pb");
         this.nodes.pitchbendSemis.start();
         this.nodes.pitchbendSemis.offset.value = this.instrumentSpec.GetParamByID("pb").currentValue;
 
         // masterDryGain
-        this.nodes.masterDryGain = this.audioCtx.createGain();
+        this.nodes.masterDryGain = this.audioCtx.createGain("inst>master");
 
         // masterWetGain
-        this.nodes.masterWetGain = this.audioCtx.createGain();
+        this.nodes.masterWetGain = this.audioCtx.createGain("inst>master");
 
         let gainLevels = this.getGainLevels();
         this.nodes.masterDryGain.gain.value = gainLevels[0];
@@ -230,6 +231,7 @@ class FMPolySynth {
         this.nodes.masterWetGain.connect(this.wetDestination);
 
         this.isConnected = true;
+        this.audioCtx.endScope();
     }
 
     disconnect() {

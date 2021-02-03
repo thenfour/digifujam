@@ -27,30 +27,31 @@ let initPWM = (ac) => {
 
     //Add a new factory method to the AudioContext object.
     ac.createPulseOscillator = function () {
+        this.beginScope("pwm");
         //Use a normal oscillator as the basis of our new oscillator.
-        var node = this.createOscillator();
+        var node = this.createOscillator("pwm");
         node.type = "sawtooth";
 
         //Pass a constant value of 1 into the widthGain – so the "width" setting
         //is duplicated to its output.
-        node.constantOneShaper = this.createWaveShaper();
+        node.constantOneShaper = this.createWaveShaper("pwm");
         node.constantOneShaper.curve = constantOneCurve;
         node.connect(node.constantOneShaper);
 
         //Use a GainNode as our new "width" audio parameter.
-        var widthGain = ac.createGain();
-        widthGain.gain.value = 0; //Default width.
-        node.width = widthGain.gain; //Add parameter to oscillator node.
-        node.constantOneShaper.connect(widthGain);
+        node.widthGain = ac.createGain("pwm");
+        node.widthGain.gain.value = 0; //Default width.
+        node.width = node.widthGain.gain; //Add parameter to oscillator node.
+        node.constantOneShaper.connect(node.widthGain);
 
         //Shape the output into a pulse wave.
-        node.pulseShaper = ac.createWaveShaper();
+        node.pulseShaper = ac.createWaveShaper("pwm");
         node.pulseShaper.curve = pulseCurve;
         node.connect(node.pulseShaper);
-        widthGain.connect(node.pulseShaper);
+        node.widthGain.connect(node.pulseShaper);
 
         // create an output node
-        node.outpNode = ac.createGain();
+        node.outpNode = ac.createGain("pwm");
         node.outpNode.gain.value = 1;
         node.pulseShaper.connect(node.outpNode);
 
@@ -62,7 +63,11 @@ let initPWM = (ac) => {
             node.outpNode.connect.apply(node.outpNode, arguments);
         }
         node.disconnect = function () {
+            node.constantOneShaper.disconnect.apply(node.constantOneShaper, arguments);
+            node.widthGain.disconnect.apply(node.widthGain, arguments);
+            node.pulseShaper.disconnect.apply(node.pulseShaper, arguments);
             node.outpNode.disconnect.apply(node.outpNode, arguments);
+            node.oscDisconnect.apply(node, arguments);
         }
 
         // now, we want to be able to still use the "type" property. so using this function,
@@ -90,6 +95,7 @@ let initPWM = (ac) => {
             this.oscConnect(this.outpNode);
         }.bind(node);
 
+        this.endScope();
         return node;
     }
 };
