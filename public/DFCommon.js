@@ -386,7 +386,7 @@ class DigifuInstrumentSpec {
         this.engine = null; // soundfont, minifm, drumkit
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
-        this.maxPolyphony = 8;
+        this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
         this.presets = []; // a preset is just a param:value pair
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
@@ -825,7 +825,8 @@ class DigifuInstrumentSpec {
         // and when CC is 0, we use the raw value.
         // when CC is max, use the value at maximum range. what is that range?
         const extent = mappingSpec.mappingRange.currentValue * (param.maxValue - param.minValue);
-        const mappedVal = remap(mappingSrcValue0127, 0, 127, param.rawValue, param.rawValue + extent);
+        //const mappedVal = remap(mappingSrcValue0127, 0, 127, param.rawValue, param.rawValue + extent);
+        const mappedVal = param.foreignToNativeValue(mappingSrcValue0127, 0, 127);
         const ret = this.sanitizeInstrumentParamVal(param, mappedVal);
         return ret;
     }
