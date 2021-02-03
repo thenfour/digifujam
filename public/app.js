@@ -595,6 +595,7 @@ class DigifuApp {
             if (foundInstrument.instrument.instrumentID == this.myInstrument.instrumentID) {
                 if (!this.myInstrument.GetParamByID("presetID").currentValue) {
                     this.myInstrument.GetParamByID("presetID").currentValue = data.patchObj.presetID;
+                    this.myInstrument.GetParamByID("presetID").rawValue = data.patchObj.presetID;
                 }
             }
         }
@@ -813,12 +814,14 @@ class DigifuApp {
         if (!this.myInstrument) return;
         // force saving as new. IT ALSO allows us to know that when the server comes back with a presetID, we should use it live.
         this.myInstrument.GetParamByID("presetID").currentValue = null;
+        this.myInstrument.GetParamByID("presetID").rawValue = null;
         this.saveLoadedPreset();
     }
 
     saveOverwriteExistingPreset(presetIDToOverwrite) {
         if (!this.myInstrument) return;
         this.myInstrument.GetParamByID("presetID").currentValue = presetIDToOverwrite;
+        this.myInstrument.GetParamByID("presetID").rawValue = presetIDToOverwrite;
         this.saveLoadedPreset();
     }
 

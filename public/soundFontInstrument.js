@@ -93,6 +93,7 @@ class SoundfontInstrument {
 	}
 
 	NoteOn(midiNote, velocity) {
+        if (!this.isConnected) this.connect();
 		if (!this.sfinstrument) return;
 		this.voices[midiNote] = this.sfinstrument.play(midiNote, null, { gain: velocity / 128 }); // https://www.npmjs.com/package/soundfont-player
 		if (this.voices[midiNote]) {
@@ -103,6 +104,7 @@ class SoundfontInstrument {
 	};
 
 	NoteOff(midiNote) {
+        if (!this.isConnected) this.connect();
 		if (!this.sfinstrument) return;
 		// we have to respect if a note off happens without corresponding note on.
 		if (!this.voices[midiNote]) return;
@@ -114,11 +116,13 @@ class SoundfontInstrument {
 	};
 
 	PedalDown() {
+        if (!this.isConnected) this.connect();
 		if (!this.sfinstrument) return;
 		this.sustainMode = true;
 	};
 
 	PedalUp() {
+        if (!this.isConnected) this.connect();
 		if (!this.sfinstrument) return;
 		this.sustainMode = false;
 		// release notes which are playing but not physically pressed.
