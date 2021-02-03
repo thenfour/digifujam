@@ -124,7 +124,7 @@ class MiniFMSynthOsc {
         this.nodes.env1PWMAmt.connectFrom(env1);
 
         // osc
-        this.nodes.osc = this.audioCtx.createPulseOscillator();
+        this.nodes.osc = new DFOscillator(this.audioCtx, "osc");// this.audioCtx.createPulseOscillator();
         this._setOscWaveform();
         this.nodes.osc.start();
         this.nodes.osc.frequency.value = this.paramValue("freq_abs");
@@ -223,6 +223,7 @@ class MiniFMSynthOsc {
             let n = this.nodes[k];
             if (n.stop) n.stop();
             n.disconnect();
+            if (n.destroy) n.destroy(); // for PWM oscillator
         });
         this.nodes = {};
 
@@ -235,7 +236,7 @@ class MiniFMSynthOsc {
 
     _setOscWaveform() {
         const shapes = ["sine", "square", "sawtooth", "triangle", "pwm"];
-        this.nodes.osc.setWaveformType(shapes[this.paramValue("wave")]);
+        this.nodes.osc.type =shapes[this.paramValue("wave")];
     }
 
     GetPanBaseValue() {

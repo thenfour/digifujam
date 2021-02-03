@@ -64,34 +64,36 @@ class MiniFMSynthVoice {
         this.nodes.oscSum.gain.value = 1;
 
         // filterFreqLFO1Amt
-        this.nodes.filterFreqLFO1Amt = this.audioCtx.createGain("voice>filt");
-        this.nodes.filterFreqLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
-        lfo1.connect(this.nodes.filterFreqLFO1Amt);
+        this.nodes.filterFreqLFO1Amt = new OptimalGainer(this.audioCtx, "voice>filt");//this.audioCtx.createGain("voice>filt");
+        this.nodes.filterFreqLFO1Amt.gain = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
+        this.nodes.filterFreqLFO1Amt.connectFrom(lfo1);
 
         // filterFreqLFO2Amt
-        this.nodes.filterFreqLFO2Amt = this.audioCtx.createGain("voice>filt");
-        this.nodes.filterFreqLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterFreqLFO2").currentValue;
-        lfo2.connect(this.nodes.filterFreqLFO2Amt);
+        this.nodes.filterFreqLFO2Amt = new OptimalGainer(this.audioCtx, "voice>filt"); // this.audioCtx.createGain("voice>filt");
+        this.nodes.filterFreqLFO2Amt.gain = this.instrumentSpec.GetParamByID("filterFreqLFO2").currentValue;
+        this.nodes.filterFreqLFO2Amt.connectFrom(lfo2);
 
         // filterFreqENVAmt
-        this.nodes.filterFreqENVAmt = this.audioCtx.createGain("voice>filt");
-        this.nodes.filterFreqENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
-        this.nodes.env1.connect(this.nodes.filterFreqENVAmt);
+        this.nodes.filterFreqENVAmt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterFreqENVAmt.gain = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
+        this.nodes.filterFreqENVAmt.connectFrom(this.nodes.env1);
 
         // filterQLFO1Amt
-        this.nodes.filterQLFO1Amt = this.audioCtx.createGain("voice>filt");
-        this.nodes.filterQLFO1Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
-        lfo1.connect(this.nodes.filterQLFO1Amt);
+        this.nodes.filterQLFO1Amt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterQLFO1Amt.gain = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
+        this.nodes.filterQLFO1Amt.connectFrom(lfo1);
 
         // filterQLFO2Amt
-        this.nodes.filterQLFO2Amt = this.audioCtx.createGain("voice>filt");
-        this.nodes.filterQLFO2Amt.gain.value = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
-        lfo2.connect(this.nodes.filterQLFO2Amt);
+        this.nodes.filterQLFO2Amt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterQLFO2Amt.gain = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
+        //lfo2.connect(this.nodes.filterQLFO2Amt);
+        this.nodes.filterQLFO2Amt.connectFrom(lfo2);
 
         // filterQENVAmt
-        this.nodes.filterQENVAmt = this.audioCtx.createGain("voice>filt");
-        this.nodes.filterQENVAmt.gain.value = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
-        this.nodes.env1.connect(this.nodes.filterQENVAmt);
+        this.nodes.filterQENVAmt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterQENVAmt.gain = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
+        //this.nodes.env1.connect(this.nodes.filterQENVAmt);
+        this.nodes.filterQENVAmt.connectFrom(this.nodes.env1);
 
         // filter
         this.nodes.filter = this.audioCtx.createBiquadFilter("voice>filt");
@@ -314,25 +316,25 @@ class MiniFMSynthVoice {
                 this._updateFilterBaseFreq();
                 break;
             case "filterQ":
-                this.nodes.filter.Q.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filter.Q.value = newVal;
                 break;
             case "filterFreqLFO1":
-                this.nodes.filterFreqLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterFreqLFO1Amt.gain = newVal;
                 break;
             case "filterFreqLFO2":
-                this.nodes.filterFreqLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterFreqLFO2Amt.gain = newVal;
                 break;
             case "filterFreqENV":
-                this.nodes.filterFreqENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterFreqENVAmt.gain = newVal;
                 break;
             case "filterQLFO1":
-                this.nodes.filterQLFO1Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterQLFO1Amt.gain = newVal;
                 break;
             case "filterQLFO2":
-                this.nodes.filterQLFO2Amt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterQLFO2Amt.gain = newVal;
                 break;
             case "filterQENV":
-                this.nodes.filterQENVAmt.gain.linearRampToValueAtTime(newVal, this.audioCtx.currentTime + this.minGlideS);
+                this.nodes.filterQENVAmt.gain = newVal;
                 break;
             case "env1_s":
                 this.nodes.env1.update({ sustain: newVal });

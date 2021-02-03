@@ -1,101 +1,147 @@
 'use strict';
 
-// thank you https://github.com/pendragon-andyh/WebAudio-PulseOscillator
+//Pre-calculate the WaveShaper curves so that we can reuse them.
+var gDFWaveshapingPulseCurve = new Float32Array(256);
+for (var i = 0; i < 128; i++) {
+    gDFWaveshapingPulseCurve[i] = -1;
+    gDFWaveshapingPulseCurve[i + 128] = 1;
+}
 
-let initPWM = (ac) => {
+// PWM mode: when setWaveformType("pwm"),
+//
+//                  [osc(sawtooth)] ----> [pulseShaper] -->
+//                 [shifter<width>] ---->
+//
+// NORMAL mode: for any other wave type,
+//
+//                  [osc] -->
+//
+class DFOscillator {
+    constructor(audioCtx, name) {
+        this.audioCtx = audioCtx;
+        this.name = name;
+        this.waveformType = "";
 
-    //Pre-calculate the WaveShaper curves so that we can reuse them.
-    var pulseCurve = new Float32Array(256);
-    for (var i = 0; i < 128; i++) {
-        pulseCurve[i] = -1;
-        pulseCurve[i + 128] = 1;
+        this.destinations = new Set();
+
+        this.osc = this.audioCtx.createOscillator("pwm");
+        this.pulseShaper = null; // when null, this is not PWM mode.
+        this.shifter = this.audioCtx.createConstantSource("pwm"); // this is always created, because it exposes an audioparam which i don't want to deal with optimizing conditionally.
+        this.shifter.start();
+
+        this.width = this.shifter.offset; // expose this audioparam as our own
+        this.start = this.osc.start.bind(this.osc);
+        this.stop = this.osc.stop.bind(this.osc);
+        this.frequency = this.osc.frequency; // expose this audioparam as our own
     }
-    var constantOneCurve = new Float32Array(2);
-    constantOneCurve[0] = 1;
-    constantOneCurve[1] = 1;
 
-
-    // when setWaveformType("pwm"),
-    //
-    //                  [node] -----------> [pulseShaper] --> [outpNode]
-    //                    |               |
-    //    [constantOneShaper] --> [widthGain]
-
-    // or for any other normal type,
-    //
-    //                  [this] --> [outp]
-
-    //Add a new factory method to the AudioContext object.
-    ac.createPulseOscillator = function () {
-        this.beginScope("pwm");
-        //Use a normal oscillator as the basis of our new oscillator.
-        var node = this.createOscillator("pwm");
-        node.type = "sawtooth";
-
-        //Pass a constant value of 1 into the widthGain – so the "width" setting
-        //is duplicated to its output.
-        node.constantOneShaper = this.createWaveShaper("pwm");
-        node.constantOneShaper.curve = constantOneCurve;
-        node.connect(node.constantOneShaper);
-
-        //Use a GainNode as our new "width" audio parameter.
-        node.widthGain = ac.createGain("pwm");
-        node.widthGain.gain.value = 0; //Default width.
-        node.width = node.widthGain.gain; //Add parameter to oscillator node.
-        node.constantOneShaper.connect(node.widthGain);
-
-        //Shape the output into a pulse wave.
-        node.pulseShaper = ac.createWaveShaper("pwm");
-        node.pulseShaper.curve = pulseCurve;
-        node.connect(node.pulseShaper);
-        node.widthGain.connect(node.pulseShaper);
-
-        // create an output node
-        node.outpNode = ac.createGain("pwm");
-        node.outpNode.gain.value = 1;
-        node.pulseShaper.connect(node.outpNode);
-
-        //Override the oscillator's "connect" and "disconnect" method so that the
-        //new node's output actually comes from the outpNode.
-        node.oscConnect = node.connect; // save for later.
-        node.oscDisconnect = node.disconnect; // save for later.
-        node.connect = function () {
-            node.outpNode.connect.apply(node.outpNode, arguments);
+    connect(dest) {
+        this.destinations.add(dest);
+        if (!this.pulseShaper) {
+            // NORMAL mode
+            this.osc.connect(dest);
+        } else {
+            // PWM mode
+            this.pulseShaper.connect(dest);
         }
-        node.disconnect = function () {
-            node.constantOneShaper.disconnect.apply(node.constantOneShaper, arguments);
-            node.widthGain.disconnect.apply(node.widthGain, arguments);
-            node.pulseShaper.disconnect.apply(node.pulseShaper, arguments);
-            node.outpNode.disconnect.apply(node.outpNode, arguments);
-            node.oscDisconnect.apply(node, arguments);
-        }
+    }
 
-        // now, we want to be able to still use the "type" property. so using this function,
-        // setWaveformType(), you can switch between waveforms seamlessly.
-        node.isPWM = true;
-        node.setWaveformType = function(shape) {
-            if (shape == "pwm") {
-                if (this.isPWM) return;
-                // we need to switch to PWM mode.
-                this.isPWM = true;
-                this.type = "sawtooth";
-                this.oscDisconnect();
+    disconnect(dest) {
+        if (typeof (dest) === 'undefined') {
+            // disconnect ALL.
+            if (!this.pulseShaper) {
+                // NORMAL mode
+                this.osc.disconnect();
+            } else {
+                // PWM mode
                 this.pulseShaper.disconnect();
-                this.oscConnect(this.constantOneShaper);
-                this.oscConnect(this.pulseShaper);
-                this.pulseShaper.connect(this.outpNode);
-                return;
             }
-            this.type = shape;
-            if (!this.isPWM) return;
-            this.isPWM = false;
-            // we need to switch to standard mode.
-            this.oscDisconnect();
-            this.pulseShaper.disconnect();
-            this.oscConnect(this.outpNode);
-        }.bind(node);
+            this.destinations = new Set();
+        } else {
+            // selective disconnect
+            this.destinations.delete(dest);
+            if (!this.pulseShaper) {
+                // NORMAL mode
+                this.osc.disconnect(dest);
+            } else {
+                // PWM mode
+                this.pulseShaper.disconnect(dest);
+            }
+        }
+    }
 
-        this.endScope();
-        return node;
+    destroy() {
+        this.osc.disconnect();
+        if (this.pulseShaper) {
+            this.pulseShaper.disconnect();
+            this.pulseShaper = null;
+        }
+        if (this.shifter) {
+            this.shifter.disconnect();
+            this.shifter = null;
+        }
+    }
+
+    get type() {
+        if (!!this.pulseShaper) return "pwm";
+        return this.osc.type;
+    }
+
+    set type(val) {
+        if (val === "pwm") {
+            this._ensurePWMMode();
+            return;
+        }
+        this._ensureNormalMode();
+        this.osc.type = val;
+    }
+
+    _ensureNormalMode() {
+        if (!this.pulseShaper) return;
+
+        // transition from 
+        //                  [osc(sawtooth)] ----> [pulseShaper] -->
+        //                 [shifter<width>] ---->
+        //
+        // to NORMAL mode: for any other wave type,
+        //
+        //                  [osc] -->
+
+        this.osc.disconnect();
+        this.pulseShaper.disconnect();
+        this.pulseShaper = null;
+
+        this.shifter.disconnect();
+
+        this.destinations.forEach(dest => {
+            this.osc.connect(dest);
+        });
+
+    }
+
+    _ensurePWMMode() {
+        if (this.pulseShaper) return;
+
+        // transition from 
+        //                  [osc] -->
+        // to
+        //                  [osc(sawtooth)] ----> [pulseShaper] -->
+        //                 [shifter<width>] ---->
+
+        this.osc.disconnect();
+
+        // create pulse shape.
+        this.pulseShaper = this.audioCtx.createWaveShaper("pwm");
+        this.pulseShaper.curve = gDFWaveshapingPulseCurve;
+
+        this.shifter.connect(this.pulseShaper);
+
+        this.destinations.forEach(dest => {
+            this.pulseShaper.connect(dest);
+        });
+
+        this.osc.connect(this.pulseShaper);
+        this.shifter.connect(this.pulseShaper);
     }
 };
+

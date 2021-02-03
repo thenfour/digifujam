@@ -173,7 +173,6 @@ class DigifuSynth {
 			reverbjs.extend(this.audioCtx);
 		}
 
-		initPWM(this.audioCtx);
 		initSynthTools(this.audioCtx);
 
 		//                                                                                                                ->[analysis]

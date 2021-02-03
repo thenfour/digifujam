@@ -48,6 +48,9 @@ let initSynthTools = (audioCtx) => {
     };
 };
 
+// THIS is a drop-in relacement for the OptimalGainer which just uses non-optimized behavior, for debugging
+// purposes. LEAVE IT HERE. it may even be used in the future if there are browsers which don't support selective disconnects.
+
 // this returns a gainer-like object which removes itself from the audio graph when gain is 0 or 1.
 // the catch:
 // - gain is no longer an AudioParam.
