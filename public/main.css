@@ -1011,3 +1011,14 @@ li.floatParam.expanded.hasMapping
     font-size: x-small;
     margin-bottom: 8px;
 }
+
+.paramValueLabel {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.mappedLiveValue {
+    color: #ffb800;
+    font-size: small;
+}
+

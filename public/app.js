@@ -294,7 +294,9 @@ class DigifuApp {
         if (this.myInstrument == null) return;
         let patchObj = { "pb": val * this.pitchBendRange };
         this.net.SendInstrumentParams(patchObj);
-        this.synth.SetInstrumentParams(this.myInstrument, patchObj);
+        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj)) {
+            this.stateChangeHandler();
+        }
     };
 
     MIDI_CC(cc, val) {
@@ -305,7 +307,9 @@ class DigifuApp {
         patchObj["midicc_" + cc] = val;
         //console.log(`MIDI_CC: ${JSON.stringify(patchObj)}`);
         this.net.SendInstrumentParams(patchObj);
-        this.synth.SetInstrumentParams(this.myInstrument, patchObj);
+        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj)) {
+            this.stateChangeHandler();
+        }
     }
 
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
@@ -507,8 +511,9 @@ class DigifuApp {
             //log(`NET_OnInstrumentParam instrument not found`);
             return;
         }
-        this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj);
-        if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
+        if (this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj)) {
+            this.stateChangeHandler();
+        } else  if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
             this.stateChangeHandler();
         }
     }
@@ -556,7 +561,6 @@ class DigifuApp {
         foundInstrument.instrument.importAllPresetsArray(data.presets);
         let initPreset = foundInstrument.instrument.GetInitPreset();
         this.synth.SetInstrumentParams(foundInstrument.instrument, initPreset);
-
         this.stateChangeHandler();
     }
 
@@ -769,7 +773,9 @@ class DigifuApp {
     loadPatchObj(presetObj /* RAW values */) {
         if (!this.myInstrument) return;
         this.net.SendInstrumentParams(presetObj);
-        this.synth.SetInstrumentParams(this.myInstrument, presetObj);
+        if (this.synth.SetInstrumentParams(this.myInstrument, presetObj)) {
+            this.stateChangeHandler();
+        }
     };
 
     SetInstrumentParam(inst, param, newVal) {
@@ -858,6 +864,15 @@ class DigifuApp {
         this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.handleRoomWelcome = handleRoomWelcome;
 
+        
+        if (_hasSelectiveDisconnect()) {
+            //alert("selective disconnect supported");
+        } else {
+            alert("selective disconnect not supported. please report this as a bug.");
+
+        }
+
+
         this.midi.Init(this);
 
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -868,13 +883,6 @@ class DigifuApp {
             this.audioCtx = new AudioContext();
             this.audioCtx.beginScope = () => { };
             this.audioCtx.endScope = () => { };
-        }
-
-        if (_hasSelectiveDisconnect()) {
-            //alert("selective disconnect supported");
-        } else {
-            alert("selective disconnect not supported. please report this as a bug.");
-
         }
 
 

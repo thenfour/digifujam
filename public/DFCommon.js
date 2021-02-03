@@ -657,11 +657,15 @@ class DigifuInstrumentSpec {
     //
     // RULE #1480: when a mapping range or source is being set here, it should also recalculate the dependent params.
     //
-    // returns a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
+    // returns {
+    //   calculatedPatchObj:{}, // a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
+    //   incurredMappings: <bool> // whether any of these changes incurred mapping changes to other params
+    // }
     integrateRawParamChanges(patchObj) {
         if (!patchObj) return;
 
         const ret = {};
+        let incurredMappings = false;
 
         const midiCCs = {};// map paramID to param
         const macros = {};// map paramID to param
@@ -768,6 +772,7 @@ class DigifuInstrumentSpec {
             //console.log(`calculated value for midi CC ${param.midiCC}: ${param.currentValue.toFixed(3)}`);
             // find all params depending on this midi CC param directly, and calculate their currentValue.
             const specs = this.getMappingSpecsForSrcVal(param.mappingSrcVal); // { mappingSrc, mappingRange, param }
+            incurredMappings = incurredMappings || (specs.length > 0);
             specs.forEach(spec => {
                 spec.param.currentValue = this.calculateParamCurrentValue(spec.param, spec, param);
                 ret[spec.param.paramID] = spec.param.currentValue;
@@ -781,6 +786,7 @@ class DigifuInstrumentSpec {
         let calcOwnParamVal = (param) => {
             const spec = this.getParamMappingSpec(param);
             if (spec) {
+                incurredMappings = true;
                 param.currentValue = this.calculateParamCurrentValue(param, spec, this.FindMapSrcValueParamForMappingSrc(spec.mappingSrc.currentValue));
             } else {
                 param.currentValue = this.calculateParamCurrentValue(param, null, null);
@@ -799,6 +805,7 @@ class DigifuInstrumentSpec {
             const param = macros[k];
             // find all params depending on this macro directly, and calculate them.
             const specs = this.getMappingSpecsForSrcVal(param.mappingSrcVal); // { mappingSrc, mappingRange, param }
+            incurredMappings = incurredMappings || (specs.length > 0);
             specs.forEach(spec => {
                 spec.param.currentValue = this.calculateParamCurrentValue(spec.param, spec, param);
                 ret[spec.param.paramID] = spec.param.currentValue;
@@ -810,7 +817,10 @@ class DigifuInstrumentSpec {
             calcOwnParamVal(otherMappableParams[k]);
         });
 
-        return ret;
+        return {
+            calculatedPatchObj: ret, // a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
+            incurredMappings // whether any of these changes incurred mapping changes to other params
+        };
     }
 
     // returns the value; doesn't set it. caller can do that.
@@ -822,12 +832,15 @@ class DigifuInstrumentSpec {
             return ret;
         }
         // all mappingSrc values are 0-127 to imitate midi CC.
-        // and when CC is 0, we use the raw value.
-        // when CC is max, use the value at maximum range. what is that range?
-        const extent = mappingSpec.mappingRange.currentValue * (param.maxValue - param.minValue);
-        //const mappedVal = remap(mappingSrcValue0127, 0, 127, param.rawValue, param.rawValue + extent);
-        const mappedVal = param.foreignToNativeValue(mappingSrcValue0127, 0, 127);
-        const ret = this.sanitizeInstrumentParamVal(param, mappedVal);
+        // we want to think of the map source being the actual GUI sliders. which means they are "foreign".
+        // but they perturb the actual GUI slider of the "raw val", which is native.
+        // so we must convert rawval to foreign, add our extent to it, and convert back to native. yee.
+        let baseForeign = param.nativeToForeignValue(param.rawValue, 0, 1); // 0 to 1
+        let modRangeN11 = mappingSpec.mappingRange.currentValue; // -1 to 1
+        let modForeign01 = mappingSrcValue0127 / 127;
+        let liveValueForeign = baseForeign + (modRangeN11 * modForeign01);
+        let liveValueNative = param.foreignToNativeValue(liveValueForeign, 0, 1);
+        const ret = this.sanitizeInstrumentParamVal(param, liveValueNative);
         return ret;
     }
 
@@ -845,7 +858,7 @@ class DigifuInstrumentSpec {
     getEffectiveMappingRange(mappingSpec) {
         return [
             this.calculateParamCurrentValueFromValue0127(mappingSpec.param, mappingSpec, 0),
-            this.calculateParamCurrentValueFromValue0127(mappingSpec.param, mappingSpec, 127),           
+            this.calculateParamCurrentValueFromValue0127(mappingSpec.param, mappingSpec, 127),
         ];
     }
 

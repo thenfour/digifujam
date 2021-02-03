@@ -126,17 +126,6 @@
       "activityDisplay": "keyboard"
     },
     {
-      "instrumentID": "sf3",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "electric_piano_2",
-      "gain": 1,
-      "name": "FM Keys",
-      "img": "",
-      "color": "rgb(131, 145, 255)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
-    },
-    {
       "instrumentID": "sf4",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "acoustic_guitar_steel",
@@ -188,6 +177,17 @@
       "name": "Strings",
       "img": "",
       "color": "rgb(255, 0, 0)",
+      "engine": "soundfont",
+      "activityDisplay": "keyboard"
+    },
+    {
+      "instrumentID": "sf3",
+      "copyOfInstrumentID": "soundfont",
+      "sfinstrumentName": "pizzicato_strings",
+      "gain": 3,
+      "name": "Pizzicato",
+      "img": "",
+      "color": "rgb(131, 145, 255)",
       "engine": "soundfont",
       "activityDisplay": "keyboard"
     },

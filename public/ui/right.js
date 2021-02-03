@@ -537,7 +537,15 @@ class InstFloatParam extends React.Component {
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(rawValue)} <-- setting values like this causes massive slowness
                 />
-                <label onClick={this.toggleShowTxt}>{this.GetParamDisplayName()}: <span id={this.valueTextID}></span></label>
+                <label onClick={this.toggleShowTxt}>
+                    {this.GetParamDisplayName()}:
+                    <div className="paramValueLabel">
+                        <span id={this.valueTextID}></span>
+                        {mappingSpec && (
+                            <div className="mappedLiveValue">{this.props.param.currentValue.toFixed(2)}</div>
+                        )}
+                    </div>
+                </label>
                 {macroMappingList}
                 { this.state.isExpanded && <div id={this.valueTextDivID}>
                     <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} value={this.state.inputTextValue} onChange={this.onChangeValInput} onKeyDown={this.handleTextInputKeyDown} />

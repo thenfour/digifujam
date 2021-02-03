@@ -87,10 +87,13 @@ class DigifuSynth {
 		this.SetInstrumentParams(inst, patchObj);
 	}
 
+	// returns true if the param changes incurred mapping propagation to other params
 	SetInstrumentParams(instrumentSpec, patchObj /* RAW values, not calculated */) {
-		let calculatedPatchObj = instrumentSpec.integrateRawParamChanges(patchObj);
-		if (this._isMuted) return;
-		this.instruments[instrumentSpec.instrumentID].SetParamValues(calculatedPatchObj);
+		const x = instrumentSpec.integrateRawParamChanges(patchObj);
+		if (!this._isMuted) {
+			this.instruments[instrumentSpec.instrumentID].SetParamValues(x.calculatedPatchObj);
+		}
+		return x.incurredMappings;
 	}
 
 	ConnectInstrument(instrumentSpec) {
