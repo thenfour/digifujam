@@ -137,7 +137,11 @@ class OptimalGainer {
                 // sources are connected to dests on behalf of this node; remove these specific connections.
                 this.destinations.forEach(dest => {
                     this.sources.forEach(src => {
-                        src.disconnect(dest);
+                        try {
+                            src.disconnect(dest);
+                        } catch (e) {
+                            // swallow. if a node fails to disconnect it may just be that it was already disconnected in some other external code.
+                        }
                     });
                 });
             }
@@ -149,7 +153,11 @@ class OptimalGainer {
                 this.gainer.disconnect(dest);
             } else if (this.passthrough) {
                 this.sources.forEach(src => {
-                    src.disconnect(dest);
+                    try {
+                        src.disconnect(dest);
+                    } catch (e) {
+                        // swallow. if a node fails to disconnect it may just be that it was already disconnected in some other external code.
+                    }
                 });
             }
         }
@@ -174,7 +182,11 @@ class OptimalGainer {
         if (this.gainer) {
             //console.log(`${this.name} gain => zero`);
             this.sources.forEach(src => { // disconnect sources from our gainer
-                src.disconnect(this.gainer);
+                try {
+                    src.disconnect(this.gainer);
+                } catch (e) {
+                    // swallow. if a node fails to disconnect it may just be that it was already disconnected in some other external code.
+                }
             })
             this.gainer.disconnect();
             this.gainer = null;
@@ -184,8 +196,12 @@ class OptimalGainer {
             //console.log(`${this.name} passthrough => zero`);
             this.destinations.forEach(dest => { // disconnect sources from destinations
                 this.sources.forEach(src => {
-                    src.disconnect(dest);
-                })
+                    try {
+                        src.disconnect(dest);
+                    } catch (e) {
+                        // swallow. if a node fails to disconnect it may just be that it was already disconnected in some other external code.
+                    }
+                });
             });
             this.passthrough = false;
             return;
@@ -196,8 +212,12 @@ class OptimalGainer {
         if (this.gainer) {
             //console.log(`${this.name} gain => passthrough`);
             this.sources.forEach(src => { // disconnect sources from our gainer
-                src.disconnect(this.gainer);
-            })
+                try {
+                    src.disconnect(this.gainer);
+                } catch (e) {
+                    // swallow. if a node fails to disconnect it may just be that it was already disconnected in some other external code.
+                }
+            });
             this.sources.forEach(src => { // connect those sources instead to the destinations.
                 this.destinations.forEach(dest => {
                     src.connect(dest);
@@ -235,7 +255,11 @@ class OptimalGainer {
             //console.log(`${this.name} passthrough => gain`);
             this.destinations.forEach(dest => { // disconnect sources from destinations
                 this.sources.forEach(src => {
-                    src.disconnect(dest);
+                    try {
+                        src.disconnect(dest);
+                    } catch (e) {
+                        // swallow. if a node fails to disconnect it may just be that it was already disconnected in some other external code.
+                    }
                 })
             });
         }
