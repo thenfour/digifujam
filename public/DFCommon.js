@@ -1,6 +1,6 @@
 'use strict';
 
-let gDigifujamVersion = 4;
+let gDigifujamVersion = 5;
 
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
@@ -87,7 +87,7 @@ const ClientMessages = {
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",
     PedalUp: "PedalUp",
-    InstrumentParams: "InstParams",// {} object mapping paramID => newVal -- pitch bend is a special param called "pb"
+    InstrumentParams: "InstParams",// { patchObj:{}, isWholePatch:<bool>} object mapping paramID => newVal
     CreateParamMapping: "CreateParamMapping", // paramID, eParamMappingSource
     RemoveParamMapping: "RemoveParamMapping", // paramID
 
@@ -116,7 +116,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    InstrumentParams: "InstParams",// { userID, instrumentID, patchObj:{object mapping paramID to newVal} } ] -- pitch bend is a special param called "pb"
+    InstrumentParams: "InstParams",// { userID, instrumentID, isWholePatch, patchObj:{object mapping paramID to newVal} } ]
     CreateParamMapping: "CreateParamMapping", // instrumentID, paramID, eParamMappingSource
     RemoveParamMapping: "RemoveParamMapping", // instrumentID, paramID
 
@@ -287,6 +287,7 @@ class InstrumentParam {
         //this.midiCC = undefined; // which midi CC does this represent
         //this.isMacro = undefined;
         //this.macroIdx = undefined; // which macro index does tihs represent?
+        //this.isDynamic = undefined; // for any params that we add dynamically, thus won't always appear in patch objects, and thus must be removed when a patch is replaced
 
         this.currentValue = 0; // the value with any mappings applied (MIDI CC, macro etc)
         this.rawValue = 0;// the value with no mappings applied, as advertised by the GUI sliders for example
@@ -516,6 +517,7 @@ class DigifuInstrumentSpec {
                 isInternal: true,
                 hidden: true,
                 isMappingSrc: true,
+                isDynamic: true,
                 dependentParamID: param.paramID,
                 minValue: 0,
                 supportsMapping: false,
@@ -536,6 +538,7 @@ class DigifuInstrumentSpec {
                 isInternal: true,
                 hidden: true,
                 isMappingRange: true,
+                isDynamic: true,
                 dependentParamID: param.paramID,
                 supportsMapping: false,
                 minValue: -1.0,
@@ -661,11 +664,16 @@ class DigifuInstrumentSpec {
     //   calculatedPatchObj:{}, // a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
     //   incurredMappings: <bool> // whether any of these changes incurred mapping changes to other params
     // }
-    integrateRawParamChanges(patchObj) {
+    integrateRawParamChanges(patchObj, isWholePatch) {
         if (!patchObj) return;
 
         const ret = {};
         let incurredMappings = false;
+
+        // if you are replacing the entire patch, then remove any existing params which we added dynamically.
+        if (isWholePatch) {
+            this.params.removeIf(p => p.isDynamic);
+        }
 
         const midiCCs = {};// map paramID to param
         const macros = {};// map paramID to param
@@ -693,6 +701,7 @@ class DigifuInstrumentSpec {
                         isInternal: true,
                         hidden: true,
                         isMidiCC: true,
+                        isDynamic: true,
                         midiCC: midiCC,
                         mappingSrcVal: midiCC,
                         minValue: 0,
@@ -711,6 +720,18 @@ class DigifuInstrumentSpec {
                 } else if (k.startsWith("mappingRange__")) {
                     mappingRangeParams[k] = patchObj[k];
                     return;
+                } else if (k === "pb") {
+                    param = Object.assign(new InstrumentParam(), {
+                        paramID: "pb",
+                        name: "pb",
+                        hidden: true,
+                        parameterType: InstrumentParamType.floatParam,
+                        minValue: -48,
+                        maxValue: 48,
+                        isDynamic: true,
+                        currentValue: 0,
+                    });
+                    this.params.push(param);
                 } else {
                     console.log(`integrateRawParamChanges: "${k}" was not found, its value will be ignored.`);
                     return;
@@ -925,10 +946,11 @@ class DigifuInstrumentSpec {
     exportPatchObj() {
         let ret = {};
         this.params.forEach(param => {
-            if (param.paramID == "pb") { return; } // pitch bend is not something we want to store in presets
+            if (param.paramID === "pb") { return; } // pitch bend is not something we want to store in presets
             if (param.isMidiCC) { return; } // also not helpful to store CC values which are live.
             ret[param.paramID] = param.rawValue;
         });
+        ret.isReadOnly = false; // when you export a patch it's no longer a read-only sort of patch.
         return ret;
     }
 
@@ -940,8 +962,10 @@ class DigifuInstrumentSpec {
             return false;
         });
         const pb = this.GetParamByID("pb");
-        pb.currentValue = 0;
-        pb.rawValue = 0;
+        if (pb) {
+            pb.currentValue = 0;
+            pb.rawValue = 0;
+        }
     }
 
     thaw() {

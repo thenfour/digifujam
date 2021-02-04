@@ -7,19 +7,20 @@ class DigifuNet {
         this.socket = null;
         this.handler = null;
 
-        this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
-        this.paramChangeLastSent = new Date();
-        this.timerCookie = null;
+        this.ResetQueuedParamChangeData();
     };
 
-    ResetInternalState() {
+    ResetQueuedParamChangeData() {
         if (this.timerCookie) {
             clearTimeout(this.timerCookie);
         }
-        this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
         this.paramChangeLastSent = new Date();
         this.timerCookie = null;
-    };
+        this.queuedParamChangeData = {
+            isWholePatch: false,
+            patchObj: {}// map paramID to newVal corresponding to ClientSettings.InstrumentParams
+        }; 
+    }
 
     SendIdentify(data) {
         this.socket.emit(ClientMessages.Identify, data);
@@ -58,24 +59,27 @@ class DigifuNet {
 
     OnParamChangeInterval() {
         this.timerCookie = null;
-        this.paramChangeLastSent = new Date();
-        //console.log(`OnParamChangeInterval QUEUED ${JSON.stringify(this.queuedParamChangeData)} `);
-        let keys = Object.keys(this.queuedParamChangeData);
+        let keys = Object.keys(this.queuedParamChangeData.patchObj);
         if (keys.length < 1) {
             return;
         }
         this.socket.emit(ClientMessages.InstrumentParams, this.queuedParamChangeData);
-        this.queuedParamChangeData = {}; // map paramID to newVal corresponding to ClientSettings.InstrumentParams
+        this.queuedParamChangeData = {
+            isWholePatch: false,
+            patchObj: {}// map paramID to newVal corresponding to ClientSettings.InstrumentParams
+        }; 
+        this.ResetQueuedParamChangeData();
     };
 
-    SendInstrumentParams(presetObj) {
+    SendInstrumentParams(patchObj, isWholePatch) {
         // how to throttle?
         // - if we have a timer set, modify the packet it will send.
         // - if we're slow enough, and no timer set, then send live.
         // - if we're too fast, then set timer with this packet.
 
         if (this.timerCookie) {
-            this.queuedParamChangeData = Object.assign(this.queuedParamChangeData, presetObj);
+            this.queuedParamChangeData.isWholePatch = this.queuedParamChangeData.isWholePatch || isWholePatch;
+            this.queuedParamChangeData.patchObj = Object.assign(this.queuedParamChangeData.patchObj, patchObj);
             return;
         }
 
@@ -85,7 +89,10 @@ class DigifuNet {
             // we waited long enough between changes; send in real time.
             this.paramChangeLastSent = new Date();
             //console.log(`SendInstrumentParam LIVE delta=${delta} ${JSON.stringify([{ paramID, newVal }])} `);
-            this.socket.emit(ClientMessages.InstrumentParams, presetObj);
+            this.socket.emit(ClientMessages.InstrumentParams, {
+                isWholePatch,
+                patchObj
+            });
             return;
         }
 
@@ -146,14 +153,14 @@ class DigifuNet {
 
 
     Disconnect() {
-        this.ResetInternalState();
+        this.ResetQueuedParamChangeData();
         this.socket.disconnect(true);
         this.socket = null;
     };
 
     Connect(handler) {
         this.handler = handler;
-        this.ResetInternalState();
+        this.ResetQueuedParamChangeData();
         let query = Object.assign({ jamroom: window.location.pathname }, Object.fromEntries(new URLSearchParams(location.search)));
         this.socket = io({
             query
@@ -187,7 +194,7 @@ class DigifuNet {
         this.socket.on(ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
         this.socket.on(ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
 
-        this.socket.on('disconnect', () => { this.ResetInternalState(); this.handler.NET_OnDisconnect(); });
+        this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };
 };
 

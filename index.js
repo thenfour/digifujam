@@ -73,17 +73,6 @@ class RoomServer {
           //log(`generated presetID ${preset.presetID}`);
         }
       });
-
-      // add special param values...
-      i.params.push(Object.assign(new DF.InstrumentParam(), {
-        paramID: "pb",
-        name: "pb",
-        hidden: true,
-        parameterType: DF.InstrumentParamType.floatParam,
-        minValue: -48,
-        maxValue: 48,
-        currentValue: 0,
-      }));
     });
 
     // integrate the server state for this room
@@ -452,13 +441,14 @@ class RoomServer {
       }
 
       // set the value.
-      foundInstrument.instrument.integrateRawParamChanges(data);
+      foundInstrument.instrument.integrateRawParamChanges(data.patchObj, data.isWholePatch);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, {
         userID: foundUser.user.userID,
         instrumentID: foundInstrument.instrument.instrumentID,
-        patchObj: data
+        patchObj: data.patchObj,
+        isWholePatch: data.isWholePatch,
       });
     } catch (e) {
       log(`OnClientInstrumentParams exception occurred`);
@@ -519,7 +509,7 @@ class RoomServer {
       const patchObj = foundInstrument.instrument.removeParamMapping(foundInstrument.instrument.GetParamByID(data.paramID));
       //log(`RemoveParamMapping inst ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
       //log(`  -> and must recalc ${JSON.stringify(patchObj)}`);
-      foundInstrument.instrument.integrateRawParamChanges(patchObj);
+      foundInstrument.instrument.integrateRawParamChanges(patchObj, false);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.RemoveParamMapping, {
@@ -581,7 +571,7 @@ class RoomServer {
         throw new Error(`error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`);
       }
       let initPreset = foundInstrument.instrument.GetInitPreset();
-      foundInstrument.instrument.integrateRawParamChanges(initPreset);
+      foundInstrument.instrument.integrateRawParamChanges(initPreset, true);
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentFactoryReset, {
         instrumentID: foundInstrument.instrument.instrumentID,

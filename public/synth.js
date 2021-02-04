@@ -84,12 +84,12 @@ class DigifuSynth {
 
 	removeParamMapping(inst, param) {
 		let patchObj = inst.removeParamMapping(param);
-		this.SetInstrumentParams(inst, patchObj);
+		this.SetInstrumentParams(inst, patchObj, false);
 	}
 
 	// returns true if the param changes incurred mapping propagation to other params
-	SetInstrumentParams(instrumentSpec, patchObj /* RAW values, not calculated */) {
-		const x = instrumentSpec.integrateRawParamChanges(patchObj);
+	SetInstrumentParams(instrumentSpec, patchObj /* RAW values, not calculated */, isWholePatch) {
+		const x = instrumentSpec.integrateRawParamChanges(patchObj, isWholePatch);
 		if (!this._isMuted) {
 			this.instruments[instrumentSpec.instrumentID].SetParamValues(x.calculatedPatchObj);
 		}

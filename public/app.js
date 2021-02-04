@@ -293,8 +293,8 @@ class DigifuApp {
         this._midiPBValue = val;
         if (this.myInstrument == null) return;
         let patchObj = { "pb": val * this.pitchBendRange };
-        this.net.SendInstrumentParams(patchObj);
-        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj)) {
+        this.net.SendInstrumentParams(patchObj, false);
+        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj, false)) {
             this.stateChangeHandler();
         }
     };
@@ -306,8 +306,8 @@ class DigifuApp {
         let patchObj = {};
         patchObj["midicc_" + cc] = val;
         //console.log(`MIDI_CC: ${JSON.stringify(patchObj)}`);
-        this.net.SendInstrumentParams(patchObj);
-        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj)) {
+        this.net.SendInstrumentParams(patchObj, false);
+        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj, false)) {
             this.stateChangeHandler();
         }
     }
@@ -503,7 +503,7 @@ class DigifuApp {
         this.synth.PedalUp(foundInstrument.instrument);
     };
 
-    NET_OnInstrumentParams(data) // userID, instrumentID, patchObj
+    NET_OnInstrumentParams(data) // userID, instrumentID, patchObj, isWholePatch
     {
         if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
@@ -511,7 +511,7 @@ class DigifuApp {
             //log(`NET_OnInstrumentParam instrument not found`);
             return;
         }
-        if (this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj)) {
+        if (this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj, data.isWholePatch)) {
             this.stateChangeHandler();
         } else  if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
             this.stateChangeHandler();
@@ -560,7 +560,7 @@ class DigifuApp {
 
         foundInstrument.instrument.importAllPresetsArray(data.presets);
         let initPreset = foundInstrument.instrument.GetInitPreset();
-        this.synth.SetInstrumentParams(foundInstrument.instrument, initPreset);
+        this.synth.SetInstrumentParams(foundInstrument.instrument, initPreset, true);
         this.stateChangeHandler();
     }
 
@@ -771,10 +771,10 @@ class DigifuApp {
         this.net.SendCheer(text, x, y);
     };
 
-    loadPatchObj(presetObj /* RAW values */) {
+    loadPatchObj(presetObj /* RAW values */, isWholePatch) {
         if (!this.myInstrument) return;
-        this.net.SendInstrumentParams(presetObj);
-        if (this.synth.SetInstrumentParams(this.myInstrument, presetObj)) {
+        this.net.SendInstrumentParams(presetObj, isWholePatch);
+        if (this.synth.SetInstrumentParams(this.myInstrument, presetObj, isWholePatch)) {
             this.stateChangeHandler();
         }
     };

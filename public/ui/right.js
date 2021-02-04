@@ -580,7 +580,7 @@ class InstrumentPreset extends React.Component {
         };
     }
     onClickLoad = () => {
-        this.props.app.loadPatchObj(this.props.presetObj);
+        this.props.app.loadPatchObj(this.props.presetObj, true);
         gStateChangeHandler.OnStateChange();
     }
     onClickOverwrite = () => {
@@ -705,7 +705,7 @@ class InstrumentParamGroup extends React.Component {
 
     clickCopyToOsc(destOscIndex) {
         const patchObj = this.props.instrument.getPatchObjectToCopyOscillatorParams(this.props.groupSpec.oscillatorSource, destOscIndex);
-        this.props.app.loadPatchObj(patchObj);
+        this.props.app.loadPatchObj(patchObj, false);
         gStateChangeHandler.OnStateChange();
     };
 
@@ -807,7 +807,7 @@ class InstrumentParams extends React.Component {
         navigator.clipboard.readText().then(text => {
             try {
                 let presetObj = JSON.parse(text);
-                this.props.app.loadPatchObj(presetObj);
+                this.props.app.loadPatchObj(presetObj, true);
                 gStateChangeHandler.OnStateChange();
             } catch (e) {
                 alert(`Unable to import; probably badly formatted text... Exception: ${e}`);

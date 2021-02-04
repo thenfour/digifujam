@@ -159,7 +159,12 @@ class FMPolySynth {
 
         this.nodes.pitchbendSemis = this.audioCtx.createConstantSource("inst>pb");
         this.nodes.pitchbendSemis.start();
-        this.nodes.pitchbendSemis.offset.value = this.instrumentSpec.GetParamByID("pb").currentValue;
+        const pb = this.instrumentSpec.GetParamByID("pb");
+        if (pb) {
+            this.nodes.pitchbendSemis.offset.value = pb.currentValue;
+        } else {
+            this.nodes.pitchbendSemis.offset.value = 0;
+        }
 
         // masterDryGain
         this.nodes.masterDryGain = this.audioCtx.createGain("inst>master");
