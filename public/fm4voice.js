@@ -366,7 +366,10 @@ class MiniFMSynthVoice {
             //  env keytracking
             let vsAmt = this.instrumentSpec.GetParamByID("env1_vel_scale").currentValue; // -1 to 1
             let vs = 1.0 - remap(this.velocity, 0.0, 127.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
-            this.nodes.env1.update({ peak: vs });
+            this.nodes.env1.update({
+                peak: vs,
+                sustain: vs * this.instrumentSpec.GetParamByID("env1_s").currentValue
+            });
             this.nodes.env1.trigger();
         }
         this.oscillators.forEach(o => {
