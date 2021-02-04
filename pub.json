@@ -148,17 +148,6 @@
       "activityDisplay": "keyboard"
     },
     {
-      "instrumentID": "sf6",
-      "copyOfInstrumentID": "soundfont",
-      "name": "Soundtrack",
-      "sfinstrumentName": "fx_2_soundtrack",
-      "img": "",
-      "color": "rgb(0, 128, 128)",
-      "gain": 1.0,
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
-    },
-    {
       "instrumentID": "sf7",
       "copyOfInstrumentID": "soundfont",
       "sfinstrumentName": "tango_accordion",
@@ -234,6 +223,10 @@
       "color": "rgb(111, 111, 111)",
       "engine": "soundfont",
       "activityDisplay": "keyboard"
+    },
+    {
+      "instrumentID": "perckit1",
+      "copyOfInstrumentID": "perckit"
     },
     {
       "instrumentID": "drumkit1",
