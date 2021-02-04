@@ -93,7 +93,7 @@ const ClientMessages = {
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // presetID
     InstrumentPresetSave: "InstrumentPresetSave", // {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite.
-    InstrumentBankReplace: "InstrumentBankReplace", // [{preset},{preset...}]
+    InstrumentBankMerge: "InstrumentBankMerge", // [{preset},{preset...}]
     InstrumentFactoryReset: "InstrumentFactoryReset",
     DownloadServerState: "DownloadServerState",
     UploadServerState: "UploadServerState",
@@ -124,7 +124,7 @@ const ServerMessages = {
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
-    InstrumentBankReplace: "InstrumentBankReplace", // [{preset},{preset...}]
+    InstrumentBankMerge: "InstrumentBankMerge", // [{preset},{preset...}]
     InstrumentFactoryReset: "InstrumentFactoryReset", // instrumentID, [presets]
 
     UserState: "UserState", // user, name, color, img, x, y
@@ -898,7 +898,7 @@ class DigifuInstrumentSpec {
     }
 
     // return true/false success
-    importAllPresetsArray(a) {
+    importAllPresetsArray(a, replaceWholeBank) {
         if (!Array.isArray(a)) {
             console.log(`importing presets array but 'a' is not an array; it's a ${typeof (a)}`);
             return false;
@@ -925,17 +925,54 @@ class DigifuInstrumentSpec {
             console.log(`=> Can't import presets.`);
             return false;
         }
-        // import everything except init, and add our own init.
-        let init = this.GetInitPreset();
-        this.presets = a.filter(p => p.patchName != "init");
-        this.presets.unshift(init);
+
+        if (replaceWholeBank) {
+            // import everything except init, and add our own init.
+            let init = this.GetInitPreset();
+            this.presets = a.filter(p => p.patchName != "init");
+            this.presets.unshift(init);
+            return true;
+        }
+
+        // perform a MERGE of preset bank.
+        a.forEach(p => {
+            if (p.patchName === "init") return; // don't import "init".
+
+            p.presetID = generateID(); // there's no reason to risk colliding
+
+            // if another exists with the same name, choose 1. this also has a side-effect that if the imported bank has patches with the same name, they'll get collapsed.
+            const existingIdx = this.presets.findIndex(existingPreset => p.patchName === existingPreset.patchName);
+            if (existingIdx == -1) {
+                // no collision; just add.
+                //console.log(`no collision; adding preset ${p.patchName}`);
+                this.presets.push(p);
+            } else {
+                // collision.
+                try {
+                    const existingDate = new Date(this.presets[existingIdx].savedDate);
+                    const pDate = new Date(p.savedDate);
+                    if (pDate > existingDate) {
+                        // the imported one is newer, replace it with the imported one.
+                        this.presets[existingIdx] = p;
+                        //console.log(`collision; imported preset is fresher. ${p.patchName}`);
+                    } else {
+                        // don't import; it's old.
+                        //console.log(`collision; imported preset old and will be ignored. ${p.patchName}`);
+                    }
+                } catch (e) {
+                    // any errors comparing dates just add it,  whatever.
+                    //console.log(`collision, and there was an error with dates. ${p.patchName}`);
+                    this.presets.push(p);
+                }
+            }
+        });
         return true;
     }
 
     // return true/false success
-    importAllPresetsJSON(js) {
+    importAllPresetsJSON(js, replaceWholeBank) {
         try {
-            this.importAllPresetsArray(JSON.parse(js));
+            this.importAllPresetsArray(JSON.parse(js), replaceWholeBank);
             return true;
         } catch (e) {
             return false;
@@ -1563,7 +1600,7 @@ class DigifuRoomState {
                 console.log(`instrument ${ip.instrumentID} was not found; couldn't import its presets. Make sure instruments all have constant IDs set.`);
                 return;
             }
-            f.instrument.importAllPresetsArray(ip.presets);
+            f.instrument.importAllPresetsArray(ip.presets, true);
         });
 
         this.chatLog = data.chatLog.map(o => {

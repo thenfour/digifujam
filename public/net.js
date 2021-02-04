@@ -128,9 +128,9 @@ class DigifuNet {
     SendInstrumentPresetSave(patchObj) {
         this.socket.emit(ClientMessages.InstrumentPresetSave, patchObj);
     };
-    SendInstrumentBankReplace(bankJSON) {
+    SendInstrumentBankMerge(bankJSON) {
         let obj = JSON.parse(bankJSON);
-        this.socket.emit(ClientMessages.InstrumentBankReplace, obj);
+        this.socket.emit(ClientMessages.InstrumentBankMerge, obj);
     };
 
     SendCreateParamMapping(param, srcVal) {
@@ -188,7 +188,7 @@ class DigifuNet {
         this.socket.on(ServerMessages.InstrumentPresetDelete, data => this.handler.NET_OnInstrumentPresetDelete(data));
         this.socket.on(ServerMessages.InstrumentFactoryReset, data => this.handler.NET_OnInstrumentFactoryReset(data));
         this.socket.on(ServerMessages.InstrumentPresetSave, data => this.handler.NET_OnInstrumentPresetSave(data));
-        this.socket.on(ServerMessages.InstrumentBankReplace, data => this.handler.NET_OnInstrumentBankReplace(data));
+        this.socket.on(ServerMessages.InstrumentBankMerge, data => this.handler.NET_OnInstrumentBankMerge(data));
 
         this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
         this.socket.on(ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));

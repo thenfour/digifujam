@@ -567,7 +567,7 @@ class RoomServer {
       if (!factorySettings) throw new Error(`no factory settings found for instrument ${foundInstrument.instrument.instrumentID}`);
 
       // a factory reset means importing the factory presets list and loading an init preset.
-      if (!foundInstrument.instrument.importAllPresetsJSON(factorySettings.presetsJSON)) {
+      if (!foundInstrument.instrument.importAllPresetsJSON(factorySettings.presetsJSON, true)) {
         throw new Error(`error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`);
       }
       let initPreset = foundInstrument.instrument.GetInitPreset();
@@ -584,7 +584,7 @@ class RoomServer {
     }
   }
 
-  OnClientInstrumentBankReplace(ws, data) {
+  OnClientInstrumentBankMerge(ws, data) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) throw new Error(`unknown user`);
@@ -592,17 +592,18 @@ class RoomServer {
       if (foundInstrument == null) throw (`user not controlling an instrument.`);
 
       // TODO: we don't really verify this at any stage. from the clipboard straight to the server's memory is a bit iffy, despite not really having any consequence.
-      if (!foundInstrument.instrument.importAllPresetsArray(data)) {
+      log(`OnClientInstrumentBankMerge ${data.length}`);
+      if (!foundInstrument.instrument.importAllPresetsArray(data, false)) {
         throw new Error(`data was not in the correct format probably.`);
       }
 
-      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentBankReplace, {
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentBankMerge, {
         instrumentID: foundInstrument.instrument.instrumentID,
         presets: foundInstrument.instrument.presets,
       });
 
     } catch (e) {
-      log(`OnClientInstrumentBankReplace exception occurred`);
+      log(`OnClientInstrumentBankMerge exception occurred`);
       log(e);
     }
   }
@@ -1064,7 +1065,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.InstrumentPresetDelete, data => ForwardToRoom(ws, room => room.OnClientInstrumentPresetDelete(ws, data)));
       ws.on(DF.ClientMessages.InstrumentFactoryReset, data => ForwardToRoom(ws, room => room.OnClientInstrumentFactoryReset(ws, data)));
       ws.on(DF.ClientMessages.InstrumentPresetSave, data => ForwardToRoom(ws, room => room.OnClientInstrumentPresetSave(ws, data)));
-      ws.on(DF.ClientMessages.InstrumentBankReplace, data => ForwardToRoom(ws, room => room.OnClientInstrumentBankReplace(ws, data)));
+      ws.on(DF.ClientMessages.InstrumentBankMerge, data => ForwardToRoom(ws, room => room.OnClientInstrumentBankMerge(ws, data)));
 
       ws.on(DF.ClientMessages.ChatMessage, data => ForwardToRoom(ws, room => room.OnClientChatMessage(ws, data)));
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));

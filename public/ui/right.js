@@ -908,7 +908,7 @@ class InstrumentParams extends React.Component {
         navigator.clipboard.readText().then(text => {
             //console.log('Pasted content: ', text);
             try {
-                this.props.app.importAllPresetsJSON(text);
+                this.props.app.mergePresetBankJSON(text);
                 gStateChangeHandler.OnStateChange();
             } catch (e) {
                 alert(`Unable to import; probably badly formatted text... Exception: ${e}`);

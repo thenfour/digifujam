@@ -558,20 +558,20 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.importAllPresetsArray(data.presets);
+        foundInstrument.instrument.importAllPresetsArray(data.presets, true);
         let initPreset = foundInstrument.instrument.GetInitPreset();
         this.synth.SetInstrumentParams(foundInstrument.instrument, initPreset, true);
         this.stateChangeHandler();
     }
 
-    NET_OnInstrumentBankReplace(data) { // [presets]
+    NET_OnInstrumentBankMerge(data) { // [presets]
         if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (foundInstrument == null) {
             return;
         }
 
-        foundInstrument.instrument.importAllPresetsArray(data.presets);
+        foundInstrument.instrument.importAllPresetsArray(data.presets, false);
 
         this.stateChangeHandler();
     }
@@ -826,11 +826,10 @@ class DigifuApp {
     }
 
     // return true/false success
-    importAllPresetsJSON(bankJSON) {
+    mergePresetBankJSON(bankJSON) {
         if (!IsValidJSONString(bankJSON)) return false;
         if (!this.myInstrument) return false;
-        //this.myInstrument.importAllPresetsJSON(bankJSON);
-        this.net.SendInstrumentBankReplace(bankJSON);
+        this.net.SendInstrumentBankMerge(bankJSON);
     }
 
     factoryResetInstrument() {
