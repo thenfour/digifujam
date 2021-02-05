@@ -142,6 +142,10 @@ class DigifuNet {
         this.socket.emit(ClientMessages.RemoveParamMapping, { paramID: param.paramID });
     }
 
+    SendAdminChangeRoomState(cmd, params) {
+        this.socket.emit(ClientMessages.AdminChangeRoomState, { cmd, params });
+    }
+
     downloadServerState(responseHandler) {
         this.serverDumpHandler = responseHandler;
         this.socket.emit(ClientMessages.DownloadServerState);
@@ -193,6 +197,8 @@ class DigifuNet {
         this.socket.on(ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
         this.socket.on(ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
         this.socket.on(ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
+        this.socket.on(ServerMessages.ChangeRoomState, (data) => this.handler.NET_ChangeRoomState(data));
+        
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };

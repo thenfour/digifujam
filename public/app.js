@@ -649,6 +649,15 @@ class DigifuApp {
         this.stateChangeHandler();
     };
 
+    NET_ChangeRoomState(data) {
+        switch (data.cmd) {
+            case "setAnnouncementHTML":
+                this.roomState.announcementHTML = data.params;
+                this.stateChangeHandler();
+                break;
+        }
+    }
+
     NET_OnUserChatMessage(msg) {
         if (!this.roomState) return;
 

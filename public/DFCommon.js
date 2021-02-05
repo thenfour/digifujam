@@ -97,7 +97,7 @@ const ClientMessages = {
     InstrumentFactoryReset: "InstrumentFactoryReset",
     DownloadServerState: "DownloadServerState",
     UploadServerState: "UploadServerState",
-
+    AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj }
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 };
@@ -126,6 +126,8 @@ const ServerMessages = {
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
     InstrumentBankMerge: "InstrumentBankMerge", // [{preset},{preset...}]
     InstrumentFactoryReset: "InstrumentFactoryReset", // instrumentID, [presets]
+
+    ChangeRoomState: "ChangeRoomState",// { cmd:str params:obj }
 
     UserState: "UserState", // user, name, color, img, x, y
     Cheer: "Cheer", // userID, text, x, y

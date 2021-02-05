@@ -41,7 +41,7 @@ class RoomServer {
   constructor(data, serverStateObj) {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(data);
-    
+
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     let usedInstrumentIDs = [];
     this.roomState.instrumentCloset.forEach(i => {
@@ -826,6 +826,23 @@ class RoomServer {
     }
   }
 
+  OnAdminChangeRoomState(ws, data) {
+    try {
+      if (!IsAdminUser(ws.id)) throw new Error(`User isn't an admin.`);
+
+      switch (data.cmd) {
+        case "setAnnouncementHTML":
+          this.roomState.announcementHTML = data.params;
+          io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+          break;
+      }
+
+    } catch (e) {
+      log(`OnAdminChangeRoomState exception occurred`);
+      log(e);
+    }
+  }
+
   // every X seconds, this is called. here we can just do a generic push to clients and they're expected
   // to return a pong. for now used for timing, and reporting user ping.
   OnPingInterval() {
@@ -1069,6 +1086,8 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
+
+      ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));
       ws.on(DF.ClientMessages.UploadServerState, data => OnClientUploadServerState(ws, data));

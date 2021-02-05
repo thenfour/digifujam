@@ -29,12 +29,20 @@ class AdminControls extends React.Component {
             });
     };
 
+    _handleChange(txt) {
+        this.props.app.net.SendAdminChangeRoomState("setAnnouncementHTML", txt);
+    }
+
     render() {
         return (
             <div className="component" style={{ whiteSpace: "nowrap" }}>
                 <h2>Admin</h2>
                 <button onClick={this.copyServerState}>Copy server state</button><br />
                 <button onClick={this.pasteServerState}>Paste server state</button>
+                <div style={{fontSize: "x-small"}}>
+                    announcement HTML (live update):<br />
+                <textarea value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChange(e.target.value)} />
+                </div>
             </div>
         );
     }
