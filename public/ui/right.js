@@ -634,7 +634,7 @@ class InstrumentPreset extends React.Component {
                     <span className="savedDate">{dt.toLocaleString()}</span>
                 }
                 {
-                    tags &&
+                    false && tags &&
                     <span className="tags">tags: {tags}</span>
                 }
                 {this.state.showingOverwriteConfirmation &&
@@ -663,14 +663,37 @@ class InstrumentPreset extends React.Component {
 
 
 class InstrumentPresetList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            filterTxt: "",
+        };
+    }
+
+    onFilterChange = (txt) => {
+        this.setState({ filterTxt: txt });
+    };
+
+    presetMatches(p, txt) {
+        let keys = txt.toLowerCase().split(" ");
+        keys = keys.map(k => k.trim());
+        keys = keys.filter(k => k.length > 0);
+        if (keys.length < 1) return true;
+        let ret = false;
+        if (keys.some(k => p.patchName.toLowerCase().includes(k))) return true;
+        if (!p.tags) return false;
+        return keys.some(k => p.tags.toLowerCase().includes(k));
+    }
+
     render() {
-        const bank = this.props.app.roomState.GetPresetBankForInstrument(this.props.instrument);
-        const lis = bank.presets.map(preset => (
+        const bank = this.props.app.roomState.GetPresetBankForInstrument(this.props.instrument);        
+        const lis = bank.presets.filter(p => this.presetMatches(p, this.state.filterTxt)).map(preset => (
             <InstrumentPreset observerMode={this.props.observerMode} key={preset.presetID} app={this.props.app} presetObj={preset}></InstrumentPreset>
         ));
         return (
             <div className="presetList">
-                Presets
+                Presets 
+                <div className="presetFilter">🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
                 <ul>
                     {lis}
                 </ul>
@@ -1019,6 +1042,7 @@ class InstrumentParams extends React.Component {
                             {this.state.presetListShown && (
                                 <ul className="instParamList">
                                     <InstTextParam key="patchName" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
+                                    <InstTextParam key="patchTags" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("tags")}></InstTextParam>
                                     {!this.props.observerMode && <li className="instPresetButtons">
                                         {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
                                         <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>

@@ -678,6 +678,16 @@ div.paramFilter input[type="text"]
 
 }
 
+div.presetFilter {
+    display:inline;
+}
+div.presetFilter input[type="text"]
+{
+    width: 50px;
+    display:inline;
+}
+
+
 .paramGroupFocusBtn,
 .paramGroupFocusBtn:active,
 .paramGroupFocusBtn:focus
