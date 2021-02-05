@@ -906,7 +906,7 @@ class InstrumentParams extends React.Component {
     };
 
     onExportBankClicked = () => {
-        let txt = this.props.instrument.exportAllPresetsJSON();
+        let txt = this.props.app.roomState.exportAllPresetsJSON(this.props.instrument);
         navigator.clipboard.writeText(txt).then(() => {
             alert('Bank was copied to the clipboard.')
         }, () => {
