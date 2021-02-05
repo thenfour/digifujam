@@ -197,6 +197,7 @@ class DigifuApp {
 
         this.midi = new DigifuMidi();
         this.synth = new DigifuSynth(); // contains all music-making stuff.
+        this.isSelfMuted = false; // ability to mute yourself
         this.net = new DigifuNet();
 
         this.deviceNameList = [];
@@ -338,6 +339,11 @@ class DigifuApp {
         Cookies.set(this.roomState.roomID + "_userName", this.myUser.name);
         Cookies.set(this.roomState.roomID + "_userColor", this.myUser.color);
 
+        // this is a client-only property.
+        this.roomState.instrumentCloset.forEach(i => {
+            i.isMuted = false;
+        });
+
         // connect instruments to synth
         this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
 
@@ -432,7 +438,11 @@ class DigifuApp {
         }
 
         if (userID) { // bring instrument online, or offline depending on new ownership.
-            this.synth.ConnectInstrument(foundInstrument.instrument);
+            if (userID == this.myUser.userID && !this.isSelfMuted) {
+                this.synth.ConnectInstrument(foundInstrument.instrument);
+            } else {
+                this.synth.ConnectInstrument(foundInstrument.instrument);
+            }
         } else {
             this.synth.DisconnectInstrument(foundInstrument.instrument);
         }
@@ -513,7 +523,7 @@ class DigifuApp {
         }
         if (this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj, data.isWholePatch)) {
             this.stateChangeHandler();
-        } else  if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
+        } else if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
             this.stateChangeHandler();
         }
     }
@@ -855,6 +865,17 @@ class DigifuApp {
         this.synth.removeParamMapping(this.myInstrument, param);
     }
 
+    toggleSelfMute() {
+        this.isSelfMuted = !this.isSelfMuted;
+        if (this.isSelfMuted && this.myInstrument) {
+            this.myInstrument.isMuted = true;
+            this.synth.DisconnectInstrument(this.myInstrument);
+        } else {
+            this.myInstrument.isMuted = false;
+            // no action necessary; instruments are connected as they're played.
+        }
+    }
+
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome) {
         this.myUser = new DigifuUser();
         this.myUser.name = userName;
@@ -870,7 +891,7 @@ class DigifuApp {
         this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.handleRoomWelcome = handleRoomWelcome;
 
-        
+
         if (_hasSelectiveDisconnect()) {
             //alert("selective disconnect supported");
         } else {

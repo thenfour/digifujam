@@ -924,6 +924,11 @@ class InstrumentParams extends React.Component {
         this.setState({ showingClipboardControls: !this.state.showingClipboardControls });
     }
 
+    onSelfMuteToggle = () => {
+        this.props.app.toggleSelfMute();
+        gStateChangeHandler.OnStateChange();
+    }
+
     render() {
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
@@ -982,6 +987,9 @@ class InstrumentParams extends React.Component {
             </div>
         );
 
+        const allowFactoryReset = this.props.app.isAdmin;
+
+        const selfMuteCaption = "Monitor " + (this.props.app.isSelfMuted ? "🔇" : "🔊");
 
         return (
             <div className="component">
@@ -990,7 +998,8 @@ class InstrumentParams extends React.Component {
                     {this.props.instrument.getDisplayName()}
                     <div className="buttonContainer">
                         <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
-                        {!this.props.observerMode && <button onClick={this.onPanicClick}>Panic</button>}
+                        {/* {!this.props.observerMode && <button onClick={this.onPanicClick}>Panic</button>} */}
+                        {!this.props.observerMode && <button onClick={this.onSelfMuteToggle}>{selfMuteCaption}</button>}
                         {!this.props.observerMode && <button onClick={this.onReleaseClick}>Release</button>}
                         {!!this.props.observerMode && <button onClick={() => { gStateChangeHandler.observingInstrument = null; }}>Stop Observing</button>}
                     </div>
@@ -1007,7 +1016,7 @@ class InstrumentParams extends React.Component {
                                     {!this.props.observerMode && <li className="instPresetButtons">
                                         {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
                                         <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
-                                        <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>
+                                        {allowFactoryReset && <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>}
                                         {this.state.showingFactoryResetConfirmation &&
                                             <div className="confirmationBox">
                                                 Click OK to reset all presets to factory defaults. It applies only to this instrument.

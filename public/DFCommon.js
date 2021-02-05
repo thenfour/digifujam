@@ -703,7 +703,7 @@ class DigifuInstrumentSpec {
                     });
                     this.params.push(param);
                 } else {
-                    console.log(`integrateRawParamChanges: "${k}" was not found, its value will be ignored.`);
+                    //console.log(`integrateRawParamChanges: "${k}" was not found, its value will be ignored.`);
                     return;
                 }
             }

@@ -49,12 +49,12 @@ class DigifuSynth {
 	}
 
 	NoteOn(instrumentSpec, note, velocity) {
-		if (this._isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
 	};
 
 	NoteOff(instrumentSpec, note) {
-		if (this._isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].NoteOff(note);
 	};
 
@@ -62,19 +62,23 @@ class DigifuSynth {
 		if (this._isMuted) return;
 		if (!instrumentSpec) {
 			// do for all instruments.
-			Object.values(this.instruments).forEach(i => { i.AllNotesOff(); });
+			Object.values(this.instruments).forEach(i => {
+				if (i.isMuted) return;
+				i.AllNotesOff();
+			});
 			return;
 		}
+		if (instrumentSpec.isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].AllNotesOff();
 	};
 
 	PedalUp(instrumentSpec) {
-		if (this._isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].PedalUp();
 	};
 
 	PedalDown(instrumentSpec) {
-		if (this._isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) return;
 		this.instruments[instrumentSpec.instrumentID].PedalDown();
 	};
 
@@ -90,7 +94,7 @@ class DigifuSynth {
 	// returns true if the param changes incurred mapping propagation to other params
 	SetInstrumentParams(instrumentSpec, patchObj /* RAW values, not calculated */, isWholePatch) {
 		const x = instrumentSpec.integrateRawParamChanges(patchObj, isWholePatch);
-		if (!this._isMuted) {
+		if (!this._isMuted || instrumentSpec.isMuted) {
 			this.instruments[instrumentSpec.instrumentID].SetParamValues(x.calculatedPatchObj);
 		}
 		return x.incurredMappings;
