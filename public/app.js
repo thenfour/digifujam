@@ -547,7 +547,9 @@ class DigifuApp {
         if (foundInstrument == null) {
             return;
         }
-        foundInstrument.instrument.presets.removeIf(p => p.presetID == data.presetID);
+        const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
+
+        bank.presets.removeIf(p => p.presetID == data.presetID);
         this.stateChangeHandler();
     }
 
@@ -558,8 +560,8 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.importAllPresetsArray(data.presets, true);
-        let initPreset = foundInstrument.instrument.GetInitPreset();
+        this.roomState.importAllPresetsArray(foundInstrument.instrument, data.presets, true);
+        let initPreset = this.roomState.GetInitPreset(foundInstrument.instrument);
         this.synth.SetInstrumentParams(foundInstrument.instrument, initPreset, true);
         this.stateChangeHandler();
     }
@@ -571,7 +573,7 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.importAllPresetsArray(data.presets, false);
+        this.roomState.importAllPresetsArray(foundInstrument.instrument, data.presets, false);
 
         this.stateChangeHandler();
     }
@@ -583,11 +585,13 @@ class DigifuApp {
             return;
         }
 
-        let existing = foundInstrument.instrument.presets.find(p => p.presetID == data.patchObj.presetID);
+        const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
+
+        let existing = bank.presets.find(p => p.presetID == data.patchObj.presetID);
         if (existing) {
             Object.assign(existing, data.patchObj);
         } else {
-            foundInstrument.instrument.presets.push(data.patchObj);
+            bank.presets.push(data.patchObj);
         }
 
         // if you saved as a NEW preset, integrate the new ID.

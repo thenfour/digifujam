@@ -65,14 +65,6 @@ class RoomServer {
         }
       });
       i.params = paramsToAdd.concat(i.params);
-
-      // make sure all presets have a presetID
-      i.presets.forEach(preset => {
-        if (!preset.presetID) {
-          preset.presetID = DF.generateID();
-          //log(`generated presetID ${preset.presetID}`);
-        }
-      });
     });
 
     // integrate the server state for this room
@@ -84,14 +76,14 @@ class RoomServer {
 
     // do factory resets
     this.roomState.instrumentCloset.forEach(i => {
-      i.integrateRawParamChanges(i.GetInitPreset());
+      i.integrateRawParamChanges(this.roomState.GetInitPreset(i));
     });
 
     // remember this stuff for our "reset to factory defaults" function.
     this.factorySettings = this.roomState.instrumentCloset.map(i => {
       return {
         instrumentID: i.instrumentID,
-        presetsJSON: i.exportAllPresetsJSON()
+        presetsJSON: this.roomState.exportAllPresetsJSON(i)
       };
     });
 
@@ -527,13 +519,13 @@ class RoomServer {
 
   OnClientInstrumentPresetDelete(ws, data) {
     try {
-      //log(`OnClientInstrumentPresetDelete(${data.presetID})`);
       let foundUser = this.FindUserFromSocket(ws);
       if (foundUser == null) throw new Error(`unknown user`);
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) throw (`user not controlling an instrument.`);
       if (!data.presetID) throw new Error(`no presetID`);
-      let foundp = foundInstrument.instrument.presets.find(p => p.presetID == data.presetID);
+      const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
+      let foundp = bank.presets.find(p => p.presetID == data.presetID);
       if (!foundp) throw new Error(`unable to find the preset ${data.presetID}`);
       if (IsAdminUser(foundUser.user.userID)) {
         if (foundp.isReadOnly) log(`An admin user ${foundUser.user.userID} | ${foundUser.user.name} is deleting a read-only preset ${data.presetID}`);
@@ -542,7 +534,7 @@ class RoomServer {
       }
 
       // delete
-      foundInstrument.instrument.presets.removeIf(p => p.presetID == data.presetID);
+      bank.presets.removeIf(p => p.presetID == data.presetID);
 
       // broadcast
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentPresetDelete, {
@@ -567,15 +559,17 @@ class RoomServer {
       if (!factorySettings) throw new Error(`no factory settings found for instrument ${foundInstrument.instrument.instrumentID}`);
 
       // a factory reset means importing the factory presets list and loading an init preset.
-      if (!foundInstrument.instrument.importAllPresetsJSON(factorySettings.presetsJSON, true)) {
+      if (!this.roomState.importAllPresetsJSON(foundInstrument.instrument, factorySettings.presetsJSON, true)) {
         throw new Error(`error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`);
       }
-      let initPreset = foundInstrument.instrument.GetInitPreset();
+      let initPreset = this.roomState.GetInitPreset(foundInstrument.instrument);
       foundInstrument.instrument.integrateRawParamChanges(initPreset, true);
+
+      const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentFactoryReset, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        presets: foundInstrument.instrument.presets,
+        presets: bank.presets,
       });
 
     } catch (e) {
@@ -593,13 +587,15 @@ class RoomServer {
 
       // TODO: we don't really verify this at any stage. from the clipboard straight to the server's memory is a bit iffy, despite not really having any consequence.
       log(`OnClientInstrumentBankMerge ${data.length}`);
-      if (!foundInstrument.instrument.importAllPresetsArray(data, false)) {
+      if (!this.roomState.importAllPresetsArray(foundInstrument.instrument, data, false)) {
         throw new Error(`data was not in the correct format probably.`);
       }
 
+      const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
+
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentBankMerge, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        presets: foundInstrument.instrument.presets,
+        presets: bank.presets,
       });
 
     } catch (e) {
@@ -622,7 +618,9 @@ class RoomServer {
       patchObj.isReadOnly = false;
 
       // if there's an existing preset with the same ID, then overwrite. otherwise push.
-      let existing = foundInstrument.instrument.presets.find(p => p.presetID == patchObj.presetID);
+      const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
+
+      let existing = bank.presets.find(p => p.presetID == patchObj.presetID);
       if (existing) {
         if (existing.isReadOnly) {
           if (IsAdminUser(foundUser.user.userID)) {
@@ -635,7 +633,7 @@ class RoomServer {
         }
         Object.assign(existing, patchObj);
       } else {
-        foundInstrument.instrument.presets.push(patchObj);
+        bank.presets.push(patchObj);
       }
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentPresetSave, {

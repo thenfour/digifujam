@@ -467,7 +467,7 @@ class InstFloatParam extends React.Component {
         if (this.props.observerMode) return;
         let a = 0;
         if (gCtrlKey) {
-            let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
+            let realVal = this.props.app.roomState.GetDefaultValueForParam(this.props.instrument, this.props.param);
             //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
 
             this.setState(this.state);
@@ -481,7 +481,7 @@ class InstFloatParam extends React.Component {
 
     onDoubleClickSlider = (e) => {
         if (this.props.observerMode) return;
-        let realVal = this.props.instrument.GetDefaultValueForParam(this.props.param);
+        let realVal = this.props.app.roomState.GetDefaultValueForParam(this.props.instrument, this.props.param);
         //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
 
         this.setState(this.state);
@@ -661,7 +661,8 @@ class InstrumentPreset extends React.Component {
 
 class InstrumentPresetList extends React.Component {
     render() {
-        const lis = this.props.instrument.presets.map(preset => (
+        const bank = this.props.app.roomState.GetPresetBankForInstrument(this.props.instrument);
+        const lis = bank.presets.map(preset => (
             <InstrumentPreset observerMode={this.props.observerMode} key={preset.presetID} app={this.props.app} presetObj={preset}></InstrumentPreset>
         ));
         return (
@@ -931,7 +932,7 @@ class InstrumentParams extends React.Component {
         );
 
         let filterTxt = this.state.filterTxt.toLowerCase();
-        let filteredParams = this.props.instrument.GetDisplayablePresetList(filterTxt);
+        let filteredParams = this.props.instrument.GetDisplayableParamList(filterTxt);
 
         // unique group names.
         let _groupNames = [...new Set(filteredParams.map(p => p.groupName))];
@@ -960,7 +961,9 @@ class InstrumentParams extends React.Component {
         let presetID = this.props.instrument.GetParamByID("presetID").rawValue;
         let writableExistingPreset = null;
         if (presetID) {
-            writableExistingPreset = this.props.instrument.presets.find(p => {
+            const bank = this.props.app.roomState.GetPresetBankForInstrument(this.props.instrument);
+
+            writableExistingPreset = bank.presets.find(p => {
                 const canWrite = this.props.app.isAdmin || !p.isReadOnly;
                 return canWrite && p.presetID == presetID
             });

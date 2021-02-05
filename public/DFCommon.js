@@ -1,6 +1,6 @@
 'use strict';
 
-let gDigifujamVersion = 5;
+let gDigifujamVersion = 6;
 
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
@@ -72,7 +72,7 @@ let gGlobalInstruments = [];
 
 let SetGlobalInstrumentList = function (x) {
     gGlobalInstruments = x;
-    console.log(`Global instrument closet now has ${x.length} instruments defined`);
+    console.log(`Global instrument closet has ${x.length} instruments defined`);
 }
 
 
@@ -389,9 +389,9 @@ class DigifuInstrumentSpec {
         this.gain = 1.0;
         this.maxPolyphony = 10;
         this.params = [];// instrument parameter value map
-        this.presets = []; // a preset is just a param:value pair
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
         this.supportsPresets = true;
+        this.presetBankID = null; // which bankID will this instrumentspec refer to for its presets
         this.maxTextLength = 100;
         this.behaviorAdjustmentsApplied = false; // upon thaw, based on teh behaviorstyle, we rearrange params and stuff. but once it's done, don't do it again (on the client)
         this.supportsObservation = false; // there's no point allowing certain instruments' params to be observed like drum kit or sampler
@@ -423,14 +423,6 @@ class DigifuInstrumentSpec {
         return this.params.find(p => p.paramID == paramID);
     }
 
-    // tries hard to find a "default" or "safe" value (used for ctrl+click a param)
-    GetDefaultValueForParam(param) {
-        if (param.defaultValue) return param.defaultValue;
-        let preset = this.GetInitPreset();
-        if (preset[param.paramID]) return preset[param.paramID];
-        return this.CalculateDefaultValue(param);
-    }
-
     // like getdefaultvalueforparam, except does'nt consult any init preset.
     CalculateDefaultValue(param) {
         switch (param.paramID) {
@@ -448,28 +440,6 @@ class DigifuInstrumentSpec {
         }
         if (param.minValue <= 0 && param.maxValue >= 0) return 0;
         return param.minValue;
-    }
-
-    // always return a valid preset.
-    GetInitPreset() {
-        let ret = this.presets.find(p => p.patchName == "init");
-        if (ret) {
-            //console.log(`loading init patch called 'init' for instrument ${this.name}`);
-            return ret;
-        }
-
-        // if an INIT patch does not exist, then one is generated
-        ret = {};
-        this.params.forEach(param => {
-            ret[param.paramID] = this.CalculateDefaultValue(param);
-        });
-
-        ret.patchName = "init";
-        ret.presetID = generateID();
-        ret.isReadOnly = true;
-        this.presets.unshift(ret);
-
-        return this.presets[0];
     }
 
     getParamMappingParamIDsForParam(param) {
@@ -893,92 +863,6 @@ class DigifuInstrumentSpec {
         return f.map(p => p.currentValue);
     }
 
-    exportAllPresetsJSON() {
-        return JSON.stringify(this.presets.filter(p => p.patchName != "init"));
-    }
-
-    // return true/false success
-    importAllPresetsArray(a, replaceWholeBank) {
-        if (!Array.isArray(a)) {
-            console.log(`importing presets array but 'a' is not an array; it's a ${typeof (a)}`);
-            return false;
-        }
-        // TODO: other validation.
-        // do a cursory check of all require params existing.
-        const requiredParamKeys = ["presetID", "patchName"];
-        let pass = true;
-        a.forEach(p => {
-            // does p contain ALL paramIDs in 
-            let count = 0;
-            requiredParamKeys.forEach(requiredKey => {
-                if (Object.keys(p).some(k => k == requiredKey)) {
-                    count++;
-                }
-            });
-            if (count < requiredParamKeys.length) {
-                console.log(`Trying to import a preset with too few required params (${count} < ${requiredParamKeys.length})`);
-                pass = false;
-                return;
-            }
-        });
-        if (!pass) {
-            console.log(`=> Can't import presets.`);
-            return false;
-        }
-
-        if (replaceWholeBank) {
-            // import everything except init, and add our own init.
-            let init = this.GetInitPreset();
-            this.presets = a.filter(p => p.patchName != "init");
-            this.presets.unshift(init);
-            return true;
-        }
-
-        // perform a MERGE of preset bank.
-        a.forEach(p => {
-            if (p.patchName === "init") return; // don't import "init".
-
-            p.presetID = generateID(); // there's no reason to risk colliding
-
-            // if another exists with the same name, choose 1. this also has a side-effect that if the imported bank has patches with the same name, they'll get collapsed.
-            const existingIdx = this.presets.findIndex(existingPreset => p.patchName === existingPreset.patchName);
-            if (existingIdx == -1) {
-                // no collision; just add.
-                //console.log(`no collision; adding preset ${p.patchName}`);
-                this.presets.push(p);
-            } else {
-                // collision.
-                try {
-                    const existingDate = new Date(this.presets[existingIdx].savedDate);
-                    const pDate = new Date(p.savedDate);
-                    if (pDate > existingDate) {
-                        // the imported one is newer, replace it with the imported one.
-                        this.presets[existingIdx] = p;
-                        //console.log(`collision; imported preset is fresher. ${p.patchName}`);
-                    } else {
-                        // don't import; it's old.
-                        //console.log(`collision; imported preset old and will be ignored. ${p.patchName}`);
-                    }
-                } catch (e) {
-                    // any errors comparing dates just add it,  whatever.
-                    //console.log(`collision, and there was an error with dates. ${p.patchName}`);
-                    this.presets.push(p);
-                }
-            }
-        });
-        return true;
-    }
-
-    // return true/false success
-    importAllPresetsJSON(js, replaceWholeBank) {
-        try {
-            this.importAllPresetsArray(JSON.parse(js), replaceWholeBank);
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
     // exports LIVE params as a patch
     exportPatchObj() {
         let ret = {};
@@ -1286,7 +1170,7 @@ class DigifuInstrumentSpec {
 
     // filters the list of presets to include only ones which are useful.
     // for example if OSC B is disabled, don't show any settings from OSC B.
-    GetDisplayablePresetList(filterTxt) {
+    GetDisplayableParamList(filterTxt) {
         if (this.engine != "minifm") {
             let ret = this.params.filter(p => {
                 // internal params which aren't part of the normal param editing zone.
@@ -1540,9 +1424,18 @@ class RoomItem {
     }
 };
 
+class PresetBank {
+    constructor() {
+        this.presetBankID = null;
+        this.presets = []; // a preset is a param:value pair
+    }
+    thaw() { }
+};
+
 class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
+        this.presetBanks = [];
         this.users = [];
         this.chatLog = []; // ordered by time asc
         this.roomItems = [];
@@ -1564,6 +1457,11 @@ class DigifuRoomState {
     thaw() {
         this.instrumentCloset = this.instrumentCloset.map(o => {
             let n = Object.assign(new DigifuInstrumentSpec(), o);
+            n.thaw();
+            return n;
+        });
+        this.presetBanks = this.presetBanks.map(o => {
+            const n = Object.assign(new PresetBank(), o);
             n.thaw();
             return n;
         });
@@ -1600,7 +1498,7 @@ class DigifuRoomState {
                 console.log(`instrument ${ip.instrumentID} was not found; couldn't import its presets. Make sure instruments all have constant IDs set.`);
                 return;
             }
-            f.instrument.importAllPresetsArray(ip.presets, true);
+            this.importAllPresetsArray(f.instrument, ip.presets, true);
         });
 
         this.chatLog = data.chatLog.map(o => {
@@ -1662,9 +1560,159 @@ class DigifuRoomState {
 
         ret.thaw();
 
+        // ensure all instruments have preset banks, AND
+        // old format of presets were stored in instrumentSpecs. migrate them to room-based banks.
+        ret.instrumentCloset.forEach(i => {
+            const bank = ret.GetPresetBankForInstrument(i); // this will ensure the bank exists and populate i.presetBankID
+            if (!Array.isArray(i.presets)) return;
+
+            console.log(`Migrating old presets for instrument ${i.instrumentID} to bank ${i.presetBankID}`);
+            ret.importAllPresetsArray(i, i.presets, false);            
+            delete i.presets;
+        });
+        
         return ret;
     }
-};
+
+    GetPresetBankForInstrument(instrumentSpec) {
+        if (!instrumentSpec.presetBankID) {
+            // if you don't specify a bank ID, then give the instrument its own unique bank.
+            instrumentSpec.presetBankID = instrumentSpec.instrumentID;
+        }
+        let ret = this.presetBanks.find(b => b.presetBankID == instrumentSpec.presetBankID);
+        if (!ret) {
+            ret = new PresetBank();
+            ret.presetBankID = instrumentSpec.presetBankID;
+            console.log(`Creating preset bank ${ret.presetBankID}`);
+            this.presetBanks.push(ret);
+        }
+        return ret;
+    }
+
+    exportAllPresetsJSON(instrumentSpec) {
+        return JSON.stringify(this.GetPresetBankForInstrument(instrumentSpec).presets.filter(p => p.patchName != "init"));
+    }
+
+    // return true/false success
+    importAllPresetsArray(instrumentSpec, a, replaceWholeBank) {
+        if (!Array.isArray(a)) {
+            console.log(`importing presets array but 'a' is not an array; it's a ${typeof (a)}`);
+            return false;
+        }
+
+        const bank = this.GetPresetBankForInstrument(instrumentSpec);
+
+        // TODO: other validation.
+        // do a cursory check of all require params existing.
+        const requiredParamKeys = ["presetID", "patchName"];
+        let pass = true;
+        a.forEach(p => {
+            // does p contain ALL paramIDs in 
+            let count = 0;
+            requiredParamKeys.forEach(requiredKey => {
+                if (Object.keys(p).some(k => k == requiredKey)) {
+                    count++;
+                }
+            });
+            if (count < requiredParamKeys.length) {
+                console.log(`Trying to import a preset with too few required params (${count} < ${requiredParamKeys.length})`);
+                pass = false;
+                return;
+            }
+        });
+        if (!pass) {
+            console.log(`=> Can't import presets.`);
+            return false;
+        }
+
+        if (replaceWholeBank) {
+            // import everything except init, and add our own init.
+            let init = this.GetInitPreset(instrumentSpec);
+            bank.presets = a.filter(p => p.patchName != "init");
+            bank.presets.unshift(init);
+            return true;
+        }
+
+        // perform a MERGE of preset bank.
+        a.forEach(p => {
+            if (p.patchName === "init") return; // don't import "init".
+
+            p.presetID = generateID(); // there's no reason to risk colliding
+
+            // if another exists with the same name, choose 1. this also has a side-effect that if the imported bank has patches with the same name, they'll get collapsed.
+            const existingIdx = bank.presets.findIndex(existingPreset => p.patchName === existingPreset.patchName);
+            if (existingIdx == -1) {
+                // no collision; just add.
+                //console.log(`no collision; adding preset ${p.patchName}`);
+                bank.presets.push(p);
+            } else {
+                // collision.
+                try {
+                    const existingDate = new Date(bank.presets[existingIdx].savedDate);
+                    const pDate = new Date(p.savedDate);
+                    if (pDate > existingDate) {
+                        // the imported one is newer, replace it with the imported one.
+                        bank.presets[existingIdx] = p;
+                        //console.log(`collision; imported preset is fresher. ${p.patchName}`);
+                    } else {
+                        // don't import; it's old.
+                        //console.log(`collision; imported preset old and will be ignored. ${p.patchName}`);
+                    }
+                } catch (e) {
+                    // any errors comparing dates just add it,  whatever.
+                    //console.log(`collision, and there was an error with dates. ${p.patchName}`);
+                    bank.presets.push(p);
+                }
+            }
+        });
+        return true;
+    }
+
+    // return true/false success
+    importAllPresetsJSON(instrumentSpec, js, replaceWholeBank) {
+        if (!instrumentSpec) {
+            return false;
+        }
+        try {
+            this.importAllPresetsArray(instrumentSpec, JSON.parse(js), replaceWholeBank);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // always return a valid preset.
+    GetInitPreset(instrumentSpec) {
+        const presetBank = this.GetPresetBankForInstrument(instrumentSpec);
+        let ret = presetBank.presets.find(p => p.patchName == "init");
+        if (ret) {
+            //console.log(`loading init patch called 'init' for instrument ${this.name}`);
+            return ret;
+        }
+
+        // if an INIT patch does not exist, then one is generated
+        ret = {};
+        instrumentSpec.params.forEach(param => {
+            ret[param.paramID] = instrumentSpec.CalculateDefaultValue(param);
+        });
+
+        ret.patchName = "init";
+        ret.presetID = generateID();
+        ret.isReadOnly = true;
+        presetBank.presets.unshift(ret);
+
+        return presetBank.presets[0];
+    }
+
+    // tries hard to find a "default" or "safe" value (used for ctrl+click a param)
+    GetDefaultValueForParam(instrumentSpec, param) {
+        if (param.defaultValue) return param.defaultValue;
+        let preset = this.GetInitPreset(instrumentSpec);
+        if (preset[param.paramID]) return preset[param.paramID];
+        return instrumentSpec.CalculateDefaultValue(param);
+    }
+
+}; // DigifuRoomState
 
 
 

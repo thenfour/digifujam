@@ -2063,8 +2063,7 @@
           "minValue": -20.0,
           "maxValue": 20.0
         }
-      ],
-      "presets": []
+      ]
     },
     {
       "instrumentID": "soundfont",
@@ -2099,8 +2098,7 @@
           "maxValue": 1.0,
           "defaultValue": 0.2
         }
-      ],
-      "presets": []
+      ]
     }
   ]
 }

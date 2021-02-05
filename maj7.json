@@ -70,17 +70,20 @@
       "instrumentID": "fm4a",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",
+      "presetBankID": "fm4",
       "name": "Mini FM A"
     },
     {
       "instrumentID": "fm4b",
       "copyOfInstrumentID": "minifm",
+      "presetBankID": "fm4",
       "namePrefix": "FM4b: ",
       "name": "Mini FM B"
     },
     {
       "instrumentID": "microA",
       "copyOfInstrumentID": "minifm",
+      "presetBankID": "microFM",
       "namePrefix": "MicroA: ",
       "name": "MicroA",
       "behaviorStyle": "microSub"
@@ -89,6 +92,7 @@
       "instrumentID": "microB",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "MicroB: ",
+      "presetBankID": "microFM",
       "name": "MicroB",
       "behaviorStyle": "microSub"
     },
