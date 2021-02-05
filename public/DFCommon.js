@@ -990,7 +990,7 @@ class DigifuInstrumentSpec {
         if (this.engine === "minifm" && this.behaviorStyle === "microSub") {
             return ["master", "∿ Osc A"];
         }
-        return ["master"];
+        return ["master", "Macro"];
     }
 
 

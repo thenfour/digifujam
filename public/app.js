@@ -655,6 +655,10 @@ class DigifuApp {
                 this.roomState.announcementHTML = data.params;
                 this.stateChangeHandler();
                 break;
+            case "setRoomImg":
+                this.roomState.img = data.params;
+                this.stateChangeHandler();
+                break;
         }
     }
 

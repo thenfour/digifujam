@@ -1499,10 +1499,10 @@ class LeftArea extends React.Component {
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
-                {adminControls}
                 <InstrumentList app={this.props.app} />
                 <UserList app={this.props.app} />
                 <WorldStatus app={this.props.app} />
+                {adminControls}
             </div>
         );
     }

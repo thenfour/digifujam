@@ -835,6 +835,10 @@ class RoomServer {
           this.roomState.announcementHTML = data.params;
           io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
+        case "setRoomImg":
+          this.roomState.img = data.params;
+          io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+          break;
       }
 
     } catch (e) {

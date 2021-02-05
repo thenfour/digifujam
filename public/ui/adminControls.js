@@ -29,8 +29,12 @@ class AdminControls extends React.Component {
             });
     };
 
-    _handleChange(txt) {
+    _handleChangeAnnouncementHTML(txt) {
         this.props.app.net.SendAdminChangeRoomState("setAnnouncementHTML", txt);
+    }
+
+    _handleChangeRoomImg(txt) {
+        this.props.app.net.SendAdminChangeRoomState("setRoomImg", txt);
     }
 
     render() {
@@ -41,7 +45,11 @@ class AdminControls extends React.Component {
                 <button onClick={this.pasteServerState}>Paste server state</button>
                 <div style={{fontSize: "x-small"}}>
                     announcement HTML (live update):<br />
-                <textarea value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChange(e.target.value)} />
+                <textarea value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChangeAnnouncementHTML(e.target.value)} />
+                </div>
+                <div style={{fontSize: "x-small"}}>
+                    roomimg:<br />
+                <input type="text" value={this.props.app.roomState.img} onChange={e => this._handleChangeRoomImg(e.target.value)} />
                 </div>
             </div>
         );
