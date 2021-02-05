@@ -516,13 +516,16 @@ class InstFloatParam extends React.Component {
         if (this.state.isExpanded) cssclass += "expanded ";
 
         let macroMappingList = null;
-        if (this.state.isExpanded && this.props.param.isMacro) {
+        if (/*this.state.isExpanded &&*/ this.props.param.isMacro) {
             const mappedParams = this.props.instrument.getMappingSpecsForMacro(this.props.param.macroIdx);
             macroMappingList = (<ul className="macroMappingList">
                 {mappedParams.map(spec => {
                     const effectiveRange = this.props.instrument.getEffectiveMappingRange(spec);
                     return (
-                        <li key={spec.param.paramID}>→ {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})</li>
+                        <li key={spec.param.paramID}>
+                            → {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})
+                            ↠ <div className="mappedLiveValue">{spec.param.currentValue.toFixed(2)}</div>
+                        </li>
                     )
                 }
                 )}
@@ -685,7 +688,10 @@ class MidiCCMappingInfo extends React.Component {
             {mappedParams.map(spec => {
                 const effectiveRange = this.props.instrument.getEffectiveMappingRange(spec);
                 return (
-                    <li key={spec.param.paramID}>→ {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})</li>
+                    <li key={spec.param.paramID}>
+                        → {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})
+                        ↠ <div className="mappedLiveValue">{spec.param.currentValue.toFixed(2)}</div>
+                    </li>
                 )
             }
             )}
