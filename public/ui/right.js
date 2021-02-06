@@ -620,6 +620,10 @@ class InstrumentPreset extends React.Component {
         if (this.props.presetObj.tags && this.props.presetObj.tags.length > 0) {
             tags = this.props.presetObj.tags;
         }
+        let description = null;
+        if (this.props.presetObj.description && this.props.presetObj.description.length > 0) {
+            description = this.props.presetObj.description;
+        }
         return (
             <li key={this.props.presetObj.patchName}>
                 <div className="buttonContainer">
@@ -628,15 +632,21 @@ class InstrumentPreset extends React.Component {
                     {canWrite && <button onClick={this.onBeginDelete}>🗑Delete</button>}
                 </div>
                 <span className="presetName">{this.props.presetObj.patchName}</span>
-                <span className="author">by {this.props.presetObj.author}</span>
                 {
-                    dt &&
-                    <span className="savedDate">{dt.toLocaleString()}</span>
+                    description &&
+                    <span className="description">{description}</span>
                 }
-                {
-                    false && tags &&
-                    <span className="tags">tags: {tags}</span>
-                }
+                <div className="authorAndDateBox">
+                    <span className="author">by {this.props.presetObj.author}</span>
+                    {
+                        false && tags &&
+                        <span className="tags">tags: {tags}</span>
+                    }
+                    {
+                        dt &&
+                        <span className="savedDate">{dt.toLocaleString()}</span>
+                    }
+                </div>
                 {this.state.showingOverwriteConfirmation &&
                     <div className="confirmationBox">
                         Click 'OK' to overwrite "{this.props.presetObj.patchName}" with the live patch
@@ -685,16 +695,32 @@ class InstrumentPresetList extends React.Component {
         return keys.some(k => p.tags.toLowerCase().includes(k));
     }
 
+    onClickInitPreset = () => {
+        this.props.app.loadInitPatch();
+        gStateChangeHandler.OnStateChange();
+    }
+
     render() {
-        const bank = this.props.app.roomState.GetPresetBankForInstrument(this.props.instrument);        
+        const bank = this.props.app.roomState.GetPresetBankForInstrument(this.props.instrument);
         const lis = bank.presets.filter(p => this.presetMatches(p, this.state.filterTxt)).map(preset => (
             <InstrumentPreset observerMode={this.props.observerMode} key={preset.presetID} app={this.props.app} presetObj={preset}></InstrumentPreset>
         ));
         return (
             <div className="presetList">
-                Presets 
+                Presets
                 <div className="presetFilter">🔎<TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></TextInputFieldExternalState></div>
                 <ul>
+
+
+                    <li>
+                        <div className="buttonContainer">
+                            {!this.props.observerMode && <button onClick={this.onClickInitPreset}>📂Load</button>}
+                        </div>
+                        <span className="presetName">init</span>
+                    </li>
+
+
+
                     {lis}
                 </ul>
             </div>
@@ -1042,6 +1068,7 @@ class InstrumentParams extends React.Component {
                             {this.state.presetListShown && (
                                 <ul className="instParamList">
                                     <InstTextParam key="patchName" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("patchName")}></InstTextParam>
+                                    <InstTextParam key="patchDescription" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("description")}></InstTextParam>
                                     <InstTextParam key="patchTags" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("tags")}></InstTextParam>
                                     {!this.props.observerMode && <li className="instPresetButtons">
                                         {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}

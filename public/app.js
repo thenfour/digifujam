@@ -864,6 +864,11 @@ class DigifuApp {
         this.net.SendInstrumentFactoryReset();
     }
 
+    loadInitPatch() {
+        if (!this.myInstrument) return false;
+        this.myInstrument.integrateRawParamChanges(this.roomState.GetInitPreset(this.myInstrument));
+    }
+
     createParamMappingFromSrcVal(param, srcVal) { // srcVal is directly mapped to MIDI CC
         if (!this.myInstrument) return;
         this.net.SendCreateParamMapping(param, srcVal);

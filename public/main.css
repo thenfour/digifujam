@@ -537,7 +537,9 @@ ul.instParamList li.buttonsParam {
     padding: 6px;
     margin: 0;
     margin-bottom: 2px;
+    white-space: normal;
 }
+
 
 .presetList li:hover,
 .presetList li:active
@@ -547,19 +549,34 @@ ul.instParamList li.buttonsParam {
 
 .presetList .presetName
 {
-    font-weight: bold;
+    font-weight: normal;
+    color: #ccc;
     white-space: nowrap;
 }
 .presetList .author,
-.presetList .savedDate
+.presetList .savedDate,
+.presetList .description,
+.presetList .tags
 {
     font-weight: normal;
     font-style: italic;
     font-size: x-small;
     color:#888;
+    display:inline;
+}
+.presetList .description
+{
     display:block;
 }
+.presetList .description
+{
+    color:#0aa;
+    font-size: small;
+}
 
+.presetList .authorAndDateBox {
+    
+}
 
 .presetList ul {
     position:relative;
