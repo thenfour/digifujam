@@ -1,9 +1,6 @@
 
 let gStateChangeHandler = null;
 
-let getArrowText = shown => shown ? '⯆' : '⯈';
-
-
 let getRoomID = function (app) {
     if (!app) return window.DFRoomID;
     if (!app.roomState) return window.DFRoomID;

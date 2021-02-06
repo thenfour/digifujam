@@ -11,6 +11,12 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
+let getArrowText = shown => shown ? '⯆' : '⯈';
+
+function getDecimalPart(decNum) {
+    return Math.round((decNum % 1) * 100000000) / 100000000;
+}
+
 function array_move(arr, old_index, new_index) {
     if (new_index >= arr.length) {
         var k = new_index - arr.length + 1;

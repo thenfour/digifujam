@@ -634,6 +634,7 @@ class DigifuApp {
             foundUser.user.pingMS = u.pingMS;
         });
         this.worldPopulation = data.rooms.reduce((a, b) => a + b.users.length, 0);
+        this.serverUptimeSec = data.serverUptimeSec;
 
         // pings are a great time to do some cleanup.
 

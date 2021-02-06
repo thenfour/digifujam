@@ -1,12 +1,34 @@
 const express = require('express')
-const { nanoid } = require("nanoid");
-const app = express()
+const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const DF = require('./public/DFCommon')
+const { nanoid } = require("nanoid");
+const DF = require('./public/DFCommon');
 const fsp = require('fs').promises;
+const DFStats = require('./DFStats.js');
+
+let oldConsoleLog = console.log;
+let log = (msg) => {
+  if (!msg) return;
+  oldConsoleLog(`${(new Date()).toISOString()} ${msg}`);
+  if (msg.stack) {
+    // assume error object.
+    oldConsoleLog(`EXCEPTION stack: ${msg.stack}`);
+  }
+};
+console.log = log;
+
+gServerStartedDate = new Date();
 
 gNanoid = nanoid;
+
+gStatsDBPath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage\\DFStatsDB.json';
+if (process.env.DF_IS_OPENODE == 1) {
+  gStatsDBPath = '/var/var/www/storage/DFStatsDB.json';
+}
+app.use("/DFStatsDB.json", express.static(gStatsDBPath));
+
+gServerStats = new DFStats.DFStats(gStatsDBPath);
 
 
 // id-generation prefix
@@ -24,16 +46,6 @@ gAdminUserIDs = [];
 let IsAdminUser = (userID) => {
   return gAdminUserIDs.some(x => x == userID);
 };
-
-let log = (msg) => {
-  if (!msg) return;
-  console.log(`${(new Date()).toISOString()} ${msg}`);
-  if (msg.stack) {
-    // assume error object.
-    console.log(`EXCEPTION stack: ${msg.stack}`);
-  }
-};
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
@@ -313,6 +325,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       foundUser.user.stats.noteOns++;
+      gServerStats.OnNoteOn(this.roomState.roomID);
       this.roomState.stats.noteOns++;
 
       // broadcast to all clients except foundUser
@@ -424,8 +437,6 @@ class RoomServer {
         return;
       }
 
-      //log(`OnClientInstrumentParams ${JSON.stringify(data)}`);
-
       let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (foundInstrument == null) {
         log(`=> not controlling an instrument.`);
@@ -434,6 +445,7 @@ class RoomServer {
 
       // set the value.
       foundInstrument.instrument.integrateRawParamChanges(data.patchObj, data.isWholePatch);
+      gServerStats.OnParamChange(this.roomState.roomID, Object.keys(data.patchObj).length);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, {
@@ -680,6 +692,7 @@ class RoomServer {
         return;
       }
 
+      gServerStats.OnMessage(this.roomState.roomID);
       foundUser.user.stats.messages++;
       this.roomState.stats.messages++;
 
@@ -816,6 +829,7 @@ class RoomServer {
         return;
       }
 
+      gServerStats.OnCheer(this.roomState.roomID);
       foundUser.user.stats.cheers++;
       this.roomState.stats.cheers++;
 
@@ -879,6 +893,7 @@ class RoomServer {
       // token, rooms: [{roomID, roomName, users [{ userid, name, pingMS }], stats}]
       var payload = {
         token: (new Date()).toISOString(),
+        serverUptimeSec: ((new Date()) - gServerStartedDate) / 1000,
         rooms: [],
       };
       payload.rooms = Object.keys(gRooms).map(k => {
@@ -1068,6 +1083,8 @@ let roomsAreLoaded = function () {
         throw new Error(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
       }
 
+      gServerStats.OnUserConnect();
+
       ws.on('disconnect', data => OnDisconnect(ws, data));
       ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRequest, data => ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));
@@ -1115,6 +1132,8 @@ let loadRoom = function (jsonTxt, serverRestoreState) {
   log(`serving room ${roomState.roomID} on route ${roomState.route}`);
   app.use(roomState.route, express.static('public'));
 }
+
+
 
 
 
