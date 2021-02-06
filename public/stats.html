@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+<head>
+
+    <script src="ext/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css"
+        integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
+        crossorigin="anonymous" />
+        <link rel="stylesheet" href="main.css" />
+    </head>
+
+<body>
+
+
+    <canvas style="max-width: 50vw; max-height: 50vh;" id="myChart"></canvas>
+    <script>
+        var ctx = document.getElementById('myChart');
+
+        // by hour of day
+        // room notes on for the past month
+
+        // return { hourOfDay, date obj, roomID}
+        let parseHourID = id => {
+            // 20210106_15__pub
+            // "2021-01-06T14:01:01.000Z"
+            //  YYYY-MM-DDTHH:mm:ss.sssZ
+            let u1 = id.indexOf("_");
+            let u2 = id.indexOf("__");
+            let roomID = id.substring(u2 + 2);
+            let hourOfDay = parseInt(id.substring(u1 + 1, u2));
+            let yyyy = (id.substring(0, 4));
+            let mm = (id.substring(4, 6));
+            let dd = (id.substring(6, 8));
+            return {
+                hourID: id,
+                hourOfDay,
+                roomID,
+                date: (new Date(`${yyyy}-${mm}-${dd}T${hourOfDay.toString().padStart(2, '0')}:01:01.000Z`))
+            };
+        };
+
+        $.ajax({
+            type: 'GET',
+            url: '/DFStatsDB.json',
+            dataType: 'json',
+            success: function (data) {
+                let hourlyStats = Object.keys(data.byHour).map(k => Object.assign(parseHourID(k), {data: data.byHour[k]}));
+                console.log(hourlyStats);
+
+                let noteOnsByHour = {};
+                for (let i = 0; i < 24; ++i) {
+                    noteOnsByHour[i] = 0;
+                }
+                // filter & aggregate.
+                hourlyStats.forEach(stat => {
+                    noteOnsByHour[stat.hourOfDay] += stat.data.noteOns;
+                });
+
+                // convert to xy dataset
+                let noteOnsByHourDataset = Object.keys(noteOnsByHour).map(hourOfDay => {
+                    return {
+                        x: parseInt(hourOfDay),
+                        y: noteOnsByHour[hourOfDay]
+                    };
+                });
+
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Note ons',
+                                backgroundColor: '#00c0c080',
+                                data: noteOnsByHourDataset,
+                            },
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                type: 'linear',
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Hour of day' // optional 
+                                },
+                            }]
+                        }
+                    } // options
+                }); // myChart = new chart
+
+            } // success
+        });
+
+    </script>
+
+</body>
+
+</html>

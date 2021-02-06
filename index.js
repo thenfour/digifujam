@@ -24,7 +24,7 @@ gNanoid = nanoid;
 
 gStatsDBPath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage\\DFStatsDB.json';
 if (process.env.DF_IS_OPENODE == 1) {
-  gStatsDBPath = '/var/var/www/storage/DFStatsDB.json';
+  gStatsDBPath = '/var/www/storage/DFStatsDB.json';
 }
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
 
