@@ -2110,6 +2110,8 @@ class RootArea extends React.Component {
             return;
         }
 
+        this.handleAllNotesOff();
+
         // throw up a screen and it fades out, then we remove it.
         var room = document.getElementById("roomArea");
         var screen = document.createElement("div");
@@ -2232,6 +2234,14 @@ class RootArea extends React.Component {
     };
 
     handleAllNotesOff = () => {
+
+        // set all notes CSS
+        for (let midiNote = 0; midiNote < 128; ++ midiNote) {
+            let k = $("#key_" + midiNote);
+            k.removeClass("active");
+            k.css("background-color", "");
+        }
+
         this.notesOn = []; // not part of state because it's pure jquery
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
         for (let i = 0; i < 128; ++i) {
