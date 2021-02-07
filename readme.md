@@ -50,3 +50,8 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
 - paste the previous server state after the site is back up; everyone will have to log back in.
 - openode logs for sanity
 
+## odds & ends & quirks
+
+- /stats.html to see activity graphs
+- /storage to view storage (feed, server state...)
+
