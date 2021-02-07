@@ -4,7 +4,9 @@
 <head>
 
     <script src="ext/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.js"
+        integrity="sha512-zO8oeHCxetPn1Hd9PdDleg5Tw1bAaP0YmNvPY8CwcRyUk7d7/+nyElmFrB6f7vg4f7Fv4sui1mcep8RIEShczg=="
+        crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css"
         integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
         crossorigin="anonymous" />
@@ -19,89 +21,121 @@
 
     <script>
 
+        // returns a new array.
+        let groupBy = (array, keySelector, accumulator) => {
+            let tempObj = {};
+            array.forEach(item => {
+                let k = keySelector(item);
+                if (k in tempObj) {
+                    tempObj[k] = accumulator(tempObj[k], item);
+                } else {
+                    tempObj[k] = item;
+                }
+            });
+            return Object.values(tempObj);
+        };
+
         // by hour of day
         // room notes on for the past month
 
         // return { hourOfDay, date obj, roomID}
+        // or null if it's not valid.
         let parseHourID = id => {
             // 20210106_15__pub
             // "2021-01-06T14:01:01.000Z"
             //  YYYY-MM-DDTHH:mm:ss.sssZ
             let u1 = id.indexOf("_");
             let u2 = id.indexOf("__");
+            if (u1 === -1 || u2 === -1) return null;
             let roomID = id.substring(u2 + 2);
+            if (!roomID || roomID.length < 1) return null;
             let hourOfDay = parseInt(id.substring(u1 + 1, u2));
+            let hh = hourOfDay.toString().padStart(2, '0');
             let yyyy = (id.substring(0, 4));
             let mm = (id.substring(4, 6));
             let dd = (id.substring(6, 8));
+            if (yyyy < 2020) return null;
+            if (mm < 1 || mm > 12) return null;
+            if (dd < 1 || dd > 31) return null;
             return {
-                hourID: id,
-                hourOfDay,
+                hourAndRoomID: id, // the passed in original id (abs hour + room)
+                absHourID: `${yyyy}-${mm}-${dd}-${hh}`, // key for grouping by absolute hour
                 roomID,
-                dayID: `${yyyy}-${mm}-${dd}`,
+                absDayID: `${yyyy}-${mm}-${dd}`, // key for grouping by day
+                hourOfDay, // key for grouping by hour of day
                 dayDate: (new Date(`${yyyy}-${mm}-${dd}T01:01:01.000Z`)),
-                date: (new Date(`${yyyy}-${mm}-${dd}T${hourOfDay.toString().padStart(2, '0')}:01:01.000Z`)),
+                date: (new Date(`${yyyy}-${mm}-${dd}T${hh}:01:01.000Z`)),
             };
         };
 
         var byHourCanvas = document.getElementById('byHourChart');
         var byDayCanvas = document.getElementById('byDayChart');
 
+        let num = (x) => (typeof (x) !== 'undefined') ? x : 0;
+
         $.ajax({
             type: 'GET',
             url: '/DFStatsDB.json',
             dataType: 'json',
             success: function (data) {
-                let hourlyStats = Object.keys(data.byHour).map(k => Object.assign(parseHourID(k), { data: data.byHour[k] }));
-                console.log(hourlyStats);
 
-                // seed initial conditions
-                let ySumByHour = []; // aggregated by hour of day
-                for (let i = 0; i < 24; ++i) {
-                    ySumByHour[i] = {
-                        notes: 0,
-                        cheers: 0,
-                        messages: 0,
-                        paramChanges: 0,
-                        maxUsers: 0,
-                        count: 0,
-                    };
-                }
+                // turn data into an array and add stuff to data which is helpful for querying it.
+                let byRoomHour = Object.keys(data.byHour).map(k => {
+                    const parsed = parseHourID(k);
+                    if (!parsed) return null;
+                    parsed.count = 1; // for aggregating average later
+                    return Object.assign(parsed, data.byHour[k]);
+                });
+                byRoomHour = byRoomHour.filter(x => !!x);// prune nulls
 
-                // filter, accumulate data by hour
-                hourlyStats.forEach(stat => {
-                    let p = ySumByHour[stat.hourOfDay];
-                    p.notes += stat.data.notes;
-                    p.cheers += stat.data.cheers;
-                    p.messages += stat.data.messages;
-                    p.paramChanges += stat.data.paramChanges;
-                    p.maxUsers += stat.data.maxUsers;
-                    p.count++;
+                // group rooms together
+                let serverStatsByAbsHour = groupBy(byRoomHour, i => i.absHourID, (a, b) => {
+                    a.notes = num(a.notes) + num(b.notes);
+                    a.cheers = num(a.cheers) + num(b.cheers);
+                    a.messages = num(a.messages) + num(b.messages);
+                    a.paramChanges = num(a.paramChanges) + num(b.paramChanges);
+                    a.maxUsers = Math.max(num(a.maxUsers), num(b.maxUsers)); // this is not accurate; there's no way to differentiate between 2 rooms having same or different sets of users. be conservative here.
+                    //a.count++;
+                    return a;
+                });
+
+                // group averages by hour-of-day.
+                // to do avg we need 2 steps.  first sum,
+                let serverStatsAvgByHourOfDay = groupBy(serverStatsByAbsHour, i => i.hourOfDay, (a, b) => {
+                    if (a.hourOfDay == 23) {
+                        let a = 0;
+                    }
+                    a.notes = num(a.notes) + num(b.notes);
+                    a.cheers = num(a.cheers) + num(b.cheers);
+                    a.messages = num(a.messages) + num(b.messages);
+                    a.paramChanges = num(a.paramChanges) + num(b.paramChanges);
+                    a.maxUsers = Math.max(num(a.maxUsers), num(b.maxUsers)); // this is not accurate; there's no way to differentiate between 2 rooms having same or different sets of users. be conservative here.
+                    a.count += b.count;
+                    return a;
                 });
 
                 // calc averages
-                let yAvgByHour = JSON.parse(JSON.stringify(ySumByHour));
-                yAvgByHour.forEach(p => {
+                serverStatsAvgByHourOfDay.forEach(p => {
                     if (p.count < 1) return;
-                    p.notes /= p.count;
-                    p.cheers /= p.count;
-                    p.messages /= p.count;
-                    p.paramChanges /= p.count;
-                    p.maxUsers /= p.count;
+                    p.notes = num(p.notes) / p.count;
+                    p.cheers = num(p.cheers) / p.count;
+                    p.messages = num(p.messages) / p.count;
+                    p.paramChanges = num(p.paramChanges) / p.count;
+                    p.maxUsers = num(p.maxUsers) / p.count;
                 });
 
                 // convert to xy dataset
-                let noteOnsByHourDataset = Object.keys(yAvgByHour).map(hourOfDay => {
+                let avgNotesByHourOfDayDataset = serverStatsAvgByHourOfDay.map(d => {
                     return {
-                        x: parseInt(hourOfDay),
-                        y: yAvgByHour[hourOfDay].notes,
+                        x: d.hourOfDay,
+                        y: d.notes,
                     };
                 });
 
-                let avgUsersByHourDataset = Object.keys(yAvgByHour).map(hourOfDay => {
+                let avgUsersByHourOfDayDataset = serverStatsAvgByHourOfDay.map(d => {
                     return {
-                        x: parseInt(hourOfDay),
-                        y: yAvgByHour[hourOfDay].maxUsers,
+                        x: d.hourOfDay,
+                        y: d.maxUsers,
                     };
                 });
 
@@ -113,13 +147,13 @@
                                 yAxisID: 'noteOnScale',
                                 label: 'Note ons',
                                 backgroundColor: '#40ffff60',
-                                data: noteOnsByHourDataset,
+                                data: avgNotesByHourOfDayDataset,
                             },
                             {
                                 yAxisID: 'usersScale',
                                 label: 'Avg Max ppl',
                                 backgroundColor: '#4040ff60',
-                                data: avgUsersByHourDataset,
+                                data: avgUsersByHourOfDayDataset,
                             },
                         ]
                     },
@@ -148,38 +182,28 @@
                 }); // byHourChart = new chart
 
 
-
-                let ySumByDay = []; // unique days.
-                // filter, accumulate data by day
-                hourlyStats.forEach(stat => {
-                    if (!ySumByDay[stat.dayDate]) {
-                        ySumByDay[stat.dayDate] = {
-                            notes: 0,
-                            cheers: 0,
-                            messages: 0,
-                            paramChanges: 0,
-                            maxUsers: 0,
-                        }
-                    }
-                    let p = ySumByDay[stat.dayDate];
-                    p.notes += stat.data.notes;
-                    p.cheers += stat.data.cheers;
-                    p.messages += stat.data.messages;
-                    p.paramChanges += stat.data.paramChanges;
-                    p.maxUsers += stat.data.maxUsers;
+                // group days together
+                let serverStatsByAbsDay = groupBy(serverStatsByAbsHour, i => i.absDayID, (a, b) => {
+                    a.notes = num(a.notes) + num(b.notes);
+                    a.cheers = num(a.cheers) + num(b.cheers);
+                    a.messages = num(a.messages) + num(b.messages);
+                    a.paramChanges = num(a.paramChanges) + num(b.paramChanges);
+                    a.maxUsers = Math.max(num(a.maxUsers), num(b.maxUsers)); // this is not accurate; there's no way to differentiate between 2 rooms having same or different sets of users. be conservative here.
+                    //a.count++;
+                    return a;
                 });
 
                 // convert to xy dataset
-                let noteOnsByDayDataset = Object.keys(ySumByDay).map(dayDate => {
+                let noteOnsByAbsDayDataset = serverStatsByAbsDay.map(d => {
                     return {
-                        x: dayDate,
-                        y: ySumByDay[dayDate].notes,
+                        x: d.dayDate,
+                        y: d.notes,
                     };
                 });
-                let maxUsersByDayDataset = Object.keys(ySumByDay).map(dayDate => {
+                let maxUsersByAbsDayDataset = serverStatsByAbsDay.map(d => {
                     return {
-                        x: dayDate,
-                        y: ySumByDay[dayDate].maxUsers,
+                        x: d.dayDate,
+                        y: d.maxUsers,
                     };
                 });
 
@@ -193,13 +217,13 @@
                                 yAxisID: 'noteOnScale',
                                 label: 'Note ons',
                                 backgroundColor: '#40ffff60',
-                                data: noteOnsByDayDataset,
+                                data: noteOnsByAbsDayDataset,
                             },
                             {
                                 yAxisID: 'usersScale',
                                 label: 'Max ppl',
                                 backgroundColor: '#4040ff60',
-                                data: maxUsersByDayDataset,
+                                data: maxUsersByAbsDayDataset,
                             },
                         ]
                     },
@@ -207,7 +231,7 @@
                         responsive: true,
                         scales: {
                             xAxes: [{
-                                type: 'category',
+                                type: 'time',
                                 display: true,
                                 scaleLabel: {
                                     display: true,
