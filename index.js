@@ -830,6 +830,12 @@ class RoomServer {
         return;
       }
 
+      const now = new Date();
+      if ((now - foundUser.user.lastCheerSentDate) <  DF.ClientSettings.MinCheerIntervalMS) {
+        return;
+      }
+      foundUser.user.lastCheerSentDate = now;
+
       let txt = DF.sanitizeCheerText(data.text);
       if (txt == null) {
         log(`OnClientCheer: invalid cheer ${data.text}.`);

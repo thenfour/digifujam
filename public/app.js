@@ -186,6 +186,7 @@ class DigifuApp {
         this.handleAllNotesOff = null;
         this.pleaseReconnectHandler = null;
         this.handleCheer = null; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
+        this.lastCheerSentDate = new Date();
 
         this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
         this.myInstrument = null; // filled when ownership is given to you.
@@ -794,6 +795,12 @@ class DigifuApp {
     };
 
     SendCheer(text, x, y) {
+
+        const now = new Date();
+        if ((now - this.lastCheerSentDate) < ClientSettings.MinCheerIntervalMS) return;
+
+        this.lastCheerSentDate = now;
+
         text = sanitizeCheerText(text);
         if (text == null) return;
         this.net.SendCheer(text, x, y);

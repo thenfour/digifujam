@@ -210,6 +210,7 @@ class DigifuUser {
         this.position = { x: 0, y: 0 }; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
         this.img = null;
         this.idle = null; // this gets set when a user's instrument ownership becomes idle
+        this.lastCheerSentDate = new Date();
 
         this.stats = {
             noteOns: 0,
