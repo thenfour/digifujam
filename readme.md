@@ -1,6 +1,8 @@
+# GET YOUR DIGITAL FUSE ON WITH 7JAM
+
 https://7jam.io/
 
-Multiplayer MIDI jam space for digital fusion music performers and producers. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session. Thanks https://www.openode.io/ for hosting.
+Online jam space for digital fusion musicians. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session. Thanks https://www.openode.io/ for hosting.
 
 Some notes:
 
