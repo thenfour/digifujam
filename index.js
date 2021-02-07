@@ -4,8 +4,10 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const { nanoid } = require("nanoid");
 const DF = require('./public/DFCommon');
-const fsp = require('fs').promises;
+const fs = require('fs');
+const fsp = fs.promises;
 const DFStats = require('./DFStats.js');
+const serveIndex = require('serve-index')
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -22,9 +24,13 @@ gServerStartedDate = new Date();
 
 gNanoid = nanoid;
 
-gStatsDBPath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage\\DFStatsDB.json';
+gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage';
+gStatsDBPath = gStoragePath + '\\DFStatsDB.json';
+gPathSeparator = "\\";
 if (process.env.DF_IS_OPENODE == 1) {
-  gStatsDBPath = '/var/www/storage/DFStatsDB.json';
+  gPathSeparator = "/";
+  gStoragePath = '/var/www/storage';
+  gStatsDBPath = gStoragePath + '/DFStatsDB.json';
 }
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
 
@@ -204,12 +210,13 @@ class RoomServer {
       this.roomState.chatLog.push(chatMessageEntry);
 
       //log(`${JSON.stringify(clientSocket.handshake.query)}`);
+      gServerStats.OnUserWelcome(this.roomState.roomID, this.roomState.users.length);
 
       if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
         log(`An admin has been identified id=${u.userID} name=${u.name}.`);
         gAdminUserIDs.push(u.userID);
       } else {
-        log(`Welcoming user id=${u.userID} name=${u.name}.`);
+        log(`Welcoming user id=${u.userID} name=${u.name}, DF_ADMIN_PASSWORD=${clientSocket.handshake.query.DF_ADMIN_PASSWORD}.`);
       }
 
       // notify this 1 user of their user id & room state
@@ -1062,6 +1069,74 @@ let OnClientUploadServerState = (ws, data) => {
 }
 
 
+let OnBackupServerStateInterval = () => {
+  try {
+    const m1 = new Date();
+    setTimeout(OnBackupServerStateInterval, DF.ServerSettings.ServerStateBackupIntervalMS);
+
+    let allRooms = [];
+    Object.keys(gRooms).forEach(roomID => {
+      allRooms.push({
+        roomID: roomID,
+        dump: gRooms[roomID].roomState.adminExportRoomState()
+      });
+    });
+
+    const allRoomsJSON = JSON.stringify(allRooms);
+
+    const d = new Date();
+    const path = `${gStoragePath}${gPathSeparator}serverState_` +
+      `${d.getUTCFullYear()}${(d.getUTCMonth() + 1).toString().padStart(2, '0')}${d.getUTCDate().toString().padStart(2, '0')}` +
+      `_${d.getUTCHours().toString().padStart(2, '0')}_${d.getUTCMinutes().toString().padStart(2, '0')}_${d.getUTCSeconds().toString().padStart(2, '0')}.json`;
+
+    fsp.writeFile(path, allRoomsJSON, 'utf8');
+    console.log(`Backing up server state to ${path}; took ${((new Date() - m1) / 1000).toFixed(3)} sec`);
+  } catch (e) {
+    console.log(`OnBackupServerStateInterval exception occurred`);
+    console.log(e);
+  }
+};
+
+
+let OnPruneServerStateInterval = () => {
+  try {
+    setTimeout(OnPruneServerStateInterval, DF.ServerSettings.ServerStatePruneIntervalMS);
+
+    let filesToDelete = [];
+    fs.readdir(gStoragePath, (err, files) => {
+      const m1 = new Date();
+      files.forEach(file => {
+        try {
+          // serverState_20210207_16_59_06.json        
+          if (!file.startsWith("serverState_")) return;
+          let fileParts = file.split('.')[0]; // remove extension
+          fileParts = fileParts.split("_");
+          // 2019-01-06T14:00:00.000Z
+          let fileDate = `${fileParts[1].substring(0, 4)}-${fileParts[1].substring(4, 6)}-${fileParts[1].substring(6)}T${fileParts[2]}:${fileParts[3]}:${fileParts[4]}.000Z`;
+          let age = m1 - new Date(fileDate);
+
+          if (age > DF.ServerSettings.ServerStateMaxAgeMS) {
+            //console.log(`${file} age ${age} maxage=${DF.ServerSettings.ServerStateMaxAgeMS} file=${gStoragePath + gPathSeparator + file}`);
+            filesToDelete.push(gStoragePath + gPathSeparator + file);
+          }
+
+        } catch (ex) {
+          console.log(`OnPruneServerStateInterval; file caused exception: ${file}`);
+          console.log(ex);
+        }
+      });
+
+      console.log(`OnPruneServerStateInterval; filesToDelete: ${JSON.stringify(filesToDelete)}`);
+
+      filesToDelete.forEach(f => fs.unlink(f, () => { }));
+      //console.log(`OnPruneServerStateInterval; took ${((new Date() - m1) / 1000).toFixed(3)} sec`);
+    });
+
+  } catch (e) {
+    console.log(`OnPruneServerStateInterval exception occurred`);
+    console.log(e);
+  }
+};
 
 
 // load configs
@@ -1083,7 +1158,7 @@ let roomsAreLoaded = function () {
         throw new Error(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
       }
 
-      gServerStats.OnUserConnect();
+      //gServerStats.OnUserConnect();
 
       ws.on('disconnect', data => OnDisconnect(ws, data));
       ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
@@ -1118,7 +1193,11 @@ let roomsAreLoaded = function () {
     } catch (e) {
       log("Exception on connection: " + e);
     }
-  });
+  }); // io.on(connection)
+
+  setTimeout(OnBackupServerStateInterval, DF.ServerSettings.ServerStateBackupIntervalMS);
+
+  setTimeout(OnPruneServerStateInterval, DF.ServerSettings.ServerStatePruneIntervalMS);
 
   let port = process.env.PORT || 8081;
   http.listen(port, () => {
@@ -1134,6 +1213,8 @@ let loadRoom = function (jsonTxt, serverRestoreState) {
 }
 
 
+
+app.use("/storage", express.static(gStoragePath), serveIndex(gStoragePath, { 'icons': true }))
 
 
 

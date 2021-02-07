@@ -8,15 +8,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css"
         integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
         crossorigin="anonymous" />
-        <link rel="stylesheet" href="main.css" />
-    </head>
+    <link rel="stylesheet" href="main.css" />
+</head>
 
 <body>
 
 
-    <canvas style="max-width: 50vw; max-height: 50vh;" id="myChart"></canvas>
+    <canvas style="width: 100vw; height: 50vh;" id="byHourChart"></canvas>
+    <canvas style="width: 100vw; height: 50vh;" id="byDayChart"></canvas>
+
     <script>
-        var ctx = document.getElementById('myChart');
 
         // by hour of day
         // room notes on for the past month
@@ -37,43 +38,88 @@
                 hourID: id,
                 hourOfDay,
                 roomID,
-                date: (new Date(`${yyyy}-${mm}-${dd}T${hourOfDay.toString().padStart(2, '0')}:01:01.000Z`))
+                dayID: `${yyyy}-${mm}-${dd}`,
+                dayDate: (new Date(`${yyyy}-${mm}-${dd}T01:01:01.000Z`)),
+                date: (new Date(`${yyyy}-${mm}-${dd}T${hourOfDay.toString().padStart(2, '0')}:01:01.000Z`)),
             };
         };
+
+        var byHourCanvas = document.getElementById('byHourChart');
+        var byDayCanvas = document.getElementById('byDayChart');
 
         $.ajax({
             type: 'GET',
             url: '/DFStatsDB.json',
             dataType: 'json',
             success: function (data) {
-                let hourlyStats = Object.keys(data.byHour).map(k => Object.assign(parseHourID(k), {data: data.byHour[k]}));
+                let hourlyStats = Object.keys(data.byHour).map(k => Object.assign(parseHourID(k), { data: data.byHour[k] }));
                 console.log(hourlyStats);
 
-                let noteOnsByHour = {};
+                // seed initial conditions
+                let ySumByHour = []; // aggregated by hour of day
                 for (let i = 0; i < 24; ++i) {
-                    noteOnsByHour[i] = 0;
+                    ySumByHour[i] = {
+                        notes: 0,
+                        cheers: 0,
+                        messages: 0,
+                        paramChanges: 0,
+                        maxUsers: 0,
+                        count: 0,
+                    };
                 }
-                // filter & aggregate.
+
+                // filter, accumulate data by hour
                 hourlyStats.forEach(stat => {
-                    noteOnsByHour[stat.hourOfDay] += stat.data.noteOns;
+                    let p = ySumByHour[stat.hourOfDay];
+                    p.notes += stat.data.notes;
+                    p.cheers += stat.data.cheers;
+                    p.messages += stat.data.messages;
+                    p.paramChanges += stat.data.paramChanges;
+                    p.maxUsers += stat.data.maxUsers;
+                    p.count++;
+                });
+
+                // calc averages
+                let yAvgByHour = JSON.parse(JSON.stringify(ySumByHour));
+                yAvgByHour.forEach(p => {
+                    if (p.count < 1) return;
+                    p.notes /= p.count;
+                    p.cheers /= p.count;
+                    p.messages /= p.count;
+                    p.paramChanges /= p.count;
+                    p.maxUsers /= p.count;
                 });
 
                 // convert to xy dataset
-                let noteOnsByHourDataset = Object.keys(noteOnsByHour).map(hourOfDay => {
+                let noteOnsByHourDataset = Object.keys(yAvgByHour).map(hourOfDay => {
                     return {
                         x: parseInt(hourOfDay),
-                        y: noteOnsByHour[hourOfDay]
+                        y: yAvgByHour[hourOfDay].notes,
                     };
                 });
 
-                var myChart = new Chart(ctx, {
+                let avgUsersByHourDataset = Object.keys(yAvgByHour).map(hourOfDay => {
+                    return {
+                        x: parseInt(hourOfDay),
+                        y: yAvgByHour[hourOfDay].maxUsers,
+                    };
+                });
+
+                var byHourChart = new Chart(byHourCanvas, {
                     type: 'line',
                     data: {
                         datasets: [
                             {
+                                yAxisID: 'noteOnScale',
                                 label: 'Note ons',
-                                backgroundColor: '#00c0c080',
+                                backgroundColor: '#40ffff60',
                                 data: noteOnsByHourDataset,
+                            },
+                            {
+                                yAxisID: 'usersScale',
+                                label: 'Avg Max ppl',
+                                backgroundColor: '#4040ff60',
+                                data: avgUsersByHourDataset,
                             },
                         ]
                     },
@@ -87,10 +133,101 @@
                                     display: true,
                                     labelString: 'Hour of day' // optional 
                                 },
-                            }]
+                            }],
+                            yAxes: [
+                                {
+                                    id: 'noteOnScale',
+                                    type: 'linear'
+                                }, {
+                                    id: 'usersScale',
+                                    type: 'linear'
+                                }
+                            ]
                         }
                     } // options
-                }); // myChart = new chart
+                }); // byHourChart = new chart
+
+
+
+                let ySumByDay = []; // unique days.
+                // filter, accumulate data by day
+                hourlyStats.forEach(stat => {
+                    if (!ySumByDay[stat.dayDate]) {
+                        ySumByDay[stat.dayDate] = {
+                            notes: 0,
+                            cheers: 0,
+                            messages: 0,
+                            paramChanges: 0,
+                            maxUsers: 0,
+                        }
+                    }
+                    let p = ySumByDay[stat.dayDate];
+                    p.notes += stat.data.notes;
+                    p.cheers += stat.data.cheers;
+                    p.messages += stat.data.messages;
+                    p.paramChanges += stat.data.paramChanges;
+                    p.maxUsers += stat.data.maxUsers;
+                });
+
+                // convert to xy dataset
+                let noteOnsByDayDataset = Object.keys(ySumByDay).map(dayDate => {
+                    return {
+                        x: dayDate,
+                        y: ySumByDay[dayDate].notes,
+                    };
+                });
+                let maxUsersByDayDataset = Object.keys(ySumByDay).map(dayDate => {
+                    return {
+                        x: dayDate,
+                        y: ySumByDay[dayDate].maxUsers,
+                    };
+                });
+
+
+
+                var byDayChart = new Chart(byDayCanvas, {
+                    type: 'line',
+                    data: {
+                        datasets: [
+                            {
+                                yAxisID: 'noteOnScale',
+                                label: 'Note ons',
+                                backgroundColor: '#40ffff60',
+                                data: noteOnsByDayDataset,
+                            },
+                            {
+                                yAxisID: 'usersScale',
+                                label: 'Max ppl',
+                                backgroundColor: '#4040ff60',
+                                data: maxUsersByDayDataset,
+                            },
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            xAxes: [{
+                                type: 'category',
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'day' // optional 
+                                },
+                            }],
+                            yAxes: [
+                                {
+                                    id: 'noteOnScale',
+                                    type: 'linear'
+                                }, {
+                                    id: 'usersScale',
+                                    type: 'linear'
+                                }
+                            ]
+                        }
+                    } // options
+                }); // byHourChart = new chart
+
+
 
             } // success
         });

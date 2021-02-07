@@ -11,6 +11,11 @@ Array.prototype.removeIf = function (callback) {
     }
 };
 
+let secondsToMS = (x) => x * 1000;
+let minutesToMS = (x) => secondsToMS(x * 60);
+let hoursToMS = (x) => minutesToMS(x * 60);
+let daysToMS = (x) => hoursToMS(x * 24);
+
 let getArrowText = shown => shown ? '⯆' : '⯈';
 
 function getDecimalPart(decNum) {
@@ -144,7 +149,7 @@ const ServerSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
 
     InstrumentIdleTimeoutMS: (1000 * 60),
-    InstrumentAutoReleaseTimeoutMS: (1000 * 60 * 5),
+    InstrumentAutoReleaseTimeoutMS: (60000 * 5),
 
     UsernameLengthMax: 20,
     UsernameLengthMin: 1,
@@ -154,6 +159,14 @@ const ServerSettings = {
     ChatMessageLengthMax: 288,
 
     WorldUserCountMaximum: 100,
+
+    StatsFlushMS: minutesToMS(5), // 5 minutes
+    StatsPruneIntervalMS: hoursToMS(24), // once a day prune stats
+    StatsMaxAgeMS: daysToMS(365),
+
+    ServerStateBackupIntervalMS: hoursToMS(1),
+    ServerStatePruneIntervalMS: hoursToMS(24),
+    ServerStateMaxAgeMS: daysToMS(5),
 };
 
 const ClientSettings = {
@@ -1501,7 +1514,7 @@ class DigifuRoomState {
     adminExportRoomState() {
         return {
             presetBanks: this.presetBanks,
-            chatLog: this.chatLog,
+            chatLog: [],//this.chatLog,
             stats: this.stats,
         };
     }
@@ -1515,17 +1528,17 @@ class DigifuRoomState {
             });
         }
 
-        this.chatLog = data.chatLog.map(o => {
-            let n = Object.assign(new DigifuChatMessage(), o);
-            n.thaw();
-            return n;
-        });
+        // this.chatLog = data.chatLog.map(o => {
+        //     let n = Object.assign(new DigifuChatMessage(), o);
+        //     n.thaw();
+        //     return n;
+        // });
+
         this.stats = data.stats;
 
         // remove "live" references to users.
         this.users = [];
         this.instrumentCloset.forEach(i => { i.ReleaseOwnership(); });
-
 
         // don't import all instrument DEFINITIONS. just the presets.
         if (data.instrumentPresets) {
