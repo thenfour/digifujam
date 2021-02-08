@@ -1,6 +1,8 @@
-https://digifujam.eu.openode.io/
+# GET YOUR DIGITAL FUSE ON WITH 7JAM
 
-Multiplayer MIDI jam space for digital fusion music performers and producers. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session. Thanks https://www.openode.io/ for hosting.
+https://7jam.io/
+
+Online jam space for digital fusion musicians. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session. Thanks https://www.openode.io/ for hosting.
 
 Some notes:
 
@@ -32,7 +34,7 @@ The server is hosted in Amsterdam by openode.io.
 
 Latency causes funny things. It's actually not a deal-breaker if you learn how to cope with it. For example fast, rhythmic funk music will probably never be a great hit on Digifujam. But if you go for ambient synth styles, then I doubt latency will ever cause an issue.
 
-So, tip #1: Don't expect millisecond latency. You're a musician, find a creative way to accept latency.
+So, tip #1: Try not to expect millisecond latency, try and find creative ways to accept latency.
 
 Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But Edge feels significantly more responsive.
 
@@ -47,4 +49,9 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
 - openode deploy
 - paste the previous server state after the site is back up; everyone will have to log back in.
 - openode logs for sanity
+
+## odds & ends & quirks
+
+- /stats.html to see activity graphs
+- /storage to view storage (feed, server state...)
 

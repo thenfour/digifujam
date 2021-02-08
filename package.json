@@ -5,10 +5,10 @@
   "main": "index.js",
   "dependencies": {
     "express": "^4.17.1",
-    "lowdb": "^1.0.0",
     "nanoid": "^3.1.20",
     "openode": "^2.0.38",
-    "socket.io": "^3.1.1",
+    "serve-index": "^1.9.1",
+    "socket.io": "^3.0.5",
     "ws": "^7.4.2"
   },
   "devDependencies": {},
