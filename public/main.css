@@ -6,101 +6,101 @@
 @import url('https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
 
 body {
-    background-color: black;
-    color: #0aa;
-    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
-    font-size: medium;
+	background-color: black;
+	color: #0aa;
+	font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+	font-size: medium;
 }
 
 html,
 body {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    padding: 0;
-    margin: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	padding: 0;
+	margin: 0;
 }
 *:focus {
-    outline: none;
+	outline: none;
 }
 a:link,
 a:visited {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 ul {
-    list-style: none;
-    padding: 10px;
-    margin:0;
+	list-style: none;
+	padding: 10px;
+	margin:0;
 }
 
 input[type="text" i] {
-    background-color: #444;
-    border: 2px solid #055;
-    color: #0cc;
-    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
-    font-weight: normal;
-    font-size: small;
-    margin: 2px;
+	background-color: #444;
+	border: 2px solid #055;
+	color: #0cc;
+	font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+	font-weight: normal;
+	font-size: small;
+	margin: 2px;
 }
 input[type="text" i]:focus {
-    border: 2px solid #0cc;
+	border: 2px solid #0cc;
 }
 
 button {
-    background-color: #444;
-    border: 3px solid #888;
-    color: #0bb;
-    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
-    font-weight: bold;
-    font-size: small;
-    margin: 2px;
-    border-radius: 4px;
-    cursor:pointer;
+	background-color: #444;
+	border: 3px solid #888;
+	color: #0bb;
+	font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+	font-weight: bold;
+	font-size: small;
+	margin: 2px;
+	border-radius: 4px;
+	cursor:pointer;
 }
 button:focus {
-    border: 3px solid #0ff;
+	border: 3px solid #0ff;
 }
 
 .validationError {
-    color:red;
+	color:red;
 }
 
 /* https://grid.layoutit.com/ */
 #grid-container {
-    height: 100vh;
-    width: 100%;
+	height: 100vh;
+	width: 100%;
 
-    display: grid;
-    grid-template-columns: 270px minmax(0, 1fr) 320px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
-    grid-template-rows: 0fr 1fr 0fr 0fr;
-    gap: 5px 5px;
-    grid-template-areas:
-        "headerArea headerArea headerArea"
-        "leftArea roomArea rightArea"
-        "leftArea chatArea rightArea"
-        "leftArea pianoArea rightArea";
+	display: grid;
+	grid-template-columns: 270px minmax(0, 1fr) 320px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
+	grid-template-rows: 0fr 1fr 0fr 0fr;
+	gap: 5px 5px;
+	grid-template-areas:
+		"headerArea headerArea headerArea"
+		"leftArea roomArea rightArea"
+		"leftArea chatArea rightArea"
+		"leftArea pianoArea rightArea";
 }
 #grid-container.wide {
-    grid-template-columns: 270px minmax(0, 1fr) 550px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
+	grid-template-columns: 270px minmax(0, 1fr) 550px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
 #grid-container.wide #rightArea input[type="range"]
 {
-    width:350px;
+	width:350px;
 }
 
 #grid-container>* {
-    background-color: #222;
+	background-color: #222;
 }
 
 .roomArea {
-    background-color: black;
-    color: #339;
-    background-repeat: no-repeat;
-    position: relative;
-    overflow:hidden;
-    transition: background-position 1s;
+	background-color: black;
+	color: #339;
+	background-repeat: no-repeat;
+	position: relative;
+	overflow:hidden;
+	transition: background-position 1s;
 }
 
 .roomArea.roomWelcomeNoTransition {
@@ -109,156 +109,156 @@ button:focus {
 
 #leftArea,
 #rightArea {
-    display: flex;
-    flex-direction: column;    
-    overflow-y:auto;
+	display: flex;
+	flex-direction: column;    
+	overflow-y:auto;
 }
 
 @keyframes screenFadeOut {
-    10% { opacite: 100%}
-    100% { opacity: 0%; }
+	10% { opacite: 100%}
+	100% { opacity: 0%; }
 }
 
 #roomArea {
-    background-color: black;
+	background-color: black;
 }
 
 #roomArea .screen {
-    background-color: black;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    opacity: 100%;
-    animation: screenFadeOut 1s 1;
-    animation-fill-mode: forwards;
+	background-color: black;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	opacity: 100%;
+	animation: screenFadeOut 1s 1;
+	animation-fill-mode: forwards;
 }
 
 .component {
-    width: 100%;
-    color: #0aa;
-    border: 4px solid #044;
-    box-sizing: border-box;
-    margin-bottom: 20px;
-    border-radius: 5px;
+	width: 100%;
+	color: #0aa;
+	border: 4px solid #044;
+	box-sizing: border-box;
+	margin-bottom: 20px;
+	border-radius: 5px;
 }
 
 .component>h2 {
-    background-color: #044;
-    padding-left: 5px;
-    margin: 0;
-    border: 0;
-    font-size: larger;
-    overflow: hidden; /* allows floated content to increase div height https://stackoverflow.com/questions/2159843/how-to-make-div-height-increase-to-include-floated-image*/
+	background-color: #044;
+	padding-left: 5px;
+	margin: 0;
+	border: 0;
+	font-size: larger;
+	overflow: hidden; /* allows floated content to increase div height https://stackoverflow.com/questions/2159843/how-to-make-div-height-increase-to-include-floated-image*/
 }
 
 .component>h2 .buttonContainer {
-    float:right;
-    line-height: 10px;
+	float:right;
+	line-height: 10px;
 }
 
 .component>h2 button {
-    font-weight: normal;
-    background-color: #033;
-    border: 1px solid #066;
-    font-size: x-small;
+	font-weight: normal;
+	background-color: #033;
+	border: 1px solid #066;
+	font-size: x-small;
 }
 
 .clipboardControls {
-    border: 0;
-    background-color: #022;
-    border-radius: 10px;
-    margin-bottom: 10px;
+	border: 0;
+	background-color: #022;
+	border-radius: 10px;
+	margin-bottom: 10px;
 }
 
 
 .clipboardControls legend {
-    font-size: small;}
+	font-size: small;}
 
 #roomArea .component {
-    margin-top:30px;
+	margin-top:30px;
 }
 
 .userPing {
-    font-size: smaller;
-    font-style: italic;
-    font-weight: normal;
+	font-size: smaller;
+	font-style: italic;
+	font-weight: normal;
 }
 
 .headerArea {
-    padding: 3px;
-    display: flex;
-    justify-content: space-between;
+	padding: 3px;
+	display: flex;
+	justify-content: space-between;
 }
 .headerArea span {
-    margin:0;
-    font-size: small;
+	margin:0;
+	font-size: small;
 }
 
 .headerArea a:link,
 .headerArea a:visited,
 .headerArea a {
-    color: #088;
+	color: #088;
 }
 
 @keyframes avatarBump1 {
-    0% {
-        transform: translate(-50%, -50%);
-        animation-timing-function: ease-in-out;
-    }
+	0% {
+		transform: translate(-50%, -50%);
+		animation-timing-function: ease-in-out;
+	}
 
-    10% {
-        transform: translate(-50%, calc(-50% + 4px));
-    }
+	10% {
+		transform: translate(-50%, calc(-50% + 4px));
+	}
 
-    100% {
-        transform: translate(-50%, -50%);
-    }
+	100% {
+		transform: translate(-50%, -50%);
+	}
 }
 
 /* exact duplicate of the other, so when i toggle between the classes, it resets the animation. why doesn't CSS let you reset one-shot animations?? */
 @keyframes avatarBump2 {
-    0% {
-        transform: translate(-50%, -50%);
-        animation-timing-function: ease-in-out;
-    }
+	0% {
+		transform: translate(-50%, -50%);
+		animation-timing-function: ease-in-out;
+	}
 
-    10% {
-        transform: translate(-50%, calc(-50% + 4px));
-    }
+	10% {
+		transform: translate(-50%, calc(-50% + 4px));
+	}
 
-    100% {
-        transform: translate(-50%, -50%);
-    }
+	100% {
+		transform: translate(-50%, -50%);
+	}
 }
 
 
 .userAvatarActivityBump1 {
-    animation: avatarBump1 .2s 1;
+	animation: avatarBump1 .2s 1;
 }
 
 .userAvatarActivityBump2 {
-    animation: avatarBump2 .2s 1;
+	animation: avatarBump2 .2s 1;
 }
 
 .userAvatar {
-    pointer-events: none; /* allow clicks to be processed by the room itself, not the item. */
-    position: absolute;
-    transition: top .5s, left .5s;
-    border-radius: 5px;
-    border-width: 1px;
-    border-style: solid;
-    padding: 7px;
-    background-color: rgba(0, 0, 0, .5);
-    text-align: center;
-    filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
-    transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
+	pointer-events: none; /* allow clicks to be processed by the room itself, not the item. */
+	position: absolute;
+	transition: top .5s, left .5s;
+	border-radius: 5px;
+	border-width: 1px;
+	border-style: solid;
+	padding: 7px;
+	background-color: rgba(0, 0, 0, .5);
+	text-align: center;
+	filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
+	transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
 }
 
 .userAvatar.me {
-    border-top-width: 10px;
+	border-top-width: 10px;
 }
 
 .userAvatar.roomWelcomeNoTransition {
@@ -266,98 +266,98 @@ button:focus {
 }
 
 .userAvatar .userAvatarInstrument button {
-    pointer-events: all;
+	pointer-events: all;
 }
 
 #chatArea {
-    display:flex;
+	display:flex;
 }
 
 #chatArea input {
-    flex-grow:1;
+	flex-grow:1;
 }
 
 .shortChatLog {
-    position: absolute;
-    bottom: 0;
-    width:100%; /* important because if you have 1 message that cannot be wrapped, it will make the chat log area grow wider, and everyone's messages will get cutoff. this allows other long messages to still wrap.*/
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;/*stroke*/
-    color: #aaa;
-    pointer-events: none;
+	position: absolute;
+	bottom: 0;
+	width:100%; /* important because if you have 1 message that cannot be wrapped, it will make the chat log area grow wider, and everyone's messages will get cutoff. this allows other long messages to still wrap.*/
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;/*stroke*/
+	color: #aaa;
+	pointer-events: none;
 
-    -webkit-mask-image: linear-gradient(transparent, transparent 25%, rgba(0, 0, 0, 1.0) 60%, rgba(0, 0, 0, 1.0));
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+	-webkit-mask-image: linear-gradient(transparent, transparent 25%, rgba(0, 0, 0, 1.0) 60%, rgba(0, 0, 0, 1.0));
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
 }
 
 
 .fullChatLog {
-    overflow-y: scroll;
-    position: absolute;
-    bottom: 0;
-    width:100%; /* important because if you have 1 message that cannot be wrapped, it will make the chat log area grow wider, and everyone's messages will get cutoff. this allows other long messages to still wrap.*/
-    /*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;/*stroke*/
-    color: #aaa;
-    background-color: #000000d4;
+	overflow-y: scroll;
+	position: absolute;
+	bottom: 0;
+	width:100%; /* important because if you have 1 message that cannot be wrapped, it will make the chat log area grow wider, and everyone's messages will get cutoff. this allows other long messages to still wrap.*/
+	/*text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;/*stroke*/
+	color: #aaa;
+	background-color: #000000d4;
 
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
 }
 .fullChatLog ul {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;    
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;    
 }
 
 button.switchChatView
 {
-    position:absolute;
-    top:0;
-    right:40px;
+	position:absolute;
+	top:0;
+	right:40px;
 }
 
 #pianoArea {
-    overflow-y:hidden;
-    height:110px;
+	overflow-y:hidden;
+	height:110px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 
 #announcementArea {
-    color: #be62ec;
-    text-align: center;
-    background-color: #00000087;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	color: #be62ec;
+	text-align: center;
+	background-color: #00000087;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 @keyframes blinker3 { to { opacity: 0; } }
 
 #roomAlertArea {
-    color: #ff0000;
-    text-align: center;
-    background-color: #000000C0;
-    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    padding: 15px;
-    font-size: 32px;
-    font-weight: bold;
-    margin-top: 5px;
-    z-index: 100000;
-    position: relative;
+	color: #ff0000;
+	text-align: center;
+	background-color: #000000C0;
+	text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+	padding: 15px;
+	font-size: 32px;
+	font-weight: bold;
+	margin-top: 5px;
+	z-index: 100000;
+	position: relative;
 }
 #roomAlertArea button {
-    font-size: large;
+	font-size: large;
 }
 
 #roomAlertArea > span {
-    animation: blinker3 .8s ease-in-out infinite alternate;     
+	animation: blinker3 .8s ease-in-out infinite alternate;     
 }
 
 .chatLogEntryNick {
@@ -373,10 +373,10 @@ button.switchChatView
 .chatLogEntryNick,
 .chatLogEntryJoin,
 .chatLogEntryPart {
-    font-style: italic;
-    font-size: smaller;
-    opacity:50%;
-    font-weight: normal;
+	font-style: italic;
+	font-size: smaller;
+	opacity:50%;
+	font-weight: normal;
 }
 
 .chatLogEntryChat {
@@ -386,322 +386,322 @@ button.switchChatView
 button.muteButton,
 button.muteButton:focus
 {
-    border:0;
+	border:0;
 }
 
 
 .userName {
-    font-weight: bold;
+	font-weight: bold;
 }
   
   .cheer {
-    position:absolute;
-    pointer-events:none;
+	position:absolute;
+	pointer-events:none;
   }
   #cheerControl {
-      position:absolute;
-      top:0;
-      left:0;
+	  position:absolute;
+	  top:0;
+	  left:0;
   }
   #cheerControl input[type="text" i] {
-      width:2em;
+	  width:2em;
   }
   #cheerControl .cheerButton {
-    background-color: #444;
-    border: 3px solid #888;
-    color: #0bb;
-    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
-    font-weight: bold;
-    font-size: small;
-    margin: 2px;
-    border-radius: 4px;
-    padding:2px;
-    display:inline;
-    cursor:pointer;
+	background-color: #444;
+	border: 3px solid #888;
+	color: #0bb;
+	font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+	font-weight: bold;
+	font-size: small;
+	margin: 2px;
+	border-radius: 4px;
+	padding:2px;
+	display:inline;
+	cursor:pointer;
   }
   
   @keyframes floatY0 {
-    to {transform: translateY(50px);}
+	to {transform: translateY(50px);}
   }
   @keyframes floatX0 {
-    to {transform: translate(150px);}
+	to {transform: translate(150px);}
   }
   
   @keyframes floatY1 {
-    to {transform: translateY(-150px);}
+	to {transform: translateY(-150px);}
   }
   @keyframes floatX1 {
-    to {transform: translate(-150px);}
+	to {transform: translate(-150px);}
   }
   @keyframes floatOpacity {
-    to {opacity: 0;}
+	to {opacity: 0;}
   }
   
   #audioVisCanvas {
-      width:200px;
-      height:128px;
+	  width:200px;
+	  height:128px;
   }
   
 .idleIndicator {
-    color: #aaa;
-    font-size:smaller;
-    font-style: italic;
+	color: #aaa;
+	font-size:smaller;
+	font-style: italic;
 }
 
 ul.instParamList {
-    white-space: nowrap;
-    overflow-x: hidden;
+	white-space: nowrap;
+	overflow-x: hidden;
 }
 
 ul.instParamList label {
-    font-size:smaller;
-    color:#ccc;
-    cursor: pointer;
+	font-size:smaller;
+	color:#ccc;
+	cursor: pointer;
 }
 
 ul.instParamList input[type="range" i] {
-    margin:0;
+	margin:0;
 }
 
 ul.instParamList li.buttonsParam {
-    /* allow button types to wrap */
-    white-space: normal;
+	/* allow button types to wrap */
+	white-space: normal;
 }
 
 .instParamGroup {
-    margin: 0;
-    padding: 1px;
-    min-inline-size: auto;
-    border: 2px solid #003838;
-    border-radius: 15px;
-    background: linear-gradient(to bottom, #00cccc15, #00cccc07);
+	margin: 0;
+	padding: 1px;
+	min-inline-size: auto;
+	border: 2px solid #003838;
+	border-radius: 15px;
+	background: linear-gradient(to bottom, #00cccc15, #00cccc07);
 }
 .instParamGroup.modulation {
-    background-color: #333;
+	background-color: #333;
 }
 .instParamGroup.modulation legend {
-    color: #66c;
+	color: #66c;
 }
 
 .instParamGroup.disabled {
-    background-color: #222;
-    border: 2px solid #333;
-    background: none;
+	background-color: #222;
+	border: 2px solid #333;
+	background: none;
 }
 .instParamGroup.disabled legend {
-    color: #555;
+	color: #555;
 }
 
 
 .wide .instParamGroup {
-    margin:10px;
+	margin:10px;
 }
 .instParamGroup legend {
-    border-radius: 6px;
-    cursor: pointer;
-    padding-right: 20px;
+	border-radius: 6px;
+	cursor: pointer;
+	padding-right: 20px;
 }
 .instParamGroup legend:hover {
-    background-color: #00666660;
+	background-color: #00666660;
 }
 
 .instParamGroup  .instParamGroupNameAnnotation {
-    color: #888;
-    font-style: italic;
-    font-size: small;
+	color: #888;
+	font-style: italic;
+	font-size: small;
 }
 
 .instParamList .paramSpacer {
-    margin-top:15px;
+	margin-top:15px;
 }
 .instParamList .paramSpacer:first-child {
-    margin-top:0;
+	margin-top:0;
 }
 
 
 
 .presetList {
-    padding:8px;
+	padding:8px;
 }
 
 .presetList ul {
-    padding:0;
+	padding:0;
 }
 
 
 .presetList li,
 .presetListControls li {
-    font-size: smaller;
-    color: #aaa;
-    background-color: #044;
-    padding: 6px;
-    margin: 0;
-    margin-bottom: 2px;
-    white-space: normal;
+	font-size: smaller;
+	color: #aaa;
+	background-color: #044;
+	padding: 6px;
+	margin: 0;
+	margin-bottom: 2px;
+	white-space: normal;
 }
 
 
 .presetList li:hover,
 .presetList li:active
  {
-    background-color: #066;
+	background-color: #066;
 }
 
 .presetList .presetName
 {
-    font-weight: normal;
-    color: #ccc;
-    white-space: nowrap;
+	font-weight: normal;
+	color: #ccc;
+	white-space: nowrap;
 }
 .presetList .author,
 .presetList .savedDate,
 .presetList .description,
 .presetList .tags
 {
-    font-weight: normal;
-    font-style: italic;
-    font-size: x-small;
-    color:#888;
-    display:inline;
+	font-weight: normal;
+	font-style: italic;
+	font-size: x-small;
+	color:#888;
+	display:inline;
 }
 .presetList .description
 {
-    display:block;
+	display:block;
 }
 .presetList .description
 {
-    color:#0aa;
-    font-size: small;
+	color:#0aa;
+	font-size: small;
 }
 
 .presetList .authorAndDateBox {
-    
+	
 }
 
 .presetList ul {
-    position:relative;
+	position:relative;
 }
 
 .presetList ul .buttonContainer {
-    position:absolute;
-    right:0;
+	position:absolute;
+	right:0;
 }
 
 .presetList li button
 {
-    visibility: hidden;
-    border:0;
-    font-weight: normal;
+	visibility: hidden;
+	border:0;
+	font-weight: normal;
 }
 .presetList li:hover button
 {
-    visibility: visible;
+	visibility: visible;
 }
 
 .presetList li button:active
 {
-    background-color:#088;
+	background-color:#088;
 }
 .presetList li button:hover,
 .presetList li button:focus
 {
-    background-color:#033;
+	background-color:#033;
 }
 
 
 
 .roomItem {
-    border:5px solid blue;
-    box-sizing: border-box;
-    background:#00000061;
-    text-align: center;
-    position: absolute;
-    transition: top 1s, left 1s;
-    pointer-events: none; /* allow clicks to be processed by the room itself, not the item. */
-    cursor: pointer;
-    color: #dd0;
-    font-weight: bold;
+	border:5px solid blue;
+	box-sizing: border-box;
+	background:#00000061;
+	text-align: center;
+	position: absolute;
+	transition: top 1s, left 1s;
+	pointer-events: none; /* allow clicks to be processed by the room itself, not the item. */
+	cursor: pointer;
+	color: #dd0;
+	font-weight: bold;
 }
 
 .roomItem.roomWelcomeNoTransition
 {
-    transition: top 0s, left 0s;
+	transition: top 0s, left 0s;
 }
 
 .roomSign {
-    position: absolute;
+	position: absolute;
 
-    border-radius: 6px;
-    border: 0px;
-    box-sizing: border-box;
-    padding: 15px;
-    transition: top 1s, left 1s;
-    transform: translate(-50%, -110%); /* this puts the "origin" of the element in the center. */
+	border-radius: 6px;
+	border: 0px;
+	box-sizing: border-box;
+	padding: 15px;
+	transition: top 1s, left 1s;
+	transform: translate(-50%, -110%); /* this puts the "origin" of the element in the center. */
 
-    background:#00000080;
-    font-size: 16px;
-    text-align: center;
-    color: #dd0;
+	background:#00000080;
+	font-size: 16px;
+	text-align: center;
+	color: #dd0;
 }
 
 .roomSign a:link,
 .roomSign a:visited {
-    color: #dd0;
+	color: #dd0;
 }
 
 
 .component.userList h2 {
-    color:#066;
+	color:#066;
 }
 .component.userList h2 .roomName{
-    color:#0aa;
+	color:#0aa;
 }
 .component.userList h2 .userCount,
 .component.userList h2 .noteOns {
-    color:#088;
+	color:#088;
 }
 
 .component.userList .roomHeaderStats
 {
-    color: #066;
-    font-size: medium;
-    margin-left: 10px;
+	color: #066;
+	font-size: medium;
+	margin-left: 10px;
 }
 
 
 .worldStatus .room {
-    margin:10px;
-    color:#066;
+	margin:10px;
+	color:#066;
 }
 .worldStatus .room .roomName
 {
-    font-weight: bold;
+	font-weight: bold;
 }
 .worldStatus .room .roomName
 {
-    color:#0aa;
+	color:#0aa;
 }
 .worldStatus .room .userCount,
 .worldStatus .room .noteOns
 {
-    color:#088;
+	color:#088;
 }
 
 
 div.paramFilter input[type="text"]
 {
-    width: 50px;
-    display:inline;
+	width: 50px;
+	display:inline;
 
 }
 
 div.presetFilter {
-    display:inline;
+	display:inline;
 }
 div.presetFilter input[type="text"]
 {
-    width: 50px;
-    display:inline;
+	width: 50px;
+	display:inline;
 }
 
 
@@ -709,12 +709,12 @@ div.presetFilter input[type="text"]
 .paramGroupFocusBtn:active,
 .paramGroupFocusBtn:focus
 {
-    border:0;
-    font-weight: normal;
+	border:0;
+	font-weight: normal;
 }
 
 .paramGroupFocusBtn.active {
-    background-color: #077;
+	background-color: #077;
 }
 
 
@@ -724,37 +724,37 @@ div.presetFilter input[type="text"]
 .buttonParam:active,
 .buttonParam:focus
 {
-    border:0;
-    font-weight: normal;
+	border:0;
+	font-weight: normal;
 }
 
 .buttonParam.active {
-    background-color: #066;
+	background-color: #066;
 }
 
 .buttonParam:hover
 {
-    background-color: #088;
+	background-color: #088;
 }
 
 
 
 .paramGroupCtrl {
-    border: 0;
-    font-size: small;
-    position:sticky;
-    position:-webkit-sticky;
-    top:0px;
-    padding-top:4px;
-    background-color: #222;
-    z-index: 9999;
+	border: 0;
+	font-size: small;
+	position:sticky;
+	position:-webkit-sticky;
+	top:0px;
+	padding-top:4px;
+	background-color: #222;
+	z-index: 9999;
 }
 
 
 .groupFocusButtons {
-    background-color: black;
-    border-radius: 10px;
-    border: 0;
+	background-color: black;
+	border-radius: 10px;
+	border: 0;
 }
 
 
@@ -764,11 +764,11 @@ input[type="range"].intParam,
 #volume,
 #pbrange
  {
-    border: 0;
-    border-radius: 8px;
-    height: 8px;
-    outline: none;
-    -webkit-appearance: none;
+	border: 0;
+	border-radius: 8px;
+	height: 8px;
+	outline: none;
+	-webkit-appearance: none;
 }
 
 input[type="range"].floatParam::-webkit-slider-thumb,
@@ -776,59 +776,59 @@ input[type="range"].intParam::-webkit-slider-thumb,
 #volume::-webkit-slider-thumb,
 #pbrange::-webkit-slider-thumb
 {
-    -webkit-appearance: none;
-    background: #0aa;
-    height: 14px;
-    width: 14px;
-    cursor: pointer;
-    border-radius: 100%;
+	-webkit-appearance: none;
+	background: #0aa;
+	height: 14px;
+	width: 14px;
+	cursor: pointer;
+	border-radius: 100%;
 }
 
 .modAmtParam input[type="range"].floatParam,
 .modAmtParam input[type="range"].intParam
 {
-    height: 4px;
+	height: 4px;
 }
 
 .modAmtParam input[type="range"].floatParam::-webkit-slider-thumb,
 .modAmtParam input[type="range"].intParam::-webkit-slider-thumb
 {
-    background: #aaa;
-    height: 9px;
-    width: 9px;
+	background: #aaa;
+	height: 9px;
+	width: 9px;
 }
 
 
 
 .instPresetButtons {
-    white-space: normal;
+	white-space: normal;
 }
 
 .instPresetButtons button {
-    border:0;
-    cursor: pointer;
-    font-weight: normal;
+	border:0;
+	cursor: pointer;
+	font-weight: normal;
 }
 
 .instPresetButtons .confirmationBox,
 .presetList .confirmationBox
 {
-    color: #8cc;
-    padding: 10px;
-    border-radius: 0;
-    border: 1px solid #a00;
-    background-color: #200;
-    white-space: normal;
-    border-left: 7px solid #a00;
+	color: #8cc;
+	padding: 10px;
+	border-radius: 0;
+	border: 1px solid #a00;
+	background-color: #200;
+	white-space: normal;
+	border-left: 7px solid #a00;
 }
 
 .instPresetButtons .confirmationBox button,
 .presetList .confirmationBox button
 {
-    visibility: visible;
-    background-color: #266;
-    color: #000;
-    padding: 5px;
+	visibility: visible;
+	background-color: #266;
+	color: #000;
+	padding: 5px;
 }
 
 .instPresetButtons .confirmationBox button:hover,
@@ -836,15 +836,24 @@ input[type="range"].intParam::-webkit-slider-thumb,
 .presetList .confirmationBox button:hover,
 .presetList .confirmationBox button:focus
 {
-    background-color: #acc;
+	background-color: #acc;
+}
+
+.bpmControls {
+	white-space: pre;
+	text-align: center;
+}
+.bpmControls * {
+	margin-left: 6px;
+	margin-right: 6px;
 }
 
 .topRightControls {
-    white-space: nowrap;
+	white-space: nowrap;
 }
 .topRightControls label {
-    display: inline-block;
-    width: 80px;
+	display: inline-block;
+	width: 80px;
 }
 
 
@@ -852,207 +861,207 @@ input[type="range"].intParam::-webkit-slider-thumb,
 
 
 li.dropdownParam {
-    font-size: small;
+	font-size: small;
 }
 
 li.dropdownParam .mainButton {
-    cursor:pointer;
-    margin: 4px;
-    background-color: #022;
+	cursor:pointer;
+	margin: 4px;
+	background-color: #022;
 }
 li.dropdownParam .mainButton:hover {
-    background:#066;
+	background:#066;
 }
 li.dropdownParam .mainButton .arrow {
-    
+	
 }
 li.dropdownParam .mainButton .currentValue {
-    
+	
 }
 li.dropdownParam ul.dropdown {
-    background-color: #022;
-    margin-left: 15px;  
-    padding: 0;
-    padding-left: 10px;  
+	background-color: #022;
+	margin-left: 15px;  
+	padding: 0;
+	padding-left: 10px;  
 }
 li.dropdownParam ul.dropdown li {
-    padding: 2px;
-    cursor: pointer;
+	padding: 2px;
+	cursor: pointer;
 }
 li.dropdownParam ul.dropdown li.active {
-    background-color: #044;
+	background-color: #044;
 }
 
 li.dropdownParam ul.dropdown li:hover {
-    background-color: #066;
+	background-color: #066;
 }
 li.dropdownParam ul.dropdown li.active:hover {
-    background-color: #066;
+	background-color: #066;
 }
 
 
 li.cbxparam {
-    display:inline;
+	display:inline;
 }
 
 li.cbxparam button {
-    border: 0;
+	border: 0;
 }
 
 li.cbxparam.on button {
-    background-color: #088;
+	background-color: #088;
 }
 
 
 li.cbxparam button:hover {
-    background-color: #066;
+	background-color: #066;
 }
 
 
 
 li.oscEnableButton {
-    display: inline-block;
-    margin: 3px;
+	display: inline-block;
+	margin: 3px;
 }
 
 ul.instParamList li.inlineLabel
 {
-    display:inline;
+	display:inline;
 }
 
 .instParamGroup .groupControls {
-    white-space: normal;
-    margin-bottom: 4px;
-    border-bottom: 2px dotted #055;
-    padding-bottom: 4px;
+	white-space: normal;
+	margin-bottom: 4px;
+	border-bottom: 2px dotted #055;
+	padding-bottom: 4px;
 }
 
 .instParamGroup .groupControls button {
-    border: 0;
-    font-weight: normal;
-    font-size: x-small;
-    color: #888;
-    line-height: 15px;
+	border: 0;
+	font-weight: normal;
+	font-size: x-small;
+	color: #888;
+	line-height: 15px;
 }
 
 .instParamGroup .groupControls button:hover {
-    background-color:#066;
+	background-color:#066;
 }
 
 
 .component.instrumentCloset>ul {
-    overflow-x: hidden;
+	overflow-x: hidden;
 }
 
 .component.instrumentCloset li.instrument {
-    position:relative;
-    padding: 3px;}
+	position:relative;
+	padding: 3px;}
 .component.instrumentCloset li.instrument:hover {
-    background-color:#044;
+	background-color:#044;
 }
 .component.instrumentCloset li.instrument button,
 li.floatParam .paramMappingBox button
 {
-    border:0;
-    background-color: #066;
-    color: #0cc;
+	border:0;
+	background-color: #066;
+	color: #0cc;
 }
 .component.instrumentCloset li.instrument button:hover,
 li.floatParam .paramMappingBox button:hover
 {
-    background-color: #088;
-    color: #0cc;
+	background-color: #088;
+	color: #0cc;
 }
 
 .component.instrumentCloset li.instrument .buttonContainer {
-    position:absolute;
-    right:0;
-    z-index: 9999;
-    visibility: hidden;
+	position:absolute;
+	right:0;
+	z-index: 9999;
+	visibility: hidden;
 }
 
 .component.instrumentCloset li.instrument:hover .buttonContainer {
-    visibility: visible;
+	visibility: visible;
 }
 
 .component.instrumentCloset li.instrument .takenBy {
-    font-size: small;
-    font-style: italic;
-    opacity: 50%;
+	font-size: small;
+	font-style: italic;
+	opacity: 50%;
 }
 
 
 
 
 li.floatParam .paramMappingBox {
-    white-space: normal;
-    margin: 0;
-    padding: 5px;
-    background-color: #ffb8002b;
-    font-size: small;
+	white-space: normal;
+	margin: 0;
+	padding: 5px;
+	background-color: #ffb8002b;
+	font-size: small;
 }
 
 li.floatParam .paramMappingBox .learningIndicator {
-    color: #8cc;
-    padding: 10px;
-    border-radius: 0;
-    border: 1px solid #a00;
-    background-color: #200;
-    white-space: normal;
-    border-left: 7px solid #a00;
+	color: #8cc;
+	padding: 10px;
+	border-radius: 0;
+	border: 1px solid #a00;
+	background-color: #200;
+	white-space: normal;
+	border-left: 7px solid #a00;
 }
 
 
 li.floatParam.expanded { /* no mapping */
-    border: 1px solid #0aa;
-    border-radius: 5px;
+	border: 1px solid #0aa;
+	border-radius: 5px;
 }
 
 li.floatParam.hasMapping,
 li.floatParam.expanded.hasMapping
 {
-    border-right: 10px solid #ffb800;
+	border-right: 10px solid #ffb800;
 }
 
 
 .instParamGroup.macros {
-    border: 2px solid #ffb80040;
+	border: 2px solid #ffb80040;
 }
 .instParamGroup.macros legend {
-    color: #ffb80080;
+	color: #ffb80080;
 }
 
 .macroMappingList {
-    padding: 0;
-    font-size: x-small;
-    margin:0;
-    color:#ffb80080;
+	padding: 0;
+	font-size: x-small;
+	margin:0;
+	color:#ffb80080;
 }
 
 .midiCCList {
 
 }
 .midiCCmappingList {
-    padding: 3px;
-    font-size: x-small;
-    margin-bottom: 4px;
-    color:#ffb80080;
+	padding: 3px;
+	font-size: x-small;
+	margin-bottom: 4px;
+	color:#ffb80080;
 }
 
 .paramValueLabel {
-    display: inline-block;
-    vertical-align: middle;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 .mappedLiveValue {
-    color: #ffb800;
-    font-size: small;
+	color: #ffb800;
+	font-size: small;
 }
 
 
 .macroMappingList .mappedLiveValue {
-    display:inline;
+	display:inline;
 }
 .midiCCmappingList .mappedLiveValue    {
-    display:inline;
+	display:inline;
 }

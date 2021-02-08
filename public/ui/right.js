@@ -2011,6 +2011,52 @@ class ChatArea extends React.Component {
     }
 }
 
+class BPMControls extends React.Component{
+    
+
+    setRoomBPM = (v) => {
+        this.props.app.metronome.bpm = v.target.value;
+        if(this.props.app.metronome.syncWithRoom)
+            this.props.app.net.SendRoomBPM(v.target.value);
+        gStateChangeHandler.OnStateChange();
+    }
+
+    onClickMetronome = () => {
+        this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
+        gStateChangeHandler.OnStateChange();
+    }
+
+    onClickSync = () => {
+        this.props.app.metronome.syncWithRoom = !this.props.app.metronome.syncWithRoom;
+        gStateChangeHandler.OnStateChange();
+    }
+
+    componentDidMount() {
+
+    }
+
+    render() {
+
+        return (
+            <span className="bpmControls">
+                    <span className="roomBPMContainer">
+                        <label>BPM: </label>
+                        <input type="number" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM}/>
+                    </span>
+                    <span className="metronomeContainer">
+                        <label>Metronome: </label>
+                        <button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted? "On" : "Off"}</button>
+                    </span>
+                    <span className="syncWithRoomContainer">
+                        <label>Sync with room: </label>
+                        <button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom? "Off" : "On"}</button>
+                    </span>
+            </span>
+
+        );
+    }    
+
+}
 
 class UpperRightControls extends React.Component {
 
@@ -2312,6 +2358,7 @@ class RootArea extends React.Component {
                         <a target="_blank" href="https://twitter.com/tenfour2">Made by tenfour</a> // 
                         <a target="_blank" href="https://github.com/thenfour/digifujam">github</a>
                     </span>
+                    {this.state.app && <BPMControls app={this.state.app}> </BPMControls>}
                     {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                 </div>
                 <PianoArea app={this.state.app} />
