@@ -83,10 +83,27 @@
                 let byRoomHour = Object.keys(data.byHour).map(k => {
                     const parsed = parseHourID(k);
                     if (!parsed) return null;
-                    parsed.count = 1; // for aggregating average later
+                    //parsed.count = 1; // for aggregating average later
                     return Object.assign(parsed, data.byHour[k]);
                 });
-                byRoomHour = byRoomHour.filter(x => !!x);// prune nulls
+
+                // filter and find extents
+                const earliestPossibleDate = new Date("2021-02-01T01:01:01.000Z");
+                let earliestDate = null;
+                let latestDate = null;
+                byRoomHour = byRoomHour.filter(x => {
+                    if (!x) return false;
+                    if (x.date < earliestPossibleDate) return false; // don't do anything before feb 1 2021
+                    if (!earliestDate || x.date < earliestDate) earliestDate = x.date;
+                    if (!latestDate || x.date > latestDate) latestDate = x.date;
+                    return true;
+                });// prune nulls
+
+                let daysSpan = (latestDate - earliestDate); // ms
+                daysSpan /= 1000;//sec
+                daysSpan /= 60; //min
+                daysSpan /= 60; // hours
+                daysSpan /= 24; // days
 
                 // group rooms together
                 let serverStatsByAbsHour = groupBy(byRoomHour, i => i.absHourID, (a, b) => {
@@ -110,18 +127,18 @@
                     a.messages = num(a.messages) + num(b.messages);
                     a.paramChanges = num(a.paramChanges) + num(b.paramChanges);
                     a.maxUsers = Math.max(num(a.maxUsers), num(b.maxUsers)); // this is not accurate; there's no way to differentiate between 2 rooms having same or different sets of users. be conservative here.
-                    a.count += b.count;
+                    //a.count += b.count;
                     return a;
                 });
 
-                // calc averages
+                // calc averages, based on date span not count.
                 serverStatsAvgByHourOfDay.forEach(p => {
-                    if (p.count < 1) return;
-                    p.notes = num(p.notes) / p.count;
-                    p.cheers = num(p.cheers) / p.count;
-                    p.messages = num(p.messages) / p.count;
-                    p.paramChanges = num(p.paramChanges) / p.count;
-                    p.maxUsers = num(p.maxUsers) / p.count;
+                    //if (p.count < 1) return;
+                    p.notes = num(p.notes) / daysSpan;
+                    p.cheers = num(p.cheers) / daysSpan;
+                    p.messages = num(p.messages) / daysSpan;
+                    p.paramChanges = num(p.paramChanges) / daysSpan;
+                    p.maxUsers = num(p.maxUsers) / daysSpan;
                 });
 
                 // convert to xy dataset
@@ -139,21 +156,51 @@
                     };
                 });
 
+                // grab a dataset of the past 24 hours.
+                let now = new Date();
+                let ago24h = new Date(Date.now() - 86400 * 1000);
+
+                let avgNotesByHourOfDayDataset24H = serverStatsAvgByHourOfDay.filter(d => d.date >= ago24h).map(d => {
+                    return {
+                        x: d.hourOfDay,
+                        y: d.notes,
+                    };
+                });
+
+                let avgUsersByHourOfDayDataset24H = serverStatsAvgByHourOfDay.filter(d => d.date >= ago24h).map(d => {
+                    return {
+                        x: d.hourOfDay,
+                        y: d.maxUsers,
+                    };
+                });
+
                 var byHourChart = new Chart(byHourCanvas, {
                     type: 'line',
                     data: {
                         datasets: [
-                            {
+                        {
                                 yAxisID: 'noteOnScale',
-                                label: 'Note ons',
-                                backgroundColor: '#40ffff60',
+                                label: 'Notes',
+                                borderColor: '#40ffff80',
                                 data: avgNotesByHourOfDayDataset,
                             },
                             {
                                 yAxisID: 'usersScale',
-                                label: 'Avg Max ppl',
-                                backgroundColor: '#4040ff60',
+                                label: 'Users',
+                                borderColor: '#ff404080',
                                 data: avgUsersByHourOfDayDataset,
+                            },
+                            {
+                                yAxisID: 'noteOnScale',
+                                label: 'Notes 24H',
+                                borderColor: '#00ff0080',
+                                data: avgNotesByHourOfDayDataset24H,
+                            },
+                            {
+                                yAxisID: 'usersScale',
+                                label: 'Users 24H',
+                                borderColor: '#ff00ff80',
+                                data: avgUsersByHourOfDayDataset24H,
                             },
                         ]
                     },
@@ -216,13 +263,13 @@
                             {
                                 yAxisID: 'noteOnScale',
                                 label: 'Note ons',
-                                backgroundColor: '#40ffff60',
+                                borderColor: '#40ffff80',
                                 data: noteOnsByAbsDayDataset,
                             },
                             {
                                 yAxisID: 'usersScale',
                                 label: 'Max ppl',
-                                backgroundColor: '#4040ff60',
+                                borderColor: '#ff404080',
                                 data: maxUsersByAbsDayDataset,
                             },
                         ]
