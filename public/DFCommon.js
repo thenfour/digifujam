@@ -101,7 +101,6 @@ const ClientMessages = {
     InstrumentParams: "InstParams",// { patchObj:{}, isWholePatch:<bool>} object mapping paramID => newVal
     CreateParamMapping: "CreateParamMapping", // paramID, eParamMappingSource
     RemoveParamMapping: "RemoveParamMapping", // paramID
-
     InstrumentPresetDelete: "InstrumentPresetDelete", // presetID
     InstrumentPresetSave: "InstrumentPresetSave", // {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite.
     InstrumentBankMerge: "InstrumentBankMerge", // [{preset},{preset...}]
@@ -111,6 +110,8 @@ const ClientMessages = {
     AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj }
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
+
+    RoomBPM: "RoomBPM" //bpm
 };
 
 const ServerMessages = {
@@ -133,6 +134,8 @@ const ServerMessages = {
 
     ServerStateDump: "ServerStateDump",
 
+    RoomBeat: "RoomBeat", //bpm
+    
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
     InstrumentBankMerge: "InstrumentBankMerge", // [{preset},{preset...}]
@@ -1474,6 +1477,7 @@ class DigifuRoomState {
         this.width = 16;
         this.height = 9;
         this.roomTitle = "";
+        this.bpm = 90; //TODO: import from json
         this.softwareVersion = gDigifujamVersion;
 
         this.stats = {

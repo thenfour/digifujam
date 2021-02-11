@@ -197,6 +197,7 @@ class DigifuApp {
         this.accessLevel = AccessLevels.User; // on the client of course this doesn't allow you to do anything except send the commands to the server who will reject them.
 
         this.midi = new DigifuMidi();
+        this.metronome = new DigifuMetronome();
         this.synth = new DigifuSynth(); // contains all music-making stuff.
         this.isSelfMuted = false; // ability to mute yourself
         this.net = new DigifuNet();
@@ -718,6 +719,10 @@ class DigifuApp {
         this.stateChangeHandler();
     }
 
+    NET_OnRoomBeat(data){
+		this.metronome.OnRoomBeat(data);
+	}
+
     NET_pleaseReconnectHandler() {
         this.pleaseReconnectHandler();
     }
@@ -940,6 +945,7 @@ class DigifuApp {
 
 
         this.synth.Init(this.audioCtx);
+        this.metronome.Init(this.audioCtx);
         this.net.Connect(this);
     };
 
@@ -953,4 +959,3 @@ class DigifuApp {
     };
 
 };
-

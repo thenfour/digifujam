@@ -132,7 +132,11 @@ class DigifuNet {
         let obj = JSON.parse(bankJSON);
         this.socket.emit(ClientMessages.InstrumentBankMerge, obj);
     };
-
+    
+    SendRoomBPM (bpm) {
+        this.socket.emit(ClientMessages.RoomBPM, { bpm });
+    };
+    
     SendCreateParamMapping(param, srcVal) {
         this.socket.emit(ClientMessages.CreateParamMapping, { paramID: param.paramID, srcVal });
     }
@@ -198,10 +202,9 @@ class DigifuNet {
         this.socket.on(ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
         this.socket.on(ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
         this.socket.on(ServerMessages.ChangeRoomState, (data) => this.handler.NET_ChangeRoomState(data));
-        
+        this.socket.on(ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data)); //TODO: changeroomstate
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };
 };
-
 
