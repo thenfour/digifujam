@@ -44,7 +44,8 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
 
 ## dev process
 
-- npm run start   // to start local server
+- npm run build // build & start local server (for dev)
+- npm run start // to start local server without build (for openode deployment)
 - npm run watch // simultaneously call this to monitor & build changes live
 
 ## deployment process
