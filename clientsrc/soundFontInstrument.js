@@ -1,5 +1,7 @@
 'use strict';
 
+var Soundfont = require('soundfont-player')
+
 class AudioGraphHelper {
 	constructor() {
 		this.nodes = {};
@@ -157,4 +159,8 @@ class SoundfontInstrument {
 };
 
 
+module.exports = {
+	SoundfontInstrument,
+	AudioGraphHelper
+};
 

@@ -1,5 +1,11 @@
 'use strict';
 
+const DF = require("./DFCommon");
+const DFMidi = require("./midi");
+const DFMetronome = require("./metronome");
+const DFSynth = require("./synth");
+const DFNet = require("./net");
+
 const gUseDebugCtx = false;
 
 // https://github.com/WebAudio/web-audio-api/issues/6
@@ -50,13 +56,13 @@ class AudioContextWrapper {
     addTrackerForNode(node, nodeType, name) {
         node.oldconnect = node.connect;
         node.olddisconnect = node.disconnect;
-        node.DFID = generateID();
+        node.DFID = DF.generateID();
         node.DFName = name;//this.scope.join(" > ") + " > " + (name || "unnamed");
         node.DFType = nodeType;
         node.DFConnectedTo = {};
 
         node.connect = (dest) => {
-            dest.DFID = dest.DFID || generateID();
+            dest.DFID = dest.DFID || DF.generateID();
             node.DFConnectedTo[dest.DFID] = true;
 
             const idx = this.connectedNodes.findIndex(n => n.DFID == node.DFID);
@@ -194,17 +200,17 @@ class DigifuApp {
         this._pitchBendRange = 2;
         this._midiPBValue = 0; // -1 to 1
 
-        this.accessLevel = AccessLevels.User; // on the client of course this doesn't allow you to do anything except send the commands to the server who will reject them.
+        this.accessLevel = DF.AccessLevels.User; // on the client of course this doesn't allow you to do anything except send the commands to the server who will reject them.
 
-        this.midi = new DigifuMidi();
-        this.metronome = new DigifuMetronome();
-        this.synth = new DigifuSynth(); // contains all music-making stuff.
+        this.midi = new DFMidi.DigifuMidi();
+        this.metronome = new DFMetronome.DigifuMetronome();
+        this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
         this.isSelfMuted = false; // ability to mute yourself
-        this.net = new DigifuNet();
+        this.net = new DFNet.DigifuNet();
 
         this.deviceNameList = [];
 
-        GetMidiInputDeviceList().then(inputs => {
+        DFMidi.GetMidiInputDeviceList().then(inputs => {
             this.deviceNameList = inputs;
             if (this.stateChangeHandler) {
                 this.stateChangeHandler();
@@ -213,7 +219,7 @@ class DigifuApp {
     }
 
     get isAdmin() {
-        return this.accessLevel == AccessLevels.Admin;
+        return this.accessLevel == DF.AccessLevels.Admin;
     }
 
     get RoomID() {
@@ -246,7 +252,7 @@ class DigifuApp {
         // last msg is aggregatable
         if (this.shortChatLog.length > 0) {
             let lastMsg = this.shortChatLog[this.shortChatLog.length - 1];
-            if (lastMsg.messageType == ChatMessageType.aggregate) {
+            if (lastMsg.messageType == DF.ChatMessageType.aggregate) {
                 lastMsg.integrate(msg);
                 return;
             }
@@ -324,7 +330,7 @@ class DigifuApp {
         // get user & room state
         let myUserID = data.yourUserID;
 
-        this.roomState = DigifuRoomState.FromJSONData(data.roomState);
+        this.roomState = DF.DigifuRoomState.FromJSONData(data.roomState);
 
         // room-specific CSS is loaded at startup, so your initial room is also the CSS you load. joining new rooms doesn't load new CSS.
         const stylesheet = document.getElementById('roomcss');
@@ -367,11 +373,11 @@ class DigifuApp {
     NET_OnUserEnter(data) {
         if (!this.roomState) return;
 
-        let nu = Object.assign(new DigifuUser(), data.user);
+        let nu = Object.assign(new DF.DigifuUser(), data.user);
         nu.thaw();
         this.roomState.users.push(nu);
 
-        let msg = Object.assign(new DigifuChatMessage, data.chatMessageEntry);
+        let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
         msg.thaw();
         this._addChatMessage(msg);
 
@@ -390,7 +396,7 @@ class DigifuApp {
         }
         this.roomState.users.splice(foundUser.index, 1);
 
-        let msg = Object.assign(new DigifuChatMessage, data.chatMessageEntry);
+        let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
         msg.thaw();
         this._addChatMessage(msg);
 
@@ -643,10 +649,10 @@ class DigifuApp {
         // prune chat.
         let now = new Date();
         this.roomState.chatLog = this.roomState.chatLog.filter(msg => {
-            return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
+            return ((now - new Date(msg.timestampUTC)) < DF.ClientSettings.ChatHistoryMaxMS);
         });
         this.shortChatLog = this.shortChatLog.filter(msg => {
-            return ((now - new Date(msg.timestampUTC)) < ClientSettings.ChatHistoryMaxMS);
+            return ((now - new Date(msg.timestampUTC)) < DF.ClientSettings.ChatHistoryMaxMS);
         });
 
         this.stateChangeHandler();
@@ -668,7 +674,7 @@ class DigifuApp {
     NET_OnUserChatMessage(msg) {
         if (!this.roomState) return;
 
-        let ncm = Object.assign(new DigifuChatMessage(), msg);
+        let ncm = Object.assign(new DF.DigifuChatMessage(), msg);
         ncm.thaw();
         this._addChatMessage(ncm);
 
@@ -699,7 +705,7 @@ class DigifuApp {
         }
 
         if (data.chatMessageEntry) {
-            let m = Object.assign(new DigifuChatMessage(), data.chatMessageEntry);
+            let m = Object.assign(new DF.DigifuChatMessage(), data.chatMessageEntry);
             m.thaw();
             this._addChatMessage(m);
         }
@@ -719,9 +725,9 @@ class DigifuApp {
         this.stateChangeHandler();
     }
 
-    NET_OnRoomBeat(data){
-		this.metronome.OnRoomBeat(data);
-	}
+    NET_OnRoomBeat(data) {
+        this.metronome.OnRoomBeat(data);
+    }
 
     NET_pleaseReconnectHandler() {
         this.pleaseReconnectHandler();
@@ -748,7 +754,7 @@ class DigifuApp {
     }
 
     SendChatMessage(msgText, toUserID) {
-        let msg = new DigifuChatMessage();
+        let msg = new DF.DigifuChatMessage();
         msg.message = msgText;
         msg.fromUserID = this.myUser.userID;
         msg.toUserID = toUserID;
@@ -772,7 +778,7 @@ class DigifuApp {
             return;
         }
         switch (interactionSpec.fn) {
-            case RoomFns.toggleSign:
+            case DF.RoomFns.toggleSign:
                 this._DoToggleSign(item, interactionSpec.params);
                 break;
             default:
@@ -802,11 +808,11 @@ class DigifuApp {
     SendCheer(text, x, y) {
 
         const now = new Date();
-        if ((now - this.lastCheerSentDate) < ClientSettings.MinCheerIntervalMS) return;
+        if ((now - this.lastCheerSentDate) < DF.ClientSettings.MinCheerIntervalMS) return;
 
         this.lastCheerSentDate = now;
 
-        text = sanitizeCheerText(text);
+        text = DF.sanitizeCheerText(text);
         if (text == null) return;
         this.net.SendCheer(text, x, y);
     };
@@ -888,7 +894,7 @@ class DigifuApp {
         this.synth.createParamMapping(this.myInstrument, param, srcVal);
     }
     createParamMappingFromMacro(param, macroIndex) {
-        return this.createParamMappingFromSrcVal(param, macroIndex + eParamMappingSource.Macro0);
+        return this.createParamMappingFromSrcVal(param, macroIndex + DF.eParamMappingSource.Macro0);
     }
     removeParamMapping(param) {
         if (!this.myInstrument) return;
@@ -908,7 +914,7 @@ class DigifuApp {
     }
 
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome) {
-        this.myUser = new DigifuUser();
+        this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
 
@@ -958,4 +964,9 @@ class DigifuApp {
         this.synth.UninitInstruments();
     };
 
+};
+
+module.exports = {
+    AudioContextWrapper,
+    DigifuApp
 };

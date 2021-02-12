@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const { nanoid } = require("nanoid");
-const DF = require('./public/DFCommon');
+const DF = require('./clientsrc/DFCommon');
 const fs = require('fs');
 const fsp = fs.promises;
 const DFStats = require('./DFStats.js');
@@ -37,15 +37,12 @@ app.use("/DFStatsDB.json", express.static(gStatsDBPath));
 gServerStats = new DFStats.DFStats(gStatsDBPath);
 
 
-// id-generation prefix
-gIDDomain = "srv";
 
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
 let gRooms = {}; // map roomID to RoomServer
 
-gIsServer = true;
 
 gAdminUserIDs = [];
 

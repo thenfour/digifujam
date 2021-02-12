@@ -54,14 +54,14 @@ class AdminControls extends React.Component {
         const uptimeInMin = uptimeInSec / 60;
         const uptimeInHours = uptimeInMin / 60;
         const uptimeHours = Math.trunc(uptimeInHours).toString().padStart(2, "0");
-        const uptimeMinutes = Math.trunc(getDecimalPart(uptimeInHours) * 60).toString().padStart(2, "0");
-        const uptimeSec = Math.trunc(getDecimalPart(uptimeInMin) * 60).toString().padStart(2, "0");
+        const uptimeMinutes = Math.trunc(DF.getDecimalPart(uptimeInHours) * 60).toString().padStart(2, "0");
+        const uptimeSec = Math.trunc(DF.getDecimalPart(uptimeInMin) * 60).toString().padStart(2, "0");
 
         const uptimeStr = `${uptimeHours}h ${uptimeMinutes}m ${uptimeSec}s`;
 
         return (
             <div className="component" style={{ whiteSpace: "nowrap" }}>
-                <h2 onClick={this.onClickHeader}>{getArrowText(this.state.isShown)} Admin</h2>
+                <h2 onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShown)} Admin</h2>
                 {this.state.isShown &&
                     <div>
                         <div>uptime: {uptimeStr}</div>

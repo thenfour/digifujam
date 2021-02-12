@@ -1,13 +1,16 @@
 'use strict';
 
-
+const DF = require("./DFCommon");
+const ADSR = require("./adhsr");
+const DFSynthTools = require("./synthTools");
+const PWM = require("./pwm");
 
 class MiniFMSynthOsc {
     constructor(audioCtx, instrumentSpec) {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
 
-        this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
+        this.minGlideS = DF.ClientSettings.InstrumentParamIntervalMS / 1000;
 
         this.midiNote = 0;
         this.velocity = 0;
@@ -73,17 +76,17 @@ class MiniFMSynthOsc {
         // - connect FROM.
 
         // env1SemisAmt
-        this.nodes.env1SemisAmt = new OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
+        this.nodes.env1SemisAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
         this.nodes.env1SemisAmt.gain = this.paramValue("env1_pitchDepth");
         this.nodes.env1SemisAmt.connectFrom(env1);
 
         // lfo1SemisAmt
-        this.nodes.lfo1SemisAmt = new OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
+        this.nodes.lfo1SemisAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
         this.nodes.lfo1SemisAmt.gain = this.paramValue("lfo1_pitchDepth");
         this.nodes.lfo1SemisAmt.connectFrom(lfo1);
 
         // lfo2SemisAmt
-        this.nodes.lfo2SemisAmt = new OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
+        this.nodes.lfo2SemisAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pitchmod");//this.audioCtx.createGain("osc>pitchmod");
         this.nodes.lfo2SemisAmt.gain = this.paramValue("lfo2_pitchDepth");
         this.nodes.lfo2SemisAmt.connectFrom(lfo2);
 
@@ -107,24 +110,24 @@ class MiniFMSynthOsc {
         this.nodes.baseFreqMidiNote.connect(this.nodes.semisToHz);
 
         // lfo1PWMAmt
-        this.nodes.lfo1PWMAmt = new OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
+        this.nodes.lfo1PWMAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
         this.nodes.lfo1PWMAmt.gain = this.paramValue("pwmLFO1");
         this.nodes.lfo1PWMAmt.connectFrom(lfo1);
 
         // lfo2PWMAmt
-        this.nodes.lfo2PWMAmt = new OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
+        this.nodes.lfo2PWMAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
         this.nodes.lfo2PWMAmt.gain = this.paramValue("pwmLFO2");
         //lfo2.connect(this.nodes.lfo2PWMAmt);
         this.nodes.lfo2PWMAmt.connectFrom(lfo2);
 
         // env1PWMAmt
-        this.nodes.env1PWMAmt = new OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
+        this.nodes.env1PWMAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pwmmod");//this.audioCtx.createGain("osc>pwmmod");
         this.nodes.env1PWMAmt.gain = this.paramValue("pwmENV");
         //env1.connect(this.nodes.env1PWMAmt);
         this.nodes.env1PWMAmt.connectFrom(env1);
 
         // osc
-        this.nodes.osc = new DFOscillator(this.audioCtx, "osc");// this.audioCtx.createPulseOscillator();
+        this.nodes.osc = new PWM.DFOscillator(this.audioCtx, "osc");// this.audioCtx.createPulseOscillator();
         this._setOscWaveform();
         this.nodes.osc.start();
         this.nodes.osc.frequency.value = this.paramValue("freq_abs");
@@ -136,7 +139,7 @@ class MiniFMSynthOsc {
         this.nodes.env1PWMAmt.connect(this.nodes.osc.width);
 
         // env
-        this.nodes.env = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
+        this.nodes.env = ADSR.ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
             attack: this.paramValue("a"),
             peak: 1.0,
             decay: this.paramValue("d"),
@@ -159,7 +162,7 @@ class MiniFMSynthOsc {
         this.nodes.envPeak.connect(this.nodes.envGainer.gain);
 
         // lfo1LevelAmt
-        this.nodes.lfo1LevelAmt = new OptimalGainer(this.audioCtx, "osc>gain_mod");
+        this.nodes.lfo1LevelAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>gain_mod");
         //this.nodes.lfo1LevelAmt = this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo1LevelAmt.gain = this.paramValue("lfo1_gainAmt");
         //lfo1_01.connect(this.nodes.lfo1LevelAmt);
@@ -171,7 +174,7 @@ class MiniFMSynthOsc {
         this.nodes.envGainer.connect(this.nodes.lfo1gainer);
 
         // lfo2LevelAmt
-        this.nodes.lfo2LevelAmt = new OptimalGainer(this.audioCtx, "osc>gain_mod");//this.audioCtx.createGain("osc>gain_mod");
+        this.nodes.lfo2LevelAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>gain_mod");//this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo2LevelAmt.gain = this.paramValue("lfo2_gainAmt");
         //lfo2_01.connect(this.nodes.lfo2LevelAmt);
         this.nodes.lfo2LevelAmt.connectFrom(lfo2_01);
@@ -182,19 +185,19 @@ class MiniFMSynthOsc {
         this.nodes.lfo1gainer.connect(this.nodes.lfo2gainer);
 
         // lfo1PanAmt
-        this.nodes.lfo1PanAmt = new OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
+        this.nodes.lfo1PanAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
         this.nodes.lfo1PanAmt.gain = this.paramValue("lfo1PanAmt");
         //lfo1.connect(this.nodes.lfo1PanAmt);
         this.nodes.lfo1PanAmt.connectFrom(lfo1);
 
         // lfo2PanAmt
-        this.nodes.lfo2PanAmt = new OptimalGainer(this.audioCtx, "osc>pan_mod");// this.audioCtx.createGain("osc>pan_mod");
+        this.nodes.lfo2PanAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pan_mod");// this.audioCtx.createGain("osc>pan_mod");
         this.nodes.lfo2PanAmt.gain = this.paramValue("lfo2PanAmt");
         //lfo2.connect(this.nodes.lfo2PanAmt);
         this.nodes.lfo2PanAmt.connectFrom(lfo2);
 
         // env1PanAmt
-        this.nodes.env1PanAmt = new OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
+        this.nodes.env1PanAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
         this.nodes.env1PanAmt.gain = this.paramValue("env1PanAmt");
         //env1.connect(this.nodes.env1PanAmt);
         this.nodes.env1PanAmt.connectFrom(env1);
@@ -240,7 +243,7 @@ class MiniFMSynthOsc {
     }
 
     GetPanBaseValue() {
-        return baseClamp(
+        return DF.baseClamp(
             this.paramValue("pan") + (this.instrumentSpec.GetParamByID("pan_spread").currentValue * this.variationFactor),
             -1, 1
         );
@@ -249,10 +252,10 @@ class MiniFMSynthOsc {
     // account for key & vel scaling
     updateEnvPeakLevel() {
         let vsAmt = this.paramValue("vel_scale");
-        let vs = 1.0 - remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let vs = 1.0 - DF.remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let ksAmt = this.paramValue("key_scale");
         const halfKeyScaleRangeSemis = 12 * 4;
-        let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let ks = 1.0 - DF.remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.paramValue("level") * ks * vs;
         //this.nodes.envPeak.gain.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
         this.nodes.envPeak.gain.value = p;
@@ -264,7 +267,7 @@ class MiniFMSynthOsc {
         let portamentoDurationS = this.isPoly ? 0 : this.paramValue("portamento");
         // for some reason, calling exponentialRampToValueAtTime or linearRampToValueAtTime will make a sudden jump of the current value. setTargetAtTime is the only one that works smoothly.
         let realFreq = this.baseFreq * this.paramValue("freq_mult");
-        let midiNote = FrequencyToMidiNote(realFreq);
+        let midiNote = DF.FrequencyToMidiNote(realFreq);
         if (portamentoDurationS <= this.minGlideS) {
             this.nodes.baseFreqMidiNote.offset.linearRampToValueAtTime(midiNote, this.audioCtx.currentTime + portamentoDurationS);
         } else {
@@ -385,3 +388,9 @@ class MiniFMSynthOsc {
         }
     }
 }
+
+
+module.exports = {
+    MiniFMSynthOsc,
+};
+

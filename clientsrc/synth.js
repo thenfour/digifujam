@@ -1,5 +1,12 @@
 'use strict';
 
+const DF = require("./DFCommon");
+const soundFontInstrument = require("./soundFontInstrument.js")
+const DFDrumkit = require("./DrumkitEngine");
+const DFSynthTools = require("./synthTools");
+const FMPolySynth = require("./fm4instrument");
+const FMVoice = require("./fm4voice");
+
 const gGainBoost = 2.0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,13 +143,13 @@ class DigifuSynth {
 
 			switch (spec.engine) {
 				case "minifm":
-					this.instruments[spec.instrumentID] = new FMPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, s) => new MiniFMSynthVoice(c, s));
+					this.instruments[spec.instrumentID] = new FMPolySynth.FMPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, s) => new FMVoice.MiniFMSynthVoice(c, s));
 					break;
 				case "soundfont":
-					this.instruments[spec.instrumentID] = new SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
+					this.instruments[spec.instrumentID] = new soundFontInstrument.SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
 					break;
 				case "drumkit":
-					this.instruments[spec.instrumentID] = new OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DrumKitVoice(s, l));
+					this.instruments[spec.instrumentID] = new DFDrumkit.OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DFDrumkit.DrumKitVoice(s, l));
 					break;
 				default:
 					alert(`Unknown synth engine '${spec.engine}'`);
@@ -173,14 +180,14 @@ class DigifuSynth {
 	Init(audioCtx) {
 		console.assert(!this.audioCtx); // don't init more than once
 
-		this.sampleLibrarian = new SampleCache(audioCtx);
+		this.sampleLibrarian = new DFDrumkit.SampleCache(audioCtx);
 
 		this.audioCtx = audioCtx;
 		if (!this.audioCtx.createReverbFromUrl) {
 			reverbjs.extend(this.audioCtx);
 		}
 
-		initSynthTools(this.audioCtx);
+		DFSynthTools.initSynthTools(this.audioCtx);
 
 		//                                                                                                                ->[analysis]
 		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
@@ -211,4 +218,8 @@ class DigifuSynth {
 	};
 };
 
+
+module.exports = {
+	DigifuSynth
+};
 

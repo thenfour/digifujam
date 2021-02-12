@@ -1,3 +1,9 @@
+const DFPiano = require("./pianoArea");
+const DF = require("../DFCommon");
+const DFApp = require("../app");
+const DFUtils = require("../util");
+
+const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
 let gStateChangeHandler = null;
 
@@ -8,10 +14,10 @@ let getRoomID = function (app) {
 }
 
 let getValidationErrorMsg = function (userName, userColor) {
-    let sanitizedName = sanitizeUsername(userName);
+    let sanitizedName = DF.sanitizeUsername(userName);
     let validationErrorTxt = (sanitizedName != null) ? "" : "! Please enter a valid username";
 
-    let sanitizedColor = sanitizeUserColor(userColor);
+    let sanitizedColor = DF.sanitizeUserColor(userColor);
     if (sanitizedColor == null) {
         validationErrorTxt += "! Please enter a valid CSS color";
     }
@@ -173,7 +179,7 @@ class InstDropdownParam extends React.Component {
         return (
             <li className={"dropdownParam " + this.props.param.cssClassName}>
                 <div className="mainButton" onClick={this.onClickShown}>
-                    <span className="arrow">{getArrowText(this.state.listShown)}</span>
+                    <span className="arrow">{DF.getArrowText(this.state.listShown)}</span>
                     <span className="currentValue">{this.props.param.enumNames[this.props.param.rawValue]}</span>
                     <label>{this.props.param.name}</label>
                 </div>
@@ -252,7 +258,7 @@ class InstIntParam extends React.Component {
         $("#" + this.sliderID).val(val);
         this.setCaption();
         this.renderedValue = val;
-        stylizeRangeInput(this.sliderID, {
+        DFUtils.stylizeRangeInput(this.sliderID, {
             bgNegColorSpec: "#044",
             negColorSpec: "#044",
             posColorSpec: "#044",
@@ -375,10 +381,7 @@ class InstFloatParam extends React.Component {
     }
     onChange = (e) => {
         const p = this.props.param;
-        let realVal = p.foreignToNativeValue(e.target.value, 0, ClientSettings.InstrumentFloatParamDiscreteValues);
-        //let realVal = parseFloat(e.target.value) / ClientSettings.InstrumentFloatParamDiscreteValues; // 0-1 within target range.
-        //realVal *= p.maxValue - p.minValue; // scaled to range.
-        //realVal += p.minValue;// shifted to correct value.
+        let realVal = p.foreignToNativeValue(e.target.value, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
 
         this.renderedValue = realVal;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
@@ -395,7 +398,7 @@ class InstFloatParam extends React.Component {
         this.setCaption(p.rawValue);
         this.setInputTextVal(p.rawValue);
         if (p.cssClassName.includes("modAmtParam")) {
-            stylizeRangeInput(this.sliderID, {
+            DFUtils.stylizeRangeInput(this.sliderID, {
                 bgNegColorSpec: "#444",
                 negColorSpec: "#66c",
                 posColorSpec: "#66c",
@@ -403,7 +406,7 @@ class InstFloatParam extends React.Component {
                 zeroVal: this._realValToSliderVal(0),
             });
         } else {
-            stylizeRangeInput(this.sliderID, {
+            DFUtils.stylizeRangeInput(this.sliderID, {
                 bgNegColorSpec: "#044",
                 negColorSpec: "#088",
                 posColorSpec: "#088",
@@ -415,7 +418,7 @@ class InstFloatParam extends React.Component {
 
     _realValToSliderVal(rv) {
         const p = this.props.param;
-        return p.nativeToForeignValue(rv, 0, ClientSettings.InstrumentFloatParamDiscreteValues);
+        return p.nativeToForeignValue(rv, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
     }
 
     setInputTextVal(val) {
@@ -463,9 +466,8 @@ class InstFloatParam extends React.Component {
     onClickSlider = (e) => {
         if (this.props.observerMode) return;
         let a = 0;
-        if (gCtrlKey) {
+        if (gModifierKeyTracker.CtrlKey) {
             let realVal = this.props.app.roomState.GetDefaultValueForParam(this.props.instrument, this.props.param);
-            //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
 
             this.setState(this.state);
             this.renderedValue = realVal;
@@ -479,7 +481,6 @@ class InstFloatParam extends React.Component {
     onDoubleClickSlider = (e) => {
         if (this.props.observerMode) return;
         let realVal = this.props.app.roomState.GetDefaultValueForParam(this.props.instrument, this.props.param);
-        //console.log(`ctrl+click ${e.altKey} ${gShiftKey} ${gCtrlKey} setting ${this.props.param.name} to ${realVal}`);
 
         this.setState(this.state);
         this.renderedValue = realVal;
@@ -532,7 +533,7 @@ class InstFloatParam extends React.Component {
         return (
             <li className={cssclass + this.props.param.cssClassName}>
                 <input id={this.sliderID} disabled={this.props.observerMode} className="floatParam" type="range" onClick={this.onClickSlider}
-                    onDoubleClick={this.onDoubleClickSlider} min={0} max={ClientSettings.InstrumentFloatParamDiscreteValues}
+                    onDoubleClick={this.onDoubleClickSlider} min={0} max={DF.ClientSettings.InstrumentFloatParamDiscreteValues}
                     onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(rawValue)} <-- setting values like this causes massive slowness
@@ -763,13 +764,13 @@ class InstrumentParamGroup extends React.Component {
     };
 
     render() {
-        const arrowText = getArrowText(this.props.isShown)
+        const arrowText = DF.getArrowText(this.props.isShown)
 
         let createParam = (p) => {
             if (p.hidden) return null;
 
             switch (p.parameterType) {
-                case InstrumentParamType.intParam:
+                case DF.InstrumentParamType.intParam:
                     if (p.renderAs == "buttons") {
                         return (<InstButtonsParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstButtonsParam>);
                     } else if (p.renderAs == "dropdown") {
@@ -777,13 +778,13 @@ class InstrumentParamGroup extends React.Component {
                     } else {
                         return (<InstIntParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstIntParam>);
                     }
-                case InstrumentParamType.floatParam:
+                case DF.InstrumentParamType.floatParam:
                     return (<InstFloatParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstFloatParam>);
-                case InstrumentParamType.textParam:
+                case DF.InstrumentParamType.textParam:
                     return (<InstTextParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstTextParam>);
-                case InstrumentParamType.cbxParam:
+                case DF.InstrumentParamType.cbxParam:
                     return (<InstCbxParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstCbxParam>);
-                case InstrumentParamType.inlineLabel:
+                case DF.InstrumentParamType.inlineLabel:
                     return (<li className="inlineLabel">{p.inlineLabel}</li>);
             }
         };
@@ -1083,7 +1084,7 @@ class InstrumentParams extends React.Component {
 
                                     <li className="instPresetButtons">
                                         <fieldset className="clipboardControls">
-                                            <legend onClick={this.onClipboardShownClick}>{getArrowText(this.state.showingClipboardControls)} Clipboard</legend>
+                                            <legend onClick={this.onClipboardShownClick}>{DF.getArrowText(this.state.showingClipboardControls)} Clipboard</legend>
                                             {this.state.showingClipboardControls && (
                                                 <div>
                                                     <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
@@ -1153,7 +1154,7 @@ class CheerControls extends React.Component {
 
         // while allowing, continue timer
         if (this.mouseIn && this.mouseDown) {
-            setTimeout(() => { this.onTimeout() }, ClientSettings.MinCheerIntervalMS);
+            setTimeout(() => { this.onTimeout() }, DF.ClientSettings.MinCheerIntervalMS);
         } else {
             this.timerRunning = false;
         }
@@ -1167,7 +1168,7 @@ class CheerControls extends React.Component {
         this.props.app.SendCheer(this.state.text, this.props.app.myUser.position.x, this.props.app.myUser.position.y);
 
         if (!this.timerRunning) {
-            setTimeout(() => { this.onTimeout() }, ClientSettings.MinCheerIntervalMS);
+            setTimeout(() => { this.onTimeout() }, DF.ClientSettings.MinCheerIntervalMS);
         }
     };
 
@@ -1331,6 +1332,10 @@ class Connection extends React.Component {
             return;
         }
         this.props.handleConnect(this.state.userName, this.state.userColor);
+    }
+
+    handleLogin = () => {
+        alert('oh');
     }
 
     render() {
@@ -1505,7 +1510,7 @@ class InstrumentList extends React.Component {
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
             <div className="component instrumentCloset" style={{ whiteSpace: "nowrap" }}>
-                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{getArrowText(this.state.isShowing)} Instrument Closet</h2>
+                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShowing)} Instrument Closet</h2>
                 {this.state.isShowing &&
                     <ul>
                         {instruments}
@@ -1672,7 +1677,7 @@ class UIRoomItem extends React.Component {
         }, this.props.item.style);
 
         let signMarkup = null;
-        if (this.props.item.itemType == DFRoomItemType.sign) {
+        if (this.props.item.itemType == DF.DFRoomItemType.sign) {
             let signStyle = Object.assign({
                 left: pos.x,
                 top: pos.y,
@@ -1682,7 +1687,7 @@ class UIRoomItem extends React.Component {
             signMarkup = (<div className="roomSign" onClick={this.onClickSign} style={signStyle}
                 dangerouslySetInnerHTML={{ __html: this.props.item.params.message }}></div>
             );
-        } else if (this.props.item.itemType == DFRoomItemType.audioVisualization) {
+        } else if (this.props.item.itemType == DF.DFRoomItemType.audioVisualization) {
             return (<UIAudioVisualizationRoomItem item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
         }
 
@@ -1709,27 +1714,27 @@ class ShortChatLog extends React.Component {
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 
             switch (msg.messageType) {
-                case ChatMessageType.aggregate:
+                case DF.ChatMessageType.aggregate:
                     {
                         return msg.messages.map(aggMsg => (
                             <div className="chatLogEntryAggregate" key={msg.messageID}>{timestamp} {aggMsg}</div>
                         ));
                     }
-                case ChatMessageType.join:
+                case DF.ChatMessageType.join:
                     let fromRoomTxt = msg.fromRoomName && `(from ${msg.fromRoomName})`;
                     return (
                         <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the {this.props.app.roomState.roomTitle} jam {fromRoomTxt}</span></div>
                     );
-                case ChatMessageType.part:
+                case DF.ChatMessageType.part:
                     let toRoomTxt = msg.toRoomName && `(to ${msg.toRoomName})`;
                     return (
                         <div className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the {this.props.app.roomState.roomTitle} jam {toRoomTxt}</span></div>
                     );
-                case ChatMessageType.nick:
+                case DF.ChatMessageType.nick:
                     return (
                         <div className="chatLogEntryNick" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} is now known as {msg.toUserName}</span></div>
                     );
-                case ChatMessageType.chat:
+                case DF.ChatMessageType.chat:
                     return (
                         <div className="chatLogEntryChat" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</div>
                     );
@@ -1762,21 +1767,21 @@ class FullChatLog extends React.Component {
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
 
             switch (msg.messageType) {
-                case ChatMessageType.join:
+                case DF.ChatMessageType.join:
                     let fromRoomTxt = msg.fromRoomName && `(from ${msg.fromRoomName})`;
                     return (
                         <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has joined the {this.props.app.roomState.roomTitle} jam {fromRoomTxt}</span></li>
                     );
-                case ChatMessageType.part:
+                case DF.ChatMessageType.part:
                     let toRoomTxt = msg.toRoomName && `(to ${msg.toRoomName})`;
                     return (
                         <li className="chatLogEntryJoin" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} has left the {this.props.app.roomState.roomTitle} jam {toRoomTxt}</span></li>
                     );
-                case ChatMessageType.nick:
+                case DF.ChatMessageType.nick:
                     return (
                         <li className="chatLogEntryNick" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>{msg.fromUserName} is now known as {msg.toUserName}</span></li>
                     );
-                case ChatMessageType.chat:
+                case DF.ChatMessageType.chat:
                     return (
                         <li className="chatLogEntryChat" key={msg.messageID}>{timestamp} <span style={{ color: msg.fromUserColor }}>[{msg.fromUserName}]</span> {msg.message}</li>
                     );
@@ -1834,7 +1839,6 @@ class RoomAlertArea extends React.Component {
 
 class RoomArea extends React.Component {
     constructor(props) {
-        console.log(`RoomArea ctor`);
         super(props);
         this.state = {
             scrollSize: { x: 0, y: 0 },// track DOM scrollHeight / scrollWidth
@@ -1985,7 +1989,7 @@ class ChatArea extends React.Component {
         if (!this.props.app) return;
         let sanitized = this.state.value.trim();
         if (sanitized.length < 1) return;
-        sanitized = sanitized.substr(0, ServerSettings.ChatMessageLengthMax);
+        sanitized = sanitized.substr(0, DF.ServerSettings.ChatMessageLengthMax);
         this.props.app.SendChatMessage(sanitized, null);
         this.state.value = '';
     }
@@ -2011,12 +2015,12 @@ class ChatArea extends React.Component {
     }
 }
 
-class BPMControls extends React.Component{
-    
+class BPMControls extends React.Component {
+
 
     setRoomBPM = (v) => {
         this.props.app.metronome.bpm = v.target.value;
-        if(this.props.app.metronome.syncWithRoom)
+        if (this.props.app.metronome.syncWithRoom)
             this.props.app.net.SendRoomBPM(v.target.value);
         gStateChangeHandler.OnStateChange();
     }
@@ -2039,22 +2043,22 @@ class BPMControls extends React.Component{
 
         return (
             <span className="bpmControls">
-                    <span className="roomBPMContainer">
-                        <label>BPM: </label>
-                        <input type="number" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM}/>
-                    </span>
-                    <span className="metronomeContainer">
-                        <label>Metronome: </label>
-                        <button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted? "On" : "Off"}</button>
-                    </span>
-                    <span className="syncWithRoomContainer">
-                        <label>Sync with room: </label>
-                        <button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom? "Off" : "On"}</button>
-                    </span>
+                <span className="roomBPMContainer">
+                    <label>BPM: </label>
+                    <input type="number" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} />
+                </span>
+                <span className="metronomeContainer">
+                    <label>Metronome: </label>
+                    <button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"}</button>
+                </span>
+                <span className="syncWithRoomContainer">
+                    <label>Sync with room: </label>
+                    <button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button>
+                </span>
             </span>
 
         );
-    }    
+    }
 
 }
 
@@ -2082,14 +2086,14 @@ class UpperRightControls extends React.Component {
 
 
     componentDidMount() {
-        stylizeRangeInput("volume", {
+        DFUtils.stylizeRangeInput("volume", {
             bgNegColorSpec: "#044",
             negColorSpec: "#044",
             posColorSpec: "#044",
             bgPosColorSpec: "#044",
             zeroVal: 0,
         });
-        stylizeRangeInput("pbrange", {
+        DFUtils.stylizeRangeInput("pbrange", {
             bgNegColorSpec: "#044",
             negColorSpec: "#044",
             posColorSpec: "#044",
@@ -2125,7 +2129,7 @@ class RootArea extends React.Component {
     }
 
     HandleConnect = (userName, color) => {
-        let app = new DigifuApp();
+        let app = new DFApp.DigifuApp();
 
         // copied from ctor
         this.notesOn = []; // not part of state because it's pure jquery
@@ -2147,7 +2151,7 @@ class RootArea extends React.Component {
 
     handleRoomWelcome = () => {
 
-        if (this.state.app.roomState.softwareVersion != gDigifujamVersion) {
+        if (this.state.app.roomState.softwareVersion != DF.gDigifujamVersion) {
             alert("New version released; this page will reload...");
             location.reload();
             return;
@@ -2279,7 +2283,7 @@ class RootArea extends React.Component {
     handleAllNotesOff = () => {
 
         // set all notes CSS
-        for (let midiNote = 0; midiNote < 128; ++ midiNote) {
+        for (let midiNote = 0; midiNote < 128; ++midiNote) {
             let k = $("#key_" + midiNote);
             k.removeClass("active");
             k.css("background-color", "");
@@ -2361,7 +2365,7 @@ class RootArea extends React.Component {
                     {this.state.app && <BPMControls app={this.state.app}> </BPMControls>}
                     {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                 </div>
-                <PianoArea app={this.state.app} />
+                <DFPiano.PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
                 <RoomArea app={this.state.app} handleConnect={this.HandleConnect}
                     handleDisconnect={() => this.HandleDisconnect()}
@@ -2373,3 +2377,40 @@ class RootArea extends React.Component {
         );
     }
 }
+
+module.exports = {
+    AnnouncementArea,
+    BPMControls,
+    ChatArea,
+    CheerControls,
+    Connection,
+    FullChatLog,
+    InstButtonsParam,
+    InstCbxParam,
+    InstDropdownParam,
+    InstFloatParam,
+    InstIntParam,
+    InstrumentList,
+    InstrumentParamGroup,
+    InstrumentParams,
+    InstrumentPreset,
+    InstrumentPresetList,
+    InstTextParam,
+    LeftArea,
+    MidiCCMappingInfo,
+    ParamMappingBox,
+    RightArea,
+    RoomAlertArea,
+    RoomArea,
+    RootArea,
+    ShortChatLog,
+    TextInputField,
+    TextInputFieldExternalState,
+    UIAudioVisualizationRoomItem,
+    UIRoomItem,
+    UpperRightControls,
+    UserAvatar,
+    UserList,
+    UserState,
+    WorldStatus,
+};

@@ -42,6 +42,11 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
 
 # tech stuff
 
+## dev process
+
+- npm run start   // to start local server
+- npm run watch // simultaneously call this to monitor & build changes live
+
 ## deployment process
 
 - if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1;

@@ -11,13 +11,11 @@
     <script src="ext/jquery.min.js"></script>
     <script src="ext/react.production.min.js"></script>
     <script src="ext/react-dom.production.min.js"></script>
-    <script src="ext/babel.min.js"></script>
     <script src="ext/js.cookie.min.js"></script>
 
     <script src="ext/nanoid.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="node_modules/soundfont-player/dist/soundfont-player.js"></script>
     <script src="reverb.js"></script>
 
     <script type="text/javascript">
@@ -25,26 +23,9 @@
         let module = {};
     </script>
 
-    <script src="util.js"></script>
-    <script src="DFCommon.js"></script>
-    <script src="midi.js"></script>
-    <script src="net.js"></script>
-    <script src="adhsr.js"></script>
-    <script src="pwm.js"></script>
-    <script src="synthTools.js"></script>
-    <script src="DrumkitEngine.js"></script>
-    <script src="fm4oscillator.js"></script>
-    <script src="fm4voice.js"></script>
-    <script src="fm4instrument.js"></script>
-    <script src="soundFontInstrument.js"></script>
-    <script src="synth.js"></script>
-    <script src="metronome.js"></script>
-    <script src="app.js"></script>
+    <script src="/dist/7jam.js"></script>
 
-    <!-- ui -->
-    <script type="text/babel" src="ui/adminControls.js"></script>
-    <script type="text/babel" src="ui/pianoArea.js"></script>
-    <script type="text/babel" src="ui/right.js"></script>
+
 
     <link rel="stylesheet" href="main.css" />
     <link rel="stylesheet" href="keyboard.css" />
@@ -54,48 +35,6 @@
 <body id="body">
 
     <script type="text/babel">
-
-        let gShiftKey = false;
-        let gCtrlKey = false;
-
-        $(document).on('keydown', function (e) {
-            if (e.shiftKey) {
-                gShiftKey = true;
-            }
-            if (e.ctrlKey) {
-                gCtrlKey = true;
-            }
-        });
-        $(document).on('keyup', function (e) {
-            if (e.shiftKey == false) {
-                gShiftKey = false;
-            }
-            if (e.ctrlKey == false) {
-                gCtrlKey = false;
-            }
-        });
-
-
-        // prefix for client-side generated IDs.
-        let gIDDomain = "client";
-        let gIsServer = false;
-        let gNanoid = nanoid;
-
-        // safari audiocontext support
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-
-        $.getJSON('./ui/spinners.json', function (data) {
-            window.gSpinners = data;
-        });
-
-        // a default room name based on the URL you entered. only to be used when you're not connected to a room.
-        let roomID = routeToRoomID(window.location.pathname);
-        window.DFRoomID = roomID;
-
-        ReactDOM.render(
-            <RootArea />,
-            document.getElementById('root')
-        );
 
     </script>
 

@@ -162,3 +162,9 @@ let GetMidiInputDeviceList = function () {
   });
 
 };
+
+
+module.exports = {
+  GetMidiInputDeviceList,
+  DigifuMidi
+};

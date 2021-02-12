@@ -79,3 +79,10 @@ class DigifuMetronome {
 		}
 
 };
+
+
+
+module.exports = {
+	DigifuMetronome,
+};
+

@@ -1,5 +1,9 @@
 'use strict';
 
+const DF = require("./DFCommon");
+const FM4OSC = require("./fm4oscillator");
+const ADSR = require("./adhsr");
+const DFSynthTools = require("./synthTools");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -8,16 +12,16 @@ class MiniFMSynthVoice {
         this.instrumentSpec = instrumentSpec;
         this.audioCtx = audioCtx;
 
-        this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
+        this.minGlideS = DF.ClientSettings.InstrumentParamIntervalMS / 1000;
 
         this.midiNote = 0;
         this.velocity = 0;
 
         this.oscillators = [
-            new MiniFMSynthOsc(audioCtx, instrumentSpec),
-            new MiniFMSynthOsc(audioCtx, instrumentSpec),
-            new MiniFMSynthOsc(audioCtx, instrumentSpec),
-            new MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new FM4OSC.MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new FM4OSC.MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new FM4OSC.MiniFMSynthOsc(audioCtx, instrumentSpec),
+            new FM4OSC.MiniFMSynthOsc(audioCtx, instrumentSpec),
         ];
 
         this.modulationGainers = [];
@@ -48,7 +52,7 @@ class MiniFMSynthVoice {
         */
 
         // env1
-        this.nodes.env1 = ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
+        this.nodes.env1 = ADSR.ADSRNode(this.audioCtx, { // https://github.com/velipso/adsrnode
             attack: this.instrumentSpec.GetParamByID("env1_a").currentValue,
             peak: 1.0,
             decay: this.instrumentSpec.GetParamByID("env1_d").currentValue,
@@ -64,33 +68,33 @@ class MiniFMSynthVoice {
         this.nodes.oscSum.gain.value = 1;
 
         // filterFreqLFO1Amt
-        this.nodes.filterFreqLFO1Amt = new OptimalGainer(this.audioCtx, "voice>filt");//this.audioCtx.createGain("voice>filt");
+        this.nodes.filterFreqLFO1Amt = new DFSynthTools.OptimalGainer(this.audioCtx, "voice>filt");//this.audioCtx.createGain("voice>filt");
         this.nodes.filterFreqLFO1Amt.gain = this.instrumentSpec.GetParamByID("filterFreqLFO1").currentValue;
         this.nodes.filterFreqLFO1Amt.connectFrom(lfo1);
 
         // filterFreqLFO2Amt
-        this.nodes.filterFreqLFO2Amt = new OptimalGainer(this.audioCtx, "voice>filt"); // this.audioCtx.createGain("voice>filt");
+        this.nodes.filterFreqLFO2Amt = new DFSynthTools.OptimalGainer(this.audioCtx, "voice>filt"); // this.audioCtx.createGain("voice>filt");
         this.nodes.filterFreqLFO2Amt.gain = this.instrumentSpec.GetParamByID("filterFreqLFO2").currentValue;
         this.nodes.filterFreqLFO2Amt.connectFrom(lfo2);
 
         // filterFreqENVAmt
-        this.nodes.filterFreqENVAmt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterFreqENVAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
         this.nodes.filterFreqENVAmt.gain = this.instrumentSpec.GetParamByID("filterFreqENV").currentValue;
         this.nodes.filterFreqENVAmt.connectFrom(this.nodes.env1);
 
         // filterQLFO1Amt
-        this.nodes.filterQLFO1Amt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterQLFO1Amt = new DFSynthTools.OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
         this.nodes.filterQLFO1Amt.gain = this.instrumentSpec.GetParamByID("filterQLFO1").currentValue;
         this.nodes.filterQLFO1Amt.connectFrom(lfo1);
 
         // filterQLFO2Amt
-        this.nodes.filterQLFO2Amt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterQLFO2Amt = new DFSynthTools.OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
         this.nodes.filterQLFO2Amt.gain = this.instrumentSpec.GetParamByID("filterQLFO2").currentValue;
         //lfo2.connect(this.nodes.filterQLFO2Amt);
         this.nodes.filterQLFO2Amt.connectFrom(lfo2);
 
         // filterQENVAmt
-        this.nodes.filterQENVAmt = new OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
+        this.nodes.filterQENVAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "voice>filt");// this.audioCtx.createGain("voice>filt");
         this.nodes.filterQENVAmt.gain = this.instrumentSpec.GetParamByID("filterQENV").currentValue;
         //this.nodes.env1.connect(this.nodes.filterQENVAmt);
         this.nodes.filterQENVAmt.connectFrom(this.nodes.env1);
@@ -271,16 +275,16 @@ class MiniFMSynthVoice {
 
     _updateFilterBaseFreq() {
         let vsAmt = this.instrumentSpec.GetParamByID("filterFreqVS").currentValue;
-        let vs = 1.0 - remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let vs = 1.0 - DF.remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let ksAmt = this.instrumentSpec.GetParamByID("filterFreqKS").currentValue;
         const halfKeyScaleRangeSemis = 12 * 4;
-        let ks = 1.0 - remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let ks = 1.0 - DF.remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         p = p * ks * vs;
         //console.log(`filter freq: ${p}`);
 
         const freqParam = this.nodes.filter.frequency;
-        freqParam.value = baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
+        freqParam.value = DF.baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
     }
 
     SetParamValue(paramID, newVal) {
@@ -357,7 +361,7 @@ class MiniFMSynthVoice {
         this.midiNote = midiNote;
         this.velocity = velocity;
 
-        let baseFreq = MidiNoteToFrequency(midiNote);
+        let baseFreq = DF.MidiNoteToFrequency(midiNote);
 
         this._updateFilterBaseFreq();
 
@@ -365,7 +369,7 @@ class MiniFMSynthVoice {
         if (isPoly || !isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
             //  env keytracking
             let vsAmt = this.instrumentSpec.GetParamByID("env1_vel_scale").currentValue; // -1 to 1
-            let vs = 1.0 - remap(this.velocity, 0.0, 127.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+            let vs = 1.0 - DF.remap(this.velocity, 0.0, 127.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
             this.nodes.env1.update({
                 peak: vs,
                 sustain: vs * this.instrumentSpec.GetParamByID("env1_s").currentValue
@@ -412,3 +416,9 @@ class MiniFMSynthVoice {
     }
 
 };
+
+
+module.exports = {
+    MiniFMSynthVoice,
+};
+

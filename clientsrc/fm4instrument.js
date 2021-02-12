@@ -1,5 +1,7 @@
 'use strict';
 
+const DF = require("./DFCommon");
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class FMPolySynth {
@@ -9,7 +11,7 @@ class FMPolySynth {
         this.wetDestination = wetDestination;
         this.instrumentSpec = instrumentSpec;
 
-        this.minGlideS = ClientSettings.InstrumentParamIntervalMS / 1000;
+        this.minGlideS = DF.ClientSettings.InstrumentParamIntervalMS / 1000;
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
@@ -431,5 +433,10 @@ class FMPolySynth {
             }
         });
     };
+};
+
+
+module.exports = {
+    FMPolySynth,
 };
 

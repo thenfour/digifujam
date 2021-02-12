@@ -1,4 +1,4 @@
-const DF = require('./public/DFCommon');
+const DF = require('./clientsrc/DFCommon');
 const fsp = require('fs').promises;
 const fs = require('fs');
 

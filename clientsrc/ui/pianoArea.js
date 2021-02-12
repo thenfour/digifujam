@@ -136,3 +136,8 @@ class PianoArea extends React.Component {
         );
     }
 }
+
+
+module.exports= {
+    PianoArea
+};

@@ -145,3 +145,8 @@ class DFOscillator {
     }
 };
 
+
+
+module.exports = {
+    DFOscillator,
+}

@@ -344,3 +344,10 @@ class OneShotInstrument {
 
 
 
+module.exports = {
+    gLoadSample,
+    SampleCache,
+    OneShotInstrument,
+    DrumKitVoice,
+};
+

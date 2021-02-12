@@ -1,5 +1,7 @@
 'use strict';
 
+const { nanoid } = require("nanoid");
+
 let gDigifujamVersion = 6;
 
 Array.prototype.removeIf = function (callback) {
@@ -74,7 +76,7 @@ let remapWithPowCurve = (value, inpMin, inpMax, p, outpMin, outpMax) => {
 // make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
 let gNextID = 1;
 let generateID = function () {
-    let ret = gIDDomain + gNextID + "_" + gNanoid(8);
+    let ret = nanoid(8);
     gNextID++;
     return ret;
 }
@@ -1802,4 +1804,13 @@ module.exports = {
     AccessLevels,
     SetGlobalInstrumentList,
     InternalInstrumentParams,
+    MidiNoteToFrequency,
+    gDigifujamVersion,
+    getArrowText,
+    getDecimalPart,
+    baseClamp,
+    remap,
+    remapWithPowCurve,
+    FrequencyToMidiNote,
+    eParamMappingSource,
 };

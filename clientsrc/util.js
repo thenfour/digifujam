@@ -1,5 +1,34 @@
 'use strict';
 
+const DF = require("./DFCommon");
+
+class ModifierKeyTracker {
+    constructor() {
+
+        this.gShiftKey = false;
+        this.gCtrlKey = false;
+    
+        $(document).on('keydown', function (e) {
+            if (e.shiftKey) {
+                this.ShiftKey = true;
+            }
+            if (e.ctrlKey) {
+                this.CtrlKey = true;
+            }
+        });
+        $(document).on('keyup', function (e) {
+            if (e.shiftKey == false) {
+                this.ShiftKey = false;
+            }
+            if (e.ctrlKey == false) {
+                this.CtrlKey = false;
+            }
+        });
+    
+    }
+};
+
+
 function IsValidJSONString(str) {
     try {
         JSON.parse(str);
@@ -56,7 +85,7 @@ let stylizeRangeInput = (elementID, opts) => {
 
 
 let testExportValue = (min, max, v) => {
-    let p = Object.assign(new InstrumentParam(), {
+    let p = Object.assign(new DF.InstrumentParam(), {
         /*valueCurve: 2,*/
         minValue: min,
         maxValue: max
@@ -69,7 +98,7 @@ let testExportValue = (min, max, v) => {
 
 
 let testImportValue = (min, max, v) => {
-    let p = Object.assign(new InstrumentParam(), {
+    let p = Object.assign(new DF.InstrumentParam(), {
         /*valueCurve: 2,*/
         minValue: min,
         maxValue: max
@@ -79,3 +108,11 @@ let testImportValue = (min, max, v) => {
     console.log(`${v} => ${x} => ${x2}`);
     //return x;
 };
+
+
+module.exports = {
+    stylizeRangeInput,
+    IsValidJSONString,
+    ModifierKeyTracker,
+};
+

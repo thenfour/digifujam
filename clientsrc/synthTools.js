@@ -1,5 +1,8 @@
 'use strict';
 
+const DF = require("./DFCommon");
+
+
 // we need to be able to convert midi note value to frequency in the graph itself.
 // but i don't think it's possible in the superficial obvious way using gainers etc.
 // but here we can use a wave shaper to curve it properly.
@@ -14,7 +17,7 @@ let initSynthTools = (audioCtx) => {
 
     var scaledNoteToScaledFreqCurve = new Float32Array(255);
     for (var i = -127; i <= 127; i++) {
-        scaledNoteToScaledFreqCurve[i + 127] = Math.sign(i) * MidiNoteToFrequency(Math.abs(i)) / 13000.0;
+        scaledNoteToScaledFreqCurve[i + 127] = Math.sign(i) * DF.MidiNoteToFrequency(Math.abs(i)) / 13000.0;
     }
 
     //Add a new factory method to the AudioContext object.
@@ -277,3 +280,10 @@ class OptimalGainer {
         });
     }
 };
+
+
+module.exports = {
+    initSynthTools,
+    OptimalGainer,
+};
+
