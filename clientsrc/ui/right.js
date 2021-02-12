@@ -1,3 +1,4 @@
+const React = require('react');
 const DFPiano = require("./pianoArea");
 const DF = require("../DFCommon");
 const DFApp = require("../app");
@@ -117,7 +118,7 @@ class InstTextParam extends React.Component {
 
         return (
             <li className={this.props.param.cssClassName}>
-                <input readOnly={this.props.observerMode} id={this.inpID} type="text" maxlength={this.props.param.maxTextLength} onChange={this.onChange} />
+                <input readOnly={this.props.observerMode} id={this.inpID} type="text" maxLength={this.props.param.maxTextLength} onChange={this.onChange} />
                 <label>{this.props.param.name}</label>
             </li>
         );
@@ -785,7 +786,7 @@ class InstrumentParamGroup extends React.Component {
                 case DF.InstrumentParamType.cbxParam:
                     return (<InstCbxParam key={p.paramID} app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={p}></InstCbxParam>);
                 case DF.InstrumentParamType.inlineLabel:
-                    return (<li className="inlineLabel">{p.inlineLabel}</li>);
+                    return (<li key={p.paramID} className="inlineLabel">{p.inlineLabel}</li>);
             }
         };
 
@@ -1004,6 +1005,7 @@ class InstrumentParams extends React.Component {
         ));
 
         let groups = groupSpecs.map(gs => (<InstrumentParamGroup
+            key={gs.internalName}
             groupSpec={gs}
             app={this.props.app}
             instrument={this.props.instrument}
@@ -1275,7 +1277,7 @@ class UserState extends React.Component {
 
         const validationMsg = getValidationErrorMsg(this.state.userName, this.state.userColor);
         const validationMarkup = validationMsg.length ? (
-            <div class="validationError">{validationMsg}</div>
+            <div className="validationError">{validationMsg}</div>
         ) : null;
 
         return (
@@ -1334,10 +1336,6 @@ class Connection extends React.Component {
         this.props.handleConnect(this.state.userName, this.state.userColor);
     }
 
-    handleLogin = () => {
-        alert('oh');
-    }
-
     render() {
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
 
@@ -1345,7 +1343,7 @@ class Connection extends React.Component {
         const validationErrorTxt = getValidationErrorMsg(this.state.userName, this.state.userColor);
 
         const validationError = validationErrorTxt.length && this.state.showValidationErrors ? (
-            <div class='validationError'>{validationErrorTxt}</div>
+            <div className='validationError'>{validationErrorTxt}</div>
         ) : null;
 
         return (
@@ -1360,9 +1358,9 @@ class Connection extends React.Component {
                         onEnter={this.goConnect} />
                         <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>
-                    <button onClick={this.goConnect}>Connect</button>
-                    {validationError}
                 </ul>
+                <button onClick={this.goConnect}>Connect</button>
+                    {validationError}
             </div>
         );
     }
@@ -1415,9 +1413,9 @@ class WorldStatus extends React.Component {
         ));
 
         const roomsMarkup = rooms.map(room => (
-            <dl className="room">
+            <dl className="room" key={room.roomName}>
                 {/* <dt className="roomStats"> */}
-                <dt><span class="roomName">{room.roomName}</span> [<span class="userCount">{room.users.length}</span>] ♫<span class="noteOns">{room.stats.noteOns}</span></dt>
+                <dt><span className="roomName">{room.roomName}</span> [<span className="userCount">{room.users.length}</span>] ♫<span className="noteOns">{room.stats.noteOns}</span></dt>
                 {room.users.length > 0 &&
                     <dd>
                         <ul className="userList">{userList(room)}</ul>
@@ -1828,7 +1826,7 @@ class RoomAlertArea extends React.Component {
                 <div id="roomAlertArea">
                     <div>Select a MIDI input device to start playing</div>
                     {this.props.app.deviceNameList.map(i => (
-                        <button onClick={() => { this.props.app.midi.ListenOnDevice(i); gStateChangeHandler.OnStateChange(); }}>Start using {i}</button>
+                        <button key={i} onClick={() => { this.props.app.midi.ListenOnDevice(i); gStateChangeHandler.OnStateChange(); }}>Start using {i}</button>
                     ))}
                 </div>
             );
@@ -2356,7 +2354,7 @@ class RootArea extends React.Component {
         }
 
         return (
-            <div id="grid-container" className={this.state.wideMode && "wide"}>
+            <div id="grid-container" className={this.state.wideMode ? "wide" : undefined}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>
                         <a target="_blank" href="https://twitter.com/tenfour2">Made by tenfour</a> // 

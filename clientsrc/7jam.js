@@ -1,10 +1,9 @@
 const DF = require("./DFCommon.js");
 const DFUI = require("./ui/right");
+const React = require('react');
+const ReactDOM = require('react-dom');
 
 $(() => {
-
-    // prefix for client-side generated IDs.
-    let gNanoid = nanoid;
 
     // safari audiocontext support
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -23,4 +22,5 @@ $(() => {
     );
 
 });
+
 

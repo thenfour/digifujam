@@ -1,3 +1,4 @@
+const React = require('react');
 
 
 class AdminControls extends React.Component {

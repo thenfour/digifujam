@@ -11,6 +11,8 @@
     "express": "^4.17.1",
     "nanoid": "^3.1.20",
     "openode": "^2.0.38",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "serve-index": "^1.9.1",
     "socket.io": "^3.0.5",
     "soundfont-player": "^0.12.0",

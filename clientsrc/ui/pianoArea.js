@@ -1,3 +1,4 @@
+const React = require('react');
 
 let keyNote = function (midiNoteValue, name, cssClass) {
     return { midiNoteValue, name, cssClass };
