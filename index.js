@@ -36,6 +36,7 @@ if (process.env.DF_IS_OPENODE == 1) {
   gGoogleRedirectURL = "https://7jam.io";
 }
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
+const gPathLatestServerState = `${gStoragePath}${gPathSeparator}serverState_latest.json`;
 
 gServerStats = new DFStats.DFStats(gStatsDBPath);
 
@@ -995,6 +996,9 @@ class RoomServer {
           this.roomState.img = data.params;
           io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
+        case "backupServerState":
+          OnBackupServerState();
+          break;
       }
 
     } catch (e) {
@@ -1203,12 +1207,9 @@ let OnClientUploadServerState = (ws, data) => {
   }
 }
 
-
-let OnBackupServerStateInterval = () => {
+let OnBackupServerState = () => {
   try {
     const m1 = new Date();
-    setTimeout(OnBackupServerStateInterval, DF.ServerSettings.ServerStateBackupIntervalMS);
-
     let allRooms = [];
     Object.keys(gRooms).forEach(roomID => {
       allRooms.push({
@@ -1225,11 +1226,17 @@ let OnBackupServerStateInterval = () => {
       `_${d.getUTCHours().toString().padStart(2, '0')}_${d.getUTCMinutes().toString().padStart(2, '0')}_${d.getUTCSeconds().toString().padStart(2, '0')}.json`;
 
     fsp.writeFile(path, allRoomsJSON, 'utf8');
+    fsp.writeFile(gPathLatestServerState, allRoomsJSON, 'utf8');
     console.log(`Backing up server state to ${path}; took ${((new Date() - m1) / 1000).toFixed(3)} sec`);
   } catch (e) {
-    console.log(`OnBackupServerStateInterval exception occurred`);
+    console.log(`OnBackupServerState exception occurred`);
     console.log(e);
   }
+};
+
+let OnBackupServerStateInterval = () => {
+  setTimeout(OnBackupServerStateInterval, DF.ServerSettings.ServerStateBackupIntervalMS);
+  OnBackupServerState();
 };
 
 
@@ -1354,18 +1361,19 @@ app.use("/storage", express.static(gStoragePath), serveIndex(gStoragePath, { 'ic
 
 
 
-fsp.readFile("global_instruments.json")
-  .then(globalInstruments => {
-    DF.SetGlobalInstrumentList(JSON.parse(globalInstruments).globalInstruments);
-    fsp.readFile("server_state.json")
-      .then(serverRestoreState => {
-        serverRestoreState = JSON.parse(serverRestoreState);
-        fsp.readFile("pub.json")
-          .then(data2 => loadRoom(data2, serverRestoreState))
-          .then(() => fsp.readFile("maj7.json"))
-          .then(data3 => loadRoom(data3, serverRestoreState))
-          .then(() => fsp.readFile("hall.json"))
-          .then(data4 => loadRoom(data4, serverRestoreState))
-          .then(() => roomsAreLoaded());
-      });
-  });
+const globalInstruments = fs.readFileSync("global_instruments.json");
+DF.SetGlobalInstrumentList(JSON.parse(globalInstruments).globalInstruments);
+
+let serverRestoreState = fs.readFileSync("server_state.json");
+if (fs.existsSync(gPathLatestServerState)) {
+  console.log(`Using latest backup of server state @ ${gPathLatestServerState}`);
+  serverRestoreState = fs.readFileSync(gPathLatestServerState);
+} else {
+  console.log(`Using hard-coded server state @ server_state.json`);
+}
+serverRestoreState = JSON.parse(serverRestoreState);
+loadRoom(fs.readFileSync("pub.json"), serverRestoreState);
+loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
+loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
+
+roomsAreLoaded();

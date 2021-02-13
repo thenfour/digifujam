@@ -46,6 +46,10 @@ class AdminControls extends React.Component {
         this.props.app.net.SendAdminChangeRoomState("setRoomImg", txt);
     }
 
+    _handleBackupServerState = () => {
+        this.props.app.net.SendAdminChangeRoomState("backupServerState");
+    }
+
     onClickHeader = e => {
         this.setState({ isShown: !this.state.isShown });
     }
@@ -68,7 +72,8 @@ class AdminControls extends React.Component {
                     <div>
                         <div>uptime: {uptimeStr}</div>
                         <button onClick={this.copyServerState}>Copy server state</button><br />
-                        <button onClick={this.pasteServerState}>Paste server state</button>
+                        <button onClick={this.pasteServerState}>Paste server state</button><br />
+                        <button onClick={this._handleBackupServerState}>Manually backup server state</button><br />
                         <div style={{ fontSize: "x-small" }}>
                             announcement HTML (live update):<br />
                             <textarea value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChangeAnnouncementHTML(e.target.value)} />

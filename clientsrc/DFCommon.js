@@ -109,7 +109,7 @@ const ClientMessages = {
     InstrumentFactoryReset: "InstrumentFactoryReset",
     DownloadServerState: "DownloadServerState",
     UploadServerState: "UploadServerState",
-    AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj }
+    AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj } see OnAdminChangeRoomState
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 
@@ -169,7 +169,7 @@ const ServerSettings = {
     StatsPruneIntervalMS: hoursToMS(24), // once a day prune stats
     StatsMaxAgeMS: daysToMS(365),
 
-    ServerStateBackupIntervalMS: hoursToMS(1),
+    ServerStateBackupIntervalMS: minutesToMS(15),
     ServerStatePruneIntervalMS: hoursToMS(24),
     ServerStateMaxAgeMS: daysToMS(5),
 };
