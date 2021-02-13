@@ -1,3 +1,4 @@
+const DF = require("../DFCommon");
 const React = require('react');
 
 
@@ -27,7 +28,7 @@ class AdminControls extends React.Component {
             try {
                 let presetObj = JSON.parse(text);
                 this.props.app.net.uploadServerState(presetObj);
-                gStateChangeHandler.OnStateChange();
+                window.DFStateChangeHandler.OnStateChange();
             } catch (e) {
                 alert(`Unable to import; probably badly formatted text... Exception: ${e}`);
             }
@@ -81,4 +82,9 @@ class AdminControls extends React.Component {
             </div>
         );
     }
+}
+
+
+module.exports = {
+    AdminControls
 }

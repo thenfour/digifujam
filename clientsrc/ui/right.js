@@ -5,6 +5,7 @@ const DFApp = require("../app");
 const DFUtils = require("../util");
 const DFSignIn = require("./DFSignIn");
 const DFReactUtils = require("./DFReactUtils");
+const DFAdminControls = require("./adminControls");
 
 const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
@@ -1404,7 +1405,7 @@ class LeftArea extends React.Component {
             <UserState app={this.props.app} handleDisconnect={this.props.handleDisconnect} />
         );
         const adminControls = (this.props.app && this.props.app.isAdmin) && (
-            <AdminControls app={this.props.app}></AdminControls>
+            <DFAdminControls.AdminControls app={this.props.app}></DFAdminControls.AdminControls>
         );
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
@@ -2173,6 +2174,7 @@ class RootArea extends React.Component {
             observingInstrument: null,
         };
 
+        window.DFStateChangeHandler = this;
         gStateChangeHandler = this;
 
         this.notesOn = []; // not part of state because it's pure jquery
