@@ -118,7 +118,7 @@ const ClientMessages = {
 
 const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
-    PleaseReconnect: "PleaseReconnect",
+    PleaseReconnect: "PleaseReconnect", // when something on the server requires a reconnection of all users, or when you're not authorized.
     Welcome: "Welcome",// (your UserID & room state, and whether you are an admin)
     UserEnter: "UserEnter",// (user data), <oldRoomName>
     UserLeave: "UserLeave",// UserID, <newRoomName>

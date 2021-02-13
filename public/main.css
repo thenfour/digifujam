@@ -101,6 +101,9 @@ button:focus {
     position: relative;
     overflow:hidden;
     transition: background-position 1s;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* announcement area fix */
 }
 
 .roomArea.roomWelcomeNoTransition {
@@ -195,6 +198,8 @@ button:focus {
 .headerArea span {
     margin:0;
     font-size: small;
+    display: inline-flex;
+    align-items: center;
 }
 
 .headerArea a:link,
@@ -1065,3 +1070,86 @@ li.floatParam.expanded.hasMapping
 .midiCCmappingList .mappedLiveValue    {
     display:inline;
 }
+
+
+.socicon {
+    height: 24px;
+    fill: #0aa;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.logoTxt {
+    font-size: medium;
+    font-weight: bold;
+}
+
+.signinScreen {
+    min-width: 400px;
+}
+
+.googleLoginButton {
+    background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_normal_web.png');
+    display: inline-block;
+    width: 191px;
+    height: 46px;
+    border: 0;
+    border-radius:0;
+ }
+ .googleLoginButton:hover {
+    background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_focus_web.png');
+    cursor: pointer;
+    border: 0;
+    border-radius:0;
+ }
+ .googleLoginButton:active {
+    background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_pressed_web.png');
+    border: 0;
+    border-radius:0;
+ }
+ .googleLoginButton:disabled {
+    background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_disabled_web.png');
+    border: 0;
+    border-radius:0;
+ }
+
+
+ /* https://loading.io/css/ */
+ .lds-facebook {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-facebook div {
+    display: inline-block;
+    position: absolute;
+    left: 8px;
+    width: 16px;
+    background: #0cc;
+    animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+  }
+  .lds-facebook div:nth-child(1) {
+    left: 8px;
+    animation-delay: -0.24s;
+  }
+  .lds-facebook div:nth-child(2) {
+    left: 32px;
+    animation-delay: -0.12s;
+  }
+  .lds-facebook div:nth-child(3) {
+    left: 56px;
+    animation-delay: 0;
+  }
+  @keyframes lds-facebook {
+    0% {
+      top: 8px;
+      height: 64px;
+    }
+    50%, 100% {
+      top: 24px;
+      height: 32px;
+    }
+  }
+
+  

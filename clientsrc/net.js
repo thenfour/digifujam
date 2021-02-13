@@ -168,12 +168,21 @@ class DigifuNet {
         this.socket = null;
     };
 
-    Connect(handler) {
+    Connect(handler, google_access_token) {
         this.handler = handler;
         this.ResetQueuedParamChangeData();
-        let query = Object.assign({ jamroom: window.location.pathname }, Object.fromEntries(new URLSearchParams(location.search)));
+        let query = Object.assign({
+            jamroom: window.location.pathname,
+        }, Object.fromEntries(new URLSearchParams(location.search)));
+
+        if (google_access_token) {
+            query.google_access_token = google_access_token;
+        }
+
+        //query.google_access_token = "test_not_an_actual_token";
+
         this.socket = io({
-            query
+            query,
         });
 
         this.socket.on(DF.ServerMessages.PleaseIdentify, (data) => this.handler.NET_OnPleaseIdentify(data));

@@ -344,8 +344,8 @@ class DigifuApp {
         // find "you"
         this.myUser = this.roomState.FindUserByID(myUserID).user;
 
-        Cookies.set(this.roomState.roomID + "_userName", this.myUser.name);
-        Cookies.set(this.roomState.roomID + "_userColor", this.myUser.color);
+        window.localStorage.setItem("userName", this.myUser.name);
+        window.localStorage.setItem("userColor", this.myUser.color);
 
         // this is a client-only property.
         this.roomState.instrumentCloset.forEach(i => {
@@ -694,8 +694,8 @@ class DigifuApp {
         u.user.position = data.state.position;
 
         if (u.user.userID == this.myUser.userID) {
-            Cookies.set(this.roomState.roomID + "_userName", this.myUser.name);
-            Cookies.set(this.roomState.roomID + "_userColor", this.myUser.color);
+            window.localStorage.setItem("userName", this.myUser.name);
+            window.localStorage.setItem("userColor", this.myUser.color);
             // room interaction based on intersection.
             this.roomState.roomItems.forEach(item => {
                 if (item.rect.PointIntersects(this.myUser.position)) {
@@ -913,7 +913,7 @@ class DigifuApp {
         }
     }
 
-    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome) {
+    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
@@ -952,7 +952,7 @@ class DigifuApp {
 
         this.synth.Init(this.audioCtx);
         this.metronome.Init(this.audioCtx);
-        this.net.Connect(this);
+        this.net.Connect(this, google_access_token);
     };
 
     Disconnect() {

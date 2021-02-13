@@ -8,6 +8,7 @@ const fs = require('fs');
 const fsp = fs.promises;
 const DFStats = require('./DFStats.js');
 const serveIndex = require('serve-index')
+const { google } = require('googleapis');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -27,14 +28,85 @@ gNanoid = nanoid;
 gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage';
 gStatsDBPath = gStoragePath + '\\DFStatsDB.json';
 gPathSeparator = "\\";
+gGoogleRedirectURL = "http://localhost:8081";
 if (process.env.DF_IS_OPENODE == 1) {
   gPathSeparator = "/";
   gStoragePath = '/var/www/storage';
   gStatsDBPath = gStoragePath + '/DFStatsDB.json';
+  gGoogleRedirectURL = "https://7jam.io";
 }
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
 
 gServerStats = new DFStats.DFStats(gStatsDBPath);
+
+
+// ----------------------------------------------------------------------------------------------------------------
+// BEGIN: google login stuff...
+const gHasGoogleAPI = () => process.env.DF_GOOGLE_CLIENT_ID && process.env.DF_GOOGLE_CLIENT_SECRET;
+//const gHasGoogleAPI = () => false;
+
+if (!gHasGoogleAPI()) {
+  console.log(`DF_GOOGLE_CLIENT_ID or DF_GOOGLE_CLIENT_SECRET are not set; google login will not be available.`);
+} else {
+  console.log(`Google auth enabled with client ID ${process.env.DF_GOOGLE_CLIENT_ID}`);
+}
+
+// here's an endpoint you can call to get a URL for logging in with google.
+app.get('/google_auth_url', (req, res) => {
+  try {
+    if (!gHasGoogleAPI()) {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({ url: null }));
+      return;
+    }
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.DF_GOOGLE_CLIENT_ID,
+      process.env.DF_GOOGLE_CLIENT_SECRET,
+      gGoogleRedirectURL
+    );
+
+    const scopes = [
+      'https://www.googleapis.com/auth/userinfo.email',
+    ];
+
+    const url = oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      prompt: 'consent',
+      scope: scopes,
+    });
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ url }));
+  } catch (e) {
+    console.log(`Exception in /google_auth_url`);
+    console.log(e);
+  }
+});
+
+
+app.get('/google_complete_authentication', (req, res) => {
+  try {
+    //console.log(`/google_complete_authentication invoked with code ${req.query.code}`);
+    const code = req.query.code;
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.DF_GOOGLE_CLIENT_ID,
+      process.env.DF_GOOGLE_CLIENT_SECRET,
+      gGoogleRedirectURL
+    );
+
+    oauth2Client.getToken(code).then(function (tokens) {
+      //console.log(`  => tokens retrieved: ${tokens}, client=${oauth2Client}`);
+      //console.log(`  => access token: ${tokens.tokens.access_token}`);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({ google_access_token: tokens.tokens.access_token }));
+    });
+  } catch (e) {
+    console.log(`Exception in /google_complete_authentication`);
+    console.log(e);
+  }
+});
+// END: google login stuff ----------------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -42,7 +114,6 @@ gServerStats = new DFStats.DFStats(gStatsDBPath);
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
 let gRooms = {}; // map roomID to RoomServer
-
 
 gAdminUserIDs = [];
 
@@ -108,7 +179,7 @@ class RoomServer {
 
     setTimeout(() => {
       this.OnRoomBeat();
-    }, 60000/roomState.bpm);
+    }, 60000 / roomState.bpm);
   }
 
   adminImportRoomState(data) {
@@ -190,48 +261,85 @@ class RoomServer {
         return;
       }
 
-      u.userID = clientSocket.id;
-      u.lastActivity = new Date();
-      u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
-      if (clientSocket.DFPosition) {
-        u.position = clientSocket.DFPosition; // if you're transitioning from a previous room, we store your neew position here across the workflow.
-      }
-      u.img = null;
+      const rejectUserEntry = () => {
+        clientSocket.emit(DF.ServerMessages.PleaseReconnect);
+      };
 
-      this.roomState.users.push(u);
+      const completeUserEntry = () => {
+        u.userID = clientSocket.id;
+        u.lastActivity = new Date();
+        u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
+        if (clientSocket.DFPosition) {
+          u.position = clientSocket.DFPosition; // if you're transitioning from a previous room, we store your neew position here across the workflow.
+        }
+        u.img = null;
 
-      let chatMessageEntry = new DF.DigifuChatMessage();
-      chatMessageEntry.messageID = DF.generateID();
-      chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
-      chatMessageEntry.fromUserID = u.userID;
-      chatMessageEntry.fromUserColor = u.color;
-      chatMessageEntry.fromUserName = u.name;
-      chatMessageEntry.timestampUTC = new Date();
-      chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
-      this.roomState.chatLog.push(chatMessageEntry);
+        this.roomState.users.push(u);
 
-      //log(`${JSON.stringify(clientSocket.handshake.query)}`);
-      gServerStats.OnUserWelcome(this.roomState.roomID, this.roomState.users.length);
+        if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
+          log(`An admin has been identified id=${u.userID} name=${u.name}.`);
+          gAdminUserIDs.push(u.userID);
+        } else {
+          log(`Welcoming user id=${u.userID} name=${u.name}, DF_ADMIN_PASSWORD=${clientSocket.handshake.query.DF_ADMIN_PASSWORD}.`);
+        }
 
-      if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
-        log(`An admin has been identified id=${u.userID} name=${u.name}.`);
-        gAdminUserIDs.push(u.userID);
+        let chatMessageEntry = new DF.DigifuChatMessage();
+        chatMessageEntry.messageID = DF.generateID();
+        chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
+        chatMessageEntry.fromUserID = u.userID;
+        chatMessageEntry.fromUserColor = u.color;
+        chatMessageEntry.fromUserName = u.name;
+        chatMessageEntry.timestampUTC = new Date();
+        chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
+        this.roomState.chatLog.push(chatMessageEntry);
+
+        gServerStats.OnUserWelcome(this.roomState.roomID, this.roomState.users.length);
+
+        // notify this 1 user of their user id & room state
+        clientSocket.emit(DF.ServerMessages.Welcome, {
+          yourUserID: clientSocket.id,
+          accessLevel: IsAdminUser(clientSocket.id) ? DF.AccessLevels.Admin : DF.AccessLevels.User,
+          roomState: this.roomState
+        });
+
+        // broadcast user enter to all clients except the user.
+        clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
+      };
+
+      const token = clientSocket.handshake.query.google_access_token;
+      if (token) {
+        // use google auth token to get a google user id.
+        var oaclient = new google.auth.OAuth2();
+        oaclient.setCredentials({ access_token: token });
+        var googleUser = google.oauth2({
+          auth: oaclient,
+          version: 'v2'
+        });
+        googleUser.userinfo.get(
+          (err, res) => {
+            if (err) {
+              console.log(`google_access_token validation failed for token ${token}`);
+              console.log(JSON.stringify(err.errors));
+              rejectUserEntry();
+            } else {
+              // <email scope>
+              //     "id": "1234567789345783495",
+              //     "email": "email@something.com",
+              //     "verified_email": true,
+              console.log(`user login with google access token produced : ${res.data.id}`);
+              console.log(`*** TODO: use this to influence the userID, fetch verified user data from a database.`);
+              //console.log(JSON.stringify(res.data, null, 2));
+              completeUserEntry();
+            }
+          });
       } else {
-        log(`Welcoming user id=${u.userID} name=${u.name}, DF_ADMIN_PASSWORD=${clientSocket.handshake.query.DF_ADMIN_PASSWORD}.`);
+        completeUserEntry();
       }
 
-      // notify this 1 user of their user id & room state
-      clientSocket.emit(DF.ServerMessages.Welcome, {
-        yourUserID: clientSocket.id,
-        accessLevel: IsAdminUser(clientSocket.id) ? DF.AccessLevels.Admin : DF.AccessLevels.User,
-        roomState: this.roomState
-      });
-
-      // broadcast user enter to all clients except the user.
-      clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
     } catch (e) {
       log(`OnClientIdentify exception occurred`);
       log(e);
+      rejectUserEntry();
     }
   };
 
@@ -832,7 +940,7 @@ class RoomServer {
       }
 
       const now = new Date();
-      if ((now - foundUser.user.lastCheerSentDate) <  DF.ClientSettings.MinCheerIntervalMS) {
+      if ((now - foundUser.user.lastCheerSentDate) < DF.ClientSettings.MinCheerIntervalMS) {
         return;
       }
       foundUser.user.lastCheerSentDate = now;
@@ -856,19 +964,19 @@ class RoomServer {
 
   // bpm
   OnClientRoomBPM(ws, data) {
-      //log("tick");
-      this.roomState.bpm = data.bpm;
+    //log("tick");
+    this.roomState.bpm = data.bpm;
   }
 
   // called per every beat, BPM is defined in roomState
   OnRoomBeat() {
-    try{
+    try {
       setTimeout(() => {
         this.OnRoomBeat();
       }, 60000 / this.roomState.bpm); //delay between beats(in ms) = 60000 / bpm (maybe define this in util?)
-      
-      io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm : this.roomState.bpm }); //send bpm in order to synchronize
-    } catch(e){
+
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.bpm }); //send bpm in order to synchronize
+    } catch (e) {
       log(`OnRoomBeat exception occured`);
       log(e);
     }

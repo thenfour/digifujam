@@ -60,4 +60,8 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
 
 - /stats.html to see activity graphs
 - /storage to view storage (feed, server state...)
-
+- server environment variables:
+  - DF_IS_OPENODE = 1 or 0
+  - DF_ADMIN_PASSWORD
+  - DF_GOOGLE_CLIENT_ID
+  - DF_GOOGLE_CLIENT_SECRET
