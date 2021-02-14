@@ -26,6 +26,10 @@ Some notes:
 
 Basically, this is a labor of love and cobbled together, so please expect problems unless you're on Chrome.
 
+### How do you start jamming?
+
+You must be using a MIDI-compatible browser (Chrome or Edge on Windows / Mac), and have a midi device connected and available. Hover over an instrument and click "play".
+
 ### Where is the server located?
 
 The server is hosted in Amsterdam by openode.io.
@@ -50,11 +54,20 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
 
 ## deployment process
 
-- if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1;
-- copy the previous server state before deployment using admin tools
+- if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1; to make clients have to reconnect.
 - openode deploy
-- paste the previous server state after the site is back up; everyone will have to log back in.
-- openode logs for sanity
+- openode logs
+  - check that latest server state backup was loaded
+  - check mongo connection
+  - check google config
+  - no exceptions
+- smoke test
+  - play synth, samples, drums
+  - load a preset
+  - cheer
+  - message
+  - rooms
+  - check for exceptions
 
 ## odds & ends & quirks
 
