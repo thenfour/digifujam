@@ -206,9 +206,10 @@ const AccessLevels = {
 
 class DigifuUser {
     constructor() {
-        this.userID = null;
+        this.userID = null; // if guest, this is "guest<id>", if it's from a database user, then it's the ObjectId from users table.
         this.pingMS = 0;
         this.lastActivity = null; // this allows us to display as idle or release instrument
+        this.persistentInfo = null; // if you sign in with google (et al) this gets set to the (public) database info. it means you're not a guest.
 
         this.name = "";
         this.color = "";

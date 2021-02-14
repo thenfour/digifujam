@@ -9,6 +9,7 @@ const fsp = fs.promises;
 const DFStats = require('./DFStats.js');
 const serveIndex = require('serve-index')
 const { google } = require('googleapis');
+const DFDB = require('./DFDB');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -40,6 +41,7 @@ const gPathLatestServerState = `${gStoragePath}${gPathSeparator}serverState_late
 
 gServerStats = new DFStats.DFStats(gStatsDBPath);
 
+let gDB = null;// new DFDB.DFDB();
 
 // ----------------------------------------------------------------------------------------------------------------
 // BEGIN: google login stuff...
@@ -122,6 +124,23 @@ let IsAdminUser = (userID) => {
   return gAdminUserIDs.some(x => x == userID);
 };
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+// convert a db model DFUser to a struct usable in DigifuUser.persistentInfo
+// see models/DFUser.js for the src format
+const DFUserToPersistentInfo = (doc, followersCount) => {
+  return {
+    global_roles: doc.global_roles,
+    bands: doc.bands,
+    room_roles: doc.room_roles,
+    stats: doc.stats,
+    followingUsersCount: doc.following_users.length,
+    followersCount,
+  };
+};
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomServer {
 
@@ -189,7 +208,10 @@ class RoomServer {
 
   // returns { user, index } or null.
   FindUserFromSocket(clientSocket) {
-    return this.roomState.FindUserByID(clientSocket.id);
+    if (!clientSocket.DFUserID) {
+      throw new Error(`Socket ${clientSocket.id} has no DFUserID`);
+    }
+    return this.roomState.FindUserByID(clientSocket.DFUserID);
   };
 
   Idle_CheckIdlenessAndEmit() {
@@ -266,8 +288,11 @@ class RoomServer {
         clientSocket.emit(DF.ServerMessages.PleaseReconnect);
       };
 
-      const completeUserEntry = () => {
-        u.userID = clientSocket.id;
+      const completeUserEntry = (userID, persistentInfo) => {
+        u.userID = userID;
+        clientSocket.DFUserID = userID;
+        console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
+        u.persistentInfo = persistentInfo;
         u.lastActivity = new Date();
         u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
         if (clientSocket.DFPosition) {
@@ -281,7 +306,7 @@ class RoomServer {
           log(`An admin has been identified id=${u.userID} name=${u.name}.`);
           gAdminUserIDs.push(u.userID);
         } else {
-          log(`Welcoming user id=${u.userID} name=${u.name}, DF_ADMIN_PASSWORD=${clientSocket.handshake.query.DF_ADMIN_PASSWORD}.`);
+          log(`Welcoming user id=${u.userID} name=${u.name}, persistentInfo:${JSON.stringify(persistentInfo)}`);
         }
 
         let chatMessageEntry = new DF.DigifuChatMessage();
@@ -298,8 +323,8 @@ class RoomServer {
 
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
-          yourUserID: clientSocket.id,
-          accessLevel: IsAdminUser(clientSocket.id) ? DF.AccessLevels.Admin : DF.AccessLevels.User,
+          yourUserID: userID,
+          accessLevel: IsAdminUser(userID) ? DF.AccessLevels.Admin : DF.AccessLevels.User,
           roomState: this.roomState
         });
 
@@ -327,14 +352,16 @@ class RoomServer {
               //     "id": "1234567789345783495",
               //     "email": "email@something.com",
               //     "verified_email": true,
-              console.log(`user login with google access token produced : ${res.data.id}`);
-              console.log(`*** TODO: use this to influence the userID, fetch verified user data from a database.`);
-              //console.log(JSON.stringify(res.data, null, 2));
-              completeUserEntry();
+              gDB.GetOrCreateGoogleUser(u.name, u.color, res.data.id).then(userDoc => {
+                gDB.GetFollowerCount(userDoc._id).then(followersCount => {
+                  //console.log(`OK i have this user doc: ${JSON.stringify(userDoc, null, 2)}`);
+                  completeUserEntry(userDoc._id, DFUserToPersistentInfo(userDoc, followersCount));
+                });
+              });
             }
           });
       } else {
-        completeUserEntry();
+        completeUserEntry("guest_" + DF.generateID(), null);
       }
 
     } catch (e) {
@@ -985,7 +1012,7 @@ class RoomServer {
 
   OnAdminChangeRoomState(ws, data) {
     try {
-      if (!IsAdminUser(ws.id)) throw new Error(`User isn't an admin.`);
+      if (!IsAdminUser(ws.DFUserID)) throw new Error(`User isn't an admin.`);
 
       switch (data.cmd) {
         case "setAnnouncementHTML":
@@ -1021,9 +1048,17 @@ class RoomServer {
       // the disconnect event to remove the user.
       // clients should do the same kind of cleanup: remove any users not appearing in the returned list, as if they've been disconnected.
       let deletedUsers = [];
+
+      let knownConnectedUserIDs = [];
+      io.of('/').sockets.forEach(s => {
+        if (!s.DFUserID) return;
+        knownConnectedUserIDs.push(s.DFUserID);
+      });
+
       this.roomState.users.removeIf(u => {
-        let ws = io.of('/').sockets.get(u.userID);
-        let shouldDelete = !ws;
+        let socketExists = knownConnectedUserIDs.some(id => id == u.userID);
+
+        let shouldDelete = !socketExists;
         if (shouldDelete) {
           log(`PING USER CLEANUP removing userid ${u.userID}`);
           deletedUsers.push(u);
@@ -1149,14 +1184,17 @@ let ForwardToRoom = function (ws, fn) {
 let OnDisconnect = function (ws) {
   // remove from all rooms.
   Object.keys(gRooms).forEach(roomID => {
-    gRooms[roomID].ClientLeaveRoom(ws, ws.id);
+    if (!ws.DFUserID) {
+      console.log(`! OnDisconnect / websocket doesn't have a user ID.`);
+    }
+    gRooms[roomID].ClientLeaveRoom(ws, ws.DFUserID);
   });
 };
 
 
 let OnClientDownloadServerState = (ws) => {
   try {
-    if (!IsAdminUser(ws.id)) throw new Error(`User isn't an admin.`);
+    if (!IsAdminUser(ws.DFUserID)) throw new Error(`User isn't an admin.`);
 
     // the server state dump is really just everything except users.
     let allRooms = [];
@@ -1177,7 +1215,7 @@ let OnClientDownloadServerState = (ws) => {
 
 let OnClientUploadServerState = (ws, data) => {
   try {
-    if (!IsAdminUser(ws.id)) throw new Error(`User isn't an admin.`);
+    if (!IsAdminUser(ws.DFUserID)) throw new Error(`User isn't an admin.`);
 
     log(`uploaded server state with len=${JSON.stringify(data).length}`);
     data.forEach(rs => {
@@ -1188,17 +1226,7 @@ let OnClientUploadServerState = (ws, data) => {
     });
 
     io.of('/').sockets.forEach(ws => {
-      ws.emit(DF.ServerMessages.PleaseReconnect); // much safer to just force them out.
-      // tell client to rejoin the room.
-      // let roomID = Object.keys(gRooms).find(roomID => {
-      //   let foundUser = gRooms[roomID].FindUserFromSocket(ws);
-      //   return !!foundUser;
-      // });
-      // if (roomID) {
-      //   log(`Re-welcoming user with id ${ws.id} to ${roomState.roomTitle}`);
-      //   //newRoom.ClientJoin(ws, gRooms[roomID].roomState.roomTitle);
-      // }
-
+      ws.emit(DF.ServerMessages.PleaseReconnect);
     });
 
   } catch (e) {
@@ -1300,8 +1328,6 @@ let roomsAreLoaded = function () {
         throw new Error(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
       }
 
-      //gServerStats.OnUserConnect();
-
       ws.on('disconnect', data => OnDisconnect(ws, data));
       ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRequest, data => ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));
@@ -1376,4 +1402,9 @@ loadRoom(fs.readFileSync("pub.json"), serverRestoreState);
 loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
 loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
 
-roomsAreLoaded();
+gDB = new DFDB.DFDB(() => {
+  roomsAreLoaded();
+}, () => {
+  // error
+});
+

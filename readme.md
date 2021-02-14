@@ -65,3 +65,5 @@ Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But
   - DF_ADMIN_PASSWORD
   - DF_GOOGLE_CLIENT_ID
   - DF_GOOGLE_CLIENT_SECRET
+  - DF_MONGO_CONNECTIONSTRING
+
