@@ -160,19 +160,23 @@
                 let now = new Date();
                 let ago24h = new Date(Date.now() - 86400 * 1000);
 
-                let avgNotesByHourOfDayDataset24H = serverStatsAvgByHourOfDay.filter(d => d.date >= ago24h).map(d => {
+                let avgNotesByHourOfDayDataset24H = serverStatsByAbsHour.filter(d => d.date >= ago24h).map(d => {
                     return {
                         x: d.hourOfDay,
                         y: d.notes,
                     };
                 });
 
-                let avgUsersByHourOfDayDataset24H = serverStatsAvgByHourOfDay.filter(d => d.date >= ago24h).map(d => {
+                avgNotesByHourOfDayDataset24H = avgNotesByHourOfDayDataset24H.sort((a,b) => a.x - b.x);
+
+                let avgUsersByHourOfDayDataset24H = serverStatsByAbsHour.filter(d => d.date >= ago24h).map(d => {
                     return {
                         x: d.hourOfDay,
                         y: d.maxUsers,
                     };
                 });
+                avgUsersByHourOfDayDataset24H = avgUsersByHourOfDayDataset24H.sort((a,b) => a.x - b.x);
+
 
                 var byHourChart = new Chart(byHourCanvas, {
                     type: 'line',
