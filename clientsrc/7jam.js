@@ -15,7 +15,6 @@ $(() => {
     // a default room name based on the URL you entered. only to be used when you're not connected to a room.
     let roomID = DF.routeToRoomID(window.location.pathname);
     window.DFRoomID = roomID;
-    window.DFHomepage = window.location.origin;
 
     ReactDOM.render(
         <DFUI.RootArea />,

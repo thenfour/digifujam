@@ -1,6 +1,12 @@
 const React = require('react');
 const DFReactUtils = require("./DFReactUtils");
 
+const GetHomepage = () => {
+    const st = window.localStorage.getItem("DFHomepage");
+    if (st) return st;
+    return window.location.origin;
+};
+
 class Connection extends React.Component {
     constructor(props) {
         super(props);
@@ -29,8 +35,6 @@ class Connection extends React.Component {
         return !!window.localStorage.getItem("google_auth_code");
     };
 
-    isGoogleStep
-
     componentDidMount() {
         if (this.nameInput && this.nameInput.inputRef) {
             this.nameInput.inputRef.focus();
@@ -40,9 +44,9 @@ class Connection extends React.Component {
         if (this.isGoogleRedirect()) {
             // #3: you have just been redirected back after positive google consent form.
             // - store queryparams in session cookie, redirect to homepage to clean the URL bar URL.
-            console.log(`#3: google gave code ${queryParams.get("code")}; directing to ${window.DFHomepage}`);
+            console.log(`#3: google gave code ${queryParams.get("code")}; directing to ${GetHomepage()}`);
             window.localStorage.setItem("google_auth_code", queryParams.get("code"));
-            window.location.href = window.DFHomepage;
+            window.location.href = GetHomepage();
         } else if (this.isHomepageRedirectForURLSanitization()) {
             // #4: you've been redirected to homepage from #3.
             const authCode = window.localStorage.getItem("google_auth_code");
@@ -83,6 +87,7 @@ class Connection extends React.Component {
             this.setState({ showValidationErrors: true });
             return;
         }
+        window.localStorage.setItem("DFHomepage", window.location.href);
         window.localStorage.setItem("userName", this.state.userName);
         window.localStorage.setItem("userColor", this.state.userColor);
         window.location.href = this.state.googleAuthURL;
@@ -94,6 +99,7 @@ class Connection extends React.Component {
             this.setState({ showValidationErrors: true });
             return;
         }
+        window.localStorage.setItem("DFHomepage", window.location.href);
         this.props.handleConnect(this.state.userName, this.state.userColor, google_access_token);
     }
 
