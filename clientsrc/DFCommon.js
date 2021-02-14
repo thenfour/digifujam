@@ -137,7 +137,7 @@ const ServerMessages = {
     ServerStateDump: "ServerStateDump",
 
     RoomBeat: "RoomBeat", //bpm
-    
+
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
     InstrumentBankMerge: "InstrumentBankMerge", // [{preset},{preset...}]
@@ -199,11 +199,6 @@ const eParamMappingSource = {
     CC11: 11,
 };
 
-const AccessLevels = {
-    User: 0,
-    Admin: 1,
-};
-
 class DigifuUser {
     constructor() {
         this.userID = null; // if guest, this is "guest<id>", if it's from a database user, then it's the ObjectId from users table.
@@ -226,7 +221,36 @@ class DigifuUser {
     }
 
     thaw() { /* no child objects to thaw. */ }
-};
+
+    IsAdmin() {
+        return this.hasGlobalRole("sysadmin");
+    }
+
+    addGlobalRole(role) {
+        if (!this.persistentInfo) {
+            this.persistentInfo = {
+                global_roles: [role],
+                bands: [],
+                room_roles: [],
+                followingUsersCount: 0,
+                followersCount: 0,
+            };
+            return;
+        }
+        if (!this.persistentInfo.global_roles) {
+            this.persistentInfo.global_roles = [role];
+            return;
+        }
+        this.persistentInfo.global_roles.push(role);
+    }
+
+    hasGlobalRole(role) {
+        if (!this.persistentInfo) return false;
+        if (!this.persistentInfo.global_roles) return false;
+        return this.persistentInfo.global_roles.some(x => x == role);
+    }
+
+}; // DigifuUser
 
 const InstrumentParamType = {
     intParam: "intParam",
@@ -1802,7 +1826,6 @@ module.exports = {
     RoomFn,
     RoomFns,
     DFRoomItemType,
-    AccessLevels,
     SetGlobalInstrumentList,
     InternalInstrumentParams,
     MidiNoteToFrequency,

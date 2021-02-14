@@ -110,20 +110,10 @@ app.get('/google_complete_authentication', (req, res) => {
 });
 // END: google login stuff ----------------------------------------------------------------------------------------------------------------
 
-
-
-
 // populate initial room state
 // https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
 let gRooms = {}; // map roomID to RoomServer
-
-gAdminUserIDs = [];
-
-let IsAdminUser = (userID) => {
-  return gAdminUserIDs.some(x => x == userID);
-};
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -300,14 +290,14 @@ class RoomServer {
         }
         u.img = null;
 
-        this.roomState.users.push(u);
-
         if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
           log(`An admin has been identified id=${u.userID} name=${u.name}.`);
-          gAdminUserIDs.push(u.userID);
+          u.addGlobalRole("sysadmin");
         } else {
           log(`Welcoming user id=${u.userID} name=${u.name}, persistentInfo:${JSON.stringify(persistentInfo)}`);
         }
+
+        this.roomState.users.push(u);
 
         let chatMessageEntry = new DF.DigifuChatMessage();
         chatMessageEntry.messageID = DF.generateID();
@@ -324,7 +314,6 @@ class RoomServer {
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
           yourUserID: userID,
-          accessLevel: IsAdminUser(userID) ? DF.AccessLevels.Admin : DF.AccessLevels.User,
           roomState: this.roomState
         });
 
@@ -683,7 +672,7 @@ class RoomServer {
       const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
       let foundp = bank.presets.find(p => p.presetID == data.presetID);
       if (!foundp) throw new Error(`unable to find the preset ${data.presetID}`);
-      if (IsAdminUser(foundUser.user.userID)) {
+      if (foundUser.user.IsAdmin()) {
         if (foundp.isReadOnly) log(`An admin user ${foundUser.user.userID} | ${foundUser.user.name} is deleting a read-only preset ${data.presetID}`);
       } else {
         if (foundp.isReadOnly) throw new Error(`don't try to delete a read-only preset.`);
@@ -779,7 +768,7 @@ class RoomServer {
       let existing = bank.presets.find(p => p.presetID == patchObj.presetID);
       if (existing) {
         if (existing.isReadOnly) {
-          if (IsAdminUser(foundUser.user.userID)) {
+          if (foundUser.user.IsAdmin()) {
             // if you're an admin user, overwriting a READ-ONLY preset, then keep it read-only.
             patchObj.isReadOnly = true;
             log(`An admin user ${foundUser.user.userID} ${foundUser.user.name} is overwriting read-only preset ${patchObj.presetID}. Keeping it read-only.`);
@@ -1012,7 +1001,13 @@ class RoomServer {
 
   OnAdminChangeRoomState(ws, data) {
     try {
-      if (!IsAdminUser(ws.DFUserID)) throw new Error(`User isn't an admin.`);
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnAdminChangeRoomState => unknown user`);
+        return;
+      }
+
+      if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
 
       switch (data.cmd) {
         case "setAnnouncementHTML":
@@ -1194,7 +1189,13 @@ let OnDisconnect = function (ws) {
 
 let OnClientDownloadServerState = (ws) => {
   try {
-    if (!IsAdminUser(ws.DFUserID)) throw new Error(`User isn't an admin.`);
+    let foundUser = this.FindUserFromSocket(ws);
+    if (foundUser == null) {
+      log(`OnClientDownloadServerState => unknown user`);
+      return;
+    }
+
+    if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
 
     // the server state dump is really just everything except users.
     let allRooms = [];
@@ -1215,7 +1216,13 @@ let OnClientDownloadServerState = (ws) => {
 
 let OnClientUploadServerState = (ws, data) => {
   try {
-    if (!IsAdminUser(ws.DFUserID)) throw new Error(`User isn't an admin.`);
+    let foundUser = this.FindUserFromSocket(ws);
+    if (foundUser == null) {
+      log(`OnClientUploadServerState => unknown user`);
+      return;
+    }
+
+    if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
 
     log(`uploaded server state with len=${JSON.stringify(data).length}`);
     data.forEach(rs => {

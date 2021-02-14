@@ -200,8 +200,6 @@ class DigifuApp {
         this._pitchBendRange = 2;
         this._midiPBValue = 0; // -1 to 1
 
-        this.accessLevel = DF.AccessLevels.User; // on the client of course this doesn't allow you to do anything except send the commands to the server who will reject them.
-
         this.midi = new DFMidi.DigifuMidi();
         this.metronome = new DFMetronome.DigifuMetronome();
         this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
@@ -216,10 +214,6 @@ class DigifuApp {
                 this.stateChangeHandler();
             }
         });
-    }
-
-    get isAdmin() {
-        return this.accessLevel == DF.AccessLevels.Admin;
     }
 
     get RoomID() {

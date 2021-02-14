@@ -397,6 +397,19 @@ button.muteButton:focus
 
 .userName {
     font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+}
+
+.userName .role {
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+    font-size: xx-small;
+    background-color: #444;
+    color: #ccc;
+    padding: 2px;
+    border-radius: 6px;
 }
   
   .cheer {
