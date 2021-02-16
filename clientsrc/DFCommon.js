@@ -204,7 +204,8 @@ class DigifuUser {
         this.userID = null; // if guest, this is "guest<id>", if it's from a database user, then it's the ObjectId from users table.
         this.pingMS = 0;
         this.lastActivity = null; // this allows us to display as idle or release instrument
-        this.persistentInfo = null; // if you sign in with google (et al) this gets set to the (public) database info. it means you're not a guest.
+        this.persistentInfo = null; // if you sign in with google (et al) this gets set to the (public) database info
+        this.hasPersistentIdentity = false; // true if your identity is not a guest
 
         this.name = "";
         this.color = "";
@@ -1234,13 +1235,8 @@ class DigifuInstrumentSpec {
         if (this.engine != "minifm") {
             let ret = this.params.filter(p => {
                 // internal params which aren't part of the normal param editing zone.
-                if (p.paramID === "presetID") return false;
-                if (p.paramID === "isReadOnly") return false;
-                if (p.paramID === "author") return false;
-                if (p.paramID === "savedDate") return false;
-                if (p.paramID === "tags") return false;
-                if (p.paramID === "patchName") return false;
-
+                if (p.isInternal) return false;
+                
                 if (p.groupName.toLowerCase().includes(filterTxt)) return true;
                 if (p.name.toLowerCase().includes(filterTxt)) return true;
                 if (p.tags.toLowerCase().includes(filterTxt)) return true;

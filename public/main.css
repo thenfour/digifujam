@@ -402,16 +402,17 @@ button.muteButton:focus
 }
 
 .userName .role {
-    display: inline-block;
-    margin-left: 3px;
-    margin-right: 3px;
-    font-size: xx-small;
-    background-color: #444;
-    color: #ccc;
-    padding: 2px;
-    border-radius: 6px;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: x-small;
+        background-color: #555;
+        color: #ccc;
+        padding: 2px;
+        border-radius: 6px;
+        padding-left: 3px;
+        padding-right: 3px;
 }
-  
+
   .cheer {
     position:absolute;
     pointer-events:none;
@@ -1108,6 +1109,7 @@ li.floatParam.expanded.hasMapping
     height: 46px;
     border: 0;
     border-radius:0;
+    margin-top:20px;
  }
  .googleLoginButton:hover {
     background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_focus_web.png');
@@ -1125,6 +1127,21 @@ li.floatParam.expanded.hasMapping
     border: 0;
     border-radius:0;
  }
+
+ 
+  
+button.stayLoggedIn {
+    border: 0;
+}
+
+button.stayLoggedIn.on {
+    background-color: #077;
+}
+
+
+button.stayLoggedIn:hover {
+    background-color: #066;
+}
 
 
  /* https://loading.io/css/ */

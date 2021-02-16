@@ -6,6 +6,7 @@ const DFUtils = require("../util");
 const DFSignIn = require("./DFSignIn");
 const DFReactUtils = require("./DFReactUtils");
 const DFAdminControls = require("./adminControls");
+const UIUser = require("./UIUser");
 
 const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
@@ -15,6 +16,55 @@ const GetHomepage = () => {
     const st = window.localStorage.getItem("DFHomepage");
     if (st) return st;
     return window.location.origin;
+};
+
+const htmlEncode = (str) => {
+    let p = document.createElement("p");
+    p.textContent = str;
+    return p.innerHTML;
+};
+
+
+const getTimeSpanInfo = (ms) => {
+    //const Sign = Math.sign(ms);
+    //ms = Math.abs(ms);
+    if (ms < 0) ms = 0;
+    const TotalSeconds = Math.floor(ms / 1000);
+    const TotalMinutes = Math.floor(ms / 60000);
+    const TotalHours = Math.floor(ms / (60000 * 60));
+    const TotalDays = Math.floor(ms / (60000 * 60 * 24));
+    const SecondsPart = TotalSeconds % 60;
+    const MinutesPart = TotalMinutes % 60;
+    const HoursPart = TotalHours % 24;
+    let ShortString = `${TotalHours}h ${MinutesPart}m ${SecondsPart}s`;
+    if (!TotalHours && !!MinutesPart) {
+        ShortString = `${MinutesPart}m ${SecondsPart}s`;
+    } else if (!TotalHours && !MinutesPart) {
+        ShortString = `${SecondsPart}s`;
+    }
+
+    let LongString = `${TotalDays} days ${HoursPart} hours ${MinutesPart} minutes ${SecondsPart} seconds`;
+    if (!TotalDays) {
+        LongString = `${HoursPart} hours ${MinutesPart} minutes ${SecondsPart} seconds`;
+        if (!HoursPart) {
+            LongString = `${MinutesPart} minutes ${SecondsPart} seconds`;
+            if (!MinutesPart) {
+                LongString = `${SecondsPart} seconds`;
+            }
+        }
+    }
+
+    return {
+        TotalSeconds,
+        TotalMinutes,
+        TotalHours,
+        TotalDays,
+        SecondsPart,
+        MinutesPart,
+        HoursPart,
+        ShortString,
+        LongString,
+    };
 };
 
 class InstTextParam extends React.Component {
@@ -1233,17 +1283,13 @@ class UserList extends React.Component {
         if (!this.props.app || !this.props.app.roomState) {
             return null;
         }
-        //         let meText = (u.userID == digifuApp.myUser.userID) ? "<ME>" : "";
 
         const room = this.props.app.rooms && this.props.app.rooms.find(r => r.roomID == this.props.app.roomState.roomID);
 
-
         const users = this.props.app.roomState.users.map(u => (
             <li key={u.userID}>
-                <span className="userName" style={{ color: u.color }}>
-                    {u.name}
-                    {u.IsAdmin() && <span className="role sysadmin">Admin</span>}
-                </span>
+                {this.props.app.myUser.IsAdmin() && <UIUser.AdminUserMgmt user={u} />}
+                <UIUser.UIUserName user={u} />
                 <span className="userPing"> ({u.pingMS}ms ping)</span>
             </li>
         ));
@@ -1476,7 +1522,10 @@ class UserAvatar extends React.Component {
 
         return (
             <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
-                <div><span className="userName">{this.props.user.name}</span></div>
+                <div>
+                    {/* <span className="userName">{this.props.user.name}</span> */}
+                    <UIUser.UIUserName user={this.props.user} />
+                </div>
                 {instMarkup}
             </div>
         );
@@ -1673,11 +1722,40 @@ class FullChatLog extends React.Component {
 
 
 class AnnouncementArea extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        };
+    }
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
+        let html = this.props.app.roomState.announcementHTML;
+        const countdownPrefix = "{{countdown:";
+        const countdownSuffix = "}}";
+        let begin = html.indexOf(countdownPrefix);
+        if (begin != -1) {
+            let end = html.indexOf(countdownSuffix, begin);
+            if (end != -1) {
+                try {
+                    // countdown timer
+                    let dt = html.substring(begin + countdownPrefix.length, end);
+                    let remainingMS = (new Date(dt)) - (new Date());
+                    const info = getTimeSpanInfo(remainingMS);
+                    //console.log(`countdown time: ${dt}; remaining ms: ${remainingMS}`);
+                    //console.log(info);
+                    html = html.substring(0, begin) + info.LongString + html.substring(end + countdownSuffix.length);
+                    setTimeout(() => {
+                        this.setState({});
+                    }, 1000);
+                } catch (e) {
+                    // whatever.
+                }
+            }
+        }
+
         return (
-            <div id="announcementArea" dangerouslySetInnerHTML={{ __html: this.props.app.roomState.announcementHTML }}></div>
+            <div id="announcementArea" dangerouslySetInnerHTML={{ __html: html }}></div>
         );
     }
 };

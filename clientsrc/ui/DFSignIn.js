@@ -16,8 +16,12 @@ class Connection extends React.Component {
             userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
             showValidationErrors: false, // don't show until you try to connect
             googleAuthURL: null,
+            staySignedIn: true,
         };
 
+        if (window.localStorage.getItem("staySignedIn")) {
+            this.state.staySignedIn = window.localStorage.getItem("staySignedIn");
+        }
         if (window.localStorage.getItem("userName")) {
             this.state.userName = window.localStorage.getItem("userName");
         }
@@ -44,7 +48,7 @@ class Connection extends React.Component {
         if (this.isGoogleRedirect()) {
             // #3: you have just been redirected back after positive google consent form.
             // - store queryparams in session cookie, redirect to homepage to clean the URL bar URL.
-            console.log(`#3: google gave code ${queryParams.get("code")}; directing to ${GetHomepage()}`);
+            //console.log(`#3: google gave code ${queryParams.get("code")}; directing to ${GetHomepage()}`);
             window.localStorage.setItem("google_auth_code", queryParams.get("code"));
             window.location.href = GetHomepage();
         } else if (this.isHomepageRedirectForURLSanitization()) {
@@ -53,7 +57,7 @@ class Connection extends React.Component {
             window.localStorage.removeItem('google_auth_code');
             this.setState({ isWaitingForGoogleAuth: true });
 
-            console.log(`#4: homepage (clean URL) with code ${authCode}. initiating ajax to get a real token.`);
+            //console.log(`#4: homepage (clean URL) with code ${authCode}. initiating ajax to get a real token.`);
             $.ajax({
                 type: 'GET',
                 url: '/google_complete_authentication',
@@ -61,7 +65,8 @@ class Connection extends React.Component {
                 dataType: 'json',
                 success: (data) => {
                     //window.sessionStorage.setItem("google_access_token", data.google_access_token);
-                    console.log(` ajax reply with real access token ${data.google_access_token}. now proceeding to connect.`);
+                    //console.log(` ajax reply with real access token ${data.google_access_token}. now proceeding to connect.`);
+                    //console.log(data);
                     window.localStorage.removeItem('isWaitingForGoogleAuth');
                     this.goConnect(data.google_access_token);
                 }
@@ -107,6 +112,10 @@ class Connection extends React.Component {
         this.goConnect();
     }
 
+    clickStaySignedIn = (e) => {
+        this.setState({staySignedIn : !this.state.staySignedIn});
+    }
+
     render() {
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
 
@@ -134,7 +143,6 @@ class Connection extends React.Component {
                                 style={{ width: 80 }}
                                 default={this.state.userName}
                                 onChange={(val) => this.setState({ userName: val })}
-                            //onEnter={this.onClickLoginAnonymous}
                             />
                         nickname
                         </li>}
@@ -143,7 +151,6 @@ class Connection extends React.Component {
                                 style={{ width: 80 }}
                                 value={this.state.userColor}
                                 onChange={(val) => this.setState({ userColor: val })}
-                            //onEnter={this.goConnect}
                             />
                                 <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>}
@@ -151,8 +158,12 @@ class Connection extends React.Component {
                             <li>
                                 <button onClick={this.onClickLoginAnonymous}>Enter as guest</button>
                             </li>}
-                        {showLoginControls && this.state.googleAuthURL && <li><button className="googleLoginButton" onClick={this.onClickGoogleSignin}></button></li>}
-
+                        {showLoginControls && this.state.googleAuthURL &&
+                            <li>
+                                <button className="googleLoginButton" onClick={this.onClickGoogleSignin}></button><br />
+                                {/* <button className={"stayLoggedIn" + (this.state.staySignedIn ? " on" : "")} onClick={this.clickStaySignedIn}>Stay signed in</button> */}
+                            </li>
+                        }
 
                     </ul>
 

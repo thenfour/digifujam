@@ -98,7 +98,7 @@ app.get('/google_complete_authentication', (req, res) => {
     );
 
     oauth2Client.getToken(code).then(function (tokens) {
-      //console.log(`  => tokens retrieved: ${tokens}, client=${oauth2Client}`);
+      //console.log(`  => tokens retrieved: ${JSON.stringify(tokens)}`);
       //console.log(`  => access token: ${tokens.tokens.access_token}`);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify({ google_access_token: tokens.tokens.access_token }));
@@ -278,8 +278,9 @@ class RoomServer {
         clientSocket.emit(DF.ServerMessages.PleaseReconnect);
       };
 
-      const completeUserEntry = (userID, persistentInfo) => {
+      const completeUserEntry = (userID, hasPersistentIdentity, persistentInfo) => {
         u.userID = userID;
+        u.hasPersistentIdentity = hasPersistentIdentity;
         clientSocket.DFUserID = userID;
         console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
         u.persistentInfo = persistentInfo;
@@ -330,6 +331,7 @@ class RoomServer {
           auth: oaclient,
           version: 'v2'
         });
+
         googleUser.userinfo.get(
           (err, res) => {
             if (err) {
@@ -344,13 +346,13 @@ class RoomServer {
               gDB.GetOrCreateGoogleUser(u.name, u.color, res.data.id).then(userDoc => {
                 gDB.GetFollowerCount(userDoc._id).then(followersCount => {
                   //console.log(`OK i have this user doc: ${JSON.stringify(userDoc, null, 2)}`);
-                  completeUserEntry(userDoc._id, DFUserToPersistentInfo(userDoc, followersCount));
+                  completeUserEntry(userDoc._id, true, DFUserToPersistentInfo(userDoc, followersCount));
                 });
               });
             }
           });
       } else {
-        completeUserEntry("guest_" + DF.generateID(), null);
+        completeUserEntry("guest_" + DF.generateID(), false, null);
       }
 
     } catch (e) {
