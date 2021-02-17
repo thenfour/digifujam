@@ -91,10 +91,10 @@ class DFDB {
             };
         });
         if (ops.length) {
-            console.log(`${JSON.stringify(ops)}`);
+            //console.log(`${JSON.stringify(ops)}`);
             DFUser.bulkWrite(ops).then(ret => {
-                console.log(`bulkwrite returned`)
-                console.log(`${JSON.stringify(ret)}`)
+                //console.log(`bulkwrite returned`)
+                //console.log(`${JSON.stringify(ret)}`)
             });
         }
     }
