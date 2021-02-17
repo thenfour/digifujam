@@ -200,6 +200,19 @@ const eParamMappingSource = {
 };
 
 class DigifuUser {
+
+    static emptyStatsObj() {
+        return {
+            noteOns: 0,
+            cheers: 0,
+            messages: 0,
+            presetsSaved: 0,
+            paramChanges: 0,
+            joins: 0,
+            connectionTimeSec: 0,
+        };
+    }
+
     constructor() {
         this.userID = null; // if guest, this is "guest<id>", if it's from a database user, then it's the ObjectId from users table.
         this.pingMS = 0;
@@ -213,12 +226,6 @@ class DigifuUser {
         this.img = null;
         this.idle = null; // this gets set when a user's instrument ownership becomes idle
         this.lastCheerSentDate = new Date();
-
-        this.stats = {
-            noteOns: 0,
-            cheers: 0,
-            messages: 0,
-        };
     }
 
     thaw() { /* no child objects to thaw. */ }
@@ -249,6 +256,11 @@ class DigifuUser {
         if (!this.persistentInfo) return false;
         if (!this.persistentInfo.global_roles) return false;
         return this.persistentInfo.global_roles.some(x => x == role);
+    }
+
+    IntegrateFromPing(u) {
+        this.pingMS = u.pingMS;
+        this.persistentInfo = u.persistentInfo;
     }
 
 }; // DigifuUser
@@ -1236,7 +1248,7 @@ class DigifuInstrumentSpec {
             let ret = this.params.filter(p => {
                 // internal params which aren't part of the normal param editing zone.
                 if (p.isInternal) return false;
-                
+
                 if (p.groupName.toLowerCase().includes(filterTxt)) return true;
                 if (p.name.toLowerCase().includes(filterTxt)) return true;
                 if (p.tags.toLowerCase().includes(filterTxt)) return true;
@@ -1555,12 +1567,6 @@ class DigifuRoomState {
                 return n;
             });
         }
-
-        // this.chatLog = data.chatLog.map(o => {
-        //     let n = Object.assign(new DigifuChatMessage(), o);
-        //     n.thaw();
-        //     return n;
-        // });
 
         this.stats = data.stats;
 

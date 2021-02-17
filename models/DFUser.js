@@ -26,10 +26,12 @@ const DFUserSchema = new mongoose.Schema({
     bands: [mongoose.Schema.Types.ObjectId],
     following_users: [mongoose.Schema.Types.ObjectId],
     stats: {
-        notes_played: Number,
-        param_changes: Number,
+        noteOns: Number,
         cheers: Number,
         messages: Number,
+        presetsSaved: Number,
+        paramChanges: Number,
+        joins: Number,
         connectionTimeSec: Number,
     }
 });

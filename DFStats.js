@@ -1,6 +1,7 @@
 const DF = require('./clientsrc/DFCommon');
 const fsp = require('fs').promises;
 const fs = require('fs');
+const DFDB = require('./DFDB');
 
 // https://github.com/typicode/lowdb
 class DFStats {
@@ -41,11 +42,14 @@ class DFStats {
             messages: 0,
             paramChanges: 0,
             maxUsers: 0,
+            presetsSaved: 0,
         };
     }
 
-    constructor(path) {
+    constructor(path, mongoDB) {
         this.path = path;
+        this.mongoDB = mongoDB;
+        
         console.log(`dfstats path = ${path}`);
 
         this.queuedByHourObj = {};
@@ -53,17 +57,20 @@ class DFStats {
         //this.adapter = new FileSync(path);
 
         try {
-            this.db = JSON.parse(fs.readFileSync(path));
+            this.serverStats = JSON.parse(fs.readFileSync(path));
         } catch (e) {
             console.log(`Starting a new statistics obj.`);
-            this.db = { byHour: {} };
+            this.serverStats = { byHour: {} };
         }
+
+        // to track user stats, map user => stats obj. stats obj is the same as in DigifuUser
+        this.queuedUserStats = {};
 
         setTimeout(() => this.OnFlushTimer(), DF.ServerSettings.StatsFlushMS);
         setTimeout(() => this.OnStatsPruneInterval(), DF.ServerSettings.StatsPruneIntervalMS);
     }
 
-
+    // removes old server statistics
     OnStatsPruneInterval() {
         try {
             const m1 = new Date();
@@ -72,7 +79,7 @@ class DFStats {
 
             const keysToRemove = [];
             const now = new Date();
-            const byHour = this.db.byHour;
+            const byHour = this.serverStats.byHour;
             Object.keys(byHour).forEach(k => {
                 const x = DFStats.parseHourID(k);
                 if ((now - x.date) > DF.ServerSettings.StatsMaxAgeMS) {
@@ -91,58 +98,93 @@ class DFStats {
         }
     }
 
+    // update stats file and database
     OnFlushTimer() {
         try {
-            const m1 = new Date();
+            //const m1 = new Date();
             setTimeout(() => this.OnFlushTimer(), DF.ServerSettings.StatsFlushMS);
             //console.log(`Saving db to ${this.path}`);
-            fsp.writeFile(this.path, JSON.stringify(this.db, null, 2), 'utf8');
+            fsp.writeFile(this.path, JSON.stringify(this.serverStats, null, 2), 'utf8');
             //console.log(`Stats: OnFlushTimer took ${((new Date() - m1) / 1000).toFixed(3)} sec`);
+
+            // TODO: write queued server stats to mongodb
+
+            // write queued user stats to mongodb
+            this.mongoDB.UpdateUserStats(this.queuedUserStats);
+            this.queuedUserStats = {};
+
         } catch (e) {
             console.log(`OnFlushTimer exception occurred`);
             console.log(e);
         }
     }
 
-    updateQueuedStats(roomID, updateCallback) {
+    updateQueuedStats(roomID, user, updateRoomStatsCallback, updateUserStatsCallback) {
         let hourID = DFStats.getHourID(roomID);
-        let existing = this.db.byHour[hourID] || DFStats.emptyStatsObj();
-        this.db.byHour[hourID] = updateCallback(existing);
+        this.serverStats.byHour[hourID] = updateRoomStatsCallback(this.serverStats.byHour[hourID] || DFStats.emptyStatsObj());
+        if (user.hasPersistentIdentity) {
+            this.queuedUserStats[user.userID] = updateUserStatsCallback(this.queuedUserStats[user.userID] || DF.DigifuUser.emptyStatsObj());
+        }
     }
 
-    OnUserWelcome(roomID, roomUserCount) {
-        this.updateQueuedStats(roomID, h => {
+    OnUserWelcome(roomID, user, roomUserCount) {
+        this.updateQueuedStats(roomID, user, h => {
             h.joins++;
             h.maxUsers = Math.max(roomUserCount, h.maxUsers);
             return h;
+        }, us => {
+            us.joins ++;
+            return us;
         });
     }
 
-    OnNoteOn(roomID) {
-        this.updateQueuedStats(roomID, h => {
+    OnNoteOn(roomID, user) {
+        this.updateQueuedStats(roomID, user, h => {
             h.notes++;
             return h;
+        }, us => {
+            us.noteOns ++;
+            return us;
         });
     }
 
-    OnCheer(roomID) {
-        this.updateQueuedStats(roomID, h => {
+    OnCheer(roomID, user) {
+        this.updateQueuedStats(roomID, user, h => {
             h.cheers++;
             return h;
+        }, us => {
+            us.cheers ++;
+            return us;
         });
     }
 
-    OnMessage(roomID) {
-        this.updateQueuedStats(roomID, h => {
+    OnMessage(roomID, user) {
+        this.updateQueuedStats(roomID, user, h => {
             h.messages++;
             return h;
+        }, us => {
+            us.messages ++;
+            return us;
         });
     }
 
-    OnParamChange(roomID, paramCount) {
-        this.updateQueuedStats(roomID, h => {
+    OnParamChange(roomID, user, paramCount) {
+        this.updateQueuedStats(roomID, user, h => {
             h.paramChanges += paramCount;
             return h;
+        }, us => {
+            us.paramChanges ++;
+            return us;
+        });
+    }
+
+    OnPresetSave(roomID, user) {
+        this.updateQueuedStats(roomID, user, h => {
+            h.presetsSaved ++;
+            return h;
+        }, us => {
+            us.presetsSaved ++;
+            return us;
         });
     }
 }

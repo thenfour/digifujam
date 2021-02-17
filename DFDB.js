@@ -30,13 +30,7 @@ class DFDB {
                 if (existing) {
                     existing.nickname = username;
                     existing.color = color;
-                    existing.stats = existing.stats || {
-                        notes_played: 0,
-                        param_changes: 0,
-                        cheers: 0,
-                        messages: 0,
-                        connectionTimeSec: 0,
-                    };
+                    existing.stats = existing.stats || DF.DigifuUser.emptyStatsObj();
                     existing.save().then(_ => {
                         console.log(`returning an existing user document ${existing._id}`);
                         resolve(existing);
@@ -49,13 +43,7 @@ class DFDB {
                     nickname: username,
                     color,
                     google_id,
-                    stats: {
-                        notes_played: 0,
-                        param_changes: 0,
-                        cheers: 0,
-                        messages: 0,
-                        connectionTimeSec: 0,
-                    }
+                    stats: DF.DigifuUser.emptyStatsObj()
                 });
                 n.save((error, document) => {
                     if (error) {
@@ -81,6 +69,34 @@ class DFDB {
                 resolve(count);
               });
         });
+    }
+
+
+    // userStats is an object with userIDs as keys
+    UpdateUserStats(userStats) {
+        const ops = Object.keys(userStats).map(userID => {
+
+            let incObj = {};
+            Object.keys(userStats[userID]).forEach(k => {
+                incObj["stats." + k] = userStats[userID][k];
+            });
+
+            return {
+                "updateOne": {
+                    "filter": { "_id" : mongoose.Types.ObjectId(userID)},
+                    "update": {
+                        $inc : incObj,
+                    },
+                }
+            };
+        });
+        if (ops.length) {
+            console.log(`${JSON.stringify(ops)}`);
+            DFUser.bulkWrite(ops).then(ret => {
+                console.log(`bulkwrite returned`)
+                console.log(`${JSON.stringify(ret)}`)
+            });
+        }
     }
 
 };

@@ -10,20 +10,29 @@ class UIUserName extends React.Component {
     getRoleDisplayText(role) {
         switch (role) {
             case "sysadmin":
-                return "@";
+                return null; // no point showing this.
         }
         return role;
     }
 
     render() {
+
+        let noteOnBadge = this.props.user.persistentInfo.stats.noteOns > 1000 && (
+            <span className="role noteOns">♫ {Math.floor(this.props.user.persistentInfo.stats.noteOns / 1000)}K</span>
+            //<span className="role noteOns">♫ {this.props.user.persistentInfo.stats.noteOns}</span>
+        );
+
         return (
             <span className="userName" style={{ color: this.props.user.color }}>
                 {this.props.user.name}
                 {this.props.user.hasPersistentIdentity && <span className="role hasPersistentIdentity">✓</span>}
                 {/* {this.props.user.IsAdmin() && <span className="role sysadmin">@</span>} */}
-                {this.props.user.persistentInfo && this.props.user.persistentInfo.global_roles && this.props.user.persistentInfo.global_roles.map(r => (
-                    <span className="role" key={r}>{this.getRoleDisplayText(r)}</span>
-                ))}
+                {this.props.user.persistentInfo && this.props.user.persistentInfo.global_roles && this.props.user.persistentInfo.global_roles.map(r => {
+                    const displayTxt = this.getRoleDisplayText(r);
+                    return displayTxt && (<span className="role" key={r}>{displayTxt}</span>);
+                })
+                }
+                {noteOnBadge}
             </span>
 
         );
@@ -32,7 +41,7 @@ class UIUserName extends React.Component {
 
 
 
-
+// TODO: this. ability to add badges, whatever stuff.
 class AdminUserMgmt extends React.Component {
     constructor(props) {
         super(props);
@@ -40,9 +49,7 @@ class AdminUserMgmt extends React.Component {
 
     render() {
         return (
-            <span>
-                ⚙
-            </span>
+            <span className="userMgmtGearIcon">⚙</span>
 
         );
     }

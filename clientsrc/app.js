@@ -633,7 +633,8 @@ class DigifuApp {
         room.users.forEach(u => {
             let foundUser = this.roomState.FindUserByID(u.userID);
             if (!foundUser) return; // this is possible because the server may be latent in sending this user data.
-            foundUser.user.pingMS = u.pingMS;
+            //foundUser.user.pingMS = u.pingMS;
+            foundUser.user.IntegrateFromPing(u);
         });
         this.worldPopulation = data.rooms.reduce((a, b) => a + b.users.length, 0);
         this.serverUptimeSec = data.serverUptimeSec;

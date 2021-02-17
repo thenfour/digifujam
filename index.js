@@ -39,7 +39,7 @@ if (process.env.DF_IS_OPENODE == 1) {
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
 const gPathLatestServerState = `${gStoragePath}${gPathSeparator}serverState_latest.json`;
 
-gServerStats = new DFStats.DFStats(gStatsDBPath);
+let gServerStats = null;
 
 let gDB = null;// new DFDB.DFDB();
 
@@ -127,6 +127,16 @@ const DFUserToPersistentInfo = (doc, followersCount) => {
     stats: doc.stats,
     followingUsersCount: doc.following_users.length,
     followersCount,
+  };
+};
+const EmptyDFUserToPersistentInfo = () => {
+  return {
+    global_roles: [],
+    bands: [],
+    room_roles: [],
+    stats: DF.DigifuUser.emptyStatsObj(),
+    followingUsersCount: 0,
+    followersCount: 0,
   };
 };
 
@@ -310,7 +320,7 @@ class RoomServer {
         chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
         this.roomState.chatLog.push(chatMessageEntry);
 
-        gServerStats.OnUserWelcome(this.roomState.roomID, this.roomState.users.length);
+        gServerStats.OnUserWelcome(this.roomState.roomID, u, this.roomState.users.length);
 
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
@@ -352,7 +362,7 @@ class RoomServer {
             }
           });
       } else {
-        completeUserEntry("guest_" + DF.generateID(), false, null);
+        completeUserEntry("guest_" + DF.generateID(), false, EmptyDFUserToPersistentInfo());
       }
 
     } catch (e) {
@@ -459,8 +469,8 @@ class RoomServer {
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
-      foundUser.user.stats.noteOns++;
-      gServerStats.OnNoteOn(this.roomState.roomID);
+      foundUser.user.persistentInfo.stats.noteOns++;
+      gServerStats.OnNoteOn(this.roomState.roomID, foundUser.user);
       this.roomState.stats.noteOns++;
 
       // broadcast to all clients except foundUser
@@ -580,7 +590,7 @@ class RoomServer {
 
       // set the value.
       foundInstrument.instrument.integrateRawParamChanges(data.patchObj, data.isWholePatch);
-      gServerStats.OnParamChange(this.roomState.roomID, Object.keys(data.patchObj).length);
+      gServerStats.OnParamChange(this.roomState.roomID, foundUser.user, Object.keys(data.patchObj).length);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, {
@@ -783,6 +793,8 @@ class RoomServer {
         bank.presets.push(patchObj);
       }
 
+      gServerStats.OnPresetSave(this.roomState.roomID, foundUser.user);
+
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentPresetSave, {
         instrumentID: foundInstrument.instrument.instrumentID,
         patchObj,
@@ -827,8 +839,8 @@ class RoomServer {
         return;
       }
 
-      gServerStats.OnMessage(this.roomState.roomID);
-      foundUser.user.stats.messages++;
+      gServerStats.OnMessage(this.roomState.roomID, foundUser.user);
+      foundUser.user.persistentInfo.stats.messages++;
       this.roomState.stats.messages++;
 
       this.roomState.chatLog.push(nm);
@@ -970,8 +982,8 @@ class RoomServer {
         return;
       }
 
-      gServerStats.OnCheer(this.roomState.roomID);
-      foundUser.user.stats.cheers++;
+      gServerStats.OnCheer(this.roomState.roomID, foundUser.user);
+      foundUser.user.persistentInfo.stats.cheers++;
       this.roomState.stats.cheers++;
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
@@ -1079,7 +1091,7 @@ class RoomServer {
         return {
           roomID: room.roomState.roomID,
           roomName: room.roomState.roomTitle,
-          users: room.roomState.users.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
+          users: room.roomState.users,//.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
           stats: room.roomState.stats
         };
       });
@@ -1122,7 +1134,7 @@ class RoomServer {
         return;
       }
 
-      log(`ClientLeaveRoom => ${userID} ${foundUser.user.name} after ${foundUser.user.stats.noteOns++} notes and ${foundUser.user.stats.messages} msgs`);
+      log(`ClientLeaveRoom => ${userID} ${foundUser.user.name}`);
 
       // remove references to this user.
       this.roomState.instrumentCloset.forEach(inst => {
@@ -1412,6 +1424,7 @@ loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
 loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
 
 gDB = new DFDB.DFDB(() => {
+  gServerStats = new DFStats.DFStats(gStatsDBPath, gDB);
   roomsAreLoaded();
 }, () => {
   // error
