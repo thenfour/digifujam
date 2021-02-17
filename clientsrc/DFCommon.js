@@ -2,7 +2,7 @@
 
 const { nanoid } = require("nanoid");
 
-let gDigifujamVersion = 6;
+let gDigifujamVersion = 7;
 
 Array.prototype.removeIf = function (callback) {
     var i = this.length;
