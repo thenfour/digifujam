@@ -327,7 +327,9 @@ class ParamMappingBox extends React.Component {
             <div>
                 Mapped to {this.props.instrument.getMappingSrcDisplayName(mappingSpec)}
                 <button onClick={this.clickClearMapping}>Clear</button>
-                <InstFloatParam app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={mappingSpec.mappingRange}></InstFloatParam>
+                <ul>
+                    <InstFloatParam app={this.props.app} instrument={this.props.instrument} observerMode={this.props.observerMode} param={mappingSpec.mappingRange}></InstFloatParam>
+                </ul>
                 Effective range: {effectiveRange[0].toFixed(3)} to {effectiveRange[1].toFixed(3)}
             </div>
         );
