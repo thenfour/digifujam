@@ -8,6 +8,8 @@ const DFNet = require("./net");
 
 const gUseDebugCtx = false;
 
+window.OfflineAudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+
 // https://github.com/WebAudio/web-audio-api/issues/6
 function _hasSelectiveDisconnect() {
     var c = new OfflineAudioContext(1, 1, 44100);

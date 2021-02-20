@@ -174,11 +174,11 @@
       "activityDisplay": "keyboard"
     },
     {
-      "instrumentID": "sf3",
+      "instrumentID": "choir_aahs",
       "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "pizzicato_strings",
+      "sfinstrumentName": "choir_aahs",
       "gain": 3,
-      "name": "Pizzicato",
+      "name": "Choir",
       "img": "",
       "color": "rgb(131, 145, 255)",
       "engine": "soundfont",

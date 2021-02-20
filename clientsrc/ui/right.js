@@ -1860,12 +1860,17 @@ class RoomArea extends React.Component {
 
     componentDidMount() {
         let e = document.getElementById("roomArea");
-        this.resizeObserver = new ResizeObserver((entries) => {
+        if (ResizeObserver) {
+            this.resizeObserver = new ResizeObserver((entries) => {
+                this.updateScrollSize();
+            });
+            this.resizeObserver.observe(e);
+    
             this.updateScrollSize();
-        });
-        this.resizeObserver.observe(e);
-
-        this.updateScrollSize();
+        }
+        else {
+            setInterval(() => this.updateScrollSize(), 3000);
+        }
     }
 
     componentWillUnmount() {

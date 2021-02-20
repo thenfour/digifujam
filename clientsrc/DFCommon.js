@@ -169,7 +169,7 @@ const ServerSettings = {
     StatsPruneIntervalMS: hoursToMS(24), // once a day prune stats
     StatsMaxAgeMS: daysToMS(365),
 
-    ServerStateBackupIntervalMS: minutesToMS(15),
+    ServerStateBackupIntervalMS: minutesToMS(5),
     ServerStatePruneIntervalMS: hoursToMS(24),
     ServerStateMaxAgeMS: daysToMS(5),
 };
