@@ -6,15 +6,16 @@ Online jam space for digital fusion musicians. Users connect with their MIDI ins
 
 Some notes:
 
+- There are multiple rooms; move between them by clicking on the doors (marked as a big blue outlined rectangle).
+  - Rooms have their own instrument closets, own preset banks.
+- Synth instruments of the same kind share a preset bank. So if you save a preset in FM4a, it will also be available in FM4b.
 - Nothing is stored on the server, period. Only 1 hour of chat log history is ever preserved; after that it vanishes into the void.
-- Setting reverb to 0 disconnects it entirely, saving a bit of CPU
-- Muting the audio also disconnects everything (TRUE BYPASS RITE?), again saving CPU
-- Pitch bend does not work on sampled instruments.
-- Sampled instruments also do not support loop points so they don't sustain very long.
+- Muting the audio disconnects everything (TRUE BYPASS), saving CPU if you're just idling
+- Limitation of the sampled instruments:
+  - Pitch bend not supported for sampled instruments
+  - Sampled instruments also do not support loop points so they don't sustain very long.
 - For synth instruments, click on a parameter value to be able to type it in. Hit "enter" to make sure it updates.
-- ADSR parameters don't automate well; they don't take effect until the next note on.
-- Sustain pedal supported.
-- Synth patches can be exported & imported via the clipboard.
+- ADSR parameters don't automate well; they don't take effect until the next note on, and have quirks largely due to the odd nature of Web Audio modulation.
 - If you are idle on your instrument for a while, it becomes available for others to take. Longer and it gets automatically released.
 
 ## FAQ
@@ -43,6 +44,17 @@ So, tip #1: Try not to expect millisecond latency, try and find creative ways to
 Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But Edge feels significantly more responsive.
 
 
+# Browser Compatibility
+This project aggressively uses latest tech in order to squeeze out features. I do all my development work an Chrome Windows, and smoke testing on Edge.
+
+- Chrome Windows will work best simply because that's where I do development.
+- Chrome Mac I expect full compatibility. I did not manage to get MIDI to work, but everything else looked fine.
+- Edge Windows should work because I smoke-test there occasionally.
+- Edge Mac I have never tested.
+- Firefox does not support MIDI, so it only works for spectators.
+- Safari does not support MIDI or ConstantSourceNode, so it's 100% incompatible.
+
+Feel free to report compatibility issues anyway.
 
 # tech stuff
 
