@@ -886,7 +886,8 @@ class DigifuApp {
 
     loadInitPatch() {
         if (!this.myInstrument) return false;
-        this.myInstrument.integrateRawParamChanges(this.roomState.GetInitPreset(this.myInstrument));
+        const presetObj = this.roomState.GetInitPreset(this.myInstrument);
+        this.loadPatchObj(presetObj, true);
     }
 
     createParamMappingFromSrcVal(param, srcVal) { // srcVal is directly mapped to MIDI CC

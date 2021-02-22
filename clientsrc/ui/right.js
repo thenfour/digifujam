@@ -819,9 +819,11 @@ class InstrumentParams extends React.Component {
             showingAllGroups: false,
             showingFactoryResetConfirmation: false,
             showingClipboardControls: false,
+            showingOverwriteConfirmation: false,
         };
         this.state.shownGroupNames = this.props.instrument.GetDefaultShownGroupsForInstrument();
     }
+
 
     onOpenClicked = () => {
         this.setState({ presetListShown: !this.state.presetListShown });
@@ -935,7 +937,15 @@ class InstrumentParams extends React.Component {
 
     onSaveAsExistingPreset = () => {
         this.props.app.saveLoadedPreset();
+        this.setState({ showingOverwriteConfirmation: false });
     }
+    onBeginOverwrite = () => {
+        this.setState({ showingOverwriteConfirmation: true });
+    };
+    onCancelOverwrite = () => {
+        this.setState({ showingOverwriteConfirmation: false });
+    }
+
 
 
     onImportBankClicked = () => {
@@ -1050,7 +1060,17 @@ class InstrumentParams extends React.Component {
                                     <InstTextParam key="patchDescription" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("description")}></InstTextParam>
                                     <InstTextParam key="patchTags" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("tags")}></InstTextParam>
                                     {!this.props.observerMode && <li className="instPresetButtons">
-                                        {writableExistingPreset && <button onClick={this.onSaveAsExistingPreset}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
+                                        {writableExistingPreset && <button onClick={this.onBeginOverwrite}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
+
+                                        {this.state.showingOverwriteConfirmation &&
+                                            <div className="confirmationBox">
+                                                Click 'OK' to overwrite "{writableExistingPreset.patchName}" with a patch named "{this.props.instrument.GetParamByID("patchName").currentValue}"<br />
+                                                <button className="OK" onClick={this.onSaveAsExistingPreset}>OK</button>
+                                                <button className="Cancel" onClick={this.onCancelOverwrite}>Cancel</button>
+                                            </div>
+                                        }
+
+
                                         <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
                                         {allowFactoryReset && <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>}
                                         {this.state.showingFactoryResetConfirmation &&
@@ -1865,7 +1885,7 @@ class RoomArea extends React.Component {
                 this.updateScrollSize();
             });
             this.resizeObserver.observe(e);
-    
+
             this.updateScrollSize();
         }
         else {
