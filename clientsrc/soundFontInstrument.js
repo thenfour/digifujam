@@ -1,23 +1,7 @@
 'use strict';
 
 var Soundfont = require('soundfont-player')
-
-class AudioGraphHelper {
-	constructor() {
-		this.nodes = {};
-	}
-	disconnect() {
-		Object.keys(this.nodes).forEach(k => {
-			let n = this.nodes[k];
-			if (n.stop) n.stop();
-			n.disconnect();
-		});
-		this.nodes = {};
-	}
-};
-
-
-
+const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SoundfontInstrument {

@@ -4,6 +4,8 @@ const DF = require("./DFCommon");
 const ADSR = require("./adhsr");
 const DFSynthTools = require("./synthTools");
 const PWM = require("./pwm");
+const FM4OscThreeNodeOptimizer = require("./fm4osc3NodeOptimizer").FM4OscThreeNodeOptimizer;
+const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
 
 class MiniFMSynthOsc {
     constructor(audioCtx, instrumentSpec) {
@@ -163,26 +165,17 @@ class MiniFMSynthOsc {
 
         // lfo1LevelAmt
         this.nodes.lfo1LevelAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>gain_mod");
-        //this.nodes.lfo1LevelAmt = this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo1LevelAmt.gain = this.paramValue("lfo1_gainAmt");
-        //lfo1_01.connect(this.nodes.lfo1LevelAmt);
         this.nodes.lfo1LevelAmt.connectFrom(lfo1_01);
 
-        // lfo1gainer
-        this.nodes.lfo1gainer = this.audioCtx.createGain("osc>gain_mod");
-        this.nodes.lfo1LevelAmt.connect(this.nodes.lfo1gainer.gain);
-        this.nodes.envGainer.connect(this.nodes.lfo1gainer);
+        // lfo1gainer (see threeNodesOptimizer)
 
         // lfo2LevelAmt
         this.nodes.lfo2LevelAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>gain_mod");//this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo2LevelAmt.gain = this.paramValue("lfo2_gainAmt");
-        //lfo2_01.connect(this.nodes.lfo2LevelAmt);
         this.nodes.lfo2LevelAmt.connectFrom(lfo2_01);
 
-        // lfo2gainer
-        this.nodes.lfo2gainer = this.audioCtx.createGain("osc>gain_mod");
-        this.nodes.lfo2LevelAmt.connect(this.nodes.lfo2gainer.gain);
-        this.nodes.lfo1gainer.connect(this.nodes.lfo2gainer);
+        // lfo2gainer (see threeNodesOptimizer)
 
         // lfo1PanAmt
         this.nodes.lfo1PanAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>pan_mod");//this.audioCtx.createGain("osc>pan_mod");
@@ -202,17 +195,21 @@ class MiniFMSynthOsc {
         //env1.connect(this.nodes.env1PanAmt);
         this.nodes.env1PanAmt.connectFrom(env1);
 
-        // panner
-        this.nodes.panner = this.audioCtx.createStereoPanner("osc>stereopanner");
-        this.nodes.panner.pan.value = this.GetPanBaseValue();
-        this.nodes.lfo1PanAmt.connect(this.nodes.panner.pan);
-        this.nodes.lfo2PanAmt.connect(this.nodes.panner.pan);
-        this.nodes.env1PanAmt.connect(this.nodes.panner.pan);
-        this.nodes.lfo2gainer.connect(this.nodes.panner);
+        // panner (see threeNodesOptimizer)
 
+        this.nodes.threeNodesOptimizer = new FM4OscThreeNodeOptimizer({
+            audioCtx: this.audioCtx,
+            initialPanValue: this.GetPanBaseValue(),
+            envGainer: this.nodes.envGainer,
+            lfo1LevelAmt: this.nodes.lfo1LevelAmt,
+            lfo2LevelAmt: this.nodes.lfo2LevelAmt,
+            lfo1PanAmt: this.nodes.lfo1PanAmt,
+            lfo2PanAmt: this.nodes.lfo2PanAmt,
+            env1PanAmt: this.nodes.env1PanAmt,
+        });
 
         // allow FM and output connections
-        this.outputNode = this.nodes.panner;
+        this.outputNode = this.nodes.threeNodesOptimizer;
         this.inputNode = this.nodes.osc;
 
         this.audioCtx.endScope();
@@ -356,7 +353,7 @@ class MiniFMSynthOsc {
                 this.nodes.env.update({ release: newVal });
                 break;
             case "pan":
-                this.nodes.panner.pan.value = this.GetPanBaseValue();
+                this.nodes.threeNodesOptimizer.SetBasePanValue(this.GetPanBaseValue());
                 break;
             case "lfo1PanAmt":
                 this.nodes.lfo1PanAmt.gain = newVal;

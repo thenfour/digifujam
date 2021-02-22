@@ -3,6 +3,25 @@
 const DF = require("./DFCommon");
 
 
+
+class AudioGraphHelper {
+	constructor() {
+		this.nodes = {};
+	}
+	disconnect() {
+		Object.keys(this.nodes).forEach(k => {
+			let n = this.nodes[k];
+			if (n.stop) n.stop();
+			n.disconnect();
+		});
+		this.nodes = {};
+	}
+};
+
+
+
+
+
 // we need to be able to convert midi note value to frequency in the graph itself.
 // but i don't think it's possible in the superficial obvious way using gainers etc.
 // but here we can use a wave shaper to curve it properly.
@@ -53,18 +72,6 @@ let initSynthTools = (audioCtx) => {
 
 // THIS is a drop-in relacement for the OptimalGainer which just uses non-optimized behavior, for debugging
 // purposes. LEAVE IT HERE. it may even be used in the future if there are browsers which don't support selective disconnects.
-
-// this returns a gainer-like object which removes itself from the audio graph when gain is 0 or 1.
-// the catch:
-// - gain is no longer an AudioParam.
-// - do not connect to this normally (prev.connect(this)). instead, this node needs to know who's connected to it,
-//   so you must do this.connectFrom(prev) instead.
-// - THERE is a scenario where this just won't work. the graph looks like this:
-//
-//   [source] --> [this] --> [dest]
-//          `-------------->
-//  in that case, removing "this" would cause a duplicate linkage between source & dest which won't do what we wish it did.
-//
 // class OptimalGainer {
 //     constructor(audioCtx, name) {
 //         this.name = name;
@@ -100,7 +107,17 @@ let initSynthTools = (audioCtx) => {
 
 
 
-
+// this returns a gainer-like object which removes itself from the audio graph when gain is 0 or 1.
+// the catch:
+// - gain is no longer an AudioParam.
+// - do not connect to this normally (prev.connect(this)). instead, this node needs to know who's connected to it,
+//   so you must do this.connectFrom(prev) instead.
+// - THERE is a scenario where this just won't work. the graph looks like this:
+//
+//   [source] --> [this] --> [dest]
+//          `-------------->
+//  in that case, removing "this" would cause a duplicate linkage between source & dest which won't do what we wish it did.
+//
 class OptimalGainer {
     constructor(audioCtx, name) {
         this.name = name;
@@ -181,6 +198,15 @@ class OptimalGainer {
         }
     }
 
+    listenForZeroModeChange(handler) {
+        console.assert(!this.zeroModeChangeHandler);
+        this.zeroModeChangeHandler = handler;
+    }
+
+    get isZeroMode() {
+        return !this.gainer && !this.passthrough;
+    }
+
     _ensureZeroMode() {
         if (this.gainer) {
             //console.log(`${this.name} gain => zero`);
@@ -194,6 +220,9 @@ class OptimalGainer {
             this.gainer.disconnect();
             this.gainer = null;
             this.passthrough = false;
+            if (this.zeroModeChangeHandler) {
+                this.zeroModeChangeHandler(this);
+            }
             return;
         } else if (this.passthrough) {
             //console.log(`${this.name} passthrough => zero`);
@@ -207,6 +236,9 @@ class OptimalGainer {
                 });
             });
             this.passthrough = false;
+            if (this.zeroModeChangeHandler) {
+                this.zeroModeChangeHandler(this);
+            }
             return;
         }
     }
@@ -242,6 +274,9 @@ class OptimalGainer {
             })
         });
         this.passthrough = true;
+        if (this.zeroModeChangeHandler) {
+            this.zeroModeChangeHandler(this);
+        }
         //console.log(`${this.name} zero => passthrough`);
     }
 
@@ -267,6 +302,8 @@ class OptimalGainer {
             });
         }
 
+        // zero mode
+
         //console.log(`${this.name} zero => gain`);
 
         // connect sources to gainer.
@@ -278,12 +315,18 @@ class OptimalGainer {
         this.destinations.forEach(dest => {
             this.gainer.connect(dest);
         });
+
+        if (this.zeroModeChangeHandler) {
+            this.zeroModeChangeHandler(this);
+        }
     }
 };
+
 
 
 module.exports = {
     initSynthTools,
     OptimalGainer,
+    AudioGraphHelper,
 };
 

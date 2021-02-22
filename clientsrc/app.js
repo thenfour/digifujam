@@ -6,6 +6,10 @@ const DFMetronome = require("./metronome");
 const DFSynth = require("./synth");
 const DFNet = require("./net");
 
+// see in console:
+// gDFApp.audioCtx.byName
+// gDFApp.audioCtx.byType
+// gDFApp.audioCtx.connectedNodes
 const gUseDebugCtx = false;
 
 window.OfflineAudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
