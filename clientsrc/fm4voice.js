@@ -31,7 +31,7 @@ class MiniFMSynthVoice {
         this.nodes = {};
     }
 
-    connect(lfo1, lfo1_01, lfo2, lfo2_01, dryDestination, wetDestination, algoSpec, pitchBendSemisNode, oscDetuneSemisMap, oscVariationMap) {
+    connect(lfo1, lfo2, dryDestination, wetDestination, algoSpec, pitchBendSemisNode, oscDetuneSemisMap, oscVariationMap) {
         if (this.isConnected) return;
         this.audioCtx.beginScope("voice");
         this.dryDestination = dryDestination;
@@ -120,7 +120,7 @@ class MiniFMSynthVoice {
             // param prefixes are like "osc0_"
             const paramPrefix = `osc${this.oscLinkSpec.sources[i]}_`;
             //console.log(`paramPrefix: ${paramPrefix}`);
-            this.oscillators[i].connect(lfo1, lfo1_01, lfo2, lfo2_01, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i], paramPrefix, oscVariationMap[i]);
+            this.oscillators[i].connect(lfo1, lfo2, this.nodes.env1, pitchBendSemisNode, oscDetuneSemisMap[i], paramPrefix, oscVariationMap[i]);
         });
 
         let mod = (src, dest) => {

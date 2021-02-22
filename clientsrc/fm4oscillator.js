@@ -32,8 +32,7 @@ class MiniFMSynthOsc {
     }
 
     // lfo1 is -1 to 1 range
-    // lfo1_01 is 0 to 1 range.
-    connect(lfo1, lfo1_01, lfo2, lfo2_01, env1, pitchBendSemisNode, detuneSemisNode, paramPrefix, variationFactor) {
+    connect(lfo1, lfo2, env1, pitchBendSemisNode, detuneSemisNode, paramPrefix, variationFactor) {
         this.isPoly = this.instrumentSpec.GetParamByID("voicing").currentValue == 1;
         this.paramPrefix = paramPrefix;
         this.variationFactor = variationFactor;
@@ -166,14 +165,14 @@ class MiniFMSynthOsc {
         // lfo1LevelAmt
         this.nodes.lfo1LevelAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>gain_mod");
         this.nodes.lfo1LevelAmt.gain = this.paramValue("lfo1_gainAmt");
-        this.nodes.lfo1LevelAmt.connectFrom(lfo1_01);
+        this.nodes.lfo1LevelAmt.connectFrom(lfo1);
 
         // lfo1gainer (see threeNodesOptimizer)
 
         // lfo2LevelAmt
         this.nodes.lfo2LevelAmt = new DFSynthTools.OptimalGainer(this.audioCtx, "osc>gain_mod");//this.audioCtx.createGain("osc>gain_mod");
         this.nodes.lfo2LevelAmt.gain = this.paramValue("lfo2_gainAmt");
-        this.nodes.lfo2LevelAmt.connectFrom(lfo2_01);
+        this.nodes.lfo2LevelAmt.connectFrom(lfo2);
 
         // lfo2gainer (see threeNodesOptimizer)
 
