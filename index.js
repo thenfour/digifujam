@@ -289,7 +289,7 @@ class RoomServer {
       };
 
       const completeUserEntry = (userID, hasPersistentIdentity, persistentInfo) => {
-        u.userID = userID;
+        u.userID = userID.toString(); // this could be a mongo Objectid
         u.hasPersistentIdentity = hasPersistentIdentity;
         clientSocket.DFUserID = userID;
         console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
@@ -1200,16 +1200,29 @@ let OnDisconnect = function (ws) {
   });
 };
 
+let gFindUserFromSocket = (ws) => {
+  let ret = null;
+  Object.values(gRooms).find(room => {
+    let u = room.FindUserFromSocket(ws);
+    if (u) {
+      ret = u.user;
+      return true;
+    }
+    return false;
+  });
+  return ret;
+};
+
 
 let OnClientDownloadServerState = (ws) => {
   try {
-    let foundUser = this.FindUserFromSocket(ws);
+    let foundUser = gFindUserFromSocket(ws);
     if (foundUser == null) {
       log(`OnClientDownloadServerState => unknown user`);
       return;
     }
 
-    if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
+    if (!foundUser.IsAdmin()) throw new Error(`User isn't an admin.`);
 
     // the server state dump is really just everything except users.
     let allRooms = [];
@@ -1227,16 +1240,15 @@ let OnClientDownloadServerState = (ws) => {
   }
 }
 
-
 let OnClientUploadServerState = (ws, data) => {
   try {
-    let foundUser = this.FindUserFromSocket(ws);
+    let foundUser = gFindUserFromSocket(ws);
     if (foundUser == null) {
       log(`OnClientUploadServerState => unknown user`);
       return;
     }
 
-    if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
+    if (!foundUser.IsAdmin()) throw new Error(`User isn't an admin.`);
 
     log(`uploaded server state with len=${JSON.stringify(data).length}`);
     data.forEach(rs => {
