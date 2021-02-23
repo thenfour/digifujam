@@ -1331,8 +1331,6 @@ class UserList extends React.Component {
     }
 }
 
-
-
 class WorldStatus extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState || !this.props.app.rooms) {
@@ -1365,6 +1363,68 @@ class WorldStatus extends React.Component {
     }
 }
 
+class BPMControls extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShowing: false
+        };
+    }
+
+    onClickHeader = () => {
+        this.setState({ isShowing: !this.state.isShowing });
+    }
+
+    setRoomBPM = (v) => {
+        this.props.app.metronome.bpm = v.target.value;
+        if (this.props.app.metronome.syncWithRoom)
+            this.props.app.net.SendRoomBPM(v.target.value);
+        gStateChangeHandler.OnStateChange();
+    }
+
+    onClickMetronome = () => {
+        this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
+        gStateChangeHandler.OnStateChange();
+    }
+
+    onClickSync = () => {
+        this.props.app.metronome.syncWithRoom = !this.props.app.metronome.syncWithRoom;
+        gStateChangeHandler.OnStateChange();
+    }
+
+    render() {
+        if (!this.props.app || !this.props.app.roomState) {
+            return null;
+        }
+
+        return (
+            <div className="component bpmControls">
+                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShowing)} Metronome</h2>
+                {this.state.isShowing &&
+                    <ul>
+                        <li> 
+                            <label>BPM: </label>
+                            <input type="number" min="0" max="999" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} />
+                        </li>
+                        
+                        <li>
+                            <label>Metronome: </label>
+                            <button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"}</button>
+                        </li>
+                        
+                        <li> 
+                            <label>Sync with room: </label>
+                            <button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button>
+                        </li>
+                    </ul>
+                }
+
+            </div>
+
+        );
+    }
+
+}
 
 class InstrumentList extends React.Component {
 
@@ -1490,6 +1550,7 @@ class LeftArea extends React.Component {
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
                 <InstrumentList app={this.props.app} />
+                <BPMControls app={this.props.app} />
                 <UserList app={this.props.app} />
                 <WorldStatus app={this.props.app} />
                 {adminControls}
@@ -1497,6 +1558,7 @@ class LeftArea extends React.Component {
         );
     }
 }
+
 
 
 class UserAvatar extends React.Component {
@@ -1983,52 +2045,7 @@ class ChatArea extends React.Component {
     }
 }
 
-class BPMControls extends React.Component {
 
-
-    setRoomBPM = (v) => {
-        this.props.app.metronome.bpm = v.target.value;
-        if (this.props.app.metronome.syncWithRoom)
-            this.props.app.net.SendRoomBPM(v.target.value);
-        gStateChangeHandler.OnStateChange();
-    }
-
-    onClickMetronome = () => {
-        this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
-        gStateChangeHandler.OnStateChange();
-    }
-
-    onClickSync = () => {
-        this.props.app.metronome.syncWithRoom = !this.props.app.metronome.syncWithRoom;
-        gStateChangeHandler.OnStateChange();
-    }
-
-    componentDidMount() {
-
-    }
-
-    render() {
-
-        return (
-            <span className="bpmControls">
-                <span className="roomBPMContainer">
-                    <label>BPM: </label>
-                    <input type="number" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} />
-                </span>
-                <span className="metronomeContainer">
-                    <label>Metronome: </label>
-                    <button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"}</button>
-                </span>
-                <span className="syncWithRoomContainer">
-                    <label>Sync with room: </label>
-                    <button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button>
-                </span>
-            </span>
-
-        );
-    }
-
-}
 
 class UpperRightControls extends React.Component {
 
@@ -2341,7 +2358,6 @@ class RootArea extends React.Component {
                             <svg className="socicon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub icon</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" /></svg>
                         </a>
                     </span>
-                    {this.state.app && <BPMControls app={this.state.app}> </BPMControls>}
                     {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                 </div>
                 <DFPiano.PianoArea app={this.state.app} />

@@ -858,14 +858,14 @@ input[type="range"].intParam::-webkit-slider-thumb,
     background-color: #acc;
 }
 
-.bpmControls {
+/*.bpmControls {
     white-space: pre;
     text-align: center;
 }
 .bpmControls * {
     margin-left: 6px;
     margin-right: 6px;
-}
+} */
 
 .topRightControls {
     white-space: nowrap;

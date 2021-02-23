@@ -355,6 +355,9 @@ class DigifuApp {
         // connect instruments to synth
         this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
 
+        //set metronome bpm to the room bpm
+        this.metronome.bpm = this.roomState.bpm;
+
         // are any instruments assigned to you?
         this.myInstrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == myUserID);
 
@@ -727,9 +730,13 @@ class DigifuApp {
     }
 
     NET_OnRoomBeat(data) {
-        this.metronome.OnRoomBeat(data);
+        this.metronome.OnRoomBeat(data.bpm);
     }
 
+    NET_OnRoomBPMUpdate(data){
+        this.metronome.bpm = data.bpm;
+    }
+    
     NET_pleaseReconnectHandler() {
         this.pleaseReconnectHandler();
     }

@@ -3,15 +3,24 @@
 class DigifuMetronome {
 		constructor() {
 				this.audioCtx = null; //audio context
-				this.bpm = 90; //beats per minute
+				this._bpm = 90; //beats per minute
 				this._syncWithRoom = false; //synchronize with room BPM  
 
-				this.metronomeTimer = setTimeout(() => { this.tick(); }, 60000/this.bpm); //local metronome timer
+				this.metronomeTimer = setTimeout(() => { this.tick(); }, 60000/this._bpm); //local metronome timer
 
 				this.sampleBuffer = null;
 				this._isMuted = true; 
 		}
 		
+		get bpm(){
+			return this._bpm;
+		}
+
+		set bpm(val){
+			if(val > 0 && val < 1000)
+				this._bpm = val;
+		}
+
 		get isMuted() {
 			return this._isMuted;
 		} 
@@ -46,7 +55,7 @@ class DigifuMetronome {
 			if(typeof(this.play) != 'undefined')
 				this.play();
 			//console.log("tick");
-			this.metronomeTimer = setTimeout(() => { this.tick(); }, 60000 / this.bpm);
+			this.metronomeTimer = setTimeout(() => { this.tick(); }, 60000 / this._bpm);
 		}
 
 		Init(audioCtx) {
@@ -68,10 +77,10 @@ class DigifuMetronome {
 			this.audioCtx = audioCtx;
 		}
 
-		OnRoomBeat(data){
+		OnRoomBeat(bpm){
 			if(this._syncWithRoom){
 				//console.log("sync tick");
-				this.bpm = data.bpm;
+				this._bpm = bpm;
 				this.play();
 			}else if(this.metronomeTimer == null){
 				this.tick(); //start the local metronome  

@@ -113,7 +113,7 @@ const ClientMessages = {
     UserState: "UserState", // name, color, img, x, y
     Cheer: "Cheer", // text, x, y
 
-    RoomBPM: "RoomBPM" //bpm
+    RoomBPMUpdate: "RoomBPMUpdate" //bpm
 };
 
 const ServerMessages = {
@@ -137,6 +137,7 @@ const ServerMessages = {
     ServerStateDump: "ServerStateDump",
 
     RoomBeat: "RoomBeat", //bpm
+    RoomBPMUpdate: "RoomBPMUpdate", //bpm
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
@@ -1512,7 +1513,7 @@ class DigifuRoomState {
         this.width = 16;
         this.height = 9;
         this.roomTitle = "";
-        this.bpm = 90; //TODO: import from json
+        this.bpm = null;
         this.softwareVersion = gDigifujamVersion;
 
         this.stats = {

@@ -994,9 +994,10 @@ class RoomServer {
   }
 
   // bpm
-  OnClientRoomBPM(ws, data) {
+  OnClientRoomBPMUpdate(ws, data) {
     //log("tick");
     this.roomState.bpm = data.bpm;
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: data.bpm }); //update bpm for the ALL clients
   }
 
   // called per every beat, BPM is defined in roomState
@@ -1383,7 +1384,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
-      ws.on(DF.ClientMessages.RoomBPM, data => ForwardToRoom(ws, room => room.OnClientRoomBPM(ws, data)));
+      ws.on(DF.ClientMessages.RoomBPMUpdate, data => ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 
