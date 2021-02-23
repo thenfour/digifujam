@@ -1397,25 +1397,16 @@ class BPMControls extends React.Component {
             return null;
         }
 
+        const ulStyle = this.state.isShowing ? { display: 'block' } : { display: "none" };
+        
         return (
-            <div className="component bpmControls">
+            <div className="component bpmControls" style={{ whiteSpace: "nowrap" }}>
                 <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShowing)} Metronome</h2>
                 {this.state.isShowing &&
-                    <ul>
-                        <li> 
-                            <label>BPM: </label>
-                            <input type="number" min="0" max="999" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} />
-                        </li>
-                        
-                        <li>
-                            <label>Metronome: </label>
-                            <button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"}</button>
-                        </li>
-                        
-                        <li> 
-                            <label>Sync with room: </label>
-                            <button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button>
-                        </li>
+                    <ul style={ulStyle}>
+                        <li style={{ marginBottom: 10 }}><input type="number" min="0" max="999" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} /> BPM</li>
+                        <li><button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"} </button> Metronome</li>
+                        <li><button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button> Server-side mode</li>
                     </ul>
                 }
 
