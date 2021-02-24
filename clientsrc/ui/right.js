@@ -1404,7 +1404,7 @@ class BPMControls extends React.Component {
                 <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShowing)} Metronome</h2>
                 {this.state.isShowing &&
                     <ul style={ulStyle}>
-                        <li style={{ marginBottom: 10 }}><input type="number" min="0" max="999" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} /> BPM</li>
+                        <li style={{ marginBottom: 10 }}><input type="number" min="0" max="200" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} /> BPM</li>
                         <li><button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"} </button> Metronome</li>
                         <li><button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button> Server-side mode</li>
                     </ul>
