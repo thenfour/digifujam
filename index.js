@@ -196,11 +196,12 @@ class RoomServer {
     setTimeout(() => {
       this.OnPingInterval();
     }, DF.ServerSettings.PingIntervalMS);
-    if(roomState.bpm > 0){
-      setTimeout(() => {
-        this.OnRoomBeat();
-      }, 60000 / roomState.bpm);
-    }
+
+    this.beatTimeout = null;
+
+    if(roomState.bpm > 0)
+      this.beatTimeout = setTimeout(() => { this.OnRoomBeat(); }, 60000 / roomState.bpm);
+    
   }
 
   adminImportRoomState(data) {
@@ -998,16 +999,18 @@ class RoomServer {
   OnClientRoomBPMUpdate(ws, data) {
     //log("tick");
     this.roomState.bpm = data.bpm;
+    
+    clearTimeout(this.beatTimeout); //refresh the beat timeout 
+    this.beatTimeout = null;
+    this.OnRoomBeat();
+
     io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: data.bpm }); //update bpm for the ALL clients
   }
 
   // called per every beat, BPM is defined in roomState
   OnRoomBeat() {
     try {
-      setTimeout(() => {
-        this.OnRoomBeat();
-      }, 60000 / this.roomState.bpm); //delay between beats(in ms) = 60000 / bpm (maybe define this in util?)
-
+      this.beatTimeout = setTimeout(() => { this.OnRoomBeat(); }, 60000 / this.roomState.bpm); //delay between beats(in ms) = 60000 / bpm (maybe define this in util?)
       io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.bpm }); //send bpm in order to synchronize
     } catch (e) {
       log(`OnRoomBeat exception occured`);
