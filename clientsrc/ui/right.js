@@ -1393,7 +1393,7 @@ class BPMControls extends React.Component {
     }
 
     render() {
-        if (!this.props.app || !this.props.app.roomState) {
+        if (!this.props.app || !this.props.app.roomState || this.props.app.metronome.bpm == null) {
             return null;
         }
 

@@ -3,7 +3,7 @@
 class DigifuMetronome {
 		constructor() {
 				this.audioCtx = null; //audio context
-				this._bpm = 90; //beats per minute
+				this._bpm = null; //beats per minute
 				this._syncWithRoom = false; //synchronize with room BPM  
 
 				this.metronomeTimer = setTimeout(() => { this.tick(); }, 60000/this._bpm); //local metronome timer

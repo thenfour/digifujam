@@ -196,10 +196,11 @@ class RoomServer {
     setTimeout(() => {
       this.OnPingInterval();
     }, DF.ServerSettings.PingIntervalMS);
-
-    setTimeout(() => {
-      this.OnRoomBeat();
-    }, 60000 / roomState.bpm);
+    if(roomState.bpm > 0){
+      setTimeout(() => {
+        this.OnRoomBeat();
+      }, 60000 / roomState.bpm);
+    }
   }
 
   adminImportRoomState(data) {
