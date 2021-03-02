@@ -47,6 +47,19 @@ input[type="text" i]:focus {
     border: 2px solid #0cc;
 }
 
+/* input[type="number" i] {
+    background-color: #444;
+    border: 2px solid #055;
+    color: #0cc;
+    font-family: 'Overpass', sans-serif; 
+    font-weight: normal;
+    font-size: small;
+    margin: 2px;
+}
+input[type="number" i]:focus {
+    border: 2px solid #0cc;
+}*/
+
 button {
     background-color: #444;
     border: 3px solid #888;
@@ -858,14 +871,14 @@ input[type="range"].intParam::-webkit-slider-thumb,
     background-color: #acc;
 }
 
-.bpmControls {
+/*.bpmControls {
     white-space: pre;
     text-align: center;
 }
 .bpmControls * {
     margin-left: 6px;
     margin-right: 6px;
-}
+} */
 
 .topRightControls {
     white-space: nowrap;

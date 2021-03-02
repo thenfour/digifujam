@@ -197,9 +197,11 @@ class RoomServer {
       this.OnPingInterval();
     }, DF.ServerSettings.PingIntervalMS);
 
-    setTimeout(() => {
-      this.OnRoomBeat();
-    }, 60000 / roomState.bpm);
+    this.beatTimeout = null;
+
+    if(roomState.bpm > 0)
+      this.beatTimeout = setTimeout(() => { this.OnRoomBeat(); }, 60000 / roomState.bpm);
+    
   }
 
   adminImportRoomState(data) {
@@ -994,18 +996,21 @@ class RoomServer {
   }
 
   // bpm
-  OnClientRoomBPM(ws, data) {
+  OnClientRoomBPMUpdate(ws, data) {
     //log("tick");
     this.roomState.bpm = data.bpm;
+    
+    clearTimeout(this.beatTimeout); //refresh the beat timeout 
+    this.beatTimeout = null;
+    this.OnRoomBeat();
+
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: data.bpm }); //update bpm for the ALL clients
   }
 
   // called per every beat, BPM is defined in roomState
   OnRoomBeat() {
     try {
-      setTimeout(() => {
-        this.OnRoomBeat();
-      }, 60000 / this.roomState.bpm); //delay between beats(in ms) = 60000 / bpm (maybe define this in util?)
-
+      this.beatTimeout = setTimeout(() => { this.OnRoomBeat(); }, 60000 / this.roomState.bpm); //delay between beats(in ms) = 60000 / bpm (maybe define this in util?)
       io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.bpm }); //send bpm in order to synchronize
     } catch (e) {
       log(`OnRoomBeat exception occured`);
@@ -1383,7 +1388,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
-      ws.on(DF.ClientMessages.RoomBPM, data => ForwardToRoom(ws, room => room.OnClientRoomBPM(ws, data)));
+      ws.on(DF.ClientMessages.RoomBPMUpdate, data => ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 

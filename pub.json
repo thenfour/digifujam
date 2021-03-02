@@ -5,6 +5,7 @@
   "img": "./roomart/matt01x1200.jpg",
   "width": 1200,
   "height": 1200,
+  "bpm": 95,
   "internalMasterGain": 5.0,
   "announcementHTML": "",
   "roomItems": [
