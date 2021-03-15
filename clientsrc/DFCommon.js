@@ -200,6 +200,66 @@ const eParamMappingSource = {
     CC11: 11,
 };
 
+// invokes a fn in a throttled way. You set a proc & interval, and call InvokeThrottled() when you want to invoke it.
+class Throttler {
+    constructor() {
+        this.interval = 1000.0 / 15;
+        this.proc = () => { }; // the work fn to run throttled
+
+        this.stats = {
+            timersCreated: 0,
+            invokesSkipped: 0,
+            realtimeInvokes: 0,
+            throttledInvokes: 0,
+            invokes: 0,
+        };
+
+        this.timerCookie = null;
+        this.Reset();
+    }
+
+    Reset() {
+        if (this.timerCookie) {
+            clearTimeout(this.timerCookie);
+        }
+        this.timerCookie = null;
+        this.lastInvoked = new Date();
+        // (reset params)
+    }
+
+    InvokeThrottled() {
+        if (this.timerCookie) {
+            // already have a timer pending
+            // (integrate to queued)
+            this.stats.invokesSkipped++;
+            return;
+        }
+
+        let now = new Date();
+        let delta = now - this.lastInvoked;
+        if (delta >= this.interval) {
+            // we waited long enough between changes; invoke in real time.
+            this.lastInvoked = now;
+            this.stats.invokes++;
+            this.stats.realtimeInvokes++;
+            this.proc();
+            return;
+        }
+
+        // we need to set a timer.
+        this.stats.timersCreated++;
+        this.timerCookie = setTimeout(() => {
+            this.timerCookie = null;
+            this.stats.invokes++;
+            this.stats.throttledInvokes++;
+            //console.log(`Throttler invoke; timeout=${this.interval - delta}`);//. timerscreated:${this.timersCreated}, paramsOptimized:${this.invokesSkipped}, paramsSent:${this.invokes}`);
+            //console.log(this.stats);
+            this.proc();
+            this.Reset();
+        }, this.interval - delta);
+    };
+};
+
 class DigifuUser {
 
     static emptyStatsObj() {
@@ -1840,4 +1900,5 @@ module.exports = {
     remapWithPowCurve,
     FrequencyToMidiNote,
     eParamMappingSource,
+    Throttler,
 };

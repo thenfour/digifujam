@@ -2104,7 +2104,9 @@ class UpperRightControls extends React.Component {
 
 class RootArea extends React.Component {
     OnStateChange() {
-        this.setState(this.state);
+        // turns out this is very expensive, probably because it's at the root. A precisely optimized system would be very complex, so let's just throttle calls.
+        this.stateChangeThrottler.InvokeThrottled();
+        //this.setState(this.state);
     }
 
     HandleConnect = (userName, color, google_access_token) => {
@@ -2307,6 +2309,11 @@ class RootArea extends React.Component {
         this.notesOn = []; // not part of state because it's pure jquery
         this.activityCount = 0;
         this.roomRef = React.createRef();
+        this.stateChangeThrottler = new DF.Throttler();
+        this.stateChangeThrottler.interval = 1000.0 / 15; // external state change events should not cause full-page re-renders often.
+        this.stateChangeThrottler.proc = () => {
+            this.setState({});
+        };
 
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
         for (let i = 0; i < 128; ++i) {

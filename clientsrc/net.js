@@ -9,6 +9,12 @@ class DigifuNet {
         this.socket = null;
         this.handler = null;
 
+        this.stats = {
+            paramTimersCreated: 0,
+            paramsOptimized: 0,
+            paramsSent: 0,
+        };
+
         this.ResetQueuedParamChangeData();
     };
 
@@ -66,6 +72,7 @@ class DigifuNet {
             return;
         }
         this.socket.emit(DF.ClientMessages.InstrumentParams, this.queuedParamChangeData);
+        this.stats.paramsSent ++;
         this.queuedParamChangeData = {
             isWholePatch: false,
             patchObj: {}// map paramID to newVal corresponding to ClientSettings.InstrumentParams
@@ -79,8 +86,15 @@ class DigifuNet {
         // - if we're slow enough, and no timer set, then send live.
         // - if we're too fast, then set timer with this packet.
 
+        // already have a timer pending; integrate this patch obj.
         if (this.timerCookie) {
-            this.queuedParamChangeData.isWholePatch = this.queuedParamChangeData.isWholePatch || isWholePatch;
+            this.stats.paramsOptimized ++;
+            if (isWholePatch) { // if you're changing "the whole patch", then wipe out any previous patch changes.
+                this.queuedParamChangeData.patchObj = patchObj;
+                this.queuedParamChangeData.isWholePatch = true;
+                return;
+            }
+            this.queuedParamChangeData.isWholePatch = this.queuedParamChangeData.isWholePatch || isWholePatch; // once you change the whole patch, subsequent changes will always still have this flag.
             this.queuedParamChangeData.patchObj = Object.assign(this.queuedParamChangeData.patchObj, patchObj);
             return;
         }
@@ -90,7 +104,7 @@ class DigifuNet {
         if (delta >= DF.ClientSettings.InstrumentParamIntervalMS) {
             // we waited long enough between changes; send in real time.
             this.paramChangeLastSent = new Date();
-            //console.log(`SendInstrumentParam LIVE delta=${delta} ${JSON.stringify([{ paramID, newVal }])} `);
+            this.stats.paramsSent ++;
             this.socket.emit(DF.ClientMessages.InstrumentParams, {
                 isWholePatch,
                 patchObj
@@ -99,7 +113,8 @@ class DigifuNet {
         }
 
         // we need to set a timer.
-        //console.log(`SendInstrumentParam setting timer; delta=${delta}`);
+        this.stats.paramTimersCreated ++;
+        //console.log(`SendInstrumentParam setting timer; timeout=${DF.ClientSettings.InstrumentParamIntervalMS - delta}. timerscreated:${this.stats.paramTimersCreated}, paramsOptimized:${this.stats.paramsOptimized}, paramsSent:${this.stats.paramsSent}`);
         this.timerCookie = setTimeout(this.OnParamChangeInterval.bind(this), DF.ClientSettings.InstrumentParamIntervalMS - delta);
     };
 
