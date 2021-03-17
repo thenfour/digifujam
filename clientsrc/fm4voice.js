@@ -1,6 +1,7 @@
 'use strict';
 
 const DF = require("./DFCommon");
+const DFU = require('./dfutil');
 const FM4OSC = require("./fm4oscillator");
 const ADSR = require("./adhsr");
 const DFSynthTools = require("./synthTools");
@@ -275,16 +276,16 @@ class MiniFMSynthVoice {
 
     _updateFilterBaseFreq() {
         let vsAmt = this.instrumentSpec.GetParamByID("filterFreqVS").currentValue;
-        let vs = 1.0 - DF.remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let vs = 1.0 - DFU.remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let ksAmt = this.instrumentSpec.GetParamByID("filterFreqKS").currentValue;
         const halfKeyScaleRangeSemis = 12 * 4;
-        let ks = 1.0 - DF.remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let ks = 1.0 - DFU.remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         p = p * ks * vs;
         //console.log(`filter freq: ${p}`);
 
         const freqParam = this.nodes.filter.frequency;
-        freqParam.value = DF.baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
+        freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
     }
 
     SetParamValue(paramID, newVal) {
@@ -361,7 +362,7 @@ class MiniFMSynthVoice {
         this.midiNote = midiNote;
         this.velocity = velocity;
 
-        let baseFreq = DF.MidiNoteToFrequency(midiNote);
+        let baseFreq = DFU.MidiNoteToFrequency(midiNote);
 
         this._updateFilterBaseFreq();
 
@@ -369,7 +370,7 @@ class MiniFMSynthVoice {
         if (isPoly || !isLegato || (this.instrumentSpec.GetParamByID("env1_trigMode").currentValue == 0)) {
             //  env keytracking
             let vsAmt = this.instrumentSpec.GetParamByID("env1_vel_scale").currentValue; // -1 to 1
-            let vs = 1.0 - DF.remap(this.velocity, 0.0, 127.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+            let vs = 1.0 - DFU.remap(this.velocity, 0.0, 127.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
             this.nodes.env1.update({
                 peak: vs,
                 sustain: vs * this.instrumentSpec.GetParamByID("env1_s").currentValue

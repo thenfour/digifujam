@@ -1,37 +1,15 @@
 {
-  "roomID": "maj7",
-  "roomTitle": "#maj7",
-  "route": "/maj7",
+  "roomID": "revisionmainstage",
+  "roomTitle": "#revisionmainstage",
+  "route": "/revisionmainstage",
   "img": "./roomart/tony01_lightsout_1750.jpg",
+  "isPrivate": true,
   "width": 1750,
   "height": 1280,
   "bpm": 100,
   "internalMasterGain": 5.0,
   "announcementHTML": "",
   "roomItems": [
-    {
-      "itemID": "roomItem1",
-      "name": "#DigiLounge",
-      "itemType": "door",
-      "style": {
-        "transform": "skewY(45deg)"
-      },
-      "rect": {
-        "x": 1230,
-        "y": 320,
-        "w": 80,
-        "h": 325
-      },
-      "onAvatarEnter": {
-        "processor": "server",
-        "fn": "roomChange",
-        "params": {
-          "roomID": "hall",
-          "x": 400,
-          "y": 825
-        }
-      }
-    },
     {
       "itemID": "roomCredits",
       "name": "i",

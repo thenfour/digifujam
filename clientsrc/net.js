@@ -131,6 +131,12 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.UserState, data);
     };
 
+    SendUserQuantizationSpec(beatDivision) {
+        this.socket.emit(DF.ClientMessages.Quantization, {
+            beatDivision,
+        });
+    }
+
     // data = { text, x, y }
     SendCheer(text, x, y) {
         this.socket.emit(DF.ClientMessages.Cheer, { text, x, y });
@@ -209,8 +215,8 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.Cheer, data => this.handler.NET_OnUserCheer(data));
 
         this.socket.on(DF.ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID, data.idle));
-        this.socket.on(DF.ServerMessages.NoteOn, data => this.handler.NET_OnNoteOn(data.userID, data.note, data.velocity));
-        this.socket.on(DF.ServerMessages.NoteOff, data => this.handler.NET_OnNoteOff(data.userID, data.note));
+        this.socket.on(DF.ServerMessages.NoteEvents, data => this.handler.NET_OnNoteEvents(data.noteOns, data.noteOffs));
+        //this.socket.on(DF.ServerMessages.NoteOff, data => this.handler.NET_OnNoteOff(data.userID, data.note));
         this.socket.on(DF.ServerMessages.UserAllNotesOff, data => this.handler.NET_OnUserAllNotesOff(data));
         this.socket.on(DF.ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
         this.socket.on(DF.ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));

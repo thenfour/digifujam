@@ -35,6 +35,16 @@ class DigifuSynth {
 		return this.masterGainNode.gain.value;
 	}
 
+	get metronomeGain() {
+		if (!this.metronomeGainNode) return 1.0;
+		return this.metronomeGainNode.gain.value;
+	}
+
+	set metronomeGain(val) {
+		if (!this.metronomeGainNode) return;
+		this.metronomeGainNode.gain.value = val;
+	}
+
 	get isMuted() {
 		return this._isMuted; // unfortunately no "is connected" api exists so we must keep state.
 	}
@@ -189,15 +199,18 @@ class DigifuSynth {
 
 		DFSynthTools.initSynthTools(this.audioCtx);
 
-		//                                                                                                                ->[analysis]
+		//                                                                             [metronomeGainNode] --->
 		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
-		//               --> (instrumentWetGainers) ----> [masterReverb] ----->
+		//               --> (instrumentWetGainers) ----> [masterReverb] ----->                                               ->[analysis]
 		//
 		this.preMasterGain = this.audioCtx.createGain("master");
 		this.preMasterGain.gain.value = gGainBoost;
 
 		this.masterGainNode = this.audioCtx.createGain("master");
 		this.preMasterGain.connect(this.masterGainNode);
+
+		this.metronomeGainNode = this.audioCtx.createGain("metronomeGainNode");
+		this.metronomeGainNode.connect(this.masterGainNode);
 
 		// this.analysisNode = this.audioCtx.createAnalyser();
 		// this.masterGainNode.connect(this.analysisNode);

@@ -26,7 +26,7 @@ gServerStartedDate = new Date();
 
 gNanoid = nanoid;
 
-gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage';
+gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage'; // todo: configure this kind of stuff in ENV at least...
 gStatsDBPath = gStoragePath + '\\DFStatsDB.json';
 gPathSeparator = "\\";
 gGoogleRedirectURL = "http://localhost:8081";
@@ -197,11 +197,9 @@ class RoomServer {
       this.OnPingInterval();
     }, DF.ServerSettings.PingIntervalMS);
 
-    this.beatTimeout = null;
-
-    if(roomState.bpm > 0)
-      this.beatTimeout = setTimeout(() => { this.OnRoomBeat(); }, 60000 / roomState.bpm);
-    
+    // set routines for metronome / quantization events
+    this.roomState.metronome.setBeatRoutine(() => { this.OnRoomBeat(); });
+    this.roomState.quantizer.setNoteEventsRoutine((noteOns, noteOffs) => { this.FlushQuantizedNoteEvents(noteOns, noteOffs); });
   }
 
   adminImportRoomState(data) {
@@ -286,10 +284,17 @@ class RoomServer {
         return;
       }
 
+      // handler
       const rejectUserEntry = () => {
-        clientSocket.emit(DF.ServerMessages.PleaseReconnect);
+        try {
+          clientSocket.emit(DF.ServerMessages.PleaseReconnect);
+        } catch (e) {
+          log(`rejectUserEntry exception occurred`);
+          log(e);
+        }
       };
 
+      // handler
       const completeUserEntry = (userID, hasPersistentIdentity, persistentInfo) => {
         u.userID = userID.toString(); // this could be a mongo Objectid
         u.hasPersistentIdentity = hasPersistentIdentity;
@@ -327,12 +332,12 @@ class RoomServer {
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
           yourUserID: userID,
-          roomState: this.roomState
+          roomState: JSON.parse(this.roomState.asJSON()) // filter out stuff that shouldn't be sent to clients
         });
 
         // broadcast user enter to all clients except the user.
         clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
-      };
+      }; // completeUserEntry
 
       const token = clientSocket.handshake.query.google_access_token;
       if (token) {
@@ -363,7 +368,7 @@ class RoomServer {
               });
             }
           });
-      } else {
+      } else { // token.
         completeUserEntry("guest_" + DF.generateID(), false, EmptyDFUserToPersistentInfo());
       }
 
@@ -405,6 +410,9 @@ class RoomServer {
         return;
       }
 
+      this.roomState.quantizer.clearUser(foundUser.user.userID);
+      this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
+
       foundInstrument.instrument.controlledByUserID = foundUser.user.userID;
       foundUser.user.idle = false;
       foundUser.user.lastActivity = new Date();
@@ -438,6 +446,9 @@ class RoomServer {
         log(`=> not controlling an instrument.`);
         return;
       }
+
+      this.roomState.quantizer.clearUser(foundUser.user.userID);
+      this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
 
       foundInstrument.instrument.ReleaseOwnership();
 
@@ -476,17 +487,25 @@ class RoomServer {
       this.roomState.stats.noteOns++;
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.NoteOn, {
-        userID: foundUser.user.userID,
-        note: data.note,
-        velocity: data.velocity
-      });
+      this.roomState.quantizer.onLiveNoteOn(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, data.note, data.velocity, foundUser.user.quantizeBeatDivision);
     } catch (e) {
       log(`OnClientNoteOn exception occurred`);
       log(e);
     }
   };
 
+  FlushQuantizedNoteEvents(noteOns, noteOffs) {
+    try {
+      // broadcast to all clients
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.NoteEvents, {
+        noteOns,
+        noteOffs,
+      });
+    } catch (e) {
+      log(`OnClientNoteOn exception occurred`);
+      log(e);
+    }
+  }
 
   OnClientNoteOff(ws, note) {
     try {
@@ -505,10 +524,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       // broadcast to all clients except foundUser
-      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.NoteOff, {
-        userID: foundUser.user.userID,
-        note: note
-      });
+      this.roomState.quantizer.onLiveNoteOff(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, note, foundUser.user.quantizeBeatDivision);
     } catch (e) {
       log(`OnClientNoteOff exception occurred`);
       log(e);
@@ -530,6 +546,8 @@ class RoomServer {
       }
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      this.roomState.quantizer.clearUser(foundUser.user.userID);
+      this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
@@ -962,6 +980,24 @@ class RoomServer {
     }
   };
 
+  OnClientQuantization(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnClientQuantization => unknown user`);
+        return;
+      }
+
+      this.roomState.quantizer.clearUser(foundUser.user.userID);
+
+      foundUser.user.quantizeBeatDivision = data.beatDivision;
+    } catch (e) {
+      log(`OnClientQuantization exception occurred`);
+      log(e);
+    }
+  };
+
+
   // text, x, y
   OnClientCheer(ws, data) {
     //log(`OnClientCheer => ${JSON.stringify(data)} ${data.text.length}`);
@@ -997,21 +1033,14 @@ class RoomServer {
 
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
-    //log("tick");
-    this.roomState.bpm = data.bpm;
-    
-    clearTimeout(this.beatTimeout); //refresh the beat timeout 
-    this.beatTimeout = null;
-    this.OnRoomBeat();
-
-    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: data.bpm }); //update bpm for the ALL clients
+    this.roomState.setBPM(data.bpm);
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: data.bpm }); //update bpm for ALL clients
   }
 
   // called per every beat, BPM is defined in roomState
   OnRoomBeat() {
     try {
-      this.beatTimeout = setTimeout(() => { this.OnRoomBeat(); }, 60000 / this.roomState.bpm); //delay between beats(in ms) = 60000 / bpm (maybe define this in util?)
-      io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.bpm }); //send bpm in order to synchronize
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.metronome.getBPM() }); //send bpm in order to synchronize
     } catch (e) {
       log(`OnRoomBeat exception occured`);
       log(e);
@@ -1095,6 +1124,7 @@ class RoomServer {
         let room = gRooms[k];
         return {
           roomID: room.roomState.roomID,
+          isPrivate: !!room.roomState.isPrivate,
           roomName: room.roomState.roomTitle,
           users: room.roomState.users,//.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
           stats: room.roomState.stats
@@ -1387,6 +1417,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.ChatMessage, data => ForwardToRoom(ws, room => room.OnClientChatMessage(ws, data)));
       ws.on(DF.ClientMessages.Pong, data => ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
+      ws.on(DF.ClientMessages.Quantization, data => ForwardToRoom(ws, room => room.OnClientQuantization(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
       ws.on(DF.ClientMessages.RoomBPMUpdate, data => ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));
 
@@ -1438,6 +1469,7 @@ if (fs.existsSync(gPathLatestServerState)) {
 serverRestoreState = JSON.parse(serverRestoreState);
 loadRoom(fs.readFileSync("pub.json"), serverRestoreState);
 loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
+loadRoom(fs.readFileSync("revisionMainStage.json"), serverRestoreState);
 loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
 
 gDB = new DFDB.DFDB(() => {

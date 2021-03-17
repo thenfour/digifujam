@@ -7,6 +7,7 @@ const DFSignIn = require("./DFSignIn");
 const DFReactUtils = require("./DFReactUtils");
 const DFAdminControls = require("./adminControls");
 const UIUser = require("./UIUser");
+const DFU = require('../dfutil');
 
 const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
@@ -18,11 +19,11 @@ const GetHomepage = () => {
     return window.location.origin;
 };
 
-const htmlEncode = (str) => {
-    let p = document.createElement("p");
-    p.textContent = str;
-    return p.innerHTML;
-};
+// const htmlEncode = (str) => {
+//     let p = document.createElement("p");
+//     p.textContent = str;
+//     return p.innerHTML;
+// };
 
 
 const getTimeSpanInfo = (ms) => {
@@ -157,7 +158,7 @@ class InstDropdownParam extends React.Component {
         return (
             <li className={"dropdownParam " + this.props.param.cssClassName}>
                 <div className="mainButton" onClick={this.onClickShown}>
-                    <span className="arrow">{DF.getArrowText(this.state.listShown)}</span>
+                    <span className="arrow">{DFU.getArrowText(this.state.listShown)}</span>
                     <span className="currentValue">{this.props.param.enumNames[this.props.param.rawValue]}</span>
                     <label>{this.props.param.name}</label>
                 </div>
@@ -744,7 +745,7 @@ class InstrumentParamGroup extends React.Component {
     };
 
     render() {
-        const arrowText = DF.getArrowText(this.props.isShown)
+        const arrowText = DFU.getArrowText(this.props.isShown)
 
         let createParam = (p) => {
             if (p.hidden) return null;
@@ -967,11 +968,6 @@ class InstrumentParams extends React.Component {
         this.setState({ showingClipboardControls: !this.state.showingClipboardControls });
     }
 
-    onSelfMuteToggle = () => {
-        this.props.app.toggleSelfMute();
-        gStateChangeHandler.OnStateChange();
-    }
-
     render() {
         const arrowText = this.state.presetListShown ? '⯆' : '⯈';
 
@@ -1033,8 +1029,6 @@ class InstrumentParams extends React.Component {
 
         const allowFactoryReset = this.props.app.myUser.IsAdmin();
 
-        const selfMuteCaption = "Monitor " + (this.props.app.isSelfMuted ? "🔇" : "🔊");
-
         return (
             <div className="component">
                 <h2 id="showInstrumentPanel" style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>
@@ -1043,7 +1037,6 @@ class InstrumentParams extends React.Component {
                     <div className="buttonContainer">
                         <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
                         {/* {!this.props.observerMode && <button onClick={this.onPanicClick}>Panic</button>} */}
-                        {!this.props.observerMode && <button onClick={this.onSelfMuteToggle}>{selfMuteCaption}</button>}
                         {!this.props.observerMode && <button onClick={this.onReleaseClick}>Release</button>}
                         {!!this.props.observerMode && <button onClick={() => { gStateChangeHandler.observingInstrument = null; }}>Stop Observing</button>}
                     </div>
@@ -1085,7 +1078,7 @@ class InstrumentParams extends React.Component {
 
                                     <li className="instPresetButtons">
                                         <fieldset className="clipboardControls">
-                                            <legend onClick={this.onClipboardShownClick}>{DF.getArrowText(this.state.showingClipboardControls)} Clipboard</legend>
+                                            <legend onClick={this.onClipboardShownClick}>{DFU.getArrowText(this.state.showingClipboardControls)} Clipboard</legend>
                                             {this.state.showingClipboardControls && (
                                                 <div>
                                                     <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
@@ -1337,7 +1330,7 @@ class WorldStatus extends React.Component {
             return null;
         }
 
-        const rooms = this.props.app.rooms.filter(r => r.roomID != this.props.app.roomState.roomID);
+        const rooms = this.props.app.rooms.filter(r => r.roomID != this.props.app.roomState.roomID && !r.isPrivate);
 
         let userList = (room) => room.users.map(u => (
             <li key={u.userID}><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
@@ -1363,12 +1356,93 @@ class WorldStatus extends React.Component {
     }
 }
 
+
+
+
+
+
 class BPMControls extends React.Component {
     constructor(props) {
         super(props);
+
+        this.quantizationOptions = [
+            {
+                caption: "None",
+                division: 0,
+            },
+            {
+                caption: "𝅝", // whole
+                division: 0.25, // 1/4
+            },
+            {
+                caption: "𝅗𝅥",
+                division: 0.5,// 1/2
+            },
+
+            {
+                caption: "𝅘𝅥",
+                division: 1, // 1/1
+            },
+            {
+                caption: "𝅘𝅥.",
+                division: 2.0/3.0,
+            },
+            {
+                caption: "𝅘𝅥3",
+                division: 3.0/2.0,//3/2
+            },
+
+            {
+                caption: "𝅘𝅥𝅮",
+                division: 2,
+            },
+            {
+                caption: "𝅘𝅥𝅮.",
+                division: 4.0/3.0,
+            },
+            {
+                caption: "𝅘𝅥𝅮3",
+                division: 3,
+            },
+
+            {
+                caption: "𝅘𝅥𝅯",
+                division: 4,
+            },
+            {
+                caption: "𝅘𝅥𝅯.",
+                division: 8.0/3.0,
+            },
+            {
+                caption: "𝅘𝅥𝅯3",
+                division: 6,
+            },
+
+            {
+                caption: "𝅘𝅥𝅰",
+                division: 8,
+            },
+        ];
+
+        let qi = this.findQuantizationIndex(this.props.app.myUser.quantizeBeatDivision);
+
         this.state = {
-            isShowing: false
+            isShowing: true,
+            quantizationIndex: qi,
         };
+    }
+
+    findQuantizationIndex(beatDivision) {
+        let nearestDist = 0;
+        let nearestIndex = -1;
+        this.quantizationOptions.forEach((val, index) => {
+            let dist = Math.abs(val.division - beatDivision);
+            if (nearestIndex == -1 || dist < nearestDist) {
+                nearestDist = dist;
+                nearestIndex = index;
+            }
+        });
+        return nearestIndex;
     }
 
     onClickHeader = () => {
@@ -1376,40 +1450,90 @@ class BPMControls extends React.Component {
     }
 
     setRoomBPM = (v) => {
-        if(v.target.value < 1 || v.target.value > 200)
+        if (v.target.value < 1 || v.target.value > 200)
             return;
-        
-        this.props.app.metronome.bpm = v.target.value;
-        if (this.props.app.metronome.syncWithRoom)
-            this.props.app.net.SendRoomBPM(v.target.value);
-        gStateChangeHandler.OnStateChange();
+
+        //this.props.app.metronome.bpm = v.target.value;
+        //if (this.props.app.metronome.syncWithRoom)
+        this.props.app.SendRoomBPM(v.target.value);
+        //this.setState({});
     }
+
+    setQuantizationOptIndex = (i) => {
+        this.setState({
+            quantizationIndex: i,
+        });
+        this.props.app.SetQuantizationSpec(this.quantizationOptions[i].division);
+    };
 
     onClickMetronome = () => {
         this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
-        gStateChangeHandler.OnStateChange();
+        this.setState({});//gStateChangeHandler.OnStateChange();
     }
 
-    onClickSync = () => {
-        this.props.app.metronome.syncWithRoom = !this.props.app.metronome.syncWithRoom;
-        gStateChangeHandler.OnStateChange();
+    setMetronomeVolume = (v) => {
+        let realVal = parseFloat(v.target.value) / 100;
+        this.props.app.synth.metronomeGain = realVal;
+        this.setState({});//gStateChangeHandler.OnStateChange();
+    }
+
+    // onClickSync(v) {
+    //     this.props.app.metronome.syncWithRoom = v;// !this.props.app.metronome.syncWithRoom;
+    //     this.setState({});
+    // }
+
+    onSetMonitoringType(mt) {
+        this.props.app.setMonitoringType(mt);
+        this.setState({});
     }
 
     render() {
-        if (!this.props.app || !this.props.app.roomState || this.props.app.metronome.bpm == null) {
+        if (!this.props.app || !this.props.app.roomState) {
             return null;
         }
 
         const ulStyle = this.state.isShowing ? { display: 'block' } : { display: "none" };
-        
+
+        const quantizationButtons = this.quantizationOptions.map((q, i) =>
+            <button
+                key={i}
+                className={"buttonParam " + ((this.state.quantizationIndex == i) ? "active" : "")}
+                onClick={() => { this.setQuantizationOptIndex(i) }}>{q.caption}</button>
+        );
+
         return (
             <div className="component bpmControls" style={{ whiteSpace: "nowrap" }}>
-                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShowing)} Metronome</h2>
+                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DFU.getArrowText(this.state.isShowing)} BPM & Monitoring</h2>
                 {this.state.isShowing &&
                     <ul style={ulStyle}>
-                        <li style={{ marginBottom: 10 }}><input type="text" pattern="[0-9]*" value={this.props.app.metronome.bpm} onChange={this.setRoomBPM} /> BPM</li>
-                        <li><button className="metronomeButton" onClick={this.onClickMetronome}>Switch {this.props.app.metronome.isMuted ? "On" : "Off"} </button> Metronome</li>
-                        <li><button className="syncButton" onClick={this.onClickSync}>Switch {this.props.app.metronome.syncWithRoom ? "Off" : "On"}</button> Server-side mode</li>
+                        <li>
+                            <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
+                            BPM: {this.props.app.roomState.bpm}
+                        </li>
+
+                        <li className="buttonsParam">
+                            <span className="volumeContainer">
+                                <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.synth.isMuted || this.props.app.metronome.isMuted} />
+                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.synth.isMuted) ? "🔇" : "🔊"}</button>
+                            </span>
+                        </li>
+
+                        {/* <li className="buttonsParam" style={{whiteSpace:"normal"}}>
+                            <button className={"buttonParam " + (!this.props.app.metronome.syncWithRoom ? "active" : "")} onClick={() => { this.onClickSync(false) }}>Personal</button>
+                            <button className={"buttonParam " + (this.props.app.metronome.syncWithRoom ? "active" : "")} onClick={() => { this.onClickSync(true) }}>Shared</button>
+                        </li> */}
+
+                        <li className="buttonsParam" style={{whiteSpace:"normal"}}>
+                            {quantizationButtons}
+                            <label>Q</label>
+                        </li>
+
+                        <li className="buttonsParam" style={{whiteSpace:"normal"}}>
+                            <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Off) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Off) }}>Off</button>
+                            <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Local) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Local) }}>Local</button>
+                            <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Remote) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Remote) }}>Remote</button>
+                            <label>Monitor</label>
+                        </li>
                     </ul>
                 }
 
@@ -1495,7 +1619,7 @@ class InstrumentList extends React.Component {
         const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
         return (
             <div className="component instrumentCloset" style={{ whiteSpace: "nowrap" }}>
-                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShowing)} Instrument Closet</h2>
+                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DFU.getArrowText(this.state.isShowing)} Instrument Closet</h2>
                 {this.state.isShowing &&
                     <ul>
                         {instruments}
@@ -1544,7 +1668,7 @@ class LeftArea extends React.Component {
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
                 <InstrumentList app={this.props.app} />
-                <BPMControls app={this.props.app} />
+                {this.props.app && <BPMControls app={this.props.app} />}
                 <UserList app={this.props.app} />
                 <WorldStatus app={this.props.app} />
                 {adminControls}
@@ -2043,7 +2167,6 @@ class ChatArea extends React.Component {
 
 class UpperRightControls extends React.Component {
 
-
     setVolumeVal = (v) => {
         let realVal = parseFloat(v.target.value) / 100;
         this.props.app.synth.masterGain = realVal;
@@ -2062,7 +2185,6 @@ class UpperRightControls extends React.Component {
             gStateChangeHandler.OnStateChange();
         }, 0);
     };
-
 
     componentDidMount() {
         DFUtils.stylizeRangeInput("volume", {
@@ -2309,7 +2431,7 @@ class RootArea extends React.Component {
         this.notesOn = []; // not part of state because it's pure jquery
         this.activityCount = 0;
         this.roomRef = React.createRef();
-        this.stateChangeThrottler = new DF.Throttler();
+        this.stateChangeThrottler = new DFU.Throttler();
         this.stateChangeThrottler.interval = 1000.0 / 15; // external state change events should not cause full-page re-renders often.
         this.stateChangeThrottler.proc = () => {
             this.setState({});

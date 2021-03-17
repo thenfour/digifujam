@@ -1,6 +1,7 @@
 'use strict';
 
 const DF = require("./DFCommon");
+const DFU = require('./dfutil');
 const ADSR = require("./adhsr");
 const DFSynthTools = require("./synthTools");
 const PWM = require("./pwm");
@@ -239,7 +240,7 @@ class MiniFMSynthOsc {
     }
 
     GetPanBaseValue() {
-        return DF.baseClamp(
+        return DFU.baseClamp(
             this.paramValue("pan") + (this.instrumentSpec.GetParamByID("pan_spread").currentValue * this.variationFactor),
             -1, 1
         );
@@ -248,10 +249,10 @@ class MiniFMSynthOsc {
     // account for key & vel scaling
     updateEnvPeakLevel() {
         let vsAmt = this.paramValue("vel_scale");
-        let vs = 1.0 - DF.remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let vs = 1.0 - DFU.remap(this.velocity, 0.0, 128.0, vsAmt, -vsAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let ksAmt = this.paramValue("key_scale");
         const halfKeyScaleRangeSemis = 12 * 4;
-        let ks = 1.0 - DF.remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
+        let ks = 1.0 - DFU.remap(this.midiNote, 60.0 /* middle C */ - halfKeyScaleRangeSemis, 60.0 + halfKeyScaleRangeSemis, ksAmt, -ksAmt); // when vsAmt is 0, the range of vsAmt,-vsAmt is 0. hence making this 1.0-x
         let p = this.paramValue("level") * ks * vs;
         //this.nodes.envPeak.gain.linearRampToValueAtTime(p, this.audioCtx.currentTime + this.minGlideS);
         this.nodes.envPeak.gain.value = p;
@@ -263,7 +264,7 @@ class MiniFMSynthOsc {
         let portamentoDurationS = this.isPoly ? 0 : this.paramValue("portamento");
         // for some reason, calling exponentialRampToValueAtTime or linearRampToValueAtTime will make a sudden jump of the current value. setTargetAtTime is the only one that works smoothly.
         let realFreq = this.baseFreq * this.paramValue("freq_mult");
-        let midiNote = DF.FrequencyToMidiNote(realFreq);
+        let midiNote = DFU.FrequencyToMidiNote(realFreq);
         if (portamentoDurationS <= this.minGlideS) {
             this.nodes.baseFreqMidiNote.offset.linearRampToValueAtTime(midiNote, this.audioCtx.currentTime + portamentoDurationS);
         } else {
@@ -307,7 +308,7 @@ class MiniFMSynthOsc {
     AllNotesOff() {
         this.midiNote = 0;
         this.velocity = 0;
-        if (this.env) this.env.reset();
+        if (this.nodes.env) this.nodes.env.reset();
     }
 
     SetParamValue(strippedParamID, newVal) {

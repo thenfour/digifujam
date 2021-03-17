@@ -1,77 +1,10 @@
 'use strict';
 
 const { nanoid } = require("nanoid");
+const DBQuantizer = require('./quantizer');
+const DFUtil = require('./dfutil');
 
 let gDigifujamVersion = 7;
-
-Array.prototype.removeIf = function (callback) {
-    var i = this.length;
-    while (i--) {
-        if (callback(this[i], i)) {
-            this.splice(i, 1);
-        }
-    }
-};
-
-let secondsToMS = (x) => x * 1000;
-let minutesToMS = (x) => secondsToMS(x * 60);
-let hoursToMS = (x) => minutesToMS(x * 60);
-let daysToMS = (x) => hoursToMS(x * 24);
-
-let getArrowText = shown => shown ? '⯆' : '⯈';
-
-function getDecimalPart(decNum) {
-    return Math.round((decNum % 1) * 100000000) / 100000000;
-}
-
-function array_move(arr, old_index, new_index) {
-    if (new_index >= arr.length) {
-        var k = new_index - arr.length + 1;
-        while (k--) {
-            arr.push(undefined);
-        }
-    }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-    //return arr; // for testing
-};
-
-// https://stackoverflow.com/a/40407914/402169
-function baseClamp(number, lower, upper) {
-    if (number === number) {
-        if (upper !== undefined) {
-            number = number <= upper ? number : upper;
-        }
-        if (lower !== undefined) {
-            number = number >= lower ? number : lower;
-        }
-    }
-    return number;
-}
-
-let MidiNoteToFrequency = function (midiNote) {
-    return 440 * Math.pow(2, (midiNote - 69) / 12);
-};
-let FrequencyToMidiNote = (hz) => {
-    return 12.0 * Math.log2(Math.max(8, hz) / 440) + 69;
-};
-
-// linear mapping
-let remap = function (value, low1, high1, low2, high2) {
-    return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
-}
-
-let remapWithPowCurve = (value, inpMin, inpMax, p, outpMin, outpMax) => {
-    // map to 0-1
-    value -= inpMin;
-    value /= inpMax - inpMin;
-    if (value < 0) value = 0;
-    if (value > 1) value = 1;
-    // curve
-    value = Math.pow(value, p);
-    // map to outpMin-outpMax
-    value *= outpMax - outpMin;
-    return value + outpMin;
-};
 
 // make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
 let gNextID = 1;
@@ -111,6 +44,7 @@ const ClientMessages = {
     UploadServerState: "UploadServerState",
     AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj } see OnAdminChangeRoomState
     UserState: "UserState", // name, color, img, x, y
+    Quantization: "Quantization", // beatDivision: 1
     Cheer: "Cheer", // text, x, y
 
     RoomBPMUpdate: "RoomBPMUpdate" //bpm
@@ -125,8 +59,7 @@ const ServerMessages = {
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     Ping: "Ping", // token, users: [{ userid, pingMS, roomID, stats }], rooms: [{roomID, roomName, userCount, stats}]
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
-    NoteOn: "NoteOn", // user, note, velocity
-    NoteOff: "NoteOff", // user, note
+    NoteEvents: "NoteEvents", // { noteOns: [ user, note, velocity ], noteOffs: [ user, note ] }
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
@@ -166,13 +99,13 @@ const ServerSettings = {
 
     WorldUserCountMaximum: 100,
 
-    StatsFlushMS: minutesToMS(5), // 5 minutes
-    StatsPruneIntervalMS: hoursToMS(24), // once a day prune stats
-    StatsMaxAgeMS: daysToMS(365),
+    StatsFlushMS: DFUtil.minutesToMS(5), // 5 minutes
+    StatsPruneIntervalMS: DFUtil.hoursToMS(24), // once a day prune stats
+    StatsMaxAgeMS: DFUtil.daysToMS(365),
 
-    ServerStateBackupIntervalMS: minutesToMS(5),
-    ServerStatePruneIntervalMS: hoursToMS(24),
-    ServerStateMaxAgeMS: daysToMS(5),
+    ServerStateBackupIntervalMS: DFUtil.minutesToMS(5),
+    ServerStatePruneIntervalMS: DFUtil.hoursToMS(24),
+    ServerStateMaxAgeMS: DFUtil.daysToMS(5),
 };
 
 const ClientSettings = {
@@ -200,65 +133,6 @@ const eParamMappingSource = {
     CC11: 11,
 };
 
-// invokes a fn in a throttled way. You set a proc & interval, and call InvokeThrottled() when you want to invoke it.
-class Throttler {
-    constructor() {
-        this.interval = 1000.0 / 15;
-        this.proc = () => { }; // the work fn to run throttled
-
-        this.stats = {
-            timersCreated: 0,
-            invokesSkipped: 0,
-            realtimeInvokes: 0,
-            throttledInvokes: 0,
-            invokes: 0,
-        };
-
-        this.timerCookie = null;
-        this.Reset();
-    }
-
-    Reset() {
-        if (this.timerCookie) {
-            clearTimeout(this.timerCookie);
-        }
-        this.timerCookie = null;
-        this.lastInvoked = new Date();
-        // (reset params)
-    }
-
-    InvokeThrottled() {
-        if (this.timerCookie) {
-            // already have a timer pending
-            // (integrate to queued)
-            this.stats.invokesSkipped++;
-            return;
-        }
-
-        let now = new Date();
-        let delta = now - this.lastInvoked;
-        if (delta >= this.interval) {
-            // we waited long enough between changes; invoke in real time.
-            this.lastInvoked = now;
-            this.stats.invokes++;
-            this.stats.realtimeInvokes++;
-            this.proc();
-            return;
-        }
-
-        // we need to set a timer.
-        this.stats.timersCreated++;
-        this.timerCookie = setTimeout(() => {
-            this.timerCookie = null;
-            this.stats.invokes++;
-            this.stats.throttledInvokes++;
-            //console.log(`Throttler invoke; timeout=${this.interval - delta}`);//. timerscreated:${this.timersCreated}, paramsOptimized:${this.invokesSkipped}, paramsSent:${this.invokes}`);
-            //console.log(this.stats);
-            this.proc();
-            this.Reset();
-        }, this.interval - delta);
-    };
-};
 
 class DigifuUser {
 
@@ -287,6 +161,8 @@ class DigifuUser {
         this.img = null;
         this.idle = null; // this gets set when a user's instrument ownership becomes idle
         this.lastCheerSentDate = new Date();
+
+        this.quantizeBeatDivision = 0;
     }
 
     thaw() { /* no child objects to thaw. */ }
@@ -481,7 +357,7 @@ class InstrumentParam {
     nativeToForeignValue(v, outpMin, outpMax) {
         if (!this.ensureZeroPoint()) {
             // only 1 pole; simple mapping with curve.
-            return remapWithPowCurve(v, this.minValue, this.maxValue, 1.0 / this.valueCurve, outpMin, outpMax);
+            return DFUtil.remapWithPowCurve(v, this.minValue, this.maxValue, 1.0 / this.valueCurve, outpMin, outpMax);
         }
         // we know zero point is valid from here.
 
@@ -489,23 +365,23 @@ class InstrumentParam {
         if (v == 0) return outpZero; // eliminate div0 with a shortcut
         if (v > 0) {
             // positive
-            return remapWithPowCurve(v, 0, this.maxValue, 1.0 / this.valueCurve, outpZero, outpMax);
+            return DFUtil.remapWithPowCurve(v, 0, this.maxValue, 1.0 / this.valueCurve, outpZero, outpMax);
         }
-        return remapWithPowCurve(v, 0, this.minValue, 1.0 / this.valueCurve, outpZero, outpMin);
+        return DFUtil.remapWithPowCurve(v, 0, this.minValue, 1.0 / this.valueCurve, outpZero, outpMin);
     }
 
     foreignToNativeValue(v, inpMin, inpMax) {
         if (!this.ensureZeroPoint()) {
             // only 1 pole; simple mapping with curve.
-            return remapWithPowCurve(v, inpMin, inpMax, this.valueCurve, this.minValue, this.maxValue);
+            return DFUtil.remapWithPowCurve(v, inpMin, inpMax, this.valueCurve, this.minValue, this.maxValue);
         }
         // we know zero point is valid from here.
         let inpZero = this.zeroPoint * (inpMax - inpMin) + inpMin; // foreign value represting native zero.
         if (v == inpZero) return 0;
         if (v > inpZero) {
-            return remapWithPowCurve(v, inpZero, inpMax, this.valueCurve, 0, this.maxValue);
+            return DFUtil.remapWithPowCurve(v, inpZero, inpMax, this.valueCurve, 0, this.maxValue);
         }
-        return remapWithPowCurve(v, inpZero, inpMin, this.valueCurve, 0, this.minValue);
+        return DFUtil.remapWithPowCurve(v, inpZero, inpMin, this.valueCurve, 0, this.minValue);
     }
 
 };
@@ -521,7 +397,7 @@ class DigifuInstrumentSpec {
         this.engine = null; // soundfont, minifm, drumkit
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
-        this.maxPolyphony = 10;
+        this.maxPolyphony = 9;
         this.params = [];// instrument parameter value map
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
         this.supportsPresets = true;
@@ -1074,10 +950,10 @@ class DigifuInstrumentSpec {
 
             // rearrange some things
             let moveToParam = (paramIDToMove, paramIDToShift) => {
-                array_move(this.params, this.params.findIndex(p => p.paramID == paramIDToMove), this.params.findIndex(p => p.paramID === paramIDToShift));
+                DFUtil.array_move(this.params, this.params.findIndex(p => p.paramID == paramIDToMove), this.params.findIndex(p => p.paramID === paramIDToShift));
             };
             let moveToAfterParam = (paramIDToMove, paramIDToShift) => {
-                array_move(this.params, this.params.findIndex(p => p.paramID == paramIDToMove), 1 + this.params.findIndex(p => p.paramID === paramIDToShift));
+                DFUtil.array_move(this.params, this.params.findIndex(p => p.paramID == paramIDToMove), 1 + this.params.findIndex(p => p.paramID === paramIDToShift));
             };
 
             moveToParam("detuneBase", "osc0_lfo1_pitchDepth");
@@ -1570,10 +1446,10 @@ class DigifuRoomState {
         this.roomItems = [];
         this.internalMasterGain = 1.0;
         this.img = null;
+        this.bpm = 55;
         this.width = 16;
         this.height = 9;
         this.roomTitle = "";
-        this.bpm = null;
         this.softwareVersion = gDigifujamVersion;
 
         this.stats = {
@@ -1610,6 +1486,14 @@ class DigifuRoomState {
             n.thaw();
             return n;
         });
+
+        this.metronome = new DBQuantizer.ServerRoomMetronome();
+        this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
+    }
+
+    setBPM(bpm) {
+        this.bpm = bpm;
+        this.metronome.setBPM(bpm);
     }
 
     adminExportRoomState() {
@@ -1618,6 +1502,18 @@ class DigifuRoomState {
             chatLog: [],//this.chatLog,
             stats: this.stats,
         };
+    }
+
+    asJSON() {
+        const replacer = (k, v) => {
+            switch (k) {
+                case "metronome":
+                case "quantizer":
+                    return undefined;
+            }
+            return v;
+        };
+        return JSON.stringify(this, replacer);
     }
 
     adminImportRoomState(data) {
@@ -1891,14 +1787,6 @@ module.exports = {
     DFRoomItemType,
     SetGlobalInstrumentList,
     InternalInstrumentParams,
-    MidiNoteToFrequency,
     gDigifujamVersion,
-    getArrowText,
-    getDecimalPart,
-    baseClamp,
-    remap,
-    remapWithPowCurve,
-    FrequencyToMidiNote,
     eParamMappingSource,
-    Throttler,
 };

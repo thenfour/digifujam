@@ -25,7 +25,6 @@ function _hasSelectiveDisconnect() {
     }
 }
 
-
 class AudioContextWrapper {
     constructor() {
         this.connectedNodes = [];
@@ -182,6 +181,12 @@ class AudioContextWrapper {
     }
 };
 
+const eMonitoringType = {
+    Off: "Off",
+    Local: "Local",
+    Remote: "Remote"
+};
+
 class DigifuApp {
     constructor() {
         window.gDFApp = this; // for debugging, so i can access this class in the JS console.
@@ -209,7 +214,11 @@ class DigifuApp {
         this.midi = new DFMidi.DigifuMidi();
         this.metronome = new DFMetronome.DigifuMetronome();
         this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
-        this.isSelfMuted = false; // ability to mute yourself
+        //this.isSelfMuted = false; // ability to mute yourself
+
+        // monitoring your own playback
+        this.monitoringType = eMonitoringType.Local;
+
         this.net = new DFNet.DigifuNet();
 
         this.deviceNameList = [];
@@ -266,15 +275,19 @@ class DigifuApp {
     MIDI_NoteOn(note, velocity) {
         if (this.myInstrument == null) return;
         this.net.SendNoteOn(note, velocity);
-        this.synth.NoteOn(this.myInstrument, note, velocity);
-        this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
+        if (this.monitoringType == eMonitoringType.Local) {
+            this.synth.NoteOn(this.myInstrument, note, velocity);
+            this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
+        }
     };
 
     MIDI_NoteOff(note) {
         if (this.myInstrument == null) return;
         this.net.SendNoteOff(note);
-        this.synth.NoteOff(this.myInstrument, note);
-        this.noteOffHandler(this.myUser, this.myInstrument, note);
+        if (this.monitoringType == eMonitoringType.Local) {
+            this.synth.NoteOff(this.myInstrument, note);
+            this.noteOffHandler(this.myUser, this.myInstrument, note);
+        }
     };
 
     // sent when midi devices change
@@ -287,14 +300,18 @@ class DigifuApp {
 
     MIDI_PedalDown() {
         if (this.myInstrument == null) return;
-        this.net.SendPedalDown();
-        this.synth.PedalDown(this.myInstrument);
+        if (this.monitoringType == eMonitoringType.Local) {
+            this.net.SendPedalDown();
+            this.synth.PedalDown(this.myInstrument);
+        }
     };
 
     MIDI_PedalUp() {
         if (this.myInstrument == null) return;
-        this.net.SendPedalUp();
-        this.synth.PedalUp(this.myInstrument);
+        if (this.monitoringType == eMonitoringType.Local) {
+            this.net.SendPedalUp();
+            this.synth.PedalUp(this.myInstrument);
+        }
     };
 
     // val is -1 to 1
@@ -303,8 +320,10 @@ class DigifuApp {
         if (this.myInstrument == null) return;
         let patchObj = { "pb": val * this.pitchBendRange };
         this.net.SendInstrumentParams(patchObj, false);
-        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj, false)) {
-            this.stateChangeHandler();
+        if (this.monitoringType == eMonitoringType.Local) {
+            if (this.synth.SetInstrumentParams(this.myInstrument, patchObj, false)) {
+                this.stateChangeHandler();
+            }
         }
     };
 
@@ -316,8 +335,10 @@ class DigifuApp {
         patchObj["midicc_" + cc] = val;
         //console.log(`MIDI_CC: ${JSON.stringify(patchObj)}`);
         this.net.SendInstrumentParams(patchObj, false);
-        if (this.synth.SetInstrumentParams(this.myInstrument, patchObj, false)) {
-            this.stateChangeHandler();
+        if (this.monitoringType == eMonitoringType.Local) {
+            if (this.synth.SetInstrumentParams(this.myInstrument, patchObj, false)) {
+                this.stateChangeHandler();
+            }
         }
     }
 
@@ -337,7 +358,7 @@ class DigifuApp {
         if (stylesheet) {
             stylesheet.parentNode.removeChild(stylesheet);
         }
-        $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomID + ".css' type='text/css' />");
+        // $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomID + ".css' type='text/css' />");
 
         this.accessLevel = data.accessLevel;
 
@@ -356,7 +377,7 @@ class DigifuApp {
         this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
 
         //set metronome bpm to the room bpm
-        this.metronome.bpm = this.roomState.bpm;
+        //this.metronome.bpm = this.roomState.bpm;
 
         // are any instruments assigned to you?
         this.myInstrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == myUserID);
@@ -449,11 +470,7 @@ class DigifuApp {
         }
 
         if (userID) { // bring instrument online, or offline depending on new ownership.
-            if (userID == this.myUser.userID && !this.isSelfMuted) {
-                this.synth.ConnectInstrument(foundInstrument.instrument);
-            } else {
-                this.synth.ConnectInstrument(foundInstrument.instrument);
-            }
+            this.synth.ConnectInstrument(foundInstrument.instrument);
         } else {
             this.synth.DisconnectInstrument(foundInstrument.instrument);
         }
@@ -463,15 +480,28 @@ class DigifuApp {
         }
     };
 
+    NET_OnNoteEvents(noteOns, noteOffs) {
+        noteOns.forEach(e => {
+            this.NET_OnNoteOn(e.userID, e.note, e.velocity);
+        });
+        noteOffs.forEach(e => {
+            this.NET_OnNoteOff(e.userID, e.note);
+        });
+    }
+
     NET_OnNoteOn(userID, note, velocity) {
         if (!this.roomState) return;
         let foundUser = this.roomState.FindUserByID(userID);
         if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
-        if (foundInstrument == null) {
-            //log(`instrument not found`);
-            return;
+        if (!foundInstrument) return;
+
+        if (foundUser.user.userID == this.myUser.userID) {
+            if (this.monitoringType !== eMonitoringType.Remote) {
+                return;
+            }
         }
+
         this.synth.NoteOn(foundInstrument.instrument, note, velocity);
         this.noteOnHandler(foundUser.user, foundInstrument.instrument, note, velocity);
     };
@@ -481,9 +511,12 @@ class DigifuApp {
         let foundUser = this.roomState.FindUserByID(userID);
         if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
-        if (foundInstrument == null) {
-            //log(`instrument not found`);
-            return;
+        if (!foundInstrument) return;
+
+        if (foundUser.user.userID == this.myUser.userID) {
+            if (this.monitoringType !== eMonitoringType.Remote) {
+                return;
+            }
         }
         this.synth.NoteOff(foundInstrument.instrument, note);
         this.noteOffHandler(foundUser.user, foundInstrument.instrument, note);
@@ -502,14 +535,15 @@ class DigifuApp {
         this.handleUserAllNotesOff(foundUser.user, foundInstrument.instrument);
     };
 
-
-
     NET_OnPedalDown(userID) {
         if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
-        if (foundInstrument == null) {
-            //log(`NET_OnPedalDown instrument not found`);
-            return;
+        if (!foundInstrument) return;
+
+        if (foundUser.user.userID == this.myUser.userID) {
+            if (this.monitoringType !== eMonitoringType.Remote) {
+                return;
+            }
         }
         this.synth.PedalDown(foundInstrument.instrument);
     };
@@ -517,9 +551,12 @@ class DigifuApp {
     NET_OnPedalUp(userID) {
         if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
-        if (foundInstrument == null) {
-            //log(`NET_OnPedalUp instrument not found`);
-            return;
+        if (!foundInstrument) return;
+
+        if (foundUser.user.userID == this.myUser.userID) {
+            if (this.monitoringType !== eMonitoringType.Remote) {
+                return;
+            }
         }
         this.synth.PedalUp(foundInstrument.instrument);
     };
@@ -528,9 +565,12 @@ class DigifuApp {
     {
         if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
-        if (foundInstrument == null) {
-            //log(`NET_OnInstrumentParam instrument not found`);
-            return;
+        if (!foundInstrument) return;
+
+        if (foundUser.user.userID == this.myUser.userID) {
+            if (this.monitoringType !== eMonitoringType.Remote) {
+                return;
+            }
         }
         if (this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj, data.isWholePatch)) {
             this.stateChangeHandler();
@@ -730,20 +770,22 @@ class DigifuApp {
     }
 
     NET_OnRoomBeat(data) {
-        this.metronome.OnRoomBeat(data.bpm);
+        // data.bpm
+        this.metronome.OnRoomBeat();
     }
 
-    NET_OnRoomBPMUpdate(data){
-        this.metronome.bpm = data.bpm;
+    NET_OnRoomBPMUpdate(data) {
+        this.roomState.bpm = data.bpm;
+        this.stateChangeHandler();
+        //this.metronome.setServerBPM(data.bpm);
     }
-    
+
     NET_pleaseReconnectHandler() {
         this.pleaseReconnectHandler();
     }
 
 
     NET_OnDisconnect() {
-        //console.log(`what is iths`);
         //this.handleDisconnect();
     }
 
@@ -812,6 +854,17 @@ class DigifuApp {
             position: this.myUser.position
         });
     };
+
+    SendRoomBPM (bpm) {
+        if (bpm != this.roomState.bpm) {
+            this.net.SendRoomBPM(bpm);
+        }
+    };
+
+    SetQuantizationSpec(beatDivision) {
+        this.net.SendUserQuantizationSpec(beatDivision);
+        this.myUser.quantizeBeatDivision = beatDivision;
+    }
 
     SendCheer(text, x, y) {
 
@@ -902,24 +955,22 @@ class DigifuApp {
         this.net.SendCreateParamMapping(param, srcVal);
         this.synth.createParamMapping(this.myInstrument, param, srcVal);
     }
+
     createParamMappingFromMacro(param, macroIndex) {
         return this.createParamMappingFromSrcVal(param, macroIndex + DF.eParamMappingSource.Macro0);
     }
+
     removeParamMapping(param) {
         if (!this.myInstrument) return;
         this.net.SendRemoveParamMapping(param);
         this.synth.removeParamMapping(this.myInstrument, param);
     }
 
-    toggleSelfMute() {
-        this.isSelfMuted = !this.isSelfMuted;
-        if (this.isSelfMuted && this.myInstrument) {
-            this.myInstrument.isMuted = true;
-            this.synth.DisconnectInstrument(this.myInstrument);
-        } else {
-            this.myInstrument.isMuted = false;
-            // no action necessary; instruments are connected as they're played.
-        }
+    setMonitoringType(mt) {
+        this.monitoringType = mt;
+        if (this.myInstrument == null) return;
+        this.synth.AllNotesOff(this.myInstrument);
+        this.handleUserAllNotesOff(this.myUser, this.myInstrument);
     }
 
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token) {
@@ -945,7 +996,6 @@ class DigifuApp {
 
         }
 
-
         this.midi.Init(this);
 
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -958,9 +1008,8 @@ class DigifuApp {
             this.audioCtx.endScope = () => { };
         }
 
-
         this.synth.Init(this.audioCtx);
-        this.metronome.Init(this.audioCtx);
+        this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
         this.net.Connect(this, google_access_token);
     };
 
@@ -977,5 +1026,6 @@ class DigifuApp {
 
 module.exports = {
     AudioContextWrapper,
-    DigifuApp
+    DigifuApp,
+    eMonitoringType,
 };

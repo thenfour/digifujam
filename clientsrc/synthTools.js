@@ -1,7 +1,7 @@
 'use strict';
 
 const DF = require("./DFCommon");
-
+const DFU = require('./dfutil');
 
 
 class AudioGraphHelper {
@@ -36,7 +36,7 @@ let initSynthTools = (audioCtx) => {
 
     var scaledNoteToScaledFreqCurve = new Float32Array(255);
     for (var i = -127; i <= 127; i++) {
-        scaledNoteToScaledFreqCurve[i + 127] = Math.sign(i) * DF.MidiNoteToFrequency(Math.abs(i)) / 13000.0;
+        scaledNoteToScaledFreqCurve[i + 127] = Math.sign(i) * DFU.MidiNoteToFrequency(Math.abs(i)) / 13000.0;
     }
 
     //Add a new factory method to the AudioContext object.
