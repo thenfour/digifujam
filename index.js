@@ -566,7 +566,7 @@ class RoomServer {
         return;
       }
       // broadcast to all clients except foundUser
-      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.PedalUp, {
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.PedalUp, {
         userID: foundUser.user.userID
       });
     } catch (e) {
@@ -584,7 +584,7 @@ class RoomServer {
         return;
       }
       // broadcast to all clients except foundUser
-      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.PedalDown, {
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.PedalDown, {
         userID: foundUser.user.userID
       });
     } catch (e) {

@@ -53,6 +53,8 @@ class FMPolySynth {
     connect() {
         if (this.isConnected) return;
         this.audioCtx.beginScope(this.instrumentSpec.getDisplayName());
+
+        this.isSustainPedalDown = false;
         // [LFO1] ----->[lfo1Gain] -------------------------------> (voices)  --> [masterDryGain] -> dryDestination
         //                                                                    --> [masterWetGain] -> wetDestination
         //
@@ -332,6 +334,7 @@ class FMPolySynth {
 
     AllNotesOff() {
         this.physicallyHeldNotes = [];
+        this.isSustainPedalDown = false;
         this.voices.forEach(v => v.AllNotesOff());
     }
 

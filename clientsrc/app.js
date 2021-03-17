@@ -300,16 +300,16 @@ class DigifuApp {
 
     MIDI_PedalDown() {
         if (this.myInstrument == null) return;
+        this.net.SendPedalDown();
         if (this.monitoringType == eMonitoringType.Local) {
-            this.net.SendPedalDown();
             this.synth.PedalDown(this.myInstrument);
         }
     };
 
     MIDI_PedalUp() {
         if (this.myInstrument == null) return;
+        this.net.SendPedalUp();
         if (this.monitoringType == eMonitoringType.Local) {
-            this.net.SendPedalUp();
             this.synth.PedalUp(this.myInstrument);
         }
     };
@@ -540,7 +540,7 @@ class DigifuApp {
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
         if (!foundInstrument) return;
 
-        if (foundUser.user.userID == this.myUser.userID) {
+        if (userID == this.myUser.userID) {
             if (this.monitoringType !== eMonitoringType.Remote) {
                 return;
             }
@@ -553,7 +553,7 @@ class DigifuApp {
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
         if (!foundInstrument) return;
 
-        if (foundUser.user.userID == this.myUser.userID) {
+        if (userID == this.myUser.userID) {
             if (this.monitoringType !== eMonitoringType.Remote) {
                 return;
             }
@@ -567,7 +567,7 @@ class DigifuApp {
         let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
         if (!foundInstrument) return;
 
-        if (foundUser.user.userID == this.myUser.userID) {
+        if (data.userID == this.myUser.userID) {
             if (this.monitoringType !== eMonitoringType.Remote) {
                 return;
             }
