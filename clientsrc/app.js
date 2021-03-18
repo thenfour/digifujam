@@ -1,6 +1,7 @@
 'use strict';
 
 const DF = require("./DFCommon");
+const DFU = require("./util");
 const DFMidi = require("./midi");
 const DFMetronome = require("./metronome");
 const DFSynth = require("./synth");
@@ -934,7 +935,7 @@ class DigifuApp {
 
     // return true/false success
     mergePresetBankJSON(bankJSON) {
-        if (!IsValidJSONString(bankJSON)) return false;
+        if (!DFU.IsValidJSONString(bankJSON)) return false;
         if (!this.myInstrument) return false;
         this.net.SendInstrumentBankMerge(bankJSON);
     }
