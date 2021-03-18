@@ -40,7 +40,45 @@
           "enumNames": [
             "Box o' Percussion"
           ]
+        },
+
+
+        {
+          "paramID": "filterType",
+          "name": "Type",
+          "groupName": "Filter",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Off",
+            "LP",
+            "HP",
+            "BP"
+          ]
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterFreq",
+          "name": "Freq",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "valueCurve": "4.5",
+          "defaultValue": 800,
+          "minValue": 0.0,
+          "maxValue": 15000.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterQ",
+          "name": "Q",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 20.0
         }
+
       ],
       "drumKits": {
         "Box o' Percussion": {
@@ -334,6 +372,42 @@
             "LINN",
             "SC88"
           ]
+        },
+
+        {
+          "paramID": "filterType",
+          "name": "Type",
+          "groupName": "Filter",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Off",
+            "LP",
+            "HP",
+            "BP"
+          ]
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterFreq",
+          "name": "Freq",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "valueCurve": "4.5",
+          "defaultValue": 800,
+          "minValue": 0.0,
+          "maxValue": 15000.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterQ",
+          "name": "Q",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 20.0
         }
       ],
       "drumKits": {

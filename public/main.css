@@ -1193,7 +1193,6 @@ button.stayLoggedIn:hover {
     position: absolute;
     z-index: 9991;
     width: 400px;
-    height: 400px;
     background-color: #111;
     text-align: -webkit-auto;
     right: 20px;
@@ -1246,3 +1245,16 @@ button.stayLoggedIn:hover {
     color: #0aa;
     padding: 0;
 }
+
+button.quantizationOption {
+
+    font-weight: bolder;
+    padding-top: 0;
+    font-size: 18px;
+    padding-bottom: 0;
+}
+
+div.quantizationGroup {
+    display:block;
+}
+

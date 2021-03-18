@@ -1,4 +1,5 @@
 'use strict';
+const DFU = require('./dfutil');
 
 // SampleCache holds loading & accessing samples
 // DrumKitVoice handles translating a MIDI message into a drum sample
@@ -74,22 +75,22 @@ class DrumKitVoice {
         }
     };
 
-    connect(audioCtx, dryDestination, wetDestination) {
+    connect(audioCtx, destination1, destination2) {
         if (this.isConnected) return;
         this.AllNotesOff();
 
         this.audioCtx = audioCtx;
-        this.dryDestination = dryDestination;
-        this.wetDestination = wetDestination;
 
         /*
-        (buffer)--> [velocityGainer] --> dryDestination
-                                     --> wetDestination
+        (buffer)--> [velocityGainer] --> destination1
+                                       > destination2
         */
         this.velocityGainer = audioCtx.createGain();
 
-        this.velocityGainer.connect(this.dryDestination);
-        this.velocityGainer.connect(this.wetDestination);
+        this.velocityGainer.connect(destination1);
+        if (destination2) {
+            this.velocityGainer.connect(destination2);
+        }
 
         this.ensureKitLoaded();
         this.isConnected = true;
@@ -227,11 +228,16 @@ class OneShotInstrument {
 
     connect() {
         /*
-        (voice) --> [masterDryGain] --> dryDestination
-                  > [masterWetGain] --> wetDestination
+        (voice) --> [filter] --> [masterDryGain] --> dryDestination
+                               > [masterWetGain] --> wetDestination
         */
         if (this.isConnected) return;
         this.audioCtx.beginScope(this.instrumentSpec.getDisplayName());
+
+        // create the filter but don't connect it yet.
+        this.filter = this.audioCtx.createBiquadFilter("drum>filter");
+        this.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
+        this.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
 
         this.masterDryGain = this.audioCtx.createGain();
         this.masterWetGain = this.audioCtx.createGain();
@@ -244,8 +250,11 @@ class OneShotInstrument {
         this.masterWetGain.connect(this.wetDestination);
 
         this.voices.forEach(v => {
-            v.connect(this.audioCtx, this.masterDryGain, this.masterWetGain);
+            v.connect(this.audioCtx, this.dryDestination, this.wetDestination);
         });
+
+        this._SetFiltType(); // this will connect the voices & filter
+
         this.isConnected = true;
         this.audioCtx.endScope();
     }
@@ -254,6 +263,10 @@ class OneShotInstrument {
         this.AllNotesOff();
         if (!this.isConnected) return;
         this.voices.forEach(v => { v.disconnect(); });
+
+        this.filter.disconnect();
+        this.filter = null;
+
         this.masterDryGain.disconnect();
         this.masterWetGain.disconnect();
         this.masterDryGain = null;
@@ -263,6 +276,8 @@ class OneShotInstrument {
 
     NoteOn(midiNote, velocity) {
         if (!this.isConnected) this.connect();
+
+        this._updateFilterBaseFreq();
 
         // find a free voice and delegate.
         //let suitableVoice = null;
@@ -320,6 +335,62 @@ class OneShotInstrument {
         return [(1.0 - vg) * ms, vg * ms * 1.0];
     }
 
+
+    _SetFiltType() {
+        let disableFilter = () => {
+            if (!this.isFilterConnected) return; // already disconnected.
+
+            this.filter.disconnect();
+
+            // reconnect voices to the wet/dry destinations instead of filter.
+            this.voices.forEach(v => {
+                v.disconnect();
+                v.connect(this.audioCtx, this.masterDryGain, this.masterWetGain);
+            });
+    
+            this.isFilterConnected = false;
+        };
+        let enableFilter = () => {
+            if (this.isFilterConnected) return; // already connected.
+
+            this.filter.connect(this.masterDryGain);
+            this.filter.connect(this.masterWetGain);
+
+            // reconnect voices to the wet/dry destinations instead of filter.
+            this.voices.forEach(v => {
+                v.disconnect();
+                v.connect(this.audioCtx, this.filter);
+            });
+
+            this.isFilterConnected = true;
+        };
+        switch (parseInt(this.instrumentSpec.GetParamByID("filterType").currentValue)) {
+            case 0: // off
+                disableFilter();
+                return;
+            case 1:
+                enableFilter();
+                this.filter.type = "lowpass";
+                return;
+            case 2:
+                enableFilter();
+                this.filter.type = "highpass";
+                return;
+            case 3:
+                enableFilter();
+                this.filter.type = "bandpass";
+                return;
+        }
+        console.warn(`unknown filter type ${this.instrumentSpec.GetParamByID("filterType").currentValue}`);
+    }
+
+    _updateFilterBaseFreq() {
+        let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
+        const freqParam = this.filter.frequency;
+        freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
+    }
+
+
     SetParamValues(patchObj) {
         let keys = Object.keys(patchObj);
         keys.forEach(paramID => {
@@ -330,6 +401,15 @@ class OneShotInstrument {
                     this.masterDryGain.gain.value = levels[0];
                     this.masterWetGain.gain.value = levels[1];
                     break;
+                case "filterType":
+                    this._SetFiltType();
+                    break;
+                case "filterFreq":
+                    this._updateFilterBaseFreq();
+                    break;
+                case "filterQ":
+                    this.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
+                    break;
                 default:
                     this.voices.forEach(voice => {
                         voice.SetParamValue(paramID, patchObj[paramID]);
@@ -339,10 +419,6 @@ class OneShotInstrument {
         });
     };
 };
-
-
-
-
 
 module.exports = {
     gLoadSample,

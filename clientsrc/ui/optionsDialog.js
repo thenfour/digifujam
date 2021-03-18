@@ -11,60 +11,78 @@ class DFOptionsDialog extends React.Component {
             {
                 caption: "None",
                 division: 0,
+                group: 0,
             },
+
             {
                 caption: "𝅝", // whole
                 division: 0.25, // 1/4
+                group: 1,
             },
             {
                 caption: "𝅗𝅥",
                 division: 0.5,// 1/2
+                group: 1,
             },
-
             {
                 caption: "𝅘𝅥",
                 division: 1, // 1/1
+                group: 1,
             },
-            {
-                caption: "𝅘𝅥.",
-                division: 2.0 / 3.0,
-            },
-            {
-                caption: "𝅘𝅥3",
-                division: 3.0 / 2.0,//3/2
-            },
-
             {
                 caption: "𝅘𝅥𝅮",
                 division: 2,
+                group: 1,
+            },
+            {
+                caption: "𝅘𝅥𝅯",
+                division: 4,
+                group: 1,
+            },
+            {
+                caption: "𝅘𝅥𝅰",
+                division: 8,
+                group: 1,
+            },
+
+
+            {
+                caption: "𝅘𝅥.",
+                division: 2.0 / 3.0,
+                group: 2,
             },
             {
                 caption: "𝅘𝅥𝅮.",
                 division: 4.0 / 3.0,
-            },
-            {
-                caption: "𝅘𝅥𝅮3",
-                division: 3,
-            },
-
-            {
-                caption: "𝅘𝅥𝅯",
-                division: 4,
+                group: 2,
             },
             {
                 caption: "𝅘𝅥𝅯.",
                 division: 8.0 / 3.0,
+                group: 2,
+            },
+
+
+            {
+                caption: "𝅘𝅥3",
+                division: 3.0 / 2.0,//3/2
+                group: 3,
+            },
+
+            {
+                caption: "𝅘𝅥𝅮3",
+                division: 3,
+                group: 3,
             },
             {
                 caption: "𝅘𝅥𝅯3",
                 division: 6,
+                group: 3,
             },
 
-            {
-                caption: "𝅘𝅥𝅰",
-                division: 8,
-            },
         ];
+
+        this.quantizationOptions.forEach((qo, i) => { qo.index = i; });
 
         let qi = this.findQuantizationIndex(this.props.app.myUser.quantizeBeatDivision);
 
@@ -144,14 +162,23 @@ class DFOptionsDialog extends React.Component {
 
     render() {
 
+        let _groups = [...new Set(this.quantizationOptions.map(p => p.group))];
 
-        const quantizationButtons = this.quantizationOptions.map((q, i) =>
-            <button
-                key={i}
-                className={"buttonParam " + ((this.state.quantizationIndex == i) ? "active" : "")}
-                onClick={() => { this.setQuantizationOptIndex(i) }}>{q.caption}</button>
-        );
+        let renderButton = (qo) => {
+            return (
+                <button
+                    key={qo.index}
+                    className={"buttonParam quantizationOption " + ((this.state.quantizationIndex == qo.index) ? " active" : "")}
+                    onClick={() => { this.setQuantizationOptIndex(qo.index) }}>{qo.caption}</button>
+            );
+        };
 
+        let renderGroup = (g) => {
+            let buttons = this.quantizationOptions.filter(qo => qo.group == g).map(qo => renderButton(qo));
+            return (<div key={g} className="quantizationGroup">{buttons}</div>);
+        };
+
+        const quantGroups = _groups.map(g => renderGroup(g));
 
         return (
             <div>
@@ -188,7 +215,7 @@ class DFOptionsDialog extends React.Component {
                         <div className="component">
                             <h2>Quantization</h2>
                             <div>
-                                {quantizationButtons}
+                                {quantGroups}
                             </div>
                         </div>
 

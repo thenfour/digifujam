@@ -998,6 +998,9 @@ class DigifuInstrumentSpec {
         if (this.engine === "minifm" && this.behaviorStyle === "microSub") {
             return ["master", "∿ Osc A"];
         }
+        if (this.engine === "drumkit") {
+            return ["master", "Macro", "Filter"];
+        }
         return ["master", "Macro"];
     }
 
