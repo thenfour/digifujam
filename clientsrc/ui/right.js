@@ -8,6 +8,7 @@ const DFReactUtils = require("./DFReactUtils");
 const DFAdminControls = require("./adminControls");
 const UIUser = require("./UIUser");
 const DFU = require('../dfutil');
+const DFOptionsDialog = require('./optionsDialog');
 
 const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
@@ -18,13 +19,6 @@ const GetHomepage = () => {
     if (st) return st;
     return window.location.origin;
 };
-
-// const htmlEncode = (str) => {
-//     let p = document.createElement("p");
-//     p.textContent = str;
-//     return p.innerHTML;
-// };
-
 
 const getTimeSpanInfo = (ms) => {
     //const Sign = Math.sign(ms);
@@ -1361,189 +1355,6 @@ class WorldStatus extends React.Component {
 
 
 
-class BPMControls extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.quantizationOptions = [
-            {
-                caption: "None",
-                division: 0,
-            },
-            {
-                caption: "𝅝", // whole
-                division: 0.25, // 1/4
-            },
-            {
-                caption: "𝅗𝅥",
-                division: 0.5,// 1/2
-            },
-
-            {
-                caption: "𝅘𝅥",
-                division: 1, // 1/1
-            },
-            {
-                caption: "𝅘𝅥.",
-                division: 2.0/3.0,
-            },
-            {
-                caption: "𝅘𝅥3",
-                division: 3.0/2.0,//3/2
-            },
-
-            {
-                caption: "𝅘𝅥𝅮",
-                division: 2,
-            },
-            {
-                caption: "𝅘𝅥𝅮.",
-                division: 4.0/3.0,
-            },
-            {
-                caption: "𝅘𝅥𝅮3",
-                division: 3,
-            },
-
-            {
-                caption: "𝅘𝅥𝅯",
-                division: 4,
-            },
-            {
-                caption: "𝅘𝅥𝅯.",
-                division: 8.0/3.0,
-            },
-            {
-                caption: "𝅘𝅥𝅯3",
-                division: 6,
-            },
-
-            {
-                caption: "𝅘𝅥𝅰",
-                division: 8,
-            },
-        ];
-
-        let qi = this.findQuantizationIndex(this.props.app.myUser.quantizeBeatDivision);
-
-        this.state = {
-            isShowing: true,
-            quantizationIndex: qi,
-        };
-    }
-
-    findQuantizationIndex(beatDivision) {
-        let nearestDist = 0;
-        let nearestIndex = -1;
-        this.quantizationOptions.forEach((val, index) => {
-            let dist = Math.abs(val.division - beatDivision);
-            if (nearestIndex == -1 || dist < nearestDist) {
-                nearestDist = dist;
-                nearestIndex = index;
-            }
-        });
-        return nearestIndex;
-    }
-
-    onClickHeader = () => {
-        this.setState({ isShowing: !this.state.isShowing });
-    }
-
-    setRoomBPM = (v) => {
-        if (v.target.value < 1 || v.target.value > 200)
-            return;
-
-        //this.props.app.metronome.bpm = v.target.value;
-        //if (this.props.app.metronome.syncWithRoom)
-        this.props.app.SendRoomBPM(v.target.value);
-        //this.setState({});
-    }
-
-    setQuantizationOptIndex = (i) => {
-        this.setState({
-            quantizationIndex: i,
-        });
-        this.props.app.SetQuantizationSpec(this.quantizationOptions[i].division);
-    };
-
-    onClickMetronome = () => {
-        this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
-        this.setState({});//gStateChangeHandler.OnStateChange();
-    }
-
-    setMetronomeVolume = (v) => {
-        let realVal = parseFloat(v.target.value) / 100;
-        this.props.app.synth.metronomeGain = realVal;
-        this.setState({});//gStateChangeHandler.OnStateChange();
-    }
-
-    // onClickSync(v) {
-    //     this.props.app.metronome.syncWithRoom = v;// !this.props.app.metronome.syncWithRoom;
-    //     this.setState({});
-    // }
-
-    onSetMonitoringType(mt) {
-        this.props.app.setMonitoringType(mt);
-        this.setState({});
-    }
-
-    render() {
-        if (!this.props.app || !this.props.app.roomState) {
-            return null;
-        }
-
-        const ulStyle = this.state.isShowing ? { display: 'block' } : { display: "none" };
-
-        const quantizationButtons = this.quantizationOptions.map((q, i) =>
-            <button
-                key={i}
-                className={"buttonParam " + ((this.state.quantizationIndex == i) ? "active" : "")}
-                onClick={() => { this.setQuantizationOptIndex(i) }}>{q.caption}</button>
-        );
-
-        return (
-            <div className="component bpmControls" style={{ whiteSpace: "nowrap" }}>
-                <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DFU.getArrowText(this.state.isShowing)} BPM & Monitoring</h2>
-                {this.state.isShowing &&
-                    <ul style={ulStyle}>
-                        <li>
-                            <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
-                            BPM: {this.props.app.roomState.bpm}
-                        </li>
-
-                        <li className="buttonsParam">
-                            <span className="volumeContainer">
-                                <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.synth.isMuted || this.props.app.metronome.isMuted} />
-                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.synth.isMuted) ? "🔇" : "🔊"}</button>
-                            </span>
-                        </li>
-
-                        {/* <li className="buttonsParam" style={{whiteSpace:"normal"}}>
-                            <button className={"buttonParam " + (!this.props.app.metronome.syncWithRoom ? "active" : "")} onClick={() => { this.onClickSync(false) }}>Personal</button>
-                            <button className={"buttonParam " + (this.props.app.metronome.syncWithRoom ? "active" : "")} onClick={() => { this.onClickSync(true) }}>Shared</button>
-                        </li> */}
-
-                        <li className="buttonsParam" style={{whiteSpace:"normal"}}>
-                            {quantizationButtons}
-                            <label>Q</label>
-                        </li>
-
-                        <li className="buttonsParam" style={{whiteSpace:"normal"}}>
-                            <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Off) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Off) }}>Off</button>
-                            <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Local) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Local) }}>Local</button>
-                            <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Remote) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Remote) }}>Remote</button>
-                            <label>Monitor</label>
-                        </li>
-                    </ul>
-                }
-
-            </div>
-
-        );
-    }
-
-}
-
 class InstrumentList extends React.Component {
 
     constructor(props) {
@@ -1668,7 +1479,6 @@ class LeftArea extends React.Component {
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 {userState}
                 <InstrumentList app={this.props.app} />
-                {this.props.app && <BPMControls app={this.props.app} />}
                 <UserList app={this.props.app} />
                 <WorldStatus app={this.props.app} />
                 {adminControls}
@@ -2167,55 +1977,11 @@ class ChatArea extends React.Component {
 
 class UpperRightControls extends React.Component {
 
-    setVolumeVal = (v) => {
-        let realVal = parseFloat(v.target.value) / 100;
-        this.props.app.synth.masterGain = realVal;
-        gStateChangeHandler.OnStateChange();
-    }
-
-    setPBRange = (v) => {
-        this.props.app.pitchBendRange = v.target.value;
-        gStateChangeHandler.OnStateChange();
-    }
-
-    onClickMute = () => {
-        // this op takes a while so do async
-        setTimeout(() => {
-            this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
-            gStateChangeHandler.OnStateChange();
-        }, 0);
-    };
-
-    componentDidMount() {
-        DFUtils.stylizeRangeInput("volume", {
-            bgNegColorSpec: "#044",
-            negColorSpec: "#044",
-            posColorSpec: "#044",
-            bgPosColorSpec: "#044",
-            zeroVal: 0,
-        });
-        DFUtils.stylizeRangeInput("pbrange", {
-            bgNegColorSpec: "#044",
-            negColorSpec: "#044",
-            posColorSpec: "#044",
-            bgPosColorSpec: "#044",
-            zeroVal: 0,
-        });
-    }
-
     render() {
 
         return (
             <span className="topRightControls">
-                <span className="pbContainer">
-                    <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
-                    <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
-                </span>
-                <span className="volumeContainer">
-                    <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
-                    <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
-                </span>
-                <button className="muteButton" onClick={this.onClickMute}>{this.props.app.synth.isMuted ? "🔇" : "🔊"}</button>
+                <DFOptionsDialog app={this.props.app} stateChangeHandler={gStateChangeHandler}></DFOptionsDialog>
             </span>
 
         );
@@ -2498,7 +2264,6 @@ class RootArea extends React.Component {
 
 module.exports = {
     AnnouncementArea,
-    BPMControls,
     ChatArea,
     CheerControls,
     FullChatLog,

@@ -779,7 +779,7 @@ div.presetFilter input[type="text"]
     top:0px;
     padding-top:4px;
     background-color: #222;
-    z-index: 9999;
+    z-index: 9900;
 }
 
 
@@ -792,9 +792,7 @@ div.presetFilter input[type="text"]
 
 
 input[type="range"].floatParam,
-input[type="range"].intParam,
-#volume,
-#pbrange
+input[type="range"].intParam
  {
     border: 0;
     border-radius: 8px;
@@ -804,9 +802,7 @@ input[type="range"].intParam,
 }
 
 input[type="range"].floatParam::-webkit-slider-thumb,
-input[type="range"].intParam::-webkit-slider-thumb,
-#volume::-webkit-slider-thumb,
-#pbrange::-webkit-slider-thumb
+input[type="range"].intParam::-webkit-slider-thumb
 {
     -webkit-appearance: none;
     background: #0aa;
@@ -870,16 +866,7 @@ input[type="range"].intParam::-webkit-slider-thumb,
 {
     background-color: #acc;
 }
-
-/*.bpmControls {
-    white-space: pre;
-    text-align: center;
-}
-.bpmControls * {
-    margin-left: 6px;
-    margin-right: 6px;
-} */
-
+/* 
 .topRightControls {
     white-space: nowrap;
 }
@@ -887,7 +874,7 @@ input[type="range"].intParam::-webkit-slider-thumb,
     display: inline-block;
     width: 80px;
 }
-
+ */
 
 
 
@@ -1201,3 +1188,61 @@ button.stayLoggedIn:hover {
 
 }
 
+.optionsDialog {
+    padding: 10px;
+    position: absolute;
+    z-index: 9991;
+    width: 400px;
+    height: 400px;
+    background-color: #111;
+    text-align: -webkit-auto;
+    right: 20px;
+    box-sizing: content-box;
+    border: 3px solid #088;
+    border-radius: 10px;
+    border-top-right-radius:0;
+}
+
+.optionsButton {
+    background-color: #033;
+    padding: 4px;
+    border: 1px solid #066;
+    border-radius: 10px;
+    margin: 0;
+    margin-right: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+.optionsButton:hover {
+    background-color: #055;
+}
+
+.optionsButton:hover {
+    background-color: #055;
+}
+
+.optionsButton:active {
+    background-color: #077;
+}
+
+.optionsButton.expanded {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.optionsDialog .component {
+    border:0;
+}
+
+.optionsDialog .component h2 {
+    margin: 0;
+    border: 0;
+    font-size: small;
+    border-bottom: 2px dotted #066;
+    display: inline-block;
+    background-color: transparent;
+    color: #0aa;
+    padding: 0;
+}
