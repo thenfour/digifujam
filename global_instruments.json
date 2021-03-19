@@ -366,11 +366,12 @@
           "renderAs": "buttons",
           "defaultValue": 0,
           "minValue": 0,
-          "maxValue": 2,
+          "maxValue": 3,
           "enumNames": [
             "SecretOfManaExt",
             "LINN",
-            "SC88"
+            "SC88",
+            "Jazzy"
           ]
         },
 
@@ -411,6 +412,7 @@
         }
       ],
       "drumKits": {
+        "Jazzy" : { "kitSpecURL" : "public/drum-samples/jazzy/jazzy.json" },
         "LINN": {
           "samples": [
             {

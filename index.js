@@ -146,7 +146,7 @@ class RoomServer {
 
   constructor(data, serverStateObj) {
     // thaw into live classes
-    this.roomState = DF.DigifuRoomState.FromJSONData(data);
+    this.roomState = DF.DigifuRoomState.FromJSONData(data, (url) => JSON.parse(fs.readFileSync(url)));
 
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     let usedInstrumentIDs = [];

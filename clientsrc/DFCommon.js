@@ -1570,7 +1570,7 @@ class DigifuRoomState {
         return { instrument: this.instrumentCloset[idx], index: idx };
     };
 
-    static FromJSONData(data) {
+    static FromJSONData(data, syncLoadJSONRoutine) {
         // thaw into live classes
         let ret = Object.assign(new DigifuRoomState(), data);
 
@@ -1594,10 +1594,25 @@ class DigifuRoomState {
             ret.instrumentCloset[idx] = Object.assign(n, i);
         }
 
+        // deal with drumkits which are externally-loaded.
+        ret.instrumentCloset.forEach(i => {
+            if (i.engine != "drumkit" || !i.drumKits) return;
+            const externalKits = {};
+            Object.keys(i.drumKits).forEach(kitName => {
+                const url = i.drumKits[kitName].kitSpecURL;
+                if (!url) return;
+                console.log(`Loading external drum kit: "${url}"`);
+                externalKits[kitName] = syncLoadJSONRoutine(url);
+            });
+            Object.keys(externalKits).forEach(kitName => {
+                i.drumKits[kitName] = externalKits[kitName];
+            });
+        });
+
         ret.thaw();
 
-        // ensure all instruments have preset banks, AND
-        // old format of presets were stored in instrumentSpecs. migrate them to room-based banks.
+        // - ensure all instruments have preset banks, AND
+        // - old format of presets were stored in instrumentSpecs. migrate them to room-based banks.
         ret.instrumentCloset.forEach(i => {
             const bank = ret.GetPresetBankForInstrument(i); // this will ensure the bank exists and populate i.presetBankID
             if (!Array.isArray(i.presets)) return;

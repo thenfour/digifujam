@@ -161,8 +161,9 @@ class DrumKitVoice {
             this.midiNoteMap.push({ spec: null, buffer: null });
         }
 
+        let kitSpec = this.instrumentSpec.drumKits[kit];
         // populate it with all known kit samples.
-        let kitSamples = this.instrumentSpec.drumKits[kit].samples; // this object so far is just {samples:[]}
+        let kitSamples = kitSpec.samples; // this object so far is just {samples:[]}
         kitSamples.forEach(sampleSpec => {
             // populate mapped notes with "loading" state
             sampleSpec.midiNotes.forEach(midiNote => {

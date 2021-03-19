@@ -1,0 +1,168 @@
+{
+  "samples": [
+    {
+      "url": "/drum-samples/jazzy/kick1.m4a",
+      "midiNotes": [
+        35
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/kick2.m4a",
+      "midiNotes": [
+        36
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/stick.m4a",
+      "midiNotes": [
+        37
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/snare1.m4a",
+      "midiNotes": [
+        38
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/snare2.m4a",
+      "midiNotes": [
+        40
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/tom1.m4a",
+      "midiNotes": [
+        41
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_closed_1.m4a",
+      "midiNotes": [
+        42
+      ],
+      "sendNoteOffToNotes": [
+        46,
+        56,
+        58
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/tom3.m4a",
+      "midiNotes": [
+        43
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_foot.m4a",
+      "midiNotes": [
+        44
+      ],
+      "sendNoteOffToNotes": [
+        46,
+        56,
+        58
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/snareslide.m4a",
+      "midiNotes": [
+        45
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_open_1.m4a",
+      "midiNotes": [
+        46
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/tom2.m4a",
+      "midiNotes": [
+        47
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/snare_ghost.m4a",
+      "midiNotes": [
+        48
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/crash1.m4a",
+      "midiNotes": [
+        49
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/snare_tippin.m4a",
+      "midiNotes": [
+        50
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/ride1.m4a",
+      "midiNotes": [
+        51
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/ride2.m4a",
+      "midiNotes": [
+        52
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/snare_ghost_ringing.m4a",
+      "midiNotes": [
+        53
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_closed_2.m4a",
+      "midiNotes": [
+        54
+      ],
+      "sendNoteOffToNotes": [
+        46,
+        56,
+        58
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/crash3.m4a",
+      "midiNotes": [
+        55
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_open_2.m4a",
+      "midiNotes": [
+        56
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/crash2.m4a",
+      "midiNotes": [
+        57
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_ring.m4a",
+      "midiNotes": [
+        58
+      ]
+    },
+    {
+      "url": "/drum-samples/jazzy/hat_closed_3.m4a",
+      "midiNotes": [
+        59
+      ],
+      "sendNoteOffToNotes": [
+        46,
+        56,
+        58
+      ]
+    }
+  ]
+}
