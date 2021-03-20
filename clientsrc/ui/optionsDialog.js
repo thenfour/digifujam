@@ -293,7 +293,7 @@ class DFOptionsDialog extends React.Component {
                             <div>
                                 <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.synth.isMuted || this.props.app.metronome.isMuted} />
                                 <label htmlFor="metronomeVolume">volume: {Math.trunc(this.props.app.synth.metronomeGain * 100)}</label>
-                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.synth.isMuted) ? "🔇" : "🔊"}</button>
+                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.synth.isMuted) ? "⚪" : "🔺"}</button>
                             </div>
                         </div>
 
