@@ -1,6 +1,16 @@
 {
   "globalInstruments": [
     {
+      "instrumentID": "mixingdesk",
+      "name": "Mixing desk",
+      "supportsPresets": false,
+      "color": "#CC0",
+      "engine": "mixingdesk",
+      "activityDisplay": "none",
+      "wantsMIDIInput": false,
+      "params": []
+    },
+    {
       "instrumentID": "perckit",
       "name": "Percussion",
       "namePrefix": "Kit: ",
@@ -41,8 +51,6 @@
             "Box o' Percussion"
           ]
         },
-
-
         {
           "paramID": "filterType",
           "name": "Type",
@@ -78,7 +86,6 @@
           "minValue": 0.0,
           "maxValue": 20.0
         }
-
       ],
       "drumKits": {
         "Box o' Percussion": {
@@ -374,7 +381,6 @@
             "Jazzy"
           ]
         },
-
         {
           "paramID": "filterType",
           "name": "Type",
@@ -412,7 +418,9 @@
         }
       ],
       "drumKits": {
-        "Jazzy" : { "kitSpecURL" : "public/drum-samples/jazzy/jazzy.json" },
+        "Jazzy": {
+          "kitSpecURL": "public/drum-samples/jazzy/jazzy.json"
+        },
         "LINN": {
           "samples": [
             {

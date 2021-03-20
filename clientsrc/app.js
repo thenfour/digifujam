@@ -569,6 +569,20 @@ class DigifuApp {
         this.synth.PedalUp(foundInstrument.instrument);
     };
 
+    //
+    PatchChangeIsLinkedByMyInstrument(instrumentSpec, patchObj) {
+        if (!this.myInstrument) return false;
+        if (this.myInstrument.engine != 'mixingdesk') return false; // performance short circuit
+        return Object.keys(patchObj).some(paramID => {
+            // find a param which links to that
+            if (this.myInstrument.params.some(p => p.sourceInstrumentID == instrumentSpec.instrumentID && p.sourceParamID == paramID)) {
+                return true;
+            }
+            return false;
+        });
+        //return false;
+    }
+
     NET_OnInstrumentParams(data) // userID, instrumentID, patchObj, isWholePatch
     {
         if (!this.roomState) return;
@@ -583,6 +597,8 @@ class DigifuApp {
         if (this.synth.SetInstrumentParams(foundInstrument.instrument, data.patchObj, data.isWholePatch)) {
             this.stateChangeHandler();
         } else if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
+            this.stateChangeHandler();
+        } else if (this.PatchChangeIsLinkedByMyInstrument(foundInstrument.instrument, data.patchObj)) {
             this.stateChangeHandler();
         }
     }
@@ -863,7 +879,7 @@ class DigifuApp {
         });
     };
 
-    SendRoomBPM (bpm) {
+    SendRoomBPM(bpm) {
         if (bpm != this.roomState.bpm) {
             this.net.SendRoomBPM(bpm);
         }
@@ -894,7 +910,7 @@ class DigifuApp {
         }
     };
 
-    SetInstrumentParam(inst, param, newVal) {
+    SetInstrumentParam(_, param, newVal) {
         let presetObj = {};
         presetObj[param.paramID] = newVal;
         this.loadPatchObj(presetObj);
@@ -1012,7 +1028,6 @@ class DigifuApp {
             //alert("selective disconnect supported");
         } else {
             alert("selective disconnect not supported. please report this as a bug.");
-
         }
 
         this.midi.Init(this);
@@ -1027,7 +1042,7 @@ class DigifuApp {
             this.audioCtx.endScope = () => { };
         }
 
-        this.synth.Init(this.audioCtx);
+        this.synth.Init(this.audioCtx, () => { return this.roomState; });
         this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
         this.net.Connect(this, google_access_token);
     };

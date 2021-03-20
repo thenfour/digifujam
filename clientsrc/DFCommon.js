@@ -402,6 +402,7 @@ class DigifuInstrumentSpec {
         this.params = [];// instrument parameter value map
         this.namePrefix = "";// when forming names based on patch name, this is the prefix
         this.supportsPresets = true;
+        this.wantsMIDIInput = true; // default. mixing board doesn't care about midi input for example
         this.presetBankID = null; // which bankID will this instrumentspec refer to for its presets
         this.maxTextLength = 100;
         this.behaviorAdjustmentsApplied = false; // upon thaw, based on teh behaviorstyle, we rearrange params and stuff. but once it's done, don't do it again (on the client)
@@ -412,6 +413,7 @@ class DigifuInstrumentSpec {
 
     getDisplayName() {
         switch (this.engine) {
+            case "mixingdesk":
             case "soundfont":
                 return this.name;
             case "drumkit":
@@ -645,7 +647,7 @@ class DigifuInstrumentSpec {
     //   calculatedPatchObj:{}, // a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
     //   incurredMappings: <bool> // whether any of these changes incurred mapping changes to other params
     // }
-    integrateRawParamChanges(patchObj, isWholePatch) {
+    integrateInstRawParamChanges(patchObj, isWholePatch) {
         if (!patchObj) return;
 
         const ret = {};
@@ -1001,6 +1003,9 @@ class DigifuInstrumentSpec {
         }
         if (this.engine === "drumkit") {
             return ["master", "Macro", "Filter"];
+        }
+        if (this.engine === "mixingdesk") {
+            return ["master", "Gain"];
         }
         return ["master", "Macro"];
     }
@@ -1470,6 +1475,7 @@ class DigifuRoomState {
             n.thaw();
             return n;
         });
+
         this.presetBanks = this.presetBanks.map(o => {
             const n = Object.assign(new PresetBank(), o);
             n.thaw();
@@ -1571,6 +1577,59 @@ class DigifuRoomState {
         return { instrument: this.instrumentCloset[idx], index: idx };
     };
 
+
+    GetLinkedInstrument(myInst, param) {
+        if (param.sourceInstrumentID) {
+            const linkedInst = this.FindInstrumentById(param.sourceInstrumentID).instrument;
+            return linkedInst;
+        }
+        return myInst;
+    }
+
+    GetLinkedParam(inst, param) {
+        if (param.sourceInstrumentID) {
+            const linkedInst = this.GetLinkedInstrument(inst, param);
+            const linkedParam = linkedInst.params.find(p => p.paramID == param.sourceParamID);
+            return linkedParam;
+        }
+        return param;
+    }
+
+    // returns similar as integrateInstRawParamChanges.
+    // returns {
+    //   calculatedPatchObj:{}, // a map of paramID : currentValue (live calculated value) for use by synthesizer to update live params
+    //   incurredMappings: <bool> // whether any of these changes incurred mapping changes to other params
+    //   downstreamInstruments: { } // maps instrumentID to a child return object (recursive)
+    // }
+    integrateRawParamChanges(instrument, patchObj, isWholePatch) {
+        const ret = instrument.integrateInstRawParamChanges(patchObj, isWholePatch);
+        ret.downstreamInstruments = {};
+
+        // propagate to linked params in other instruments. first group by instrumentID so we have 1 object per instrument.
+        let anyLinked = false;
+        Object.keys(ret.calculatedPatchObj).forEach(paramID => {
+            const param = instrument.GetParamByID(paramID);
+            const sourceInstrumentID = param.sourceInstrumentID;
+            if (sourceInstrumentID) {
+                const sourceParamID = param.sourceParamID;
+                anyLinked = true;
+                if (!(sourceInstrumentID in ret.downstreamInstruments)) {
+                    ret.downstreamInstruments[sourceInstrumentID] = {}; // create new patch obj
+                }
+                ret.downstreamInstruments[sourceInstrumentID][sourceParamID] = ret.calculatedPatchObj[paramID];
+            }
+        });
+
+        Object.keys(ret.downstreamInstruments).forEach(instrumentID => {
+            // create patch object for this instrument.
+            const subPatchObj = ret.downstreamInstruments[instrumentID];
+            const foundInstrument = this.FindInstrumentById(instrumentID);
+            ret.downstreamInstruments[instrumentID] = this.integrateRawParamChanges(foundInstrument.instrument, subPatchObj, false);
+        });
+
+        return ret;
+    }
+
     static FromJSONData(data, syncLoadJSONRoutine) {
         // thaw into live classes
         let ret = Object.assign(new DigifuRoomState(), data);
@@ -1607,6 +1666,41 @@ class DigifuRoomState {
             });
             Object.keys(externalKits).forEach(kitName => {
                 i.drumKits[kitName] = externalKits[kitName];
+            });
+        });
+
+        // initialize the parameters of mixingdesk.
+        ret.instrumentCloset.forEach(i => {
+            if (i.engine != 'mixingdesk') return;
+            // create the params for each instrument
+            ret.instrumentCloset.forEach(ci => {
+                if (ci.engine == 'mixingdesk') {
+                    return;
+                }
+                const cigain = ci.params.find(cip => cip.paramID == "masterGain");
+                if (!cigain) {
+                    return;
+                }
+                const paramID = `${ci.instrumentID}_${cigain.paramID}`;
+                //console.log(`      yea ${paramID}`);
+                if (i.params.find(cip => cip.paramID == paramID)) {
+                    return;
+                }
+
+                i.params.push({
+                    paramID,
+                    name: `${ci.name}`,
+                    groupName: "Gain",
+                    sourceInstrumentID: ci.instrumentID,
+                    sourceParamID: cigain.paramID,
+                    // you can theoretically get these values by following the link, but this is just more efficient.
+                    parameterType: cigain.parameterType,
+                    defaultValue: cigain.defaultValue,
+                    valueCurve: cigain.valueCurve,
+                    minValue: cigain.minValue,
+                    maxValue: cigain.maxValue,
+                    zeroPoint: cigain.zeroPoint,
+                });
             });
         });
 

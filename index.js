@@ -182,7 +182,7 @@ class RoomServer {
 
     // do factory resets
     this.roomState.instrumentCloset.forEach(i => {
-      i.integrateRawParamChanges(this.roomState.GetInitPreset(i));
+      this.roomState.integrateRawParamChanges(i, this.roomState.GetInitPreset(i));
     });
 
     // remember this stuff for our "reset to factory defaults" function.
@@ -612,7 +612,7 @@ class RoomServer {
       }
 
       // set the value.
-      foundInstrument.instrument.integrateRawParamChanges(data.patchObj, data.isWholePatch);
+      this.roomState.integrateRawParamChanges(foundInstrument.instrument, data.patchObj, data.isWholePatch);      
       gServerStats.OnParamChange(this.roomState.roomID, foundUser.user, Object.keys(data.patchObj).length);
 
       // broadcast to all clients
@@ -681,7 +681,7 @@ class RoomServer {
       const patchObj = foundInstrument.instrument.removeParamMapping(foundInstrument.instrument.GetParamByID(data.paramID));
       //log(`RemoveParamMapping inst ${foundInstrument.instrument.name}, paramID ${data.paramID}`);
       //log(`  -> and must recalc ${JSON.stringify(patchObj)}`);
-      foundInstrument.instrument.integrateRawParamChanges(patchObj, false);
+      this.roomState.integrateRawParamChanges(foundInstrument.instrument, patchObj, false);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.RemoveParamMapping, {
@@ -743,7 +743,7 @@ class RoomServer {
         throw new Error(`error importing factory settings for instrument ${foundInstrument.instrument.instrumentID}`);
       }
       let initPreset = this.roomState.GetInitPreset(foundInstrument.instrument);
-      foundInstrument.instrument.integrateRawParamChanges(initPreset, true);
+      this.roomState.integrateRawParamChanges(foundInstrument.instrument, initPreset, true);
 
       const bank = this.roomState.GetPresetBankForInstrument(foundInstrument.instrument);
 

@@ -6,6 +6,7 @@ const DFDrumkit = require("./DrumkitEngine");
 const DFSynthTools = require("./synthTools");
 const FMPolySynth = require("./fm4instrument");
 const FMVoice = require("./fm4voice");
+const MixingDeskInstrument = require("./MixingDeskInstrument");
 
 const gGainBoost = 2.0;
 
@@ -49,6 +50,9 @@ class DigifuSynth {
 		return this._isMuted; // unfortunately no "is connected" api exists so we must keep state.
 	}
 
+	//                                                                        [metronomeGainNode] -->
+	// (instruments) --> (instrumentDryGainers) ---------------------> [preMasterGain] -------------> [masterGainNode] -->  (destination)
+	//               --> (instrumentWetGainers) --> [masterReverb] -->                             -> [analysis]
 	set isMuted(val) {
 		// instrumentSpecs, internalMasterGain
 		if (val) {
@@ -110,11 +114,17 @@ class DigifuSynth {
 
 	// returns true if the param changes incurred mapping propagation to other params
 	SetInstrumentParams(instrumentSpec, patchObj /* RAW values, not calculated */, isWholePatch) {
-		const x = instrumentSpec.integrateRawParamChanges(patchObj, isWholePatch);
+		const x = this.roomStateGetter().integrateRawParamChanges(instrumentSpec, patchObj, isWholePatch);
 		if (!this._isMuted || instrumentSpec.isMuted) {
 			this.instruments[instrumentSpec.instrumentID].SetParamValues(x.calculatedPatchObj);
 		}
-		return x.incurredMappings;
+		// handle downstream linked params.
+		var ret = x.incurredMappings;
+		Object.keys(x.downstreamInstruments).forEach(instrumentID => {
+			this.SetInstrumentParams(this.instrumentSpecs.find(i => i.instrumentID == instrumentID), x.downstreamInstruments[instrumentID].calculatedPatchObj, false);
+			ret = true;
+		});
+		return ret;
 	}
 
 	ConnectInstrument(instrumentSpec) {
@@ -161,6 +171,9 @@ class DigifuSynth {
 				case "drumkit":
 					this.instruments[spec.instrumentID] = new DFDrumkit.OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DFDrumkit.DrumKitVoice(s, l));
 					break;
+				case "mixingdesk":
+					this.instruments[spec.instrumentID] = new MixingDeskInstrument();
+					break;
 				default:
 					alert(`Unknown synth engine '${spec.engine}'`);
 					break;
@@ -187,9 +200,10 @@ class DigifuSynth {
 	}
 
 	// call as a sort of ctor
-	Init(audioCtx) {
+	Init(audioCtx, roomStateGetter) {
 		console.assert(!this.audioCtx); // don't init more than once
 
+		this.roomStateGetter = roomStateGetter;
 		this.sampleLibrarian = new DFDrumkit.SampleCache(audioCtx);
 
 		this.audioCtx = audioCtx;
@@ -201,8 +215,10 @@ class DigifuSynth {
 
 		//                                                                             [metronomeGainNode] --->
 		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
-		//               --> (instrumentWetGainers) ----> [masterReverb] ----->                                               ->[analysis]
+		//               --> (instrumentWetGainers) ----> [masterReverb] ----->                              -> [analysis]
 		//
+		//this.compressor = this.audioCtx.createDynamicsCompressor("masterCompressor");
+
 		this.preMasterGain = this.audioCtx.createGain("master");
 		this.preMasterGain.gain.value = gGainBoost;
 

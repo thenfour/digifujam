@@ -346,7 +346,7 @@ class InstFloatParam extends React.Component {
         super(props);
         this.state = {
             isExpanded: false,
-            inputTextValue: this.props.param.rawValue.toFixed(4),
+            inputTextValue: this.GetRawValue().toFixed(4),
         };
         this.valueTextInputID = "i_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.valueTextDivID = "idiv_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
@@ -355,23 +355,23 @@ class InstFloatParam extends React.Component {
         this.renderedValue = -420.69;
     }
     onChange = (e) => {
-        const p = this.props.param;
-        let realVal = p.foreignToNativeValue(e.target.value, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
+        let realVal = this.props.param.foreignToNativeValue(e.target.value, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
 
         this.renderedValue = realVal;
-        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
-        this.setCaption(this.props.param.rawValue);
-        this.setInputTextVal(p.rawValue);
+        this.props.app.SetInstrumentParam(null, this.props.param, realVal);
+        this.setCaption(this.GetRawValue());
+        this.setInputTextVal(this.GetRawValue());
         //this.setState(this.state);
         gStateChangeHandler.OnStateChange();
     }
     componentDidMount() {
         // set initial values.
         const p = this.props.param;
-        this.renderedValue = p.rawValue;
-        this.setSliderVal(p.rawValue);
-        this.setCaption(p.rawValue);
-        this.setInputTextVal(p.rawValue);
+        const rawValue = this.GetRawValue();
+        this.renderedValue = rawValue;
+        this.setSliderVal(rawValue);
+        this.setCaption(rawValue);
+        this.setInputTextVal(rawValue);
         if (p.cssClassName.includes("modAmtParam")) {
             DFUtils.stylizeRangeInput(this.sliderID, {
                 bgNegColorSpec: "#444",
@@ -392,19 +392,17 @@ class InstFloatParam extends React.Component {
     }
 
     _realValToSliderVal(rv) {
-        const p = this.props.param;
-        return p.nativeToForeignValue(rv, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
+        return this.props.param.nativeToForeignValue(rv, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
     }
 
     setInputTextVal(val) {
-        this.setState({ inputTextValue: this.props.param.rawValue.toFixed(4) });
-        //$("#" + this.valueTextInputID).val(this.props.param.rawValue.toFixed(4));
+        this.setState({ inputTextValue: this.GetRawValue().toFixed(4) });
     }
     setCaption(val) {
-        $("#" + this.valueTextID).text(this.props.param.rawValue.toFixed(3));
+        $("#" + this.valueTextID).text(this.GetRawValue().toFixed(3));
     }
     setSliderVal(val) {
-        const p = this.props.param;
+        //const p = this.props.param;
         let currentSliderValue = this._realValToSliderVal(val);
         $("#" + this.sliderID).val(currentSliderValue);
         $("#" + this.sliderID).trigger("change");
@@ -432,7 +430,7 @@ class InstFloatParam extends React.Component {
         if (e.key != 'Enter') return;
         this.setState(this.state);
         let realVal = parseFloat(e.target.value);
-        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+        this.props.app.SetInstrumentParam(null, this.props.param, realVal);
 
         this.setCaption(realVal);
         this.setSliderVal(realVal);
@@ -446,7 +444,7 @@ class InstFloatParam extends React.Component {
 
             this.setState(this.state);
             this.renderedValue = realVal;
-            this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+            this.props.app.SetInstrumentParam(null, this.props.param, realVal);
             this.setCaption(realVal);
             this.setInputTextVal(realVal);
             this.setSliderVal(realVal);
@@ -459,7 +457,7 @@ class InstFloatParam extends React.Component {
 
         this.setState(this.state);
         this.renderedValue = realVal;
-        this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, realVal);
+        this.props.app.SetInstrumentParam(null, this.props.param, realVal);
         this.setCaption(realVal);
         this.setInputTextVal(realVal);
         this.setSliderVal(realVal);
@@ -474,10 +472,19 @@ class InstFloatParam extends React.Component {
         this.setState({});
     }
 
+    GetRawValue() {
+        return this.GetLinkedParam().rawValue;
+    }
+
+    GetLinkedParam() {
+        return this.props.app.roomState.GetLinkedParam(this.props.instrument, this.props.param);
+    }
+
     render() {
-        if (this.renderedValue != this.props.param.rawValue) {
+        const rawValue = this.GetRawValue();
+        if (this.renderedValue != rawValue) {
             //has been externally modified. update ui.
-            let val = this.props.param.rawValue;
+            let val = rawValue;
             this.renderedValue = val;
             this.setSliderVal(val);//$("#" + this.sliderID).val(val);
             this.setCaption(val);
@@ -496,8 +503,8 @@ class InstFloatParam extends React.Component {
                     const effectiveRange = this.props.instrument.getEffectiveMappingRange(spec);
                     return (
                         <li key={spec.param.paramID}>
-                            → {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})
-                            ↠ <div className="mappedLiveValue">{spec.param.currentValue.toFixed(2)}</div>
+                            {this.props.instrument.getParamDisplayName(spec.param)} ({effectiveRange[0].toFixed(2)} to {effectiveRange[1].toFixed(2)})
+                            <div className="mappedLiveValue">{spec.param.currentValue.toFixed(2)}</div>
                         </li>
                     )
                 }
@@ -518,7 +525,7 @@ class InstFloatParam extends React.Component {
                     <div className="paramValueLabel">
                         <span id={this.valueTextID}></span>
                         {mappingSpec && (
-                            <div className="mappedLiveValue">{this.props.param.currentValue.toFixed(2)}</div>
+                            <div className="mappedLiveValue">{this.GetLinkedParam().currentValue.toFixed(2)}</div>
                         )}
                     </div>
                 </label>
@@ -1776,7 +1783,7 @@ class RoomAlertArea extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
-        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice()) {
+        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice() && this.props.app.myInstrument.wantsMIDIInput) {
             return (
                 <div id="roomAlertArea">
                     <div>Select a MIDI input device to start playing</div>
