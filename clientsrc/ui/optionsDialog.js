@@ -9,75 +9,98 @@ class DFOptionsDialog extends React.Component {
 
         this.quantizationOptions = [
             {
-                caption: "None",
+                caption: "off",
                 division: 0,
                 group: 0,
+                cssClass: "quantizationValueOff",
             },
 
-            {
-                caption: "𝅝", // whole
-                division: 0.25, // 1/4
-                group: 1,
-            },
+            // {
+            //     caption: "𝅝", // whole
+            //     division: 0.25, // 1/4
+            //     group: 1,
+            // },
             {
                 caption: "𝅗𝅥",
                 division: 0.5,// 1/2
                 group: 1,
+                cssClass: "quantizationValue",
             },
             {
                 caption: "𝅘𝅥",
                 division: 1, // 1/1
                 group: 1,
+                cssClass: "quantizationValue",
             },
             {
                 caption: "𝅘𝅥𝅮",
                 division: 2,
                 group: 1,
+                cssClass: "quantizationValue",
             },
             {
                 caption: "𝅘𝅥𝅯",
                 division: 4,
                 group: 1,
+                cssClass: "quantizationValue",
             },
             {
                 caption: "𝅘𝅥𝅰",
                 division: 8,
                 group: 1,
+                cssClass: "quantizationValue",
             },
 
 
             {
+                caption: "𝅗𝅥.",
+                division: 1.0 / 3.0,
+                group: 2,
+                cssClass: "quantizationValue",
+            },
+            {
                 caption: "𝅘𝅥.",
                 division: 2.0 / 3.0,
                 group: 2,
+                cssClass: "quantizationValue",
             },
             {
                 caption: "𝅘𝅥𝅮.",
                 division: 4.0 / 3.0,
                 group: 2,
+                cssClass: "quantizationValue",
             },
             {
                 caption: "𝅘𝅥𝅯.",
                 division: 8.0 / 3.0,
                 group: 2,
+                cssClass: "quantizationValue",
             },
 
 
             {
-                caption: "𝅘𝅥3",
+                caption: "𝅗𝅥³",
+                division: 3.0 / 4.0,//3/2
+                group: 3,
+                cssClass: "quantizationValue",
+            },
+            {
+                caption: "𝅘𝅥³",
                 division: 3.0 / 2.0,//3/2
                 group: 3,
+                cssClass: "quantizationValue",
             },
-
             {
-                caption: "𝅘𝅥𝅮3",
+                caption: "𝅘𝅥𝅮³",
                 division: 3,
                 group: 3,
+                cssClass: "quantizationValue",
             },
             {
-                caption: "𝅘𝅥𝅯3",
+                caption: "𝅘𝅥𝅯³",
                 division: 6,
                 group: 3,
+                cssClass: "quantizationValue",
             },
 
         ];
@@ -168,7 +191,7 @@ class DFOptionsDialog extends React.Component {
             return (
                 <button
                     key={qo.index}
-                    className={"buttonParam quantizationOption " + ((this.state.quantizationIndex == qo.index) ? " active" : "")}
+                    className={"buttonParam quantizationOption " + ((this.state.quantizationIndex == qo.index) ? " active" : "") + " " + qo.cssClass}
                     onClick={() => { this.setQuantizationOptIndex(qo.index) }}>{qo.caption}</button>
             );
         };
@@ -180,14 +203,31 @@ class DFOptionsDialog extends React.Component {
 
         const quantGroups = _groups.map(g => renderGroup(g));
 
+        let monitoringCaption = "🔇";
+        if (this.props.app.monitoringType == DFApp.eMonitoringType.Local) {
+            monitoringCaption = "Local";
+        }
+        else if (this.props.app.monitoringType == DFApp.eMonitoringType.Remote) {
+            monitoringCaption = "Remote";
+        }
+
+        let buttonCaption = <span className="optionsBtnContent">
+            <span>Playback</span>
+            <span className="masterMuteIndicator">{this.props.app.synth.isMuted ? " 🔇" : " 🔊"}</span>
+            {!!this.state.quantizationIndex && <span className="quantIndicator">Quant=<span className={this.quantizationOptions[this.state.quantizationIndex].cssClass}>{this.quantizationOptions[this.state.quantizationIndex].caption}</span></span>}
+            {!this.props.app.metronome.isMuted && !this.props.app.synth.isMuted && <span className="metronomeIndicator">🔺</span>}
+            {!!this.props.app.myInstrument && <span className="monitoringIndicator">Monitoring:{monitoringCaption}</span>}
+        </span>;
+
         return (
             <div>
-                <div className={"optionsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>Options</div>
+                <div className={"optionsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>{buttonCaption}</div>
                 {this.state.isExpanded &&
                     <div className="optionsDialog">
 
                         <div className="component">
                             <h2>Master volume</h2>
+                            <div className="helpText">Applies to you only.</div>
                             <div>
                                 <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
                                 <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
@@ -197,6 +237,7 @@ class DFOptionsDialog extends React.Component {
 
                         <div className="component">
                             <h2>Pitch bend</h2>
+                            <div className="helpText">Applies to your playing.</div>
                             <div>
                                 <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
                                 <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
@@ -210,27 +251,40 @@ class DFOptionsDialog extends React.Component {
                                 <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Local) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Local) }}>Local</button>
                                 <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Remote) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Remote) }}>Remote</button>
                             </div>
+                            {this.props.app.monitoringType == DFApp.eMonitoringType.Off && <div className="helpText">You will not hear yourself. This could be useful if you want to use an external MIDI device for monitoring, but you won't be aware of how you sound in the room.</div>}
+                            {this.props.app.monitoringType == DFApp.eMonitoringType.Local && <div className="helpText">You hear yourself before your notes are sent to the server. Advantages: less latency for yourself. Disadvantages: You will hear yourself before others hear you, and you can't hear your quantization.</div>}
+                            {this.props.app.monitoringType == DFApp.eMonitoringType.Remote && <div className="helpText">You hear yourself as others hear you, with a round trip through the server. More latency, but you'll hear yourself as others hear you. If you can get used to the delay, this is best.</div>}
                         </div>
 
                         <div className="component">
                             <h2>Quantization</h2>
+                            <div className="helpText">Delays your notes to align to the beat. You will only hear the effect if you are using "remote" monitoring style.</div>
                             <div>
                                 {quantGroups}
                             </div>
                         </div>
 
                         <div className="component">
-                            <h2>Room BPM (shared)</h2>
+                            <h2>Tempo</h2>
+                            <div className="helpText">Changes you make here will affect quantization and metronome for everyone in the room.</div>
                             <div>
                                 <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
-                                {this.props.app.roomState.bpm}
+                                {this.props.app.roomState.bpm} BPM
                             </div>
+                            {this.props.app.myInstrument && <div>
+                                <button className={"buttonParam " + (this.props.app.GetResetBeatPhaseOnNextNote() ? "active" : "")}
+                                    onClick={() => { this.props.app.ToggleResetBeatPhaseOnNextNote() }}>Set beat on next note on</button>
+                            </div>}
+                            {this.props.app.GetResetBeatPhaseOnNextNote() &&
+                                <div className="helpText">Listening for next note in order to synchronize the room beat.</div>}
                         </div>
 
                         <div className="component">
                             <h2>Metronome</h2>
+                            <div className="helpText">Only you will hear the metronome.</div>
                             <div>
                                 <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.synth.isMuted || this.props.app.metronome.isMuted} />
+                                <label htmlFor="metronomeVolume">volume: {Math.trunc(this.props.app.synth.metronomeGain * 100)}</label>
                                 <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.synth.isMuted) ? "🔇" : "🔊"}</button>
                             </div>
                         </div>

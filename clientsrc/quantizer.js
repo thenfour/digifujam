@@ -68,6 +68,11 @@ class ServerRoomMetronome {
         this.resetTimer();
     }
 
+    resetBeatPhase() {
+        this.rootTime = new Date();
+        this.resetTimer();
+    }
+
     getAbsoluteBeat() {
         const absTimeMS = (new Date() - this.rootTime);
         const absoluteBeat = DF.MSToBeats(absTimeMS, this.BPM);

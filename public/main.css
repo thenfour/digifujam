@@ -208,7 +208,7 @@ button:focus {
     display: flex;
     justify-content: space-between;
 }
-.headerArea span {
+.headerArea>span {
     margin:0;
     font-size: small;
     display: inline-flex;
@@ -1247,14 +1247,45 @@ button.stayLoggedIn:hover {
 }
 
 button.quantizationOption {
-
-    font-weight: bolder;
     padding-top: 0;
-    font-size: 18px;
     padding-bottom: 0;
+    /* font-size: 30px;
+    line-height: 40px;
+    height:40px; */
 }
 
 div.quantizationGroup {
     display:block;
 }
+
+.optionsDialog .helpText {
+    color: #888;
+    font-style: italic;
+}
+
+.headerArea>span.optionsBtnContent {
+    display: flex;
+    align-items: baseline;
+}
+
+/* space between items in the options button */ 
+.optionsBtnContent span ~ span {
+    padding-left: 10px;
+}
+
+.headerArea span.quantizationValue
+ {
+    font-size: 30px;
+    /* line-height makes sure the text doesn't stretch the height of the container. */
+    line-height: 0;
+}
+
+.quantizationValue
+ {
+    font-size: 30px;
+    height: 35px;
+    line-height: 0;
+}
+
+
 

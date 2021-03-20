@@ -206,6 +206,8 @@ class DigifuApp {
         this.handleCheer = null; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.lastCheerSentDate = new Date();
 
+        this.resetBeatPhaseOnNextNote = false;
+
         this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
         this.myInstrument = null; // filled when ownership is given to you.
 
@@ -275,7 +277,8 @@ class DigifuApp {
     // MIDI HANDLERS --------------------------------------------------------------------------------------
     MIDI_NoteOn(note, velocity) {
         if (this.myInstrument == null) return;
-        this.net.SendNoteOn(note, velocity);
+        this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
+        this.resetBeatPhaseOnNextNote = false;
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.NoteOn(this.myInstrument, note, velocity);
             this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
@@ -349,6 +352,9 @@ class DigifuApp {
     };
 
     NET_OnWelcome(data) {
+
+        this.resetBeatPhaseOnNextNote = false;
+
         // get user & room state
         let myUserID = data.yourUserID;
 
@@ -460,6 +466,7 @@ class DigifuApp {
             }
 
             if (userID == this.myUser.userID) {
+                this.resetBeatPhaseOnNextNote = false;
                 this.myInstrument = foundInstrument.instrument;
             } else {
                 // or if your instrument is being given to someone else, then you no longer have an instrument
@@ -974,6 +981,13 @@ class DigifuApp {
         this.handleUserAllNotesOff(this.myUser, this.myInstrument);
     }
 
+    ToggleResetBeatPhaseOnNextNote() {
+        this.resetBeatPhaseOnNextNote = !this.resetBeatPhaseOnNextNote;
+    }
+    GetResetBeatPhaseOnNextNote() {
+        return this.resetBeatPhaseOnNextNote;
+    }
+
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
@@ -988,7 +1002,7 @@ class DigifuApp {
         this.pleaseReconnectHandler = pleaseReconnectHandler;
         this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.handleRoomWelcome = handleRoomWelcome;
-
+        this.resetBeatPhaseOnNextNote = false;
 
         if (_hasSelectiveDisconnect()) {
             //alert("selective disconnect supported");
@@ -1030,3 +1044,4 @@ module.exports = {
     DigifuApp,
     eMonitoringType,
 };
+

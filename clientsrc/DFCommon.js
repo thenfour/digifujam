@@ -28,7 +28,7 @@ const ClientMessages = {
     InstrumentRelease: "InstrumentRelease",
     ChatMessage: "ChatMessage",// (to_userID_null, msg)
     Pong: "Pong", // token
-    NoteOn: "NoteOn", // note, velocity
+    NoteOn: "NoteOn", // note, velocity, resetBeatPhase
     NoteOff: "NoteOff", // note
     AllNotesOff: "AllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown",

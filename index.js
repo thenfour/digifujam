@@ -487,6 +487,9 @@ class RoomServer {
       this.roomState.stats.noteOns++;
 
       // broadcast to all clients except foundUser
+      if (data.resetBeatPhase) {
+        this.roomState.metronome.resetBeatPhase();
+      }
       this.roomState.quantizer.onLiveNoteOn(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, data.note, data.velocity, foundUser.user.quantizeBeatDivision);
     } catch (e) {
       log(`OnClientNoteOn exception occurred`);

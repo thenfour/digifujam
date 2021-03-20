@@ -42,10 +42,11 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.InstrumentRelease);
     };
 
-    SendNoteOn(note, velocity) {
+    SendNoteOn(note, velocity, resetBeatPhase) {
         this.socket.emit(DF.ClientMessages.NoteOn, {
             note,
-            velocity
+            velocity,
+            resetBeatPhase
         });
     };
 
