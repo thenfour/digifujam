@@ -277,6 +277,14 @@ class DFOptionsDialog extends React.Component {
                             </div>}
                             {this.props.app.GetResetBeatPhaseOnNextNote() &&
                                 <div className="helpText">Listening for next note in order to synchronize the room beat.</div>}
+
+                            <div>
+                                <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(-50) }}>-50ms</button>
+                                <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(-10) }}>-10ms</button>
+                                <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(+10) }}>+10ms</button>
+                                <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(+50) }}>+50ms</button>
+                                Adjust beat phase manually
+                            </div>
                         </div>
 
                         <div className="component">

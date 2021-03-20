@@ -46,6 +46,7 @@ const ClientMessages = {
     UserState: "UserState", // name, color, img, x, y
     Quantization: "Quantization", // beatDivision: 1
     Cheer: "Cheer", // text, x, y
+    AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
 
     RoomBPMUpdate: "RoomBPMUpdate" //bpm
 };

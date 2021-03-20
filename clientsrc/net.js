@@ -160,6 +160,10 @@ class DigifuNet {
     SendRoomBPM (bpm) {
         this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm });
     };
+
+    SendAdjustBeatPhase(relativeMS) {
+        this.socket.emit(DF.ClientMessages.AdjustBeatPhase, { relativeMS });
+    }
     
     SendCreateParamMapping(param, srcVal) {
         this.socket.emit(DF.ClientMessages.CreateParamMapping, { paramID: param.paramID, srcVal });

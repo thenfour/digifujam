@@ -988,6 +988,10 @@ class DigifuApp {
         return this.resetBeatPhaseOnNextNote;
     }
 
+    AdjustBeatPhase(relativeMS) {
+        this.net.SendAdjustBeatPhase(relativeMS);
+    }
+
     Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;

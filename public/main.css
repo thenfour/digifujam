@@ -1262,6 +1262,9 @@ div.quantizationGroup {
     color: #888;
     font-style: italic;
 }
+.optionsDialog input[type="range"] {
+    width:250px;
+}
 
 .headerArea>span.optionsBtnContent {
     display: flex;

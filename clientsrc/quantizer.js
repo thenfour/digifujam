@@ -19,22 +19,19 @@ let FrameToMS = f => {
 // keep BPM and beat info for the room on the server.
 class ServerRoomMetronome {
     constructor() {
-        this.rootTime = new Date();
+        this.rootTime = Date.now();
         this.BPM = 95; // BPM is when denom = 4.
         this.beatRoutine = () => { };
         this.intervalCookie = null;
     }
 
     scheduleNextTick() {
-        // interval = ms till next beat.
-        // next beat is 1. - current beat fraction
-        let interval = this.getAbsoluteBeat();
-        interval = 1.0 - DF.getDecimalPart(interval);
-        // if we're aaaalmost at the end of the beat, give some leeway.
-        if (interval < 0.01) interval ++;
-        interval = DF.BeatsToMS(interval, this.BPM);
-
-        this.intervalCookie = setTimeout(() => { this.timerProc(); }, interval);
+        let currentBeat = this.getAbsoluteBeat(); // like 123.34. so next beat will be 1.0-.34 beats from now.
+        let nextRunBeat = currentBeat + 0.01; // if we're almost at the end of a beat, skip to the next. when making quick BPM adjustments it helps avoid very short glitchy beats.
+        nextRunBeat = Math.ceil(nextRunBeat); // the beat to schedule
+        let nextRunMS = DF.BeatsToMS(nextRunBeat, this.BPM);
+        let absNextRunTime = this.rootTime + nextRunMS;
+        this.intervalCookie = setTimeout(() => { this.timerProc(); }, absNextRunTime - Date.now());
     }
 
     resetTimer() {
@@ -45,8 +42,8 @@ class ServerRoomMetronome {
     }
 
     timerProc() {
-        this.beatRoutine();
         this.scheduleNextTick();
+        this.beatRoutine();
     }
 
     setBeatRoutine(routine) {
@@ -63,18 +60,23 @@ class ServerRoomMetronome {
         // so, make the new root time (now - current beat fraction * new bpm)
         let b = this.getAbsoluteBeat();
         let ms = DF.BeatsToMS(b, newBPM);
-        this.rootTime = new Date() - ms;
+        this.rootTime = Date.now() - ms;
         this.BPM = newBPM;
         this.resetTimer();
     }
 
+    AdjustPhase(relativeMS) {
+        this.rootTime += relativeMS;
+        this.resetTimer();
+    }
+
     resetBeatPhase() {
-        this.rootTime = new Date();
+        this.rootTime = Date.now();
         this.resetTimer();
     }
 
     getAbsoluteBeat() {
-        const absTimeMS = (new Date() - this.rootTime);
+        const absTimeMS = (Date.now() - this.rootTime);
         const absoluteBeat = DF.MSToBeats(absTimeMS, this.BPM);
         return absoluteBeat;
     }
