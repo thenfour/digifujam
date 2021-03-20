@@ -236,10 +236,15 @@ class OneShotInstrument {
         this.audioCtx.beginScope(this.instrumentSpec.getDisplayName());
 
         // create the filter but don't connect it yet.
+            /*
+            (voice) --> [masterDryGain] --> dryDestination
+                      > [masterWetGain] --> wetDestination
+            */
         this.isFilterConnected = false;
         this.filter = this.audioCtx.createBiquadFilter("drum>filter");
         this.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         this.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
+
 
         this.masterDryGain = this.audioCtx.createGain();
         this.masterWetGain = this.audioCtx.createGain();
@@ -252,13 +257,13 @@ class OneShotInstrument {
         this.masterWetGain.connect(this.wetDestination);
 
         this.voices.forEach(v => {
-            v.connect(this.audioCtx, this.dryDestination, this.wetDestination);
+            v.connect(this.audioCtx, this.masterDryGain, this.masterWetGain);
         });
-
-        this._SetFiltType(); // this will connect the voices & filter
 
         this.isConnected = true;
         this.audioCtx.endScope();
+
+        this._SetFiltType(); // this will connect the voices & filter if needed.
     }
 
     disconnect() {
