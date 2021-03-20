@@ -583,7 +583,7 @@ class RoomServer {
         log(`OnClientPedalDown => unknown user`);
         return;
       }
-      // broadcast to all clients except foundUser
+      // broadcast to all clients
       io.to(this.roomState.roomID).emit(DF.ServerMessages.PedalDown, {
         userID: foundUser.user.userID
       });
@@ -612,8 +612,8 @@ class RoomServer {
       foundInstrument.instrument.integrateRawParamChanges(data.patchObj, data.isWholePatch);
       gServerStats.OnParamChange(this.roomState.roomID, foundUser.user, Object.keys(data.patchObj).length);
 
-      // broadcast to all clients except foundUser
-      ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.InstrumentParams, {
+      // broadcast to all clients
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentParams, {
         userID: foundUser.user.userID,
         instrumentID: foundInstrument.instrument.instrumentID,
         patchObj: data.patchObj,
