@@ -1,0 +1,445 @@
+{
+  "samples": [
+    {
+      "url": "/drum-samples/909/30-909_Bd.m4a",
+      "midiNotes": [
+        78
+      ]
+    },
+    {
+      "url": "/drum-samples/909/29-909_Bd.m4a",
+      "midiNotes": [
+        79
+      ]
+    },
+    {
+      "url": "/drum-samples/909/28-909_Bd.m4a",
+      "midiNotes": [
+        80
+      ]
+    },
+    {
+      "url": "/drum-samples/909/27-909_Bd.m4a",
+      "midiNotes": [
+        81
+      ]
+    },
+    {
+      "url": "/drum-samples/909/26-909_Bd.m4a",
+      "midiNotes": [
+        82
+      ]
+    },
+    {
+      "url": "/drum-samples/909/25-909_Bd.m4a",
+      "midiNotes": [
+        84
+      ]
+    },
+    {
+      "url": "/drum-samples/909/24-909_Bd.m4a",
+      "midiNotes": [
+        83
+      ]
+    },
+    {
+      "url": "/drum-samples/909/23-909_Ride.m4a",
+      "midiNotes": [
+        99
+      ]
+    },
+    {
+      "url": "/drum-samples/909/22-909_Crash.m4a",
+      "midiNotes": [
+        97
+      ]
+    },
+    {
+      "url": "/drum-samples/909/21-909_Hh.m4a",
+      "midiNotes": [
+        102
+      ]
+    },
+    {
+      "url": "/drum-samples/909/20-909_Hh.m4a",
+      "midiNotes": [
+        90
+      ]
+    },
+    {
+      "url": "/drum-samples/909/19-909_Oh.m4a",
+      "midiNotes": [
+        100
+      ]
+    },
+    {
+      "url": "/drum-samples/909/18-909_Oh.m4a",
+      "midiNotes": [
+        94
+      ]
+    },
+    {
+      "url": "/drum-samples/909/17-909_Oh.m4a",
+      "midiNotes": [
+        92
+      ]
+    },
+    {
+      "url": "/drum-samples/909/16-909_Rim.m4a",
+      "midiNotes": [
+        85
+      ]
+    },
+    {
+      "url": "/drum-samples/909/15-909_Clp.m4a",
+      "midiNotes": [
+        87
+      ]
+    },
+    {
+      "url": "/drum-samples/909/14-909_Sd.m4a",
+      "midiNotes": [
+        113
+      ]
+    },
+    {
+      "url": "/drum-samples/909/13-909_Sd.m4a",
+      "midiNotes": [
+        112
+      ]
+    },
+    {
+      "url": "/drum-samples/909/12-909_Sd.m4a",
+      "midiNotes": [
+        111
+      ]
+    },
+    {
+      "url": "/drum-samples/909/11-909_Sd.m4a",
+      "midiNotes": [
+        110
+      ]
+    },
+    {
+      "url": "/drum-samples/909/10-909_Sd.m4a",
+      "midiNotes": [
+        109
+      ]
+    },
+    {
+      "url": "/drum-samples/909/09-909_Sd.m4a",
+      "midiNotes": [
+        88
+      ]
+    },
+    {
+      "url": "/drum-samples/909/08-909_Sd.m4a",
+      "midiNotes": [
+        108
+      ]
+    },
+    {
+      "url": "/drum-samples/909/07-909_Sd.m4a",
+      "midiNotes": [
+        86
+      ]
+    },
+    {
+      "url": "/drum-samples/909/06-909_Tom.m4a",
+      "midiNotes": [
+        95
+      ]
+    },
+    {
+      "url": "/drum-samples/909/05-909_Tom.m4a",
+      "midiNotes": [
+        96
+      ]
+    },
+    {
+      "url": "/drum-samples/909/04-909_Tom.m4a",
+      "midiNotes": [
+        89
+      ]
+    },
+    {
+      "url": "/drum-samples/909/03-909_Tom.m4a",
+      "midiNotes": [
+        98
+      ]
+    },
+    {
+      "url": "/drum-samples/909/02-909_Tom.m4a",
+      "midiNotes": [
+        93
+      ]
+    },
+    {
+      "url": "/drum-samples/909/01-909_Tom.m4a",
+      "midiNotes": [
+        91
+      ]
+    },
+    {
+      "url": "/drum-samples/808/01-Kit_Sd.m4a",
+      "midiNotes": [
+        38
+      ]
+    },
+    {
+      "url": "/drum-samples/808/02-808_Tom.m4a",
+      "midiNotes": [
+        43
+      ]
+    },
+    {
+      "url": "/drum-samples/808/03-808_Cng.m4a",
+      "midiNotes": [
+        63
+      ]
+    },
+    {
+      "url": "/drum-samples/808/04-808_Cng.m4a",
+      "midiNotes": [
+        62
+      ]
+    },
+    {
+      "url": "/drum-samples/808/05-808_Cng.m4a",
+      "midiNotes": [
+        64
+      ]
+    },
+    {
+      "url": "/drum-samples/808/06-808_Tom.m4a",
+      "midiNotes": [
+        50
+      ]
+    },
+    {
+      "url": "/drum-samples/808/07-808_Tom.m4a",
+      "midiNotes": [
+        48
+      ]
+    },
+    {
+      "url": "/drum-samples/808/08-808_Tom.m4a",
+      "midiNotes": [
+        45
+      ]
+    },
+    {
+      "url": "/drum-samples/808/09-808_Sd.m4a",
+      "midiNotes": [
+        40
+      ]
+    },
+    {
+      "url": "/drum-samples/808/10-808_Sd.m4a",
+      "midiNotes": [
+        41
+      ]
+    },
+    {
+      "url": "/drum-samples/808/11-808_Sd.m4a",
+      "midiNotes": [
+        47
+      ]
+    },
+    {
+      "url": "/drum-samples/808/12-808_Sd.m4a",
+      "midiNotes": [
+        58
+      ]
+    },
+    {
+      "url": "/drum-samples/808/13-808_Sd.m4a",
+      "midiNotes": [
+        60
+      ]
+    },
+    {
+      "url": "/drum-samples/808/14-808_Clp.m4a",
+      "midiNotes": [
+        39
+      ]
+    },
+    {
+      "url": "/drum-samples/808/15-808_Cb.m4a",
+      "midiNotes": [
+        56
+      ]
+    },
+    {
+      "url": "/drum-samples/808/16-808_Rim.m4a",
+      "midiNotes": [
+        61
+      ]
+    },
+    {
+      "url": "/drum-samples/808/17-808_Clp.m4a",
+      "midiNotes": [
+        65
+      ]
+    },
+    {
+      "url": "/drum-samples/808/18-808_Rim.m4a",
+      "midiNotes": [
+        37
+      ]
+    },
+    {
+      "url": "/drum-samples/808/19-808_Clv.m4a",
+      "midiNotes": [
+        75
+      ]
+    },
+    {
+      "url": "/drum-samples/808/20-808_Hh.m4a",
+      "midiNotes": [
+        42
+      ],
+      "sendNoteOffToNotes": [
+        46, 69
+      ]
+    },
+    {
+      "url": "/drum-samples/808/21-808_Oh.m4a",
+      "midiNotes": [
+        69
+      ]
+    },
+    {
+      "url": "/drum-samples/808/22-808_Hh.m4a",
+      "midiNotes": [
+        44
+      ],
+      "sendNoteOffToNotes": [
+        46, 69
+      ]
+    },
+    {
+      "url": "/drum-samples/808/23-808_Hh.m4a",
+      "midiNotes": [
+        71
+      ],
+      "sendNoteOffToNotes": [
+        46, 69
+      ]
+    },
+    {
+      "url": "/drum-samples/808/24-808_Oh.m4a",
+      "midiNotes": [
+        46
+      ]
+    },
+    {
+      "url": "/drum-samples/808/25-808_Sh.m4a",
+      "midiNotes": [
+        54
+      ]
+    },
+    {
+      "url": "/drum-samples/808/26-808_Ride.m4a",
+      "midiNotes": [
+        51
+      ]
+    },
+    {
+      "url": "/drum-samples/808/27-808_Ride.m4a",
+      "midiNotes": [
+        49
+      ]
+    },
+    {
+      "url": "/drum-samples/808/28-808_Sh.m4a",
+      "midiNotes": [
+        70
+      ]
+    },
+    {
+      "url": "/drum-samples/808/29-808_Ride.m4a",
+      "midiNotes": [
+        59
+      ]
+    },
+    {
+      "url": "/drum-samples/808/30-808_Ride.m4a",
+      "midiNotes": [
+        52
+      ]
+    },
+    {
+      "url": "/drum-samples/808/31-808_Bd.m4a",
+      "midiNotes": [
+        36
+      ],
+      "sendNoteOffToNotes": [
+        29, 30, 31, 32, 33, 34, 35
+      ]
+    },
+    {
+      "url": "/drum-samples/808/32-808_Bd.m4a",
+      "midiNotes": [
+        35
+      ],
+      "sendNoteOffToNotes": [
+        29, 30, 31, 32, 33, 34, 36
+      ]
+    },
+    {
+      "url": "/drum-samples/808/33-808_Bd.m4a",
+      "midiNotes": [
+        34
+      ],
+      "sendNoteOffToNotes": [
+        29, 30, 31, 32, 33, 35, 36
+      ]
+    },
+    {
+      "url": "/drum-samples/808/34-808_Bd.m4a",
+      "midiNotes": [
+        33
+      ],
+      "sendNoteOffToNotes": [
+        29, 30, 31, 32, 34, 35, 36
+      ]
+    },
+    {
+      "url": "/drum-samples/808/35-808_Bd.m4a",
+      "midiNotes": [
+        32
+      ],
+      "sendNoteOffToNotes": [
+        29, 30, 31, 33, 34, 35, 36
+      ]
+    },
+    {
+      "url": "/drum-samples/808/36-808_Bd.m4a",
+      "midiNotes": [
+        31
+      ],
+      "sendNoteOffToNotes": [
+        29, 30, 32, 33, 34, 35, 36
+      ]
+    },
+    {
+      "url": "/drum-samples/808/37-808_Bd.m4a",
+      "midiNotes": [
+        30
+      ],
+      "sendNoteOffToNotes": [
+        29, 31, 32, 33, 34, 35, 36
+      ]
+    },
+    {
+      "url": "/drum-samples/808/38-808_Bd.m4a",
+      "midiNotes": [
+        29
+      ],
+      "sendNoteOffToNotes": [
+        30, 31, 32, 33, 34, 35, 36
+      ]
+    }
+  ]
+}
