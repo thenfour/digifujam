@@ -125,15 +125,27 @@ class ServerRoomQuantizer {
     }
 
     // assuming an event happened NOW, calculate relevant timings
-    getLiveQuantizedEventTiming(userPingMS, beatDivision) {
+    getLiveQuantizedEventTiming(userPingMS, quantizeSpec) {
         let unquantizedBeat = this.metronome.getAbsoluteBeat();
         unquantizedBeat -= DF.MSToBeats(userPingMS / 2, this.metronome.getBPM());// adjust user's one-way latency. this is our best guess when the user intended the note.
-        let quantizedBeat = DF.dividedCeil(unquantizedBeat, beatDivision);
+        
+        // quantization segment
+        let quantizationSegmentPos = DF.getDecimalPart(unquantizedBeat * quantizeSpec.beatDivision);
+        let playQuantized = quantizationSegmentPos > quantizeSpec.quantizeBoundary;
+        let discard = !playQuantized && (quantizationSegmentPos > quantizeSpec.swallowBoundary);
+
+        let quantizedBeat = DF.dividedCeil(unquantizedBeat, quantizeSpec.beatDivision);
+
+        // lerp using amt.
+        quantizedBeat = DF.lerp(unquantizedBeat, quantizedBeat, quantizeSpec.quantizeAmt);
+
         let quantizedFrame = beatToFrame(quantizedBeat, this.metronome.getBPM());
         return {
             unquantizedBeat,
             quantizedBeat,
-            quantizedFrame
+            quantizedFrame,
+            discard,
+            playQuantized,
         };
     }
 
@@ -171,21 +183,29 @@ class ServerRoomQuantizer {
     - we should probably limit the amount of drift.
     */
 
-    onLiveNoteOn(userID, userPingMS, instrumentID, note, velocity, beatDivision) {
+    onLiveNoteOn(userID, userPingMS, instrumentID, note, velocity, quantizeSpec) {
         let notePacket = {
             userID,
             instrumentID,
             note,
             velocity,
         };
-        if (beatDivision == 0) {
+        if (quantizeSpec.beatDivision == 0) {
             // no quantization. play it live.
             this.noteEventsFlushRoutine([notePacket], []);
             return;
         }
 
         // where SHOULD the note fall, based on beatDivision.
-        let eventInfo = this.getLiveQuantizedEventTiming(userPingMS, beatDivision);
+        let eventInfo = this.getLiveQuantizedEventTiming(userPingMS, quantizeSpec);
+        if (eventInfo.discard) { // should be discarded entirely.
+            return;
+        }
+        if (!eventInfo.playQuantized) {
+            // play it unquantized per spec.
+            this.noteEventsFlushRoutine([notePacket], []);
+            return;
+        }
         eventInfo.notePacket = notePacket;
 
         // important to not have duplicate notes in the queue, otherwise corresponding note offs can get misplaced.
@@ -195,7 +215,7 @@ class ServerRoomQuantizer {
         this.scheduleEvent(eventInfo.quantizedFrame, notePacket, null, eventInfo);
     }
 
-    onLiveNoteOff(userID, userPingMS, instrumentID, note, beatDivision) {
+    onLiveNoteOff(userID, userPingMS, instrumentID, note, quantizeSpec) {
         let noteOffPacket = {
             userID,
             instrumentID,
@@ -207,7 +227,7 @@ class ServerRoomQuantizer {
 
         // find the original note, measure the duration.
         let correspondingNoteOn = this.allQueuedNoteOns.find(n => n.notePacket.userID == userID && n.notePacket.instrumentID == instrumentID && n.notePacket.note == note);
-        if (!correspondingNoteOn || beatDivision == 0) {
+        if (!correspondingNoteOn || quantizeSpec.beatDivision == 0) {
             // if not found, just send the note off live.
             // console.log(`  -> note on not found. fuck it weré goin live`);
             this.noteEventsFlushRoutine([], [noteOffPacket]);
@@ -215,7 +235,9 @@ class ServerRoomQuantizer {
         }
 
         // where SHOULD the event fall, based on beatDivision.
-        let eventInfo = this.getLiveQuantizedEventTiming(userPingMS, beatDivision);
+        let eventInfo = this.getLiveQuantizedEventTiming(userPingMS, quantizeSpec);
+        // note offs never discarded.
+
         // console.log(`  -> note off eventInfo ${JSON.stringify(eventInfo)}`);
         // console.log(`  -> corresp noteon:${JSON.stringify(correspondingNoteOn)}`);
 

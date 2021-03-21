@@ -1255,6 +1255,7 @@ button.stayLoggedIn:hover {
 button.quantizationOption {
     padding-top: 0;
     padding-bottom: 0;
+    width:35px;
     /* font-size: 30px;
     line-height: 40px;
     height:40px; */

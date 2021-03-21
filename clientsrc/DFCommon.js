@@ -44,7 +44,7 @@ const ClientMessages = {
     UploadServerState: "UploadServerState",
     AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj } see OnAdminChangeRoomState
     UserState: "UserState", // name, color, img, x, y
-    Quantization: "Quantization", // beatDivision: 1
+    Quantization: "Quantization", // quantizeSpec:{beatDivision, swallowBoundary, quantizeBoundary}
     Cheer: "Cheer", // text, x, y
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
 
@@ -163,7 +163,12 @@ class DigifuUser {
         this.idle = null; // this gets set when a user's instrument ownership becomes idle
         this.lastCheerSentDate = new Date();
 
-        this.quantizeBeatDivision = 0;
+        this.quantizeSpec = {
+            beatDivision: 0,
+            swallowBoundary:0.33,
+            quantizeBoundary:0.5, 
+            quantizeAmt: 0.9,
+        };
     }
 
     thaw() { /* no child objects to thaw. */ }

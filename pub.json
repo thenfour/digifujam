@@ -79,6 +79,10 @@
   "chatLog": [],
   "instrumentCloset": [
     {
+      "instrumentID": "mixer1",
+      "copyOfInstrumentID": "mixingdesk"
+    },
+    {
       "instrumentID": "fm4a",
       "presetBankID": "fm4",
       "copyOfInstrumentID": "minifm",

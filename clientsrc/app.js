@@ -885,9 +885,9 @@ class DigifuApp {
         }
     };
 
-    SetQuantizationSpec(beatDivision) {
-        this.net.SendUserQuantizationSpec(beatDivision);
-        this.myUser.quantizeBeatDivision = beatDivision;
+    SetQuantizationSpec(quantizeSpec) {
+        this.net.SendUserQuantizationSpec(quantizeSpec);
+        this.myUser.quantizeSpec = quantizeSpec;
     }
 
     SendCheer(text, x, y) {

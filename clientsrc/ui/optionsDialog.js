@@ -107,7 +107,7 @@ class DFOptionsDialog extends React.Component {
 
         this.quantizationOptions.forEach((qo, i) => { qo.index = i; });
 
-        let qi = this.findQuantizationIndex(this.props.app.myUser.quantizeBeatDivision);
+        let qi = this.findQuantizationIndex(this.props.app.myUser.quantizeSpec.beatDivision);
 
         this.state = {
             isExpanded: false,
@@ -161,8 +161,31 @@ class DFOptionsDialog extends React.Component {
         this.setState({
             quantizationIndex: i,
         });
-        this.props.app.SetQuantizationSpec(this.quantizationOptions[i].division);
+        let quantizeSpec = this.props.app.myUser.quantizeSpec;
+        quantizeSpec.beatDivision = this.quantizationOptions[i].division;
+        this.props.app.SetQuantizationSpec(quantizeSpec);
     };
+
+    setQuantDeadZone = (v) => {
+        let quantizeSpec = this.props.app.myUser.quantizeSpec;
+        quantizeSpec.swallowBoundary = v.target.value / 100;
+        this.props.app.SetQuantizationSpec(quantizeSpec);
+        this.setState({});
+    };
+
+    setQuantBoundary = (v) => {
+        let quantizeSpec = this.props.app.myUser.quantizeSpec;
+        quantizeSpec.quantizeBoundary = v.target.value / 100;
+        this.props.app.SetQuantizationSpec(quantizeSpec);
+        this.setState({});
+    };
+
+    setQuantAmt = (v) => {
+        let quantizeSpec = this.props.app.myUser.quantizeSpec;
+        quantizeSpec.quantizeAmt = v.target.value / 100;
+        this.props.app.SetQuantizationSpec(quantizeSpec);
+        this.setState({});
+    }
 
     setRoomBPM = (v) => {
         if (v.target.value < 1 || v.target.value > 200)
@@ -262,10 +285,25 @@ class DFOptionsDialog extends React.Component {
                             <div>
                                 {quantGroups}
                             </div>
+                            <div>
+                                <input type="range" id="quantZone" name="quantZone" min="0" max="100" onChange={this.setQuantBoundary} value={this.props.app.myUser.quantizeSpec.quantizeBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
+                                Quantization boundary
+                                <div className="helpText">If a note is played after this point within a beat, it will be delayed until the next quantization boundary. A value of 0 would apply delay-quantization to every note.</div>
+                            </div>
+                            <div>
+                                <input type="range" id="quantDeadZone" name="quantDeadZone" min="0" max="100" onChange={this.setQuantDeadZone} value={this.props.app.myUser.quantizeSpec.swallowBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
+                                Discard boundary
+                                <div className="helpText">If a note is played after this point within a beat, it's considered "too far away from a quantization boundary" to be musically useful, and will be discarded.</div>
+                            </div>
+                            <div>
+                                <input type="range" id="quantAmt" name="quantAmt" min="0" max="100" onChange={this.setQuantAmt} value={this.props.app.myUser.quantizeSpec.quantizeAmt * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
+                                Quantization amt
+                                <div className="helpText">From no quantization to full quantization. Somewhere in the middle is more humanized.</div>
+                            </div>
                         </div>
 
                         <div className="component">
-                            <h2>Tempo</h2>
+                            <h2>Room Tempo</h2>
                             <div className="helpText">Changes you make here will affect quantization and metronome for everyone in the room.</div>
                             <div>
                                 <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />

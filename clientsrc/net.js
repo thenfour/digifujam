@@ -132,9 +132,9 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.UserState, data);
     };
 
-    SendUserQuantizationSpec(beatDivision) {
+    SendUserQuantizationSpec(quantizeSpec) {
         this.socket.emit(DF.ClientMessages.Quantization, {
-            beatDivision,
+            quantizeSpec,
         });
     }
 

@@ -163,6 +163,9 @@ let dividedFloor = (x, denom) => {
     return Math.floor(x * denom) / denom;
 };
 
+let lerp = (start, end, amt) => {
+    return (1 - amt) * start + amt * end;
+};
 
 module.exports = {
     secondsToMS,
@@ -177,11 +180,12 @@ module.exports = {
     FrequencyToMidiNote,
     remap,
     remapWithPowCurve,
-    Throttler,    
+    Throttler,
     BeatsToMS,
     MSToBeats,
     steppedCeil,
     steppedFloor,
     dividedCeil,
     dividedFloor,
+    lerp,
 };

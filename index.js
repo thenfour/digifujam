@@ -490,7 +490,7 @@ class RoomServer {
       if (data.resetBeatPhase) {
         this.roomState.metronome.resetBeatPhase();
       }
-      this.roomState.quantizer.onLiveNoteOn(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, data.note, data.velocity, foundUser.user.quantizeBeatDivision);
+      this.roomState.quantizer.onLiveNoteOn(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, data.note, data.velocity, foundUser.user.quantizeSpec);
     } catch (e) {
       log(`OnClientNoteOn exception occurred`);
       log(e);
@@ -527,7 +527,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       // broadcast to all clients except foundUser
-      this.roomState.quantizer.onLiveNoteOff(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, note, foundUser.user.quantizeBeatDivision);
+      this.roomState.quantizer.onLiveNoteOff(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, note, foundUser.user.quantizeSpec);
     } catch (e) {
       log(`OnClientNoteOff exception occurred`);
       log(e);
@@ -997,7 +997,7 @@ class RoomServer {
 
       this.roomState.quantizer.clearUser(foundUser.user.userID);
 
-      foundUser.user.quantizeBeatDivision = data.beatDivision;
+      foundUser.user.quantizeSpec = data.quantizeSpec;
     } catch (e) {
       log(`OnClientQuantization exception occurred`);
       log(e);
