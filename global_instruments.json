@@ -5,6 +5,7 @@
       "name": "Mixing desk",
       "supportsPresets": false,
       "color": "#CC0",
+      "paramChangeRenewal": true,
       "engine": "mixingdesk",
       "activityDisplay": "none",
       "wantsMIDIInput": false,

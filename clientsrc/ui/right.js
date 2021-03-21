@@ -14,6 +14,8 @@ const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
 let gStateChangeHandler = null;
 
+let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
+
 const GetHomepage = () => {
     const st = window.localStorage.getItem("DFHomepage");
     if (st) return st;
@@ -353,6 +355,20 @@ class InstFloatParam extends React.Component {
         this.valueTextID = "val_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.sliderID = "slider_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.renderedValue = -420.69;
+
+        // create throttlers for toggling class
+        this.activityThrottlers = {};
+        this.props.app.roomState.instrumentCloset.forEach(i => {
+            const th = new DFU.Throttler();
+            th.interval = 1000.0 / 30; // fps
+            const instrumentID = i.instrumentID;
+            th.proc = () => {
+                $('#mixerActivity_' + instrumentID).toggleClass('alt1').toggleClass('alt2');
+            };
+            this.activityThrottlers[i.instrumentID] = th;
+        });
+
+
     }
     onChange = (e) => {
         let realVal = this.props.param.foreignToNativeValue(e.target.value, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
@@ -364,7 +380,13 @@ class InstFloatParam extends React.Component {
         //this.setState(this.state);
         gStateChangeHandler.OnStateChange();
     }
+
+    OnInstrumentActivity = (instrumentSpec, note) => {
+        this.activityThrottlers[instrumentSpec.instrumentID].InvokeThrottled();
+    };
+
     componentDidMount() {
+        gInstActivityHandlers[this.props.instrument.instrumentID] = this.OnInstrumentActivity;
         // set initial values.
         const p = this.props.param;
         const rawValue = this.GetRawValue();
@@ -389,6 +411,9 @@ class InstFloatParam extends React.Component {
                 zeroVal: this._realValToSliderVal(0),
             });
         }
+    }
+    componentWillUnmount() {
+        delete gInstActivityHandlers[this.props.instrument.instrumentID];
     }
 
     _realValToSliderVal(rv) {
@@ -512,26 +537,59 @@ class InstFloatParam extends React.Component {
             </ul>);
         }
 
+        let isReadOnly = this.props.observerMode;
+
+        let instActivity = null; // who is controlling the inst
+        let instLiveActivity = null; // animated activity
+        if (this.props.param.showLinkedInstrumentActivity) {
+            if (this.props.param.sourceInstrumentID) {
+                let sourceInst = this.props.app.roomState.FindInstrumentById(this.props.param.sourceInstrumentID).instrument;
+                let inUse = !!sourceInst.controlledByUserID;
+                //let idle = false;
+                if (inUse) {
+                    let foundUser = this.props.app.roomState.FindUserByID(sourceInst.controlledByUserID);
+                    if (foundUser) {
+                        instActivity = (<span className="instControlledBy"><span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span></span>);
+                        instLiveActivity = (<span className="instActivity alt1" id={"mixerActivity_" + sourceInst.instrumentID}></span>);
+                        //idle = foundUser.user.idle;// user is taken, but considered idle. so we can show it.
+                    }
+                }
+            }
+            if (!instActivity) {
+                isReadOnly = true;
+                instActivity = (<span className="instControlledBy empty"></span>);
+            }
+            if (!instLiveActivity) {
+                instLiveActivity = (<span className="instActivity empty"></span>);
+            }
+        }
+
+
         return (
             <li className={cssclass + this.props.param.cssClassName}>
-                <input id={this.sliderID} disabled={this.props.observerMode} className="floatParam" type="range" onClick={this.onClickSlider}
+                <input id={this.sliderID} disabled={isReadOnly} className="floatParam" type="range" onClick={this.onClickSlider}
                     onDoubleClick={this.onDoubleClickSlider} min={0} max={DF.ClientSettings.InstrumentFloatParamDiscreteValues}
                     onChange={this.onChange}
                     ref={i => { this.sliderRef = i; }}
                 //value={Math.trunc(rawValue)} <-- setting values like this causes massive slowness
                 />
                 <label onClick={this.toggleShowTxt}>
-                    {this.GetParamDisplayName()}:
+                    <div className="paramValueName">
+                        <span className={"paramValueName " + (isReadOnly ? "readonly" : "")}>{this.GetParamDisplayName()}:</span>
+                        {instLiveActivity}
+                    </div>
                     <div className="paramValueLabel">
                         <span id={this.valueTextID}></span>
                         {mappingSpec && (
                             <div className="mappedLiveValue">{this.GetLinkedParam().currentValue.toFixed(2)}</div>
                         )}
+                        {instActivity}
                     </div>
                 </label>
+
                 {macroMappingList}
                 { this.state.isExpanded && <div id={this.valueTextDivID}>
-                    <input type="text" id={this.valueTextInputID} readOnly={this.props.observerMode} value={this.state.inputTextValue} onChange={this.onChangeValInput} onKeyDown={this.handleTextInputKeyDown} />
+                    <input type="text" id={this.valueTextInputID} readOnly={isReadOnly} value={this.state.inputTextValue} onChange={this.onChangeValInput} onKeyDown={this.handleTextInputKeyDown} />
                     <label>Value</label>
                     {this.props.param.isMacro &&
                         <div className="macroNameInput">
@@ -2112,6 +2170,12 @@ class RootArea extends React.Component {
     }
 
     handleNoteOn = (user, instrument, midiNote, velocity) => {
+
+        // mixer activity indicator
+        Object.keys(gInstActivityHandlers).forEach(id => {
+            gInstActivityHandlers[id](instrument, midiNote);
+        });
+
         $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
 
         if (instrument.activityDisplay != "keyboard") return;

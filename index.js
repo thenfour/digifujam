@@ -611,6 +611,10 @@ class RoomServer {
         return;
       }
 
+      if (foundInstrument.instrument.paramChangeRenewal) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
       // set the value.
       this.roomState.integrateRawParamChanges(foundInstrument.instrument, data.patchObj, data.isWholePatch);      
       gServerStats.OnParamChange(this.roomState.roomID, foundUser.user, Object.keys(data.patchObj).length);

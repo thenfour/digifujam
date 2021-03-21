@@ -1693,6 +1693,7 @@ class DigifuRoomState {
                     groupName: "Gain",
                     sourceInstrumentID: ci.instrumentID,
                     sourceParamID: cigain.paramID,
+                    showLinkedInstrumentActivity: true,
                     // you can theoretically get these values by following the link, but this is just more efficient.
                     parameterType: cigain.parameterType,
                     defaultValue: cigain.defaultValue,
