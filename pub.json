@@ -5,7 +5,7 @@
   "img": "./roomart/matt01x1200.jpg",
   "width": 1200,
   "height": 1200,
-  "bpm": 95,
+  "bpm": 100,
   "internalMasterGain": 5.0,
   "announcementHTML": "",
   "roomItems": [
@@ -78,6 +78,12 @@
   "users": [],
   "chatLog": [],
   "instrumentCloset": [
+    {
+      "instrumentID": "sfz1",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/Fantasia/Fantasia.sfz.json",
+      "name": "Fantasia"
+    },
     {
       "instrumentID": "mixer1",
       "copyOfInstrumentID": "mixingdesk"

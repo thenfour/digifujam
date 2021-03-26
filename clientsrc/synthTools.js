@@ -1,9 +1,14 @@
 'use strict';
 
-const DF = require("./DFCommon");
 const DFU = require('./dfutil');
 
-
+// helps disconnecting big-ish audio graphs.
+// in ctor
+//   this.graph = new AudioGraphHelper();
+// in connect when building graph, 
+//   this.graph.nodes.sfOutput = this.audioCtx.createGain("sfOutput");
+// when disconnecting,
+//   this.graph.disconnect();
 class AudioGraphHelper {
 	constructor() {
 		this.nodes = {};
@@ -16,6 +21,77 @@ class AudioGraphHelper {
 		});
 		this.nodes = {};
 	}
+};
+
+// handler receives an object
+let AjaxJSON = function (url, successHandler, errorHandler) {
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
+    request.onload = () => {
+        let strjson = null;
+        if (request.responseType === 'arraybuffer') {
+            strjson = (new TextDecoder("utf-8")).decode(request.response);
+        } else if (request.responseType === 'text') {
+            strjson = request.responseText;
+        }
+        successHandler(JSON.parse(strjson));
+    };
+    request.error = errorHandler;
+    request.abort = errorHandler;
+    request.send();
+}
+
+// SampleCache holds loading & accessing samples
+// DrumKitVoice handles translating a MIDI message into a drum sample
+// OneShotInstrument handles polyphony & voicing & triggering & instrument-level effects
+
+// handler receives (buffer)
+let gLoadSample = function (audioContext, url, successHandler, errorHandler) {
+    var request = new XMLHttpRequest();
+    request.open("GET", url, true);
+    request.responseType = "arraybuffer";
+    request.onload = () => {
+        //console.log(`Loaded sample URL ${url}`);
+        audioContext.decodeAudioData(request.response, successHandler, errorHandler);
+    };
+    request.error = errorHandler;
+    request.abort = errorHandler;
+    request.send();
+}
+
+// just maps name to prepared sample buffer, and hands out AudioBufferSourceNodes when needed.
+class SampleCache {
+    constructor(audioCtx) {
+        this.sampleMap = {}; // map URL to { buffer<nullable>, completions[] }
+        this.audioCtx = audioCtx;
+    }
+    loadSampleFromURL(url, onSuccess, onError) {
+        let existing = this.sampleMap[url];
+        if (existing) {
+            if (existing.buffer) {
+                //console.log(`SampleCache: returning existing buffer for ${url}`);
+                onSuccess(existing.buffer);
+                return;
+            }
+            // it's still loading; just add the completion handlers.
+            //console.log(`SampleCache: still loading; adding handler for ${url}`);
+            existing.completions.push({ onSuccess, onError });
+            return;
+        }
+        this.sampleMap[url] = {
+            buffer: null,
+            completions: [{ onSuccess, onError }]
+        };
+        gLoadSample(this.audioCtx, url, buffer => {
+            this.sampleMap[url].buffer = buffer;
+            this.sampleMap[url].completions.forEach(h => h.onSuccess(buffer));
+            this.sampleMap[url].completions = [];
+        }, err => {
+            this.sampleMap[url].completions.forEach(e => e.onError(err));
+            this.sampleMap[url].completions = [];
+        });
+    };
 };
 
 
@@ -328,5 +404,7 @@ module.exports = {
     initSynthTools,
     OptimalGainer,
     AudioGraphHelper,
+    SampleCache,
+    AjaxJSON,
 };
 

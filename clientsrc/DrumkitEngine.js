@@ -1,58 +1,6 @@
 'use strict';
 const DFU = require('./dfutil');
-
-// SampleCache holds loading & accessing samples
-// DrumKitVoice handles translating a MIDI message into a drum sample
-// OneShotInstrument handles polyphony & voicing & triggering & instrument-level effects
-
-
-// handler receives (buffer)
-let gLoadSample = function (audioContext, url, successHandler, errorHandler) {
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.responseType = "arraybuffer";
-    request.onload = () => {
-        audioContext.decodeAudioData(request.response, successHandler, errorHandler);
-    };
-    request.error = errorHandler;
-    request.abort = errorHandler;
-    request.send();
-}
-
-// just maps name to prepared sample buffer, and hands out AudioBufferSourceNodes when needed.
-class SampleCache {
-    constructor(audioCtx) {
-        this.sampleMap = {}; // map URL to { buffer<nullable>, completions[] }
-        this.audioCtx = audioCtx;
-    }
-    loadSampleFromURL(url, onSuccess, onError) {
-        let existing = this.sampleMap[url];
-        if (existing) {
-            if (existing.buffer) {
-                //console.log(`SampleCache: returning existing buffer for ${url}`);
-                onSuccess(existing.buffer);
-                return;
-            }
-            // it's still loading; just add the completion handlers.
-            //console.log(`SampleCache: still loading; adding handler for ${url}`);
-            existing.completions.push({ onSuccess, onError });
-            return;
-        }
-        this.sampleMap[url] = {
-            buffer: null,
-            completions: [{ onSuccess, onError }]
-        };
-        gLoadSample(this.audioCtx, url, buffer => {
-            this.sampleMap[url].buffer = buffer;
-            this.sampleMap[url].completions.forEach(h => h.onSuccess(buffer));
-            this.sampleMap[url].completions = [];
-        }, err => {
-            this.sampleMap[url].completions.forEach(e => e.onError(err));
-            this.sampleMap[url].completions = [];
-        });
-    };
-};
-
+const DFSynthTools = require('./synthTools');
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // handles the musical work (note ons etc)
@@ -439,8 +387,6 @@ class OneShotInstrument {
 };
 
 module.exports = {
-    gLoadSample,
-    SampleCache,
     OneShotInstrument,
     DrumKitVoice,
 };

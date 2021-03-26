@@ -277,6 +277,7 @@ class DigifuApp {
     // MIDI HANDLERS --------------------------------------------------------------------------------------
     MIDI_NoteOn(note, velocity) {
         if (this.myInstrument == null) return;
+        if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
         this.resetBeatPhaseOnNextNote = false;
         if (this.monitoringType == eMonitoringType.Local) {
@@ -287,6 +288,7 @@ class DigifuApp {
 
     MIDI_NoteOff(note) {
         if (this.myInstrument == null) return;
+        if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendNoteOff(note);
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.NoteOff(this.myInstrument, note);
@@ -304,6 +306,7 @@ class DigifuApp {
 
     MIDI_PedalDown() {
         if (this.myInstrument == null) return;
+        if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendPedalDown();
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.PedalDown(this.myInstrument);
@@ -312,6 +315,7 @@ class DigifuApp {
 
     MIDI_PedalUp() {
         if (this.myInstrument == null) return;
+        if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendPedalUp();
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.PedalUp(this.myInstrument);
@@ -322,6 +326,7 @@ class DigifuApp {
     MIDI_PitchBend(val) {
         this._midiPBValue = val;
         if (this.myInstrument == null) return;
+        if (!this.myInstrument.wantsMIDIInput) return;
         let patchObj = { "pb": val * this.pitchBendRange };
         this.net.SendInstrumentParams(patchObj, false);
         if (this.monitoringType == eMonitoringType.Local) {
@@ -333,6 +338,7 @@ class DigifuApp {
 
     MIDI_CC(cc, val) {
         if (this.myInstrument == null) return;
+        if (!this.myInstrument.wantsMIDIInput) return;
         if (!this.myInstrument.MIDICCHasMappings(cc)) return;
         // ok we have a mapped CC. send to synth & net.
         let patchObj = {};
@@ -475,6 +481,9 @@ class DigifuApp {
                 }
             }
             foundInstrument.instrument.controlledByUserID = userID;
+            if (!userID) {
+                foundInstrument.instrument.ReleaseOwnership();
+            }
         }
 
         if (userID) { // bring instrument online, or offline depending on new ownership.

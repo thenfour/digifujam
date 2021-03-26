@@ -146,7 +146,7 @@ class RoomServer {
 
   constructor(data, serverStateObj) {
     // thaw into live classes
-    this.roomState = DF.DigifuRoomState.FromJSONData(data, (url) => JSON.parse(fs.readFileSync(url)));
+    this.roomState = DF.DigifuRoomState.FromJSONData(data, url => fs.readFileSync(url, "utf8"), url => JSON.parse(fs.readFileSync(url)));
 
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     let usedInstrumentIDs = [];
@@ -1131,13 +1131,29 @@ class RoomServer {
         serverUptimeSec: ((new Date()) - gServerStartedDate) / 1000,
         rooms: [],
       };
+
+      const transformUser = (u) => {
+        return {
+          userID: u.userID,
+          pingMS: u.pingMS,
+          name: u.name,
+          persistentInfo: {
+            stats: {
+              noteOns: u.persistentInfo.stats.noteOns,
+            }
+          },
+          color: u.color,
+        };
+      };
+
       payload.rooms = Object.keys(gRooms).map(k => {
         let room = gRooms[k];
         return {
           roomID: room.roomState.roomID,
           isPrivate: !!room.roomState.isPrivate,
           roomName: room.roomState.roomTitle,
-          users: room.roomState.users,//.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
+          users: room.roomState.users.map(u => transformUser(u)),
+          //users: room.roomState.users,//.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
           stats: room.roomState.stats
         };
       });
@@ -1484,6 +1500,7 @@ loadRoom(fs.readFileSync("pub.json"), serverRestoreState);
 loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
 loadRoom(fs.readFileSync("revisionMainStage.json"), serverRestoreState);
 loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
+
 
 gDB = new DFDB.DFDB(() => {
   gServerStats = new DFStats.DFStats(gStatsDBPath, gDB);

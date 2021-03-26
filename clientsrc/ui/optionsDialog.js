@@ -287,16 +287,19 @@ class DFOptionsDialog extends React.Component {
                             </div>
                             <div>
                                 <input type="range" id="quantZone" name="quantZone" min="0" max="100" onChange={this.setQuantBoundary} value={this.props.app.myUser.quantizeSpec.quantizeBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
+                                {this.props.app.myUser.quantizeSpec.quantizeBoundary * 100}
                                 Quantization boundary
                                 <div className="helpText">If a note is played after this point within the quantization frame, it will be delayed until the next quantization tick. A value of 0 would apply quantization to every note.</div>
                             </div>
                             <div>
                                 <input type="range" id="quantDeadZone" name="quantDeadZone" min="0" max="100" onChange={this.setQuantDeadZone} value={this.props.app.myUser.quantizeSpec.swallowBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
+                                {this.props.app.myUser.quantizeSpec.swallowBoundary * 100}
                                 Discard boundary
                                 <div className="helpText">If a note is played after this point within a beat, it's considered "too far away from a quantization boundary" to be musically useful, and will be discarded.</div>
                             </div>
                             <div>
                                 <input type="range" id="quantAmt" name="quantAmt" min="0" max="100" onChange={this.setQuantAmt} value={this.props.app.myUser.quantizeSpec.quantizeAmt * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
+                                {this.props.app.myUser.quantizeSpec.quantizeAmt * 100}
                                 Quantization amt
                                 <div className="helpText">From no quantization to full quantization. Somewhere in the middle is more humanized.</div>
                             </div>

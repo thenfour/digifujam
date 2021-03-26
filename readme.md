@@ -64,6 +64,7 @@ Feel free to report compatibility issues anyway.
 - npm run start // to start local server without build (for openode deployment)
 - npm run watch // simultaneously call this to monitor & build changes live
 - node --inspect index.js // for chrome inspector debugging the server
+- node --inspect-brk index.js // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
 
 ## deployment process
 

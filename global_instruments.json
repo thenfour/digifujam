@@ -2188,6 +2188,36 @@
           "defaultValue": 0.2
         }
       ]
+    },
+
+
+    {
+      "instrumentID": "sfz",
+      "engine": "sfz",
+      "activityDisplay": "keyboard",
+      "params":[
+        {
+          "paramID": "masterGain",
+          "name": "Master gain",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0.5
+        },
+        {
+          "paramID": "verbMix",
+          "name": "Reverb mix",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0.2
+        }
+      ]
     }
+
+
   ]
 }
+

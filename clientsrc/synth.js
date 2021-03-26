@@ -7,6 +7,7 @@ const DFSynthTools = require("./synthTools");
 const FMPolySynth = require("./fm4instrument");
 const FMVoice = require("./fm4voice");
 const MixingDeskInstrument = require("./MixingDeskInstrument");
+const sfzInstrument = require('./sfzInstrument')
 
 const gGainBoost = 2.0;
 
@@ -168,6 +169,9 @@ class DigifuSynth {
 				case "soundfont":
 					this.instruments[spec.instrumentID] = new soundFontInstrument.SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
 					break;
+				case "sfz":
+					this.instruments[spec.instrumentID] = new sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian);
+					break;
 				case "drumkit":
 					this.instruments[spec.instrumentID] = new DFDrumkit.OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DFDrumkit.DrumKitVoice(s, l));
 					break;
@@ -204,7 +208,7 @@ class DigifuSynth {
 		console.assert(!this.audioCtx); // don't init more than once
 
 		this.roomStateGetter = roomStateGetter;
-		this.sampleLibrarian = new DFDrumkit.SampleCache(audioCtx);
+		this.sampleLibrarian = new DFSynthTools.SampleCache(audioCtx);
 
 		this.audioCtx = audioCtx;
 		if (!this.audioCtx.createReverbFromUrl) {

@@ -6,7 +6,7 @@ const ADSR = require("./adhsr");
 const DFSynthTools = require("./synthTools");
 const PWM = require("./pwm");
 const FM4OscThreeNodeOptimizer = require("./fm4osc3NodeOptimizer").FM4OscThreeNodeOptimizer;
-const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
+//const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
 
 class MiniFMSynthOsc {
     constructor(audioCtx, instrumentSpec) {

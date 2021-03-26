@@ -3,6 +3,7 @@
 const { nanoid } = require("nanoid");
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
+const parseSFZ = require('./sfzParser');
 
 let gDigifujamVersion = 7;
 
@@ -159,15 +160,15 @@ class DigifuUser {
         this.name = "";
         this.color = "";
         this.position = { x: 0, y: 0 }; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
-        this.img = null;
-        this.idle = null; // this gets set when a user's instrument ownership becomes idle
+        //this.img = null;
+        //this.idle = null; // this gets set when a user's instrument ownership becomes idle
         this.lastCheerSentDate = new Date();
 
         this.quantizeSpec = {
             beatDivision: 0,
-            swallowBoundary:0.33,
-            quantizeBoundary:0.5, 
-            quantizeAmt: 0.9,
+            swallowBoundary: 0.33,
+            quantizeBoundary: 0.2,
+            quantizeAmt: 0.95,
         };
     }
 
@@ -395,8 +396,8 @@ class InstrumentParam {
 class DigifuInstrumentSpec {
     constructor() {
         this.name = "";
-        this.sfinstrumentName = "";
-        this.img = "";
+        //this.sfinstrumentName = "";
+        //this.img = "";
         this.color = "rgb(138, 224, 153)";
         this.instrumentID = null;
         this.controlledByUserID = null;
@@ -420,6 +421,7 @@ class DigifuInstrumentSpec {
         switch (this.engine) {
             case "mixingdesk":
             case "soundfont":
+            case "sfz":
                 return this.name;
             case "drumkit":
                 let kit = this.GetParamByID("kit");
@@ -893,6 +895,7 @@ class DigifuInstrumentSpec {
         return ret;
     }
 
+    // call when this instrument ownership is being released to reset some params. must be called from both server & client to keep things in sync.
     ReleaseOwnership() {
         this.controlledByUserID = null;
         // - set pb and all CC values to 0 when instrument release/take
@@ -1012,6 +1015,7 @@ class DigifuInstrumentSpec {
         if (this.engine === "mixingdesk") {
             return ["master", "Gain"];
         }
+        // soundfont, sfz
         return ["master", "Macro"];
     }
 
@@ -1091,6 +1095,7 @@ class DigifuInstrumentSpec {
         let ret = { cssClassName: "", annotation: "", displayName: groupName, shown: true, internalName: groupName };
         switch (this.engine) {
             case "soundfont":
+            case "sfz":
                 return ret;
             case "minifm":
                 // fall through to calculate the name.
@@ -1459,7 +1464,7 @@ class DigifuRoomState {
         this.chatLog = []; // ordered by time asc
         this.roomItems = [];
         this.internalMasterGain = 1.0;
-        this.img = null;
+        //this.img = null;
         this.bpm = 55;
         this.width = 16;
         this.height = 9;
@@ -1635,7 +1640,7 @@ class DigifuRoomState {
         return ret;
     }
 
-    static FromJSONData(data, syncLoadJSONRoutine) {
+    static FromJSONData(data, syncLoadTextRoutine, syncLoadJSONRoutine) {
         // thaw into live classes
         let ret = Object.assign(new DigifuRoomState(), data);
 
@@ -1652,6 +1657,7 @@ class DigifuRoomState {
             }
 
             console.assert(!!base, `Instrument is based on nonexistent instrument ${i.copyOfInstrumentID}`);
+            //console.log(`+ copied instrument ${i.instrumentID} from ${i.copyOfInstrumentID}`);
             // create a clone of the base
             let n = JSON.parse(JSON.stringify(base));
             // apply modifications
@@ -1682,6 +1688,7 @@ class DigifuRoomState {
                 if (ci.engine == 'mixingdesk') {
                     return;
                 }
+                //console.log(JSON.stringify(ci));
                 const cigain = ci.params.find(cip => cip.paramID == "masterGain");
                 if (!cigain) {
                     return;
@@ -1723,6 +1730,7 @@ class DigifuRoomState {
             delete i.presets;
         });
 
+        ret.metronome.setBPM(ret.bpm);
         return ret;
     }
 
