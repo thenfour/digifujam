@@ -85,6 +85,7 @@ Feel free to report compatibility issues anyway.
 
 ## odds & ends & quirks
 
+- Instrument IDs must be conservative wrt characters, because they are used in jq selectors and such.
 - /stats.html to see activity graphs
 - /storage to view storage (feed, server state...)
 - server environment variables:

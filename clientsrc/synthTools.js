@@ -16,6 +16,7 @@ class AudioGraphHelper {
 	disconnect() {
 		Object.keys(this.nodes).forEach(k => {
 			let n = this.nodes[k];
+            if (n.reset) n.reset();
 			if (n.stop) n.stop();
 			n.disconnect();
 		});

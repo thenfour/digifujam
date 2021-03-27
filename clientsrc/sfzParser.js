@@ -51,7 +51,15 @@ function parseSFZ(sfzText) {
         }
         let headerInstanceOpcodes = {};
 
-        const kvs = matchAll(res[2], /(.*?)=(.*?)($|\s(?=.*?=))/gm); // match all opcodes in this header.
+        //const kvs = matchAll(res[2], /(.*?)=(.*?)($|\s(?=.*?=))/gm); // match all opcodes in this header.
+        // ([a-z,0-9,_]*?) // capture the opcode name
+        // =
+        // (  // capture the value
+        //   (?:. // do not capture; any character
+        //     (?! // negative lookahead assertion: don't match a character followed by another header
+        //       ([a-z,0-9,_]*?)=))*)
+
+        const kvs = matchAll(res[2], /([a-z,0-9,_]*?)=((?:.(?!([a-z,0-9,_]*?)=))*)/gm);//.exec("sample=x1.flac l_1ol=2");
         kvs.forEach((kv) => {
             headerInstanceOpcodes[kv[1].replace(/\s/gm, "")] = /^\d*$/g.test(kv[2])
                 ? Number(kv[2])
@@ -88,11 +96,6 @@ function parseSFZ(sfzText) {
 // // 			sample=
 // // 		<region>
 // // 			sample=
-
-
-
-// };
-
 
 module.exports = parseSFZ;
 

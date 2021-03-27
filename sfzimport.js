@@ -1,5 +1,5 @@
 /*
-just imports audio & json to a format the server can easily serve up.
+imports audio & json to a format the server can easily serve up.
 samples are converted to m4a and brought into the same dir as the sfz.
 */
 const fs = require('fs');
@@ -9,9 +9,41 @@ const wav = require('node-wav');
 const exec = require('child_process').exec
 //const ffmpeg = require('ffmpeg');
 
+function GetLeaf(path) {
+  if (!path.includes("\\")) return path;
+  return path.substring(path.lastIndexOf("\\") + 1);
+};
+
+function RemoveExtension(path) {
+  if (!path.includes(".")) return path;
+  return path.substring(0, path.lastIndexOf("."));
+};
+
+// requires the ORIGINAL r.sample opcode
+function GetDestSamplePath(r) {
+  if ('end' in r) {
+    return outputDir + `${RemoveExtension(GetLeaf(r.sample))}_${r.offset}_${r.end - r.offset}.wav`;
+  }
+  return outputDir + `${RemoveExtension(GetLeaf(r.sample))}_${r.offset}_end.wav`;
+};
+
+function RemoveQuotes(s) {
+  return s.replace(/\"/g, "\\");
+}
+function EnsureWindowsPathSeparators(s) {
+  return s.replace(/\//g, "\\");
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// MAIN
+
 console.log(`----------------------------------`);
 console.log(`7jam Serverside SFZ Importer`);
 console.log(``);
+
+const errorMessages = [];
 
 // find the sfz arg.
 let sfzpath = null;
@@ -28,7 +60,7 @@ process.argv.forEach(arg => {
 if (!sfzpath) {
   throw new Error(`no sfzpath= specified in arguments.`);
 }
-sfzpath = sfzpath.replace("\"", "");
+sfzpath = RemoveQuotes(sfzpath);
 if (!sfzpath.includes(":")) {
   throw new Error(`Path must be rooted: ${sfzpath}`);
 }
@@ -38,13 +70,18 @@ console.log(`  ${sfzpath}`);
 console.log(``);
 
 if (!outputDir) {
-  throw new Error(`no outputdir= specified in arguments.`);
+  //throw new Error(`no outputdir= specified in arguments.`);
+  // generate an output dir based on the input dir.
+  outputDir = __dirname + "/public/sfz/" + RemoveExtension(GetLeaf(sfzpath));
+  //console.log(`Generated output dir: ${outputDir}`);
 }
-outputDir = outputDir.replace("\"", "");
+outputDir = RemoveQuotes(outputDir);
 if (!outputDir.includes(":")) {
   throw new Error(`Path must be rooted: ${outputDir}`);
 }
-outputDir = outputDir.replace("/", "\\"); // ensure windows paths
+
+outputDir = EnsureWindowsPathSeparators(outputDir);
+
 if (!outputDir.endsWith("\\")) { // ensure outputdir ends with backslash so relative paths can be appended.
   outputDir += "\\";
 }
@@ -71,6 +108,8 @@ const sfzPathStem = sfzpath.substring(sfzpath.lastIndexOf("\\") + 1);
 let outputJSONPath = outputDir + sfzPathStem + ".json";
 console.log(`Output JSON will be @: ${outputJSONPath}`);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// PARSE the original SFZ
 const parsed = parseSFZ(fs.readFileSync(sfzpath, "utf8"));
 
 // transform it a bit:
@@ -102,31 +141,9 @@ if (parsed.control) {
 
 // pathbase is relative to the .sfz
 let rootedPath = sfzpath.substring(0, sfzpath.lastIndexOf("\\") + 1); // remove the inst.sfz filename to make relative paths
-rootedPath += pathBase.replace("/", "\\");
+rootedPath += EnsureWindowsPathSeparators(pathBase);
 
-// function GetSrcSamplePath(r) {
-//   return ;
-// };
-
-function GetLeaf(path) {
-  if (!path.includes("\\")) return path;
-  return path.substring(path.lastIndexOf("\\") + 1);
-};
-
-function RemoveExtension(path) {
-  if (!path.includes(".")) return path;
-  return path.substring(0, path.lastIndexOf("."));
-};
-
-// requires the ORIGINAL r.sample opcode
-function GetDestSamplePath(r) {
-  if ('end' in r) {
-    return outputDir + `${RemoveExtension(GetLeaf(r.sample))}_${r.offset}_${r.end - r.offset}.wav`;
-  }
-  return outputDir + `${RemoveExtension(GetLeaf(r.sample))}_${r.offset}_end.wav`;
-};
-
-// there are some global opcodes which want to be ADDED to region opcodes.
+// there are some global opcodes which want to be ADDED to group/region opcodes.
 // remove them from the globalOpcodes struct and put them here for later dealin
 globalAddOpcodes = {};
 if ('global_volume' in globalOpcodes) {
@@ -138,6 +155,7 @@ if ('global_tune' in globalOpcodes) {
   delete globalOpcodes.global_tune;
 }
 
+// Process all regions...
 parsed.region.forEach(region => {
   // calculate the sample URL to load
   // first bring in global opcodes + region opcodes
@@ -296,6 +314,10 @@ Promise.allSettled(conversionPromises).then(() => {
   const unsupportedOpcodes = [
     "region_label",
   ];
+  const errorOpcodes = [
+    "ampeg_delay",
+    "loop_crossfade",
+  ];
   const floatOpcodes = [
     "ampeg_attack",
     "ampeg_delay",
@@ -313,6 +335,7 @@ Promise.allSettled(conversionPromises).then(() => {
   ];
   const renameOpcodes = {
     "polyphony_group": "group",
+    "pitch": "tune",
   };
 
   sfzRegions.forEach(r => {
@@ -371,9 +394,37 @@ Promise.allSettled(conversionPromises).then(() => {
     intOpcodes.forEach(k => {
       if (k in r) r[k] = parseInt(r[k]);
     });
+    errorOpcodes.forEach(k => {
+      if (k in r) errorMessages.push(`Error: opcode ${k} is going to cause issues.`);
+    });
 
   }); // for each region
 
   fs.writeFileSync(outputJSONPath, JSON.stringify(sfzRegions, null, 2), "utf8");
 
+  errorMessages.forEach(m => console.log(m));
+
+  // generate a sample instrumentspec...
+  console.log(`Import complete.`);
+
+  const pubDir = (__dirname + "\\public").toLowerCase();
+  if (outputJSONPath.toLowerCase().startsWith(pubDir)) {
+    console.log(`Sample JSON instrument spec:`);
+    const sampleSpec = {
+      "instrumentID": "sfz_" + RemoveExtension(GetLeaf(sfzpath)).replace(/\W/g, ''),
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": outputJSONPath.substr(pubDir.length).replace(/\\/g, "/"),
+      "name": RemoveExtension(GetLeaf(sfzpath)),
+    };
+
+
+    console.log(JSON.stringify(sampleSpec, null, 2));
+
+  }
+
+
+
 }); // wait for conversions to complete.
+
+
+

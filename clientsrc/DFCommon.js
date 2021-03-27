@@ -86,7 +86,7 @@ const ServerMessages = {
 };
 
 const ServerSettings = {
-    PingIntervalMS: 3000,
+    PingIntervalMS: 5000,
     ChatHistoryMaxMS: (1000 * 60 * 60),
 
     InstrumentIdleTimeoutMS: (1000 * 60),
