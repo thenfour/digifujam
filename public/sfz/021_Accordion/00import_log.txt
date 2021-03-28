@@ -1,0 +1,68 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\021_Accordion.sfz.json
+Region count: 16
+Source samples to read: 1
+Dest samples to create: 16
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 150133080
+  Max offset       : 300390630
+  Reflen in samples: 150257550
+  > Creating sf2_smpl_150133080_124470.wav from sf2_smpl.wav [150133080-150257550]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150133080_124470.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150133080_124470.m4a"
+  > Creating sf2_smpl_150257573_124470.wav from sf2_smpl.wav [150257573-150382043]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150257573_124470.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150257573_124470.m4a"
+  > Creating sf2_smpl_150382066_128877.wav from sf2_smpl.wav [150382066-150510943]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150382066_128877.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150382066_128877.m4a"
+  > Creating sf2_smpl_150510966_128877.wav from sf2_smpl.wav [150510966-150639843]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150510966_128877.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150510966_128877.m4a"
+  > Creating sf2_smpl_150639866_134080.wav from sf2_smpl.wav [150639866-150773946]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150639866_134080.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150639866_134080.m4a"
+  > Creating sf2_smpl_150773969_134080.wav from sf2_smpl.wav [150773969-150908049]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150773969_134080.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150773969_134080.m4a"
+  > Creating sf2_smpl_150908072_222120.wav from sf2_smpl.wav [150908072-151130192]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150908072_222120.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150908072_222120.m4a"
+  > Creating sf2_smpl_151130215_222120.wav from sf2_smpl.wav [151130215-151352335]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151130215_222120.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151130215_222120.m4a"
+  > Creating sf2_smpl_151352358_91415.wav from sf2_smpl.wav [151352358-151443773]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151352358_91415.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151352358_91415.m4a"
+  > Creating sf2_smpl_151443796_91415.wav from sf2_smpl.wav [151443796-151535211]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151443796_91415.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151443796_91415.m4a"
+  > Creating sf2_smpl_151535234_157894.wav from sf2_smpl.wav [151535234-151693128]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151535234_157894.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151535234_157894.m4a"
+  > Creating sf2_smpl_151693151_157894.wav from sf2_smpl.wav [151693151-151851045]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151693151_157894.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151693151_157894.m4a"
+  > Creating sf2_smpl_151851068_48444.wav from sf2_smpl.wav [151851068-151899512]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151851068_48444.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151851068_48444.m4a"
+  > Creating sf2_smpl_151899535_48444.wav from sf2_smpl.wav [151899535-151947979]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151899535_48444.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151899535_48444.m4a"
+  > Creating sf2_smpl_151948002_20676.wav from sf2_smpl.wav [151948002-151968678]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151948002_20676.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151948002_20676.m4a"
+  > Creating sf2_smpl_151968701_20676.wav from sf2_smpl.wav [151968701-151989377]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151968701_20676.wav" "C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151968701_20676.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150639866_134080.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150382066_128877.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150257573_124470.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150133080_124470.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151130215_222120.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150510966_128877.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150908072_222120.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_150773969_134080.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151851068_48444.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151443796_91415.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151899535_48444.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151535234_157894.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151693151_157894.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151948002_20676.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151352358_91415.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\021_Accordion\sf2_smpl_151968701_20676.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_021_Accordion",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/021_Accordion/021_Accordion.sfz.json",
+  "name": "021_Accordion"
+}

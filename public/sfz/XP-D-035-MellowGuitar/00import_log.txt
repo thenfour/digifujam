@@ -1,0 +1,157 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\XP-D-035-MellowGuitar.sfz.json
+Region count: 12
+Source samples to read: 12
+Dest samples to create: 12
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 083.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 088.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 088.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board D SR-JV80-14 Asia\XP-D-035-MellowGuitar Samples\MellowGuitar 091.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 091.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 254743
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 036_0_end.wav from MellowGuitar 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237297
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 043_0_end.wav from MellowGuitar 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 246101
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 053_0_end.wav from MellowGuitar 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 254921
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 048_0_end.wav from MellowGuitar 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 246263
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 068_0_end.wav from MellowGuitar 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 228688
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 083_0_end.wav from MellowGuitar 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 083_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 246263
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 063_0_end.wav from MellowGuitar 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237362
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 078_0_end.wav from MellowGuitar 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 088.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 219868
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 088_0_end.wav from MellowGuitar 088.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 088_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 088_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237297
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 073_0_end.wav from MellowGuitar 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 254970
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 058_0_end.wav from MellowGuitar 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 091.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211210
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating MellowGuitar 091_0_end.wav from MellowGuitar 091.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 091_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 091_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 083.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 068.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 088_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 088.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 091_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-D-035-MellowGuitar\MellowGuitar 091.flac.wav
+Completed processing source WAV files with 12 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPD035MellowGuitar",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-D-035-MellowGuitar/XP-D-035-MellowGuitar.sfz.json",
+  "name": "XP-D-035-MellowGuitar"
+}

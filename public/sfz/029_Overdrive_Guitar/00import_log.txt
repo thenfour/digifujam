@@ -1,0 +1,50 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\029_Overdrive_Guitar.sfz.json
+Region count: 11
+Source samples to read: 1
+Dest samples to create: 10
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\SGM-180_v1_5_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 91685996
+  Min offset       : 27942713
+  Max offset       : 56818576
+  Reflen in samples: 28875863
+  > Creating sf2_smpl_28369416_79744.wav from sf2_smpl.wav [28369416-28449160]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28369416_79744.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28369416_79744.m4a"
+  > Creating sf2_smpl_28307633_61760.wav from sf2_smpl.wav [28307633-28369393]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28307633_61760.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28307633_61760.m4a"
+  > Creating sf2_smpl_28248026_59584.wav from sf2_smpl.wav [28248026-28307610]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28248026_59584.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28248026_59584.m4a"
+  > Creating sf2_smpl_28197123_50880.wav from sf2_smpl.wav [28197123-28248003]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28197123_50880.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28197123_50880.m4a"
+  > Creating sf2_smpl_28137452_59648.wav from sf2_smpl.wav [28137452-28197100]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28137452_59648.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28137452_59648.m4a"
+  > Creating sf2_smpl_28084565_52864.wav from sf2_smpl.wav [28084565-28137429]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28084565_52864.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28084565_52864.m4a"
+  > Creating sf2_smpl_28046974_37568.wav from sf2_smpl.wav [28046974-28084542]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28046974_37568.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28046974_37568.m4a"
+  > Creating sf2_smpl_27998311_48640.wav from sf2_smpl.wav [27998311-28046951]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27998311_48640.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27998311_48640.m4a"
+  > Creating sf2_smpl_27973840_24448.wav from sf2_smpl.wav [27973840-27998288]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27973840_24448.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27973840_24448.m4a"
+  > Creating sf2_smpl_27942713_31104.wav from sf2_smpl.wav [27942713-27973817]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27942713_31104.wav" "C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27942713_31104.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28197123_50880.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28307633_61760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28248026_59584.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28137452_59648.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28369416_79744.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28046974_37568.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27942713_31104.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_28084565_52864.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27973840_24448.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\029_Overdrive_Guitar\sf2_smpl_27998311_48640.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_029_Overdrive_Guitar",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/029_Overdrive_Guitar/029_Overdrive_Guitar.sfz.json",
+  "name": "029_Overdrive_Guitar"
+}

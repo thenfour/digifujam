@@ -1,0 +1,98 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\034_Picked_Bass.sfz.json
+Region count: 27
+Source samples to read: 1
+Dest samples to create: 26
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\WolfGMv3_9_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 261596424
+  Min offset       : 113741919
+  Max offset       : 227572158
+  Reflen in samples: 113830239
+  > Creating sf2_smpl_113741919_88320.wav from sf2_smpl.wav [113741919-113830239]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113741919_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113741919_88320.m4a"
+  > Creating sf2_smpl_113830271_88320.wav from sf2_smpl.wav [113830271-113918591]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113830271_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113830271_88320.m4a"
+  > Creating sf2_smpl_113918623_88576.wav from sf2_smpl.wav [113918623-114007199]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113918623_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113918623_88576.m4a"
+  > Creating sf2_smpl_114007231_88576.wav from sf2_smpl.wav [114007231-114095807]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114007231_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114007231_88576.m4a"
+  > Creating sf2_smpl_114095839_88576.wav from sf2_smpl.wav [114095839-114184415]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114095839_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114095839_88576.m4a"
+  > Creating sf2_smpl_114184447_88320.wav from sf2_smpl.wav [114184447-114272767]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114184447_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114184447_88320.m4a"
+  > Creating sf2_smpl_114272799_88320.wav from sf2_smpl.wav [114272799-114361119]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114272799_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114272799_88320.m4a"
+  > Creating sf2_smpl_114361151_88576.wav from sf2_smpl.wav [114361151-114449727]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114361151_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114361151_88576.m4a"
+  > Creating sf2_smpl_114449759_88320.wav from sf2_smpl.wav [114449759-114538079]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114449759_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114449759_88320.m4a"
+  > Creating sf2_smpl_114538111_88576.wav from sf2_smpl.wav [114538111-114626687]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114538111_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114538111_88576.m4a"
+  > Creating sf2_smpl_114626719_88576.wav from sf2_smpl.wav [114626719-114715295]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114626719_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114626719_88576.m4a"
+  > Creating sf2_smpl_114715327_88576.wav from sf2_smpl.wav [114715327-114803903]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114715327_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114715327_88576.m4a"
+  > Creating sf2_smpl_114803935_88320.wav from sf2_smpl.wav [114803935-114892255]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114803935_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114803935_88320.m4a"
+  > Creating sf2_smpl_114892287_88576.wav from sf2_smpl.wav [114892287-114980863]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114892287_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114892287_88576.m4a"
+  > Creating sf2_smpl_114980895_88576.wav from sf2_smpl.wav [114980895-115069471]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114980895_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114980895_88576.m4a"
+  > Creating sf2_smpl_115069503_88576.wav from sf2_smpl.wav [115069503-115158079]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115069503_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115069503_88576.m4a"
+  > Creating sf2_smpl_115158111_88576.wav from sf2_smpl.wav [115158111-115246687]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115158111_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115158111_88576.m4a"
+  > Creating sf2_smpl_115246719_88576.wav from sf2_smpl.wav [115246719-115335295]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115246719_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115246719_88576.m4a"
+  > Creating sf2_smpl_115335327_88576.wav from sf2_smpl.wav [115335327-115423903]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115335327_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115335327_88576.m4a"
+  > Creating sf2_smpl_115423935_88576.wav from sf2_smpl.wav [115423935-115512511]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115423935_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115423935_88576.m4a"
+  > Creating sf2_smpl_115512543_88576.wav from sf2_smpl.wav [115512543-115601119]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115512543_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115512543_88576.m4a"
+  > Creating sf2_smpl_115601151_88576.wav from sf2_smpl.wav [115601151-115689727]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115601151_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115601151_88576.m4a"
+  > Creating sf2_smpl_115689759_88576.wav from sf2_smpl.wav [115689759-115778335]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115689759_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115689759_88576.m4a"
+  > Creating sf2_smpl_115778367_88576.wav from sf2_smpl.wav [115778367-115866943]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115778367_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115778367_88576.m4a"
+  > Creating sf2_smpl_115866975_88576.wav from sf2_smpl.wav [115866975-115955551]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115866975_88576.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115866975_88576.m4a"
+  > Creating sf2_smpl_115955583_88320.wav from sf2_smpl.wav [115955583-116043903]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115955583_88320.wav" "C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115955583_88320.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114803935_88320.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114626719_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114715327_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114538111_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114272799_88320.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114361151_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114449759_88320.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114184447_88320.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114095839_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113918623_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114007231_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113830271_88320.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_113741919_88320.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115158111_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114980895_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_114892287_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115069503_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115335327_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115512543_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115246719_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115601151_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115866975_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115778367_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115423935_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115689759_88576.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\034_Picked_Bass\sf2_smpl_115955583_88320.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_034_Picked_Bass",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/034_Picked_Bass/034_Picked_Bass.sfz.json",
+  "name": "034_Picked_Bass"
+}

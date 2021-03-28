@@ -1,0 +1,344 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\025_Steel_Guitar.sfz.json
+Region count: 216
+Source samples to read: 1
+Dest samples to create: 108
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 160210151
+  Max offset       : 320880046
+  Reflen in samples: 160669895
+  > Creating sf2_smpl_160210151_459744.wav from sf2_smpl.wav [160210151-160669895]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_160210151_459744.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_160210151_459744.m4a"
+  > Creating sf2_smpl_160669918_574553.wav from sf2_smpl.wav [160669918-161244471]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_160669918_574553.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_160669918_574553.m4a"
+  > Creating sf2_smpl_161244494_767872.wav from sf2_smpl.wav [161244494-162012366]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_161244494_767872.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_161244494_767872.m4a"
+  > Creating sf2_smpl_162012389_737497.wav from sf2_smpl.wav [162012389-162749886]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_162012389_737497.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_162012389_737497.m4a"
+  > Creating sf2_smpl_162749909_395133.wav from sf2_smpl.wav [162749909-163145042]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_162749909_395133.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_162749909_395133.m4a"
+  > Creating sf2_smpl_163145065_414696.wav from sf2_smpl.wav [163145065-163559761]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_163145065_414696.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_163145065_414696.m4a"
+  > Creating sf2_smpl_163559784_553415.wav from sf2_smpl.wav [163559784-164113199]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_163559784_553415.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_163559784_553415.m4a"
+  > Creating sf2_smpl_164113222_473691.wav from sf2_smpl.wav [164113222-164586913]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164113222_473691.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164113222_473691.m4a"
+  > Creating sf2_smpl_164586936_372222.wav from sf2_smpl.wav [164586936-164959158]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164586936_372222.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164586936_372222.m4a"
+  > Creating sf2_smpl_164959181_417520.wav from sf2_smpl.wav [164959181-165376701]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164959181_417520.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164959181_417520.m4a"
+  > Creating sf2_smpl_165376724_506823.wav from sf2_smpl.wav [165376724-165883547]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_165376724_506823.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_165376724_506823.m4a"
+  > Creating sf2_smpl_165883570_432275.wav from sf2_smpl.wav [165883570-166315845]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_165883570_432275.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_165883570_432275.m4a"
+  > Creating sf2_smpl_166315868_504752.wav from sf2_smpl.wav [166315868-166820620]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_166315868_504752.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_166315868_504752.m4a"
+  > Creating sf2_smpl_166820643_561439.wav from sf2_smpl.wav [166820643-167382082]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_166820643_561439.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_166820643_561439.m4a"
+  > Creating sf2_smpl_167382105_387754.wav from sf2_smpl.wav [167382105-167769859]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_167382105_387754.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_167382105_387754.m4a"
+  > Creating sf2_smpl_167769882_501905.wav from sf2_smpl.wav [167769882-168271787]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_167769882_501905.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_167769882_501905.m4a"
+  > Creating sf2_smpl_168271810_490377.wav from sf2_smpl.wav [168271810-168762187]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_168271810_490377.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_168271810_490377.m4a"
+  > Creating sf2_smpl_168762210_543147.wav from sf2_smpl.wav [168762210-169305357]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_168762210_543147.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_168762210_543147.m4a"
+  > Creating sf2_smpl_169305380_584848.wav from sf2_smpl.wav [169305380-169890228]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_169305380_584848.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_169305380_584848.m4a"
+  > Creating sf2_smpl_169890251_620371.wav from sf2_smpl.wav [169890251-170510622]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_169890251_620371.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_169890251_620371.m4a"
+  > Creating sf2_smpl_170510645_395133.wav from sf2_smpl.wav [170510645-170905778]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_170510645_395133.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_170510645_395133.m4a"
+  > Creating sf2_smpl_170905801_491151.wav from sf2_smpl.wav [170905801-171396952]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_170905801_491151.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_170905801_491151.m4a"
+  > Creating sf2_smpl_171396975_508397.wav from sf2_smpl.wav [171396975-171905372]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_171396975_508397.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_171396975_508397.m4a"
+  > Creating sf2_smpl_171905395_575582.wav from sf2_smpl.wav [171905395-172480977]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_171905395_575582.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_171905395_575582.m4a"
+  > Creating sf2_smpl_172481000_504278.wav from sf2_smpl.wav [172481000-172985278]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_172481000_504278.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_172481000_504278.m4a"
+  > Creating sf2_smpl_172985301_593343.wav from sf2_smpl.wav [172985301-173578644]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_172985301_593343.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_172985301_593343.m4a"
+  > Creating sf2_smpl_173578667_782028.wav from sf2_smpl.wav [173578667-174360695]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_173578667_782028.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_173578667_782028.m4a"
+  > Creating sf2_smpl_174360718_884995.wav from sf2_smpl.wav [174360718-175245713]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_174360718_884995.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_174360718_884995.m4a"
+  > Creating sf2_smpl_175245736_520237.wav from sf2_smpl.wav [175245736-175765973]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_175245736_520237.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_175245736_520237.m4a"
+  > Creating sf2_smpl_175765996_463863.wav from sf2_smpl.wav [175765996-176229859]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_175765996_463863.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_175765996_463863.m4a"
+  > Creating sf2_smpl_176229882_455112.wav from sf2_smpl.wav [176229882-176684994]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_176229882_455112.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_176229882_455112.m4a"
+  > Creating sf2_smpl_176685017_570177.wav from sf2_smpl.wav [176685017-177255194]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_176685017_570177.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_176685017_570177.m4a"
+  > Creating sf2_smpl_177255217_263078.wav from sf2_smpl.wav [177255217-177518295]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177255217_263078.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177255217_263078.m4a"
+  > Creating sf2_smpl_177518318_318165.wav from sf2_smpl.wav [177518318-177836483]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177518318_318165.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177518318_318165.m4a"
+  > Creating sf2_smpl_177836506_299633.wav from sf2_smpl.wav [177836506-178136139]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177836506_299633.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177836506_299633.m4a"
+  > Creating sf2_smpl_178136162_315850.wav from sf2_smpl.wav [178136162-178452012]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178136162_315850.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178136162_315850.m4a"
+  > Creating sf2_smpl_178452035_342359.wav from sf2_smpl.wav [178452035-178794394]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178452035_342359.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178452035_342359.m4a"
+  > Creating sf2_smpl_178794417_430395.wav from sf2_smpl.wav [178794417-179224812]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178794417_430395.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178794417_430395.m4a"
+  > Creating sf2_smpl_179224835_454339.wav from sf2_smpl.wav [179224835-179679174]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_179224835_454339.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_179224835_454339.m4a"
+  > Creating sf2_smpl_179679197_491149.wav from sf2_smpl.wav [179679197-180170346]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_179679197_491149.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_179679197_491149.m4a"
+  > Creating sf2_smpl_180170369_542976.wav from sf2_smpl.wav [180170369-180713345]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_180170369_542976.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_180170369_542976.m4a"
+  > Creating sf2_smpl_180713368_543232.wav from sf2_smpl.wav [180713368-181256600]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_180713368_543232.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_180713368_543232.m4a"
+  > Creating sf2_smpl_181256623_597248.wav from sf2_smpl.wav [181256623-181853871]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_181256623_597248.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_181256623_597248.m4a"
+  > Creating sf2_smpl_181853894_637952.wav from sf2_smpl.wav [181853894-182491846]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_181853894_637952.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_181853894_637952.m4a"
+  > Creating sf2_smpl_182491869_450816.wav from sf2_smpl.wav [182491869-182942685]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_182491869_450816.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_182491869_450816.m4a"
+  > Creating sf2_smpl_182942708_579328.wav from sf2_smpl.wav [182942708-183522036]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_182942708_579328.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_182942708_579328.m4a"
+  > Creating sf2_smpl_183522059_509440.wav from sf2_smpl.wav [183522059-184031499]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_183522059_509440.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_183522059_509440.m4a"
+  > Creating sf2_smpl_184031522_676352.wav from sf2_smpl.wav [184031522-184707874]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_184031522_676352.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_184031522_676352.m4a"
+  > Creating sf2_smpl_184707897_382976.wav from sf2_smpl.wav [184707897-185090873]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_184707897_382976.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_184707897_382976.m4a"
+  > Creating sf2_smpl_185090896_392960.wav from sf2_smpl.wav [185090896-185483856]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185090896_392960.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185090896_392960.m4a"
+  > Creating sf2_smpl_185483879_403968.wav from sf2_smpl.wav [185483879-185887847]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185483879_403968.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185483879_403968.m4a"
+  > Creating sf2_smpl_185887870_426240.wav from sf2_smpl.wav [185887870-186314110]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185887870_426240.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185887870_426240.m4a"
+  > Creating sf2_smpl_186314133_364288.wav from sf2_smpl.wav [186314133-186678421]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_186314133_364288.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_186314133_364288.m4a"
+  > Creating sf2_smpl_186678444_422400.wav from sf2_smpl.wav [186678444-187100844]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_186678444_422400.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_186678444_422400.m4a"
+  > Creating sf2_smpl_187100867_437760.wav from sf2_smpl.wav [187100867-187538627]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187100867_437760.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187100867_437760.m4a"
+  > Creating sf2_smpl_187538650_430592.wav from sf2_smpl.wav [187538650-187969242]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187538650_430592.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187538650_430592.m4a"
+  > Creating sf2_smpl_187969265_465408.wav from sf2_smpl.wav [187969265-188434673]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187969265_465408.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187969265_465408.m4a"
+  > Creating sf2_smpl_188434696_480768.wav from sf2_smpl.wav [188434696-188915464]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_188434696_480768.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_188434696_480768.m4a"
+  > Creating sf2_smpl_188915487_556544.wav from sf2_smpl.wav [188915487-189472031]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_188915487_556544.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_188915487_556544.m4a"
+  > Creating sf2_smpl_189472054_596992.wav from sf2_smpl.wav [189472054-190069046]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_189472054_596992.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_189472054_596992.m4a"
+  > Creating sf2_smpl_190069069_281856.wav from sf2_smpl.wav [190069069-190350925]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190069069_281856.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190069069_281856.m4a"
+  > Creating sf2_smpl_190350948_276992.wav from sf2_smpl.wav [190350948-190627940]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190350948_276992.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190350948_276992.m4a"
+  > Creating sf2_smpl_190627963_284672.wav from sf2_smpl.wav [190627963-190912635]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190627963_284672.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190627963_284672.m4a"
+  > Creating sf2_smpl_190912658_288768.wav from sf2_smpl.wav [190912658-191201426]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190912658_288768.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190912658_288768.m4a"
+  > Creating sf2_smpl_191201449_335360.wav from sf2_smpl.wav [191201449-191536809]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191201449_335360.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191201449_335360.m4a"
+  > Creating sf2_smpl_191536832_306432.wav from sf2_smpl.wav [191536832-191843264]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191536832_306432.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191536832_306432.m4a"
+  > Creating sf2_smpl_191843287_387584.wav from sf2_smpl.wav [191843287-192230871]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191843287_387584.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191843287_387584.m4a"
+  > Creating sf2_smpl_192230894_244992.wav from sf2_smpl.wav [192230894-192475886]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192230894_244992.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192230894_244992.m4a"
+  > Creating sf2_smpl_192475909_432604.wav from sf2_smpl.wav [192475909-192908513]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192475909_432604.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192475909_432604.m4a"
+  > Creating sf2_smpl_192908536_393161.wav from sf2_smpl.wav [192908536-193301697]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192908536_393161.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192908536_393161.m4a"
+  > Creating sf2_smpl_193301720_421916.wav from sf2_smpl.wav [193301720-193723636]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_193301720_421916.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_193301720_421916.m4a"
+  > Creating sf2_smpl_193723659_431331.wav from sf2_smpl.wav [193723659-194154990]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_193723659_431331.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_193723659_431331.m4a"
+  > Creating sf2_smpl_194155013_367104.wav from sf2_smpl.wav [194155013-194522117]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194155013_367104.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194155013_367104.m4a"
+  > Creating sf2_smpl_194522140_393472.wav from sf2_smpl.wav [194522140-194915612]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194522140_393472.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194522140_393472.m4a"
+  > Creating sf2_smpl_194915635_383488.wav from sf2_smpl.wav [194915635-195299123]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194915635_383488.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194915635_383488.m4a"
+  > Creating sf2_smpl_195299146_412416.wav from sf2_smpl.wav [195299146-195711562]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195299146_412416.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195299146_412416.m4a"
+  > Creating sf2_smpl_195711585_200704.wav from sf2_smpl.wav [195711585-195912289]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195711585_200704.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195711585_200704.m4a"
+  > Creating sf2_smpl_195912312_221440.wav from sf2_smpl.wav [195912312-196133752]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195912312_221440.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195912312_221440.m4a"
+  > Creating sf2_smpl_196133775_233984.wav from sf2_smpl.wav [196133775-196367759]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196133775_233984.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196133775_233984.m4a"
+  > Creating sf2_smpl_196367782_308224.wav from sf2_smpl.wav [196367782-196676006]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196367782_308224.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196367782_308224.m4a"
+  > Creating sf2_smpl_196676029_267264.wav from sf2_smpl.wav [196676029-196943293]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196676029_267264.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196676029_267264.m4a"
+  > Creating sf2_smpl_196943316_194048.wav from sf2_smpl.wav [196943316-197137364]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196943316_194048.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196943316_194048.m4a"
+  > Creating sf2_smpl_197137387_165768.wav from sf2_smpl.wav [197137387-197303155]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197137387_165768.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197137387_165768.m4a"
+  > Creating sf2_smpl_197303178_241920.wav from sf2_smpl.wav [197303178-197545098]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197303178_241920.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197303178_241920.m4a"
+  > Creating sf2_smpl_197545121_281447.wav from sf2_smpl.wav [197545121-197826568]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197545121_281447.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197545121_281447.m4a"
+  > Creating sf2_smpl_197826591_282210.wav from sf2_smpl.wav [197826591-198108801]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197826591_282210.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197826591_282210.m4a"
+  > Creating sf2_smpl_198108824_208668.wav from sf2_smpl.wav [198108824-198317492]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198108824_208668.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198108824_208668.m4a"
+  > Creating sf2_smpl_198317515_175332.wav from sf2_smpl.wav [198317515-198492847]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198317515_175332.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198317515_175332.m4a"
+  > Creating sf2_smpl_198492870_202815.wav from sf2_smpl.wav [198492870-198695685]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198492870_202815.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198492870_202815.m4a"
+  > Creating sf2_smpl_198695708_206632.wav from sf2_smpl.wav [198695708-198902340]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198695708_206632.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198695708_206632.m4a"
+  > Creating sf2_smpl_198902363_200524.wav from sf2_smpl.wav [198902363-199102887]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198902363_200524.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198902363_200524.m4a"
+  > Creating sf2_smpl_199102910_195944.wav from sf2_smpl.wav [199102910-199298854]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199102910_195944.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199102910_195944.m4a"
+  > Creating sf2_smpl_199298877_276612.wav from sf2_smpl.wav [199298877-199575489]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199298877_276612.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199298877_276612.m4a"
+  > Creating sf2_smpl_199575512_245567.wav from sf2_smpl.wav [199575512-199821079]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199575512_245567.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199575512_245567.m4a"
+  > Creating sf2_smpl_199821102_227500.wav from sf2_smpl.wav [199821102-200048602]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199821102_227500.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199821102_227500.m4a"
+  > Creating sf2_smpl_200048625_215286.wav from sf2_smpl.wav [200048625-200263911]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200048625_215286.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200048625_215286.m4a"
+  > Creating sf2_smpl_200263934_269824.wav from sf2_smpl.wav [200263934-200533758]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200263934_269824.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200263934_269824.m4a"
+  > Creating sf2_smpl_200533781_235520.wav from sf2_smpl.wav [200533781-200769301]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200533781_235520.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200533781_235520.m4a"
+  > Creating sf2_smpl_200769324_186880.wav from sf2_smpl.wav [200769324-200956204]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200769324_186880.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200769324_186880.m4a"
+  > Creating sf2_smpl_200956227_201216.wav from sf2_smpl.wav [200956227-201157443]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200956227_201216.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200956227_201216.m4a"
+  > Creating sf2_smpl_201157466_239616.wav from sf2_smpl.wav [201157466-201397082]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201157466_239616.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201157466_239616.m4a"
+  > Creating sf2_smpl_201397105_151552.wav from sf2_smpl.wav [201397105-201548657]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201397105_151552.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201397105_151552.m4a"
+  > Creating sf2_smpl_201548680_255744.wav from sf2_smpl.wav [201548680-201804424]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201548680_255744.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201548680_255744.m4a"
+  > Creating sf2_smpl_201804447_162192.wav from sf2_smpl.wav [201804447-201966639]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201804447_162192.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201804447_162192.m4a"
+  > Creating sf2_smpl_201966662_76111.wav from sf2_smpl.wav [201966662-202042773]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201966662_76111.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201966662_76111.m4a"
+  > Creating sf2_smpl_202042796_104310.wav from sf2_smpl.wav [202042796-202147106]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202042796_104310.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202042796_104310.m4a"
+  > Creating sf2_smpl_202147129_66902.wav from sf2_smpl.wav [202147129-202214031]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202147129_66902.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202147129_66902.m4a"
+  > Creating sf2_smpl_202214054_100915.wav from sf2_smpl.wav [202214054-202314969]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202214054_100915.wav" "C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202214054_100915.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185887870_426240.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_186314133_364288.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185483879_403968.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_185090896_392960.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_181853894_637952.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_182942708_579328.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_184707897_382976.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_184031522_676352.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_182491869_450816.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_183522059_509440.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_181256623_597248.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_180713368_543232.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_179679197_491149.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_180170369_542976.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_179224835_454339.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178794417_430395.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178452035_342359.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_178136162_315850.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177836506_299633.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177518318_318165.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_176685017_570177.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_177255217_263078.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_175245736_520237.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_175765996_463863.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_172985301_593343.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_176229882_455112.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_172481000_504278.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_173578667_782028.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_174360718_884995.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_171905395_575582.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_170510645_395133.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_170905801_491151.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_171396975_508397.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_169305380_584848.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_169890251_620371.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_168762210_543147.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_168271810_490377.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_167769882_501905.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_167382105_387754.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_166820643_561439.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_165883570_432275.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_166315868_504752.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_165376724_506823.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164959181_417520.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164586936_372222.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_163559784_553415.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_164113222_473691.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_163145065_414696.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_162749909_395133.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_162012389_737497.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_161244494_767872.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_160669918_574553.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_160210151_459744.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199575512_245567.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199298877_276612.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199102910_195944.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197826591_282210.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198902363_200524.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198695708_206632.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198492870_202815.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198317515_175332.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_198108824_208668.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197545121_281447.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197137387_165768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_197303178_241920.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196676029_267264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194915635_383488.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196943316_194048.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195912312_221440.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196133775_233984.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_196367782_308224.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195711585_200704.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194522140_393472.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_194155013_367104.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_195299146_412416.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192908536_393161.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_193723659_431331.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_193301720_421916.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191843287_387584.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192475909_432604.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_192230894_244992.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191536832_306432.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_191201449_335360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190912658_288768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190350948_276992.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187100867_437760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_189472054_596992.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_188915487_556544.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_188434696_480768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190627963_284672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_190069069_281856.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187538650_430592.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_186678444_422400.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_187969265_465408.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_199821102_227500.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201548680_255744.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202147129_66902.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202042796_104310.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201157466_239616.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201397105_151552.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200956227_201216.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201804447_162192.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200769324_186880.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200533781_235520.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200048625_215286.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_200263934_269824.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_201966662_76111.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\025_Steel_Guitar\sf2_smpl_202214054_100915.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_025_Steel_Guitar",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/025_Steel_Guitar/025_Steel_Guitar.sfz.json",
+  "name": "025_Steel_Guitar"
+}

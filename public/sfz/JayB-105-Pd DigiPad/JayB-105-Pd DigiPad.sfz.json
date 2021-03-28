@@ -1,0 +1,79 @@
+[
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 042_0_end.m4a",
+    "lokey": 0,
+    "hikey": 45,
+    "pitch_keycenter": 42
+  },
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 048_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48
+  },
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 054_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54
+  },
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 060_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60
+  },
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 066_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66
+  },
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 072_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "loop_start": 2.6285714285714286,
+    "loop_end": 4.918344671201814,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": 1,
+    "sample": "DigiPad 078_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78
+  }
+]

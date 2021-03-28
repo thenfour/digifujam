@@ -1,0 +1,68 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\005_ElecPiano3.sfz.json
+Region count: 16
+Source samples to read: 1
+Dest samples to create: 16
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\MT-32-32K-v1-r65-Full-Hedsound_sf2\000\..\sf2_smpl.wav
+  Samplerate: 32000
+  Channels: 1
+  Length in samples: 259264712
+  Min offset       : 6657036
+  Max offset       : 13388145
+  Reflen in samples: 6731109
+  > Creating sf2_smpl_6657036_74073.wav from sf2_smpl.wav [6657036-6731109]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6657036_74073.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6657036_74073.m4a"
+  > Creating sf2_smpl_6805274_160119.wav from sf2_smpl.wav [6805274-6965393]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6805274_160119.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6805274_160119.m4a"
+  > Creating sf2_smpl_7125604_14099.wav from sf2_smpl.wav [7125604-7139703]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7125604_14099.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7125604_14099.m4a"
+  > Creating sf2_smpl_7153894_150130.wav from sf2_smpl.wav [7153894-7304024]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7153894_150130.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7153894_150130.m4a"
+  > Creating sf2_smpl_7454246_153554.wav from sf2_smpl.wav [7454246-7607800]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7454246_153554.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7454246_153554.m4a"
+  > Creating sf2_smpl_7761446_108797.wav from sf2_smpl.wav [7761446-7870243]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7761446_108797.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7761446_108797.m4a"
+  > Creating sf2_smpl_7979132_142256.wav from sf2_smpl.wav [7979132-8121388]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7979132_142256.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7979132_142256.m4a"
+  > Creating sf2_smpl_8263736_131672.wav from sf2_smpl.wav [8263736-8395408]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8263736_131672.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8263736_131672.m4a"
+  > Creating sf2_smpl_6731155_74073.wav from sf2_smpl.wav [6731155-6805228]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6731155_74073.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6731155_74073.m4a"
+  > Creating sf2_smpl_6965439_160119.wav from sf2_smpl.wav [6965439-7125558]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6965439_160119.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6965439_160119.m4a"
+  > Creating sf2_smpl_7139749_14099.wav from sf2_smpl.wav [7139749-7153848]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7139749_14099.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7139749_14099.m4a"
+  > Creating sf2_smpl_7304070_150130.wav from sf2_smpl.wav [7304070-7454200]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7304070_150130.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7304070_150130.m4a"
+  > Creating sf2_smpl_7607846_153554.wav from sf2_smpl.wav [7607846-7761400]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7607846_153554.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7607846_153554.m4a"
+  > Creating sf2_smpl_7870289_108797.wav from sf2_smpl.wav [7870289-7979086]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7870289_108797.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7870289_108797.m4a"
+  > Creating sf2_smpl_8121434_142256.wav from sf2_smpl.wav [8121434-8263690]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8121434_142256.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8121434_142256.m4a"
+  > Creating sf2_smpl_8395454_131672.wav from sf2_smpl.wav [8395454-8527126]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8395454_131672.wav" "C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8395454_131672.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7153894_150130.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7125604_14099.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6805274_160119.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6657036_74073.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7454246_153554.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7761446_108797.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6731155_74073.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7139749_14099.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7979132_142256.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_6965439_160119.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8263736_131672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7607846_153554.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7870289_108797.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_7304070_150130.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8121434_142256.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\005_ElecPiano3\sf2_smpl_8395454_131672.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_005_ElecPiano3",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/005_ElecPiano3/005_ElecPiano3.sfz.json",
+  "name": "005_ElecPiano3"
+}

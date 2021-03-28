@@ -1,0 +1,85 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck.sfz.json
+Region count: 6
+Source samples to read: 6
+Dest samples to create: 6
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Oxygene 2 Pluck\Oxygene 2 Pluck 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Oxygene 2 Pluck\Oxygene 2 Pluck 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Oxygene 2 Pluck\Oxygene 2 Pluck 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Oxygene 2 Pluck\Oxygene 2 Pluck 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Oxygene 2 Pluck\Oxygene 2 Pluck 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Oxygene 2 Pluck\Oxygene 2 Pluck 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 072.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 118581
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Oxygene 2 Pluck 042_0_end.wav from Oxygene 2 Pluck 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 119726
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Oxygene 2 Pluck 048_0_end.wav from Oxygene 2 Pluck 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 130763
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Oxygene 2 Pluck 060_0_end.wav from Oxygene 2 Pluck 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 117575
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Oxygene 2 Pluck 066_0_end.wav from Oxygene 2 Pluck 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 066_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 110006
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Oxygene 2 Pluck 054_0_end.wav from Oxygene 2 Pluck 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132374
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Oxygene 2 Pluck 072_0_end.wav from Oxygene 2 Pluck 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 072_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 066.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Oxygene 2 Pluck\Oxygene 2 Pluck 072.flac.wav
+Completed processing source WAV files with 6 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_Oxygene2Pluck",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Oxygene 2 Pluck/Oxygene 2 Pluck.sfz.json",
+  "name": "Oxygene 2 Pluck"
+}

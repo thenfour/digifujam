@@ -1,0 +1,104 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\046_Harp\046_Harp.sfz.json
+Region count: 252
+Source samples to read: 1
+Dest samples to create: 28
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\WolfGMv3_9_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 261596424
+  Min offset       : 151578902
+  Max offset       : 380230082
+  Reflen in samples: 228651180
+  > Creating sf2_smpl_190088057_53968.wav from sf2_smpl.wav [190088057-190142025]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_190088057_53968.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_190088057_53968.m4a"
+  > Creating sf2_smpl_190034057_53968.wav from sf2_smpl.wav [190034057-190088025]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_190034057_53968.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_190034057_53968.m4a"
+  > Creating sf2_smpl_189985849_48176.wav from sf2_smpl.wav [189985849-190034025]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189985849_48176.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189985849_48176.m4a"
+  > Creating sf2_smpl_189937641_48176.wav from sf2_smpl.wav [189937641-189985817]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189937641_48176.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189937641_48176.m4a"
+  > Creating sf2_smpl_189893099_44510.wav from sf2_smpl.wav [189893099-189937609]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189893099_44510.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189893099_44510.m4a"
+  > Creating sf2_smpl_189848557_44510.wav from sf2_smpl.wav [189848557-189893067]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189848557_44510.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189848557_44510.m4a"
+  > Creating sf2_smpl_189796141_52384.wav from sf2_smpl.wav [189796141-189848525]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189796141_52384.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189796141_52384.m4a"
+  > Creating sf2_smpl_189743725_52384.wav from sf2_smpl.wav [189743725-189796109]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189743725_52384.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189743725_52384.m4a"
+  > Creating sf2_smpl_189697997_45696.wav from sf2_smpl.wav [189697997-189743693]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189697997_45696.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189697997_45696.m4a"
+  > Creating sf2_smpl_189652269_45696.wav from sf2_smpl.wav [189652269-189697965]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189652269_45696.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189652269_45696.m4a"
+  > Creating sf2_smpl_189621221_31016.wav from sf2_smpl.wav [189621221-189652237]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189621221_31016.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189621221_31016.m4a"
+  > Creating sf2_smpl_189590173_31016.wav from sf2_smpl.wav [189590173-189621189]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189590173_31016.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189590173_31016.m4a"
+  > Creating sf2_smpl_189571145_18996.wav from sf2_smpl.wav [189571145-189590141]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189571145_18996.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189571145_18996.m4a"
+  > Creating sf2_smpl_189552117_18996.wav from sf2_smpl.wav [189552117-189571113]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189552117_18996.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189552117_18996.m4a"
+  > Creating sf2_smpl_189528777_23308.wav from sf2_smpl.wav [189528777-189552085]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189528777_23308.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189528777_23308.m4a"
+  > Creating sf2_smpl_189505437_23308.wav from sf2_smpl.wav [189505437-189528745]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189505437_23308.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189505437_23308.m4a"
+  > Creating sf2_smpl_189479517_25888.wav from sf2_smpl.wav [189479517-189505405]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189479517_25888.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189479517_25888.m4a"
+  > Creating sf2_smpl_189453597_25888.wav from sf2_smpl.wav [189453597-189479485]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189453597_25888.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189453597_25888.m4a"
+  > Creating sf2_smpl_189430301_23264.wav from sf2_smpl.wav [189430301-189453565]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189430301_23264.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189430301_23264.m4a"
+  > Creating sf2_smpl_189407005_23264.wav from sf2_smpl.wav [189407005-189430269]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189407005_23264.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189407005_23264.m4a"
+  > Creating sf2_smpl_189387849_19124.wav from sf2_smpl.wav [189387849-189406973]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189387849_19124.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189387849_19124.m4a"
+  > Creating sf2_smpl_151864882_19124.wav from sf2_smpl.wav [151864882-151884006]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151864882_19124.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151864882_19124.m4a"
+  > Creating sf2_smpl_151850202_14648.wav from sf2_smpl.wav [151850202-151864850]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151850202_14648.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151850202_14648.m4a"
+  > Creating sf2_smpl_151835522_14648.wav from sf2_smpl.wav [151835522-151850170]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151835522_14648.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151835522_14648.m4a"
+  > Creating sf2_smpl_151716540_11256.wav from sf2_smpl.wav [151716540-151727796]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151716540_11256.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151716540_11256.m4a"
+  > Creating sf2_smpl_151705252_11256.wav from sf2_smpl.wav [151705252-151716508]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151705252_11256.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151705252_11256.m4a"
+  > Creating sf2_smpl_151695924_9296.wav from sf2_smpl.wav [151695924-151705220]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151695924_9296.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151695924_9296.m4a"
+  > Creating sf2_smpl_151578902_9296.wav from sf2_smpl.wav [151578902-151588198]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151578902_9296.wav" "C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151578902_9296.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189528777_23308.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189552117_18996.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189571145_18996.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189590173_31016.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189697997_45696.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189652269_45696.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189621221_31016.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189743725_52384.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189796141_52384.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189848557_44510.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189893099_44510.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189985849_48176.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189937641_48176.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_190034057_53968.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_190088057_53968.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189479517_25888.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189505437_23308.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189453597_25888.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189407005_23264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189430301_23264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_189387849_19124.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151716540_11256.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151864882_19124.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151705252_11256.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151578902_9296.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151695924_9296.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151835522_14648.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\046_Harp\sf2_smpl_151850202_14648.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_046_Harp",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/046_Harp/046_Harp.sfz.json",
+  "name": "046_Harp"
+}

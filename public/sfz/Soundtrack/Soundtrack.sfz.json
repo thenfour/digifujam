@@ -1,0 +1,236 @@
+[
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 036 032_0_end.m4a",
+    "lokey": 0,
+    "hikey": 39,
+    "pitch_keycenter": 36,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 036 063_0_end.m4a",
+    "lokey": 0,
+    "hikey": 39,
+    "pitch_keycenter": 36,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 036 127_0_end.m4a",
+    "lokey": 0,
+    "hikey": 39,
+    "pitch_keycenter": 36,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 042 032_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 042 063_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 042 127_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 048 032_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 048 063_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 048 127_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 054 032_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 054 063_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 054 127_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 060 032_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 060 063_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 060 127_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 066 032_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 066 063_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 066 127_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 072 032_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 072 063_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 072 127_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 078 032_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 078 063_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 33,
+    "hivel": 63
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 078 127_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 64,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 084 032_0_end.m4a",
+    "lokey": 82,
+    "hikey": 127,
+    "pitch_keycenter": 84,
+    "lovel": 0,
+    "hivel": 32
+  },
+  {
+    "ampeg_release": 2,
+    "sample": "Soundtrack 084 063_0_end.m4a",
+    "lokey": 82,
+    "hikey": 127,
+    "pitch_keycenter": 84,
+    "lovel": 33,
+    "hivel": 63
+  }
+]

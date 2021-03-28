@@ -1,0 +1,68 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\048_Orchestra_Pad.sfz.json
+Region count: 16
+Source samples to read: 1
+Dest samples to create: 16
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\008\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 300111926
+  Max offset       : 852103787
+  Reflen in samples: 551991861
+  > Creating sf2_smpl_300241470_38686.wav from sf2_smpl.wav [300241470-300280156]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300241470_38686.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300241470_38686.m4a"
+  > Creating sf2_smpl_300660385_57474.wav from sf2_smpl.wav [300660385-300717859]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300660385_57474.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300660385_57474.m4a"
+  > Creating sf2_smpl_300195726_45721.wav from sf2_smpl.wav [300195726-300241447]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300195726_45721.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300195726_45721.m4a"
+  > Creating sf2_smpl_300617480_42882.wav from sf2_smpl.wav [300617480-300660362]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300617480_42882.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300617480_42882.m4a"
+  > Creating sf2_smpl_300159138_36565.wav from sf2_smpl.wav [300159138-300195703]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300159138_36565.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300159138_36565.m4a"
+  > Creating sf2_smpl_300577518_39939.wav from sf2_smpl.wav [300577518-300617457]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300577518_39939.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300577518_39939.m4a"
+  > Creating sf2_smpl_300131669_27446.wav from sf2_smpl.wav [300131669-300159115]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300131669_27446.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300131669_27446.m4a"
+  > Creating sf2_smpl_300554396_23099.wav from sf2_smpl.wav [300554396-300577495]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300554396_23099.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300554396_23099.m4a"
+  > Creating sf2_smpl_300111926_19720.wav from sf2_smpl.wav [300111926-300131646]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300111926_19720.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300111926_19720.m4a"
+  > Creating sf2_smpl_852032175_35783.wav from sf2_smpl.wav [852032175-852067958]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852032175_35783.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852032175_35783.m4a"
+  > Creating sf2_smpl_852067981_35783.wav from sf2_smpl.wav [852067981-852103764]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852067981_35783.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852067981_35783.m4a"
+  > Creating sf2_smpl_852103787_23108.wav from sf2_smpl.wav [852103787-852126895]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852103787_23108.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852103787_23108.m4a"
+  > Creating sf2_smpl_852009044_23108.wav from sf2_smpl.wav [852009044-852032152]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852009044_23108.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852009044_23108.m4a"
+  > Creating sf2_smpl_851986980_22041.wav from sf2_smpl.wav [851986980-852009021]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851986980_22041.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851986980_22041.m4a"
+  > Creating sf2_smpl_851959976_26981.wav from sf2_smpl.wav [851959976-851986957]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851959976_26981.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851959976_26981.m4a"
+  > Creating sf2_smpl_851949884_10069.wav from sf2_smpl.wav [851949884-851959953]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851949884_10069.wav" "C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851949884_10069.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300241470_38686.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300660385_57474.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300617480_42882.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300159138_36565.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300195726_45721.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300577518_39939.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300131669_27446.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300111926_19720.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852032175_35783.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_300554396_23099.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852067981_35783.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852103787_23108.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851949884_10069.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_852009044_23108.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851959976_26981.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\048_Orchestra_Pad\sf2_smpl_851986980_22041.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_048_Orchestra_Pad",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/048_Orchestra_Pad/048_Orchestra_Pad.sfz.json",
+  "name": "048_Orchestra_Pad"
+}

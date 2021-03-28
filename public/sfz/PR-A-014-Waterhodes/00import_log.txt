@@ -1,0 +1,133 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\PR-A-014-Waterhodes.sfz.json
+Region count: 10
+Source samples to read: 10
+Dest samples to create: 10
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 079.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 079.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 084.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 084.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Preset Bank A\PR-A-014-Waterhodes Samples\Waterhodes 091.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 091.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 272981
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 036_0_end.wav from Waterhodes 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 272951
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 055_0_end.wav from Waterhodes 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255321
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 067_0_end.wav from Waterhodes 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 272994
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 048_0_end.wav from Waterhodes 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 246495
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 060_0_end.wav from Waterhodes 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 079.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 264148
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 079_0_end.wav from Waterhodes 079.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 079_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 079_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 272991
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 043_0_end.wav from Waterhodes 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 084.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 264135
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 084_0_end.wav from Waterhodes 084.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 084_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 084_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255341
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 072_0_end.wav from Waterhodes 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 091.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255308
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Waterhodes 091_0_end.wav from Waterhodes 091.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 091_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 091_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 079_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 079.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 084_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 084.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 091_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-014-Waterhodes\Waterhodes 091.flac.wav
+Completed processing source WAV files with 10 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_PRA014Waterhodes",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/PR-A-014-Waterhodes/PR-A-014-Waterhodes.sfz.json",
+  "name": "PR-A-014-Waterhodes"
+}

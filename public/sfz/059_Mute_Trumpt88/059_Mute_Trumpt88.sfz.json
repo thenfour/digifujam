@@ -1,0 +1,25 @@
+[
+  {
+    "sample": "sf2_smpl_5747628_61075.m4a",
+    "lfo06_wave": 0,
+    "lfo06_pitch": 0,
+    "lfo06_pitch_oncc129": 50,
+    "lfo06_pitch_oncc1": 50,
+    "lfo06_freq": "5.0184",
+    "amplitude_oncc11": 100,
+    "amplitude_curvecc11": 7,
+    "lokey": 0,
+    "hikey": 127,
+    "loop_mode": "loop_continuous",
+    "ampeg_release": 0.500289,
+    "lfo07_wave": 0,
+    "lfo07_pitch": 15,
+    "lfo07_freq": "5.0184",
+    "lfo07_delay": "0.68302",
+    "pan": 0,
+    "pitch_keycenter": 67,
+    "tune": 8,
+    "loop_start": 0.9216553287981859,
+    "loop_end": 1.384716553287982
+  }
+]

@@ -1,0 +1,23 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\011_Vibraphone.sfz.json
+Region count: 1
+Source samples to read: 1
+Dest samples to create: 1
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Roland_SC-88_sf2\000\..\sf2_smpl.wav
+  Samplerate: 44100
+  Channels: 1
+  Length in samples: 11403488
+  Min offset       : 1413052
+  Max offset       : 2856627
+  Reflen in samples: 1443575
+  > Creating sf2_smpl_1413052_30523.wav from sf2_smpl.wav [1413052-1443575]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_1413052_30523.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_1413052_30523.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_1413052_30523.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_011_Vibraphone",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
+  "name": "011_Vibraphone"
+}

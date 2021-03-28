@@ -1,0 +1,181 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\XP-C-087-Gamelan-x4.sfz.json
+Region count: 14
+Source samples to read: 14
+Dest samples to create: 14
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 083.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 088.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 088.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 091.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 091.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 096.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 096.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-087-Gamelan-x4 Samples\Gamelan-x4 103.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 103.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 272959
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 036_0_end.wav from Gamelan-x4 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255328
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 058_0_end.wav from Gamelan-x4 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255341
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 068_0_end.wav from Gamelan-x4 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 281809
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 053_0_end.wav from Gamelan-x4 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 272992
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 048_0_end.wav from Gamelan-x4 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255323
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 043_0_end.wav from Gamelan-x4 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237716
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 078_0_end.wav from Gamelan-x4 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255313
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 063_0_end.wav from Gamelan-x4 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211217
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 083_0_end.wav from Gamelan-x4 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 083_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 096.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 175943
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 096_0_end.wav from Gamelan-x4 096.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 096_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 096_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 088.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 184763
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 088_0_end.wav from Gamelan-x4 088.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 088_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 088_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237707
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 073_0_end.wav from Gamelan-x4 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 073_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 036.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 103.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158308
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 103_0_end.wav from Gamelan-x4 103.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 103_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 103_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 091.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193588
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gamelan-x4 091_0_end.wav from Gamelan-x4 091.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 091_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 091_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 068.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 083.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 096_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 096.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 088_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 088.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 103_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 103.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 091_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-087-Gamelan-x4\Gamelan-x4 091.flac.wav
+Completed processing source WAV files with 14 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPC087Gamelanx4",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-C-087-Gamelan-x4/XP-C-087-Gamelan-x4.sfz.json",
+  "name": "XP-C-087-Gamelan-x4"
+}

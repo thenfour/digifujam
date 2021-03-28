@@ -1,0 +1,23 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\059_Mute_Trumpt88\059_Mute_Trumpt88.sfz.json
+Region count: 1
+Source samples to read: 1
+Dest samples to create: 1
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Roland_SC-88_sf2\000\..\sf2_smpl.wav
+  Samplerate: 44100
+  Channels: 1
+  Length in samples: 11403488
+  Min offset       : 5747628
+  Max offset       : 11556331
+  Reflen in samples: 5808703
+  > Creating sf2_smpl_5747628_61075.wav from sf2_smpl.wav [5747628-5808703]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\059_Mute_Trumpt88\sf2_smpl_5747628_61075.wav" "C:\root\git\thenfour\digifujam\public\sfz\059_Mute_Trumpt88\sf2_smpl_5747628_61075.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\059_Mute_Trumpt88\sf2_smpl_5747628_61075.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_059_Mute_Trumpt88",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/059_Mute_Trumpt88/059_Mute_Trumpt88.sfz.json",
+  "name": "059_Mute_Trumpt88"
+}

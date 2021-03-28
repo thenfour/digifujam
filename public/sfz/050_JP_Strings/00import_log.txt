@@ -1,0 +1,50 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\050_JP_Strings.sfz.json
+Region count: 20
+Source samples to read: 1
+Dest samples to create: 10
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\SGM-180_v1_5_sf2\003\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 91685996
+  Min offset       : 59721558
+  Max offset       : 120227104
+  Reflen in samples: 60505546
+  > Creating sf2_smpl_60069774_87556.wav from sf2_smpl.wav [60069774-60157330]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60069774_87556.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60069774_87556.m4a"
+  > Creating sf2_smpl_60157353_87556.wav from sf2_smpl.wav [60157353-60244909]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60157353_87556.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60157353_87556.m4a"
+  > Creating sf2_smpl_59937120_66304.wav from sf2_smpl.wav [59937120-60003424]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59937120_66304.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59937120_66304.m4a"
+  > Creating sf2_smpl_60003447_66304.wav from sf2_smpl.wav [60003447-60069751]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60003447_66304.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60003447_66304.m4a"
+  > Creating sf2_smpl_59836082_50496.wav from sf2_smpl.wav [59836082-59886578]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59836082_50496.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59836082_50496.m4a"
+  > Creating sf2_smpl_59886601_50496.wav from sf2_smpl.wav [59886601-59937097]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59886601_50496.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59886601_50496.m4a"
+  > Creating sf2_smpl_59774468_30784.wav from sf2_smpl.wav [59774468-59805252]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59774468_30784.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59774468_30784.m4a"
+  > Creating sf2_smpl_59805275_30784.wav from sf2_smpl.wav [59805275-59836059]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59805275_30784.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59805275_30784.m4a"
+  > Creating sf2_smpl_59721558_26432.wav from sf2_smpl.wav [59721558-59747990]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59721558_26432.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59721558_26432.m4a"
+  > Creating sf2_smpl_59748013_26432.wav from sf2_smpl.wav [59748013-59774445]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59748013_26432.wav" "C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59748013_26432.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60069774_87556.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60157353_87556.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59937120_66304.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59774468_30784.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59721558_26432.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59886601_50496.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_60003447_66304.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59836082_50496.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59805275_30784.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\050_JP_Strings\sf2_smpl_59748013_26432.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_050_JP_Strings",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/050_JP_Strings/050_JP_Strings.sfz.json",
+  "name": "050_JP_Strings"
+}

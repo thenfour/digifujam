@@ -1,0 +1,485 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\000_GS_STANDARD_1.sfz.json
+Region count: 178
+Source samples to read: 1
+Dest samples to create: 155
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\WolfGMv3_9_sf2\127\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 261596424
+  Min offset       : 0
+  Max offset       : 236320892
+  Reflen in samples: 236320892
+  > Creating sf2_smpl_9345414_28544.wav from sf2_smpl.wav [9345414-9373958]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9345414_28544.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9345414_28544.m4a"
+  > Creating sf2_smpl_9316838_28544.wav from sf2_smpl.wav [9316838-9345382]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9316838_28544.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9316838_28544.m4a"
+  > Creating sf2_smpl_9402566_28544.wav from sf2_smpl.wav [9402566-9431110]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9402566_28544.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9402566_28544.m4a"
+  > Creating sf2_smpl_9373990_28544.wav from sf2_smpl.wav [9373990-9402534]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9373990_28544.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9373990_28544.m4a"
+  > Creating sf2_smpl_21824114_15104.wav from sf2_smpl.wav [21824114-21839218]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21824114_15104.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21824114_15104.m4a"
+  > Creating sf2_smpl_21839250_15104.wav from sf2_smpl.wav [21839250-21854354]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21839250_15104.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21839250_15104.m4a"
+  > Creating sf2_smpl_21807186_16896.wav from sf2_smpl.wav [21807186-21824082]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21807186_16896.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21807186_16896.m4a"
+  > Creating sf2_smpl_21790258_16896.wav from sf2_smpl.wav [21790258-21807154]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21790258_16896.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21790258_16896.m4a"
+  > Creating sf2_smpl_46842565_130771.wav from sf2_smpl.wav [46842565-46973336]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46842565_130771.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46842565_130771.m4a"
+  > Creating sf2_smpl_55416547_179712.wav from sf2_smpl.wav [55416547-55596259]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55416547_179712.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55416547_179712.m4a"
+  > Creating sf2_smpl_235788647_86528.wav from sf2_smpl.wav [235788647-235875175]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235788647_86528.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235788647_86528.m4a"
+  > Creating sf2_smpl_235875207_86528.wav from sf2_smpl.wav [235875207-235961735]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235875207_86528.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235875207_86528.m4a"
+  > Creating sf2_smpl_30326170_77584.wav from sf2_smpl.wav [30326170-30403754]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30326170_77584.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30326170_77584.m4a"
+  > Creating sf2_smpl_47064024_155136.wav from sf2_smpl.wav [47064024-47219160]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_47064024_155136.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_47064024_155136.m4a"
+  > Creating sf2_smpl_46973368_90624.wav from sf2_smpl.wav [46973368-47063992]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46973368_90624.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46973368_90624.m4a"
+  > Creating sf2_smpl_0_end.wav from sf2_smpl.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_0_end.m4a"
+  > Creating sf2_smpl_280344_3361.wav from sf2_smpl.wav [280344-283705]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_280344_3361.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_280344_3361.m4a"
+  > Creating sf2_smpl_30403786_9691.wav from sf2_smpl.wav [30403786-30413477]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30403786_9691.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30403786_9691.m4a"
+  > Creating sf2_smpl_30413509_10716.wav from sf2_smpl.wav [30413509-30424225]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30413509_10716.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30413509_10716.m4a"
+  > Creating sf2_smpl_235961767_34816.wav from sf2_smpl.wav [235961767-235996583]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235961767_34816.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235961767_34816.m4a"
+  > Creating sf2_smpl_235996615_34816.wav from sf2_smpl.wav [235996615-236031431]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235996615_34816.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235996615_34816.m4a"
+  > Creating sf2_smpl_236031463_10688.wav from sf2_smpl.wav [236031463-236042151]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236031463_10688.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236031463_10688.m4a"
+  > Creating sf2_smpl_236042183_10688.wav from sf2_smpl.wav [236042183-236052871]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236042183_10688.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236042183_10688.m4a"
+  > Creating sf2_smpl_16524896_19968.wav from sf2_smpl.wav [16524896-16544864]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16524896_19968.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16524896_19968.m4a"
+  > Creating sf2_smpl_16544896_172.wav from sf2_smpl.wav [16544896-16545068]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16544896_172.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16544896_172.m4a"
+  > Creating sf2_smpl_236052903_16224.wav from sf2_smpl.wav [236052903-236069127]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236052903_16224.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236052903_16224.m4a"
+  > Creating sf2_smpl_236069159_16224.wav from sf2_smpl.wav [236069159-236085383]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236069159_16224.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236069159_16224.m4a"
+  > Creating sf2_smpl_236085415_29184.wav from sf2_smpl.wav [236085415-236114599]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236085415_29184.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236085415_29184.m4a"
+  > Creating sf2_smpl_236114631_29184.wav from sf2_smpl.wav [236114631-236143815]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236114631_29184.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236114631_29184.m4a"
+  > Creating sf2_smpl_465817_284928.wav from sf2_smpl.wav [465817-750745]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_465817_284928.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_465817_284928.m4a"
+  > Creating sf2_smpl_236143847_10784.wav from sf2_smpl.wav [236143847-236154631]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236143847_10784.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236143847_10784.m4a"
+  > Creating sf2_smpl_236154663_10784.wav from sf2_smpl.wav [236154663-236165447]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236154663_10784.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236154663_10784.m4a"
+  > Creating sf2_smpl_55050649_7040.wav from sf2_smpl.wav [55050649-55057689]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55050649_7040.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55050649_7040.m4a"
+  > Creating sf2_smpl_236165479_35072.wav from sf2_smpl.wav [236165479-236200551]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236165479_35072.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236165479_35072.m4a"
+  > Creating sf2_smpl_236200583_35072.wav from sf2_smpl.wav [236200583-236235655]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236200583_35072.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236200583_35072.m4a"
+  > Creating sf2_smpl_55063113_57926.wav from sf2_smpl.wav [55063113-55121039]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55063113_57926.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55063113_57926.m4a"
+  > Creating sf2_smpl_55057721_5360.wav from sf2_smpl.wav [55057721-55063081]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55057721_5360.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55057721_5360.m4a"
+  > Creating sf2_smpl_842617_11744.wav from sf2_smpl.wav [842617-854361]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_842617_11744.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_842617_11744.m4a"
+  > Creating sf2_smpl_16545100_12096.wav from sf2_smpl.wav [16545100-16557196]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16545100_12096.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16545100_12096.m4a"
+  > Creating sf2_smpl_16584524_27264.wav from sf2_smpl.wav [16584524-16611788]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16584524_27264.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16584524_27264.m4a"
+  > Creating sf2_smpl_16557228_27264.wav from sf2_smpl.wav [16557228-16584492]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16557228_27264.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16557228_27264.m4a"
+  > Creating sf2_smpl_16633612_21760.wav from sf2_smpl.wav [16633612-16655372]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16633612_21760.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16633612_21760.m4a"
+  > Creating sf2_smpl_16611820_21760.wav from sf2_smpl.wav [16611820-16633580]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16611820_21760.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16611820_21760.m4a"
+  > Creating sf2_smpl_16779752_27584.wav from sf2_smpl.wav [16779752-16807336]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16779752_27584.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16779752_27584.m4a"
+  > Creating sf2_smpl_16752136_27584.wav from sf2_smpl.wav [16752136-16779720]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16752136_27584.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16752136_27584.m4a"
+  > Creating sf2_smpl_16677038_21602.wav from sf2_smpl.wav [16677038-16698640]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16677038_21602.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16677038_21602.m4a"
+  > Creating sf2_smpl_16655404_21602.wav from sf2_smpl.wav [16655404-16677006]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16655404_21602.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16655404_21602.m4a"
+  > Creating sf2_smpl_16725404_26700.wav from sf2_smpl.wav [16725404-16752104]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16725404_26700.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16725404_26700.m4a"
+  > Creating sf2_smpl_16698672_26700.wav from sf2_smpl.wav [16698672-16725372]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16698672_26700.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16698672_26700.m4a"
+  > Creating sf2_smpl_16508480_16384.wav from sf2_smpl.wav [16508480-16524864]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16508480_16384.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16508480_16384.m4a"
+  > Creating sf2_smpl_3397873_77115.wav from sf2_smpl.wav [3397873-3474988]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3397873_77115.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3397873_77115.m4a"
+  > Creating sf2_smpl_3320726_77115.wav from sf2_smpl.wav [3320726-3397841]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3320726_77115.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3320726_77115.m4a"
+  > Creating sf2_smpl_3611142_37241.wav from sf2_smpl.wav [3611142-3648383]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3611142_37241.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3611142_37241.m4a"
+  > Creating sf2_smpl_42382276_11696.wav from sf2_smpl.wav [42382276-42393972]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42382276_11696.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42382276_11696.m4a"
+  > Creating sf2_smpl_42368116_14128.wav from sf2_smpl.wav [42368116-42382244]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42368116_14128.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42368116_14128.m4a"
+  > Creating sf2_smpl_42303428_64656.wav from sf2_smpl.wav [42303428-42368084]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42303428_64656.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42303428_64656.m4a"
+  > Creating sf2_smpl_16807368_36135.wav from sf2_smpl.wav [16807368-16843503]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16807368_36135.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16807368_36135.m4a"
+  > Creating sf2_smpl_16843535_83748.wav from sf2_smpl.wav [16843535-16927283]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16843535_83748.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16843535_83748.m4a"
+  > Creating sf2_smpl_16927315_22805.wav from sf2_smpl.wav [16927315-16950120]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16927315_22805.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16927315_22805.m4a"
+  > Creating sf2_smpl_16950152_22464.wav from sf2_smpl.wav [16950152-16972616]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16950152_22464.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16950152_22464.m4a"
+  > Creating sf2_smpl_16972648_8416.wav from sf2_smpl.wav [16972648-16981064]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16972648_8416.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16972648_8416.m4a"
+  > Creating sf2_smpl_17035092_34271.wav from sf2_smpl.wav [17035092-17069363]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17035092_34271.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17035092_34271.m4a"
+  > Creating sf2_smpl_16981096_53964.wav from sf2_smpl.wav [16981096-17035060]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16981096_53964.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16981096_53964.m4a"
+  > Creating sf2_smpl_17069395_15530.wav from sf2_smpl.wav [17069395-17084925]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17069395_15530.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17069395_15530.m4a"
+  > Creating sf2_smpl_17084957_29110.wav from sf2_smpl.wav [17084957-17114067]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17084957_29110.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17084957_29110.m4a"
+  > Creating sf2_smpl_17114099_22848.wav from sf2_smpl.wav [17114099-17136947]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17114099_22848.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17114099_22848.m4a"
+  > Creating sf2_smpl_17136979_23854.wav from sf2_smpl.wav [17136979-17160833]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17136979_23854.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17136979_23854.m4a"
+  > Creating sf2_smpl_17160865_21069.wav from sf2_smpl.wav [17160865-17181934]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17160865_21069.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17160865_21069.m4a"
+  > Creating sf2_smpl_17181966_33360.wav from sf2_smpl.wav [17181966-17215326]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17181966_33360.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17181966_33360.m4a"
+  > Creating sf2_smpl_17215358_32316.wav from sf2_smpl.wav [17215358-17247674]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17215358_32316.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17215358_32316.m4a"
+  > Creating sf2_smpl_17247706_7552.wav from sf2_smpl.wav [17247706-17255258]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17247706_7552.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17247706_7552.m4a"
+  > Creating sf2_smpl_46831259_11274.wav from sf2_smpl.wav [46831259-46842533]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46831259_11274.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46831259_11274.m4a"
+  > Creating sf2_smpl_40484387_75264.wav from sf2_smpl.wav [40484387-40559651]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40484387_75264.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40484387_75264.m4a"
+  > Creating sf2_smpl_15202592_17408.wav from sf2_smpl.wav [15202592-15220000]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_15202592_17408.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_15202592_17408.m4a"
+  > Creating sf2_smpl_47656588_1316.wav from sf2_smpl.wav [47656588-47657904]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_47656588_1316.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_47656588_1316.m4a"
+  > Creating sf2_smpl_41742580_60272.wav from sf2_smpl.wav [41742580-41802852]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41742580_60272.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41742580_60272.m4a"
+  > Creating sf2_smpl_41682276_60272.wav from sf2_smpl.wav [41682276-41742548]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41682276_60272.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41682276_60272.m4a"
+  > Creating sf2_smpl_41612116_70128.wav from sf2_smpl.wav [41612116-41682244]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41612116_70128.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41612116_70128.m4a"
+  > Creating sf2_smpl_41541956_70128.wav from sf2_smpl.wav [41541956-41612084]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41541956_70128.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41541956_70128.m4a"
+  > Creating sf2_smpl_41469492_72432.wav from sf2_smpl.wav [41469492-41541924]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41469492_72432.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41469492_72432.m4a"
+  > Creating sf2_smpl_41397028_72432.wav from sf2_smpl.wav [41397028-41469460]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41397028_72432.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41397028_72432.m4a"
+  > Creating sf2_smpl_41901476_61296.wav from sf2_smpl.wav [41901476-41962772]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41901476_61296.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41901476_61296.m4a"
+  > Creating sf2_smpl_41962804_61296.wav from sf2_smpl.wav [41962804-42024100]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41962804_61296.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41962804_61296.m4a"
+  > Creating sf2_smpl_41802884_49264.wav from sf2_smpl.wav [41802884-41852148]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41802884_49264.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41802884_49264.m4a"
+  > Creating sf2_smpl_41852180_49264.wav from sf2_smpl.wav [41852180-41901444]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41852180_49264.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41852180_49264.m4a"
+  > Creating sf2_smpl_42024132_39856.wav from sf2_smpl.wav [42024132-42063988]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42024132_39856.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42024132_39856.m4a"
+  > Creating sf2_smpl_42064020_39856.wav from sf2_smpl.wav [42064020-42103876]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42064020_39856.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42064020_39856.m4a"
+  > Creating sf2_smpl_48980366_10208.wav from sf2_smpl.wav [48980366-48990574]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_48980366_10208.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_48980366_10208.m4a"
+  > Creating sf2_smpl_1212948_18560.wav from sf2_smpl.wav [1212948-1231508]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1212948_18560.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1212948_18560.m4a"
+  > Creating sf2_smpl_1162104_37228.wav from sf2_smpl.wav [1162104-1199332]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1162104_37228.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1162104_37228.m4a"
+  > Creating sf2_smpl_48990606_5280.wav from sf2_smpl.wav [48990606-48995886]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_48990606_5280.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_48990606_5280.m4a"
+  > Creating sf2_smpl_49154407_11808.wav from sf2_smpl.wav [49154407-49166215]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49154407_11808.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49154407_11808.m4a"
+  > Creating sf2_smpl_40645769_11260.wav from sf2_smpl.wav [40645769-40657029]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40645769_11260.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40645769_11260.m4a"
+  > Creating sf2_smpl_40948068_19411.wav from sf2_smpl.wav [40948068-40967479]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40948068_19411.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40948068_19411.m4a"
+  > Creating sf2_smpl_40928625_19411.wav from sf2_smpl.wav [40928625-40948036]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40928625_19411.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40928625_19411.m4a"
+  > Creating sf2_smpl_40905033_23560.wav from sf2_smpl.wav [40905033-40928593]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40905033_23560.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40905033_23560.m4a"
+  > Creating sf2_smpl_40881441_23560.wav from sf2_smpl.wav [40881441-40905001]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40881441_23560.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40881441_23560.m4a"
+  > Creating sf2_smpl_21993134_17792.wav from sf2_smpl.wav [21993134-22010926]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21993134_17792.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21993134_17792.m4a"
+  > Creating sf2_smpl_21975310_17792.wav from sf2_smpl.wav [21975310-21993102]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21975310_17792.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21975310_17792.m4a"
+  > Creating sf2_smpl_21957166_18112.wav from sf2_smpl.wav [21957166-21975278]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21957166_18112.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21957166_18112.m4a"
+  > Creating sf2_smpl_21939022_18112.wav from sf2_smpl.wav [21939022-21957134]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21939022_18112.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21939022_18112.m4a"
+  > Creating sf2_smpl_46803035_14080.wav from sf2_smpl.wav [46803035-46817115]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46803035_14080.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46803035_14080.m4a"
+  > Creating sf2_smpl_46817147_14080.wav from sf2_smpl.wav [46817147-46831227]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46817147_14080.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46817147_14080.m4a"
+  > Creating sf2_smpl_46780135_11418.wav from sf2_smpl.wav [46780135-46791553]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46780135_11418.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46780135_11418.m4a"
+  > Creating sf2_smpl_46791585_11418.wav from sf2_smpl.wav [46791585-46803003]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46791585_11418.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46791585_11418.m4a"
+  > Creating sf2_smpl_21918176_20814.wav from sf2_smpl.wav [21918176-21938990]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21918176_20814.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21918176_20814.m4a"
+  > Creating sf2_smpl_21897330_20814.wav from sf2_smpl.wav [21897330-21918144]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21897330_20814.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21897330_20814.m4a"
+  > Creating sf2_smpl_21875858_21440.wav from sf2_smpl.wav [21875858-21897298]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21875858_21440.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21875858_21440.m4a"
+  > Creating sf2_smpl_21854386_21440.wav from sf2_smpl.wav [21854386-21875826]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21854386_21440.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21854386_21440.m4a"
+  > Creating sf2_smpl_236235687_12768.wav from sf2_smpl.wav [236235687-236248455]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236235687_12768.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236235687_12768.m4a"
+  > Creating sf2_smpl_236248487_12768.wav from sf2_smpl.wav [236248487-236261255]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236248487_12768.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236248487_12768.m4a"
+  > Creating sf2_smpl_27840917_21987.wav from sf2_smpl.wav [27840917-27862904]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27840917_21987.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27840917_21987.m4a"
+  > Creating sf2_smpl_27818898_21987.wav from sf2_smpl.wav [27818898-27840885]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27818898_21987.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27818898_21987.m4a"
+  > Creating sf2_smpl_27812006_6860.wav from sf2_smpl.wav [27812006-27818866]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27812006_6860.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27812006_6860.m4a"
+  > Creating sf2_smpl_27805114_6860.wav from sf2_smpl.wav [27805114-27811974]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27805114_6860.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27805114_6860.m4a"
+  > Creating sf2_smpl_49147134_7241.wav from sf2_smpl.wav [49147134-49154375]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49147134_7241.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49147134_7241.m4a"
+  > Creating sf2_smpl_49139861_7241.wav from sf2_smpl.wav [49139861-49147102]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49139861_7241.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49139861_7241.m4a"
+  > Creating sf2_smpl_40452867_31488.wav from sf2_smpl.wav [40452867-40484355]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40452867_31488.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40452867_31488.m4a"
+  > Creating sf2_smpl_40421347_31488.wav from sf2_smpl.wav [40421347-40452835]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40421347_31488.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40421347_31488.m4a"
+  > Creating sf2_smpl_236261287_8500.wav from sf2_smpl.wav [236261287-236269787]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236261287_8500.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236261287_8500.m4a"
+  > Creating sf2_smpl_236269819_8500.wav from sf2_smpl.wav [236269819-236278319]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236269819_8500.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236269819_8500.m4a"
+  > Creating sf2_smpl_1077425_10879.wav from sf2_smpl.wav [1077425-1088304]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1077425_10879.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1077425_10879.m4a"
+  > Creating sf2_smpl_1066514_10879.wav from sf2_smpl.wav [1066514-1077393]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1066514_10879.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1066514_10879.m4a"
+  > Creating sf2_smpl_1206156_6760.wav from sf2_smpl.wav [1206156-1212916]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1206156_6760.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1206156_6760.m4a"
+  > Creating sf2_smpl_1199364_6760.wav from sf2_smpl.wav [1199364-1206124]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1199364_6760.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1199364_6760.m4a"
+  > Creating sf2_smpl_1387108_5841.wav from sf2_smpl.wav [1387108-1392949]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1387108_5841.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1387108_5841.m4a"
+  > Creating sf2_smpl_1381235_5841.wav from sf2_smpl.wav [1381235-1387076]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1381235_5841.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1381235_5841.m4a"
+  > Creating sf2_smpl_20772203_32208.wav from sf2_smpl.wav [20772203-20804411]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_20772203_32208.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_20772203_32208.m4a"
+  > Creating sf2_smpl_20739963_32208.wav from sf2_smpl.wav [20739963-20772171]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_20739963_32208.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_20739963_32208.m4a"
+  > Creating sf2_smpl_44876189_31405.wav from sf2_smpl.wav [44876189-44907594]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_44876189_31405.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_44876189_31405.m4a"
+  > Creating sf2_smpl_44844752_31405.wav from sf2_smpl.wav [44844752-44876157]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_44844752_31405.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_44844752_31405.m4a"
+  > Creating sf2_smpl_236278351_12679.wav from sf2_smpl.wav [236278351-236291030]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236278351_12679.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236278351_12679.m4a"
+  > Creating sf2_smpl_236291062_12679.wav from sf2_smpl.wav [236291062-236303741]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236291062_12679.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236291062_12679.m4a"
+  > Creating sf2_smpl_49166247_17087.wav from sf2_smpl.wav [49166247-49183334]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49166247_17087.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49166247_17087.m4a"
+  > Creating sf2_smpl_236303773_17087.wav from sf2_smpl.wav [236303773-236320860]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236303773_17087.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236303773_17087.m4a"
+  > Creating sf2_smpl_46749586_30517.wav from sf2_smpl.wav [46749586-46780103]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46749586_30517.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46749586_30517.m4a"
+  > Creating sf2_smpl_46719037_30517.wav from sf2_smpl.wav [46719037-46749554]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46719037_30517.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46719037_30517.m4a"
+  > Creating sf2_smpl_46691805_27200.wav from sf2_smpl.wav [46691805-46719005]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46691805_27200.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46691805_27200.m4a"
+  > Creating sf2_smpl_46664573_27200.wav from sf2_smpl.wav [46664573-46691773]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46664573_27200.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46664573_27200.m4a"
+  > Creating sf2_smpl_22223792_33664.wav from sf2_smpl.wav [22223792-22257456]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22223792_33664.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22223792_33664.m4a"
+  > Creating sf2_smpl_22190096_33664.wav from sf2_smpl.wav [22190096-22223760]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22190096_33664.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22190096_33664.m4a"
+  > Creating sf2_smpl_1122500_24892.wav from sf2_smpl.wav [1122500-1147392]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1122500_24892.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1122500_24892.m4a"
+  > Creating sf2_smpl_1097576_24892.wav from sf2_smpl.wav [1097576-1122468]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1097576_24892.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1097576_24892.m4a"
+  > Creating sf2_smpl_22291352_33832.wav from sf2_smpl.wav [22291352-22325184]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22291352_33832.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22291352_33832.m4a"
+  > Creating sf2_smpl_236320892_33832.wav from sf2_smpl.wav [236320892-236354724]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236320892_33832.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236320892_33832.m4a"
+  > Creating sf2_smpl_22140136_21402.wav from sf2_smpl.wav [22140136-22161538]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22140136_21402.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22140136_21402.m4a"
+  > Creating sf2_smpl_22118702_21402.wav from sf2_smpl.wav [22118702-22140104]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22118702_21402.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22118702_21402.m4a"
+  > Creating sf2_smpl_22175833_14231.wav from sf2_smpl.wav [22175833-22190064]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22175833_14231.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22175833_14231.m4a"
+  > Creating sf2_smpl_22161570_14231.wav from sf2_smpl.wav [22161570-22175801]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22161570_14231.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22161570_14231.m4a"
+  > Creating sf2_smpl_1154764_7308.wav from sf2_smpl.wav [1154764-1162072]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1154764_7308.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1154764_7308.m4a"
+  > Creating sf2_smpl_1147424_7308.wav from sf2_smpl.wav [1147424-1154732]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1147424_7308.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1147424_7308.m4a"
+  > Creating sf2_smpl_41047341_26486.wav from sf2_smpl.wav [41047341-41073827]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41047341_26486.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41047341_26486.m4a"
+  > Creating sf2_smpl_41020823_26486.wav from sf2_smpl.wav [41020823-41047309]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41020823_26486.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41020823_26486.m4a"
+  > Creating sf2_smpl_40994167_26624.wav from sf2_smpl.wav [40994167-41020791]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40994167_26624.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40994167_26624.m4a"
+  > Creating sf2_smpl_40967511_26624.wav from sf2_smpl.wav [40967511-40994135]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40967511_26624.wav" "C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40967511_26624.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16508480_16384.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16725404_26700.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16698672_26700.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16779752_27584.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16655404_21602.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16677038_21602.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16752136_27584.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16611820_21760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16633612_21760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16557228_27264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16584524_27264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16545100_12096.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55057721_5360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_842617_11744.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236200583_35072.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55063113_57926.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55050649_7040.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236165479_35072.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236114631_29184.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236154663_10784.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236143847_10784.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_465817_284928.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236069159_16224.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236085415_29184.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16544896_172.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236052903_16224.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16524896_19968.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236042183_10688.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236031463_10688.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30413509_10716.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235996615_34816.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235961767_34816.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30403786_9691.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_280344_3361.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46973368_90624.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_30326170_77584.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235875207_86528.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_47064024_155136.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_235788647_86528.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21824114_15104.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_55416547_179712.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46842565_130771.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21790258_16896.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9402566_28544.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21839250_15104.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9373990_28544.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21807186_16896.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9316838_28544.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_9345414_28544.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40881441_23560.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40905033_23560.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40948068_19411.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40928625_19411.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_48990606_5280.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40645769_11260.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49154407_11808.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1162104_37228.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1212948_18560.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_48980366_10208.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42064020_39856.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42024132_39856.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41852180_49264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41802884_49264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41962804_61296.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41901476_61296.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41397028_72432.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41469492_72432.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41612116_70128.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41541956_70128.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41742580_60272.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41682276_60272.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_15202592_17408.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_47656588_1316.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46831259_11274.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40484387_75264.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17247706_7552.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17084957_29110.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17215358_32316.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17181966_33360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17160865_21069.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17136979_23854.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17114099_22848.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17069395_15530.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16972648_8416.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16981096_53964.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_17035092_34271.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16843535_83748.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16950152_22464.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16927315_22805.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_16807368_36135.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42303428_64656.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42382276_11696.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_42368116_14128.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3611142_37241.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3320726_77115.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_3397873_77115.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46664573_27200.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46691805_27200.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46719037_30517.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236303773_17087.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49166247_17087.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236291062_12679.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236278351_12679.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_44876189_31405.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_44844752_31405.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_20739963_32208.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1381235_5841.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1387108_5841.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_20772203_32208.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1206156_6760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1199364_6760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1066514_10879.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1077425_10879.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236269819_8500.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236261287_8500.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40421347_31488.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49139861_7241.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40452867_31488.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_49147134_7241.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27805114_6860.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27812006_6860.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27840917_21987.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_27818898_21987.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236248487_12768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236235687_12768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21875858_21440.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21854386_21440.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21897330_20814.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46791585_11418.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21918176_20814.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46780135_11418.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21975310_17792.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46817147_14080.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46803035_14080.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21939022_18112.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21957166_18112.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_21993134_17792.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1154764_7308.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40994167_26624.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_40967511_26624.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41020823_26486.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_41047341_26486.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22161570_14231.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1147424_7308.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22118702_21402.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22140136_21402.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22175833_14231.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_236320892_33832.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22291352_33832.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1097576_24892.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_1122500_24892.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_46749586_30517.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22190096_33664.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_22223792_33664.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\000_GS_STANDARD_1\sf2_smpl_0_end.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_000_GS_STANDARD_1",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/000_GS_STANDARD_1/000_GS_STANDARD_1.sfz.json",
+  "name": "000_GS_STANDARD_1"
+}

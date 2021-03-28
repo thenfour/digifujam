@@ -1,0 +1,26 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\094_Halo_Padx.sfz.json
+Region count: 2
+Source samples to read: 1
+Dest samples to create: 2
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\WolfGMv3_9_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 261596424
+  Min offset       : 36218702
+  Max offset       : 72575156
+  Reflen in samples: 36356454
+  > Creating sf2_smpl_36264630_45896.wav from sf2_smpl.wav [36264630-36310526]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\sf2_smpl_36264630_45896.wav" "C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\sf2_smpl_36264630_45896.m4a"
+  > Creating sf2_smpl_36218702_45896.wav from sf2_smpl.wav [36218702-36264598]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\sf2_smpl_36218702_45896.wav" "C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\sf2_smpl_36218702_45896.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\sf2_smpl_36264630_45896.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\094_Halo_Padx\sf2_smpl_36218702_45896.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_094_Halo_Padx",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/094_Halo_Padx/094_Halo_Padx.sfz.json",
+  "name": "094_Halo_Padx"
+}

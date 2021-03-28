@@ -1,0 +1,41 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\026_Jazz_Guitar.sfz.json
+Region count: 7
+Source samples to read: 1
+Dest samples to create: 7
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\SGM-180_v1_5_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 91685996
+  Min offset       : 34657924
+  Max offset       : 69801756
+  Reflen in samples: 35143832
+  > Creating sf2_smpl_34878734_44288.wav from sf2_smpl.wav [34878734-34923022]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34878734_44288.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34878734_44288.m4a"
+  > Creating sf2_smpl_34834551_44160.wav from sf2_smpl.wav [34834551-34878711]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34834551_44160.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34834551_44160.m4a"
+  > Creating sf2_smpl_34799072_35456.wav from sf2_smpl.wav [34799072-34834528]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34799072_35456.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34799072_35456.m4a"
+  > Creating sf2_smpl_34763657_35392.wav from sf2_smpl.wav [34763657-34799049]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34763657_35392.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34763657_35392.m4a"
+  > Creating sf2_smpl_34732658_30976.wav from sf2_smpl.wav [34732658-34763634]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34732658_30976.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34732658_30976.m4a"
+  > Creating sf2_smpl_34692827_39808.wav from sf2_smpl.wav [34692827-34732635]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34692827_39808.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34692827_39808.m4a"
+  > Creating sf2_smpl_34657924_34880.wav from sf2_smpl.wav [34657924-34692804]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34657924_34880.wav" "C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34657924_34880.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34763657_35392.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34799072_35456.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34878734_44288.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34732658_30976.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34834551_44160.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34657924_34880.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\026_Jazz_Guitar\sf2_smpl_34692827_39808.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_026_Jazz_Guitar",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/026_Jazz_Guitar/026_Jazz_Guitar.sfz.json",
+  "name": "026_Jazz_Guitar"
+}

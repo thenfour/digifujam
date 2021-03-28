@@ -1,0 +1,44 @@
+[
+  {
+    "ampeg_release": 0.3,
+    "sample": "Nylonsphere 042_0_end.m4a",
+    "pitch_keycenter": 42,
+    "lokey": 0,
+    "hikey": 44
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Nylonsphere 048_0_end.m4a",
+    "pitch_keycenter": 48,
+    "lokey": 45,
+    "hikey": 50
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Nylonsphere 054_0_end.m4a",
+    "pitch_keycenter": 54,
+    "lokey": 51,
+    "hikey": 56
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Nylonsphere 060_0_end.m4a",
+    "pitch_keycenter": 60,
+    "lokey": 57,
+    "hikey": 62
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Nylonsphere 066_0_end.m4a",
+    "pitch_keycenter": 66,
+    "lokey": 63,
+    "hikey": 68
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Nylonsphere 072_0_end.m4a",
+    "pitch_keycenter": 72,
+    "lokey": 69,
+    "hikey": 74
+  }
+]

@@ -1,0 +1,325 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack.sfz.json
+Region count: 26
+Source samples to read: 26
+Dest samples to create: 26
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 036 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 036 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 036 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 042 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 042 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 042 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 048 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 048 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 048 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 054 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 054 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 054 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 060 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 060 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 060 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 066 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 066 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 066 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 072 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 072 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 072 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 078 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 078 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 078 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 084 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\D-50\Soundtrack\Soundtrack 084 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 063.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 590940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 036 127_0_end.wav from Soundtrack 036 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 527846
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 036 063_0_end.wav from Soundtrack 036 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 485100
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 036 032_0_end.wav from Soundtrack 036 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 546840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 042 063_0_end.wav from Soundtrack 042 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 723240
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 048 127_0_end.wav from Soundtrack 048 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 555660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 042 032_0_end.wav from Soundtrack 042 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 643860
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 042 127_0_end.wav from Soundtrack 042 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 617400
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 084 032_0_end.wav from Soundtrack 084 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 617400
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 072 063_0_end.wav from Soundtrack 072 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 643860
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 048 032_0_end.wav from Soundtrack 048 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 661500
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 066 032_0_end.wav from Soundtrack 066 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 661500
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 066 063_0_end.wav from Soundtrack 066 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 696780
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 066 127_0_end.wav from Soundtrack 066 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 635040
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 054 063_0_end.wav from Soundtrack 054 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 652680
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 084 063_0_end.wav from Soundtrack 084 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 582120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 054 032_0_end.wav from Soundtrack 054 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 661500
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 060 063_0_end.wav from Soundtrack 060 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 590940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 078 063_0_end.wav from Soundtrack 078 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 564480
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 072 032_0_end.wav from Soundtrack 072 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 521728
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 072 127_0_end.wav from Soundtrack 072 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 652680
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 060 032_0_end.wav from Soundtrack 060 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 679140
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 054 127_0_end.wav from Soundtrack 054 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 652680
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 078 127_0_end.wav from Soundtrack 078 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 661500
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 048 063_0_end.wav from Soundtrack 048 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 590940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 078 032_0_end.wav from Soundtrack 078 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 723240
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Soundtrack 060 127_0_end.wav from Soundtrack 060 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 127_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 036 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 066 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 084 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 042 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 072 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 054 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 048 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 078 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Soundtrack\Soundtrack 060 127.flac.wav
+Completed processing source WAV files with 26 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_Soundtrack",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Soundtrack/Soundtrack.sfz.json",
+  "name": "Soundtrack"
+}

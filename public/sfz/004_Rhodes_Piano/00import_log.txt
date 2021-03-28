@@ -1,0 +1,215 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\004_Rhodes_Piano.sfz.json
+Region count: 75
+Source samples to read: 1
+Dest samples to create: 65
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 86566228
+  Max offset       : 173953146
+  Reflen in samples: 87386918
+  > Creating sf2_smpl_86566228_820690.wav from sf2_smpl.wav [86566228-87386918]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_86566228_820690.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_86566228_820690.m4a"
+  > Creating sf2_smpl_87386941_1014689.wav from sf2_smpl.wav [87386941-88401630]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_87386941_1014689.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_87386941_1014689.m4a"
+  > Creating sf2_smpl_88401653_1084961.wav from sf2_smpl.wav [88401653-89486614]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_88401653_1084961.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_88401653_1084961.m4a"
+  > Creating sf2_smpl_89486637_1102685.wav from sf2_smpl.wav [89486637-90589322]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_89486637_1102685.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_89486637_1102685.m4a"
+  > Creating sf2_smpl_90589345_908634.wav from sf2_smpl.wav [90589345-91497979]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_90589345_908634.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_90589345_908634.m4a"
+  > Creating sf2_smpl_91498002_899708.wav from sf2_smpl.wav [91498002-92397710]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_91498002_899708.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_91498002_899708.m4a"
+  > Creating sf2_smpl_92397733_776180.wav from sf2_smpl.wav [92397733-93173913]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_92397733_776180.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_92397733_776180.m4a"
+  > Creating sf2_smpl_93173936_785224.wav from sf2_smpl.wav [93173936-93959160]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_93173936_785224.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_93173936_785224.m4a"
+  > Creating sf2_smpl_93959183_661519.wav from sf2_smpl.wav [93959183-94620702]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_93959183_661519.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_93959183_661519.m4a"
+  > Creating sf2_smpl_94620725_564493.wav from sf2_smpl.wav [94620725-95185218]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_94620725_564493.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_94620725_564493.m4a"
+  > Creating sf2_smpl_95185241_229501.wav from sf2_smpl.wav [95185241-95414742]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95185241_229501.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95185241_229501.m4a"
+  > Creating sf2_smpl_95414765_370466.wav from sf2_smpl.wav [95414765-95785231]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95414765_370466.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95414765_370466.m4a"
+  > Creating sf2_smpl_95785254_317536.wav from sf2_smpl.wav [95785254-96102790]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95785254_317536.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95785254_317536.m4a"
+  > Creating sf2_smpl_96102813_158784.wav from sf2_smpl.wav [96102813-96261597]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96102813_158784.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96102813_158784.m4a"
+  > Creating sf2_smpl_96261620_61783.wav from sf2_smpl.wav [96261620-96323403]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96261620_61783.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96261620_61783.m4a"
+  > Creating sf2_smpl_96323426_617513.wav from sf2_smpl.wav [96323426-96940939]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96323426_617513.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96323426_617513.m4a"
+  > Creating sf2_smpl_96940962_714706.wav from sf2_smpl.wav [96940962-97655668]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96940962_714706.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96940962_714706.m4a"
+  > Creating sf2_smpl_97655691_837948.wav from sf2_smpl.wav [97655691-98493639]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_97655691_837948.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_97655691_837948.m4a"
+  > Creating sf2_smpl_98493662_820481.wav from sf2_smpl.wav [98493662-99314143]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_98493662_820481.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_98493662_820481.m4a"
+  > Creating sf2_smpl_99314166_785088.wav from sf2_smpl.wav [99314166-100099254]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_99314166_785088.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_99314166_785088.m4a"
+  > Creating sf2_smpl_100099277_882022.wav from sf2_smpl.wav [100099277-100981299]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_100099277_882022.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_100099277_882022.m4a"
+  > Creating sf2_smpl_100981322_661521.wav from sf2_smpl.wav [100981322-101642843]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_100981322_661521.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_100981322_661521.m4a"
+  > Creating sf2_smpl_101642866_705607.wav from sf2_smpl.wav [101642866-102348473]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_101642866_705607.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_101642866_705607.m4a"
+  > Creating sf2_smpl_102348496_661506.wav from sf2_smpl.wav [102348496-103010002]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_102348496_661506.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_102348496_661506.m4a"
+  > Creating sf2_smpl_103010025_538027.wav from sf2_smpl.wav [103010025-103548052]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103010025_538027.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103010025_538027.m4a"
+  > Creating sf2_smpl_103548075_238151.wav from sf2_smpl.wav [103548075-103786226]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103548075_238151.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103548075_238151.m4a"
+  > Creating sf2_smpl_103786249_344020.wav from sf2_smpl.wav [103786249-104130269]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103786249_344020.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103786249_344020.m4a"
+  > Creating sf2_smpl_104130292_317552.wav from sf2_smpl.wav [104130292-104447844]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104130292_317552.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104130292_317552.m4a"
+  > Creating sf2_smpl_104447867_141142.wav from sf2_smpl.wav [104447867-104589009]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104447867_141142.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104447867_141142.m4a"
+  > Creating sf2_smpl_104589032_61760.wav from sf2_smpl.wav [104589032-104650792]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104589032_61760.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104589032_61760.m4a"
+  > Creating sf2_smpl_104650815_635505.wav from sf2_smpl.wav [104650815-105286320]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104650815_635505.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104650815_635505.m4a"
+  > Creating sf2_smpl_105286343_749903.wav from sf2_smpl.wav [105286343-106036246]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_105286343_749903.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_105286343_749903.m4a"
+  > Creating sf2_smpl_106036269_908676.wav from sf2_smpl.wav [106036269-106944945]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_106036269_908676.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_106036269_908676.m4a"
+  > Creating sf2_smpl_106944968_829233.wav from sf2_smpl.wav [106944968-107774201]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_106944968_829233.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_106944968_829233.m4a"
+  > Creating sf2_smpl_107774224_838117.wav from sf2_smpl.wav [107774224-108612341]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_107774224_838117.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_107774224_838117.m4a"
+  > Creating sf2_smpl_108612364_899693.wav from sf2_smpl.wav [108612364-109512057]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_108612364_899693.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_108612364_899693.m4a"
+  > Creating sf2_smpl_109512080_652765.wav from sf2_smpl.wav [109512080-110164845]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_109512080_652765.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_109512080_652765.m4a"
+  > Creating sf2_smpl_110164868_740888.wav from sf2_smpl.wav [110164868-110905756]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_110164868_740888.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_110164868_740888.m4a"
+  > Creating sf2_smpl_110905779_679185.wav from sf2_smpl.wav [110905779-111584964]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_110905779_679185.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_110905779_679185.m4a"
+  > Creating sf2_smpl_111584987_635067.wav from sf2_smpl.wav [111584987-112220054]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_111584987_635067.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_111584987_635067.m4a"
+  > Creating sf2_smpl_112220077_829096.wav from sf2_smpl.wav [112220077-113049173]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_112220077_829096.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_112220077_829096.m4a"
+  > Creating sf2_smpl_113049196_617417.wav from sf2_smpl.wav [113049196-113666613]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_113049196_617417.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_113049196_617417.m4a"
+  > Creating sf2_smpl_113666636_705650.wav from sf2_smpl.wav [113666636-114372286]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_113666636_705650.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_113666636_705650.m4a"
+  > Creating sf2_smpl_114372309_582279.wav from sf2_smpl.wav [114372309-114954588]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_114372309_582279.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_114372309_582279.m4a"
+  > Creating sf2_smpl_114954611_802713.wav from sf2_smpl.wav [114954611-115757324]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_114954611_802713.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_114954611_802713.m4a"
+  > Creating sf2_smpl_115757347_643875.wav from sf2_smpl.wav [115757347-116401222]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_115757347_643875.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_115757347_643875.m4a"
+  > Creating sf2_smpl_116401245_687982.wav from sf2_smpl.wav [116401245-117089227]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_116401245_687982.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_116401245_687982.m4a"
+  > Creating sf2_smpl_117089250_617422.wav from sf2_smpl.wav [117089250-117706672]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_117089250_617422.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_117089250_617422.m4a"
+  > Creating sf2_smpl_117706695_467465.wav from sf2_smpl.wav [117706695-118174160]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_117706695_467465.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_117706695_467465.m4a"
+  > Creating sf2_smpl_118174183_264619.wav from sf2_smpl.wav [118174183-118438802]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118174183_264619.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118174183_264619.m4a"
+  > Creating sf2_smpl_118438825_291075.wav from sf2_smpl.wav [118438825-118729900]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118438825_291075.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118438825_291075.m4a"
+  > Creating sf2_smpl_118729923_282251.wav from sf2_smpl.wav [118729923-119012174]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118729923_282251.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118729923_282251.m4a"
+  > Creating sf2_smpl_119012197_132402.wav from sf2_smpl.wav [119012197-119144599]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119012197_132402.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119012197_132402.m4a"
+  > Creating sf2_smpl_119144622_61789.wav from sf2_smpl.wav [119144622-119206411]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119144622_61789.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119144622_61789.m4a"
+  > Creating sf2_smpl_119206434_740886.wav from sf2_smpl.wav [119206434-119947320]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119206434_740886.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119206434_740886.m4a"
+  > Creating sf2_smpl_119947343_846942.wav from sf2_smpl.wav [119947343-120794285]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119947343_846942.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119947343_846942.m4a"
+  > Creating sf2_smpl_120794308_661655.wav from sf2_smpl.wav [120794308-121455963]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_120794308_661655.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_120794308_661655.m4a"
+  > Creating sf2_smpl_121455986_864372.wav from sf2_smpl.wav [121455986-122320358]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_121455986_864372.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_121455986_864372.m4a"
+  > Creating sf2_smpl_122320381_643911.wav from sf2_smpl.wav [122320381-122964292]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_122320381_643911.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_122320381_643911.m4a"
+  > Creating sf2_smpl_122964315_714451.wav from sf2_smpl.wav [122964315-123678766]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_122964315_714451.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_122964315_714451.m4a"
+  > Creating sf2_smpl_123678789_573318.wav from sf2_smpl.wav [123678789-124252107]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_123678789_573318.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_123678789_573318.m4a"
+  > Creating sf2_smpl_124252130_617455.wav from sf2_smpl.wav [124252130-124869585]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_124252130_617455.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_124252130_617455.m4a"
+  > Creating sf2_smpl_124869608_546864.wav from sf2_smpl.wav [124869608-125416472]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_124869608_546864.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_124869608_546864.m4a"
+  > Creating sf2_smpl_125416495_405726.wav from sf2_smpl.wav [125416495-125822221]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_125416495_405726.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_125416495_405726.m4a"
+  > Creating sf2_smpl_125822244_238281.wav from sf2_smpl.wav [125822244-126060525]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_125822244_238281.wav" "C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_125822244_238281.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_114372309_582279.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_113666636_705650.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_110905779_679185.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_112220077_829096.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_113049196_617417.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_107774224_838117.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_109512080_652765.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_110164868_740888.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_111584987_635067.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_105286343_749903.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_108612364_899693.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_106036269_908676.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_106944968_829233.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104650815_635505.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104447867_141142.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104589032_61760.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_104130292_317552.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103786249_344020.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103010025_538027.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_103548075_238151.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_102348496_661506.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_101642866_705607.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_98493662_820481.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_100981322_661521.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_99314166_785088.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_100099277_882022.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96940962_714706.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_97655691_837948.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96323426_617513.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96102813_158784.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_96261620_61783.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95785254_317536.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95414765_370466.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_94620725_564493.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_95185241_229501.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_92397733_776180.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_93959183_661519.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_93173936_785224.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_91498002_899708.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_90589345_908634.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_89486637_1102685.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_88401653_1084961.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_87386941_1014689.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_86566228_820690.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_115757347_643875.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_117706695_467465.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_114954611_802713.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119012197_132402.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118438825_291075.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118174183_264619.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_117089250_617422.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_116401245_687982.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119144622_61789.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_118729923_282251.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_120794308_661655.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119947343_846942.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_125416495_405726.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_125822244_238281.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_121455986_864372.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_119206434_740886.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_122320381_643911.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_124252130_617455.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_124869608_546864.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_123678789_573318.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\004_Rhodes_Piano\sf2_smpl_122964315_714451.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_004_Rhodes_Piano",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/004_Rhodes_Piano/004_Rhodes_Piano.sfz.json",
+  "name": "004_Rhodes_Piano"
+}

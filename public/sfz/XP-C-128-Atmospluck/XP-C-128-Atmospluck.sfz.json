@@ -1,0 +1,173 @@
+[
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 042 072_0_end.m4a",
+    "lokey": 0,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 042 127_0_end.m4a",
+    "lokey": 0,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 048 072_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 048 127_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 054 072_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 054 127_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 060 072_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 060 127_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 066 072_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 066 127_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 072 072_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 072 127_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 078 072_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 078 127_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 084 072_0_end.m4a",
+    "lokey": 82,
+    "hikey": 87,
+    "pitch_keycenter": 84,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 084 127_0_end.m4a",
+    "lokey": 82,
+    "hikey": 87,
+    "pitch_keycenter": 84,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 090 072_0_end.m4a",
+    "lokey": 88,
+    "hikey": 93,
+    "pitch_keycenter": 90,
+    "lovel": 0,
+    "hivel": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 090 127_0_end.m4a",
+    "lokey": 88,
+    "hikey": 93,
+    "pitch_keycenter": 90,
+    "lovel": 73,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Atmospluck 096 072_0_end.m4a",
+    "lokey": 94,
+    "hikey": 127,
+    "pitch_keycenter": 96,
+    "lovel": 0,
+    "hivel": 72
+  }
+]

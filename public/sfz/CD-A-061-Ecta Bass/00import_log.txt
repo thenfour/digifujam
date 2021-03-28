@@ -1,0 +1,61 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\CD-A-061-Ecta Bass.sfz.json
+Region count: 4
+Source samples to read: 4
+Dest samples to create: 4
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Card-A\CD-A-061-Ecta Bass\Ecta Bass 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Card-A\CD-A-061-Ecta Bass\Ecta Bass 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Card-A\CD-A-061-Ecta Bass\Ecta Bass 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Card-A\CD-A-061-Ecta Bass\Ecta Bass 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 054.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 147916
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Ecta Bass 042_0_end.wav from Ecta Bass 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 146040
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Ecta Bass 054_0_end.wav from Ecta Bass 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 146287
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Ecta Bass 036_0_end.wav from Ecta Bass 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 147215
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Ecta Bass 048_0_end.wav from Ecta Bass 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 048_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-061-Ecta Bass\Ecta Bass 048.flac.wav
+Completed processing source WAV files with 4 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_CDA061EctaBass",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/CD-A-061-Ecta Bass/CD-A-061-Ecta Bass.sfz.json",
+  "name": "CD-A-061-Ecta Bass"
+}

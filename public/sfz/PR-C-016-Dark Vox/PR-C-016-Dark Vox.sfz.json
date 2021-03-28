@@ -1,0 +1,68 @@
+[
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 2.245328798185941,
+    "loop_end": 5.32328798185941,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": "0.5",
+    "sample": "Dark Vox 048_0_end.m4a",
+    "lokey": 0,
+    "hikey": 51,
+    "pitch_keycenter": 48
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 2.245328798185941,
+    "loop_end": 5.32328798185941,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": "0.5",
+    "sample": "Dark Vox 054_0_end.m4a",
+    "lokey": 52,
+    "hikey": 54,
+    "pitch_keycenter": 54
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 2.245328798185941,
+    "loop_end": 5.32328798185941,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": "0.5",
+    "sample": "Dark Vox 060_0_end.m4a",
+    "lokey": 55,
+    "hikey": 63,
+    "pitch_keycenter": 60
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 2.245328798185941,
+    "loop_end": 5.32328798185941,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": "0.5",
+    "sample": "Dark Vox 066_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 2.245328798185941,
+    "loop_end": 5.32328798185941,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": "0.5",
+    "sample": "Dark Vox 072_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 2.245328798185941,
+    "loop_end": 5.32328798185941,
+    "loop_mode": "loop_sustain",
+    "loop_crossfade": "0.5",
+    "sample": "Dark Vox 078_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78
+  }
+]

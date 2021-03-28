@@ -1,0 +1,241 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\XP-C-128-Atmospluck.sfz.json
+Region count: 19
+Source samples to read: 19
+Dest samples to create: 19
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 042 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 042 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 048 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 048 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 054 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 054 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 060 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 060 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 066 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 066 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 072 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 072 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 078 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 078 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 084 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 084 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 090 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 090 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\Patches\Expansion Board C SR-JV80-05 World\XP-C-128-Atmospluck\Atmospluck 096 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 096 072.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 247567
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 042 072_0_end.wav from Atmospluck 042 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 218065
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 048 072_0_end.wav from Atmospluck 048 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 223402
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 054 127_0_end.wav from Atmospluck 054 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 229673
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 054 072_0_end.wav from Atmospluck 054 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 222340
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 048 127_0_end.wav from Atmospluck 048 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 214331
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 042 127_0_end.wav from Atmospluck 042 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 219199
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 072 072_0_end.wav from Atmospluck 072 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 223783
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 060 072_0_end.wav from Atmospluck 060 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 219356
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 060 127_0_end.wav from Atmospluck 060 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 224008
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 066 127_0_end.wav from Atmospluck 066 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 229022
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 084 072_0_end.wav from Atmospluck 084 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 224481
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 078 072_0_end.wav from Atmospluck 078 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 219055
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 078 127_0_end.wav from Atmospluck 078 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 216728
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 090 072_0_end.wav from Atmospluck 090 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 214176
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 066 072_0_end.wav from Atmospluck 066 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 096 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 199679
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 096 072_0_end.wav from Atmospluck 096 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 096 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 096 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 232350
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 084 127_0_end.wav from Atmospluck 084 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 206932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 072 127_0_end.wav from Atmospluck 072 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 127_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 072.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 208063
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Atmospluck 090 127_0_end.wav from Atmospluck 090 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 127_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 054 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 042 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 048 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 078 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 060 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 096 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 096 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 066 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 072 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 090 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-128-Atmospluck\Atmospluck 084 127.flac.wav
+Completed processing source WAV files with 19 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPC128Atmospluck",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-C-128-Atmospluck/XP-C-128-Atmospluck.sfz.json",
+  "name": "XP-C-128-Atmospluck"
+}

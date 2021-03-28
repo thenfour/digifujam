@@ -1,0 +1,50 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\032_Acoustic_Bass.sfz.json
+Region count: 11
+Source samples to read: 1
+Dest samples to create: 10
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 253622262
+  Max offset       : 507314668
+  Reflen in samples: 253692406
+  > Creating sf2_smpl_253622262_70144.wav from sf2_smpl.wav [253622262-253692406]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253622262_70144.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253622262_70144.m4a"
+  > Creating sf2_smpl_253692429_37504.wav from sf2_smpl.wav [253692429-253729933]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253692429_37504.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253692429_37504.m4a"
+  > Creating sf2_smpl_253729956_46336.wav from sf2_smpl.wav [253729956-253776292]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253729956_46336.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253729956_46336.m4a"
+  > Creating sf2_smpl_253776315_50816.wav from sf2_smpl.wav [253776315-253827131]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253776315_50816.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253776315_50816.m4a"
+  > Creating sf2_smpl_253827154_46336.wav from sf2_smpl.wav [253827154-253873490]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253827154_46336.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253827154_46336.m4a"
+  > Creating sf2_smpl_253873513_28864.wav from sf2_smpl.wav [253873513-253902377]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253873513_28864.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253873513_28864.m4a"
+  > Creating sf2_smpl_253902400_39744.wav from sf2_smpl.wav [253902400-253942144]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253902400_39744.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253902400_39744.m4a"
+  > Creating sf2_smpl_253942167_30848.wav from sf2_smpl.wav [253942167-253973015]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253942167_30848.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253942167_30848.m4a"
+  > Creating sf2_smpl_253973038_28736.wav from sf2_smpl.wav [253973038-254001774]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253973038_28736.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253973038_28736.m4a"
+  > Creating sf2_smpl_254001797_28992.wav from sf2_smpl.wav [254001797-254030789]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_254001797_28992.wav" "C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_254001797_28992.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253622262_70144.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253692429_37504.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253827154_46336.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253729956_46336.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253776315_50816.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253873513_28864.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253902400_39744.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_254001797_28992.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253973038_28736.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\032_Acoustic_Bass\sf2_smpl_253942167_30848.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_032_Acoustic_Bass",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/032_Acoustic_Bass/032_Acoustic_Bass.sfz.json",
+  "name": "032_Acoustic_Bass"
+}

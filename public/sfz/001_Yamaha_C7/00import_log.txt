@@ -1,0 +1,596 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\001_Yamaha_C7.sfz.json
+Region count: 3264
+Source samples to read: 1
+Dest samples to create: 192
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Equinox_Grand_Pianos_sf2\000\..\sf2_smpl.wav
+  Samplerate: 44100
+  Channels: 1
+  Length in samples: 48073032
+  Min offset       : 0
+  Max offset       : 51490542
+  Reflen in samples: 51490542
+  > Creating sf2_smpl_25656526_177490.wav from sf2_smpl.wav [25656526-25834016]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25656526_177490.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25656526_177490.m4a"
+  > Creating sf2_smpl_25479004_177490.wav from sf2_smpl.wav [25479004-25656494]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25479004_177490.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25479004_177490.m4a"
+  > Creating sf2_smpl_25303922_175050.wav from sf2_smpl.wav [25303922-25478972]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25303922_175050.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25303922_175050.m4a"
+  > Creating sf2_smpl_25128840_175050.wav from sf2_smpl.wav [25128840-25303890]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25128840_175050.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25128840_175050.m4a"
+  > Creating sf2_smpl_24952826_175982.wav from sf2_smpl.wav [24952826-25128808]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24952826_175982.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24952826_175982.m4a"
+  > Creating sf2_smpl_24776812_175982.wav from sf2_smpl.wav [24776812-24952794]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24776812_175982.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24776812_175982.m4a"
+  > Creating sf2_smpl_24600173_176607.wav from sf2_smpl.wav [24600173-24776780]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24600173_176607.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24600173_176607.m4a"
+  > Creating sf2_smpl_24423534_176607.wav from sf2_smpl.wav [24423534-24600141]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24423534_176607.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24423534_176607.m4a"
+  > Creating sf2_smpl_24248230_175272.wav from sf2_smpl.wav [24248230-24423502]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24248230_175272.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24248230_175272.m4a"
+  > Creating sf2_smpl_24072926_175272.wav from sf2_smpl.wav [24072926-24248198]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24072926_175272.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24072926_175272.m4a"
+  > Creating sf2_smpl_23896952_175942.wav from sf2_smpl.wav [23896952-24072894]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23896952_175942.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23896952_175942.m4a"
+  > Creating sf2_smpl_23720978_175942.wav from sf2_smpl.wav [23720978-23896920]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23720978_175942.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23720978_175942.m4a"
+  > Creating sf2_smpl_23547532_173414.wav from sf2_smpl.wav [23547532-23720946]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23547532_173414.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23547532_173414.m4a"
+  > Creating sf2_smpl_23374086_173414.wav from sf2_smpl.wav [23374086-23547500]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23374086_173414.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23374086_173414.m4a"
+  > Creating sf2_smpl_23208076_165978.wav from sf2_smpl.wav [23208076-23374054]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23208076_165978.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23208076_165978.m4a"
+  > Creating sf2_smpl_23042066_165978.wav from sf2_smpl.wav [23042066-23208044]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23042066_165978.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23042066_165978.m4a"
+  > Creating sf2_smpl_22874130_167904.wav from sf2_smpl.wav [22874130-23042034]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22874130_167904.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22874130_167904.m4a"
+  > Creating sf2_smpl_22706194_167904.wav from sf2_smpl.wav [22706194-22874098]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22706194_167904.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22706194_167904.m4a"
+  > Creating sf2_smpl_22538141_168021.wav from sf2_smpl.wav [22538141-22706162]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22538141_168021.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22538141_168021.m4a"
+  > Creating sf2_smpl_22370088_168021.wav from sf2_smpl.wav [22370088-22538109]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22370088_168021.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22370088_168021.m4a"
+  > Creating sf2_smpl_22193018_177038.wav from sf2_smpl.wav [22193018-22370056]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22193018_177038.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22193018_177038.m4a"
+  > Creating sf2_smpl_22015948_177038.wav from sf2_smpl.wav [22015948-22192986]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22015948_177038.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22015948_177038.m4a"
+  > Creating sf2_smpl_21847193_168723.wav from sf2_smpl.wav [21847193-22015916]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21847193_168723.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21847193_168723.m4a"
+  > Creating sf2_smpl_21678438_168723.wav from sf2_smpl.wav [21678438-21847161]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21678438_168723.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21678438_168723.m4a"
+  > Creating sf2_smpl_21506548_171858.wav from sf2_smpl.wav [21506548-21678406]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21506548_171858.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21506548_171858.m4a"
+  > Creating sf2_smpl_21334658_171858.wav from sf2_smpl.wav [21334658-21506516]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21334658_171858.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21334658_171858.m4a"
+  > Creating sf2_smpl_21173858_160768.wav from sf2_smpl.wav [21173858-21334626]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21173858_160768.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21173858_160768.m4a"
+  > Creating sf2_smpl_21013058_160768.wav from sf2_smpl.wav [21013058-21173826]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21013058_160768.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21013058_160768.m4a"
+  > Creating sf2_smpl_20861996_151030.wav from sf2_smpl.wav [20861996-21013026]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20861996_151030.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20861996_151030.m4a"
+  > Creating sf2_smpl_20710934_151030.wav from sf2_smpl.wav [20710934-20861964]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20710934_151030.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20710934_151030.m4a"
+  > Creating sf2_smpl_20557768_153134.wav from sf2_smpl.wav [20557768-20710902]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20557768_153134.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20557768_153134.m4a"
+  > Creating sf2_smpl_20404602_153134.wav from sf2_smpl.wav [20404602-20557736]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20404602_153134.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20404602_153134.m4a"
+  > Creating sf2_smpl_20256118_148452.wav from sf2_smpl.wav [20256118-20404570]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20256118_148452.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20256118_148452.m4a"
+  > Creating sf2_smpl_20107634_148452.wav from sf2_smpl.wav [20107634-20256086]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20107634_148452.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20107634_148452.m4a"
+  > Creating sf2_smpl_19978353_129249.wav from sf2_smpl.wav [19978353-20107602]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19978353_129249.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19978353_129249.m4a"
+  > Creating sf2_smpl_19849072_129249.wav from sf2_smpl.wav [19849072-19978321]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19849072_129249.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19849072_129249.m4a"
+  > Creating sf2_smpl_19681753_167287.wav from sf2_smpl.wav [19681753-19849040]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19681753_167287.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19681753_167287.m4a"
+  > Creating sf2_smpl_19514434_167287.wav from sf2_smpl.wav [19514434-19681721]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19514434_167287.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19514434_167287.m4a"
+  > Creating sf2_smpl_19357291_157111.wav from sf2_smpl.wav [19357291-19514402]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19357291_157111.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19357291_157111.m4a"
+  > Creating sf2_smpl_19200148_157111.wav from sf2_smpl.wav [19200148-19357259]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19200148_157111.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19200148_157111.m4a"
+  > Creating sf2_smpl_19077614_122502.wav from sf2_smpl.wav [19077614-19200116]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19077614_122502.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19077614_122502.m4a"
+  > Creating sf2_smpl_18955080_122502.wav from sf2_smpl.wav [18955080-19077582]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18955080_122502.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18955080_122502.m4a"
+  > Creating sf2_smpl_18829146_125902.wav from sf2_smpl.wav [18829146-18955048]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18829146_125902.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18829146_125902.m4a"
+  > Creating sf2_smpl_18703212_125902.wav from sf2_smpl.wav [18703212-18829114]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18703212_125902.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18703212_125902.m4a"
+  > Creating sf2_smpl_18576825_126355.wav from sf2_smpl.wav [18576825-18703180]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18576825_126355.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18576825_126355.m4a"
+  > Creating sf2_smpl_18450438_126355.wav from sf2_smpl.wav [18450438-18576793]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18450438_126355.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18450438_126355.m4a"
+  > Creating sf2_smpl_18322782_127624.wav from sf2_smpl.wav [18322782-18450406]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18322782_127624.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18322782_127624.m4a"
+  > Creating sf2_smpl_18195126_127624.wav from sf2_smpl.wav [18195126-18322750]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18195126_127624.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18195126_127624.m4a"
+  > Creating sf2_smpl_18070972_124122.wav from sf2_smpl.wav [18070972-18195094]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18070972_124122.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18070972_124122.m4a"
+  > Creating sf2_smpl_17946818_124122.wav from sf2_smpl.wav [17946818-18070940]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17946818_124122.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17946818_124122.m4a"
+  > Creating sf2_smpl_17819048_127738.wav from sf2_smpl.wav [17819048-17946786]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17819048_127738.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17819048_127738.m4a"
+  > Creating sf2_smpl_17691278_127738.wav from sf2_smpl.wav [17691278-17819016]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17691278_127738.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17691278_127738.m4a"
+  > Creating sf2_smpl_17570334_120912.wav from sf2_smpl.wav [17570334-17691246]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17570334_120912.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17570334_120912.m4a"
+  > Creating sf2_smpl_17449390_120912.wav from sf2_smpl.wav [17449390-17570302]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17449390_120912.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17449390_120912.m4a"
+  > Creating sf2_smpl_17341858_107500.wav from sf2_smpl.wav [17341858-17449358]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17341858_107500.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17341858_107500.m4a"
+  > Creating sf2_smpl_17234326_107500.wav from sf2_smpl.wav [17234326-17341826]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17234326_107500.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17234326_107500.m4a"
+  > Creating sf2_smpl_17124934_109360.wav from sf2_smpl.wav [17124934-17234294]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17124934_109360.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17124934_109360.m4a"
+  > Creating sf2_smpl_17015542_109360.wav from sf2_smpl.wav [17015542-17124902]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17015542_109360.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17015542_109360.m4a"
+  > Creating sf2_smpl_16908418_107092.wav from sf2_smpl.wav [16908418-17015510]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16908418_107092.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16908418_107092.m4a"
+  > Creating sf2_smpl_16801294_107092.wav from sf2_smpl.wav [16801294-16908386]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16801294_107092.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16801294_107092.m4a"
+  > Creating sf2_smpl_16673891_127371.wav from sf2_smpl.wav [16673891-16801262]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16673891_127371.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16673891_127371.m4a"
+  > Creating sf2_smpl_16546488_127371.wav from sf2_smpl.wav [16546488-16673859]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16546488_127371.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16546488_127371.m4a"
+  > Creating sf2_smpl_16417827_128629.wav from sf2_smpl.wav [16417827-16546456]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16417827_128629.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16417827_128629.m4a"
+  > Creating sf2_smpl_16289166_128629.wav from sf2_smpl.wav [16289166-16417795]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16289166_128629.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16289166_128629.m4a"
+  > Creating sf2_smpl_16185770_103364.wav from sf2_smpl.wav [16185770-16289134]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16185770_103364.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16185770_103364.m4a"
+  > Creating sf2_smpl_16082374_103364.wav from sf2_smpl.wav [16082374-16185738]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16082374_103364.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16082374_103364.m4a"
+  > Creating sf2_smpl_15975716_106626.wav from sf2_smpl.wav [15975716-16082342]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15975716_106626.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15975716_106626.m4a"
+  > Creating sf2_smpl_15869058_106626.wav from sf2_smpl.wav [15869058-15975684]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15869058_106626.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15869058_106626.m4a"
+  > Creating sf2_smpl_15767878_101148.wav from sf2_smpl.wav [15767878-15869026]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15767878_101148.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15767878_101148.m4a"
+  > Creating sf2_smpl_15666698_101148.wav from sf2_smpl.wav [15666698-15767846]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15666698_101148.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15666698_101148.m4a"
+  > Creating sf2_smpl_15574515_92151.wav from sf2_smpl.wav [15574515-15666666]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15574515_92151.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15574515_92151.m4a"
+  > Creating sf2_smpl_15482332_92151.wav from sf2_smpl.wav [15482332-15574483]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15482332_92151.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15482332_92151.m4a"
+  > Creating sf2_smpl_15389123_93177.wav from sf2_smpl.wav [15389123-15482300]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15389123_93177.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15389123_93177.m4a"
+  > Creating sf2_smpl_15295914_93177.wav from sf2_smpl.wav [15295914-15389091]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15295914_93177.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15295914_93177.m4a"
+  > Creating sf2_smpl_15201131_94751.wav from sf2_smpl.wav [15201131-15295882]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15201131_94751.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15201131_94751.m4a"
+  > Creating sf2_smpl_15106348_94751.wav from sf2_smpl.wav [15106348-15201099]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15106348_94751.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15106348_94751.m4a"
+  > Creating sf2_smpl_15008818_97498.wav from sf2_smpl.wav [15008818-15106316]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15008818_97498.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15008818_97498.m4a"
+  > Creating sf2_smpl_14911288_97498.wav from sf2_smpl.wav [14911288-15008786]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14911288_97498.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14911288_97498.m4a"
+  > Creating sf2_smpl_14799332_111924.wav from sf2_smpl.wav [14799332-14911256]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14799332_111924.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14799332_111924.m4a"
+  > Creating sf2_smpl_14687376_111924.wav from sf2_smpl.wav [14687376-14799300]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14687376_111924.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14687376_111924.m4a"
+  > Creating sf2_smpl_14599805_87539.wav from sf2_smpl.wav [14599805-14687344]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14599805_87539.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14599805_87539.m4a"
+  > Creating sf2_smpl_14512234_87539.wav from sf2_smpl.wav [14512234-14599773]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14512234_87539.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14512234_87539.m4a"
+  > Creating sf2_smpl_14417183_95019.wav from sf2_smpl.wav [14417183-14512202]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14417183_95019.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14417183_95019.m4a"
+  > Creating sf2_smpl_14322132_95019.wav from sf2_smpl.wav [14322132-14417151]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14322132_95019.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14322132_95019.m4a"
+  > Creating sf2_smpl_14224506_97594.wav from sf2_smpl.wav [14224506-14322100]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14224506_97594.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14224506_97594.m4a"
+  > Creating sf2_smpl_14126880_97594.wav from sf2_smpl.wav [14126880-14224474]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14126880_97594.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14126880_97594.m4a"
+  > Creating sf2_smpl_14031201_95647.wav from sf2_smpl.wav [14031201-14126848]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14031201_95647.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14031201_95647.m4a"
+  > Creating sf2_smpl_13935522_95647.wav from sf2_smpl.wav [13935522-14031169]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13935522_95647.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13935522_95647.m4a"
+  > Creating sf2_smpl_13840806_94684.wav from sf2_smpl.wav [13840806-13935490]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13840806_94684.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13840806_94684.m4a"
+  > Creating sf2_smpl_13746090_94684.wav from sf2_smpl.wav [13746090-13840774]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13746090_94684.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13746090_94684.m4a"
+  > Creating sf2_smpl_13652143_93915.wav from sf2_smpl.wav [13652143-13746058]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13652143_93915.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13652143_93915.m4a"
+  > Creating sf2_smpl_13558196_93915.wav from sf2_smpl.wav [13558196-13652111]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13558196_93915.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13558196_93915.m4a"
+  > Creating sf2_smpl_13463492_94672.wav from sf2_smpl.wav [13463492-13558164]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13463492_94672.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13463492_94672.m4a"
+  > Creating sf2_smpl_13368788_94672.wav from sf2_smpl.wav [13368788-13463460]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13368788_94672.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13368788_94672.m4a"
+  > Creating sf2_smpl_13266676_102080.wav from sf2_smpl.wav [13266676-13368756]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13266676_102080.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13266676_102080.m4a"
+  > Creating sf2_smpl_13164564_102080.wav from sf2_smpl.wav [13164564-13266644]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13164564_102080.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13164564_102080.m4a"
+  > Creating sf2_smpl_12976684_187848.wav from sf2_smpl.wav [12976684-13164532]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12976684_187848.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12976684_187848.m4a"
+  > Creating sf2_smpl_12788804_187848.wav from sf2_smpl.wav [12788804-12976652]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12788804_187848.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12788804_187848.m4a"
+  > Creating sf2_smpl_12611702_177070.wav from sf2_smpl.wav [12611702-12788772]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12611702_177070.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12611702_177070.m4a"
+  > Creating sf2_smpl_12434600_177070.wav from sf2_smpl.wav [12434600-12611670]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12434600_177070.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12434600_177070.m4a"
+  > Creating sf2_smpl_12258384_176184.wav from sf2_smpl.wav [12258384-12434568]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12258384_176184.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12258384_176184.m4a"
+  > Creating sf2_smpl_12082168_176184.wav from sf2_smpl.wav [12082168-12258352]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12082168_176184.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12082168_176184.m4a"
+  > Creating sf2_smpl_11900959_181177.wav from sf2_smpl.wav [11900959-12082136]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11900959_181177.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11900959_181177.m4a"
+  > Creating sf2_smpl_11719750_181177.wav from sf2_smpl.wav [11719750-11900927]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11719750_181177.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11719750_181177.m4a"
+  > Creating sf2_smpl_11535459_184259.wav from sf2_smpl.wav [11535459-11719718]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11535459_184259.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11535459_184259.m4a"
+  > Creating sf2_smpl_11351168_184259.wav from sf2_smpl.wav [11351168-11535427]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11351168_184259.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11351168_184259.m4a"
+  > Creating sf2_smpl_11171277_179859.wav from sf2_smpl.wav [11171277-11351136]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11171277_179859.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11171277_179859.m4a"
+  > Creating sf2_smpl_10991386_179859.wav from sf2_smpl.wav [10991386-11171245]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10991386_179859.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10991386_179859.m4a"
+  > Creating sf2_smpl_10811293_180061.wav from sf2_smpl.wav [10811293-10991354]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10811293_180061.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10811293_180061.m4a"
+  > Creating sf2_smpl_10631200_180061.wav from sf2_smpl.wav [10631200-10811261]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10631200_180061.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10631200_180061.m4a"
+  > Creating sf2_smpl_10454808_176360.wav from sf2_smpl.wav [10454808-10631168]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10454808_176360.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10454808_176360.m4a"
+  > Creating sf2_smpl_10278416_176360.wav from sf2_smpl.wav [10278416-10454776]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10278416_176360.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10278416_176360.m4a"
+  > Creating sf2_smpl_10101655_176729.wav from sf2_smpl.wav [10101655-10278384]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10101655_176729.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10101655_176729.m4a"
+  > Creating sf2_smpl_9924894_176729.wav from sf2_smpl.wav [9924894-10101623]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9924894_176729.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9924894_176729.m4a"
+  > Creating sf2_smpl_9747600_177262.wav from sf2_smpl.wav [9747600-9924862]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9747600_177262.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9747600_177262.m4a"
+  > Creating sf2_smpl_9570306_177262.wav from sf2_smpl.wav [9570306-9747568]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9570306_177262.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9570306_177262.m4a"
+  > Creating sf2_smpl_9383207_187067.wav from sf2_smpl.wav [9383207-9570274]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9383207_187067.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9383207_187067.m4a"
+  > Creating sf2_smpl_9196108_187067.wav from sf2_smpl.wav [9196108-9383175]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9196108_187067.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9196108_187067.m4a"
+  > Creating sf2_smpl_9020963_175113.wav from sf2_smpl.wav [9020963-9196076]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9020963_175113.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9020963_175113.m4a"
+  > Creating sf2_smpl_8845818_175113.wav from sf2_smpl.wav [8845818-9020931]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8845818_175113.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8845818_175113.m4a"
+  > Creating sf2_smpl_8686276_159510.wav from sf2_smpl.wav [8686276-8845786]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8686276_159510.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8686276_159510.m4a"
+  > Creating sf2_smpl_8526734_159510.wav from sf2_smpl.wav [8526734-8686244]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8526734_159510.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8526734_159510.m4a"
+  > Creating sf2_smpl_8371371_155331.wav from sf2_smpl.wav [8371371-8526702]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8371371_155331.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8371371_155331.m4a"
+  > Creating sf2_smpl_8216008_155331.wav from sf2_smpl.wav [8216008-8371339]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8216008_155331.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8216008_155331.m4a"
+  > Creating sf2_smpl_8063427_152549.wav from sf2_smpl.wav [8063427-8215976]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8063427_152549.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8063427_152549.m4a"
+  > Creating sf2_smpl_7910846_152549.wav from sf2_smpl.wav [7910846-8063395]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7910846_152549.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7910846_152549.m4a"
+  > Creating sf2_smpl_7749631_161183.wav from sf2_smpl.wav [7749631-7910814]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7749631_161183.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7749631_161183.m4a"
+  > Creating sf2_smpl_7588416_161183.wav from sf2_smpl.wav [7588416-7749599]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7588416_161183.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7588416_161183.m4a"
+  > Creating sf2_smpl_7462764_125620.wav from sf2_smpl.wav [7462764-7588384]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7462764_125620.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7462764_125620.m4a"
+  > Creating sf2_smpl_7337112_125620.wav from sf2_smpl.wav [7337112-7462732]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7337112_125620.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7337112_125620.m4a"
+  > Creating sf2_smpl_7205966_131114.wav from sf2_smpl.wav [7205966-7337080]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7205966_131114.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7205966_131114.m4a"
+  > Creating sf2_smpl_7074820_131114.wav from sf2_smpl.wav [7074820-7205934]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7074820_131114.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7074820_131114.m4a"
+  > Creating sf2_smpl_6918068_156720.wav from sf2_smpl.wav [6918068-7074788]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6918068_156720.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6918068_156720.m4a"
+  > Creating sf2_smpl_6761316_156720.wav from sf2_smpl.wav [6761316-6918036]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6761316_156720.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6761316_156720.m4a"
+  > Creating sf2_smpl_6592249_169035.wav from sf2_smpl.wav [6592249-6761284]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6592249_169035.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6592249_169035.m4a"
+  > Creating sf2_smpl_6423182_169035.wav from sf2_smpl.wav [6423182-6592217]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6423182_169035.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6423182_169035.m4a"
+  > Creating sf2_smpl_6292092_131058.wav from sf2_smpl.wav [6292092-6423150]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6292092_131058.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6292092_131058.m4a"
+  > Creating sf2_smpl_6161002_131058.wav from sf2_smpl.wav [6161002-6292060]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6161002_131058.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6161002_131058.m4a"
+  > Creating sf2_smpl_6015794_145176.wav from sf2_smpl.wav [6015794-6160970]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6015794_145176.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6015794_145176.m4a"
+  > Creating sf2_smpl_5870586_145176.wav from sf2_smpl.wav [5870586-6015762]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5870586_145176.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5870586_145176.m4a"
+  > Creating sf2_smpl_5732934_137620.wav from sf2_smpl.wav [5732934-5870554]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5732934_137620.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5732934_137620.m4a"
+  > Creating sf2_smpl_5595282_137620.wav from sf2_smpl.wav [5595282-5732902]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5595282_137620.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5595282_137620.m4a"
+  > Creating sf2_smpl_5464233_131017.wav from sf2_smpl.wav [5464233-5595250]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5464233_131017.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5464233_131017.m4a"
+  > Creating sf2_smpl_5333184_131017.wav from sf2_smpl.wav [5333184-5464201]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5333184_131017.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5333184_131017.m4a"
+  > Creating sf2_smpl_5202378_130774.wav from sf2_smpl.wav [5202378-5333152]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5202378_130774.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5202378_130774.m4a"
+  > Creating sf2_smpl_5071572_130774.wav from sf2_smpl.wav [5071572-5202346]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5071572_130774.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5071572_130774.m4a"
+  > Creating sf2_smpl_4944619_126921.wav from sf2_smpl.wav [4944619-5071540]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4944619_126921.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4944619_126921.m4a"
+  > Creating sf2_smpl_4817666_126921.wav from sf2_smpl.wav [4817666-4944587]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4817666_126921.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4817666_126921.m4a"
+  > Creating sf2_smpl_4696736_120898.wav from sf2_smpl.wav [4696736-4817634]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4696736_120898.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4696736_120898.m4a"
+  > Creating sf2_smpl_4575806_120898.wav from sf2_smpl.wav [4575806-4696704]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4575806_120898.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4575806_120898.m4a"
+  > Creating sf2_smpl_4462059_113715.wav from sf2_smpl.wav [4462059-4575774]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4462059_113715.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4462059_113715.m4a"
+  > Creating sf2_smpl_4348312_113715.wav from sf2_smpl.wav [4348312-4462027]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4348312_113715.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4348312_113715.m4a"
+  > Creating sf2_smpl_4239300_108980.wav from sf2_smpl.wav [4239300-4348280]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4239300_108980.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4239300_108980.m4a"
+  > Creating sf2_smpl_4130288_108980.wav from sf2_smpl.wav [4130288-4239268]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4130288_108980.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4130288_108980.m4a"
+  > Creating sf2_smpl_4016221_114035.wav from sf2_smpl.wav [4016221-4130256]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4016221_114035.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4016221_114035.m4a"
+  > Creating sf2_smpl_3902154_114035.wav from sf2_smpl.wav [3902154-4016189]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3902154_114035.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3902154_114035.m4a"
+  > Creating sf2_smpl_3768424_133698.wav from sf2_smpl.wav [3768424-3902122]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3768424_133698.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3768424_133698.m4a"
+  > Creating sf2_smpl_3634694_133698.wav from sf2_smpl.wav [3634694-3768392]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3634694_133698.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3634694_133698.m4a"
+  > Creating sf2_smpl_3518729_115933.wav from sf2_smpl.wav [3518729-3634662]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3518729_115933.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3518729_115933.m4a"
+  > Creating sf2_smpl_3402764_115933.wav from sf2_smpl.wav [3402764-3518697]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3402764_115933.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3402764_115933.m4a"
+  > Creating sf2_smpl_3281996_120736.wav from sf2_smpl.wav [3281996-3402732]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3281996_120736.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3281996_120736.m4a"
+  > Creating sf2_smpl_3161228_120736.wav from sf2_smpl.wav [3161228-3281964]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3161228_120736.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3161228_120736.m4a"
+  > Creating sf2_smpl_3055639_105557.wav from sf2_smpl.wav [3055639-3161196]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3055639_105557.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3055639_105557.m4a"
+  > Creating sf2_smpl_2950050_105557.wav from sf2_smpl.wav [2950050-3055607]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2950050_105557.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2950050_105557.m4a"
+  > Creating sf2_smpl_2831238_118780.wav from sf2_smpl.wav [2831238-2950018]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2831238_118780.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2831238_118780.m4a"
+  > Creating sf2_smpl_2712426_118780.wav from sf2_smpl.wav [2712426-2831206]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2712426_118780.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2712426_118780.m4a"
+  > Creating sf2_smpl_2603872_108522.wav from sf2_smpl.wav [2603872-2712394]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2603872_108522.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2603872_108522.m4a"
+  > Creating sf2_smpl_2495318_108522.wav from sf2_smpl.wav [2495318-2603840]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2495318_108522.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2495318_108522.m4a"
+  > Creating sf2_smpl_2384207_111079.wav from sf2_smpl.wav [2384207-2495286]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2384207_111079.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2384207_111079.m4a"
+  > Creating sf2_smpl_2273096_111079.wav from sf2_smpl.wav [2273096-2384175]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2273096_111079.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2273096_111079.m4a"
+  > Creating sf2_smpl_2170616_102448.wav from sf2_smpl.wav [2170616-2273064]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2170616_102448.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2170616_102448.m4a"
+  > Creating sf2_smpl_2068136_102448.wav from sf2_smpl.wav [2068136-2170584]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2068136_102448.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2068136_102448.m4a"
+  > Creating sf2_smpl_1963464_104640.wav from sf2_smpl.wav [1963464-2068104]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1963464_104640.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1963464_104640.m4a"
+  > Creating sf2_smpl_1858792_104640.wav from sf2_smpl.wav [1858792-1963432]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1858792_104640.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1858792_104640.m4a"
+  > Creating sf2_smpl_1751655_107105.wav from sf2_smpl.wav [1751655-1858760]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1751655_107105.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1751655_107105.m4a"
+  > Creating sf2_smpl_1644518_107105.wav from sf2_smpl.wav [1644518-1751623]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1644518_107105.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1644518_107105.m4a"
+  > Creating sf2_smpl_1535803_108683.wav from sf2_smpl.wav [1535803-1644486]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1535803_108683.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1535803_108683.m4a"
+  > Creating sf2_smpl_1427088_108683.wav from sf2_smpl.wav [1427088-1535771]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1427088_108683.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1427088_108683.m4a"
+  > Creating sf2_smpl_1320673_106383.wav from sf2_smpl.wav [1320673-1427056]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1320673_106383.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1320673_106383.m4a"
+  > Creating sf2_smpl_1214258_106383.wav from sf2_smpl.wav [1214258-1320641]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1214258_106383.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1214258_106383.m4a"
+  > Creating sf2_smpl_1105105_109121.wav from sf2_smpl.wav [1105105-1214226]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1105105_109121.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1105105_109121.m4a"
+  > Creating sf2_smpl_995952_109121.wav from sf2_smpl.wav [995952-1105073]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_995952_109121.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_995952_109121.m4a"
+  > Creating sf2_smpl_892678_103242.wav from sf2_smpl.wav [892678-995920]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_892678_103242.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_892678_103242.m4a"
+  > Creating sf2_smpl_789404_103242.wav from sf2_smpl.wav [789404-892646]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_789404_103242.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_789404_103242.m4a"
+  > Creating sf2_smpl_680303_109069.wav from sf2_smpl.wav [680303-789372]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_680303_109069.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_680303_109069.m4a"
+  > Creating sf2_smpl_571202_109069.wav from sf2_smpl.wav [571202-680271]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_571202_109069.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_571202_109069.m4a"
+  > Creating sf2_smpl_472405_98765.wav from sf2_smpl.wav [472405-571170]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_472405_98765.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_472405_98765.m4a"
+  > Creating sf2_smpl_373608_98765.wav from sf2_smpl.wav [373608-472373]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_373608_98765.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_373608_98765.m4a"
+  > Creating sf2_smpl_273302_100274.wav from sf2_smpl.wav [273302-373576]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_273302_100274.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_273302_100274.m4a"
+  > Creating sf2_smpl_172996_100274.wav from sf2_smpl.wav [172996-273270]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_172996_100274.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_172996_100274.m4a"
+  > Creating sf2_smpl_86498_86466.wav from sf2_smpl.wav [86498-172964]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_86498_86466.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_86498_86466.m4a"
+  > Creating sf2_smpl_0_86466.wav from sf2_smpl.wav [0-86466]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_0_86466.wav" "C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_0_86466.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18195126_127624.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17946818_124122.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18322782_127624.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18450438_126355.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18703212_125902.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18576825_126355.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19077614_122502.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18829146_125902.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18955080_122502.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19200148_157111.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19514434_167287.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19357291_157111.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19681753_167287.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19849072_129249.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20107634_148452.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_19978353_129249.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20256118_148452.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20557768_153134.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20404602_153134.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20861996_151030.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_20710934_151030.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21173858_160768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21013058_160768.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21334658_171858.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21506548_171858.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21678438_168723.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_21847193_168723.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22015948_177038.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22193018_177038.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22370088_168021.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22538141_168021.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22874130_167904.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_22706194_167904.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23042066_165978.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23374086_173414.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23547532_173414.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23208076_165978.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23896952_175942.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_23720978_175942.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24072926_175272.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24248230_175272.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24600173_176607.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24423534_176607.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24776812_175982.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_24952826_175982.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25128840_175050.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25303922_175050.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25479004_177490.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_25656526_177490.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13463492_94672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13558196_93915.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13935522_95647.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13652143_93915.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13746090_94684.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13840806_94684.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14031201_95647.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14126880_97594.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14224506_97594.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14512234_87539.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14322132_95019.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14417183_95019.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14599805_87539.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14687376_111924.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14799332_111924.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15106348_94751.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_14911288_97498.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15008818_97498.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15482332_92151.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15201131_94751.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15389123_93177.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15295914_93177.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15869058_106626.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15666698_101148.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15767878_101148.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15574515_92151.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_15975716_106626.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16082374_103364.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16289166_128629.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17015542_109360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16185770_103364.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16417827_128629.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16546488_127371.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16801294_107092.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16673891_127371.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_16908418_107092.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17570334_120912.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17124934_109360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17234326_107500.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17341858_107500.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17819048_127738.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17449390_120912.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_18070972_124122.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_17691278_127738.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6161002_131058.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6292092_131058.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6423182_169035.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6592249_169035.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7205966_131114.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6918068_156720.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7074820_131114.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7337112_125620.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7462764_125620.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7588416_161183.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8063427_152549.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7749631_161183.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_7910846_152549.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8216008_155331.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8371371_155331.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8526734_159510.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8686276_159510.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9020963_175113.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_8845818_175113.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9196108_187067.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9383207_187067.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9570306_177262.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9747600_177262.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_9924894_176729.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10101655_176729.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10278416_176360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10991386_179859.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10454808_176360.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10631200_180061.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11351168_184259.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_10811293_180061.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11719750_181177.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11535459_184259.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11171277_179859.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_11900959_181177.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12082168_176184.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12258384_176184.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12434600_177070.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13368788_94672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12611702_177070.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13266676_102080.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12788804_187848.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_13164564_102080.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_12976684_187848.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_995952_109121.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1105105_109121.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1427088_108683.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1214258_106383.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1320673_106383.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1535803_108683.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1644518_107105.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1751655_107105.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1963464_104640.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_1858792_104640.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2068136_102448.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2170616_102448.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2273096_111079.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2384207_111079.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2495318_108522.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2603872_108522.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2712426_118780.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2831238_118780.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_2950050_105557.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3055639_105557.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3281996_120736.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3161228_120736.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3518729_115933.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3402764_115933.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3634694_133698.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3768424_133698.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_3902154_114035.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4016221_114035.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4348312_113715.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4130288_108980.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4462059_113715.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4239300_108980.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4575806_120898.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4696736_120898.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4817666_126921.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5071572_130774.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_4944619_126921.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5202378_130774.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5333184_131017.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5595282_137620.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5464233_131017.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5870586_145176.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_5732934_137620.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6015794_145176.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_6761316_156720.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_0_86466.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_373608_98765.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_86498_86466.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_172996_100274.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_273302_100274.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_472405_98765.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_571202_109069.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_680303_109069.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_789404_103242.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\001_Yamaha_C7\sf2_smpl_892678_103242.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_001_Yamaha_C7",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/001_Yamaha_C7/001_Yamaha_C7.sfz.json",
+  "name": "001_Yamaha_C7"
+}

@@ -1,0 +1,38 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\065_Alto_Sax.sfz.json
+Region count: 6
+Source samples to read: 1
+Dest samples to create: 6
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Super_Mario_Sunshine_sf2\004\..\sf2_smpl.wav
+  Samplerate: 32000
+  Channels: 1
+  Length in samples: 7025488
+  Min offset       : 6445648
+  Max offset       : 13393520
+  Reflen in samples: 6947872
+  > Creating sf2_smpl_6674496_44528.wav from sf2_smpl.wav [6674496-6719024]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6674496_44528.wav" "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6674496_44528.m4a"
+  > Creating sf2_smpl_6719056_64608.wav from sf2_smpl.wav [6719056-6783664]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6719056_64608.wav" "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6719056_64608.m4a"
+  > Creating sf2_smpl_6511232_62912.wav from sf2_smpl.wav [6511232-6574144]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6511232_62912.wav" "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6511232_62912.m4a"
+  > Creating sf2_smpl_6574176_53824.wav from sf2_smpl.wav [6574176-6628000]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6574176_53824.wav" "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6574176_53824.m4a"
+  > Creating sf2_smpl_6628032_46432.wav from sf2_smpl.wav [6628032-6674464]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6628032_46432.wav" "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6628032_46432.m4a"
+  > Creating sf2_smpl_6445648_65552.wav from sf2_smpl.wav [6445648-6511200]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6445648_65552.wav" "C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6445648_65552.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6674496_44528.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6719056_64608.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6511232_62912.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6574176_53824.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6628032_46432.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\065_Alto_Sax\sf2_smpl_6445648_65552.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_065_Alto_Sax",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/065_Alto_Sax/065_Alto_Sax.sfz.json",
+  "name": "065_Alto_Sax"
+}

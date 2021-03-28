@@ -1,0 +1,143 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven.sfz.json
+Region count: 10
+Source samples to read: 10
+Dest samples to create: 10
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 084.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 084.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\K2500\Piano Heaven\Piano Heaven 090.flac" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 090.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 530150
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 036_0_end.wav from Piano Heaven 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 536065
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 042_0_end.wav from Piano Heaven 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 511899
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 048_0_end.wav from Piano Heaven 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 593337
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 072_0_end.wav from Piano Heaven 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 550959
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 078_0_end.wav from Piano Heaven 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 084.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 519312
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 084_0_end.wav from Piano Heaven 084.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 084_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 084_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 520598
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 060_0_end.wav from Piano Heaven 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 574296
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 054_0_end.wav from Piano Heaven 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 090.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 634746
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 090_0_end.wav from Piano Heaven 090.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 090_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 090_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 550899
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Piano Heaven 066_0_end.wav from Piano Heaven 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 066_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 084_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 084.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 090_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 090.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Piano Heaven\Piano Heaven 066.flac.wav
+Completed processing source WAV files with 10 conversions.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Error: opcode loop_crossfade is going to cause issues.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_PianoHeaven",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Piano Heaven/Piano Heaven.sfz.json",
+  "name": "Piano Heaven"
+}

@@ -1,0 +1,59 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\012_Marimba.sfz.json
+Region count: 26
+Source samples to read: 1
+Dest samples to create: 13
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 133965968
+  Max offset       : 267985377
+  Reflen in samples: 134019409
+  > Creating sf2_smpl_133965968_53441.wav from sf2_smpl.wav [133965968-134019409]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_133965968_53441.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_133965968_53441.m4a"
+  > Creating sf2_smpl_134019432_76761.wav from sf2_smpl.wav [134019432-134096193]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134019432_76761.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134019432_76761.m4a"
+  > Creating sf2_smpl_134096216_91019.wav from sf2_smpl.wav [134096216-134187235]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134096216_91019.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134096216_91019.m4a"
+  > Creating sf2_smpl_134187258_61150.wav from sf2_smpl.wav [134187258-134248408]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134187258_61150.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134187258_61150.m4a"
+  > Creating sf2_smpl_134248431_51623.wav from sf2_smpl.wav [134248431-134300054]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134248431_51623.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134248431_51623.m4a"
+  > Creating sf2_smpl_134300077_74524.wav from sf2_smpl.wav [134300077-134374601]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134300077_74524.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134300077_74524.m4a"
+  > Creating sf2_smpl_134374624_54654.wav from sf2_smpl.wav [134374624-134429278]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134374624_54654.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134374624_54654.m4a"
+  > Creating sf2_smpl_134429301_33277.wav from sf2_smpl.wav [134429301-134462578]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134429301_33277.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134429301_33277.m4a"
+  > Creating sf2_smpl_134462601_32588.wav from sf2_smpl.wav [134462601-134495189]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134462601_32588.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134462601_32588.m4a"
+  > Creating sf2_smpl_134495212_27036.wav from sf2_smpl.wav [134495212-134522248]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134495212_27036.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134495212_27036.m4a"
+  > Creating sf2_smpl_134522271_37864.wav from sf2_smpl.wav [134522271-134560135]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134522271_37864.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134522271_37864.m4a"
+  > Creating sf2_smpl_134560158_23152.wav from sf2_smpl.wav [134560158-134583310]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134560158_23152.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134560158_23152.m4a"
+  > Creating sf2_smpl_134583333_12171.wav from sf2_smpl.wav [134583333-134595504]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134583333_12171.wav" "C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134583333_12171.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134096216_91019.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134019432_76761.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_133965968_53441.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134248431_51623.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134187258_61150.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134374624_54654.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134300077_74524.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134495212_27036.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134462601_32588.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134583333_12171.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134429301_33277.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134522271_37864.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\012_Marimba\sf2_smpl_134560158_23152.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_012_Marimba",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/012_Marimba/012_Marimba.sfz.json",
+  "name": "012_Marimba"
+}
