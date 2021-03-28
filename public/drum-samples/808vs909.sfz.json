@@ -1,0 +1,295 @@
+[
+  {
+    "sample": "909/30-909_Bd.m4a",
+    "key": 78
+  },
+  {
+    "sample": "909/29-909_Bd.m4a",
+    "key": 79
+  },
+  {
+    "sample": "909/28-909_Bd.m4a",
+    "key": 80
+  },
+  {
+    "sample": "909/27-909_Bd.m4a",
+    "key": 81
+  },
+  {
+    "sample": "909/26-909_Bd.m4a",
+    "key": 82
+  },
+  {
+    "sample": "909/25-909_Bd.m4a",
+    "key": 84
+  },
+  {
+    "sample": "909/24-909_Bd.m4a",
+    "key": 83
+  },
+  {
+    "sample": "909/23-909_Ride.m4a",
+    "key": 99
+  },
+  {
+    "sample": "909/22-909_Crash.m4a",
+    "key": 97
+  },
+  {
+    "sample": "909/21-909_Hh.m4a",
+    "key": 102
+  },
+  {
+    "sample": "909/20-909_Hh.m4a",
+    "key": 90
+  },
+  {
+    "sample": "909/19-909_Oh.m4a",
+    "key": 100
+  },
+  {
+    "sample": "909/18-909_Oh.m4a",
+    "key": 94
+  },
+  {
+    "sample": "909/17-909_Oh.m4a",
+    "key": 92
+  },
+  {
+    "sample": "909/16-909_Rim.m4a",
+    "key": 85
+  },
+  {
+    "sample": "909/15-909_Clp.m4a",
+    "key": 87
+  },
+  {
+    "sample": "909/14-909_Sd.m4a",
+    "key": 113
+  },
+  {
+    "sample": "909/13-909_Sd.m4a",
+    "key": 112
+  },
+  {
+    "sample": "909/12-909_Sd.m4a",
+    "key": 111
+  },
+  {
+    "sample": "909/11-909_Sd.m4a",
+    "key": 110
+  },
+  {
+    "sample": "909/10-909_Sd.m4a",
+    "key": 109
+  },
+  {
+    "sample": "909/09-909_Sd.m4a",
+    "key": 88
+  },
+  {
+    "sample": "909/08-909_Sd.m4a",
+    "key": 108
+  },
+  {
+    "sample": "909/07-909_Sd.m4a",
+    "key": 86
+  },
+  {
+    "sample": "909/06-909_Tom.m4a",
+    "key": 95
+  },
+  {
+    "sample": "909/05-909_Tom.m4a",
+    "key": 96
+  },
+  {
+    "sample": "909/04-909_Tom.m4a",
+    "key": 89
+  },
+  {
+    "sample": "909/03-909_Tom.m4a",
+    "key": 98
+  },
+  {
+    "sample": "909/02-909_Tom.m4a",
+    "key": 93
+  },
+  {
+    "sample": "909/01-909_Tom.m4a",
+    "key": 91
+  },
+  {
+    "sample": "808/01-Kit_Sd.m4a",
+    "key": 38
+  },
+  {
+    "sample": "808/02-808_Tom.m4a",
+    "key": 43
+  },
+  {
+    "sample": "808/03-808_Cng.m4a",
+    "key": 63
+  },
+  {
+    "sample": "808/04-808_Cng.m4a",
+    "key": 62
+  },
+  {
+    "sample": "808/05-808_Cng.m4a",
+    "key": 64
+  },
+  {
+    "sample": "808/06-808_Tom.m4a",
+    "key": 50
+  },
+  {
+    "sample": "808/07-808_Tom.m4a",
+    "key": 48
+  },
+  {
+    "sample": "808/08-808_Tom.m4a",
+    "key": 45
+  },
+  {
+    "sample": "808/09-808_Sd.m4a",
+    "key": 40
+  },
+  {
+    "sample": "808/10-808_Sd.m4a",
+    "key": 41
+  },
+  {
+    "sample": "808/11-808_Sd.m4a",
+    "key": 47
+  },
+  {
+    "sample": "808/12-808_Sd.m4a",
+    "key": 58
+  },
+  {
+    "sample": "808/13-808_Sd.m4a",
+    "key": 60
+  },
+  {
+    "sample": "808/14-808_Clp.m4a",
+    "key": 39
+  },
+  {
+    "sample": "808/15-808_Cb.m4a",
+    "key": 56
+  },
+  {
+    "sample": "808/16-808_Rim.m4a",
+    "key": 61
+  },
+  {
+    "sample": "808/17-808_Clp.m4a",
+    "key": 65
+  },
+  {
+    "sample": "808/18-808_Rim.m4a",
+    "key": 37
+  },
+  {
+    "sample": "808/19-808_Clv.m4a",
+    "key": 75
+  },
+  {
+    "sample": "808/20-808_Hh.m4a",
+    "key": 42,
+    "group": 1
+  },
+  {
+    "sample": "808/21-808_Oh.m4a",
+    "key": 69,
+    "group": 1
+  },
+  {
+    "sample": "808/22-808_Hh.m4a",
+    "key": 44,
+    "group": 1
+  },
+  {
+    "sample": "808/23-808_Hh.m4a",
+    "key": 71,
+    "group": 1
+  },
+  {
+    "sample": "808/24-808_Oh.m4a",
+    "key": 46,
+    "off_by": 1
+  },
+  {
+    "sample": "808/25-808_Sh.m4a",
+    "key": 54
+  },
+  {
+    "sample": "808/26-808_Ride.m4a",
+    "key": 51
+  },
+  {
+    "sample": "808/27-808_Ride.m4a",
+    "key": 49
+  },
+  {
+    "sample": "808/28-808_Sh.m4a",
+    "key": 70
+  },
+  {
+    "sample": "808/29-808_Ride.m4a",
+    "key": 59
+  },
+  {
+    "sample": "808/30-808_Ride.m4a",
+    "key": 52
+  },
+  {
+    "sample": "808/31-808_Bd.m4a",
+    "key": 36,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/32-808_Bd.m4a",
+    "key": 35,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/33-808_Bd.m4a",
+    "key": 34,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/34-808_Bd.m4a",
+    "key": 33,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/35-808_Bd.m4a",
+    "key": 32,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/36-808_Bd.m4a",
+    "key": 31,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/37-808_Bd.m4a",
+    "key": 30,
+    "group": 2,
+    "off_by": 2
+  },
+  {
+    "sample": "808/38-808_Bd.m4a",
+    "key": 29,
+    "group": 2,
+    "off_by": 2
+  }
+]

@@ -68,28 +68,24 @@
   "chatLog": [],
   "instrumentCloset": [
     {
-      "instrumentID": "mixer1",
-      "copyOfInstrumentID": "mixingdesk"
-    },
-    {
       "instrumentID": "fm4a",
+      "presetBankID": "fm4",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",
-      "presetBankID": "fm4",
       "name": "Mini FM A"
     },
     {
       "instrumentID": "fm4b",
-      "copyOfInstrumentID": "minifm",
       "presetBankID": "fm4",
+      "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4b: ",
       "name": "Mini FM B"
     },
     {
       "instrumentID": "microA",
       "copyOfInstrumentID": "minifm",
-      "presetBankID": "microFM",
       "namePrefix": "MicroA: ",
+      "presetBankID": "microFM",
       "name": "MicroA",
       "behaviorStyle": "microSub"
     },
@@ -113,124 +109,372 @@
       "activityDisplay": "keyboard"
     },
     {
-      "instrumentID": "sf2",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "electric_piano_1",
-      "gain": 1,
-      "name": "Rhodes",
-      "img": "",
+      "instrumentID": "sfzACPno",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(73, 137, 255)",
+      "name": "Acoustic Pianos",
+      "sfzArray": [
+        {
+          "gain": 1.8,
+          "transpose": 0,
+          "sfzURL": "/sfz/001_Yamaha_C7/001_Yamaha_C7.sfz.json",
+          "filtCutoffMul": 7000,
+          "name": "001_Yamaha_C7"
+        },
+        {
+          "gain": 0.7,
+          "sfzURL": "/sfz/Piano Heaven/Piano Heaven.sfz.json",
+          "sfzExtendRange": true,
+          "name": "Piano Heaven"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzEP",
+      "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(121, 255, 255)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "name": "Electric Pianos",
+      "sfzArray": [
+        {
+          "gain": 1,
+          "sfzURL": "/sfz/005_ElecPiano3/005_ElecPiano3.sfz.json",
+          "sfzExtendRange": true,
+          "name": "005_ElecPiano3"
+        },
+        {
+          "gain": 2.0,
+          "sfzURL": "/sfz/004_Rhodes_Piano/004_Rhodes_Piano.sfz.json",
+          "sfzExtendRange": true,
+          "name": "004_Rhodes_Piano"
+        },
+        {
+          "gain": 1,
+          "sfzURL": "/sfz/PR-A-014-Waterhodes/PR-A-014-Waterhodes.sfz.json",
+          "sfzExtendRange": true,
+          "name": "PR-A-014-Waterhodes"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/Itsa My Pad/Itsa My Pad.sfz.json",
+          "name": "Itsa My Pad"
+        }
+      ]
     },
     {
-      "instrumentID": "sf4",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "acoustic_guitar_steel",
-      "gain": 1,
-      "name": "Acoustic Guitar",
-      "img": "",
-      "color": "rgb(208, 144, 0)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "instrumentID": "sfzAcGt",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "Acoustic Guitars",
+      "sfzArray": [
+        {
+          "gain": 4,
+          "sfzURL": "/sfz/025_Steel_Guitar/025_Steel_Guitar.sfz.json",
+          "sfzExtendRange": true,
+          "name": "025_Steel_Guitar",
+          "sfzPatch": {
+            "velCurve": 1.0,
+            "velAmpMod": 0.3
+          }
+        },
+        {
+          "gain": 0.5,
+          "sfzURL": "/sfz/Perform-Int-088-Co Nylonsphere/Perform-Int-088-Co Nylonsphere.sfz.json",
+          "sfzExtendRange": true,
+          "name": "Perform-Int-088-Co Nylonsphere"
+        },
+        {
+          "sfzURL": "/sfz/XP-D-035-MellowGuitar/XP-D-035-MellowGuitar.sfz.json",
+          "sfzExtendRange": true,
+          "name": "XP-D-035-MellowGuitar"
+        }
+      ]
     },
     {
-      "instrumentID": "sf5",
-      "copyOfInstrumentID": "soundfont",
-      "name": "Marimba",
-      "sfinstrumentName": "marimba",
-      "img": "",
-      "color": "rgb(136, 68, 0)",
-      "gain": 1.0,
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "instrumentID": "sfzElGt",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "#ff5900",
+      "name": "Electric Guitars",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/PR-A-118-JC-Strat/PR-A-118-JC-Strat.sfz.json",
+          "sfzExtendRange": true,
+          "name": "PR-A-118-JC-Strat"
+        },
+        {
+          "sfzURL": "/sfz/026_Jazz_Guitar/026_Jazz_Guitar.sfz.json",
+          "sfzExtendRange": true,
+          "name": "026_Jazz_Guitar"
+        },
+        {
+          "sfzURL": "/sfz/029_Overdrive_Guitar/029_Overdrive_Guitar.sfz.json",
+          "sfzExtendRange": true,
+          "name": "029_Overdrive_Guitar"
+        }
+      ]
     },
     {
-      "instrumentID": "sf7",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "tango_accordion",
+      "instrumentID": "sfzBrass",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "#00ff55",
+      "name": "Brass",
+      "sfzArray": [
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/059_Mute_Trumpt88/059_Mute_Trumpt88.sfz.json",
+          "name": "059_Mute_Trumpt88"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/065_Alto_Sax/065_Alto_Sax.sfz.json",
+          "name": "065_Alto_Sax"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/061_BRASS/061_BRASS.sfz.json",
+          "name": "061_BRASS"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfz_G83SynCaliope",
+      "copyOfInstrumentID": "sfz",
+      "color": "green",
+      "sfzExtendRange": true,
+      "sfzURL": "/sfz/G83 SynCaliope/G83 SynCaliope.sfz.json",
+      "name": "G83 SynCaliope"
+    },
+    {
+      "instrumentID": "sfzAccordion",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "#12c781",
       "name": "Accordion",
-      "img": "",
-      "color": "rgb(220, 0, 152)",
-      "gain": 0.8,
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "sfzArray": [
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/021_Accordion/021_Accordion.sfz.json",
+          "name": "021_Accordion"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/022_HarmonicaVibrato/022_HarmonicaVibrato.sfz.json",
+          "name": "022_HarmonicaVibrato"
+        }
+      ]
     },
     {
-      "instrumentID": "sf8",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "string_ensemble_1",
-      "gain": 0.8,
+      "instrumentID": "sfzVox",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "#8eff40",
+      "name": "Vox",
+      "sfzArray": [
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-A-079-Fantasy-Vox/PR-A-079-Fantasy-Vox.sfz.json",
+          "name": "PR-A-079-Fantasy-Vox"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-C-016-Dark Vox/PR-C-016-Dark Vox.sfz.json",
+          "name": "PR-C-016-Dark Vox"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/ChoraleSul/ChoraleSul.sfz.json",
+          "name": "ChoraleSul"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzPad",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(255, 75, 75)",
+      "name": "Pad",
+      "sfzArray": [
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/Soundtrack/Soundtrack.sfz.json",
+          "name": "Soundtrack"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/Andromedae/Andromedae.sfz.json",
+          "name": "Andromedae"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/094_Halo_Padx/094_Halo_Padx.sfz.json",
+          "name": "094_Halo_Padx"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/JayB-105-Pd DigiPad/JayB-105-Pd DigiPad.sfz.json",
+          "name": "JayB-105-Pd DigiPad"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/XP-E-205-Miracle-Pad/XP-E-205-Miracle-Pad.sfz.json",
+          "name": "XP-E-205-Miracle-Pad"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzStr",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(255, 75, 75)",
       "name": "Strings",
-      "img": "",
-      "color": "rgb(255, 0, 0)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/048_Orchestra_Pad/048_Orchestra_Pad.sfz.json",
+          "sfzExtendRange": true,
+          "name": "048_Orchestra_Pad"
+        },
+        {
+          "sfzURL": "/sfz/050_JP_Strings/050_JP_Strings.sfz.json",
+          "sfzExtendRange": true,
+          "name": "050_JP_Strings"
+        }
+      ]
     },
     {
-      "instrumentID": "choir_aahs",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "choir_aahs",
-      "gain": 3,
-      "name": "Choir",
-      "img": "",
-      "color": "rgb(131, 145, 255)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "instrumentID": "sfzPluck",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(255, 245, 53)",
+      "name": "Pluck",
+      "sfzArray": [
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/XP-C-128-Atmospluck/XP-C-128-Atmospluck.sfz.json",
+          "name": "XP-C-128-Atmospluck"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/Oxygene 2 Pluck/Oxygene 2 Pluck.sfz.json",
+          "name": "Oxygene 2 Pluck"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/046_Harp/046_Harp.sfz.json",
+          "name": "046_Harp"
+        }
+      ]
     },
     {
-      "instrumentID": "sf9",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "synth_brass_1",
-      "gain": 0.7,
-      "name": "Synth Brass",
-      "img": "",
-      "color": "rgb(255, 228, 153)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "instrumentID": "sfzMallet",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(255, 245, 53)",
+      "name": "Mallet / Bell",
+      "sfzArray": [
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
+          "name": "011_Vibraphone"
+        },
+        {
+          "ignoreLoop": true,
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/012_Marimba/012_Marimba.sfz.json",
+          "name": "012_Marimba"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/009_Glockenspiel/009_Glockenspiel.sfz.json",
+          "name": "009_Glockenspiel"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/XP-C-087-Gamelan-x4/XP-C-087-Gamelan-x4.sfz.json",
+          "name": "XP-C-087-Gamelan-x4"
+        }
+      ]
     },
     {
-      "instrumentID": "sf10",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "muted_trumpet",
-      "gain": 1,
-      "name": "Muted Trumpet",
-      "img": "",
-      "color": "rgb(36, 152, 50)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "instrumentID": "sfzBass",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(203, 203, 203)",
+      "name": "Bass",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/034_Picked_Bass/034_Picked_Bass.sfz.json",
+          "sfzExtendRange": true,
+          "name": "034_Picked_Bass"
+        },
+        {
+          "sfzURL": "/sfz/CD-A-061-Ecta Bass/CD-A-061-Ecta Bass.sfz.json",
+          "sfzExtendRange": true,
+          "name": "CD-A-061-Ecta Bass"
+        },
+        {
+          "sfzURL": "/sfz/037_Slap_Bass_2/037_Slap_Bass_2.sfz.json",
+          "sfzExtendRange": true,
+          "name": "037_Slap_Bass_2"
+        },
+        {
+          "sfzURL": "/sfz/032_Acoustic_Bass/032_Acoustic_Bass.sfz.json",
+          "sfzExtendRange": true,
+          "name": "032_Acoustic_Bass"
+        }
+      ]
     },
     {
-      "instrumentID": "sf11",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "acoustic_bass",
-      "gain": 1,
-      "name": "Double Bass",
-      "img": "",
-      "color": "rgb(109, 107, 36)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
+      "instrumentID": "sfzPerc",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(91, 91, 255)",
+      "name": "Percussion",
+      "sfzArray": [
+        {
+          "sfzURL": "/drum-samples/BagOPercussion/BagOPercussion.json",
+          "name": "BagOPercussion"
+        }
+      ]
+    },
+        {
+      "instrumentID": "sfzDrums",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(91, 91, 255)",
+      "name": "Drum kits",
+      "sfzArray": [
+        {
+          "sfzURL": "/drum-samples/808vs909.sfz.json",
+          "name": "808 vs 909"
+        },
+        {
+          "sfzURL": "/drum-samples/jazzy/jazz.sfz.json",
+          "name": "Jazzy"
+        },
+        
+        {
+          "sfzURL": "/drum-samples/LINN/linn.sfz.json",
+          "name": "LINN"
+        },
+        {
+          "sfzURL": "/drum-samples/SC88/sc88.sfz.json",
+          "name": "SC88"
+        },
+        {
+          "sfzURL": "/drum-samples/SecretOfManaExt/SecretOfManaExt.sfz.json",
+          "name": "SecretOfManaExt"
+        },
+        
+        {
+          "ignoreLoop": true,
+          "sfzURL": "/sfz/User-61-XV-BrushKit/User-61-XV-BrushKit.sfz.json",
+          "name": "User-61-XV-BrushKit"
+        },
+        {
+          "ignoreLoop": true,
+          "sfzURL": "/sfz/010_Pop/010_Pop.sfz.json",
+          "name": "010_Pop"
+        },
+        {
+          "ignoreLoop": true,
+          "sfzURL": "/sfz/032_Jazz/032_Jazz.sfz.json",
+          "name": "032_Jazz"
+        }
+      ]
     },
     {
-      "instrumentID": "sf12",
-      "copyOfInstrumentID": "soundfont",
-      "sfinstrumentName": "slap_bass_2",
-      "gain": 1,
-      "name": "Slap Bass",
-      "img": "",
-      "color": "rgb(111, 111, 111)",
-      "engine": "soundfont",
-      "activityDisplay": "keyboard"
-    },
-    {
-      "instrumentID": "perckit1",
-      "copyOfInstrumentID": "perckit"
-    },
-    {
-      "instrumentID": "drumkit1",
-      "copyOfInstrumentID": "drumkit",
-      "namePrefix": "Drums: ",
-      "name": "Drums"
+      "instrumentID": "mixer1",
+      "copyOfInstrumentID": "mixingdesk"
     }
   ]
 }

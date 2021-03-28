@@ -1,0 +1,40 @@
+[
+            {
+              "sample": "KICK_1.m4a",
+              "key": 35
+            },
+            {
+              "sample": "KICK_2.m4a",
+              "key": 36
+            },
+            {
+              "sample": "SNARE_1.m4a",
+              "key": 38
+            },
+            {
+              "sample": "SNARE_2.m4a",
+              "key": 40
+            },
+            {
+              "sample": "SM64_Closed_Hat.m4a",
+              "key": 42,
+              "group":1
+            },
+            {
+              "sample": "openhat.m4a",
+              "key": 46,
+              "off_by":1
+            },
+            {
+              "sample": "CRASH_1.m4a",
+              "key": 49
+            },
+            {
+              "sample": "ride.m4a",
+              "key": 51
+            },
+            {
+              "sample": "CRASH_2.m4a",
+              "key": 55
+            }
+          ]

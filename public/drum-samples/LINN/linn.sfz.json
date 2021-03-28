@@ -1,0 +1,40 @@
+[
+            {
+              "sample": "Acoustic_Bass_Drum.m4a",
+              "lokey": 35,
+              "hikey":36,
+              "pitch_keycenter":36
+            },
+            {
+              "sample": "Closed_Hi_Hat.m4a",
+              "key": 42
+            },
+            {
+              "sample": "Acoustic_Snare.m4a",
+              "lokey": 38,
+              "hikey": 40,
+              "pitch_keycenter":38
+            },
+            {
+              "sample": "Low_Floor_Tom.m4a",
+              "key": 48
+            },
+            {
+              "sample": "Low_Floor_Tom.m4a",
+              "detune": -200,
+              "key": 47
+            },
+            {
+              "sample": "High_Floor_Tom.m4a",
+              "key": 45
+            },
+            {
+              "sample": "High_Floor_Tom.m4a",
+              "detune": -200,
+              "key": 43
+            },
+            {
+              "sample": "LowMidTom.m4a",
+              "key": 41
+            }
+          ]

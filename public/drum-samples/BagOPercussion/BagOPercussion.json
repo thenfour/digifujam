@@ -1,0 +1,165 @@
+[
+  {
+    "sample": "mp3/Dununba_AfroShop_1.mp3",
+    "key": 35
+  },
+  {
+    "sample": "mp3/Conga_DueWest_2.mp3",
+    "key": 46,
+    "off_by": 1
+  },
+  {
+    "sample": "mp3/Conga_Fiasco_1.mp3",
+    "key": 40
+  },
+  {
+    "sample": "mp3/Conga_Fiasco_2.mp3",
+    "key": 43
+  },
+  {
+    "sample": "mp3/Conga_Fiasco_3.mp3",
+    "key": 45
+  },
+  {
+    "sample": "mp3/Conga_Fiasco_4.mp3",
+    "key": 38
+  },
+  {
+    "sample": "mp3/Conga_Groovin_1.mp3",
+    "key": 41
+  },
+  {
+    "sample": "mp3/Conga_Groovin_2.mp3",
+    "key": 39
+  },
+  {
+    "sample": "mp3/Conga_MadFlavor_1.mp3",
+    "key": 42,
+    "group": 1
+  },
+  {
+    "sample": "mp3/Conga_MadFlavor_2.mp3",
+    "key": 37
+  },
+  {
+    "sample": "mp3/Conga_Steveland_2.mp3",
+    "key": 47
+  },
+  {
+    "sample": "mp3/Calabash_AfroShop.mp3",
+    "key": 36
+  },
+  {
+    "sample": "mp3/HiCongaMute_727.mp3",
+    "key": 44
+  },
+  {
+    "sample": "mp3/HK_PR_Bell_01.mp3",
+    "key": 66
+  },
+  {
+    "sample": "mp3/HK_PR_Bell_02.mp3",
+    "key": 65
+  },
+  {
+    "sample": "mp3/HK_PR_Bell_07.mp3",
+    "key": 64
+  },
+  {
+    "sample": "mp3/HK_PR_Guiro_01a.mp3",
+    "key": 60
+  },
+  {
+    "sample": "mp3/HK_PR_Guiro_01c.mp3",
+    "key": 61
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_04.mp3",
+    "detune": -200,
+    "key": 52
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_04.mp3",
+    "key": 53
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_07.mp3",
+    "detune": -200,
+    "key": 49
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_07.mp3",
+    "key": 50
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_13.mp3",
+    "key": 48
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_14.mp3",
+    "key": 51
+  },
+  {
+    "sample": "mp3/HK_PR_Timbale_17.mp3",
+    "key": 54
+  },
+  {
+    "sample": "mp3/HK_PR_Triangle_01.mp3",
+    "key": 72,
+    "off_by": 2
+  },
+  {
+    "sample": "mp3/HK_PR_Triangle_02.mp3",
+    "key": 73,
+    "group": 2
+  },
+  {
+    "sample": "mp3/HK_PR_Vibraslap_01.mp3",
+    "key": 59
+  },
+  {
+    "sample": "mp3/Shaker_Alphabetical_1.mp3",
+    "key": 70
+  },
+  {
+    "sample": "mp3/Shaker_Alphabetical_4.mp3",
+    "key": 69
+  },
+  {
+    "sample": "mp3/Shaker_Bikini_1.mp3",
+    "key": 67
+  },
+  {
+    "sample": "mp3/Shaker_Bikini_2.mp3",
+    "key": 68
+  },
+  {
+    "sample": "mp3/SR16_Prc_Clave_Hi.mp3",
+    "key": 63
+  },
+  {
+    "sample": "mp3/SR16_Prc_Clave_Lo.mp3",
+    "key": 62
+  },
+  {
+    "sample": "mp3/Tamb.mp3",
+    "key": 71
+  },
+  {
+    "sample": "mp3/Wood_Zion.mp3",
+    "key": 58
+  },
+  {
+    "sample": "mp3/Woodblock_Zion.mp3",
+    "key": 55
+  },
+  {
+    "sample": "mp3/WoodLow_Session_V11.mp3",
+    "detune": -200,
+    "key": 56
+  },
+  {
+    "sample": "mp3/WoodLow_Session_V11.mp3",
+    "key": 57
+  }
+]
