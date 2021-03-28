@@ -1,4 +1,5 @@
 'use strict';
+// https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
 
 var Soundfont = require('soundfont-player')
 const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
@@ -6,6 +7,7 @@ const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SoundfontInstrument {
 	constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
+        instrumentSpec.loadProgress = 1;
 		/*
 
 		(soundfont) --> [sfOutput] --> [masterDryGain] --> dryDestination

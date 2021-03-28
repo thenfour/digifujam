@@ -79,10 +79,322 @@
   "chatLog": [],
   "instrumentCloset": [
     {
-      "instrumentID": "sfz1",
+      "instrumentID": "sfzACPno",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(73, 137, 255)",
+      "name": "SFZ: Acoustic Pianos",
+      "sfzArray": [
+        {
+          "gain": 1.0,
+          "transpose": 0,
+          "sfzURL": "/sfz/001_Yamaha_C7/001_Yamaha_C7.sfz.json",
+          "filtCutoffMul": 7000,
+          "name": "001_Yamaha_C7"
+        },
+        {
+          "gain": 1.0,
+          "transpose": 0,
+          "sfzURL": "/sfz/000_Grand_Piano/000_Grand_Piano.sfz.json",
+          "ignoreLoop": true,
+          "name": "000_Grand_Piano"
+        },
+        {
+          "sfzURL": "/sfz/Piano Heaven/Piano Heaven.sfz.json",
+          "sfzExtendRange": true,
+          "name": "Piano Heaven"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzEP",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(121, 255, 255)",
+      "name": "SFZ: Electric Pianos",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/005_ElecPiano3/005_ElecPiano3.sfz.json",
+          "name": "005_ElecPiano3"
+        },
+        {
+          "sfzURL": "/sfz/004_Rhodes_Piano/004_Rhodes_Piano.sfz.json",
+          "name": "004_Rhodes_Piano"
+        },
+        {
+          "sfzURL": "/sfz/005_Epiano_2_-_Rev/005_Epiano_2_-_Rev.sfz.json",
+          "sfzReleaseMul": 0.33,
+          "sfzExtendRange": true,
+          "name": "005_Epiano_2_-_Rev"
+        },
+        {
+          "sfzURL": "/sfz/PR-A-014-Waterhodes/PR-A-014-Waterhodes.sfz.json",
+          "sfzExtendRange": true,
+          "name": "PR-A-014-Waterhodes"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzAcGt",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Acoustic Guitars",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/025_Steel_Guitar/025_Steel_Guitar.sfz.json",
+          "name": "025_Steel_Guitar"
+        },
+        {
+          "sfzURL": "/sfz/085 Steel Str Guitar/085 Steel Str Guitar.sfz.json",
+          "name": "085 Steel Str Guitar"
+        },
+        {
+          "sfzURL": "/sfz/024_Nylon_Guitar/024_Nylon_Guitar.sfz.json",
+          "name": "024_Nylon_Guitar"
+        },
+        {
+          "sfzURL": "/sfz/024_Nylon-str._Guitar/024_Nylon-str._Guitar.sfz.json",
+          "name": "024_Nylon-str._Guitar"
+        },
+        {
+          "sfzURL": "/sfz/025_Nylon+Steel/025_Nylon+Steel.sfz.json",
+          "name": "025_Nylon+Steel"
+        },
+        {
+          "sfzURL": "/sfz/Perform-Int-088-Co Nylonsphere/Perform-Int-088-Co Nylonsphere.sfz.json",
+          "name": "Perform-Int-088-Co Nylonsphere"
+        },
+        {
+          "sfzURL": "/sfz/PR-D-031-Nylon-Guitar/PR-D-031-Nylon-Guitar.sfz.json",
+          "name": "PR-D-031-Nylon-Guitar"
+        },
+        {
+          "sfzURL": "/sfz/CD-A-06 Children/CD-A-06 Children.sfz.json",
+          "name": "CD-A-06 Children"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzElGt",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Electric Guitars",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/PR-A-115-LetterFrmPat/PR-A-115-LetterFrmPat.sfz.json",
+          "name": "PR-A-115-LetterFrmPat"
+        },
+        {
+          "sfzURL": "/sfz/PR-A-118-JC-Strat/PR-A-118-JC-Strat.sfz.json",
+          "name": "PR-A-118-JC-Strat"
+        },
+        {
+          "sfzURL": "/sfz/CD-B-007-Vocostrat/CD-B-007-Vocostrat.sfz.json",
+          "name": "CD-B-007-Vocostrat"
+        },
+        {
+          "sfzURL": "/sfz/027_Clean_Guitar/027_Clean_Guitar.sfz.json",
+          "name": "027_Clean_Guitar"
+        },
+        {
+          "sfzURL": "/sfz/026_Jazz_Guitar/026_Jazz_Guitar.sfz.json",
+          "name": "026_Jazz_Guitar"
+        },
+        {
+          "sfzURL": "/sfz/XP-D-035-MellowGuitar/XP-D-035-MellowGuitar.sfz.json",
+          "name": "XP-D-035-MellowGuitar"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfz_G83SynCaliope",
       "copyOfInstrumentID": "sfz",
-      "sfzURL": "/sfz/Fantasia/Fantasia.sfz.json",
-      "name": "Fantasia"
+      "sfzURL": "/sfz/G83 SynCaliope/G83 SynCaliope.sfz.json",
+      "name": "G83 SynCaliope"
+    },
+    {
+      "instrumentID": "sfz_Oxygene2Pluck",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/Oxygene 2 Pluck/Oxygene 2 Pluck.sfz.json",
+      "name": "Oxygene 2 Pluck"
+    },
+    {
+      "instrumentID": "sfzPad",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Pad",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/Soundtrack/Soundtrack.sfz.json",
+          "name": "Soundtrack"
+        }
+
+      ]
+    },
+    {
+      "instrumentID": "sfzStr",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Strings",
+      "sfzArray": []
+    },
+    {
+      "instrumentID": "sfzBass",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Bass",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/Synth Fretless/Synth Fretless.sfz.json",
+          "name": "Synth Fretless"
+        },
+        {
+          "sfzURL": "/sfz/034_Picked_Bass/034_Picked_Bass.sfz.json",
+          "name": "034_Picked_Bass"
+        },
+        {
+          "sfzURL": "/sfz/CD-A-061-Ecta Bass/CD-A-061-Ecta Bass.sfz.json",
+          "name": "CD-A-061-Ecta Bass"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzPerc",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Percussion",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/XP-E-005-Scratch-Menu/XP-E-005-Scratch-Menu.sfz.json",
+          "name": "XP-E-005-Scratch-Menu"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzDrums",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Drum kits",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/User-61-XV-BrushKit/User-61-XV-BrushKit.sfz.json",
+          "name": "User-61-XV-BrushKit"
+        },
+        {
+          "sfzURL": "/sfz/000_Standard/000_Standard.sfz.json",
+          "name": "000_Standard"
+        },
+        {
+          "sfzURL": "/sfz/003_Electro/003_Electro.sfz.json",
+          "name": "003_Electro"
+        },
+        {
+          "sfzURL": "/sfz/010_Pop/010_Pop.sfz.json",
+          "name": "010_Pop"
+        },
+        {
+          "sfzURL": "/sfz/032_Jazz/032_Jazz.sfz.json",
+          "name": "032_Jazz"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzMallet",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Mallet / Bell",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/CD-B-001-Morning/CD-B-001-Morning.sfz.json",
+          "name": "CD-B-001-Morning"
+        },
+        {
+          "sfzURL": "/sfz/GM-205-Steel-Drums/GM-205-Steel-Drums.sfz.json",
+          "name": "GM-205-Steel-Drums"
+        },
+        {
+          "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
+          "name": "011_Vibraphone"
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzVox",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "orange",
+      "name": "SFZ: Vox",
+      "sfzArray": [
+        {
+          "sfzURL": "/sfz/PR-A-079-Fantasy-Vox/PR-A-079-Fantasy-Vox.sfz.json",
+          "name": "PR-A-079-Fantasy-Vox"
+        },
+        {
+          "sfzURL": "/sfz/PR-C-016-Dark Vox/PR-C-016-Dark Vox.sfz.json",
+          "name": "PR-C-016-Dark Vox"
+        },
+        {
+          "sfzURL": "/sfz/ChoraleSul/ChoraleSul.sfz.json",
+          "name": "ChoraleSul"
+        }
+          ]
+    },
+    {
+      "instrumentID": "sfz_Andromedae",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/Andromedae/Andromedae.sfz.json",
+      "name": "Andromedae"
+    },
+    {
+      "instrumentID": "sfz_Megastructure",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/Megastructure/Megastructure.sfz.json",
+      "name": "Megastructure"
+    },
+    {
+      "instrumentID": "sfz_PRB065AnalogSeq",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/PR-B-065-Analog-Seq/PR-B-065-Analog-Seq.sfz.json",
+      "name": "PR-B-065-Analog-Seq"
+    },
+    {
+      "instrumentID": "sfz_A34LASynth",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/A34 LA Synth/A34 LA Synth.sfz.json",
+      "name": "A34 LA Synth"
+    },
+    {
+      "instrumentID": "sfz_PRD128RainForest",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/PR-D-128-Rain-Forest/PR-D-128-Rain-Forest.sfz.json",
+      "name": "PR-D-128-Rain-Forest"
+    },
+    {
+      "instrumentID": "sfz_PRE124QueenV",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/PR-E-124-Queen-V/PR-E-124-Queen-V.sfz.json",
+      "name": "PR-E-124-Queen-V"
+    },
+    {
+      "instrumentID": "sfz_XPC128Atmospluck",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/XP-C-128-Atmospluck/XP-C-128-Atmospluck.sfz.json",
+      "name": "XP-C-128-Atmospluck"
+    },
+    {
+      "instrumentID": "sfz_XPC087Gamelanx4",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/XP-C-087-Gamelan-x4/XP-C-087-Gamelan-x4.sfz.json",
+      "name": "XP-C-087-Gamelan-x4"
+    },
+    {
+      "instrumentID": "sfz_065_Alto_Sax",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/065_Alto_Sax/065_Alto_Sax.sfz.json",
+      "name": "065_Alto_Sax"
+    },
+    {
+      "instrumentID": "sfz_046_Harp",
+      "copyOfInstrumentID": "sfz",
+      "sfzURL": "/sfz/046_Harp/046_Harp.sfz.json",
+      "name": "046_Harp"
     },
     {
       "instrumentID": "mixer1",

@@ -3,11 +3,9 @@ imports audio & json to a format the server can easily serve up.
 samples are converted to m4a and brought into the same dir as the sfz.
 */
 const fs = require('fs');
-//const readline = require('readline');
 const parseSFZ = require('./clientsrc/sfzParser');
 const wav = require('node-wav');
 const exec = require('child_process').exec
-//const ffmpeg = require('ffmpeg');
 
 function GetLeaf(path) {
   if (!path.includes("\\")) return path;
@@ -311,6 +309,9 @@ Object.keys(srcSamples).forEach(originalPath => {
 Promise.allSettled(conversionPromises).then(() => {
   console.log(`Completed processing source WAV files with ${conversionPromises.length} conversions.`);
 
+  let cutoffMin = null;
+  let cutoffMax = null;
+
   const unsupportedOpcodes = [
     "region_label",
   ];
@@ -329,9 +330,13 @@ Promise.allSettled(conversionPromises).then(() => {
     "volume",
     "pan",
     "tune",
+    "cutoff",
+    "resonance",
   ];
   const intOpcodes = [
     "pitch_keycenter",
+    "group",
+    "off_by",
   ];
   const renameOpcodes = {
     "polyphony_group": "group",
@@ -407,6 +412,13 @@ Promise.allSettled(conversionPromises).then(() => {
   // generate a sample instrumentspec...
   console.log(`Import complete.`);
 
+  // a lot of sfz instruments have some oddball filter cutoff frequency range. alert to that.
+  let filtCutoffMul = null;
+  if (cutoffMin !== null && cutoffMax !== null) {
+    filtCutoffMul = 22050 / cutoffMax;
+    console.log(`Filter cutoff range [${cutoffMin}-${cutoffMax}]`);
+    //console.log(`${filtCutoffMul}`);
+  }
   const pubDir = (__dirname + "\\public").toLowerCase();
   if (outputJSONPath.toLowerCase().startsWith(pubDir)) {
     console.log(`Sample JSON instrument spec:`);
@@ -416,12 +428,12 @@ Promise.allSettled(conversionPromises).then(() => {
       "sfzURL": outputJSONPath.substr(pubDir.length).replace(/\\/g, "/"),
       "name": RemoveExtension(GetLeaf(sfzpath)),
     };
-
+    if (filtCutoffMul !== null) {
+      sampleSpec.filtCutoffMul = filtCutoffMul;
+    }
 
     console.log(JSON.stringify(sampleSpec, null, 2));
-
   }
-
 
 
 }); // wait for conversions to complete.

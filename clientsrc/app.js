@@ -220,7 +220,7 @@ class DigifuApp {
         //this.isSelfMuted = false; // ability to mute yourself
 
         // monitoring your own playback
-        this.monitoringType = eMonitoringType.Local;
+        this.monitoringType = eMonitoringType.Remote;
 
         this.net = new DFNet.DigifuNet();
 
@@ -1017,7 +1017,7 @@ class DigifuApp {
         this.net.SendAdjustBeatPhase(relativeMS);
     }
 
-    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token) {
+    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
@@ -1051,7 +1051,7 @@ class DigifuApp {
             this.audioCtx.endScope = () => { };
         }
 
-        this.synth.Init(this.audioCtx, () => { return this.roomState; });
+        this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress);
         this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
         this.net.Connect(this, google_access_token);
     };

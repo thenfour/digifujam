@@ -1009,7 +1009,7 @@ class DigifuInstrumentSpec {
         if (this.engine === "minifm" && this.behaviorStyle === "microSub") {
             return ["master", "∿ Osc A"];
         }
-        if (this.engine === "drumkit") {
+        if (this.engine === "drumkit" || this.engine === "sfz") {
             return ["master", "Macro", "Filter"];
         }
         if (this.engine === "mixingdesk") {
@@ -1679,6 +1679,24 @@ class DigifuRoomState {
                 i.drumKits[kitName] = externalKits[kitName];
             });
         });
+
+        // set enumvalues of sfz multi and and value ranges for enums.
+        ret.instrumentCloset.forEach(i => {
+            const sfzSelect = i.params.find(p => p.paramID === "sfzSelect");
+            if (sfzSelect && ('sfzArray' in i)) {
+                sfzSelect.enumNames = i.sfzArray.map(sfz => {
+                    return sfz.name;
+                });
+            }
+            
+            i.params.forEach(p => {
+                if ('enumNames' in p) {
+                    p.minValue = 0;
+                    p.maxValue = p.enumNames.length - 1;
+                }
+            });
+        });
+        
 
         // initialize the parameters of mixingdesk.
         ret.instrumentCloset.forEach(i => {

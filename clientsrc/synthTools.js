@@ -36,12 +36,51 @@ let AjaxJSON = function (url, successHandler, errorHandler) {
         } else if (request.responseType === 'text') {
             strjson = request.responseText;
         }
-        successHandler(JSON.parse(strjson));
+        successHandler(strjson);
     };
     request.error = errorHandler;
     request.abort = errorHandler;
     request.send();
 }
+
+// just maps name to prepared sample buffer, and hands out AudioBufferSourceNodes when needed.
+class JSONCache {
+    constructor() {
+        this.responseMap = {}; // map URL to { text, completions[] }
+    }
+    loadFromURL(url, onSuccess, onError) {
+        let existing = this.responseMap[url];
+        if (existing) {
+            if (existing.text) {
+                onSuccess(existing.text);
+                return;
+            }
+            // it's still loading; add the completion handlers.
+            existing.completions.push({ onSuccess, onError });
+            return;
+        }
+        this.responseMap[url] = {
+            text: null,
+            completions: [{ onSuccess, onError }]
+        };
+        AjaxJSON(url, text => {
+            this.responseMap[url].text = text;
+            this.responseMap[url].completions.forEach(h => h.onSuccess(text));
+            this.responseMap[url].completions = [];
+        }, err => {
+            this.responseMap[url].completions.forEach(e => e.onError(err));
+            this.responseMap[url].completions = [];
+        });
+    };
+};
+
+const gJSONCache = new JSONCache();
+
+let LoadCachedJSON = function (url, successHandler, errorHandler) {
+    gJSONCache.loadFromURL(url, text => successHandler(JSON.parse(text)), errorHandler);
+};
+
+
 
 // SampleCache holds loading & accessing samples
 // DrumKitVoice handles translating a MIDI message into a drum sample
@@ -407,5 +446,6 @@ module.exports = {
     AudioGraphHelper,
     SampleCache,
     AjaxJSON,
+    LoadCachedJSON,
 };
 

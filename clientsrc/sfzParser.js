@@ -1,5 +1,12 @@
 // https://sfzformat.com/legacy/
 
+// general structure is like,
+// <control>
+// <global>
+//  <master>
+// 	  <group>
+// 		<region>
+
 function matchAll(str/*: string*/, regexp/*: RegExp*/) {
     let match = null;//: RegExpExecArray | null = null;
     const res = [];
@@ -40,6 +47,8 @@ function parseSFZ(sfzText) {
     sfzText = sfzText.replace(/\/\/.*$/gm, "");
     const ret = {}; // SFZ <header> is an array of instances, and each instance is an object of opcodes.
 
+    // <master>. because this is not a hierarchical format, <master> does the same thing as <group> but higher level.
+    let currentMasterOpcodes = {};
     // <group> headers 
     let currentGroupOpcodes = {};
 
@@ -73,9 +82,13 @@ function parseSFZ(sfzText) {
         if (headerName === "group") {
             currentGroupOpcodes = headerInstanceOpcodes;
         }
+        else if (headerName === "master") {
+            currentMasterOpcodes = headerInstanceOpcodes;
+        }
         else if (headerName === "region") {
-            // apply group params.
-            let tmp = Object.assign({}, currentGroupOpcodes);
+            // apply inherited params from master/group.
+            let tmp = Object.assign({}, currentMasterOpcodes);
+            tmp = Object.assign(tmp, currentGroupOpcodes);
             headerInstanceOpcodes = Object.assign(tmp, headerInstanceOpcodes);
         }
 
@@ -83,19 +96,6 @@ function parseSFZ(sfzText) {
     });
     return ret;
 };
-
-// // <control>
-// // <global>
-// // 	<group>
-// // 		<region>
-// // 			sample=
-// // 		<region>
-// // 			sample=
-// // 	<group>
-// // 		<region>
-// // 			sample=
-// // 		<region>
-// // 			sample=
 
 module.exports = parseSFZ;
 

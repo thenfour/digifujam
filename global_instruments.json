@@ -2189,13 +2189,15 @@
         }
       ]
     },
-
-
     {
       "instrumentID": "sfz",
       "engine": "sfz",
+      "supportsPresets": false,
+      "gain": 1.0,
+      "transpose": 0,
+      "maxPolyphony": 12,
       "activityDisplay": "keyboard",
-      "params":[
+      "params": [
         {
           "paramID": "masterGain",
           "name": "Master gain",
@@ -2213,11 +2215,166 @@
           "minValue": 0.0,
           "maxValue": 1.0,
           "defaultValue": 0.2
+        },
+        {
+          "paramID": "velCurve",
+          "name": "Velocity Curve",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 4.0,
+          "defaultValue": 2.0
+        },
+        {
+          "paramID": "velAmpMod",
+          "name": "Vel->Amp",
+          "groupName": "master",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 1,
+          "defaultValue": 1,
+          "enumNames": [
+            "Off",
+            "On"
+          ]
+        },
+        {
+          "paramID": "filterType",
+          "name": "Type",
+          "groupName": "Filter",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Off",
+            "LP",
+            "HP",
+            "BP"
+          ]
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterFreq",
+          "name": "Freq",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "valueCurve": 3.5,
+          "defaultValue": 800,
+          "minValue": 20.0,
+          "maxValue": 15000.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterQ",
+          "name": "Q",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 20.0
         }
       ]
+    },
+    {
+      "instrumentID": "sfzMulti",
+      "engine": "sfz",
+      "supportsPresets": false,
+      "maxPolyphony": 12,
+      "activityDisplay": "keyboard",
+      "params": [
+        {
+          "paramID": "masterGain",
+          "name": "Master gain",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0.5
+        },
+        {
+          "paramID": "verbMix",
+          "name": "Reverb mix",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0.2
+        },
+        {
+          "paramID": "sfzSelect",
+          "cssClassName": "sfzSelect",
+          "labelFirst": true,
+          "name": "Variation",
+          "groupName": "master",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 0,
+          "enumNames": [
+            "...this gets preprocessed by server, based on sfzArray..."
+          ]
+        },
+        {
+          "paramID": "velCurve",
+          "name": "Velocity Curve",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 4.0,
+          "defaultValue": 2.0
+        },
+        {
+          "paramID": "velAmpMod",
+          "name": "Vel->Amp",
+          "groupName": "master",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 1,
+          "defaultValue": 1,
+          "enumNames": [
+            "Off",
+            "On"
+          ]
+        },
+        {
+          "paramID": "filterType",
+          "name": "Type",
+          "groupName": "Filter",
+          "parameterType": "intParam",
+          "renderAs": "buttons",
+          "minValue": 0,
+          "maxValue": 3,
+          "enumNames": [
+            "Off",
+            "LP",
+            "HP",
+            "BP"
+          ]
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterFreq",
+          "name": "Freq",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "valueCurve": 3.5,
+          "defaultValue": 800,
+          "minValue": 20.0,
+          "maxValue": 15000.0
+        },
+        {
+          "cssClassName": "paramSpacer",
+          "paramID": "filterQ",
+          "name": "Q",
+          "groupName": "Filter",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 20.0
+        }
+      ],
+      "sfzArray": []
     }
-
-
   ]
 }
-

@@ -174,10 +174,12 @@ class RoomServer {
     });
 
     // integrate the server state for this room
-    const roomRestoreState = serverStateObj.find(r => r.roomID === this.roomState.roomID);
-    if (roomRestoreState && roomRestoreState.dump) {
-      this.roomState.adminImportRoomState(roomRestoreState.dump);
-      log(`Imported room state for ${this.roomState.roomID}`);
+    if (serverStateObj) {
+      const roomRestoreState = serverStateObj.find(r => r.roomID === this.roomState.roomID);
+      if (roomRestoreState && roomRestoreState.dump) {
+        this.roomState.adminImportRoomState(roomRestoreState.dump);
+        log(`Imported room state for ${this.roomState.roomID}`);
+      }
     }
 
     // do factory resets
@@ -616,7 +618,7 @@ class RoomServer {
       }
 
       // set the value.
-      this.roomState.integrateRawParamChanges(foundInstrument.instrument, data.patchObj, data.isWholePatch);      
+      this.roomState.integrateRawParamChanges(foundInstrument.instrument, data.patchObj, data.isWholePatch);
       gServerStats.OnParamChange(this.roomState.roomID, foundUser.user, Object.keys(data.patchObj).length);
 
       // broadcast to all clients
@@ -1404,6 +1406,29 @@ let OnPruneServerStateInterval = () => {
 };
 
 
+function listUnusedSFZInstruments() {
+  const usedSFZ = new Set();
+  Object.keys(gRooms).forEach(k => {
+    gRooms[k].roomState.instrumentCloset.forEach(i => {
+      if (i.engine !== "sfz") return;
+      if (i.sfzURL) usedSFZ.add(i.sfzURL);
+      if (i.sfzArray) {
+        i.sfzArray.forEach(s => {
+          usedSFZ.add(s.sfzURL);
+        });
+      }
+    });
+  });
+
+  console.log(`-------------------------------------------------`);
+  console.log(` SFZ PATHS USED`);
+  console.log(`-------------------------------------------------`);
+  usedSFZ.forEach(s => {
+    console.log(`  ${s}`);
+  });
+  console.log(`-------------------------------------------------`);
+};
+
 // load configs
 let roomsAreLoaded = function () {
   // serve the rooms
@@ -1448,7 +1473,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
       ws.on(DF.ClientMessages.RoomBPMUpdate, data => ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));
       ws.on(DF.ClientMessages.AdjustBeatPhase, data => ForwardToRoom(ws, room => room.OnClientAdjustBeatPhase(ws, data)));
-      
+
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 
@@ -1461,6 +1486,8 @@ let roomsAreLoaded = function () {
       log("Exception on connection: " + e);
     }
   }); // io.on(connection)
+
+  listUnusedSFZInstruments();
 
   setTimeout(OnBackupServerStateInterval, DF.ServerSettings.ServerStateBackupIntervalMS);
 
@@ -1495,7 +1522,13 @@ if (fs.existsSync(gPathLatestServerState)) {
 } else {
   console.log(`Using hard-coded server state @ server_state.json`);
 }
-serverRestoreState = JSON.parse(serverRestoreState);
+try {
+  serverRestoreState = JSON.parse(serverRestoreState);
+} catch (e) {
+  console.log(`error loading server state:`);
+  console.log(e);
+  serverRestoreState = null;
+}
 loadRoom(fs.readFileSync("pub.json"), serverRestoreState);
 loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
 loadRoom(fs.readFileSync("revisionMainStage.json"), serverRestoreState);

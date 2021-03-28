@@ -49,13 +49,13 @@ const GLOBAL_SFZ_GAIN = 0.2;
 
 
 class SFZRegion {
-    constructor(r) {
+    constructor(r, instrumentSpec) {
         Object.assign(this, r);
         // guarantee certain properties.
-        this.noteRangeSpec = this.CalculateNoteRangeSpec();
-        this.velocityRangeSpec = this.CalculateVelocityRangeSpec();
-        this.ampEGSpec = this.CalculateAmpEGSpec();
-        this.loopSpec = this.CalculateLoopSpec();
+        this.noteRangeSpec = this.CalculateNoteRangeSpec(instrumentSpec);
+        this.velocityRangeSpec = this.CalculateVelocityRangeSpec(instrumentSpec);
+        this.ampEGSpec = this.CalculateAmpEGSpec(instrumentSpec);
+        this.loopSpec = this.CalculateLoopSpec(instrumentSpec);
 
         this.isRedundant = false; // L/R pairs: this gets set to true for the R region, so it doesn't ever match directly. Let the L region match.
         this.correspondingRegion = null; // L/R pairs: L gets this set to the R region.
@@ -70,12 +70,24 @@ class SFZRegion {
 
         this.midiFrequencyCenter = DFU.MidiNoteToFrequency(this.pitch_keycenter);
         this.tune = this.GetOpcodeVal('tune', 0);
-        this.filterSpec = this.CalculateFilterSpec();
+        this.filterSpec = this.CalculateFilterSpec(instrumentSpec);
         this.pan = this.GetOpcodeVal('pan', 0);
         this.pan /= 100; // to be consistent with web audio.
+
+        this.volumeMul = this.GetTransformedOpcodeVal('volume', 1, v => DFU.DBToLinear(v));
     }
 
-    CalculateFilterSpec() {
+    GetTransformedOpcodeVal(opcodeName, defaultValue, transformProc) {
+        if (opcodeName in this) return transformProc(this[opcodeName]);
+        return defaultValue;
+    }
+
+    GetOpcodeVal(opcodeName, defaultValue) {
+        if (opcodeName in this) return this[opcodeName];
+        return defaultValue;
+    }
+
+    CalculateFilterSpec(instrumentSpec) {
         if (!('fil_type' in this) || !('cutoff' in this)) return null;
         const ret = {
             cutoff: this.GetOpcodeVal('cutoff', 0),
@@ -89,10 +101,14 @@ class SFZRegion {
         else if (this.fil_type.startsWith('brf')) ret.type = 'notch';
         else return null;
 
+        if ('filtCutoffMul' in instrumentSpec) {
+            ret.cutoff *= instrumentSpec.filtCutoffMul;
+        }
+
         return ret;
     };
 
-    CalculateLoopSpec() {
+    CalculateLoopSpec(instrumentSpec) {
         /*
         - loop_mode
         - loop_start
@@ -104,6 +120,13 @@ class SFZRegion {
         loop_sustain: the player will play the loop while the note is held, by keeping it depressed or by using the sustain pedal (CC64). During the release phase, there’s no looping.
         */
         if (!('loop_start' in this) || !('loop_end' in this)) return null; // looping only works with both set.
+
+        // see "C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\ConcertGM0_97test3_sf2\000\000_Grand_Piano.sfz"
+        // here, loop_start and loop_end are specified but they're clearly wrong.
+        // according to the docs, if it's unspecified, we should also not loop. so...
+        if (!('loop_mode') in this) return null;
+        if (instrumentSpec.ignoreLoop) return null;
+
         if (this.loop_mode == 'one_shot') return null; // one-shot is sorta redundant and really isn't relevant to looping.
         if (this.loop_mode == 'no_loop') return null;
         return {
@@ -145,12 +168,7 @@ class SFZRegion {
         return [0, 127];
     }
 
-    GetOpcodeVal(opcodeName, defaultValue) {
-        if (opcodeName in this) return this[opcodeName];
-        return defaultValue;
-    }
-
-    CalculateAmpEGSpec() {
+    CalculateAmpEGSpec(instrumentSpec) {
         const ret = {
             base: 0, // 
             attack: this.GetOpcodeVal('ampeg_attack', 0),
@@ -158,11 +176,16 @@ class SFZRegion {
             peak: 1,
             hold: this.GetOpcodeVal('ampeg_hold', 0),
             decay: this.GetOpcodeVal('ampeg_decay', 0),
-            decayCurve: 3.5,
-            sustain: this.GetOpcodeVal('ampeg_sustain', 1),
+            decayCurve: 9,
+            sustain: this.GetTransformedOpcodeVal('ampeg_sustain', 1, v => v / 100), // https://sfzformat.com/opcodes/ampeg_sustain in percentage (0-100)
             release: this.GetOpcodeVal('ampeg_release', -1), // if this is <0, consider the sample a one-shot.
-            releaseCurve: 3.5,
+            releaseCurve: 9, // this feels about right
         };
+
+        if (('sfzReleaseMul' in instrumentSpec) && (ret.release > 0)) {
+            ret.release *= instrumentSpec.sfzReleaseMul;
+        }
+
         /*
         amplitude ADSR https://sfzformat.com/opcodes/ampeg_attack
         - ampeg_delay  <-- currently unsupported
@@ -198,6 +221,7 @@ class SFZRegion {
         if (this.isRedundant) return false;
         if (midiNote < this.noteRangeSpec[0]) return false;
         if (midiNote > this.noteRangeSpec[1]) return false;
+        velocity = Math.trunc(velocity);
         if (velocity < this.velocityRangeSpec[0]) return false;
         if (velocity > this.velocityRangeSpec[1]) return false;
         return true;
@@ -210,13 +234,42 @@ function IsVeryCloseTo(a, b) {
 
 // there are regions which are stereo L/R pairs; we want to group them up because we don't support playing multiple regions at once,
 // and this is a common idiom.
-function PreprocessSFZRegions(regions) {
+function PreprocessSFZRegions(regions, instrumentSpec) {
+
+    // extend range if requested. basically for some 
+    if (instrumentSpec.sfzExtendRange) {
+        // find low & high key ranges.
+        let lokey = 127;
+        let hikey = 0;
+        regions.forEach(r => {
+            lokey = Math.min(lokey, r.noteRangeSpec[0]);
+            hikey = Math.max(hikey, r.noteRangeSpec[1]);
+        });
+
+        // now all regions which match these boundaries get extended.
+        regions.forEach(r => {
+            if (r.noteRangeSpec[0] == lokey) {
+                r.noteRangeSpec[0] = 0;
+            }
+            if (r.noteRangeSpec[1] == hikey) {
+                r.noteRangeSpec[1] = 127;
+            }
+        });
+    }
+
     regions.forEach(leftRegion => {
+        if (leftRegion.lokey == 59) {
+            let a = 0;
+        }
         // if this is a left sample, and we can find a corresponding right sample, link them
         // and mark the right same as redundant.
         if (!IsVeryCloseTo(leftRegion.pan, -1)) return false;
         let rightRegion = regions.find(r => {
+            if (r.lokey == 59) {
+                let a = 0;
+            }
             if (!IsVeryCloseTo(r.pan, 1)) return false;
+
             if ('key' in leftRegion && leftRegion.key != r.key) return false;
             if ('lovel' in leftRegion && leftRegion.lovel != r.lovel) return false;
             if ('hivel' in leftRegion && leftRegion.hivel != r.hivel) return false;
@@ -224,6 +277,10 @@ function PreprocessSFZRegions(regions) {
             if ('hikey' in leftRegion && leftRegion.hikey != r.hikey) return false;
             return true;
         }); // find rightRegion
+
+        if (leftRegion.lokey == 59) {
+            let a = 0;
+        }
 
         if (!rightRegion) return false;
 
@@ -237,45 +294,37 @@ function PreprocessSFZRegions(regions) {
 
 // filter, lfo, adsr, buffer
 class sfzVoice {
-    constructor(audioCtx, instrumentSpec, sampleLibrarian) {
+    constructor(audioCtx, instrumentSpec, sampleLibrarian, myVoiceIndex) {
         this.audioCtx = audioCtx;
         this.instrumentSpec = instrumentSpec;
         this.sampleLibrarian = sampleLibrarian;
         this.graph = new DFSynthTools.AudioGraphHelper();
         this.perfGraph = new DFSynthTools.AudioGraphHelper();
+        this.myVoiceIndex = myVoiceIndex;
         this.isConnected = false;
     }
 
+    // used to match note on to note off.
     get IsPlaying() {
         if (!this.isConnected) return false;
         if (this.timestamp) return true; // note is definitely playing.
-        if (!this.noteOffTimestamp) return false;
-        // note is off; check if we're still in envelope "release" stage.
-
-        let releaseLength = this.sfzRegion.ampEGSpec.release;
-        if (this.sfzRegion.ampEGSpec.release < 0) {
-            // if release is a one-shot style (inf), then the release len is the whole length of the sample.
-            releaseLength = this.sfzRegion.buffer.duration;
-        }
-
-        // stretch the duration based on the rate it was played at.
-        releaseLength *= this.playbackRatio;
-
-        if ((Date.now() - this.noteOffTimestamp) < (releaseLength * 1000)) {
-            return true;
-        }
-        this.noteOffTimestamp = null;
-        this.sfzRegion = null;
-        return false;
     }
 
-    // timestamp
+    GetAvailabilityScore() {
+        // note free prio...
+        // 1. released [time since note off]
+        // 2. playing currently [time since note on]
+        const now = Date.now();
+        if (this.timestamp) {
+            return ((now - this.timestamp) / 1000);
+        }
+        if (this.noteOffTimestamp) {
+            return ((now - this.noteOffTimestamp) / 1000) + 100000;
+        }
+        return 999999;
+    }
 
     connect(dest1, dest2) {
-        if (this.isConnected) {
-            let a = 0;
-        }
-        console.assert(!this.isConnected);
 
         this.dest1 = dest1;
         this.dest2 = dest2;
@@ -296,6 +345,7 @@ class sfzVoice {
     }
 
     AllNotesOff() {
+        //console.log(`v${this.myVoiceIndex} AllNotesOff`);
         this.perfGraph.disconnect();
         this.midiNote = 0;
         this.timestamp = null;
@@ -310,7 +360,8 @@ class sfzVoice {
         return 0;
     }
 
-    physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity) {
+    physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, regionIndex) {
+        if (!this.isConnected) return;
         this.timestamp = Date.now();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -332,7 +383,8 @@ class sfzVoice {
         this.bufferSourceNode2 = null;
 
         // source buffers & panners
-        const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis());
+        const transpose = ('transpose' in this.instrumentSpec) ? this.instrumentSpec.transpose : 0;
+        const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis() + transpose);
         this.playbackRatio = detuneSpec.playbackRatio; // needed to calculate the correct duration of the sample
 
         this.perfGraph.nodes.pan1 = this.audioCtx.createStereoPanner("sfz>pan1");
@@ -348,7 +400,6 @@ class sfzVoice {
         }
         this.bufferSourceNode1.connect(this.perfGraph.nodes.pan1);
 
-
         if (sfzRegion.correspondingRegion) {
             this.perfGraph.nodes.pan2 = this.audioCtx.createStereoPanner("sfz>pan2");
             this.perfGraph.nodes.pan2.pan.value = sfzRegion.correspondingRegion.pan;
@@ -361,23 +412,30 @@ class sfzVoice {
                 this.bufferSourceNode2.loopEnd = sfzRegion.correspondingRegion.loopSpec.end;
             }
             this.bufferSourceNode2.connect(this.perfGraph.nodes.pan2);
+            //console.log(`v${this.myVoiceIndex} noteon: STEREO ${midiNote}, region ${regionIndex} with stereo pair`);
+        } else {
+            //console.log(`v${this.myVoiceIndex} noteon: MONO ${midiNote}, region ${regionIndex}`);
         }
 
         // envGainer / ADSR
+        this.perfGraph.nodes.ampEG = ADSR.ADSRNode(this.audioCtx, this.sfzRegion.ampEGSpec);
+        this.perfGraph.nodes.ampEG.start();
+        this.perfGraph.nodes.ampEG.trigger();
+
         this.perfGraph.nodes.envGainer = this.audioCtx.createGain("sfz>envGainer");
         this.perfGraph.nodes.pan1.connect(this.perfGraph.nodes.envGainer);
         if (this.perfGraph.nodes.pan2) this.perfGraph.nodes.pan2.connect(this.perfGraph.nodes.envGainer);
         this.perfGraph.nodes.envGainer.gain.value = 0;
-
-        this.perfGraph.nodes.ampEG = ADSR.ADSRNode(this.audioCtx, this.sfzRegion.ampEGSpec);
         this.perfGraph.nodes.ampEG.connect(this.perfGraph.nodes.envGainer.gain);
-        this.perfGraph.nodes.ampEG.start();
-        this.perfGraph.nodes.ampEG.trigger();
 
         // velGain
+        velAmpMod = this.instrumentSpec.GetParamByID("velAmpMod").currentValue;
+        if (velAmpMod < 0.5) {
+            velocity = 127;
+        }
         this.perfGraph.nodes.velGain = this.audioCtx.createGain("sfz>velGain");
         this.perfGraph.nodes.envGainer.connect(this.perfGraph.nodes.velGain);
-        this.perfGraph.nodes.velGain.gain.value = (velocity / 128) * GLOBAL_SFZ_GAIN;
+        this.perfGraph.nodes.velGain.gain.value = (velocity / 127) * GLOBAL_SFZ_GAIN * this.sfzRegion.volumeMul;
 
         // filter
         if (sfzRegion.filterSpec) {
@@ -388,25 +446,57 @@ class sfzVoice {
             this.perfGraph.nodes.filter.Q.value = sfzRegion.filterSpec.q;
             this.perfGraph.nodes.filter.type = sfzRegion.filterSpec.type;
             this.perfGraph.nodes.filter.connect(this.dest1);
-            this.perfGraph.nodes.filter.connect(this.dest2);
+            if (this.dest2) this.perfGraph.nodes.filter.connect(this.dest2);
         } else {
             this.perfGraph.nodes.velGain.connect(this.dest1);
-            this.perfGraph.nodes.velGain.connect(this.dest2);
+            if (this.dest2) this.perfGraph.nodes.velGain.connect(this.dest2);
         }
+
+
+        let releaseLength = this.sfzRegion.ampEGSpec.release;
+        if (this.sfzRegion.ampEGSpec.release < 0) {
+            // if release is a one-shot style (inf), then the release len is the whole length of the sample.
+            releaseLength = this.sfzRegion.buffer.duration;
+        }
+
+        // stretch the duration based on the rate it was played at.
+        releaseLength *= this.playbackRatio;
+        this.releaseLengthMS = releaseLength * 1000;
+
 
         if (this.bufferSourceNode1) this.bufferSourceNode1.start();
         if (this.bufferSourceNode2) this.bufferSourceNode2.start();
+    }
 
+    setDestNodes(dest1, dest2) {
+        if (!this.isConnected) return;
+        this.dest1 = dest1;
+        this.dest2 = dest2;
+        if (!this.sfzRegion) return;
+        if (this.sfzRegion.filterSpec) {
+            this.perfGraph.nodes.filter.disconnect();
+            this.perfGraph.nodes.filter.connect(this.dest1);
+            if (this.dest2) this.perfGraph.nodes.filter.connect(this.dest2);
+        } else {
+            this.perfGraph.nodes.velGain.disconnect();
+            this.perfGraph.nodes.velGain.connect(this.dest1);
+            if (this.dest2) this.perfGraph.nodes.velGain.connect(this.dest2);
+        }
     }
 
     musicallyRelease() {
+        if (!this.isConnected) return;
+        //console.log(`v${this.myVoiceIndex} Release: MONO ${this.midiNote}`);
         if (!this.timestamp) {
+            //console.log(`v${this.myVoiceIndex} --> no timestamp`);
             return; // some odd synth state can cause releases without note ons (pedal up after taking the instrument for example)
         }
         if (this.perfGraph.nodes.ampEG) {
+            //console.log(`v${this.myVoiceIndex} --> Success`);
             this.perfGraph.nodes.ampEG.release();
+        } else {
+            let a = 0;
         }
-
         if (this.sfzRegion.loopSpec && this.sfzRegion.loopSpec.stopLoopOnRelease) {
             this.bufferSourceNode1.loop = false;
         }
@@ -419,6 +509,9 @@ class sfzVoice {
         //this.midiNote = 0; <-- dont kill this while noteOffTimestamp is still there
         this.noteOffTimestamp = Date.now();
         this.velocity = 0;
+
+        // if (this.bufferSourceNode1) this.bufferSourceNode1.stop();
+        // if (this.bufferSourceNode2) this.bufferSourceNode2.stop();
     }
 
     ParamHasChanged(paramID) {
@@ -437,7 +530,7 @@ class sfzVoice {
                 }
                 break;
             default:
-                console.log(`unknown param ${paramID}`);
+                //console.log(`unknown param ${paramID}`);
                 break;
         }
     };
@@ -446,7 +539,7 @@ class sfzVoice {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class sfzInstrument {
-    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec, sampleLibrarian) {
+    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec, sampleLibrarian, onLoadProgress) {
         this.audioCtx = audioCtx;
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
@@ -456,54 +549,90 @@ class sfzInstrument {
         this.regions = null; // later, populated with the SFZ region opcodes
         this.hasStartedLoading = false; // on first connect, we load.
         this.hasCompletedLoading = false;
+        this.onLoadProgress = onLoadProgress;
+        this.instrumentSpec.loadProgress = 0;
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
-            this.voices.push(new sfzVoice(audioCtx, instrumentSpec, sampleLibrarian));
+            this.voices.push(new sfzVoice(audioCtx, instrumentSpec, sampleLibrarian, i));
         }
 
         this.isSustainPedalDown = false;
         this.physicallyHeldNotes = []; // array of {note, sfzRegion, voiceIndex} in order of note on.
 
         this.graph = new DFSynthTools.AudioGraphHelper();
+
+        this.sfzCache = {}; // map sfzURL to regions.
     }
 
     connect() {
         if (this.isConnected) return true;
         if (this.hasStartedLoading && !this.hasCompletedLoading) return false;// loading still in progress
         if (!this.hasStartedLoading) {
-            this.hasStartedLoading = true;
-            this.pendingLoads = 0; // how many samples are in "loading" state.
-            this.regions = [];
-            DFSynthTools.AjaxJSON(this.instrumentSpec.sfzURL, regions => {
-                let baseURL = this.instrumentSpec.sfzURL;
-                baseURL = baseURL.substring(0, baseURL.lastIndexOf("/") + 1);
-                this.instrumentSpec.sfzRegions = regions;//.map(r => new SFZRegion(r));
-                regions.forEach(r => {
-                    // for each region, load up the sample it references
-                    this.pendingLoads++;
-                    const sampleURL = baseURL + r.sample;
-                    this.sampleLibrarian.loadSampleFromURL(sampleURL, (buffer) => {
-                        // save this sample buffer somewhere.
-                        let reg = new SFZRegion(r);// Object.assign({}, r);
-                        reg.buffer = buffer;
-                        this.regions.push(reg);
-                        this.pendingLoads--;
-                        if (!this.pendingLoads) {
-                            PreprocessSFZRegions(this.regions);
-                            this.hasCompletedLoading = true;
-                            console.log(`Finished loading instrument ${this.instrumentSpec.instrumentID}`);
-                            this.connect();
-                        }
-                    }); // load sample
+            // for multi-sfz, make sure the selected one is .. selected
+            const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
+            if (sfzSelect) {
+                // start by removing all properties that are set by the child sfz array
+                this.instrumentSpec.sfzArray.forEach(s => {
+                    Object.keys(s).forEach(k => {
+                        if (k === 'name') return; // don't overwrite this one!
+                        delete this.instrumentSpec[k];
+                    });
                 });
-            });
-            return false;
-        }
+                Object.keys(this.instrumentSpec.sfzArray[sfzSelect.currentValue]).forEach(k => {
+                    if (k === 'name') return; // don't overwrite this one!
+                    this.instrumentSpec[k] = this.instrumentSpec.sfzArray[sfzSelect.currentValue][k];
+                });
+            }
 
+            if (this.instrumentSpec.sfzURL in this.sfzCache) {
+                this.regions = this.sfzCache[this.instrumentSpec.sfzURL];
+            } else {
+                this.hasStartedLoading = true;
+                this.pendingLoads = 0; // how many samples are in "loading" state.
+                this.regions = [];
+                DFSynthTools.LoadCachedJSON(this.instrumentSpec.sfzURL, regions => {
+                    let baseURL = this.instrumentSpec.sfzURL;
+                    baseURL = baseURL.substring(0, baseURL.lastIndexOf("/") + 1);
+                    this.instrumentSpec.sfzRegions = regions;//.map(r => new SFZRegion(r));
+                    this.pendingLoads = regions.length;
+                    this.instrumentSpec.loadProgress = 0.1; // >0 to show something happening.
+                    this.onLoadProgress(this.instrumentSpec.loadProgress);
+                    regions.forEach(r => {
+                        // for each region, load up the sample it references
+                        const sampleURL = baseURL + r.sample;
+                        this.sampleLibrarian.loadSampleFromURL(sampleURL, (buffer) => {
+                            // save this sample buffer somewhere.
+                            let reg = new SFZRegion(r, this.instrumentSpec);// Object.assign({}, r);
+                            reg.buffer = buffer;
+                            this.regions.push(reg);
+                            this.pendingLoads--;
+                            this.instrumentSpec.loadProgress = 1.1 - (this.pendingLoads / regions.length);
+                            this.onLoadProgress(this.instrumentSpec.loadProgress);
+                            //console.log(`this.loadingprogress = ${this.loadingProgress}`);
+                            if (!this.pendingLoads) {
+                                PreprocessSFZRegions(this.regions, this.instrumentSpec);
+                                this.sfzCache[this.instrumentSpec.sfzURL] = this.regions;
+                                this.hasCompletedLoading = true;
+                                this.instrumentSpec.loadProgress = 1;
+                                this.onLoadProgress(this.instrumentSpec.loadProgress);
+                                //console.log(`Finished loading instrument ${this.instrumentSpec.instrumentID}`);
+                                this.connect();
+                                this.hasStartedLoading = false;
+                            }
+                        }); // load sample
+                    }); // iterate regions
+                }); // load json
+                return false; // not loaded yet; not connected.
+            }
+
+        }
         /*
-        (voices) --> [wetGainer] -> wetDestination
-                   > [dryGainer] -> dryDestination
+        (voice) --> [filter] --> [wetGainer] --> dryDestination
+                               > [dryGainer] --> wetDestination
+
+        (voices) --------------> [wetGainer] -> wetDestination
+                               > [dryGainer] -> dryDestination
         */
         let gainLevels = this.getGainLevels();
 
@@ -520,13 +649,18 @@ class sfzInstrument {
         });
 
         this.isConnected = true;
+
+        this.isFilterConnected = false;
+        this._SetFiltType(); // this will connect the voices & filter if needed.
+
         return true;
     }
 
     disconnect() {
         this.isConnected = false;
-        this.graph.disconnect();
         this.AllNotesOff();
+        this.voices.forEach(v => v.disconnect());
+        this.graph.disconnect();
     }
 
     AllNotesOff() {
@@ -539,7 +673,7 @@ class sfzInstrument {
 
     // returns [drygain, wetgain]
     getGainLevels() {
-        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
+        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue * (('gain' in this.instrumentSpec) ? this.instrumentSpec.gain : 1);
         let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
         // when verb mix is 0, drygain is the real master gain.
         // when verb mix is 1, drygain is 0 and verbmix is mastergain
@@ -549,40 +683,46 @@ class sfzInstrument {
     NoteOn(midiNote, velocity) {
         if (!this.connect()) return;
 
+        const velcurve = this.instrumentSpec.GetParamByID("velCurve").currentValue;
+        velocity = Math.pow(DFU.baseClamp(velocity / 127, 0, 1), velcurve) * 127;
+
         // find a SFZ region.
-        const sfzRegion = this.regions.find(r => r.RegionMatches(midiNote, velocity));
-        if (!sfzRegion) return;
+        const sfzRegionIndex = this.regions.findIndex(r => r.RegionMatches(midiNote, velocity));
+        if (sfzRegionIndex == -1) return;
+        const sfzRegion = this.regions[sfzRegionIndex];
 
-        // find a free voice and delegate.
-        let suitableVoiceIndex = -1;
+        let bestAvailabilityScore = 0;
+        let bestVoiceIndex = 0;
+        this.voices.forEach((v, i) => {
+            const s = v.GetAvailabilityScore();
+            if (s <= bestAvailabilityScore) return;
+            bestAvailabilityScore = s;
+            bestVoiceIndex = i;
+        });
 
-        for (let i = 0; i < this.voices.length; ++i) {
-            let v = this.voices[i];
-            if (!v.IsPlaying) {
-                suitableVoiceIndex = i;// found a free voice; use it.
-                break;
-            }
-
-            // voice is playing; in this case find the oldest voice.
-            if (suitableVoiceIndex == -1) {
-                suitableVoiceIndex = i;
-            } else {
-                if (v.timestamp < this.voices[suitableVoiceIndex].timestamp) {
-                    suitableVoiceIndex = i;
-                }
-            }
-        }
         this.physicallyHeldNotes.push({
             note: midiNote,
             sfzRegion,
-            voiceIndex: suitableVoiceIndex
+            voiceIndex: bestVoiceIndex
         });
-        this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity);
+        this.voices[bestVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, sfzRegionIndex);
+
+        // handle off_by
+        //- group=1 off_by=1 polyphony
+        if ('group' in sfzRegion) {
+            const group = sfzRegion.group;
+            // release playing notes which are off_by this group.
+            this.voices.forEach((v, vi) => {
+                if (vi == bestVoiceIndex) return;
+                if (v.IsPlaying && v.sfzRegion && ('off_by' in v.sfzRegion) && (v.sfzRegion.off_by == group) && v.midiNote) {
+                    this.NoteOff(v.midiNote);
+                }
+            });
+        }
     };
 
     NoteOff(midiNote) {
         if (!this.connect()) return;
-
         this.physicallyHeldNotes.removeIf(n => n.note === midiNote);
         if (this.isSustainPedalDown) return;
 
@@ -612,6 +752,72 @@ class sfzInstrument {
         return this.physicallyHeldNotes.find(x => x.voiceIndex == voiceIndex) != null;
     }
 
+
+    _SetFiltType() {
+        let disableFilter = () => {
+            if (!this.isFilterConnected) return; // already disconnected.
+
+            /*
+            (voices) --------------> [wetGainer] -> wetDestination
+                                   > [dryGainer] -> dryDestination
+            */
+            // reconnect voices to the wet/dry destinations instead of filter.
+            this.voices.forEach(v => {
+                v.setDestNodes(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer);
+            });
+            this.graph.nodes.filter.disconnect();
+            this.graph.nodes.filter = null;
+
+            this.isFilterConnected = false;
+        };
+        let enableFilter = () => {
+            if (this.isFilterConnected) return; // already connected.
+
+            /*
+            (voice) --> [filter] --> [wetGainer] --> dryDestination
+                                   > [dryGainer] --> wetDestination
+            */
+            this.graph.nodes.filter = this.audioCtx.createBiquadFilter("sfz>filter");
+            this.graph.nodes.filter.frequency.value = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
+            this.graph.nodes.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
+
+            this.graph.nodes.filter.connect(this.graph.nodes.dryGainer);
+            this.graph.nodes.filter.connect(this.graph.nodes.wetGainer);
+
+            // reconnect voices to the wet/dry destinations instead of filter.
+            this.voices.forEach(v => {
+                v.setDestNodes(this.graph.nodes.filter);
+            });
+
+            this.isFilterConnected = true;
+        };
+        switch (parseInt(this.instrumentSpec.GetParamByID("filterType").currentValue)) {
+            case 0: // off
+                disableFilter();
+                return;
+            case 1:
+                enableFilter();
+                this.graph.nodes.filter.type = "lowpass";
+                return;
+            case 2:
+                enableFilter();
+                this.graph.nodes.filter.type = "highpass";
+                return;
+            case 3:
+                enableFilter();
+                this.graph.nodes.filter.type = "bandpass";
+                return;
+        }
+        console.warn(`unknown filter type ${this.instrumentSpec.GetParamByID("filterType").currentValue}`);
+    }
+
+    _updateFilterBaseFreq() {
+        if (!this.graph.nodes.filter) return;
+        let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
+        const freqParam = this.graph.nodes.filter.frequency;
+        freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);
+    }
+
     SetParamValues(patchObj) {
         if (!this.isConnected) return;
         Object.keys(patchObj).forEach(paramID => {
@@ -621,6 +827,21 @@ class sfzInstrument {
                     let levels = this.getGainLevels();
                     this.graph.nodes.dryGainer.gain.value = levels[0];
                     this.graph.nodes.wetGainer.gain.value = levels[1];
+                    break;
+                case "sfzSelect":
+                    this.disconnect();
+                    this.connect();
+                    break;
+                case "filterType":
+                    this._SetFiltType();
+                    break;
+                case "filterFreq":
+                    this._updateFilterBaseFreq();
+                    break;
+                case "filterQ":
+                    if (this.graph.nodes.filter) {
+                        this.graph.nodes.filter.Q.value = this.instrumentSpec.GetParamByID("filterQ").currentValue;
+                    }
                     break;
                 default:
                     this.voices.forEach(voice => {

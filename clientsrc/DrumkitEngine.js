@@ -162,6 +162,7 @@ class DrumKitVoice {
 class OneShotInstrument {
     constructor(audioCtx, sampleLibrarian, dryDestination, wetDestination, instrumentSpec, createVoiceFn) {
         this.audioCtx = audioCtx;
+        instrumentSpec.loadProgress = 1;
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
         this.instrumentSpec = instrumentSpec;
@@ -355,7 +356,6 @@ class OneShotInstrument {
         const freqParam = this.filter.frequency;
         freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);//, this.audioCtx.currentTime + this.minGlideS);
     }
-
 
     SetParamValues(patchObj) {
         let keys = Object.keys(patchObj);

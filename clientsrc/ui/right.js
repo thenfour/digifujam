@@ -118,7 +118,13 @@ class InstButtonsParam extends React.Component {
             <button className={"buttonParam " + ((this.props.param.rawValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</button>
         )));
 
-        return (
+        return this.props.param.labelFirst ? (
+            <li className={"buttonsParam " + this.props.param.cssClassName}>
+                <label>{this.props.param.name}</label>
+                {buttons}
+            </li>
+
+        ) : (
             <li className={"buttonsParam " + this.props.param.cssClassName}>
                 {buttons}
                 <label>{this.props.param.name}</label>
@@ -943,6 +949,12 @@ class InstrumentParams extends React.Component {
         }
         this.setState({ shownGroupNames: [groupName], showingAllGroups: false });
     };
+
+    clickPresetFocusButton = () => {
+        this.setState({ presetListShown: !this.state.presetListShown });
+    };
+
+
     onToggleGroupShown(groupName) {
         if (this.isGroupNameShown(groupName)) {
             let x = this.state.shownGroupNames.filter(gn => gn != groupName);
@@ -1044,7 +1056,13 @@ class InstrumentParams extends React.Component {
         let groupSpecs = _groupNames.map(gn => this.props.instrument.getGroupInfo(gn));
         groupSpecs = groupSpecs.filter(gs => gs.shown);
 
-        let groupFocusButtons = groupSpecs.map(gs => (
+        const instrumentSupportsPresets = this.props.instrument.supportsPresets;
+
+        const presetsFocusButton = instrumentSupportsPresets && (
+            <button className={this.state.presetListShown ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={this.clickPresetFocusButton}>Presets</button>
+        );
+
+        const groupFocusButtons = groupSpecs.map(gs => (
             <button key={gs.internalName} className={this.isGroupNameShown(gs.internalName) ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickFocusGroupName(gs.internalName)}>{gs.displayName}</button>
         ));
 
@@ -1073,13 +1091,13 @@ class InstrumentParams extends React.Component {
             });
         }
 
-        const instrumentSupportsPresets = this.props.instrument.supportsPresets;
 
         const groupFocusButtonStuff = this.state.isShown && ((groupSpecs.length > 1) || (this.state.filterTxt.length > 0)) && (
             <div className="paramGroupCtrl">
                 <fieldset className="groupFocusButtons">
                     <legend>Param groups</legend>
                     <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
+                    {presetsFocusButton}
                     {groupFocusButtons}
                     <div className="paramFilter">Param filter🔎<DFReactUtils.TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></DFReactUtils.TextInputFieldExternalState></div>
                 </fieldset>
@@ -1087,6 +1105,16 @@ class InstrumentParams extends React.Component {
         );
 
         const allowFactoryReset = this.props.app.myUser.IsAdmin();
+
+        let progPercent = Math.trunc(this.props.instrument.loadProgress * 100);
+        //progPercent = 82;
+        const loadingIndicator = (
+            <div className={"instrumentLoadingIndicator " + ((progPercent <= 0 || progPercent >= 100) ? "hidden" : "")}>
+                <div className="doneSegment" style={{ width: `${progPercent}%` }}>
+                    {progPercent}%
+                    </div>
+            </div>);
+
 
         return (
             <div className="component">
@@ -1102,6 +1130,8 @@ class InstrumentParams extends React.Component {
                 </h2>
                 <div style={shownStyle}>
                     {groupFocusButtonStuff}
+
+                    {loadingIndicator}
 
                     {instrumentSupportsPresets &&
                         <fieldset className="instParamGroup presetsGroup">
@@ -1456,6 +1486,12 @@ class InstrumentList extends React.Component {
             }
         }
 
+        let loadIndicator = null;
+        if (i.loadProgress > 0 && i.loadProgress < 1) {
+            loadIndicator = (<span className="instrumentLoadingIndicator">{Math.trunc(i.loadProgress * 100)}%</span>);
+            //loadIndicator = (<span className="instrumentLoadingIndicator">86%</span>);
+        }
+
         const isYours = (i.controlledByUserID == app.myUser.userID);
         const takeable = app.midi.AnyMidiDevicesAvailable() && (!inUse || idle);
 
@@ -1483,7 +1519,10 @@ class InstrumentList extends React.Component {
         return (
             <li className="instrument" key={i.instrumentID} style={{ color: i.color }}>
                 <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
-                {idle} {i.getDisplayName()} {ownedBy}
+                {idle}
+                {i.getDisplayName()}
+                {loadIndicator}
+                {ownedBy}
             </li>
         );
     }
@@ -2075,9 +2114,15 @@ class RootArea extends React.Component {
         app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
             this.handleUserAllNotesOff, this.handleAllNotesOff,
             this.handleUserLeave, this.HandlePleaseReconnect,
-            this.HandleCheer, this.handleRoomWelcome, google_access_token);
+            this.HandleCheer, this.handleRoomWelcome, google_access_token, this.onInstrumentLoadProgress);
         this.setState({ app });
     }
+
+    onInstrumentLoadProgress = (instSpec, prog) => {
+        this.stateChangeThrottler.InvokeThrottled();
+        //this.instrumentLoadingProgressThrottler.proc = 
+        //this.instrumentLoadingProgressThrottler.InvokeThrottled();
+    };
 
     handleRoomRef = (r) => {
         let a = 0;
@@ -2264,6 +2309,8 @@ class RootArea extends React.Component {
 
         window.DFStateChangeHandler = this;
         gStateChangeHandler = this;
+
+        this.instrumentLoadingProgressThrottler = new DFU.Throttler(1000.0 / 15);
 
         this.notesOn = []; // not part of state because it's pure jquery
         this.activityCount = 0;

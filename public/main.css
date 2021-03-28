@@ -501,6 +501,15 @@ ul.instParamList li.buttonsParam {
     white-space: normal;
 }
 
+ul.instParamList li.buttonsParam.sfzSelect {
+/*    display: flex;
+    flex-direction: column;*/
+}
+
+ul.instParamList li.buttonsParam.sfzSelect button {
+    display:block;
+}
+
 .instParamGroup {
     margin: 0;
     padding: 1px;
@@ -1346,7 +1355,35 @@ ul.instParamList .instActivity.alt2 {
     animation: mixerActivityBump2 .5s 1;
 }
 
+.instrumentCloset .instrumentLoadingIndicator {
+    background-color: #444;
+    color: #aaa;
+    padding: 4px;
+    border-radius: 10px;
+    font-size: small;
+}
 
+
+
+#rightArea .instrumentLoadingIndicator {
+    font-size: x-small;
+    margin: 4px;
+    margin-top:1px;
+    margin-bottom:1px;
+    background-color: #a04;
+    border-radius: 6px;
+}
+
+#rightArea .instrumentLoadingIndicator.hidden {
+    visibility: hidden;
+}
+
+#rightArea .instrumentLoadingIndicator .doneSegment {
+    text-align: center;
+    background-color: #0a4;
+    color: white;
+    border-radius: 6px;
+}
 
 
 

@@ -170,7 +170,7 @@ class DigifuSynth {
 					this.instruments[spec.instrumentID] = new soundFontInstrument.SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
 					break;
 				case "sfz":
-					this.instruments[spec.instrumentID] = new sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian);
+					this.instruments[spec.instrumentID] = new sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
 					break;
 				case "drumkit":
 					this.instruments[spec.instrumentID] = new DFDrumkit.OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DFDrumkit.DrumKitVoice(s, l));
@@ -204,9 +204,10 @@ class DigifuSynth {
 	}
 
 	// call as a sort of ctor
-	Init(audioCtx, roomStateGetter) {
+	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress) {
 		console.assert(!this.audioCtx); // don't init more than once
 
+		this.onInstrumentLoadProgress = onInstrumentLoadProgress;
 		this.roomStateGetter = roomStateGetter;
 		this.sampleLibrarian = new DFSynthTools.SampleCache(audioCtx);
 

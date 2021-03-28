@@ -73,9 +73,9 @@ let remapWithPowCurve = (value, inpMin, inpMax, p, outpMin, outpMax) => {
 
 // invokes a fn in a throttled way. You set a proc & interval, and call InvokeThrottled() when you want to invoke it.
 class Throttler {
-    constructor() {
-        this.interval = 1000.0 / 15;
-        this.proc = () => { }; // the work fn to run throttled
+    constructor(interval, proc) {
+        this.interval = interval || 1000.0 / 15;
+        this.proc = proc || (() => { }); // the work fn to run throttled
 
         this.stats = {
             timersCreated: 0,
@@ -167,6 +167,10 @@ let lerp = (start, end, amt) => {
     return (1 - amt) * start + amt * end;
 };
 
+const DBToLinear = dB => {
+    return Math.pow(10, dB / 20);
+};
+
 module.exports = {
     secondsToMS,
     minutesToMS,
@@ -188,4 +192,5 @@ module.exports = {
     dividedCeil,
     dividedFloor,
     lerp,
+    DBToLinear,
 };

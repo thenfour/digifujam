@@ -171,19 +171,20 @@ function ADSRNode(ctx, opts) {
         return this;
     };
 
-    node.release = function (when) {
-        if (typeof when === 'undefined')
-            when = this.context.currentTime;
+    node.release = function () {
+        // if (typeof when === 'undefined')
+        //     when = this.context.currentTime;
+        const when = this.context.currentTime;
 
-        if (lastTrigger === false)
-            throw new Error('[ADSRNode] Cannot release without a trigger');
-        if (when < lastTrigger.when)
-            throw new Error('[ADSRNode] Cannot release before the last trigger');
+        // if (lastTrigger === false)
+        //     throw new Error('[ADSRNode] Cannot release without a trigger');
+        // if (when < lastTrigger.when)
+        //     throw new Error('[ADSRNode] Cannot release before the last trigger');
         var tnow = when - lastTrigger.when;
         var v = triggeredValue(tnow);
         var reltime = release;
-        if (Math.abs(sustain - base) > eps)
-            reltime = release * (v - base) / (sustain - base);
+        // if (Math.abs(sustain - base) > eps)  <-- not sure the point of this
+        //     reltime = release * (v - base) / (sustain - base);
         lastRelease = { when: when, v: v, reltime: reltime };
         var atktime = lastTrigger.atktime;
         // check if a linear attack or a linear decay has been interrupted by this release
@@ -195,15 +196,15 @@ function ADSRNode(ctx, opts) {
         this.offset.cancelScheduledValues(when);
         node.baseTime = when + reltime;
 
-        if (DEBUG) {
-            // simulate curve using releasedValue (debug purposes)
-            for (var i = 0; true; i += 0.01) {
-                this.offset.setValueAtTime(releasedValue(i), when + i);
-                if (i >= reltime)
-                    break;
-            }
-            return this;
-        }
+        // if (DEBUG) {
+        //     // simulate curve using releasedValue (debug purposes)
+        //     for (var i = 0; true; i += 0.01) {
+        //         this.offset.setValueAtTime(releasedValue(i), when + i);
+        //         if (i >= reltime)
+        //             break;
+        //     }
+        //     return this;
+        // }
 
         if (interruptedLine)
             this.offset.linearRampToValueAtTime(v, when);
