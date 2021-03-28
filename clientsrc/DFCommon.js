@@ -113,7 +113,7 @@ const ServerSettings = {
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
     MinCheerIntervalMS: 200,
-    InstrumentParamIntervalMS: 50,
+    InstrumentParamIntervalMS: 30,
     InstrumentFloatParamDiscreteValues: 64000,
 };
 
@@ -1095,8 +1095,6 @@ class DigifuInstrumentSpec {
         let ret = { cssClassName: "", annotation: "", displayName: groupName, shown: true, internalName: groupName };
         switch (this.engine) {
             case "soundfont":
-            case "sfz":
-                return ret;
             case "minifm":
                 // fall through to calculate the name.
                 break;

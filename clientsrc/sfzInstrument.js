@@ -73,6 +73,7 @@ class SFZRegion {
         this.filterSpec = this.CalculateFilterSpec(instrumentSpec);
         this.pan = this.GetOpcodeVal('pan', 0);
         this.pan /= 100; // to be consistent with web audio.
+        this.pan = DFU.baseClamp(this.pan, -1, 1);
 
         this.volumeMul = this.GetTransformedOpcodeVal('volume', 1, v => DFU.DBToLinear(v));
     }
@@ -428,14 +429,10 @@ class sfzVoice {
         this.perfGraph.nodes.envGainer.gain.value = 0;
         this.perfGraph.nodes.ampEG.connect(this.perfGraph.nodes.envGainer.gain);
 
-        // velGain
-        velAmpMod = this.instrumentSpec.GetParamByID("velAmpMod").currentValue;
-        if (velAmpMod < 0.5) {
-            velocity = 127;
-        }
+        const velAmpMul = DFU.remap(this.instrumentSpec.GetParamByID("velAmpMod").currentValue, 0, 1, 1, (velocity / 127));
         this.perfGraph.nodes.velGain = this.audioCtx.createGain("sfz>velGain");
         this.perfGraph.nodes.envGainer.connect(this.perfGraph.nodes.velGain);
-        this.perfGraph.nodes.velGain.gain.value = (velocity / 127) * GLOBAL_SFZ_GAIN * this.sfzRegion.volumeMul;
+        this.perfGraph.nodes.velGain.gain.value = velAmpMul * GLOBAL_SFZ_GAIN * this.sfzRegion.volumeMul;
 
         // filter
         if (sfzRegion.filterSpec) {
@@ -583,6 +580,14 @@ class sfzInstrument {
                     if (k === 'name') return; // don't overwrite this one!
                     this.instrumentSpec[k] = this.instrumentSpec.sfzArray[sfzSelect.currentValue][k];
                 });
+
+                // a sfz can specify params to set when its selected too. this goes against convention; typically param changes are done externally. but let's allow it.
+                if (this.instrumentSpec.sfzPatch) {
+                    Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
+                        const p = this.instrumentSpec.GetParamByID(paramID);
+                        p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
+                    });
+                }
             }
 
             if (this.instrumentSpec.sfzURL in this.sfzCache) {

@@ -2229,15 +2229,10 @@
           "paramID": "velAmpMod",
           "name": "Vel->Amp",
           "groupName": "master",
-          "parameterType": "intParam",
-          "renderAs": "buttons",
+          "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1,
-          "defaultValue": 1,
-          "enumNames": [
-            "Off",
-            "On"
-          ]
+          "defaultValue": 1
         },
         {
           "paramID": "filterType",
@@ -2255,7 +2250,6 @@
           ]
         },
         {
-          "cssClassName": "paramSpacer",
           "paramID": "filterFreq",
           "name": "Freq",
           "groupName": "Filter",
@@ -2266,7 +2260,6 @@
           "maxValue": 15000.0
         },
         {
-          "cssClassName": "paramSpacer",
           "paramID": "filterQ",
           "name": "Q",
           "groupName": "Filter",
@@ -2289,7 +2282,7 @@
           "groupName": "master",
           "parameterType": "floatParam",
           "minValue": 0.0,
-          "maxValue": 1.0,
+          "maxValue": 3.0,
           "defaultValue": 0.5
         },
         {
@@ -2328,15 +2321,10 @@
           "paramID": "velAmpMod",
           "name": "Vel->Amp",
           "groupName": "master",
-          "parameterType": "intParam",
-          "renderAs": "buttons",
+          "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1,
-          "defaultValue": 1,
-          "enumNames": [
-            "Off",
-            "On"
-          ]
+          "defaultValue": 1
         },
         {
           "paramID": "filterType",
@@ -2354,7 +2342,6 @@
           ]
         },
         {
-          "cssClassName": "paramSpacer",
           "paramID": "filterFreq",
           "name": "Freq",
           "groupName": "Filter",
@@ -2365,7 +2352,6 @@
           "maxValue": 15000.0
         },
         {
-          "cssClassName": "paramSpacer",
           "paramID": "filterQ",
           "name": "Q",
           "groupName": "Filter",
