@@ -421,8 +421,8 @@ class sfzVoice {
         this.perfGraph.disconnect();
 
         // source buffers & panners
-        const transpose = ('transpose' in this.instrumentSpec) ? this.instrumentSpec.transpose : 0;
-        const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis() + transpose);
+        //const transpose = ('transpose' in this.instrumentSpec) ? this.instrumentSpec.transpose : 0;
+        const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis() + (this.instrumentSpec.GetParamByID("adjustFinetune").currentValue / 100));
         this.playbackRatio = detuneSpec.playbackRatio; // needed to calculate the correct duration of the sample
         this.graph.nodes.pan1.pan.value = sfzRegion.pan;
 
@@ -449,7 +449,35 @@ class sfzVoice {
             this.perfGraph.nodes.bufferSourceNode2.connect(this.graph.nodes.pan2);
         }
 
-        this.perfGraph.nodes.ampEG = new ADSREnvelope(this.sfzRegion.ampEGSpec);
+        // adjust EG spec based on params.
+        this.sfzRegion.adjustedAmpEGSpec = Object.assign({}, this.sfzRegion.ampEGSpec);
+        const adjA = this.instrumentSpec.GetParamByID("adjustA").currentValue;
+        const adjD = this.instrumentSpec.GetParamByID("adjustD").currentValue;
+        const adjS = this.instrumentSpec.GetParamByID("adjustS").currentValue;
+        const adjR = this.instrumentSpec.GetParamByID("adjustR").currentValue;
+        if (adjA < 0) {
+            this.sfzRegion.adjustedAmpEGSpec.attackTime *= (adjA + 1);// -1 means *0, 0 means *1
+        } else {
+            this.sfzRegion.adjustedAmpEGSpec.attackTime += (adjA * 1.5);// 0 meanss no change, 1 = add up to 1.5 seconds attack time
+        }
+        if (adjD < 0) {
+            this.sfzRegion.adjustedAmpEGSpec.decayTime *= (adjD + 1);// -1 means *0, 0 means *1
+        } else {
+            this.sfzRegion.adjustedAmpEGSpec.decayTime += (adjD * 1.5);// 0 meanss no change, 1 = add up to 1.5 seconds
+        }
+        if (adjS < 0) {
+            this.sfzRegion.adjustedAmpEGSpec.sustainLevel *= (adjS + 1);// -1 means *0, 0 means *1
+        } else {
+            //this.sfzRegion.adjustedAmpEGSpec.sustainLevel += (adjD * 1.5);// 0 means no change, 1 = 1
+            DFU.lerp(this.sfzRegion.adjustedAmpEGSpec.sustainLevel, 1, adjS);
+        }
+        if (adjR < 0) {
+            this.sfzRegion.adjustedAmpEGSpec.releaseTime *= (adjR + 1);// -1 means *0, 0 means *1
+        } else {
+            this.sfzRegion.adjustedAmpEGSpec.releaseTime += (adjR * 1.5);// 0 meanss no change, 1 = add up to 1.5 seconds
+        }
+
+        this.perfGraph.nodes.ampEG = new ADSREnvelope(this.sfzRegion.adjustedAmpEGSpec);
 
         this.graph.nodes.pan1.disconnect();
         if (this.perfGraph.nodes.pan2) this.perfGraph.nodes.pan2.disconnect();
@@ -473,8 +501,8 @@ class sfzVoice {
             this.graph.nodes.filter.type = sfzRegion.filterSpec.type;
         }
 
-        let releaseLength = this.sfzRegion.ampEGSpec.releaseTime;
-        if (this.sfzRegion.ampEGSpec.releaseTime < 0) {
+        let releaseLength = this.sfzRegion.adjustedAmpEGSpec.releaseTime;
+        if (this.sfzRegion.adjustedAmpEGSpec.releaseTime < 0) {
             // if release is a one-shot style (inf), then the release len is the whole length of the sample.
             releaseLength = this.sfzRegion.buffer.duration;
         }
@@ -526,7 +554,7 @@ class sfzVoice {
         }
 
         if (!offBecauseGroup) {
-            if (this.perfGraph.nodes.ampEG && (this.sfzRegion.ampEGSpec.releaseTime >= 0)) {
+            if (this.perfGraph.nodes.ampEG && (this.sfzRegion.adjustedAmpEGSpec.releaseTime >= 0)) {
                 this.perfGraph.nodes.ampEG.gateTime = this.audioCtx.currentTime - this.startMusicalTime;
                 this.perfGraph.nodes.ampEG.applyTo(this.perfGraph.nodes.envGainer.gain, this.startMusicalTime);
 
@@ -543,9 +571,10 @@ class sfzVoice {
     ParamHasChanged(paramID) {
         if (!this.isConnected) return;
         switch (paramID) {
+            case "adjustFinetune":
             case "pb":
                 if (this.sfzRegion) {
-                    const detuneCents = this.sfzRegion.CalculateDetune(this.midiNote + this.getPitchBendSemis()).detuneCents;
+                    const detuneCents = this.sfzRegion.CalculateDetune(this.midiNote + this.getPitchBendSemis() + (this.instrumentSpec.GetParamByID("adjustFinetune").currentValue / 100)).detuneCents;
                     // don't bother setting this.playbackRatio; it will not be accurate
                     if (this.perfGraph.nodes.bufferSourceNode1) {
                         this.perfGraph.nodes.bufferSourceNode1.detune.value = detuneCents;
@@ -730,6 +759,8 @@ class sfzInstrument {
         const velcurve = this.instrumentSpec.GetParamByID("velCurve").currentValue;
         velocity = Math.pow(DFU.baseClamp(velocity / 127, 0, 1), velcurve) * 127;
 
+        midiNote += this.instrumentSpec.transpose || 0;
+
         // find a SFZ region.
         const sfzRegionIndex = this.regions.findIndex(r => r.RegionMatches(midiNote, velocity));
         if (sfzRegionIndex == -1) return;
@@ -769,6 +800,7 @@ class sfzInstrument {
 
     NoteOff(midiNote, offBecauseGroup) {
         if (!this.connect()) return;
+        midiNote += this.instrumentSpec.transpose || 0;
         this.physicallyHeldNotes.removeIf(n => n.note === midiNote);
         if (this.isSustainPedalDown) return;
 
