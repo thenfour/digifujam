@@ -360,7 +360,7 @@ class sfzVoice {
         let needsFilter = regions.some(r => !!r.filterSpec);
         let needsPan2 = regions.some(r => !!r.correspondingRegion);
 
-        console.log(`connect ${this.instrumentSpec.instrumentID} needsFilter:${needsFilter} needsPan2:${needsPan2}`);
+        //console.log(`connect ${this.instrumentSpec.instrumentID} needsFilter:${needsFilter} needsPan2:${needsPan2}`);
 
         // source buffers & panners
         this.graph.nodes.pan1 = this.audioCtx.createStereoPanner("sfz>pan1");
@@ -370,22 +370,22 @@ class sfzVoice {
 
         this.graph.nodes.velGain = this.audioCtx.createGain("sfz>velGain");
 
-        // filter
+        // filter - create it but disconnected to start with.
         if (needsFilter) {
             this.graph.nodes.filter = this.audioCtx.createBiquadFilter("sfz>filt");
-            this.graph.nodes.velGain.connect(this.graph.nodes.filter);
-            this.graph.nodes.filter.connect(this.dest1);
-            if (this.dest2) this.graph.nodes.filter.connect(this.dest2);
-        } else {
-            this.graph.nodes.velGain.connect(this.dest1);
-            if (this.dest2) this.graph.nodes.velGain.connect(this.dest2);
-        }
+            //this.graph.nodes.velGain.connect(this.graph.nodes.filter);
+            //this.graph.nodes.filter.connect(this.dest1);
+            //if (this.dest2) this.graph.nodes.filter.connect(this.dest2);
+        }// else {
+        this.graph.nodes.velGain.connect(this.dest1);
+        if (this.dest2) this.graph.nodes.velGain.connect(this.dest2);
+        //}
 
         this.isConnected = true;
     }
 
     disconnect() {
-        console.log(`disconnect ${this.instrumentSpec.instrumentID}`);
+        //console.log(`disconnect ${this.instrumentSpec.instrumentID}`);
         if (!this.isConnected) return;
         this.graph.disconnect();
         this.perfGraph.disconnect();
@@ -412,7 +412,7 @@ class sfzVoice {
     physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, regionIndex, voiceIndex) {
         if (!this.isConnected) {
             return;
-        } 
+        }
         this.timestamp = Date.now();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -620,12 +620,12 @@ class sfzInstrument {
             }
 
             if (this.instrumentSpec.sfzURL in this.sfzCache) {
-                console.log(`Inst connect setting new regions cached`);
+                //console.log(`Inst connect setting new regions cached`);
                 this.regions = this.sfzCache[this.instrumentSpec.sfzURL];
             } else {
                 this.hasStartedLoading = true;
                 this.pendingLoads = 0; // how many samples are in "loading" state.
-                console.log(`Inst connect clearing regions`);
+                //console.log(`Inst connect clearing regions`);
                 this.regions = [];
                 DFSynthTools.LoadCachedJSON(this.instrumentSpec.sfzURL, regions => {
                     let baseURL = this.instrumentSpec.sfzURL;
@@ -647,16 +647,16 @@ class sfzInstrument {
                             this.onLoadProgress(this.instrumentSpec.loadProgress);
                             //console.log(`this.loadingprogress = ${this.loadingProgress}`);
                             if (!this.pendingLoads) {
-                                console.log(`Inst connect preprocessing regions`);
+                                //console.log(`Inst connect preprocessing regions`);
                                 PreprocessSFZRegions(this.regions, this.instrumentSpec);
                                 this.sfzCache[this.instrumentSpec.sfzURL] = this.regions;
                                 this.hasCompletedLoading = true;
                                 this.instrumentSpec.loadProgress = 1;
                                 this.onLoadProgress(this.instrumentSpec.loadProgress);
                                 //console.log(`Finished loading instrument ${this.instrumentSpec.instrumentID}`);
-                                console.log(`[ real connect recurse`);
+                                //console.log(`[ real connect recurse`);
                                 this.connect();
-                                console.log(`]`);
+                                //console.log(`]`);
                                 this.hasStartedLoading = false;
                             }
                         }); // load sample
@@ -667,7 +667,7 @@ class sfzInstrument {
 
         }
 
-        console.log(`  really connecting...`);
+        //console.log(`  really connecting...`);
         /*
         (voice) --> [filter] --> [wetGainer] --> dryDestination
                                > [dryGainer] --> wetDestination
@@ -686,7 +686,7 @@ class sfzInstrument {
         this.graph.nodes.wetGainer.connect(this.wetDestination);
 
         let needsPan2 = this.regions.some(r => !!r.correspondingRegion);
-        console.log(`Inst connect needs pan? ${needsPan2}`);
+        //console.log(`Inst connect needs pan? ${needsPan2}`);
         this.voices.forEach(v => {
             v.connect(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer, this.regions);
         });
@@ -702,7 +702,7 @@ class sfzInstrument {
     disconnect() {
         this.isConnected = false;
         this.AllNotesOff();
-        console.log(`Inst disconnect`);
+        //console.log(`Inst disconnect`);
         this.voices.forEach(v => v.disconnect());
         this.graph.disconnect();
     }
