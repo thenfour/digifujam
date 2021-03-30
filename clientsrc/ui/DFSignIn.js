@@ -14,6 +14,7 @@ class Connection extends React.Component {
         this.state = {
             userName: '',
             userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
+            roomKey: "",
             showValidationErrors: false, // don't show until you try to connect
             googleAuthURL: null,
             staySignedIn: true,
@@ -105,7 +106,7 @@ class Connection extends React.Component {
             return;
         }
         window.localStorage.setItem("DFHomepage", window.location.href);
-        this.props.handleConnect(this.state.userName, this.state.userColor, google_access_token);
+        this.props.handleConnect(this.state.userName, this.state.userColor, this.state.roomKey, google_access_token);
     }
 
     onClickLoginAnonymous = (e) => {
@@ -113,7 +114,7 @@ class Connection extends React.Component {
     }
 
     clickStaySignedIn = (e) => {
-        this.setState({staySignedIn : !this.state.staySignedIn});
+        this.setState({ staySignedIn: !this.state.staySignedIn });
     }
 
     render() {
@@ -140,7 +141,7 @@ class Connection extends React.Component {
                         {showLoginControls &&
                             <li><DFReactUtils.TextInputField
                                 ref={(input) => { this.nameInput = input; }}
-                                style={{ width: 80 }}
+                                style={{ width: 120 }}
                                 default={this.state.userName}
                                 onChange={(val) => this.setState({ userName: val })}
                             />
@@ -148,12 +149,20 @@ class Connection extends React.Component {
                         </li>}
                         {showLoginControls &&
                             <li><DFReactUtils.TextInputFieldExternalState
-                                style={{ width: 80 }}
+                                style={{ width: 120 }}
                                 value={this.state.userColor}
                                 onChange={(val) => this.setState({ userColor: val })}
                             />
                                 <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>}
+                        {window.DFRoomWantsKey && <li><DFReactUtils.TextInputFieldExternalState
+                            style={{ width: 120 }}
+                            value={this.state.roomKey}
+                            onChange={(val) => this.setState({ roomKey: val })}
+                        />
+                        Room key
+                        </li>}
+
                         {showLoginControls &&
                             <li>
                                 <button onClick={this.onClickLoginAnonymous}>Enter as guest</button>

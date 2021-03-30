@@ -1017,7 +1017,7 @@ class DigifuApp {
         this.net.SendAdjustBeatPhase(relativeMS);
     }
 
-    Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
+    Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
@@ -1053,7 +1053,7 @@ class DigifuApp {
 
         this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress);
         this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
-        this.net.Connect(this, google_access_token);
+        this.net.Connect(this, roomKey, google_access_token);
     };
 
     Disconnect() {

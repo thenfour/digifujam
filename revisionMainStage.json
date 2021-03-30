@@ -1,6 +1,7 @@
 {
   "roomID": "revisionmainstage",
   "roomTitle": "#revisionmainstage",
+  "roomKey":"digifulife",
   "route": "/revisionmainstage",
   "img": "./roomart/tony01_lightsout_1750.jpg",
   "isPrivate": true,

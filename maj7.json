@@ -454,19 +454,21 @@
           "sfzURL": "/drum-samples/SecretOfManaExt/SecretOfManaExt.sfz.json",
           "name": "SecretOfManaExt"
         },
-        
         {
           "ignoreLoop": true,
+          "sfzForceOneShot": true,
           "sfzURL": "/sfz/User-61-XV-BrushKit/User-61-XV-BrushKit.sfz.json",
           "name": "User-61-XV-BrushKit"
         },
         {
           "ignoreLoop": true,
+          "sfzForceOneShot": true,
           "sfzURL": "/sfz/010_Pop/010_Pop.sfz.json",
           "name": "010_Pop"
         },
         {
           "ignoreLoop": true,
+          "sfzForceOneShot": true,
           "sfzURL": "/sfz/032_Jazz/032_Jazz.sfz.json",
           "name": "032_Jazz"
         }

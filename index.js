@@ -1445,7 +1445,17 @@ let roomsAreLoaded = function () {
       let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"]);
       let room = gRooms[requestedRoomID];
       if (!room) {
-        throw new Error(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
+        console.log(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
+        ws.disconnect();
+        return;
+      }
+
+      if ('roomKey' in room.roomState) {
+        if (ws.handshake.query["roomKey"] != room.roomState.roomKey) {
+          console.log(`user is connecting with incorrect roomkey to ${room.roomState.roomID}.`);
+          ws.disconnect();
+          return;
+        }
       }
 
       ws.on('disconnect', data => OnDisconnect(ws, data));
@@ -1503,7 +1513,10 @@ let loadRoom = function (jsonTxt, serverRestoreState) {
   roomState = JSON.parse(jsonTxt);
   gRooms[roomState.roomID] = new RoomServer(roomState, serverRestoreState);
   log(`serving room ${roomState.roomID} on route ${roomState.route}`);
-  app.use(roomState.route, express.static('public'));
+
+  app.use(roomState.route, express.static('public', {
+    index: ('roomKey' in roomState) ? "index-key.html" : "index.html"
+  }));
 }
 
 

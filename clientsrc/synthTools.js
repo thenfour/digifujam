@@ -19,7 +19,7 @@ class AudioGraphHelper {
             if (n) {
                 if (n.reset) n.reset();
                 if (n.stop) n.stop();
-                n.disconnect();
+                if (n.disconnect) n.disconnect();
             }
 		});
 		this.nodes = {};

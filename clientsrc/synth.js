@@ -142,6 +142,9 @@ class DigifuSynth {
 		this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
 		instrumentSpecs.forEach(spec => {
+
+			spec.loadProgress = 0;
+
 			let dryGainer = this.audioCtx.createGain("inst gainer");
 			dryGainer.gain.value = 1;
 			if (spec.gain) {

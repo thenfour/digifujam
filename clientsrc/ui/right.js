@@ -2101,7 +2101,7 @@ class RootArea extends React.Component {
         //this.setState(this.state);
     }
 
-    HandleConnect = (userName, color, google_access_token) => {
+    HandleConnect = (userName, color, roomKey, google_access_token) => {
         let app = new DFApp.DigifuApp();
 
         // copied from ctor
@@ -2111,7 +2111,7 @@ class RootArea extends React.Component {
             this.notesOn.push([]); // empty initially.
         }
 
-        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
+        app.Connect(userName, color, roomKey, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
             this.handleUserAllNotesOff, this.handleAllNotesOff,
             this.handleUserLeave, this.HandlePleaseReconnect,
             this.HandleCheer, this.handleRoomWelcome, google_access_token, this.onInstrumentLoadProgress);
@@ -2327,6 +2327,22 @@ class RootArea extends React.Component {
         }
     }
 
+    setVolumeVal = (v) => {
+        let realVal = parseFloat(v.target.value) / 100;
+        this.state.app.synth.masterGain = realVal;
+        gStateChangeHandler.OnStateChange();
+        //this.state.stateChangeHandler.OnStateChange();
+    }
+
+    onClickMute = () => {
+        // this op takes a while so do async
+        //setTimeout(() => {
+            this.state.app.synth.isMuted = !this.state.app.synth.isMuted;
+            gStateChangeHandler.OnStateChange();
+            //this.state.stateChangeHandler.OnStateChange();
+        //}, 0);
+    };
+
     render() {
         let title = "(not connected)";
         if (this.state.app && this.state.app.roomState) {
@@ -2348,14 +2364,15 @@ class RootArea extends React.Component {
             }, 1);
         }
 
+        let hasRightArea = this.state.app && (this.state.app.observingInstrument || this.state.app.myInstrument);
 
 
         return (
-            <div id="grid-container" className={this.state.wideMode ? "wide" : undefined}>
+            <div id="grid-container" className={!hasRightArea ? "noright" : (this.state.wideMode ? "wide" : undefined)}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>
                         <a className="logoTxt" href={GetHomepage()}>7jam.io</a>
-                        <a href="https://discord.gg/cKSF3Mg" target="_blank">
+                        <a href="https://discord.gg/kkf9gQfKAd" target="_blank"> {/* https://discord.gg/cKSF3Mg */}
                             <svg className="socicon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Discord icon</title><path d="M20.222 0c1.406 0 2.54 1.137 2.607 2.475V24l-2.677-2.273-1.47-1.338-1.604-1.398.67 2.205H3.71c-1.402 0-2.54-1.065-2.54-2.476V2.48C1.17 1.142 2.31.003 3.715.003h16.5L20.222 0zm-6.118 5.683h-.03l-.202.2c2.073.6 3.076 1.537 3.076 1.537-1.336-.668-2.54-1.002-3.744-1.137-.87-.135-1.74-.064-2.475 0h-.2c-.47 0-1.47.2-2.81.735-.467.203-.735.336-.735.336s1.002-1.002 3.21-1.537l-.135-.135s-1.672-.064-3.477 1.27c0 0-1.805 3.144-1.805 7.02 0 0 1 1.74 3.743 1.806 0 0 .4-.533.805-1.002-1.54-.468-2.14-1.404-2.14-1.404s.134.066.335.2h.06c.03 0 .044.015.06.03v.006c.016.016.03.03.06.03.33.136.66.27.93.4.466.202 1.065.403 1.8.536.93.135 1.996.2 3.21 0 .6-.135 1.2-.267 1.8-.535.39-.2.87-.4 1.397-.737 0 0-.6.936-2.205 1.404.33.466.795 1 .795 1 2.744-.06 3.81-1.8 3.87-1.726 0-3.87-1.815-7.02-1.815-7.02-1.635-1.214-3.165-1.26-3.435-1.26l.056-.02zm.168 4.413c.703 0 1.27.6 1.27 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.334.002-.74.573-1.338 1.27-1.338zm-4.543 0c.7 0 1.266.6 1.266 1.335 0 .74-.57 1.34-1.27 1.34-.7 0-1.27-.6-1.27-1.334 0-.74.57-1.338 1.27-1.338z" /></svg>
                         </a>
                         <a href="https://twitter.com/tenfour2" target="_blank">
@@ -2366,6 +2383,12 @@ class RootArea extends React.Component {
                         </a>
                     </span>
                     {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
+                    {this.state.app && this.state.app.synth &&
+                        <span>
+                            <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.app.synth.masterGain * 100} disabled={this.state.app.synth.isMuted} />
+                            <label htmlFor="volume">gain:{Math.trunc(this.state.app.synth.masterGain * 100)}</label>
+                            <button className="muteButton" onClick={this.onClickMute}>{this.state.app.synth.isMuted ? "🔇" : "🔊"}</button>
+                        </span>}
                 </div>
                 <DFPiano.PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />

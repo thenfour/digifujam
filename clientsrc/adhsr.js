@@ -6,6 +6,70 @@
 
 var DEBUG = false;
 
+/*
+    attack: 0,
+    hold: 0,
+    decay: 2,
+    sustain: 0,// var eps = 0.00001;
+    release: 2,
+ */
+
+//     // https://stackoverflow.com/a/34697382/402169
+//     function expCurve(start, end) {
+//         var count = 10;
+//         var t = 0;
+//         var curve = new Float32Array(count + 1);
+//         start = Math.max(start, 0.0000001);
+//         end = Math.max(end, 0.0000001);
+//         for (var i = 0; i <= count; ++i) {
+//             curve[i] = start * Math.pow(end / start, t);
+//             t += 1/count;
+//         }
+//         return curve;
+//     }
+
+// function ADSRNode2(ctx, opts) {
+//     var node = ctx.createConstantSource();
+//     node.adsrOpts = opts;
+
+//     node.trigger = function () {
+//         this.offset.cancelScheduledValues(0);
+//         this.offset.linearRampToValueAtTime(1, this.context.currentTime + this.adsrOpts.attack);// attack to 1
+//         this.offset.setValueAtTime(1, this.context.currentTime + this.adsrOpts.attack + this.adsrOpts.hold); // hold to 1
+//         //this.offset.exponentialRampToValueAtTime(Math.max(0.00001, this.adsrOpts.sustain), this.context.currentTime + this.adsrOpts.attack + this.adsrOpts.hold + this.adsrOpts.decay); // decay to sustain level.
+//         this.offset.setValueCurveAtTime(expCurve(1, 0), this.context.currentTime + this.adsrOpts.attack + this.adsrOpts.hold, this.adsrOpts.decay);
+//         return this;
+//     };
+
+//     node.release = function () {
+
+//         // figure out what value we're at.
+
+//         this.offset.cancelScheduledValues(0);
+//         var currentVol = this.offset.value;
+//         var now = this.context.currentTime;
+//         this.offset.setValueCurveAtTime(expCurve(currentVol, 1), now, this.adsrOpts.attack);
+//         this.offset.setValueCurveAtTime(expCurve(1, 0), now + this.adsrOpts.attack, volDecay);
+
+
+
+
+//         //this.offset.cancelAndHoldAtTime(this.context.currentTime);
+//         //this.offset.cancelScheduledValues(this.context.currentTime);
+//         // in order to make exponentialRampToValueAtTime work, it needs to know the FROM value.
+//         //this.offset.exponentialRampToValueAtTime(0.00001, this.context.currentTime + this.adsrOpts.release); // release to very close to 0
+//         //this.offset.setTargetAtTime(0, this.context.currentTime, this.adsrOpts.release); // release to very close to 0
+//         //this.offset.setValueAtTime(0, this.context.currentTime + this.adsrOpts.release); // and truly 0
+//         return this;
+//     };
+//     return node;
+// }
+
+
+
+
+
+
 function ADSRNode(ctx, opts) {
     // `ctx` is the AudioContext
     // `opts` is an object in the format:
@@ -125,13 +189,14 @@ function ADSRNode(ctx, opts) {
             param.setTargetAtTime(value, time, duration / type);
     }
 
-    node.trigger = function (when) {
-        if (typeof when === 'undefined')
-            when = this.context.currentTime;
+    node.trigger = function () {
+        //if (typeof when === 'undefined')
+        const when = this.context.currentTime;
 
         if (lastTrigger !== false) {
             if (when < lastTrigger.when)
                 throw new Error('[ADSRNode] Cannot trigger before future trigger');
+            console.log(`ADSR trigger releasing`);
             this.release(when);
         }
         var v = base;
@@ -150,12 +215,12 @@ function ADSRNode(ctx, opts) {
 
         this.offset.cancelScheduledValues(when);
 
-        if (DEBUG) {
-            // simulate curve using triggeredValue (debug purposes)
-            for (var i = 0; i < 10; i += 0.01)
-                this.offset.setValueAtTime(triggeredValue(i), when + i);
-            return this;
-        }
+        // if (DEBUG) {
+        //     // simulate curve using triggeredValue (debug purposes)
+        //     for (var i = 0; i < 10; i += 0.01)
+        //         this.offset.setValueAtTime(triggeredValue(i), when + i);
+        //     return this;
+        // }
 
         if (interruptedLine)
             this.offset.linearRampToValueAtTime(v, when);
@@ -183,8 +248,8 @@ function ADSRNode(ctx, opts) {
         var tnow = when - lastTrigger.when;
         var v = triggeredValue(tnow);
         var reltime = release;
-        // if (Math.abs(sustain - base) > eps)  <-- not sure the point of this
-        //     reltime = release * (v - base) / (sustain - base);
+        if (Math.abs(sustain - base) > eps) // <-- not sure the point of this
+            reltime = release * (v - base) / (sustain - base);
         lastRelease = { when: when, v: v, reltime: reltime };
         var atktime = lastTrigger.atktime;
         // check if a linear attack or a linear decay has been interrupted by this release
@@ -237,5 +302,6 @@ function ADSRNode(ctx, opts) {
 }
 
 module.exports = {
-    ADSRNode
+    ADSRNode,
+    //ADSRNode2,
 };

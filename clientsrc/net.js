@@ -194,11 +194,12 @@ class DigifuNet {
         this.socket = null;
     };
 
-    Connect(handler, google_access_token) {
+    Connect(handler, roomKey, google_access_token) {
         this.handler = handler;
         this.ResetQueuedParamChangeData();
         let query = Object.assign({
             jamroom: window.location.pathname,
+            roomKey,
         }, Object.fromEntries(new URLSearchParams(location.search)));
 
         if (google_access_token) {

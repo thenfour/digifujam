@@ -1,4 +1,8 @@
 /*
+
+https://github.com/mohayonao/adsr-envelope
+
+
 layering/region selection:
 - lokey
 - hikey
@@ -41,9 +45,9 @@ todo:
 
 */
 
+const ADSREnvelope = require("adsr-envelope");
 const DFSynthTools = require("./synthTools");
 const DFU = require('./dfutil');
-const ADSR = require("./adhsr");
 
 const GLOBAL_SFZ_GAIN = 0.2;
 
@@ -171,21 +175,35 @@ class SFZRegion {
 
     CalculateAmpEGSpec(instrumentSpec) {
         const ret = {
-            base: 0, // 
+            //base: 0, // 
             attack: this.GetOpcodeVal('ampeg_attack', 0),
-            attackCurve: 0, // linear https://sfzformat.com/opcodes/ampeg_attack
-            peak: 1,
+            //attackCurve: 0, // linear https://sfzformat.com/opcodes/ampeg_attack
+            //peak: 1,
             hold: this.GetOpcodeVal('ampeg_hold', 0),
             decay: this.GetOpcodeVal('ampeg_decay', 0),
-            decayCurve: 9,
+            //decayCurve: 9,
             sustain: this.GetTransformedOpcodeVal('ampeg_sustain', 1, v => v / 100), // https://sfzformat.com/opcodes/ampeg_sustain in percentage (0-100)
             release: this.GetOpcodeVal('ampeg_release', -1), // if this is <0, consider the sample a one-shot.
-            releaseCurve: 9, // this feels about right
+            //releaseCurve: 9, // this feels about right
         };
 
         if (('sfzReleaseMul' in instrumentSpec) && (ret.release > 0)) {
             ret.release *= instrumentSpec.sfzReleaseMul;
         }
+        if ('sfzForceOneShot' in instrumentSpec) {
+            ret.release = -1;
+        }
+        //ret.decay *= 0.125;
+        //ret.release *= 0.125;
+
+        return {
+            attackTime: ret.attack,
+            decayTime: ret.decay,
+            sustainLevel: ret.sustain,
+            releaseTime: ret.release,
+            decayCurve: "exp",
+            releaseCurve: "exp",
+        };
 
         /*
         amplitude ADSR https://sfzformat.com/opcodes/ampeg_attack
@@ -325,19 +343,49 @@ class sfzVoice {
         return 999999;
     }
 
-    connect(dest1, dest2) {
-
+    connect(dest1, dest2, regions) {
+        if (this.isConnected) return;
         this.dest1 = dest1;
         this.dest2 = dest2;
 
         /*
-            with SFZ, each region can have all its own params. so it must be done on noteon, not in connect().
+        each region can have all its own params. so it must be done on noteon, not in connect().
+ 
+                                                                       -> dest1
+        (bufferL) -> [panL] -> [envGainer] ----> [velGain] -> [filter] -> dest2
+        (bufferR) -> [panR] ->       |<gain> 
+                                     |
+                            [ampEG] -
         */
+        let needsFilter = regions.some(r => !!r.filterSpec);
+        let needsPan2 = regions.some(r => !!r.correspondingRegion);
+
+        console.log(`connect ${this.instrumentSpec.instrumentID} needsFilter:${needsFilter} needsPan2:${needsPan2}`);
+
+        // source buffers & panners
+        this.graph.nodes.pan1 = this.audioCtx.createStereoPanner("sfz>pan1");
+        if (needsPan2) {
+            this.graph.nodes.pan2 = this.audioCtx.createStereoPanner("sfz>pan2");
+        }
+
+        this.graph.nodes.velGain = this.audioCtx.createGain("sfz>velGain");
+
+        // filter
+        if (needsFilter) {
+            this.graph.nodes.filter = this.audioCtx.createBiquadFilter("sfz>filt");
+            this.graph.nodes.velGain.connect(this.graph.nodes.filter);
+            this.graph.nodes.filter.connect(this.dest1);
+            if (this.dest2) this.graph.nodes.filter.connect(this.dest2);
+        } else {
+            this.graph.nodes.velGain.connect(this.dest1);
+            if (this.dest2) this.graph.nodes.velGain.connect(this.dest2);
+        }
 
         this.isConnected = true;
     }
 
     disconnect() {
+        console.log(`disconnect ${this.instrumentSpec.instrumentID}`);
         if (!this.isConnected) return;
         this.graph.disconnect();
         this.perfGraph.disconnect();
@@ -346,7 +394,7 @@ class sfzVoice {
     }
 
     AllNotesOff() {
-        //console.log(`v${this.myVoiceIndex} AllNotesOff`);
+        if (!this.isConnected) return;
         this.perfGraph.disconnect();
         this.midiNote = 0;
         this.timestamp = null;
@@ -361,8 +409,10 @@ class sfzVoice {
         return 0;
     }
 
-    physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, regionIndex) {
-        if (!this.isConnected) return;
+    physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, regionIndex, voiceIndex) {
+        if (!this.isConnected) {
+            return;
+        } 
         this.timestamp = Date.now();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -370,88 +420,61 @@ class sfzVoice {
 
         this.perfGraph.disconnect();
 
-        /*
-        thing is, with SFZ, each region can have all its own params. so it must be done on noteon, not in connect().
-
-                                                                       -> dest1
-        (bufferL) -> [panL] -> [envGainer] ----> [velGain] -> [filter] -> dest2
-        (bufferR) -> [panR] ->       |<gain> 
-                                     |
-                                  [ampEG]
-        */
-
-        this.bufferSourceNode1 = null;
-        this.bufferSourceNode2 = null;
-
         // source buffers & panners
         const transpose = ('transpose' in this.instrumentSpec) ? this.instrumentSpec.transpose : 0;
         const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis() + transpose);
         this.playbackRatio = detuneSpec.playbackRatio; // needed to calculate the correct duration of the sample
+        this.graph.nodes.pan1.pan.value = sfzRegion.pan;
 
-        this.perfGraph.nodes.pan1 = this.audioCtx.createStereoPanner("sfz>pan1");
-        this.perfGraph.nodes.pan1.pan.value = sfzRegion.pan;
-
-        this.bufferSourceNode1 = this.audioCtx.createBufferSource();
-        this.bufferSourceNode1.buffer = sfzRegion.buffer;
-        this.bufferSourceNode1.detune.value = detuneSpec.detuneCents;
+        this.perfGraph.nodes.bufferSourceNode1 = this.audioCtx.createBufferSource();
+        this.perfGraph.nodes.bufferSourceNode1.buffer = sfzRegion.buffer;
+        this.perfGraph.nodes.bufferSourceNode1.detune.value = detuneSpec.detuneCents;
         if (sfzRegion.loopSpec) {
-            this.bufferSourceNode1.loop = true;
-            this.bufferSourceNode1.loopStart = sfzRegion.loopSpec.start;
-            this.bufferSourceNode1.loopEnd = sfzRegion.loopSpec.end;
+            this.perfGraph.nodes.bufferSourceNode1.loop = true;
+            this.perfGraph.nodes.bufferSourceNode1.loopStart = sfzRegion.loopSpec.start;
+            this.perfGraph.nodes.bufferSourceNode1.loopEnd = sfzRegion.loopSpec.end;
         }
-        this.bufferSourceNode1.connect(this.perfGraph.nodes.pan1);
+        this.perfGraph.nodes.bufferSourceNode1.connect(this.graph.nodes.pan1);
 
-        if (sfzRegion.correspondingRegion) {
-            this.perfGraph.nodes.pan2 = this.audioCtx.createStereoPanner("sfz>pan2");
-            this.perfGraph.nodes.pan2.pan.value = sfzRegion.correspondingRegion.pan;
-            this.bufferSourceNode2 = this.audioCtx.createBufferSource();
-            this.bufferSourceNode2.buffer = sfzRegion.correspondingRegion.buffer;
-            this.bufferSourceNode2.detune.value = detuneSpec.detuneCents;
+        if (sfzRegion.correspondingRegion && this.graph.nodes.pan2) {
+            this.graph.nodes.pan2.pan.value = sfzRegion.correspondingRegion.pan;
+            this.perfGraph.nodes.bufferSourceNode2 = this.audioCtx.createBufferSource();
+            this.perfGraph.nodes.bufferSourceNode2.buffer = sfzRegion.correspondingRegion.buffer;
+            this.perfGraph.nodes.bufferSourceNode2.detune.value = detuneSpec.detuneCents;
             if (sfzRegion.correspondingRegion.loopSpec) {
-                this.bufferSourceNode2.loop = true;
-                this.bufferSourceNode2.loopStart = sfzRegion.correspondingRegion.loopSpec.start;
-                this.bufferSourceNode2.loopEnd = sfzRegion.correspondingRegion.loopSpec.end;
+                this.perfGraph.nodes.bufferSourceNode2.loop = true;
+                this.perfGraph.nodes.bufferSourceNode2.loopStart = sfzRegion.correspondingRegion.loopSpec.start;
+                this.perfGraph.nodes.bufferSourceNode2.loopEnd = sfzRegion.correspondingRegion.loopSpec.end;
             }
-            this.bufferSourceNode2.connect(this.perfGraph.nodes.pan2);
-            //console.log(`v${this.myVoiceIndex} noteon: STEREO ${midiNote}, region ${regionIndex} with stereo pair`);
-        } else {
-            //console.log(`v${this.myVoiceIndex} noteon: MONO ${midiNote}, region ${regionIndex}`);
+            this.perfGraph.nodes.bufferSourceNode2.connect(this.graph.nodes.pan2);
         }
 
-        // envGainer / ADSR
-        this.perfGraph.nodes.ampEG = ADSR.ADSRNode(this.audioCtx, this.sfzRegion.ampEGSpec);
-        this.perfGraph.nodes.ampEG.start();
-        this.perfGraph.nodes.ampEG.trigger();
+        this.perfGraph.nodes.ampEG = new ADSREnvelope(this.sfzRegion.ampEGSpec);
+
+        this.graph.nodes.pan1.disconnect();
+        if (this.perfGraph.nodes.pan2) this.perfGraph.nodes.pan2.disconnect();
 
         this.perfGraph.nodes.envGainer = this.audioCtx.createGain("sfz>envGainer");
-        this.perfGraph.nodes.pan1.connect(this.perfGraph.nodes.envGainer);
-        if (this.perfGraph.nodes.pan2) this.perfGraph.nodes.pan2.connect(this.perfGraph.nodes.envGainer);
+        this.graph.nodes.pan1.connect(this.perfGraph.nodes.envGainer);
+        if (this.graph.nodes.pan2) {
+            this.graph.nodes.pan2.connect(this.perfGraph.nodes.envGainer);
+        }
         this.perfGraph.nodes.envGainer.gain.value = 0;
-        this.perfGraph.nodes.ampEG.connect(this.perfGraph.nodes.envGainer.gain);
+
+        this.perfGraph.nodes.envGainer.connect(this.graph.nodes.velGain);
 
         const velAmpMul = DFU.remap(this.instrumentSpec.GetParamByID("velAmpMod").currentValue, 0, 1, 1, (velocity / 127));
-        this.perfGraph.nodes.velGain = this.audioCtx.createGain("sfz>velGain");
-        this.perfGraph.nodes.envGainer.connect(this.perfGraph.nodes.velGain);
-        this.perfGraph.nodes.velGain.gain.value = velAmpMul * GLOBAL_SFZ_GAIN * this.sfzRegion.volumeMul;
+        this.graph.nodes.velGain.gain.value = velAmpMul * GLOBAL_SFZ_GAIN * this.sfzRegion.volumeMul;
 
         // filter
         if (sfzRegion.filterSpec) {
-            this.perfGraph.nodes.filter = this.audioCtx.createBiquadFilter("sfz>filt");
-            this.perfGraph.nodes.velGain.connect(this.perfGraph.nodes.filter);
-
-            this.perfGraph.nodes.filter.frequency.value = sfzRegion.filterSpec.cutoff;
-            this.perfGraph.nodes.filter.Q.value = sfzRegion.filterSpec.q;
-            this.perfGraph.nodes.filter.type = sfzRegion.filterSpec.type;
-            this.perfGraph.nodes.filter.connect(this.dest1);
-            if (this.dest2) this.perfGraph.nodes.filter.connect(this.dest2);
-        } else {
-            this.perfGraph.nodes.velGain.connect(this.dest1);
-            if (this.dest2) this.perfGraph.nodes.velGain.connect(this.dest2);
+            this.graph.nodes.filter.frequency.value = sfzRegion.filterSpec.cutoff;
+            this.graph.nodes.filter.Q.value = sfzRegion.filterSpec.q;
+            this.graph.nodes.filter.type = sfzRegion.filterSpec.type;
         }
 
-
-        let releaseLength = this.sfzRegion.ampEGSpec.release;
-        if (this.sfzRegion.ampEGSpec.release < 0) {
+        let releaseLength = this.sfzRegion.ampEGSpec.releaseTime;
+        if (this.sfzRegion.ampEGSpec.releaseTime < 0) {
             // if release is a one-shot style (inf), then the release len is the whole length of the sample.
             releaseLength = this.sfzRegion.buffer.duration;
         }
@@ -460,9 +483,11 @@ class sfzVoice {
         releaseLength *= this.playbackRatio;
         this.releaseLengthMS = releaseLength * 1000;
 
+        if (this.perfGraph.nodes.bufferSourceNode1) this.perfGraph.nodes.bufferSourceNode1.start();
+        if (this.perfGraph.nodes.bufferSourceNode2) this.perfGraph.nodes.bufferSourceNode2.start();
 
-        if (this.bufferSourceNode1) this.bufferSourceNode1.start();
-        if (this.bufferSourceNode2) this.bufferSourceNode2.start();
+        this.startMusicalTime = this.audioCtx.currentTime;
+        this.perfGraph.nodes.ampEG.applyTo(this.perfGraph.nodes.envGainer.gain, this.startMusicalTime);
     }
 
     setDestNodes(dest1, dest2) {
@@ -471,44 +496,48 @@ class sfzVoice {
         this.dest2 = dest2;
         if (!this.sfzRegion) return;
         if (this.sfzRegion.filterSpec) {
-            this.perfGraph.nodes.filter.disconnect();
-            this.perfGraph.nodes.filter.connect(this.dest1);
-            if (this.dest2) this.perfGraph.nodes.filter.connect(this.dest2);
+            this.graph.nodes.filter.disconnect();
+            this.graph.nodes.filter.connect(this.dest1);
+            if (this.dest2) this.graph.nodes.filter.connect(this.dest2);
         } else {
-            this.perfGraph.nodes.velGain.disconnect();
-            this.perfGraph.nodes.velGain.connect(this.dest1);
-            if (this.dest2) this.perfGraph.nodes.velGain.connect(this.dest2);
+            this.graph.nodes.velGain.disconnect();
+            this.graph.nodes.velGain.connect(this.dest1);
+            if (this.dest2) this.graph.nodes.velGain.connect(this.dest2);
         }
     }
 
-    musicallyRelease() {
+    musicallyRelease(offBecauseGroup) {
         if (!this.isConnected) return;
-        //console.log(`v${this.myVoiceIndex} Release: MONO ${this.midiNote}`);
+        if (offBecauseGroup) {
+            // if this note is being released because of a group, like openhat off because of hihat, then it should override the normal note off.
+            if (this.perfGraph.nodes.bufferSourceNode1) this.perfGraph.nodes.bufferSourceNode1.stop();
+            if (this.perfGraph.nodes.bufferSourceNode2) this.perfGraph.nodes.bufferSourceNode2.stop();
+        }
+
         if (!this.timestamp) {
-            //console.log(`v${this.myVoiceIndex} --> no timestamp`);
             return; // some odd synth state can cause releases without note ons (pedal up after taking the instrument for example)
         }
-        if (this.perfGraph.nodes.ampEG) {
-            //console.log(`v${this.myVoiceIndex} --> Success`);
-            this.perfGraph.nodes.ampEG.release();
-        } else {
-            let a = 0;
-        }
+
         if (this.sfzRegion.loopSpec && this.sfzRegion.loopSpec.stopLoopOnRelease) {
-            this.bufferSourceNode1.loop = false;
+            this.perfGraph.nodes.bufferSourceNode1.loop = false;
         }
         if (this.sfzRegion.correspondingRegion && this.sfzRegion.correspondingRegion.loopSpec && this.sfzRegion.correspondingRegion.loopSpec.stopLoopOnRelease) {
-            this.bufferSourceNode2.loop = false;
+            this.perfGraph.nodes.bufferSourceNode2.loop = false;
+        }
+
+        if (!offBecauseGroup) {
+            if (this.perfGraph.nodes.ampEG && (this.sfzRegion.ampEGSpec.releaseTime >= 0)) {
+                this.perfGraph.nodes.ampEG.gateTime = this.audioCtx.currentTime - this.startMusicalTime;
+                this.perfGraph.nodes.ampEG.applyTo(this.perfGraph.nodes.envGainer.gain, this.startMusicalTime);
+
+                if (this.perfGraph.nodes.bufferSourceNode1) this.perfGraph.nodes.bufferSourceNode1.stop(this.startMusicalTime + this.perfGraph.nodes.ampEG.duration);
+                if (this.perfGraph.nodes.bufferSourceNode2) this.perfGraph.nodes.bufferSourceNode2.stop(this.startMusicalTime + this.perfGraph.nodes.ampEG.duration);
+            }
         }
 
         this.timestamp = null;
-        //this.sfzRegion = null; <-- dont kill this while noteOffTimestamp is still there
-        //this.midiNote = 0; <-- dont kill this while noteOffTimestamp is still there
         this.noteOffTimestamp = Date.now();
         this.velocity = 0;
-
-        // if (this.bufferSourceNode1) this.bufferSourceNode1.stop();
-        // if (this.bufferSourceNode2) this.bufferSourceNode2.stop();
     }
 
     ParamHasChanged(paramID) {
@@ -518,16 +547,15 @@ class sfzVoice {
                 if (this.sfzRegion) {
                     const detuneCents = this.sfzRegion.CalculateDetune(this.midiNote + this.getPitchBendSemis()).detuneCents;
                     // don't bother setting this.playbackRatio; it will not be accurate
-                    if (this.bufferSourceNode1) {
-                        this.bufferSourceNode1.detune.value = detuneCents;
+                    if (this.perfGraph.nodes.bufferSourceNode1) {
+                        this.perfGraph.nodes.bufferSourceNode1.detune.value = detuneCents;
                     }
-                    if (this.bufferSourceNode2) {
-                        this.bufferSourceNode2.detune.value = detuneCents;
+                    if (this.perfGraph.nodes.bufferSourceNode2) {
+                        this.perfGraph.nodes.bufferSourceNode2.detune.value = detuneCents;
                     }
                 }
                 break;
             default:
-                //console.log(`unknown param ${paramID}`);
                 break;
         }
     };
@@ -566,6 +594,7 @@ class sfzInstrument {
         if (this.isConnected) return true;
         if (this.hasStartedLoading && !this.hasCompletedLoading) return false;// loading still in progress
         if (!this.hasStartedLoading) {
+            this.hasCompletedLoading = false;
             // for multi-sfz, make sure the selected one is .. selected
             const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
             if (sfzSelect) {
@@ -591,10 +620,12 @@ class sfzInstrument {
             }
 
             if (this.instrumentSpec.sfzURL in this.sfzCache) {
+                console.log(`Inst connect setting new regions cached`);
                 this.regions = this.sfzCache[this.instrumentSpec.sfzURL];
             } else {
                 this.hasStartedLoading = true;
                 this.pendingLoads = 0; // how many samples are in "loading" state.
+                console.log(`Inst connect clearing regions`);
                 this.regions = [];
                 DFSynthTools.LoadCachedJSON(this.instrumentSpec.sfzURL, regions => {
                     let baseURL = this.instrumentSpec.sfzURL;
@@ -616,13 +647,16 @@ class sfzInstrument {
                             this.onLoadProgress(this.instrumentSpec.loadProgress);
                             //console.log(`this.loadingprogress = ${this.loadingProgress}`);
                             if (!this.pendingLoads) {
+                                console.log(`Inst connect preprocessing regions`);
                                 PreprocessSFZRegions(this.regions, this.instrumentSpec);
                                 this.sfzCache[this.instrumentSpec.sfzURL] = this.regions;
                                 this.hasCompletedLoading = true;
                                 this.instrumentSpec.loadProgress = 1;
                                 this.onLoadProgress(this.instrumentSpec.loadProgress);
                                 //console.log(`Finished loading instrument ${this.instrumentSpec.instrumentID}`);
+                                console.log(`[ real connect recurse`);
                                 this.connect();
+                                console.log(`]`);
                                 this.hasStartedLoading = false;
                             }
                         }); // load sample
@@ -632,6 +666,8 @@ class sfzInstrument {
             }
 
         }
+
+        console.log(`  really connecting...`);
         /*
         (voice) --> [filter] --> [wetGainer] --> dryDestination
                                > [dryGainer] --> wetDestination
@@ -649,8 +685,10 @@ class sfzInstrument {
         this.graph.nodes.dryGainer.connect(this.dryDestination);
         this.graph.nodes.wetGainer.connect(this.wetDestination);
 
+        let needsPan2 = this.regions.some(r => !!r.correspondingRegion);
+        console.log(`Inst connect needs pan? ${needsPan2}`);
         this.voices.forEach(v => {
-            v.connect(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer);
+            v.connect(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer, this.regions);
         });
 
         this.isConnected = true;
@@ -664,6 +702,7 @@ class sfzInstrument {
     disconnect() {
         this.isConnected = false;
         this.AllNotesOff();
+        console.log(`Inst disconnect`);
         this.voices.forEach(v => v.disconnect());
         this.graph.disconnect();
     }
@@ -710,7 +749,7 @@ class sfzInstrument {
             sfzRegion,
             voiceIndex: bestVoiceIndex
         });
-        this.voices[bestVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, sfzRegionIndex);
+        this.voices[bestVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, sfzRegionIndex, bestVoiceIndex);
 
         // handle off_by
         //- group=1 off_by=1 polyphony
@@ -719,21 +758,23 @@ class sfzInstrument {
             // release playing notes which are off_by this group.
             this.voices.forEach((v, vi) => {
                 if (vi == bestVoiceIndex) return;
-                if (v.IsPlaying && v.sfzRegion && ('off_by' in v.sfzRegion) && (v.sfzRegion.off_by == group) && v.midiNote) {
-                    this.NoteOff(v.midiNote);
+                if (v.sfzRegion && ('off_by' in v.sfzRegion) && (v.sfzRegion.off_by == group) && v.midiNote) {
+                    //console.log(`off_by ${v.midiNote}`);
+                    v.musicallyRelease(true);
+                    //this.NoteOff(v.midiNote, true);
                 }
             });
         }
     };
 
-    NoteOff(midiNote) {
+    NoteOff(midiNote, offBecauseGroup) {
         if (!this.connect()) return;
         this.physicallyHeldNotes.removeIf(n => n.note === midiNote);
         if (this.isSustainPedalDown) return;
 
         let v = this.voices.find(v => v.midiNote == midiNote && v.IsPlaying);
         if (v) {
-            v.musicallyRelease();
+            v.musicallyRelease(offBecauseGroup);
         }
     };
 

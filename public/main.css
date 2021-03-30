@@ -98,6 +98,10 @@ button:focus {
     grid-template-columns: 270px minmax(0, 1fr) 550px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
 }
 
+#grid-container.noright {
+    grid-template-columns: 270px minmax(0, 1fr) 10px; /* minmax(0,..) avoids keyboard content from increasing cell size.https://css-tricks.com/preventing-a-grid-blowout/ */
+}
+
 #grid-container.wide #rightArea input[type="range"]
 {
     width:350px;
@@ -206,10 +210,12 @@ button:focus {
 .headerArea {
     padding: 3px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 .headerArea>span {
     margin:0;
+    margin-left:20px;
+    margin-right:20px;
     font-size: small;
     display: inline-flex;
     align-items: center;
@@ -1208,13 +1214,12 @@ button.stayLoggedIn:hover {
     position: absolute;
     z-index: 9991;
     width: 400px;
-    background-color: #111;
-    text-align: -webkit-auto;
-    right: 20px;
+    background-color: #111111e8;
+    text-align: left;
     box-sizing: content-box;
     border: 3px solid #088;
     border-radius: 10px;
-    border-top-right-radius:0;
+    border-top-left-radius:0;
 }
 
 .optionsButton {
@@ -1385,5 +1390,7 @@ ul.instParamList .instActivity.alt2 {
     border-radius: 6px;
 }
 
-
+.optionsBtnContent .quantIndicator {
+    color:orange;
+}
 

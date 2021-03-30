@@ -79,25 +79,25 @@ class DFOptionsDialog extends React.Component {
 
 
             {
-                caption: "𝅗𝅥³",
+                caption: "𝅗𝅥3",
                 division: 3.0 / 4.0,//3/2
                 group: 3,
                 cssClass: "quantizationValue",
             },
             {
-                caption: "𝅘𝅥³",
+                caption: "𝅘𝅥3",
                 division: 3.0 / 2.0,//3/2
                 group: 3,
                 cssClass: "quantizationValue",
             },
             {
-                caption: "𝅘𝅥𝅮³",
+                caption: "𝅘𝅥𝅮3",
                 division: 3,
                 group: 3,
                 cssClass: "quantizationValue",
             },
             {
-                caption: "𝅘𝅥𝅯³",
+                caption: "𝅘𝅥𝅯3",
                 division: 6,
                 group: 3,
                 cssClass: "quantizationValue",
@@ -121,24 +121,24 @@ class DFOptionsDialog extends React.Component {
         });
     };
 
-    setVolumeVal = (v) => {
-        let realVal = parseFloat(v.target.value) / 100;
-        this.props.app.synth.masterGain = realVal;
-        this.props.stateChangeHandler.OnStateChange();
-    }
-
     setPBRange = (v) => {
         this.props.app.pitchBendRange = v.target.value;
         this.props.stateChangeHandler.OnStateChange();
     }
 
-    onClickMute = () => {
-        // this op takes a while so do async
-        setTimeout(() => {
-            this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
-            this.props.stateChangeHandler.OnStateChange();
-        }, 0);
-    };
+    // setVolumeVal = (v) => {
+    //     let realVal = parseFloat(v.target.value) / 100;
+    //     this.props.app.synth.masterGain = realVal;
+    //     this.props.stateChangeHandler.OnStateChange();
+    // }
+
+    // onClickMute = () => {
+    //     // this op takes a while so do async
+    //     setTimeout(() => {
+    //         this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
+    //         this.props.stateChangeHandler.OnStateChange();
+    //     }, 0);
+    // };
 
     onSetMonitoringType(mt) {
         this.props.app.setMonitoringType(mt);
@@ -235,8 +235,8 @@ class DFOptionsDialog extends React.Component {
         }
 
         let buttonCaption = <span className="optionsBtnContent">
-            <span>Playback</span>
-            <span className="masterMuteIndicator">{this.props.app.synth.isMuted ? " 🔇" : " 🔊"}</span>
+            <span>Settings</span>
+            {/* <span className="masterMuteIndicator">{this.props.app.synth.isMuted ? " 🔇" : " 🔊"}</span> */}
             {!!this.state.quantizationIndex && <span className="quantIndicator">Quant=<span className={this.quantizationOptions[this.state.quantizationIndex].cssClass}>{this.quantizationOptions[this.state.quantizationIndex].caption}</span></span>}
             {!this.props.app.metronome.isMuted && !this.props.app.synth.isMuted && <span className="metronomeIndicator">🔺</span>}
             {!!this.props.app.myInstrument && <span className="monitoringIndicator">Monitoring:{monitoringCaption}</span>}
@@ -245,22 +245,21 @@ class DFOptionsDialog extends React.Component {
         return (
             <div>
                 <div className={"optionsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>{buttonCaption}</div>
+
                 {this.state.isExpanded &&
                     <div className="optionsDialog">
 
-                        <div className="component">
+                        {/* <div className="component">
                             <h2>Master volume</h2>
-                            <div className="helpText">Applies to you only.</div>
                             <div>
                                 <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
                                 <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
                                 <button className="muteButton" onClick={this.onClickMute}>{this.props.app.synth.isMuted ? "🔇" : "🔊"}</button>
                             </div>
                         </div>
-
+ */}
                         <div className="component">
                             <h2>Pitch bend</h2>
-                            <div className="helpText">Applies to your playing.</div>
                             <div>
                                 <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
                                 <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
@@ -274,9 +273,9 @@ class DFOptionsDialog extends React.Component {
                                 <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Local) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Local) }}>Local</button>
                                 <button className={"buttonParam " + ((this.props.app.monitoringType == DFApp.eMonitoringType.Remote) ? "active" : "")} onClick={() => { this.onSetMonitoringType(DFApp.eMonitoringType.Remote) }}>Remote</button>
                             </div>
-                            {this.props.app.monitoringType == DFApp.eMonitoringType.Off && <div className="helpText">You will not hear yourself. This could be useful if you want to use an external MIDI device for monitoring, but you won't be aware of how you sound in the room.</div>}
-                            {this.props.app.monitoringType == DFApp.eMonitoringType.Local && <div className="helpText">You hear yourself before your notes are sent to the server. Advantages: less latency for yourself. Disadvantages: You will hear yourself before others hear you, and you can't hear your quantization.</div>}
-                            {this.props.app.monitoringType == DFApp.eMonitoringType.Remote && <div className="helpText">You hear yourself as others hear you, with a round trip through the server. More latency, but you'll hear yourself as others hear you. If you can get used to the delay, this is best.</div>}
+                            {this.props.app.monitoringType == DFApp.eMonitoringType.Off && <div className="helpText">You will not hear yourself.</div>}
+                            {this.props.app.monitoringType == DFApp.eMonitoringType.Local && <div className="helpText">You hear yourself before others do. Less latency, but you won't hear correct rhythms and you can't hear your quantization.</div>}
+                            {this.props.app.monitoringType == DFApp.eMonitoringType.Remote && <div className="helpText">You hear yourself as others hear you, with a round trip through the server. More latency, but you'll hear yourself as others hear you.</div>}
                         </div>
 
                         <div className="component">
@@ -288,20 +287,19 @@ class DFOptionsDialog extends React.Component {
                             <div>
                                 <input type="range" id="quantZone" name="quantZone" min="0" max="100" onChange={this.setQuantBoundary} value={this.props.app.myUser.quantizeSpec.quantizeBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
                                 {this.props.app.myUser.quantizeSpec.quantizeBoundary * 100}
-                                Quantization boundary
-                                <div className="helpText">If a note is played after this point within the quantization frame, it will be delayed until the next quantization tick. A value of 0 would apply quantization to every note.</div>
+                                | Period
+                                <div className="helpText">Notes played after this point in a beat will be delayed.</div>
                             </div>
                             <div>
                                 <input type="range" id="quantDeadZone" name="quantDeadZone" min="0" max="100" onChange={this.setQuantDeadZone} value={this.props.app.myUser.quantizeSpec.swallowBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
                                 {this.props.app.myUser.quantizeSpec.swallowBoundary * 100}
-                                Discard boundary
-                                <div className="helpText">If a note is played after this point within a beat, it's considered "too far away from a quantization boundary" to be musically useful, and will be discarded.</div>
+                                | No man's land
+                                <div className="helpText">Notes played after this point are discarded because they're too far from a musical boundary to be useful.</div>
                             </div>
                             <div>
                                 <input type="range" id="quantAmt" name="quantAmt" min="0" max="100" onChange={this.setQuantAmt} value={this.props.app.myUser.quantizeSpec.quantizeAmt * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
                                 {this.props.app.myUser.quantizeSpec.quantizeAmt * 100}
-                                Quantization amt
-                                <div className="helpText">From no quantization to full quantization. Somewhere in the middle is more humanized.</div>
+                                | Amount
                             </div>
                         </div>
 

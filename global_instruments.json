@@ -2232,7 +2232,7 @@
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1,
-          "defaultValue": 1
+          "defaultValue": 0.8
         },
         {
           "paramID": "filterType",
@@ -2324,7 +2324,7 @@
           "parameterType": "floatParam",
           "minValue": 0,
           "maxValue": 1,
-          "defaultValue": 1
+          "defaultValue": 0.8
         },
         {
           "paramID": "filterType",
