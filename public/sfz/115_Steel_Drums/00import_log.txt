@@ -1,0 +1,56 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\115_Steel_Drums.sfz.json
+Region count: 12
+Source samples to read: 1
+Dest samples to create: 12
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Roland_SC-88_sf2\000\..\sf2_smpl.wav
+  Samplerate: 44100
+  Channels: 1
+  Length in samples: 11403488
+  Min offset       : 9957735
+  Max offset       : 19998702
+  Reflen in samples: 10040967
+  > Creating sf2_smpl_9957735_83232.wav from sf2_smpl.wav [9957735-10040967]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_9957735_83232.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_9957735_83232.m4a"
+  > Creating sf2_smpl_10041013_72829.wav from sf2_smpl.wav [10041013-10113842]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10041013_72829.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10041013_72829.m4a"
+  > Creating sf2_smpl_10113888_41619.wav from sf2_smpl.wav [10113888-10155507]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10113888_41619.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10113888_41619.m4a"
+  > Creating sf2_smpl_10155553_41619.wav from sf2_smpl.wav [10155553-10197172]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10155553_41619.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10155553_41619.m4a"
+  > Creating sf2_smpl_10197218_61530.wav from sf2_smpl.wav [10197218-10258748]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10197218_61530.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10197218_61530.m4a"
+  > Creating sf2_smpl_10258794_32578.wav from sf2_smpl.wav [10258794-10291372]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10258794_32578.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10258794_32578.m4a"
+  > Creating sf2_smpl_10291418_38601.wav from sf2_smpl.wav [10291418-10330019]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10291418_38601.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10291418_38601.m4a"
+  > Creating sf2_smpl_10330065_45087.wav from sf2_smpl.wav [10330065-10375152]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10330065_45087.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10330065_45087.m4a"
+  > Creating sf2_smpl_10375198_3739.wav from sf2_smpl.wav [10375198-10378937]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10375198_3739.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10375198_3739.m4a"
+  > Creating sf2_smpl_10378983_32929.wav from sf2_smpl.wav [10378983-10411912]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10378983_32929.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10378983_32929.m4a"
+  > Creating sf2_smpl_10411958_36692.wav from sf2_smpl.wav [10411958-10448650]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10411958_36692.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10411958_36692.m4a"
+  > Creating sf2_smpl_10448696_66806.wav from sf2_smpl.wav [10448696-10515502]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10448696_66806.wav" "C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10448696_66806.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10041013_72829.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10113888_41619.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_9957735_83232.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10291418_38601.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10330065_45087.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10197218_61530.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10155553_41619.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10258794_32578.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10375198_3739.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10378983_32929.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10448696_66806.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\115_Steel_Drums\sf2_smpl_10411958_36692.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_115_Steel_Drums",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/115_Steel_Drums/115_Steel_Drums.sfz.json",
+  "name": "115_Steel_Drums"
+}

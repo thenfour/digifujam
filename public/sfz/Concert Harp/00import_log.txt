@@ -1,0 +1,750 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Region count: 20
+Source samples to read: 20
+Dest samples to create: 20
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 177463
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c2_0_end.wav from /Samples/Harp/harp-c2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 117686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#2_0_end.wav from /Samples/Harp/harp-d#2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 183932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#2_0_end.wav from /Samples/Harp/harp-f#2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 93184
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a2_0_end.wav from /Samples/Harp/harp-a2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 90519
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c3_0_end.wav from /Samples/Harp/harp-c3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 78663
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#3_0_end.wav from /Samples/Harp/harp-d#3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 154102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#3_0_end.wav from /Samples/Harp/harp-f#3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 124995
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a3_0_end.wav from /Samples/Harp/harp-a3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 77870
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c4_0_end.wav from /Samples/Harp/harp-c4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 76141
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#4_0_end.wav from /Samples/Harp/harp-d#4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79482
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#4_0_end.wav from /Samples/Harp/harp-f#4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 72696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a4_0_end.wav from /Samples/Harp/harp-a4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 47957
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c5_0_end.wav from /Samples/Harp/harp-c5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 63557
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#5_0_end.wav from /Samples/Harp/harp-d#5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 61932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#5_0_end.wav from /Samples/Harp/harp-f#5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a5_0_end.wav from /Samples/Harp/harp-a5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33735
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c6_0_end.wav from /Samples/Harp/harp-c6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33592
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#6_0_end.wav from /Samples/Harp/harp-d#6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 28743
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#6_0_end.wav from /Samples/Harp/harp-f#6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 29159
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a6_0_end.wav from /Samples/Harp/harp-a6.wav [0-end]
+Completed processing source WAV files with 20 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_ConcertHarp",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Concert Harp/Concert Harp.sfz.json",
+  "name": "Concert Harp"
+}
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Region count: 20
+Source samples to read: 20
+Dest samples to create: 20
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 177463
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c2_0_end.wav from /Samples/Harp/harp-c2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 117686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#2_0_end.wav from /Samples/Harp/harp-d#2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 183932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#2_0_end.wav from /Samples/Harp/harp-f#2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 93184
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a2_0_end.wav from /Samples/Harp/harp-a2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 90519
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c3_0_end.wav from /Samples/Harp/harp-c3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 78663
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#3_0_end.wav from /Samples/Harp/harp-d#3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 154102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#3_0_end.wav from /Samples/Harp/harp-f#3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 124995
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a3_0_end.wav from /Samples/Harp/harp-a3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 77870
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c4_0_end.wav from /Samples/Harp/harp-c4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 76141
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#4_0_end.wav from /Samples/Harp/harp-d#4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79482
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#4_0_end.wav from /Samples/Harp/harp-f#4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 72696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a4_0_end.wav from /Samples/Harp/harp-a4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 47957
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c5_0_end.wav from /Samples/Harp/harp-c5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 63557
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#5_0_end.wav from /Samples/Harp/harp-d#5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 61932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#5_0_end.wav from /Samples/Harp/harp-f#5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a5_0_end.wav from /Samples/Harp/harp-a5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-c6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33735
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c6_0_end.wav from /Samples/Harp/harp-c6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-d#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33592
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-d#6_0_end.wav from /Samples/Harp/harp-d#6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-f#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 28743
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-f#6_0_end.wav from /Samples/Harp/harp-f#6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\/Samples/Harp/harp-a6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 29159
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a6_0_end.wav from /Samples/Harp/harp-a6.wav [0-end]
+Completed processing source WAV files with 20 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_ConcertHarp",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Concert Harp/Concert Harp.sfz.json",
+  "name": "Concert Harp"
+}
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Region count: 20
+Source samples to read: 20
+Dest samples to create: 20
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 177463
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c2_0_end.wav from harp-c2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 117686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-dsharp2_0_end.wav from harp-d#2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 183932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-fsharp2_0_end.wav from harp-f#2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 93184
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a2_0_end.wav from harp-a2.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 90519
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c3_0_end.wav from harp-c3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 78663
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-dsharp3_0_end.wav from harp-d#3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 154102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-fsharp3_0_end.wav from harp-f#3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 124995
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a3_0_end.wav from harp-a3.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 77870
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c4_0_end.wav from harp-c4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 76141
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-dsharp4_0_end.wav from harp-d#4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79482
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-fsharp4_0_end.wav from harp-f#4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 72696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a4_0_end.wav from harp-a4.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 47957
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c5_0_end.wav from harp-c5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 63557
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-dsharp5_0_end.wav from harp-d#5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 61932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-fsharp5_0_end.wav from harp-f#5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a5_0_end.wav from harp-a5.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33735
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-c6_0_end.wav from harp-c6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33592
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-dsharp6_0_end.wav from harp-d#6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 28743
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-fsharp6_0_end.wav from harp-f#6.wav [0-end]
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 29159
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating /Samples/Harp/harp-a6_0_end.wav from harp-a6.wav [0-end]
+Completed processing source WAV files with 20 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_ConcertHarp",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Concert Harp/Concert Harp.sfz.json",
+  "name": "Concert Harp"
+}
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Region count: 20
+Source samples to read: 20
+Dest samples to create: 20
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 177463
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\Concert Harp.sfz.json
+Region count: 20
+Source samples to read: 20
+Dest samples to create: 20
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 177463
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-c2_0_end.wav from harp-c2.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c2_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c2_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 117686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-dsharp2_0_end.wav from harp-d#2.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp2_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp2_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 183932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-fsharp2_0_end.wav from harp-f#2.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp2_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp2_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a2.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 93184
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-a2_0_end.wav from harp-a2.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a2_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a2_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 90519
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-c3_0_end.wav from harp-c3.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c3_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c3_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 78663
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-dsharp3_0_end.wav from harp-d#3.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp3_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp3_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 154102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-fsharp3_0_end.wav from harp-f#3.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp3_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp3_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a3.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 124995
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-a3_0_end.wav from harp-a3.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a3_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a3_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 77870
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-c4_0_end.wav from harp-c4.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c4_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c4_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 76141
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-dsharp4_0_end.wav from harp-d#4.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp4_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp4_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79482
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-fsharp4_0_end.wav from harp-f#4.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp4_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp4_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a4.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 72696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-a4_0_end.wav from harp-a4.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a4_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a4_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 47957
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-c5_0_end.wav from harp-c5.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c5_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c5_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 63557
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-dsharp5_0_end.wav from harp-d#5.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp5_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp5_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 61932
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-fsharp5_0_end.wav from harp-f#5.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp5_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp5_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a5.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33696
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-a5_0_end.wav from harp-a5.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a5_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a5_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-c6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33735
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-c6_0_end.wav from harp-c6.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c6_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c6_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-d#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 33592
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-dsharp6_0_end.wav from harp-d#6.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp6_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp6_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-f#6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 28743
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-fsharp6_0_end.wav from harp-f#6.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp6_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp6_0_end.m4a"
+Loading C:\root\Dropbox\root\MUS\samples\Sonatina Symphonic Orchestra\Samples\Harp\harp-a6.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 29159
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating harp-a6_0_end.wav from harp-a6.wav [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a6_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a6_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c6_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a5_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp5_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp5_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c5_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a4_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp4_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp4_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c4_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a3_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp3_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp3_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c3_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a2_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp2_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp2_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-c2_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-dsharp6_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-a6_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Concert Harp\harp-fsharp6_0_end.wav
+Completed processing source WAV files with 20 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_ConcertHarp",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Concert Harp/Concert Harp.sfz.json",
+  "name": "Concert Harp"
+}
