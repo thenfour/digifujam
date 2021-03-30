@@ -213,10 +213,10 @@
       ]
     },
     {
-      "instrumentID": "sfzBrass",
+      "instrumentID": "sfzBrassSolo",
       "copyOfInstrumentID": "sfzMulti",
-      "color": "#00ff55",
-      "name": "Brass",
+      "color": "#11ff66",
+      "name": "Brass Solo",
       "sfzArray": [
         {
           "sfzExtendRange": true,
@@ -227,13 +227,25 @@
           "sfzExtendRange": true,
           "sfzURL": "/sfz/065_Alto_Sax/065_Alto_Sax.sfz.json",
           "name": "065_Alto_Sax"
-        },
+        }
+            ]
+    },
+    {
+      "instrumentID": "sfzBrassEns",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "#00ff55",
+      "name": "Brass Ensemble",
+      "sfzArray": [
         {
           "sfzExtendRange": true,
           "sfzURL": "/sfz/061_BRASS/061_BRASS.sfz.json",
           "name": "061_BRASS"
+        },
+        {
+          "sfzURL": "/sfz/062_Synth_Brass_1/062_Synth_Brass_1.sfz.json",
+          "name": "062_Synth_Brass_1"
         }
-      ]
+            ]
     },
     {
       "instrumentID": "sfz_G83SynCaliope",
@@ -365,15 +377,15 @@
       "name": "Mallet / Bell",
       "sfzArray": [
         {
-          "sfzExtendRange": true,
-          "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
-          "name": "011_Vibraphone"
-        },
-        {
           "ignoreLoop": true,
           "sfzExtendRange": true,
           "sfzURL": "/sfz/012_Marimba/012_Marimba.sfz.json",
           "name": "012_Marimba"
+        },
+        {
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
+          "name": "011_Vibraphone"
         },
         {
           "sfzExtendRange": true,

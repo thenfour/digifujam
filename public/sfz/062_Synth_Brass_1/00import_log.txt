@@ -1,0 +1,68 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\062_Synth_Brass_1.sfz.json
+Region count: 16
+Source samples to read: 1
+Dest samples to create: 16
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 529576525
+  Max offset       : 1059955702
+  Reflen in samples: 530379177
+  > Creating sf2_smpl_529889915_175872.wav from sf2_smpl.wav [529889915-530065787]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529889915_175872.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529889915_175872.m4a"
+  > Creating sf2_smpl_529576525_156672.wav from sf2_smpl.wav [529576525-529733197]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529576525_156672.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529576525_156672.m4a"
+  > Creating sf2_smpl_530241705_133376.wav from sf2_smpl.wav [530241705-530375081]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530241705_133376.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530241705_133376.m4a"
+  > Creating sf2_smpl_529733220_156672.wav from sf2_smpl.wav [529733220-529889892]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529733220_156672.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529733220_156672.m4a"
+  > Creating sf2_smpl_530065810_175872.wav from sf2_smpl.wav [530065810-530241682]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530065810_175872.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530065810_175872.m4a"
+  > Creating sf2_smpl_530375104_133376.wav from sf2_smpl.wav [530375104-530508480]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530375104_133376.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530375104_133376.m4a"
+  > Creating sf2_smpl_530508503_156928.wav from sf2_smpl.wav [530508503-530665431]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530508503_156928.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530508503_156928.m4a"
+  > Creating sf2_smpl_530665454_156928.wav from sf2_smpl.wav [530665454-530822382]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530665454_156928.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530665454_156928.m4a"
+  > Creating sf2_smpl_530822405_128512.wav from sf2_smpl.wav [530822405-530950917]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530822405_128512.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530822405_128512.m4a"
+  > Creating sf2_smpl_530950940_128512.wav from sf2_smpl.wav [530950940-531079452]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530950940_128512.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530950940_128512.m4a"
+  > Creating sf2_smpl_531079475_93952.wav from sf2_smpl.wav [531079475-531173427]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531079475_93952.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531079475_93952.m4a"
+  > Creating sf2_smpl_531173450_93952.wav from sf2_smpl.wav [531173450-531267402]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531173450_93952.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531173450_93952.m4a"
+  > Creating sf2_smpl_531267425_76672.wav from sf2_smpl.wav [531267425-531344097]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531267425_76672.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531267425_76672.m4a"
+  > Creating sf2_smpl_531344120_76672.wav from sf2_smpl.wav [531344120-531420792]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531344120_76672.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531344120_76672.m4a"
+  > Creating sf2_smpl_531420815_74496.wav from sf2_smpl.wav [531420815-531495311]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531420815_74496.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531420815_74496.m4a"
+  > Creating sf2_smpl_531495334_74496.wav from sf2_smpl.wav [531495334-531569830]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531495334_74496.wav" "C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531495334_74496.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531344120_76672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530375104_133376.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529733220_156672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530508503_156928.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531267425_76672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531420815_74496.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530241705_133376.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529889915_175872.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530065810_175872.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530665454_156928.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531495334_74496.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531079475_93952.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_529576525_156672.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530950940_128512.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_531173450_93952.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\062_Synth_Brass_1\sf2_smpl_530822405_128512.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_062_Synth_Brass_1",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/062_Synth_Brass_1/062_Synth_Brass_1.sfz.json",
+  "name": "062_Synth_Brass_1"
+}
