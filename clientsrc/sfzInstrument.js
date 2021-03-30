@@ -597,7 +597,7 @@ class sfzInstrument {
             this.hasCompletedLoading = false;
             // for multi-sfz, make sure the selected one is .. selected
             const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
-            if (sfzSelect) {
+            if (sfzSelect && this.instrumentSpec.sfzArray && this.instrumentSpec.sfzArray.length) {
                 // start by removing all properties that are set by the child sfz array
                 this.instrumentSpec.sfzArray.forEach(s => {
                     Object.keys(s).forEach(k => {

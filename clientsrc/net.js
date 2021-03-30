@@ -27,7 +27,7 @@ class DigifuNet {
         this.queuedParamChangeData = {
             isWholePatch: false,
             patchObj: {}// map paramID to newVal corresponding to ClientSettings.InstrumentParams
-        }; 
+        };
     }
 
     SendIdentify(data) {
@@ -68,16 +68,18 @@ class DigifuNet {
 
     OnParamChangeInterval() {
         this.timerCookie = null;
+
         let keys = Object.keys(this.queuedParamChangeData.patchObj);
         if (keys.length < 1) {
             return;
         }
+
         this.socket.emit(DF.ClientMessages.InstrumentParams, this.queuedParamChangeData);
-        this.stats.paramsSent ++;
+        this.stats.paramsSent++;
         this.queuedParamChangeData = {
             isWholePatch: false,
             patchObj: {}// map paramID to newVal corresponding to ClientSettings.InstrumentParams
-        }; 
+        };
         this.ResetQueuedParamChangeData();
     };
 
@@ -89,14 +91,14 @@ class DigifuNet {
 
         // already have a timer pending; integrate this patch obj.
         if (this.timerCookie) {
-            this.stats.paramsOptimized ++;
+            this.stats.paramsOptimized++;
             if (isWholePatch) { // if you're changing "the whole patch", then wipe out any previous patch changes.
                 this.queuedParamChangeData.patchObj = patchObj;
                 this.queuedParamChangeData.isWholePatch = true;
-                return;
+            } else {
+                this.queuedParamChangeData.isWholePatch = this.queuedParamChangeData.isWholePatch || isWholePatch; // once you change the whole patch, subsequent changes will always still have this flag.
+                this.queuedParamChangeData.patchObj = Object.assign(this.queuedParamChangeData.patchObj, patchObj);
             }
-            this.queuedParamChangeData.isWholePatch = this.queuedParamChangeData.isWholePatch || isWholePatch; // once you change the whole patch, subsequent changes will always still have this flag.
-            this.queuedParamChangeData.patchObj = Object.assign(this.queuedParamChangeData.patchObj, patchObj);
             return;
         }
 
@@ -105,7 +107,8 @@ class DigifuNet {
         if (delta >= DF.ClientSettings.InstrumentParamIntervalMS) {
             // we waited long enough between changes; send in real time.
             this.paramChangeLastSent = new Date();
-            this.stats.paramsSent ++;
+            this.stats.paramsSent++;
+
             this.socket.emit(DF.ClientMessages.InstrumentParams, {
                 isWholePatch,
                 patchObj
@@ -114,9 +117,15 @@ class DigifuNet {
         }
 
         // we need to set a timer.
-        this.stats.paramTimersCreated ++;
-        //console.log(`SendInstrumentParam setting timer; timeout=${DF.ClientSettings.InstrumentParamIntervalMS - delta}. timerscreated:${this.stats.paramTimersCreated}, paramsOptimized:${this.stats.paramsOptimized}, paramsSent:${this.stats.paramsSent}`);
-        this.timerCookie = setTimeout(this.OnParamChangeInterval.bind(this), DF.ClientSettings.InstrumentParamIntervalMS - delta);
+        this.stats.paramTimersCreated++;
+        this.queuedParamChangeData = {
+            isWholePatch,
+            patchObj
+        };
+
+        this.timerCookie = setTimeout(() => {
+            this.OnParamChangeInterval();
+        }, DF.ClientSettings.InstrumentParamIntervalMS - delta);
     };
 
     SendPong(token) {
@@ -156,21 +165,20 @@ class DigifuNet {
         let obj = JSON.parse(bankJSON);
         this.socket.emit(DF.ClientMessages.InstrumentBankMerge, obj);
     };
-    
-    SendRoomBPM (bpm) {
+
+    SendRoomBPM(bpm) {
         this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm });
     };
 
     SendAdjustBeatPhase(relativeMS) {
         this.socket.emit(DF.ClientMessages.AdjustBeatPhase, { relativeMS });
     }
-    
+
     SendCreateParamMapping(param, srcVal) {
         this.socket.emit(DF.ClientMessages.CreateParamMapping, { paramID: param.paramID, srcVal });
     }
 
-    SendRemoveParamMapping(param)
-    {
+    SendRemoveParamMapping(param) {
         this.socket.emit(DF.ClientMessages.RemoveParamMapping, { paramID: param.paramID });
     }
 
@@ -240,7 +248,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
         this.socket.on(DF.ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
         this.socket.on(DF.ServerMessages.ChangeRoomState, (data) => this.handler.NET_ChangeRoomState(data));
-        
+
         this.socket.on(DF.ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data)); //TODO: changeroomstate
         this.socket.on(DF.ServerMessages.RoomBPMUpdate, (data) => this.handler.NET_OnRoomBPMUpdate(data))
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });

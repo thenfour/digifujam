@@ -19,10 +19,11 @@ function RemoveExtension(path) {
 
 // requires the ORIGINAL r.sample opcode
 function GetDestSamplePath(r) {
+  let leaf = GetLeaf(r.sample.replace(/\//g, "\\").replace(/#/g,"sharp"));
   if ('end' in r) {
-    return outputDir + `${RemoveExtension(GetLeaf(r.sample))}_${r.offset}_${r.end - r.offset}.wav`;
+    return outputDir + `${RemoveExtension(leaf)}_${r.offset}_${r.end - r.offset}.wav`;
   }
-  return outputDir + `${RemoveExtension(GetLeaf(r.sample))}_${r.offset}_end.wav`;
+  return outputDir + `${RemoveExtension(leaf)}_${r.offset}_end.wav`;
 };
 
 function RemoveQuotes(s) {
@@ -183,7 +184,13 @@ parsed.region.forEach(region => {
     }
   }
 
-  r.srcSamplePath = rootedPath + r.sample; // full path to the full source sample
+  const CalcAbsSamplePath = () => {
+    let s = r.sample.replace(/\//g, "\\"); // use backslashes on windows.
+    let ret = rootedPath + s;
+    return ret.replace(/\\\\/g, "\\"); // if rootedpath ends in slash and s begins with slash, collapse them.
+  };
+
+  r.srcSamplePath = CalcAbsSamplePath();//rootedPath + r.sample; // full path to the full source sample
 
   r.destWavPath = GetDestSamplePath(r);
   r.destM4APath = RemoveExtension(r.destWavPath) + ".m4a";

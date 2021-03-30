@@ -114,6 +114,9 @@ class InstButtonsParam extends React.Component {
         gStateChangeHandler.OnStateChange();
     };
     render() {
+
+        if (this.props.param.enumNames.length < 1) return null;
+
         const buttons = (this.props.param.enumNames.map((e, val) => (
             <button className={"buttonParam " + ((this.props.param.rawValue == val) ? "active" : "")} key={val} onClick={() => this.onClickButton(val)}>{e}</button>
         )));

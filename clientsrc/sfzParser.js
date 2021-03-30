@@ -73,7 +73,10 @@ function parseSFZ(sfzText) {
             headerInstanceOpcodes[kv[1].replace(/\s/gm, "")] = /^\d*$/g.test(kv[2])
                 ? Number(kv[2])
                 : kv[2];
-            if (/^[a-gA-G]#?\d$/.test(kv[2])) prop[kv[1]] = name2num(kv[2]);
+            if (/^[a-gA-G]#?\d$/.test(kv[2])) { // check for note names like C2
+                //prop[kv[1]] = name2num(kv[2]);
+                headerInstanceOpcodes[kv[1]] = name2num(kv[2]);
+            } 
         });
         if (headerInstanceOpcodes.sample) {
             headerInstanceOpcodes.sample = headerInstanceOpcodes.sample.replace(/\\/g, "/"); // windows path correction
