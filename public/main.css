@@ -34,7 +34,9 @@ ul {
     margin:0;
 }
 
-input[type="text" i] {
+input[type="text" i],
+input[type="password" i]
+ {
     background-color: #444;
     border: 2px solid #055;
     color: #0cc;
@@ -43,7 +45,9 @@ input[type="text" i] {
     font-size: small;
     margin: 2px;
 }
-input[type="text" i]:focus {
+input[type="text" i]:focus,
+input[type="password" i]:focus,
+{
     border: 2px solid #0cc;
 }
 
@@ -441,7 +445,8 @@ button.muteButton:focus
       top:0;
       left:0;
   }
-  #cheerControl input[type="text" i] {
+  #cheerControl input[type="text" i]
+  {
       width:2em;
   }
   #cheerControl .cheerButton {

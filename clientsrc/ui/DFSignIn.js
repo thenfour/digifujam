@@ -155,7 +155,7 @@ class Connection extends React.Component {
                             />
                                 <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>}
-                        {window.DFRoomWantsKey && <li><DFReactUtils.TextInputFieldExternalState
+                        {window.DFRoomWantsKey && <li><DFReactUtils.PasswordInput
                             style={{ width: 120 }}
                             value={this.state.roomKey}
                             onChange={(val) => this.setState({ roomKey: val })}

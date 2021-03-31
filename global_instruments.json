@@ -2176,7 +2176,7 @@
           "parameterType": "floatParam",
           "minValue": 0.0,
           "maxValue": 1.0,
-          "defaultValue": 0.5
+          "defaultValue": 1.0
         },
         {
           "paramID": "verbMix",
@@ -2186,93 +2186,13 @@
           "minValue": 0.0,
           "maxValue": 1.0,
           "defaultValue": 0.2
-        }
-      ]
-    },
-    {
-      "instrumentID": "sfz",
-      "engine": "sfz",
-      "supportsPresets": false,
-      "gain": 1.0,
-      "transpose": 0,
-      "maxPolyphony": 12,
-      "activityDisplay": "keyboard",
-      "params": [
-        {
-          "paramID": "masterGain",
-          "name": "Master gain",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 0.5
-        },
-        {
-          "paramID": "verbMix",
-          "name": "Reverb mix",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 0.2
-        },
-        {
-          "paramID": "velCurve",
-          "name": "Velocity Curve",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 4.0,
-          "defaultValue": 2.0
-        },
-        {
-          "paramID": "velAmpMod",
-          "name": "Vel->Amp",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0,
-          "maxValue": 1,
-          "defaultValue": 0.8
-        },
-        {
-          "paramID": "filterType",
-          "name": "Type",
-          "groupName": "Filter",
-          "parameterType": "intParam",
-          "renderAs": "buttons",
-          "minValue": 0,
-          "maxValue": 3,
-          "enumNames": [
-            "Off",
-            "LP",
-            "HP",
-            "BP"
-          ]
-        },
-        {
-          "paramID": "filterFreq",
-          "name": "Freq",
-          "groupName": "Filter",
-          "parameterType": "floatParam",
-          "valueCurve": 3.5,
-          "defaultValue": 800,
-          "minValue": 20.0,
-          "maxValue": 15000.0
-        },
-        {
-          "paramID": "filterQ",
-          "name": "Q",
-          "groupName": "Filter",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 20.0
         }
       ]
     },
     {
       "instrumentID": "sfzMulti",
       "engine": "sfz",
-      "supportsPresets": false,
+      "supportsPresets": true,
       "maxPolyphony": 12,
       "activityDisplay": "keyboard",
       "params": [
@@ -2283,7 +2203,7 @@
           "parameterType": "floatParam",
           "minValue": 0.0,
           "maxValue": 3.0,
-          "defaultValue": 0.5
+          "defaultValue": 1
         },
         {
           "paramID": "verbMix",
@@ -2308,7 +2228,21 @@
             "...this gets preprocessed by server, based on sfzArray..."
           ]
         },
+
         {
+          "cssClassName": "paramSpacer",
+          "paramID": "adjustFinetune",
+          "name": "Finetune",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "minValue": -100,
+          "maxValue": 100
+        },
+
+
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "velCurve",
           "name": "Velocity Curve",
           "groupName": "master",
@@ -2326,7 +2260,51 @@
           "maxValue": 1,
           "defaultValue": 0.8
         },
+
+
         {
+          "cssClassName": "paramSpacer",
+          "paramID": "adjustA",
+          "name": "Attack",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "minValue": -1,
+          "maxValue": 1
+        },
+        {
+          "paramID": "adjustD",
+          "name": "Decay",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "minValue": -1,
+          "maxValue": 10
+        },
+        {
+          "paramID": "adjustS",
+          "name": "Sustain",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "minValue": -1,
+          "maxValue": 1
+        },
+        {
+          "paramID": "adjustR",
+          "name": "Release",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "defaultValue": 0,
+          "minValue": -1,
+          "maxValue": 10
+        },
+
+
+
+
+        {
+          "cssClassName": "paramSpacer",
           "paramID": "filterType",
           "name": "Type",
           "groupName": "Filter",

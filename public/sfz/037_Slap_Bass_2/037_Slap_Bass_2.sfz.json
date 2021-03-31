@@ -394,9 +394,9 @@
     "tune": -143,
     "loop_start": 0.0006041666666666667,
     "loop_end": 0.001979166666666667,
-    "fil_type": "lpf_2p",
-    "cutoff": 411.97,
-    "resonance": 1.2,
+
+
+
     "lfo07_wave": 0,
     "lfo07_freq": "5.45998"
   },
@@ -413,10 +413,10 @@
     "hivel": 127,
     "global_volume": "-10",
     "ampeg_release": 1,
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
-    "eg06_cutoff": 5000,
+
+
+
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -460,10 +460,10 @@
     "hivel": 127,
     "global_volume": "-10",
     "ampeg_release": 1,
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
-    "eg06_cutoff": 5000,
+
+
+
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -507,10 +507,10 @@
     "hivel": 127,
     "global_volume": "-10",
     "ampeg_release": 1,
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
-    "eg06_cutoff": 5000,
+
+
+
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -554,10 +554,10 @@
     "hivel": 127,
     "global_volume": "-10",
     "ampeg_release": 1,
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
-    "eg06_cutoff": 5000,
+
+
+
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -601,10 +601,10 @@
     "hivel": 127,
     "global_volume": "-10",
     "ampeg_release": 1,
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
-    "eg06_cutoff": 5000,
+
+
+
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -647,11 +647,11 @@
     "lovel": 119,
     "hivel": 123,
     "global_volume": "-12",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -694,11 +694,11 @@
     "lovel": 119,
     "hivel": 123,
     "global_volume": "-12",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -741,11 +741,11 @@
     "lovel": 119,
     "hivel": 123,
     "global_volume": "-12",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -788,11 +788,11 @@
     "lovel": 119,
     "hivel": 123,
     "global_volume": "-12",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -835,11 +835,11 @@
     "lovel": 119,
     "hivel": 123,
     "global_volume": "-12",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -882,11 +882,11 @@
     "lovel": 112,
     "hivel": 118,
     "global_volume": "-14",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -929,11 +929,11 @@
     "lovel": 112,
     "hivel": 118,
     "global_volume": "-14",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -976,11 +976,11 @@
     "lovel": 112,
     "hivel": 118,
     "global_volume": "-14",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1023,11 +1023,11 @@
     "lovel": 112,
     "hivel": 118,
     "global_volume": "-14",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1070,11 +1070,11 @@
     "lovel": 112,
     "hivel": 118,
     "global_volume": "-14",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1117,11 +1117,11 @@
     "lovel": 105,
     "hivel": 111,
     "global_volume": "-16",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1164,11 +1164,11 @@
     "lovel": 105,
     "hivel": 111,
     "global_volume": "-16",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1211,11 +1211,11 @@
     "lovel": 105,
     "hivel": 111,
     "global_volume": "-16",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1258,11 +1258,11 @@
     "lovel": 105,
     "hivel": 111,
     "global_volume": "-16",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,
@@ -1305,11 +1305,11 @@
     "lovel": 105,
     "hivel": 111,
     "global_volume": "-16",
-    "fil_type": "lpf_2p",
-    "cutoff": 1999.69,
-    "resonance": 0.5,
+
+
+
     "ampeg_release": 1,
-    "eg06_cutoff": 5000,
+
     "eg06_sustain": 4,
     "eg06_time0": "0.001",
     "eg06_level0": 0,

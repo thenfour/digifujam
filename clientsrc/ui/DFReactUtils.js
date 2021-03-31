@@ -83,10 +83,42 @@ class TextInputFieldExternalState extends React.Component {
 }
 
 
+// props
+// - onChange
+// - onEnter
+// - value
+// - style
+class PasswordInput extends React.Component {
+    handleChange = (val) => {
+        this.setState({ value: val });
+        if (this.props.onChange) {
+            this.props.onChange(val);
+        }
+    }
+    handleChange = (e) => {
+        if (this.props.onChange) {
+            return this.props.onChange(e.target.value);
+        }
+    }
+    handleKeyDown = (e) => {
+        if (e.key === 'Enter' && this.props.onEnter) {
+            return this.props.onEnter(e);
+        }
+    }
+    render() {
+        return (
+            <input type="password" style={this.props.style} value={this.props.value} onChange={this.handleChange} onKeyDown={this.handleKeyDown} />
+        );
+    }
+}
+
+
+
 
 module.exports = {
     TextInputField,
     TextInputFieldExternalState,
+    PasswordInput,
     getRoomID,
     getValidationErrorMsg,
 };

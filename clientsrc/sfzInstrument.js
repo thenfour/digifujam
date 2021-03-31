@@ -198,9 +198,9 @@ class SFZRegion {
 
         return {
             attackTime: ret.attack,
-            decayTime: ret.decay,
+            decayTime: ret.decay * 0.8, // this just seems to be the right match.
             sustainLevel: ret.sustain,
-            releaseTime: ret.release,
+            releaseTime: ret.release * 0.8, // this just seems to be the right match.
             decayCurve: "exp",
             releaseCurve: "exp",
         };
@@ -619,35 +619,38 @@ class sfzInstrument {
         this.sfzCache = {}; // map sfzURL to regions.
     }
 
+    ensureSelectedSFZVariantParams() {
+        // for multi-sfz, make sure the selected one is .. selected
+        const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
+        if (sfzSelect && this.instrumentSpec.sfzArray && this.instrumentSpec.sfzArray.length) {
+            // start by removing all properties that are set by the child sfz array
+            this.instrumentSpec.sfzArray.forEach(s => {
+                Object.keys(s).forEach(k => {
+                    if (k === 'name') return; // don't overwrite this one!
+                    delete this.instrumentSpec[k];
+                });
+            });
+            Object.keys(this.instrumentSpec.sfzArray[sfzSelect.currentValue]).forEach(k => {
+                if (k === 'name') return; // don't overwrite this one!
+                this.instrumentSpec[k] = this.instrumentSpec.sfzArray[sfzSelect.currentValue][k];
+            });
+
+            // a sfz can specify params to set when its selected too. this goes against convention; typically param changes are done externally. but let's allow it.
+            if (this.instrumentSpec.sfzPatch) {
+                Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
+                    const p = this.instrumentSpec.GetParamByID(paramID);
+                    p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
+                });
+            }
+        }
+    }
+
     connect() {
         if (this.isConnected) return true;
+        this.ensureSelectedSFZVariantParams();
         if (this.hasStartedLoading && !this.hasCompletedLoading) return false;// loading still in progress
         if (!this.hasStartedLoading) {
             this.hasCompletedLoading = false;
-            // for multi-sfz, make sure the selected one is .. selected
-            const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
-            if (sfzSelect && this.instrumentSpec.sfzArray && this.instrumentSpec.sfzArray.length) {
-                // start by removing all properties that are set by the child sfz array
-                this.instrumentSpec.sfzArray.forEach(s => {
-                    Object.keys(s).forEach(k => {
-                        if (k === 'name') return; // don't overwrite this one!
-                        delete this.instrumentSpec[k];
-                    });
-                });
-                Object.keys(this.instrumentSpec.sfzArray[sfzSelect.currentValue]).forEach(k => {
-                    if (k === 'name') return; // don't overwrite this one!
-                    this.instrumentSpec[k] = this.instrumentSpec.sfzArray[sfzSelect.currentValue][k];
-                });
-
-                // a sfz can specify params to set when its selected too. this goes against convention; typically param changes are done externally. but let's allow it.
-                if (this.instrumentSpec.sfzPatch) {
-                    Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
-                        const p = this.instrumentSpec.GetParamByID(paramID);
-                        p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
-                    });
-                }
-            }
-
             if (this.instrumentSpec.sfzURL in this.sfzCache) {
                 //console.log(`Inst connect setting new regions cached`);
                 this.regions = this.sfzCache[this.instrumentSpec.sfzURL];
@@ -895,6 +898,17 @@ class sfzInstrument {
         const freqParam = this.graph.nodes.filter.frequency;
         freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);
     }
+
+    SetParamValuesMuted(patchObj) {
+        Object.keys(patchObj).forEach(paramID => {
+            switch (paramID) {
+                case "sfzSelect":
+                    this.disconnect();
+                    this.ensureSelectedSFZVariantParams();
+                    break;
+            }
+        });
+    };
 
     SetParamValues(patchObj) {
         if (!this.isConnected) return;

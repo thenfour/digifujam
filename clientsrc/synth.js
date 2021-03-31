@@ -118,6 +118,9 @@ class DigifuSynth {
 		const x = this.roomStateGetter().integrateRawParamChanges(instrumentSpec, patchObj, isWholePatch);
 		if (!this._isMuted || instrumentSpec.isMuted) {
 			this.instruments[instrumentSpec.instrumentID].SetParamValues(x.calculatedPatchObj);
+		} else if ('SetParamValuesMuted' in this.instruments[instrumentSpec.instrumentID]) {
+			// here we want to send params sometimes even if the instrument is muted.
+			this.instruments[instrumentSpec.instrumentID].SetParamValuesMuted(x.calculatedPatchObj);
 		}
 		// handle downstream linked params.
 		var ret = x.incurredMappings;
