@@ -1,0 +1,85 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\PR-B-119 Harmonica.sfz.json
+Region count: 6
+Source samples to read: 6
+Dest samples to create: 6
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\Harmonica\PR-B-119 Harmonica\Harmonica 048 123.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 048 123.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\Harmonica\PR-B-119 Harmonica\Harmonica 054 123.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 054 123.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\Harmonica\PR-B-119 Harmonica\Harmonica 060 123.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 060 123.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\Harmonica\PR-B-119 Harmonica\Harmonica 066 123.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 066 123.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\Harmonica\PR-B-119 Harmonica\Harmonica 072 123.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 072 123.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\Harmonica\PR-B-119 Harmonica\Harmonica 078 123.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 078 123.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 054 123.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 273420
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Harmonica 054 123_0_end.wav from Harmonica 054 123.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 054 123_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 054 123_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 048 123.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 273420
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Harmonica 048 123_0_end.wav from Harmonica 048 123.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 048 123_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 048 123_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 072 123.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 264600
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Harmonica 072 123_0_end.wav from Harmonica 072 123.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 072 123_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 072 123_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 066 123.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 273420
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Harmonica 066 123_0_end.wav from Harmonica 066 123.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 066 123_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 066 123_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 060 123.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 273420
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Harmonica 060 123_0_end.wav from Harmonica 060 123.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 060 123_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 060 123_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 078 123.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 273420
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Harmonica 078 123_0_end.wav from Harmonica 078 123.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 078 123_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 078 123_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 054 123_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 054 123.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 048 123_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 048 123.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 072 123_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 072 123.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 066 123_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 066 123.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 060 123_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 060 123.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 078 123_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-B-119 Harmonica\Harmonica 078 123.flac.wav
+Completed processing source WAV files with 6 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_PRB119Harmonica",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/PR-B-119 Harmonica/PR-B-119 Harmonica.sfz.json",
+  "name": "PR-B-119 Harmonica"
+}

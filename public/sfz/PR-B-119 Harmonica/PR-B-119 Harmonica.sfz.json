@@ -1,0 +1,62 @@
+[
+  {
+    "ampeg_release": 0.2,
+    "loop_start": 0.8580952380952381,
+    "loop_end": 2.925170068027211,
+    "loop_mode": "loop_sustain",
+    "sample": "Harmonica 048 123_0_end.m4a",
+    "lokey": 0,
+    "hikey": 51,
+    "pitch_keycenter": 48
+  },
+  {
+    "ampeg_release": 0.2,
+    "loop_start": 0.8580952380952381,
+    "loop_end": 2.925170068027211,
+    "loop_mode": "loop_sustain",
+    "sample": "Harmonica 054 123_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54
+  },
+  {
+    "ampeg_release": 0.2,
+    "loop_start": 0.8580952380952381,
+    "loop_end": 2.925170068027211,
+    "loop_mode": "loop_sustain",
+    "sample": "Harmonica 060 123_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60
+  },
+  {
+    "ampeg_release": 0.2,
+    "loop_start": 0.8580952380952381,
+    "loop_end": 2.925170068027211,
+    "loop_mode": "loop_sustain",
+    "sample": "Harmonica 066 123_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66
+  },
+  {
+    "ampeg_release": 0.2,
+    "loop_start": 0.8580952380952381,
+    "loop_end": 2.925170068027211,
+    "loop_mode": "loop_sustain",
+    "sample": "Harmonica 072 123_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72
+  },
+  {
+    "ampeg_release": 0.2,
+    "loop_start": 0.8580952380952381,
+    "loop_end": 2.925170068027211,
+    "loop_mode": "loop_sustain",
+    "sample": "Harmonica 078 123_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78
+  }
+]

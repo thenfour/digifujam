@@ -1,0 +1,102 @@
+[
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 036 127_0_end.m4a",
+    "lokey": 0,
+    "hikey": 39,
+    "pitch_keycenter": 36
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 042 127_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 048 127_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 054 127_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 060 127_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 066 127_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 072 127_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 078 127_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 084 127_0_end.m4a",
+    "lokey": 82,
+    "hikey": 87,
+    "pitch_keycenter": 84
+  },
+  {
+    "ampeg_release": 1.5,
+    "loop_start": 3.824172335600907,
+    "loop_end": 6.477687074829932,
+    "loop_mode": "loop_sustain",
+    "sample": "Fantasia 090 127_0_end.m4a",
+    "lokey": 88,
+    "hikey": 93,
+    "pitch_keycenter": 90
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "ampeg_release": 0.3,
+    "sample": "LoFidelity 036_0_end.m4a",
+    "pitch_keycenter": 36,
+    "lokey": 0,
+    "hikey": 38
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "LoFidelity 042_0_end.m4a",
+    "pitch_keycenter": 42,
+    "lokey": 39,
+    "hikey": 44
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "LoFidelity 048_0_end.m4a",
+    "pitch_keycenter": 48,
+    "lokey": 45,
+    "hikey": 50
+  }
+]

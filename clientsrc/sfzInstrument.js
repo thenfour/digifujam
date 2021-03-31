@@ -51,6 +51,72 @@ const DFU = require('./dfutil');
 
 const GLOBAL_SFZ_GAIN = 0.2;
 
+class _SFZAssetLoader {
+    constructor() {
+        this.hasBeenInvoked = false;
+        this.progressSpec = {
+            successes: 0,
+            errors: 0,
+            totalFiles: 0,
+        }
+    }
+
+    /*
+        cacheLoadProgress.successes
+        cacheLoadProgress.errors
+        cacheLoadProgress.totalFiles
+    */
+    // instrumentSpecs is an array of instrumentSpec of sfz instruments.
+    CacheAllSFZAssets(sampleLibrarian, instrumentSpecs, progressCallback) {
+        if (this.hasBeenInvoked) return;
+        this.hasBeenInvoked = true;
+
+        const jsonURLs = new Set();
+        instrumentSpecs.forEach(instrumentSpec => {
+            instrumentSpec.sfzArray.forEach(i => {
+                jsonURLs.add(i.sfzURL);
+            })
+        });
+
+        this.progressSpec.totalFiles = jsonURLs.size; // expecting this many JSONs
+        progressCallback(this.progressSpec);
+
+        jsonURLs.forEach(jsonURL => {
+            this.progressSpec.successes ++;
+            progressCallback(this.progressSpec);
+
+            const baseURL = jsonURL.substring(0, jsonURL.lastIndexOf("/") + 1); // get directory name + /
+
+            DFSynthTools.LoadCachedJSON(jsonURL, regions => {
+                const sampleURLs = new Set(regions.map(region => baseURL + region.sample));
+
+                this.progressSpec.totalFiles += sampleURLs.size;
+                progressCallback(this.progressSpec);
+
+                sampleURLs.forEach(sampleURL => {
+                    sampleLibrarian.loadSampleFromURL(sampleURL, _ => {
+                        // on success
+                        this.progressSpec.successes ++;
+                        progressCallback(this.progressSpec);
+                    }, _ => {
+                        // on error
+                        this.progressSpec.errors ++;
+                        progressCallback(this.progressSpec);
+                                }); // load sample
+                }); // iterate regions
+            }, () => {
+                // error loading json.
+                this.progressSpec.errors ++;
+                progressCallback(this.progressSpec);
+            }); // load json
+        })
+
+    }
+};
+
+let SFZAssetLoader = new _SFZAssetLoader();
+
+
 
 class SFZRegion {
     constructor(r, instrumentSpec) {
@@ -945,5 +1011,9 @@ class sfzInstrument {
     };
 };
 
-module.exports = sfzInstrument;
+module.exports = {
+    sfzInstrument,
+    SFZAssetLoader
+};
+
 

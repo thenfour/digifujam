@@ -2203,7 +2203,7 @@
           "parameterType": "floatParam",
           "minValue": 0.0,
           "maxValue": 3.0,
-          "defaultValue": 1
+          "defaultValue": 0.5
         },
         {
           "paramID": "verbMix",

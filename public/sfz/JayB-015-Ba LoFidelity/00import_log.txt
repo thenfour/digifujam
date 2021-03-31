@@ -1,0 +1,49 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\JayB-015-Ba LoFidelity.sfz.json
+Region count: 3
+Source samples to read: 3
+Dest samples to create: 3
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\CS6R\JayB-015-Ba LoFidelity\LoFidelity 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\CS6R\JayB-015-Ba LoFidelity\LoFidelity 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\CS6R\JayB-015-Ba LoFidelity\LoFidelity 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 048.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 201934
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LoFidelity 042_0_end.wav from LoFidelity 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 201934
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LoFidelity 036_0_end.wav from LoFidelity 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 210754
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LoFidelity 048_0_end.wav from LoFidelity 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 048_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\JayB-015-Ba LoFidelity\LoFidelity 036.flac.wav
+Completed processing source WAV files with 3 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_JayB015BaLoFidelity",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/JayB-015-Ba LoFidelity/JayB-015-Ba LoFidelity.sfz.json",
+  "name": "JayB-015-Ba LoFidelity"
+}

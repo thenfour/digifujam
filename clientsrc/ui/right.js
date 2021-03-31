@@ -1299,6 +1299,7 @@ class UserState extends React.Component {
             userName: '',
             userColor: '',
             isShown: false,
+            cacheLoadProgress:null,
         };
 
         if (this.props.app && this.props.app.myUser) {
@@ -1313,6 +1314,12 @@ class UserState extends React.Component {
 
     handleToggleShownClick = () => {
         this.setState({ isShown: !this.state.isShown });
+    };
+
+    clickCacheSamples = () => {
+        this.props.app.synth.cacheSFZInstruments(cacheLoadProgress => {
+            this.setState({ cacheLoadProgress });
+        });
     };
 
     render() {
@@ -1346,7 +1353,7 @@ class UserState extends React.Component {
         ) : null;
 
         const changeUserStateBtn = this.props.app ? (
-            <li style={{ marginBottom: 10 }}><button onClick={this.sendUserStateChange}>update above stuff</button></li>
+            <li className="updateAboveStuff"><button onClick={this.sendUserStateChange}>update above stuff</button></li>
         ) : null;
 
         const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
@@ -1358,6 +1365,14 @@ class UserState extends React.Component {
         const validationMarkup = validationMsg.length ? (
             <div className="validationError">{validationMsg}</div>
         ) : null;
+
+        const cacheSamplesButton = this.props.app && (<li className="preloadSFZ">
+            {!this.state.cacheLoadProgress && <button onClick={this.clickCacheSamples}>Preload all SFZ instruments</button>}
+            {this.state.cacheLoadProgress && <div>
+                {this.state.cacheLoadProgress.successes} success,
+                {this.state.cacheLoadProgress.errors} errors /
+                {this.state.cacheLoadProgress.totalFiles} total</div>}
+        </li>);
 
         return (
             <div className="component">
@@ -1375,6 +1390,7 @@ class UserState extends React.Component {
                     {validationMarkup}
                     {changeUserStateBtn}
                     {inputList}
+                    {cacheSamplesButton}
                 </ul>
             </div>
         );
@@ -2340,9 +2356,9 @@ class RootArea extends React.Component {
     onClickMute = () => {
         // this op takes a while so do async
         //setTimeout(() => {
-            this.state.app.synth.isMuted = !this.state.app.synth.isMuted;
-            gStateChangeHandler.OnStateChange();
-            //this.state.stateChangeHandler.OnStateChange();
+        this.state.app.synth.isMuted = !this.state.app.synth.isMuted;
+        gStateChangeHandler.OnStateChange();
+        //this.state.stateChangeHandler.OnStateChange();
         //}, 0);
     };
 

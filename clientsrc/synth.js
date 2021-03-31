@@ -176,7 +176,7 @@ class DigifuSynth {
 					this.instruments[spec.instrumentID] = new soundFontInstrument.SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
 					break;
 				case "sfz":
-					this.instruments[spec.instrumentID] = new sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
+					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
 					break;
 				case "drumkit":
 					this.instruments[spec.instrumentID] = new DFDrumkit.OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DFDrumkit.DrumKitVoice(s, l));
@@ -190,6 +190,13 @@ class DigifuSynth {
 			}
 		});
 	};
+
+	cacheSFZInstruments(progressCallback) {
+		sfzInstrument.SFZAssetLoader.CacheAllSFZAssets(
+			this.sampleLibrarian,
+			this.instrumentSpecs.filter(i => i.engine === "sfz"),
+			progressCallback);
+	}
 
 	UninitInstruments() {
 		for (let inst in this.instruments) {

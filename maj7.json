@@ -407,11 +407,11 @@
           }
         },
         {
-          "gain": 1,
+          "gain": 0.33,
           "transpose": 0,
           "sfzExtendRange": true,
-          "sfzURL": "/sfz/022_HarmonicaVibrato/022_HarmonicaVibrato.sfz.json",
-          "name": "022_HarmonicaVibrato",
+          "sfzURL": "/sfz/PR-B-119 Harmonica/PR-B-119 Harmonica.sfz.json",
+          "name": "PR-B-119 Harmonica",
           "sfzPatch": {
             "velCurve": 2.0,
             "velAmpMod": 0.85,
@@ -434,7 +434,7 @@
       "sfzPatch": {
         "velCurve": 2.0,
         "velAmpMod": 0.85,
-    "adjustFinetune": 0,
+        "adjustFinetune": 0,
         "adjustA": 0,
         "adjustD": 0,
         "adjustS": 0,
@@ -736,6 +736,21 @@
           }
         },
         {
+          "gain": 0.5,
+          "transpose": 0,
+          "sfzURL": "/sfz/Fantasia/Fantasia.sfz.json",
+          "name": "Fantasia",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
           "gain": 1,
           "transpose": 0,
           "sfzExtendRange": true,
@@ -776,22 +791,6 @@
           }
         },
         {
-          "gain": 0.5,
-          "transpose": 0,
-          "sfzURL": "/sfz/CD-A-061-Ecta Bass/CD-A-061-Ecta Bass.sfz.json",
-          "sfzExtendRange": true,
-          "name": "CD-A-061-Ecta Bass",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0.14
-          }
-        },
-        {
           "gain": 2.5,
           "adjustFinetune": 0,
           "transpose": -12,
@@ -823,6 +822,38 @@
             "adjustD": 0,
             "adjustS": 0,
             "adjustR": 0
+          }
+        },
+        {
+          "gain": 0.66,
+          "sfzExtendRange": true,
+          "transpose": -12,
+          "sfzURL": "/sfz/JayB-015-Ba LoFidelity/JayB-015-Ba LoFidelity.sfz.json",
+          "name": "JayB-015-Ba LoFidelity",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "gain": 0.5,
+          "transpose": 0,
+          "sfzURL": "/sfz/CD-A-061-Ecta Bass/CD-A-061-Ecta Bass.sfz.json",
+          "sfzExtendRange": true,
+          "name": "CD-A-061-Ecta Bass",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0.14
           }
         }
       ]

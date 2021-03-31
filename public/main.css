@@ -1399,3 +1399,14 @@ ul.instParamList .instActivity.alt2 {
     color:orange;
 }
 
+
+li.preloadSFZ {
+    padding-top:5px;
+    margin-top:5px;
+    border-top:2px dotted #077;
+}
+li.updateAboveStuff {
+    padding-bottom:5px;
+    margin-bottom:5px;
+    border-bottom:2px dotted #077;
+}
