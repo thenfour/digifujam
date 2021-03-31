@@ -49,16 +49,18 @@ const ADSREnvelope = require("adsr-envelope");
 const DFSynthTools = require("./synthTools");
 const DFU = require('./dfutil');
 
+
+// DFSynthTools.AjaxJSON("ftp://::::/aoeu", ()=>{
+//     console.log("success");
+// }, ()=>{
+//     console.log("err");
+// });
+
 const GLOBAL_SFZ_GAIN = 0.2;
 
 class _SFZAssetLoader {
     constructor() {
-        this.hasBeenInvoked = false;
-        this.progressSpec = {
-            successes: 0,
-            errors: 0,
-            totalFiles: 0,
-        }
+        //this.hasBeenInvoked = false;
     }
 
     /*
@@ -68,8 +70,15 @@ class _SFZAssetLoader {
     */
     // instrumentSpecs is an array of instrumentSpec of sfz instruments.
     CacheAllSFZAssets(sampleLibrarian, instrumentSpecs, progressCallback) {
-        if (this.hasBeenInvoked) return;
-        this.hasBeenInvoked = true;
+        this.progressSpec = {
+            successes: 0,
+            errors: 0,
+            totalFiles: 0,
+        };
+        this.progressSpec.isComplete = function() { return (this.successes + this.errors) >= this.totalFiles; }.bind(this.progressSpec);
+
+        //if (this.hasBeenInvoked) return;
+        //this.hasBeenInvoked = true;
 
         const jsonURLs = new Set();
         instrumentSpecs.forEach(instrumentSpec => {

@@ -10,39 +10,52 @@ const DFU = require('./dfutil');
 // when disconnecting,
 //   this.graph.disconnect();
 class AudioGraphHelper {
-	constructor() {
-		this.nodes = {};
-	}
-	disconnect() {
-		Object.keys(this.nodes).forEach(k => {
-			let n = this.nodes[k];
+    constructor() {
+        this.nodes = {};
+    }
+    disconnect() {
+        Object.keys(this.nodes).forEach(k => {
+            let n = this.nodes[k];
             if (n) {
                 if (n.reset) n.reset();
                 if (n.stop) n.stop();
                 if (n.disconnect) n.disconnect();
             }
-		});
-		this.nodes = {};
-	}
+        });
+        this.nodes = {};
+    }
 };
+
 
 // handler receives an object
 let AjaxJSON = function (url, successHandler, errorHandler) {
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.responseType = "arraybuffer";
-    request.onload = () => {
-        let strjson = null;
-        if (request.responseType === 'arraybuffer') {
-            strjson = (new TextDecoder("utf-8")).decode(request.response);
-        } else if (request.responseType === 'text') {
-            strjson = request.responseText;
-        }
-        successHandler(strjson);
-    };
-    request.error = errorHandler;
-    request.abort = errorHandler;
-    request.send();
+    try {
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
+        request.onload = () => {
+            try {
+
+                let strjson = null;
+                if (request.responseType === 'arraybuffer') {
+                    strjson = (new TextDecoder("utf-8")).decode(request.response);
+                } else if (request.responseType === 'text') {
+                    strjson = request.responseText;
+                }
+                successHandler(strjson);
+            }
+            catch (e) {
+                errorHandler(e);
+            }
+        };
+        request.onerror = errorHandler;
+        request.onabort = errorHandler;
+
+        request.send();
+
+    } catch (e) {
+        errorHandler(e);
+    }
 }
 
 // just maps name to prepared sample buffer, and hands out AudioBufferSourceNodes when needed.
@@ -90,16 +103,24 @@ let LoadCachedJSON = function (url, successHandler, errorHandler) {
 
 // handler receives (buffer)
 let gLoadSample = function (audioContext, url, successHandler, errorHandler) {
-    var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.responseType = "arraybuffer";
-    request.onload = () => {
-        //console.log(`Loaded sample URL ${url}`);
-        audioContext.decodeAudioData(request.response, successHandler, errorHandler);
-    };
-    request.error = errorHandler;
-    request.abort = errorHandler;
-    request.send();
+    try {
+        var request = new XMLHttpRequest();
+        request.open("GET", url, true);
+        request.responseType = "arraybuffer";
+        request.onload = () => {
+            //console.log(`Loaded sample URL ${url}`);
+            try {
+                audioContext.decodeAudioData(request.response, successHandler, errorHandler);
+            } catch (e) {
+                errorHandler(e);
+            }
+        };
+        request.onerror = errorHandler;
+        request.onabort = errorHandler;
+        request.send();
+    } catch (e) {
+        errorHandler(e);
+    }
 }
 
 // just maps name to prepared sample buffer, and hands out AudioBufferSourceNodes when needed.

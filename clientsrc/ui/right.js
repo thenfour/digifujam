@@ -1366,8 +1366,10 @@ class UserState extends React.Component {
             <div className="validationError">{validationMsg}</div>
         ) : null;
 
+        let cacheHasErrors = this.state.cacheLoadProgress && this.state.cacheLoadProgress.errors > 0;
+
         const cacheSamplesButton = this.props.app && (<li className="preloadSFZ">
-            {!this.state.cacheLoadProgress && <button onClick={this.clickCacheSamples}>Preload all SFZ instruments</button>}
+            {(!this.state.cacheLoadProgress || (this.state.cacheLoadProgress.isComplete() && cacheHasErrors)) && <button onClick={this.clickCacheSamples}>Preload all SFZ instruments</button>}
             {this.state.cacheLoadProgress && <div>
                 {this.state.cacheLoadProgress.successes} success,
                 {this.state.cacheLoadProgress.errors} errors /
