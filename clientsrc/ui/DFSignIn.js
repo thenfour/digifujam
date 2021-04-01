@@ -29,6 +29,9 @@ class Connection extends React.Component {
         if (window.localStorage.getItem("userColor")) {
             this.state.userColor = window.localStorage.getItem("userColor");
         }
+        if (window.localStorage.getItem("roomKey")) {
+            this.state.roomKey = window.localStorage.getItem("roomKey");
+        }
     }
 
     isGoogleRedirect = () => {
@@ -96,6 +99,7 @@ class Connection extends React.Component {
         window.localStorage.setItem("DFHomepage", window.location.href);
         window.localStorage.setItem("userName", this.state.userName);
         window.localStorage.setItem("userColor", this.state.userColor);
+        window.localStorage.setItem("roomKey", this.state.roomKey);
         window.location.href = this.state.googleAuthURL;
     }
 

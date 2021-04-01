@@ -1,0 +1,85 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\CD-A-069-Kawai Mix 1.sfz.json
+Region count: 6
+Source samples to read: 6
+Dest samples to create: 6
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\CD-A-069-Kawai Mix 1\Kawai Mix 1 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\CD-A-069-Kawai Mix 1\Kawai Mix 1 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\CD-A-069-Kawai Mix 1\Kawai Mix 1 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\CD-A-069-Kawai Mix 1\Kawai Mix 1 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\CD-A-069-Kawai Mix 1\Kawai Mix 1 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\CD-A-069-Kawai Mix 1\Kawai Mix 1 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 066.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 259575
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Kawai Mix 1 036_0_end.wav from Kawai Mix 1 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 282590
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Kawai Mix 1 042_0_end.wav from Kawai Mix 1 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 281605
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Kawai Mix 1 048_0_end.wav from Kawai Mix 1 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 265346
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Kawai Mix 1 054_0_end.wav from Kawai Mix 1 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 268723
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Kawai Mix 1 060_0_end.wav from Kawai Mix 1 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 284666
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Kawai Mix 1 066_0_end.wav from Kawai Mix 1 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 066_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\CD-A-069-Kawai Mix 1\Kawai Mix 1 066.flac.wav
+Completed processing source WAV files with 6 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_CDA069KawaiMix1",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/CD-A-069-Kawai Mix 1/CD-A-069-Kawai Mix 1.sfz.json",
+  "name": "CD-A-069-Kawai Mix 1"
+}

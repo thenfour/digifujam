@@ -470,24 +470,18 @@ class sfzVoice {
         return 999999;
     }
 
-    connect(dest1, dest2, regions) {
+    connect(needsFilter, needsPan2) {
         if (this.isConnected) return;
-        this.dest1 = dest1;
-        this.dest2 = dest2;
 
         /*
         each region can have all its own params. so it must be done on noteon, not in connect().
  
-                                                                       -> dest1
-        (bufferL) -> [panL] -> [envGainer] ----> [velGain] -> [filter] -> dest2
+                                                                       -> (dest1)
+        (bufferL) -> [panL] -> [envGainer] ----> [velGain] -> [filter] -> (dest2)
         (bufferR) -> [panR] ->       |<gain> 
                                      |
                             [ampEG] -
         */
-        let needsFilter = regions.some(r => !!r.filterSpec);
-        let needsPan2 = regions.some(r => !!r.correspondingRegion);
-
-        //console.log(`connect ${this.instrumentSpec.instrumentID} needsFilter:${needsFilter} needsPan2:${needsPan2}`);
 
         // source buffers & panners
         this.graph.nodes.pan1 = this.audioCtx.createStereoPanner("sfz>pan1");
@@ -500,19 +494,14 @@ class sfzVoice {
         // filter - create it but disconnected to start with.
         if (needsFilter) {
             this.graph.nodes.filter = this.audioCtx.createBiquadFilter("sfz>filt");
-            //this.graph.nodes.velGain.connect(this.graph.nodes.filter);
-            //this.graph.nodes.filter.connect(this.dest1);
-            //if (this.dest2) this.graph.nodes.filter.connect(this.dest2);
-        }// else {
-        this.graph.nodes.velGain.connect(this.dest1);
-        if (this.dest2) this.graph.nodes.velGain.connect(this.dest2);
-        //}
+        }
+        //this.graph.nodes.velGain.connect(this.dest1);
+        //if (this.dest2) this.graph.nodes.velGain.connect(this.dest2);
 
         this.isConnected = true;
     }
 
     disconnect() {
-        //console.log(`disconnect ${this.instrumentSpec.instrumentID}`);
         if (!this.isConnected) return;
         this.graph.disconnect();
         this.perfGraph.disconnect();
@@ -536,13 +525,14 @@ class sfzVoice {
         return 0;
     }
 
-    physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, regionIndex, voiceIndex) {
+    physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, dest1, dest2) {
         if (!this.isConnected) {
             return;
         }
         if (!sfzRegion.buffer) {
             return; // sample is still loading.
         }
+
         this.timestamp = Date.now();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -646,12 +636,15 @@ class sfzVoice {
 
         this.startMusicalTime = this.audioCtx.currentTime;
         this.perfGraph.nodes.ampEG.applyTo(this.perfGraph.nodes.envGainer.gain, this.startMusicalTime);
+
+        this.setDestNodes(dest1, dest2);
     }
 
     setDestNodes(dest1, dest2) {
         if (!this.isConnected) return;
         this.dest1 = dest1;
         this.dest2 = dest2;
+
         if (!this.sfzRegion) return;
         if (this.sfzRegion.filterSpec) {
             this.graph.nodes.filter.disconnect();
@@ -748,7 +741,9 @@ class sfzInstrument {
 
     getCurrentSFZSpec() {
         const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
-        return this.instrumentSpec.sfzArray[sfzSelect.currentValue];
+        const r1 = this.instrumentSpec.sfzArray[sfzSelect.currentValue];
+        if (r1) return r1;
+        return this.instrumentSpec;
     }
 
     ensureSelectedSFZVariantParams() {
@@ -848,8 +843,13 @@ class sfzInstrument {
         this.graph.nodes.dryGainer.connect(this.dryDestination);
         this.graph.nodes.wetGainer.connect(this.wetDestination);
 
+        this.childDest1 = this.graph.nodes.dryGainer;
+        this.childDest2 = this.graph.nodes.wetGainer;
+        this.needsFilter = this.regions.some(r => !!r.filterSpec);
+        this.needsPan2 = this.regions.some(r => !!r.correspondingRegion);
+
         this.voices.forEach(v => {
-            v.connect(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer, this.regions);
+            v.connect(this.needsFilter, this.needsPan2);
         });
 
         this.isConnected = true;
@@ -912,7 +912,7 @@ class sfzInstrument {
             sfzRegion,
             voiceIndex: bestVoiceIndex
         });
-        this.voices[bestVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, sfzRegionIndex, bestVoiceIndex);
+        this.voices[bestVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, this.childDest1, this.childDest2);
 
         // handle off_by
         //- group=1 off_by=1 polyphony
@@ -967,13 +967,17 @@ class sfzInstrument {
         let disableFilter = () => {
             if (!this.isFilterConnected) return; // already disconnected.
 
+            console.log(`DISABLING filter`);
+    
             /*
             (voices) --------------> [wetGainer] -> wetDestination
                                    > [dryGainer] -> dryDestination
             */
             // reconnect voices to the wet/dry destinations instead of filter.
+            this.childDest1 = this.graph.nodes.dryGainer;
+            this.childDest2 = this.graph.nodes.wetGainer;
             this.voices.forEach(v => {
-                v.setDestNodes(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer);
+                v.setDestNodes(this.childDest1, this.childDest2);
             });
             this.graph.nodes.filter.disconnect();
             this.graph.nodes.filter = null;
@@ -982,6 +986,7 @@ class sfzInstrument {
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return; // already connected.
+            console.log(`ENABLING filter`);
 
             /*
             (voice) --> [filter] --> [wetGainer] --> dryDestination
@@ -995,11 +1000,14 @@ class sfzInstrument {
             this.graph.nodes.filter.connect(this.graph.nodes.wetGainer);
 
             // reconnect voices to the wet/dry destinations instead of filter.
-            this.voices.forEach(v => {
-                v.setDestNodes(this.graph.nodes.filter);
+            this.childDest1 = this.graph.nodes.filter;
+            this.childDest2 = null;
+                this.voices.forEach(v => {
+                v.setDestNodes(this.childDest1, this.childDest2);
             });
 
             this.isFilterConnected = true;
+            this._updateFilterBaseFreq();
         };
         switch (parseInt(this.instrumentSpec.GetParamByID("filterType").currentValue)) {
             case 0: // off
@@ -1025,6 +1033,7 @@ class sfzInstrument {
         if (!this.graph.nodes.filter) return;
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         const freqParam = this.graph.nodes.filter.frequency;
+        console.log(`filter freq = ${p}`);
         freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);
     }
 

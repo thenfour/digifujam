@@ -5,7 +5,9 @@
     "sample": "Ecta Bass 036_0_end.m4a",
     "lokey": 0,
     "hikey": 39,
-    "pitch_keycenter": 36
+    "pitch_keycenter": 36,
+    "loop_start": 1.1506349206349207,
+    "loop_end": 2.1577097505668936
   },
   {
     "ampeg_release": 0.1,
@@ -13,7 +15,9 @@
     "sample": "Ecta Bass 042_0_end.m4a",
     "lokey": 40,
     "hikey": 45,
-    "pitch_keycenter": 42
+    "pitch_keycenter": 42,
+    "loop_start": 1.1784807256235827,
+    "loop_end": 2.3244897959183675
   },
   {
     "ampeg_release": 0.1,
@@ -21,7 +25,9 @@
     "sample": "Ecta Bass 048_0_end.m4a",
     "lokey": 46,
     "hikey": 51,
-    "pitch_keycenter": 48
+    "pitch_keycenter": 48,
+    "loop_start": 1.185827664399093,
+    "loop_end": 2.347687074829932
   },
   {
     "ampeg_release": 0.1,
@@ -29,6 +35,8 @@
     "sample": "Ecta Bass 054_0_end.m4a",
     "lokey": 52,
     "hikey": 57,
-    "pitch_keycenter": 54
+    "pitch_keycenter": 54,
+    "loop_start": 0.9325396825396826,
+    "loop_end": 2.110204081632653
   }
 ]
