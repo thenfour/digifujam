@@ -9,7 +9,7 @@ ul.keyboard li {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	transition: background-color 1s;
+	transition: background-color 0.5s;
 }
 
 ul.keyboard .white {
@@ -58,9 +58,28 @@ ul.keyboard li.white {
 	box-shadow:
 		0 0 5px #ccc inset,
 		0 0 1px black;
+
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;		
 }
 
 ul.keyboard li.black {
 	box-shadow:
 		0 2px 4px rgba(0, 0, 0, 0.3);
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;		
+}
+
+
+ul.keyboard li span.drum {
+    /* background-color: red; */
+    width: 16px;
+    height: 7px;
+	transition: background-color 0.2s;
+}
+
+ul.keyboard li span.drum.active {
+	transition: background-color 0s;
 }

@@ -354,7 +354,7 @@ button.switchChatView
     height:110px;
 
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
 }
 

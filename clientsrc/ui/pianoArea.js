@@ -126,7 +126,7 @@ class PianoArea extends React.Component {
     render() {
         if (!this.props.app) return null;
         const keys = gNotes.map(k => (
-            <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}></li>
+            <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}><span className="drum" id={"drum_" + k.midiNoteValue}></span></li>
         ));
         return (
             <div id="pianoArea" style={{ gridArea: "pianoArea" }}>
