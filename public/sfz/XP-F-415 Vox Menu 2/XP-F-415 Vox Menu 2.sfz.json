@@ -1,0 +1,255 @@
+[
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 036_0_end.m4a",
+    "lokey": 0,
+    "hikey": 36,
+    "pitch_keycenter": 36
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 038_0_end.m4a",
+    "lokey": 37,
+    "hikey": 38,
+    "pitch_keycenter": 38
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 040_0_end.m4a",
+    "lokey": 39,
+    "hikey": 40,
+    "pitch_keycenter": 40
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 041_0_end.m4a",
+    "key": 41
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 043_0_end.m4a",
+    "lokey": 42,
+    "hikey": 43,
+    "pitch_keycenter": 43
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 045_0_end.m4a",
+    "lokey": 44,
+    "hikey": 45,
+    "pitch_keycenter": 45
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 047_0_end.m4a",
+    "lokey": 46,
+    "hikey": 47,
+    "pitch_keycenter": 47
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 048_0_end.m4a",
+    "key": 48
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 050_0_end.m4a",
+    "lokey": 49,
+    "hikey": 50,
+    "pitch_keycenter": 50
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 052_0_end.m4a",
+    "lokey": 51,
+    "hikey": 52,
+    "pitch_keycenter": 52
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 053_0_end.m4a",
+    "key": 53
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 055_0_end.m4a",
+    "lokey": 54,
+    "hikey": 56,
+    "pitch_keycenter": 55
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 060_0_end.m4a",
+    "lokey": 57,
+    "hikey": 60,
+    "pitch_keycenter": 60
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 062_0_end.m4a",
+    "lokey": 61,
+    "hikey": 62,
+    "pitch_keycenter": 62
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 064_0_end.m4a",
+    "lokey": 63,
+    "hikey": 64,
+    "pitch_keycenter": 64
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 065_0_end.m4a",
+    "key": 65
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 067_0_end.m4a",
+    "lokey": 66,
+    "hikey": 67,
+    "pitch_keycenter": 67
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 069_0_end.m4a",
+    "lokey": 68,
+    "hikey": 69,
+    "pitch_keycenter": 69
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 071_0_end.m4a",
+    "lokey": 70,
+    "hikey": 71,
+    "pitch_keycenter": 71
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 072_0_end.m4a",
+    "key": 72
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 074_0_end.m4a",
+    "lokey": 73,
+    "hikey": 74,
+    "pitch_keycenter": 74
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 076_0_end.m4a",
+    "lokey": 75,
+    "hikey": 76,
+    "pitch_keycenter": 76
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 077_0_end.m4a",
+    "key": 77
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 079_0_end.m4a",
+    "lokey": 78,
+    "hikey": 79,
+    "pitch_keycenter": 79
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 081_0_end.m4a",
+    "lokey": 80,
+    "hikey": 81,
+    "pitch_keycenter": 81
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 083_0_end.m4a",
+    "lokey": 82,
+    "hikey": 83,
+    "pitch_keycenter": 83
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 084_0_end.m4a",
+    "key": 84
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 085_0_end.m4a",
+    "lokey": 85,
+    "hikey": 86,
+    "pitch_keycenter": 85
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 087_0_end.m4a",
+    "lokey": 87,
+    "hikey": 88,
+    "pitch_keycenter": 87
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 089_0_end.m4a",
+    "key": 89
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 090_0_end.m4a",
+    "lokey": 90,
+    "hikey": 91,
+    "pitch_keycenter": 90
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 092_0_end.m4a",
+    "lokey": 92,
+    "hikey": 93,
+    "pitch_keycenter": 92
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 094_0_end.m4a",
+    "lokey": 94,
+    "hikey": 95,
+    "pitch_keycenter": 94
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 096_0_end.m4a",
+    "key": 96
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 097_0_end.m4a",
+    "lokey": 97,
+    "hikey": 98,
+    "pitch_keycenter": 97
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 099_0_end.m4a",
+    "lokey": 99,
+    "hikey": 100,
+    "pitch_keycenter": 99
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 101_0_end.m4a",
+    "key": 101
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 102_0_end.m4a",
+    "lokey": 102,
+    "hikey": 103,
+    "pitch_keycenter": 102
+  },
+  {
+    "ampeg_release": 0.5,
+    "sample": "Vox Menu 2 104_0_end.m4a",
+    "lokey": 104,
+    "hikey": 105,
+    "pitch_keycenter": 104
+  }
+]

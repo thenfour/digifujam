@@ -179,3 +179,184 @@ Sample JSON instrument spec:
   "sfzURL": "/sfz/XP-E-205-Miracle-Pad/XP-E-205-Miracle-Pad.sfz.json",
   "name": "XP-E-205-Miracle-Pad"
 }
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\XP-E-205-Miracle-Pad.sfz.json
+Region count: 14
+Source samples to read: 14
+Dest samples to create: 14
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 024.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 024.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 031.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 031.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 083.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 088.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 088.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-E-205-Miracle-Pad Samples\Miracle-Pad 091.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 091.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 024.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 511042
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 024_0_end.wav from Miracle-Pad 024.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 024_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 024_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 031.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528666
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 031_0_end.wav from Miracle-Pad 031.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 031_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 031_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 511062
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 043_0_end.wav from Miracle-Pad 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 510997
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 036_0_end.wav from Miracle-Pad 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528661
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 073_0_end.wav from Miracle-Pad 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528674
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 068_0_end.wav from Miracle-Pad 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528670
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 048_0_end.wav from Miracle-Pad 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 511050
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 063_0_end.wav from Miracle-Pad 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528653
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 058_0_end.wav from Miracle-Pad 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 519837
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 078_0_end.wav from Miracle-Pad 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 511026
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 053_0_end.wav from Miracle-Pad 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 053_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 031_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 031.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 088.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 519837
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 088_0_end.wav from Miracle-Pad 088.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 088_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 088_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 091.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 511050
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 091_0_end.wav from Miracle-Pad 091.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 091_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 091_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 519870
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Miracle-Pad 083_0_end.wav from Miracle-Pad 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 083_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 024_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 024.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 068.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 088_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 088.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 091_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 091.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-E-205-Miracle-Pad\Miracle-Pad 083.flac.wav
+Completed processing source WAV files with 14 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPE205MiraclePad",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-E-205-Miracle-Pad/XP-E-205-Miracle-Pad.sfz.json",
+  "name": "XP-E-205-Miracle-Pad"
+}

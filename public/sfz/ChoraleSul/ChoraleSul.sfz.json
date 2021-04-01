@@ -5,7 +5,9 @@
     "sample": "ChoraleSul 036_0_end.m4a",
     "lokey": 0,
     "hikey": 39,
-    "pitch_keycenter": 36
+    "pitch_keycenter": 36,
+    "loop_start": 2.868095238095238,
+    "loop_end": 4.164126984126984
   },
   {
     "ampeg_release": 1.25,
@@ -13,7 +15,9 @@
     "sample": "ChoraleSul 042_0_end.m4a",
     "lokey": 40,
     "hikey": 45,
-    "pitch_keycenter": 42
+    "pitch_keycenter": 42,
+    "loop_start": 2.7961224489795917,
+    "loop_end": 4.023038548752835
   },
   {
     "ampeg_release": 1.25,
@@ -21,7 +25,9 @@
     "sample": "ChoraleSul 048_0_end.m4a",
     "lokey": 46,
     "hikey": 51,
-    "pitch_keycenter": 48
+    "pitch_keycenter": 48,
+    "loop_start": 2.730748299319728,
+    "loop_end": 3.861156462585034
   },
   {
     "ampeg_release": 1.25,
@@ -29,7 +35,9 @@
     "sample": "ChoraleSul 054_0_end.m4a",
     "lokey": 52,
     "hikey": 57,
-    "pitch_keycenter": 54
+    "pitch_keycenter": 54,
+    "loop_start": 2.7231746031746034,
+    "loop_end": 4.158639455782313
   },
   {
     "ampeg_release": 1.25,
@@ -37,7 +45,9 @@
     "sample": "ChoraleSul 060_0_end.m4a",
     "lokey": 58,
     "hikey": 63,
-    "pitch_keycenter": 60
+    "pitch_keycenter": 60,
+    "loop_start": 2.8159410430839,
+    "loop_end": 3.827097505668934
   },
   {
     "ampeg_release": 1.25,
@@ -45,7 +55,9 @@
     "sample": "ChoraleSul 066_0_end.m4a",
     "lokey": 64,
     "hikey": 69,
-    "pitch_keycenter": 66
+    "pitch_keycenter": 66,
+    "loop_start": 2.4621541950113377,
+    "loop_end": 3.948049886621315
   },
   {
     "ampeg_release": 1.25,
@@ -53,7 +65,9 @@
     "sample": "ChoraleSul 072_0_end.m4a",
     "lokey": 70,
     "hikey": 75,
-    "pitch_keycenter": 72
+    "pitch_keycenter": 72,
+    "loop_start": 2.4080272108843537,
+    "loop_end": 3.9742403628117913
   },
   {
     "ampeg_release": 1.25,
@@ -61,7 +75,9 @@
     "sample": "ChoraleSul 078_0_end.m4a",
     "lokey": 76,
     "hikey": 81,
-    "pitch_keycenter": 78
+    "pitch_keycenter": 78,
+    "loop_start": 2.5346938775510206,
+    "loop_end": 3.845034013605442
   },
   {
     "ampeg_release": 1.25,
@@ -69,7 +85,9 @@
     "sample": "ChoraleSul 084_0_end.m4a",
     "lokey": 82,
     "hikey": 87,
-    "pitch_keycenter": 84
+    "pitch_keycenter": 84,
+    "loop_start": 2.397981859410431,
+    "loop_end": 3.8721995464852608
   },
   {
     "ampeg_release": 1.25,
@@ -77,6 +95,8 @@
     "sample": "ChoraleSul 090_0_end.m4a",
     "lokey": 88,
     "hikey": 93,
-    "pitch_keycenter": 90
+    "pitch_keycenter": 90,
+    "loop_start": 2.256485260770975,
+    "loop_end": 3.9411791383219956
   }
 ]

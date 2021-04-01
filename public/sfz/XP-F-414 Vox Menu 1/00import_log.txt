@@ -1,0 +1,770 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\XP-F-414 Vox Menu 1.sfz.json
+Region count: 31
+Source samples to read: 31
+Dest samples to create: 31
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\VoxMenus\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 036_0_end.wav from Vox Menu 1 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 037_0_end.wav from Vox Menu 1 037.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 038_0_end.wav from Vox Menu 1 038.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 039_0_end.wav from Vox Menu 1 039.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 045_0_end.wav from Vox Menu 1 045.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 042_0_end.wav from Vox Menu 1 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 041_0_end.wav from Vox Menu 1 041.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 040_0_end.wav from Vox Menu 1 040.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 044_0_end.wav from Vox Menu 1 044.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 043_0_end.wav from Vox Menu 1 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 049_0_end.wav from Vox Menu 1 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 047_0_end.wav from Vox Menu 1 047.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 060_0_end.wav from Vox Menu 1 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 050_0_end.wav from Vox Menu 1 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 97020
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 053_0_end.wav from Vox Menu 1 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 057_0_end.wav from Vox Menu 1 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 046_0_end.wav from Vox Menu 1 046.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 048_0_end.wav from Vox Menu 1 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 071_0_end.wav from Vox Menu 1 071.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 055_0_end.wav from Vox Menu 1 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 073_0_end.wav from Vox Menu 1 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 077_0_end.wav from Vox Menu 1 077.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 065_0_end.wav from Vox Menu 1 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 067_0_end.wav from Vox Menu 1 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 058_0_end.wav from Vox Menu 1 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 072_0_end.wav from Vox Menu 1 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123480
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 069_0_end.wav from Vox Menu 1 069.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 97020
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 062_0_end.wav from Vox Menu 1 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 051_0_end.wav from Vox Menu 1 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 064_0_end.wav from Vox Menu 1 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123480
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 075_0_end.wav from Vox Menu 1 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac.wav
+Completed processing source WAV files with 31 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPF414VoxMenu1",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-F-414 Vox Menu 1/XP-F-414 Vox Menu 1.sfz.json",
+  "name": "XP-F-414 Vox Menu 1"
+}
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\XP-F-414 Vox Menu 1.sfz.json
+Region count: 31
+Source samples to read: 31
+Dest samples to create: 31
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 050_0_end.wav from Vox Menu 1 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 049_0_end.wav from Vox Menu 1 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 043_0_end.wav from Vox Menu 1 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 046_0_end.wav from Vox Menu 1 046.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 044_0_end.wav from Vox Menu 1 044.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 047_0_end.wav from Vox Menu 1 047.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 042_0_end.wav from Vox Menu 1 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 041_0_end.wav from Vox Menu 1 041.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 040_0_end.wav from Vox Menu 1 040.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 039_0_end.wav from Vox Menu 1 039.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 038_0_end.wav from Vox Menu 1 038.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 037_0_end.wav from Vox Menu 1 037.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 036_0_end.wav from Vox Menu 1 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 065_0_end.wav from Vox Menu 1 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 058_0_end.wav from Vox Menu 1 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 057_0_end.wav from Vox Menu 1 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 045_0_end.wav from Vox Menu 1 045.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 048_0_end.wav from Vox Menu 1 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 055_0_end.wav from Vox Menu 1 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 051_0_end.wav from Vox Menu 1 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 97020
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 053_0_end.wav from Vox Menu 1 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 047.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 044.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 046.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 049.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 050.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 071_0_end.wav from Vox Menu 1 071.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 077_0_end.wav from Vox Menu 1 077.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 073_0_end.wav from Vox Menu 1 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105840
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 064_0_end.wav from Vox Menu 1 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 072_0_end.wav from Vox Menu 1 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 060_0_end.wav from Vox Menu 1 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 067_0_end.wav from Vox Menu 1 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123480
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 075_0_end.wav from Vox Menu 1 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123480
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 069_0_end.wav from Vox Menu 1 069.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 97020
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Vox Menu 1 062_0_end.wav from Vox Menu 1 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 041.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 037.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 045.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 057.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 039.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 040.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 038.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 077.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 071.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 075.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 069.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-F-414 Vox Menu 1\Vox Menu 1 062.flac.wav
+Completed processing source WAV files with 31 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPF414VoxMenu1",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-F-414 Vox Menu 1/XP-F-414 Vox Menu 1.sfz.json",
+  "name": "XP-F-414 Vox Menu 1"
+}

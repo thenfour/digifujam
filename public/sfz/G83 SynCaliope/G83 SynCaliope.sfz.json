@@ -1,6 +1,9 @@
 [
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 042_0_end.m4a",
     "lokey": 0,
     "hikey": 45,
@@ -8,6 +11,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 048_0_end.m4a",
     "lokey": 46,
     "hikey": 51,
@@ -15,6 +21,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 054_0_end.m4a",
     "lokey": 52,
     "hikey": 57,
@@ -22,6 +31,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 060_0_end.m4a",
     "lokey": 58,
     "hikey": 63,
@@ -29,6 +41,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 066_0_end.m4a",
     "lokey": 64,
     "hikey": 69,
@@ -36,6 +51,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 072_0_end.m4a",
     "lokey": 70,
     "hikey": 75,
@@ -43,6 +61,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 078_0_end.m4a",
     "lokey": 76,
     "hikey": 81,
@@ -50,6 +71,9 @@
   },
   {
     "ampeg_release": 0.5,
+    "loop_start": 1.885170068027211,
+    "loop_end": 4.492766439909297,
+    "loop_mode": "loop_sustain",
     "sample": "SynCaliope 084_0_end.m4a",
     "lokey": 82,
     "hikey": 87,

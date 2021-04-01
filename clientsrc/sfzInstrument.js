@@ -32,9 +32,9 @@ filter:
 
 amplitude ADSR https://sfzformat.com/opcodes/ampeg_attack
 - ampeg_attack
-- ampeg_delay
+- ampeg_delay <-- not supported
 - ampeg_decay
-- ampeg_hold
+- ampeg_hold   <-- not supported
 - ampeg_release
 - ampeg_start
 - ampeg_sustain
@@ -49,18 +49,98 @@ const ADSREnvelope = require("adsr-envelope");
 const DFSynthTools = require("./synthTools");
 const DFU = require('./dfutil');
 
-
-// DFSynthTools.AjaxJSON("ftp://::::/aoeu", ()=>{
-//     console.log("success");
-// }, ()=>{
-//     console.log("err");
-// });
-
 const GLOBAL_SFZ_GAIN = 0.2;
+
+class ProgressSpec {
+    constructor(progressCallback) {
+        this.progressCallback = progressCallback;
+        this.successes = 0;
+        this.errors = 0;
+        this.totalFiles = 0;
+    }
+    addTotal(n) {
+        this.totalFiles += n;
+        this.progressCallback(this);
+    }
+
+    addSuccesses(n) {
+        this.successes += n;
+        this.progressCallback(this);
+    }
+
+    addErrors(n) {
+        this.errors += n;
+        this.progressCallback(this);
+    }
+
+    ProgressPercent() {
+        if (this.totalFiles <= 0) return 100;
+        return Math.trunc((this.successes + this.errors) / this.totalFiles * 100);
+    }
+
+    isComplete() {
+        return (this.successes + this.errors) >= this.totalFiles;
+    }
+}
+
+const eLoadStatus = {
+    Unknown: 0,
+    InProgress: 1,
+    Complete: 2,
+};
 
 class _SFZAssetLoader {
     constructor() {
-        //this.hasBeenInvoked = false;
+        this.cacheStatus = {}; // map JSONURL to eLoadStatus
+    }
+
+    GetLoadStatus(jsonURL) {
+        if (!(jsonURL in this.cacheStatus)) return eLoadStatus.Unknown;
+        return this.cacheStatus[jsonURL];
+    }
+
+    CacheSFZAssets(sampleLibrarian, jsonURL, progressCallback, existingProgressSpec, onJSONLoadComplete, onJSONLoadError, onSampleLoadComplete, onSampleLoadError) {
+
+        switch (this.GetLoadStatus(jsonURL)) {
+            case eLoadStatus.Unknown:
+                break;
+            case eLoadStatus.InProgress: // fall through
+            case eLoadStatus.Complete: // fall through
+            default:
+                throw new Exception(`Don't try to cache things more than once. It's innocent enough but if you're expecting progress callbacks and all that it's not so simple.`);
+        }
+
+        const progressSpec = existingProgressSpec || new ProgressSpec(progressCallback);
+        progressSpec.addTotal(1);
+        DFSynthTools.LoadCachedJSON(jsonURL, regions => {
+
+            progressSpec.addSuccesses(1);
+
+            const baseURL = jsonURL.substring(0, jsonURL.lastIndexOf("/") + 1); // get directory name + /
+            regions.forEach(r => {
+                r.sampleFullPath = baseURL + r.sample;
+            });
+            const sampleURLs = new Set(regions.map(region => region.sampleFullPath));
+
+            onJSONLoadComplete && onJSONLoadComplete(regions);
+
+            progressSpec.addTotal(sampleURLs.size);
+
+            sampleURLs.forEach(sampleURL => {
+                sampleLibrarian.loadSampleFromURL(sampleURL, buffer => {
+                    //console.log(`Loaded sample successfully: ${sampleURL}`);
+                    progressSpec.addSuccesses(1); // successfully loaded sample; it's available now in the cache.
+                    onSampleLoadComplete && onSampleLoadComplete(sampleURL, buffer);
+                }, _ => {
+                    //console.log(`Error loading sample: ${sampleURL}`);
+                    progressSpec.addErrors(1); // error loading sample
+                    onSampleLoadError && onSampleLoadError(sampleURL);
+                }); // load sample
+            }); // iterate regions
+        }, () => {
+            progressSpec.addErrors(1);// error loading json.
+            onJSONLoadError && onJSONLoadError(jsonURL);
+        }); // load json
     }
 
     /*
@@ -70,15 +150,7 @@ class _SFZAssetLoader {
     */
     // instrumentSpecs is an array of instrumentSpec of sfz instruments.
     CacheAllSFZAssets(sampleLibrarian, instrumentSpecs, progressCallback) {
-        this.progressSpec = {
-            successes: 0,
-            errors: 0,
-            totalFiles: 0,
-        };
-        this.progressSpec.isComplete = function() { return (this.successes + this.errors) >= this.totalFiles; }.bind(this.progressSpec);
-
-        //if (this.hasBeenInvoked) return;
-        //this.hasBeenInvoked = true;
+        const progressSpec = new ProgressSpec(progressCallback);
 
         const jsonURLs = new Set();
         instrumentSpecs.forEach(instrumentSpec => {
@@ -87,39 +159,17 @@ class _SFZAssetLoader {
             })
         });
 
-        this.progressSpec.totalFiles = jsonURLs.size; // expecting this many JSONs
-        progressCallback(this.progressSpec);
-
         jsonURLs.forEach(jsonURL => {
-            this.progressSpec.successes ++;
-            progressCallback(this.progressSpec);
-
-            const baseURL = jsonURL.substring(0, jsonURL.lastIndexOf("/") + 1); // get directory name + /
-
-            DFSynthTools.LoadCachedJSON(jsonURL, regions => {
-                const sampleURLs = new Set(regions.map(region => baseURL + region.sample));
-
-                this.progressSpec.totalFiles += sampleURLs.size;
-                progressCallback(this.progressSpec);
-
-                sampleURLs.forEach(sampleURL => {
-                    sampleLibrarian.loadSampleFromURL(sampleURL, _ => {
-                        // on success
-                        this.progressSpec.successes ++;
-                        progressCallback(this.progressSpec);
-                    }, _ => {
-                        // on error
-                        this.progressSpec.errors ++;
-                        progressCallback(this.progressSpec);
-                                }); // load sample
-                }); // iterate regions
-            }, () => {
-                // error loading json.
-                this.progressSpec.errors ++;
-                progressCallback(this.progressSpec);
-            }); // load json
+            this.CacheSFZAssets(sampleLibrarian, jsonURL, progressCallback, progressSpec,
+                null,
+                ()=> { // json load error
+                    console.log(`Error loading JSON: ${jsonURL}`);
+                },
+                null,
+                (sampleURL) => {
+                    console.log(`Error loading sample: ${sampleURL}`);
+                });
         })
-
     }
 };
 
@@ -128,13 +178,14 @@ let SFZAssetLoader = new _SFZAssetLoader();
 
 
 class SFZRegion {
-    constructor(r, instrumentSpec) {
+    constructor(r, sfzItem) {
         Object.assign(this, r);
         // guarantee certain properties.
-        this.noteRangeSpec = this.CalculateNoteRangeSpec(instrumentSpec);
-        this.velocityRangeSpec = this.CalculateVelocityRangeSpec(instrumentSpec);
-        this.ampEGSpec = this.CalculateAmpEGSpec(instrumentSpec);
-        this.loopSpec = this.CalculateLoopSpec(instrumentSpec);
+        this.buffer = null; // caller set this whenever
+        this.noteRangeSpec = this.CalculateNoteRangeSpec(sfzItem);
+        this.velocityRangeSpec = this.CalculateVelocityRangeSpec(sfzItem);
+        this.ampEGSpec = this.CalculateAmpEGSpec(sfzItem);
+        this.loopSpec = this.CalculateLoopSpec(sfzItem);
 
         this.isRedundant = false; // L/R pairs: this gets set to true for the R region, so it doesn't ever match directly. Let the L region match.
         this.correspondingRegion = null; // L/R pairs: L gets this set to the R region.
@@ -149,7 +200,7 @@ class SFZRegion {
 
         this.midiFrequencyCenter = DFU.MidiNoteToFrequency(this.pitch_keycenter);
         this.tune = this.GetOpcodeVal('tune', 0);
-        this.filterSpec = this.CalculateFilterSpec(instrumentSpec);
+        this.filterSpec = this.CalculateFilterSpec(sfzItem);
         this.pan = this.GetOpcodeVal('pan', 0);
         this.pan /= 100; // to be consistent with web audio.
         this.pan = DFU.baseClamp(this.pan, -1, 1);
@@ -167,7 +218,7 @@ class SFZRegion {
         return defaultValue;
     }
 
-    CalculateFilterSpec(instrumentSpec) {
+    CalculateFilterSpec(sfzItem) {
         if (!('fil_type' in this) || !('cutoff' in this)) return null;
         const ret = {
             cutoff: this.GetOpcodeVal('cutoff', 0),
@@ -181,14 +232,14 @@ class SFZRegion {
         else if (this.fil_type.startsWith('brf')) ret.type = 'notch';
         else return null;
 
-        if ('filtCutoffMul' in instrumentSpec) {
-            ret.cutoff *= instrumentSpec.filtCutoffMul;
+        if ('filtCutoffMul' in sfzItem) {
+            ret.cutoff *= sfzItem.filtCutoffMul;
         }
 
         return ret;
     };
 
-    CalculateLoopSpec(instrumentSpec) {
+    CalculateLoopSpec(sfzItem) {
         /*
         - loop_mode
         - loop_start
@@ -205,7 +256,7 @@ class SFZRegion {
         // here, loop_start and loop_end are specified but they're clearly wrong.
         // according to the docs, if it's unspecified, we should also not loop. so...
         if (!('loop_mode') in this) return null;
-        if (instrumentSpec.ignoreLoop) return null;
+        if (sfzItem.ignoreLoop) return null;
 
         if (this.loop_mode == 'one_shot') return null; // one-shot is sorta redundant and really isn't relevant to looping.
         if (this.loop_mode == 'no_loop') return null;
@@ -248,7 +299,7 @@ class SFZRegion {
         return [0, 127];
     }
 
-    CalculateAmpEGSpec(instrumentSpec) {
+    CalculateAmpEGSpec(sfzItem) {
         const ret = {
             //base: 0, // 
             attack: this.GetOpcodeVal('ampeg_attack', 0),
@@ -262,10 +313,10 @@ class SFZRegion {
             //releaseCurve: 9, // this feels about right
         };
 
-        if (('sfzReleaseMul' in instrumentSpec) && (ret.release > 0)) {
-            ret.release *= instrumentSpec.sfzReleaseMul;
+        if (('sfzReleaseMul' in sfzItem) && (ret.release > 0)) {
+            ret.release *= sfzItem.sfzReleaseMul;
         }
-        if ('sfzForceOneShot' in instrumentSpec) {
+        if ('sfzForceOneShot' in sfzItem) {
             ret.release = -1;
         }
         //ret.decay *= 0.125;
@@ -326,12 +377,13 @@ function IsVeryCloseTo(a, b) {
     return Math.abs(a - b) < 0.001;
 }
 
-// there are regions which are stereo L/R pairs; we want to group them up because we don't support playing multiple regions at once,
+// there are SFZRegion objects which are stereo L/R pairs; we want to group them up because we
+// don't support playing multiple regions at once,
 // and this is a common idiom.
-function PreprocessSFZRegions(regions, instrumentSpec) {
+function PreprocessSFZRegions(regions, sfzSpec) {
 
     // extend range if requested. basically for some 
-    if (instrumentSpec.sfzExtendRange) {
+    if (sfzSpec.sfzExtendRange) {
         // find low & high key ranges.
         let lokey = 127;
         let hikey = 0;
@@ -488,6 +540,9 @@ class sfzVoice {
         if (!this.isConnected) {
             return;
         }
+        if (!sfzRegion.buffer) {
+            return; // sample is still loading.
+        }
         this.timestamp = Date.now();
         this.midiNote = midiNote;
         this.velocity = velocity;
@@ -511,7 +566,7 @@ class sfzVoice {
         }
         this.perfGraph.nodes.bufferSourceNode1.connect(this.graph.nodes.pan1);
 
-        if (sfzRegion.correspondingRegion && this.graph.nodes.pan2) {
+        if (sfzRegion.correspondingRegion && this.graph.nodes.pan2 && sfzRegion.correspondingRegion.buffer) {
             this.graph.nodes.pan2.pan.value = sfzRegion.correspondingRegion.pan;
             this.perfGraph.nodes.bufferSourceNode2 = this.audioCtx.createBufferSource();
             this.perfGraph.nodes.bufferSourceNode2.buffer = sfzRegion.correspondingRegion.buffer;
@@ -624,7 +679,7 @@ class sfzVoice {
         if (this.sfzRegion.loopSpec && this.sfzRegion.loopSpec.stopLoopOnRelease) {
             this.perfGraph.nodes.bufferSourceNode1.loop = false;
         }
-        if (this.sfzRegion.correspondingRegion && this.sfzRegion.correspondingRegion.loopSpec && this.sfzRegion.correspondingRegion.loopSpec.stopLoopOnRelease) {
+        if (this.sfzRegion.correspondingRegion && this.sfzRegion.correspondingRegion.loopSpec && this.sfzRegion.correspondingRegion.loopSpec.stopLoopOnRelease && this.perfGraph.nodes.bufferSourceNode2) {
             this.perfGraph.nodes.bufferSourceNode2.loop = false;
         }
 
@@ -675,11 +730,10 @@ class sfzInstrument {
         this.instrumentSpec = instrumentSpec;
         this.sampleLibrarian = sampleLibrarian;
         this.isConnected = false;
-        this.regions = null; // later, populated with the SFZ region opcodes
-        this.hasStartedLoading = false; // on first connect, we load.
-        this.hasCompletedLoading = false;
+        this.regions = null; // later, populated with the SFZ containing region opcodes
+        this.sfzCache = {}; // map sfzURL to regions.
         this.onLoadProgress = onLoadProgress;
-        this.instrumentSpec.loadProgress = 0;
+        this.instrumentSpec.loadProgress = null;
 
         this.voices = [];
         for (let i = 0; i < instrumentSpec.maxPolyphony; ++i) {
@@ -690,91 +744,93 @@ class sfzInstrument {
         this.physicallyHeldNotes = []; // array of {note, sfzRegion, voiceIndex} in order of note on.
 
         this.graph = new DFSynthTools.AudioGraphHelper();
+    }
 
-        this.sfzCache = {}; // map sfzURL to regions.
+    getCurrentSFZSpec() {
+        const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
+        return this.instrumentSpec.sfzArray[sfzSelect.currentValue];
     }
 
     ensureSelectedSFZVariantParams() {
         // for multi-sfz, make sure the selected one is .. selected
-        const sfzSelect = this.instrumentSpec.GetParamByID("sfzSelect");
-        if (sfzSelect && this.instrumentSpec.sfzArray && this.instrumentSpec.sfzArray.length) {
-            // start by removing all properties that are set by the child sfz array
-            this.instrumentSpec.sfzArray.forEach(s => {
-                Object.keys(s).forEach(k => {
-                    if (k === 'name') return; // don't overwrite this one!
-                    delete this.instrumentSpec[k];
-                });
-            });
-            Object.keys(this.instrumentSpec.sfzArray[sfzSelect.currentValue]).forEach(k => {
+        const sfzSpec = this.getCurrentSFZSpec();
+        // start by removing all properties that are set by the child sfz array
+        this.instrumentSpec.sfzArray.forEach(s => {
+            Object.keys(s).forEach(k => {
                 if (k === 'name') return; // don't overwrite this one!
-                this.instrumentSpec[k] = this.instrumentSpec.sfzArray[sfzSelect.currentValue][k];
+                delete this.instrumentSpec[k];
             });
+        });
+        Object.keys(sfzSpec).forEach(k => {
+            if (k === 'name') return; // don't overwrite this one!
+            this.instrumentSpec[k] = sfzSpec[k];
+        });
 
-            // a sfz can specify params to set when its selected too. this goes against convention; typically param changes are done externally. but let's allow it.
-            if (this.instrumentSpec.sfzPatch) {
-                Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
-                    const p = this.instrumentSpec.GetParamByID(paramID);
-                    p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
-                });
-            }
+        // a sfz can specify params to set when its selected too. this goes against convention; typically param changes are done externally. but let's allow it.
+        if (this.instrumentSpec.sfzPatch) {
+            Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
+                const p = this.instrumentSpec.GetParamByID(paramID);
+                p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
+            });
         }
+    }
+
+    onJSONLoadSuccess(sfzSpec, loadedRegions) {
+        const a = [];
+        loadedRegions.forEach(r => {
+            let reg = new SFZRegion(r, sfzSpec);
+            a.push(reg);
+        });
+
+        PreprocessSFZRegions(a, sfzSpec);
+        this.sfzCache[sfzSpec.sfzURL] = a;
+    }
+
+    onSampleLoadSuccess(sfzSpec, sampleFullPath, buffer) {
+        const regions = this.sfzCache[sfzSpec.sfzURL]; // samples may still be loading but we don't care in connect().
+        regions.forEach(r => {
+            if (r.sampleFullPath !== sampleFullPath) return;
+            r.buffer = buffer;
+        });
     }
 
     connect() {
         if (this.isConnected) return true;
+
         this.ensureSelectedSFZVariantParams();
-        if (this.hasStartedLoading && !this.hasCompletedLoading) return false;// loading still in progress
-        if (!this.hasStartedLoading) {
-            this.hasCompletedLoading = false;
-            if (this.instrumentSpec.sfzURL in this.sfzCache) {
-                //console.log(`Inst connect setting new regions cached`);
-                this.regions = this.sfzCache[this.instrumentSpec.sfzURL];
-            } else {
-                this.hasStartedLoading = true;
-                this.pendingLoads = 0; // how many samples are in "loading" state.
-                //console.log(`Inst connect clearing regions`);
-                this.regions = [];
-                DFSynthTools.LoadCachedJSON(this.instrumentSpec.sfzURL, regions => {
-                    let baseURL = this.instrumentSpec.sfzURL;
-                    baseURL = baseURL.substring(0, baseURL.lastIndexOf("/") + 1);
-                    this.instrumentSpec.sfzRegions = regions;//.map(r => new SFZRegion(r));
-                    this.pendingLoads = regions.length;
-                    this.instrumentSpec.loadProgress = 0.1; // >0 to show something happening.
-                    this.onLoadProgress(this.instrumentSpec.loadProgress);
-                    regions.forEach(r => {
-                        // for each region, load up the sample it references
-                        const sampleURL = baseURL + r.sample;
-                        this.sampleLibrarian.loadSampleFromURL(sampleURL, (buffer) => {
-                            // save this sample buffer somewhere.
-                            let reg = new SFZRegion(r, this.instrumentSpec);// Object.assign({}, r);
-                            reg.buffer = buffer;
-                            this.regions.push(reg);
-                            this.pendingLoads--;
-                            this.instrumentSpec.loadProgress = 1.1 - (this.pendingLoads / regions.length);
-                            this.onLoadProgress(this.instrumentSpec.loadProgress);
-                            //console.log(`this.loadingprogress = ${this.loadingProgress}`);
-                            if (!this.pendingLoads) {
-                                //console.log(`Inst connect preprocessing regions`);
-                                PreprocessSFZRegions(this.regions, this.instrumentSpec);
-                                this.sfzCache[this.instrumentSpec.sfzURL] = this.regions;
-                                this.hasCompletedLoading = true;
-                                this.instrumentSpec.loadProgress = 1;
-                                this.onLoadProgress(this.instrumentSpec.loadProgress);
-                                //console.log(`Finished loading instrument ${this.instrumentSpec.instrumentID}`);
-                                //console.log(`[ real connect recurse`);
-                                this.connect();
-                                //console.log(`]`);
-                                this.hasStartedLoading = false;
-                            }
-                        }); // load sample
-                    }); // iterate regions
-                }); // load json
-                return false; // not loaded yet; not connected.
+        const sfzSpec = this.getCurrentSFZSpec();
+
+        if (this.instrumentSpec.sfzURL in this.sfzCache) {
+            this.regions = this.sfzCache[sfzSpec.sfzURL]; // samples may still be loading but we don't care in connect().
+        } else {
+            // queue this for loading.
+            if (SFZAssetLoader.GetLoadStatus(sfzSpec.sfzURL) === eLoadStatus.Unknown) {
+                SFZAssetLoader.CacheSFZAssets(this.sampleLibrarian, sfzSpec.sfzURL,
+                    (progressSpec) => { // progress
+                        this.instrumentSpec.loadProgress = progressSpec;
+                        this.onLoadProgress(progressSpec);
+                    },
+                    null,// existing prog spec
+                    (regions) => { // json load success
+                        // generate our sfzCache item which 
+                        this.onJSONLoadSuccess(sfzSpec, regions);
+                    },
+                    () => { // json error.
+                        // todo. not even sure what to do here.
+                        throw new Error(`ERROR loading JSON ${sfzSpec.sfzURL}`);
+                    },
+                    (sampleURL, buffer) => { // on sample success. fill out buffers.
+                        this.onSampleLoadSuccess(sfzSpec, sampleURL, buffer);
+                    },
+                    (sampleURL) => { // sample load error.
+                        throw new Error(`ERROR loading sample ${sampleURL}`);
+                    }
+                );
             }
 
-        }
+            return false; // can't connect yet.
+        };
 
-        //console.log(`  really connecting...`);
         /*
         (voice) --> [filter] --> [wetGainer] --> dryDestination
                                > [dryGainer] --> wetDestination
@@ -792,8 +848,6 @@ class sfzInstrument {
         this.graph.nodes.dryGainer.connect(this.dryDestination);
         this.graph.nodes.wetGainer.connect(this.wetDestination);
 
-        let needsPan2 = this.regions.some(r => !!r.correspondingRegion);
-        //console.log(`Inst connect needs pan? ${needsPan2}`);
         this.voices.forEach(v => {
             v.connect(this.graph.nodes.dryGainer, this.graph.nodes.wetGainer, this.regions);
         });

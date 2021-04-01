@@ -1,6 +1,9 @@
 [
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 036_0_end.m4a",
     "pitch_keycenter": 36,
     "lokey": 0,
@@ -8,6 +11,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 043_0_end.m4a",
     "pitch_keycenter": 43,
     "lokey": 40,
@@ -15,6 +21,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 048_0_end.m4a",
     "pitch_keycenter": 48,
     "lokey": 46,
@@ -22,6 +31,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 055_0_end.m4a",
     "pitch_keycenter": 55,
     "lokey": 52,
@@ -29,6 +41,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 060_0_end.m4a",
     "pitch_keycenter": 60,
     "lokey": 58,
@@ -36,6 +51,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 067_0_end.m4a",
     "pitch_keycenter": 67,
     "lokey": 64,
@@ -43,6 +61,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 072_0_end.m4a",
     "pitch_keycenter": 72,
     "lokey": 70,
@@ -50,6 +71,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 079_0_end.m4a",
     "pitch_keycenter": 79,
     "lokey": 76,
@@ -57,6 +81,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 084_0_end.m4a",
     "pitch_keycenter": 84,
     "lokey": 82,
@@ -64,6 +91,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 2.3673242630385487,
+    "loop_end": 3.7606122448979593,
+    "loop_mode": "loop_sustain",
     "sample": "JC-Strat 091_0_end.m4a",
     "pitch_keycenter": 91,
     "lokey": 88,

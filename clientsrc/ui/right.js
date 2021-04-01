@@ -1109,7 +1109,8 @@ class InstrumentParams extends React.Component {
 
         const allowFactoryReset = this.props.app.myUser.IsAdmin();
 
-        let progPercent = Math.trunc(this.props.instrument.loadProgress * 100);
+        //let progPercent = Math.trunc(this.props.instrument.loadProgress * 100);
+        const progPercent = !!this.props.instrument.loadProgress ? this.props.instrument.loadProgress.ProgressPercent() : 0;
         //progPercent = 82;
         const loadingIndicator = (
             <div className={"instrumentLoadingIndicator " + ((progPercent <= 0 || progPercent >= 100) ? "hidden" : "")}>
@@ -1117,7 +1118,6 @@ class InstrumentParams extends React.Component {
                     {progPercent}%
                     </div>
             </div>);
-
 
         return (
             <div className="component">
@@ -1369,7 +1369,7 @@ class UserState extends React.Component {
         let cacheHasErrors = this.state.cacheLoadProgress && this.state.cacheLoadProgress.errors > 0;
 
         const cacheSamplesButton = this.props.app && (<li className="preloadSFZ">
-            {(!this.state.cacheLoadProgress || (this.state.cacheLoadProgress.isComplete() && cacheHasErrors)) && <button onClick={this.clickCacheSamples}>Preload all SFZ instruments</button>}
+            {/* {(!this.state.cacheLoadProgress || (this.state.cacheLoadProgress.isComplete() && cacheHasErrors)) &&*/ <button onClick={this.clickCacheSamples}>Preload all SFZ instruments</button>} }
             {this.state.cacheLoadProgress && <div>
                 {this.state.cacheLoadProgress.successes} success,
                 {this.state.cacheLoadProgress.errors} errors /

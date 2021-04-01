@@ -102,3 +102,100 @@ Sample JSON instrument spec:
   "sfzURL": "/sfz/Andromedae/Andromedae.sfz.json",
   "name": "Andromedae"
 }
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae.sfz.json
+Region count: 7
+Source samples to read: 7
+Dest samples to create: 7
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\fixedloops2\Andromedae\Andromedae 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 078.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 490136
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 042_0_end.wav from Andromedae 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 520205
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 078_0_end.wav from Andromedae 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 520220
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 072_0_end.wav from Andromedae 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 503322
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 060_0_end.wav from Andromedae 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 503640
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 054_0_end.wav from Andromedae 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 520247
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 066_0_end.wav from Andromedae 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 066_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 486833
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Andromedae 048_0_end.wav from Andromedae 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 048_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 066.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Andromedae\Andromedae 048.flac.wav
+Completed processing source WAV files with 7 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_Andromedae",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Andromedae/Andromedae.sfz.json",
+  "name": "Andromedae"
+}

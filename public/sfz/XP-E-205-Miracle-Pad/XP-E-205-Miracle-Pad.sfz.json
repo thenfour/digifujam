@@ -1,6 +1,9 @@
 [
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 024_0_end.m4a",
     "pitch_keycenter": 24,
     "lokey": 0,
@@ -8,6 +11,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 031_0_end.m4a",
     "pitch_keycenter": 31,
     "lokey": 28,
@@ -15,6 +21,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 036_0_end.m4a",
     "pitch_keycenter": 36,
     "lokey": 34,
@@ -22,6 +31,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 043_0_end.m4a",
     "pitch_keycenter": 43,
     "lokey": 40,
@@ -29,6 +41,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 048_0_end.m4a",
     "pitch_keycenter": 48,
     "lokey": 46,
@@ -36,6 +51,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 053_0_end.m4a",
     "pitch_keycenter": 53,
     "lokey": 51,
@@ -43,6 +61,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 058_0_end.m4a",
     "pitch_keycenter": 58,
     "lokey": 56,
@@ -50,6 +71,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 063_0_end.m4a",
     "pitch_keycenter": 63,
     "lokey": 61,
@@ -57,6 +81,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 068_0_end.m4a",
     "pitch_keycenter": 68,
     "lokey": 66,
@@ -64,6 +91,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 073_0_end.m4a",
     "pitch_keycenter": 73,
     "lokey": 71,
@@ -71,6 +101,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 078_0_end.m4a",
     "pitch_keycenter": 78,
     "lokey": 76,
@@ -78,6 +111,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 083_0_end.m4a",
     "pitch_keycenter": 83,
     "lokey": 81,
@@ -85,6 +121,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 088_0_end.m4a",
     "pitch_keycenter": 88,
     "lokey": 86,
@@ -92,6 +131,9 @@
   },
   {
     "ampeg_release": 0.3,
+    "loop_start": 4.7561904761904765,
+    "loop_end": 6.7903401360544215,
+    "loop_mode": "loop_sustain",
     "sample": "Miracle-Pad 091_0_end.m4a",
     "pitch_keycenter": 91,
     "lokey": 90,

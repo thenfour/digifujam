@@ -7,7 +7,7 @@ const AudioGraphHelper = require('./synthTools').AudioGraphHelper;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SoundfontInstrument {
 	constructor(audioCtx, dryDestination, wetDestination, instrumentSpec) {
-        instrumentSpec.loadProgress = 1;
+        //instrumentSpec.loadProgress = 1;
 		/*
 
 		(soundfont) --> [sfOutput] --> [masterDryGain] --> dryDestination

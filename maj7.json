@@ -878,6 +878,36 @@
             "adjustS": 0,
             "adjustR": 0
           }
+        },
+        {
+          "gain": 1,
+          "transpose": 0,
+          "sfzURL": "/sfz/XP-F-414 Vox Menu 1/XP-F-414 Vox Menu 1.sfz.json",
+          "name": "XP-F-414 Vox Menu 1",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "gain": 1,
+          "transpose": 0,
+          "sfzURL": "/sfz/XP-F-415 Vox Menu 2/XP-F-415 Vox Menu 2.sfz.json",
+          "name": "XP-F-415 Vox Menu 2",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
         }
       ]
     },

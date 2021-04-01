@@ -162,7 +162,7 @@ class DrumKitVoice {
 class OneShotInstrument {
     constructor(audioCtx, sampleLibrarian, dryDestination, wetDestination, instrumentSpec, createVoiceFn) {
         this.audioCtx = audioCtx;
-        instrumentSpec.loadProgress = 1;
+        //instrumentSpec.loadProgress = 1;
         this.dryDestination = dryDestination;
         this.wetDestination = wetDestination;
         this.instrumentSpec = instrumentSpec;
