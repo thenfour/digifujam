@@ -647,6 +647,9 @@ class sfzVoice {
 
         if (!this.sfzRegion) return;
         if (this.sfzRegion.filterSpec) {
+            this.graph.nodes.velGain.disconnect();
+            this.graph.nodes.velGain.connect(this.graph.nodes.filter);
+
             this.graph.nodes.filter.disconnect();
             this.graph.nodes.filter.connect(this.dest1);
             if (this.dest2) this.graph.nodes.filter.connect(this.dest2);
