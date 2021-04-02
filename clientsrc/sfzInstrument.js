@@ -970,7 +970,7 @@ class sfzInstrument {
         let disableFilter = () => {
             if (!this.isFilterConnected) return; // already disconnected.
 
-            console.log(`DISABLING filter`);
+            //console.log(`DISABLING filter`);
     
             /*
             (voices) --------------> [wetGainer] -> wetDestination
@@ -989,7 +989,7 @@ class sfzInstrument {
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return; // already connected.
-            console.log(`ENABLING filter`);
+            //console.log(`ENABLING filter`);
 
             /*
             (voice) --> [filter] --> [wetGainer] --> dryDestination
@@ -1036,7 +1036,7 @@ class sfzInstrument {
         if (!this.graph.nodes.filter) return;
         let p = this.instrumentSpec.GetParamByID("filterFreq").currentValue;
         const freqParam = this.graph.nodes.filter.frequency;
-        console.log(`filter freq = ${p}`);
+        //console.log(`filter freq = ${p}`);
         freqParam.value = DFU.baseClamp(p, freqParam.minValue, freqParam.maxValue);
     }
 

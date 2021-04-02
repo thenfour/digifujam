@@ -84,7 +84,7 @@ class JSONCache {
             this.responseMap[url].completions = [];
         }, err => {
             this.responseMap[url].completions.forEach(e => e.onError(err));
-            this.responseMap[url].completions = [];
+            delete this.responseMap[url];//.completions = []; <-- this way it will be available to re-try.
         });
     };
 };
@@ -108,7 +108,6 @@ let gLoadSample = function (audioContext, url, successHandler, errorHandler) {
         request.open("GET", url, true);
         request.responseType = "arraybuffer";
         request.onload = () => {
-            //console.log(`Loaded sample URL ${url}`);
             try {
                 audioContext.decodeAudioData(request.response, successHandler, errorHandler);
             } catch (e) {
@@ -133,12 +132,10 @@ class SampleCache {
         let existing = this.sampleMap[url];
         if (existing) {
             if (existing.buffer) {
-                //console.log(`SampleCache: returning existing buffer for ${url}`);
                 onSuccess(existing.buffer);
                 return;
             }
             // it's still loading; just add the completion handlers.
-            //console.log(`SampleCache: still loading; adding handler for ${url}`);
             existing.completions.push({ onSuccess, onError });
             return;
         }
@@ -152,7 +149,7 @@ class SampleCache {
             this.sampleMap[url].completions = [];
         }, err => {
             this.sampleMap[url].completions.forEach(e => e.onError(err));
-            this.sampleMap[url].completions = [];
+            delete this.sampleMap[url];// it's now available to retry.
         });
     };
 };
@@ -348,7 +345,6 @@ class OptimalGainer {
 
     _ensureZeroMode() {
         if (this.gainer) {
-            //console.log(`${this.name} gain => zero`);
             this.sources.forEach(src => { // disconnect sources from our gainer
                 try {
                     src.disconnect(this.gainer);
@@ -364,7 +360,6 @@ class OptimalGainer {
             }
             return;
         } else if (this.passthrough) {
-            //console.log(`${this.name} passthrough => zero`);
             this.destinations.forEach(dest => { // disconnect sources from destinations
                 this.sources.forEach(src => {
                     try {
@@ -384,7 +379,6 @@ class OptimalGainer {
 
     _ensurePassthroughMode() {
         if (this.gainer) {
-            //console.log(`${this.name} gain => passthrough`);
             this.sources.forEach(src => { // disconnect sources from our gainer
                 try {
                     src.disconnect(this.gainer);
@@ -416,7 +410,6 @@ class OptimalGainer {
         if (this.zeroModeChangeHandler) {
             this.zeroModeChangeHandler(this);
         }
-        //console.log(`${this.name} zero => passthrough`);
     }
 
     _ensureGainMode(gainVal) {
@@ -429,7 +422,6 @@ class OptimalGainer {
         this.gainer.gain.value = gainVal;
 
         if (this.passthrough) {
-            //console.log(`${this.name} passthrough => gain`);
             this.destinations.forEach(dest => { // disconnect sources from destinations
                 this.sources.forEach(src => {
                     try {
@@ -442,8 +434,6 @@ class OptimalGainer {
         }
 
         // zero mode
-
-        //console.log(`${this.name} zero => gain`);
 
         // connect sources to gainer.
         this.sources.forEach(src => {
