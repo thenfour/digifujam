@@ -2,7 +2,6 @@
 
 const DF = require("./DFCommon");
 const soundFontInstrument = require("./soundFontInstrument.js")
-const DFDrumkit = require("./DrumkitEngine");
 const DFSynthTools = require("./synthTools");
 const FMPolySynth = require("./fm4instrument");
 const FMVoice = require("./fm4voice");
@@ -177,9 +176,6 @@ class DigifuSynth {
 					break;
 				case "sfz":
 					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
-					break;
-				case "drumkit":
-					this.instruments[spec.instrumentID] = new DFDrumkit.OneShotInstrument(this.audioCtx, this.sampleLibrarian, dryGainer, wetGainer, spec, (s, l) => new DFDrumkit.DrumKitVoice(s, l));
 					break;
 				case "mixingdesk":
 					this.instruments[spec.instrumentID] = new MixingDeskInstrument();

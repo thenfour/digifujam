@@ -401,7 +401,7 @@ class DigifuInstrumentSpec {
         this.color = "rgb(138, 224, 153)";
         this.instrumentID = null;
         this.controlledByUserID = null;
-        this.engine = null; // soundfont, minifm, drumkit
+        this.engine = null; // minifm, sfz, mixing???
         this.activityDisplay = "none"; // keyboard, drums, none
         this.gain = 1.0;
         this.maxPolyphony = 9;
@@ -423,9 +423,6 @@ class DigifuInstrumentSpec {
             case "soundfont":
             case "sfz":
                 return this.name;
-            case "drumkit":
-                let kit = this.GetParamByID("kit");
-                return this.namePrefix + " " + kit.enumNames[kit.currentValue];
             case "minifm":
                 // fall through to calculate the name.
                 break;
@@ -1009,7 +1006,7 @@ class DigifuInstrumentSpec {
         if (this.engine === "minifm" && this.behaviorStyle === "microSub") {
             return ["master", "∿ Osc A"];
         }
-        if (this.engine === "drumkit" || this.engine === "sfz") {
+        if (this.engine === "sfz") {
             return ["master", "Macro", "Filter"];
         }
         if (this.engine === "mixingdesk") {
@@ -1662,21 +1659,6 @@ class DigifuRoomState {
             i.copyOfInstrumentID = null;
             ret.instrumentCloset[idx] = Object.assign(n, i);
         }
-
-        // deal with drumkits which are externally-loaded.
-        ret.instrumentCloset.forEach(i => {
-            if (i.engine != "drumkit" || !i.drumKits) return;
-            const externalKits = {};
-            Object.keys(i.drumKits).forEach(kitName => {
-                const url = i.drumKits[kitName].kitSpecURL;
-                if (!url) return;
-                console.log(`Loading external drum kit: "${url}"`);
-                externalKits[kitName] = syncLoadJSONRoutine(url);
-            });
-            Object.keys(externalKits).forEach(kitName => {
-                i.drumKits[kitName] = externalKits[kitName];
-            });
-        });
 
         // set enumvalues of sfz multi and and value ranges for enums.
         ret.instrumentCloset.forEach(i => {
