@@ -74,10 +74,11 @@ ul.keyboard li.black {
 
 
 ul.keyboard li span.drum {
-    /* background-color: red; */
-    width: 16px;
+    width: 7px;
     height: 7px;
-	transition: background-color 0.2s;
+    transition: background-color 0.2s;
+    border-radius: 50%;
+    margin-bottom: 3px;
 }
 
 ul.keyboard li span.drum.active {

@@ -1,5 +1,6 @@
-const DF = require("../DFCommon");
+let DF = require("../DFCommon");
 const React = require('react');
+DF = Object.assign(DF, require('../dfutil'));
 
 
 class AdminControls extends React.Component {

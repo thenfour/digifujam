@@ -1139,11 +1139,7 @@ class RoomServer {
           userID: u.userID,
           pingMS: u.pingMS,
           name: u.name,
-          persistentInfo: {
-            stats: {
-              noteOns: u.persistentInfo.stats.noteOns,
-            }
-          },
+          persistentInfo: u.persistentInfo,
           color: u.color,
         };
       };
