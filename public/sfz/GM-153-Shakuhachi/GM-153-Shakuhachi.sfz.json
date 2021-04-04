@@ -1,0 +1,72 @@
+[
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 048_0_end.m4a",
+    "pitch_keycenter": 48,
+    "lokey": 0,
+    "hikey": 51
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 055_0_end.m4a",
+    "pitch_keycenter": 55,
+    "lokey": 52,
+    "hikey": 57
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 060_0_end.m4a",
+    "pitch_keycenter": 60,
+    "lokey": 58,
+    "hikey": 62
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 065_0_end.m4a",
+    "pitch_keycenter": 65,
+    "lokey": 63,
+    "hikey": 67
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 070_0_end.m4a",
+    "pitch_keycenter": 70,
+    "lokey": 68,
+    "hikey": 72
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 075_0_end.m4a",
+    "pitch_keycenter": 75,
+    "lokey": 73,
+    "hikey": 77
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 080_0_end.m4a",
+    "pitch_keycenter": 80,
+    "lokey": 78,
+    "hikey": 81
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 084_0_end.m4a",
+    "pitch_keycenter": 84,
+    "lokey": 82,
+    "hikey": 85
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 087_0_end.m4a",
+    "pitch_keycenter": 87,
+    "lokey": 86,
+    "hikey": 89
+  },
+  {
+    "ampeg_release": 0.3,
+    "sample": "Shakuhachi 092_0_end.m4a",
+    "pitch_keycenter": 92,
+    "lokey": 90,
+    "hikey": 93
+  }
+]

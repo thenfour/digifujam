@@ -341,7 +341,8 @@
           "name": "Portamento",
           "groupName": "∿ Osc A",
           "parameterType": "floatParam",
-          "minValue": 0.004,
+          "valueCurve": "3.5",
+          "minValue": 0.02,
           "maxValue": 0.25
         },
         {
@@ -590,7 +591,8 @@
           "name": "Portamento",
           "groupName": "∿ Osc B",
           "parameterType": "floatParam",
-          "minValue": 0.004,
+          "valueCurve": "3.5",
+          "minValue": 0.02,
           "maxValue": 0.25
         },
         {
@@ -839,7 +841,8 @@
           "name": "Portamento",
           "groupName": "∿ Osc C",
           "parameterType": "floatParam",
-          "minValue": 0.004,
+          "valueCurve": "3.5",
+          "minValue": 0.02,
           "maxValue": 0.25
         },
         {
@@ -1088,7 +1091,8 @@
           "name": "Portamento",
           "groupName": "∿ Osc D",
           "parameterType": "floatParam",
-          "minValue": 0.004,
+          "valueCurve": "3.5",
+          "minValue": 0.02,
           "maxValue": 0.25
         },
         {
@@ -1573,7 +1577,6 @@
             "...this gets preprocessed by server, based on sfzArray..."
           ]
         },
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "adjustFinetune",
@@ -1584,8 +1587,6 @@
           "minValue": -100,
           "maxValue": 100
         },
-
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "velCurve",
@@ -1605,8 +1606,6 @@
           "maxValue": 1,
           "defaultValue": 0.8
         },
-
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "adjustA",
@@ -1648,10 +1647,6 @@
           "minValue": -1,
           "maxValue": 10
         },
-
-
-
-
         {
           "cssClassName": "paramSpacer",
           "paramID": "filterType",

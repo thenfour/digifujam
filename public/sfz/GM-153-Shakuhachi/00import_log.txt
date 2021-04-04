@@ -1,0 +1,133 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\GM-153-Shakuhachi.sfz.json
+Region count: 10
+Source samples to read: 10
+Dest samples to create: 10
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 070.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 070.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 080.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 080.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 084.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 084.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 087.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 087.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\root\Dropbox\root\MUS\samples\soundfonts\sagasfz\XV-5080\GM\GM-153-Shakuhachi Samples\Shakuhachi 092.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 092.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255271
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 048_0_end.wav from Shakuhachi 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255271
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 065_0_end.wav from Shakuhachi 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255277
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 060_0_end.wav from Shakuhachi 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255259
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 055_0_end.wav from Shakuhachi 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 092.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 246463
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 092_0_end.wav from Shakuhachi 092.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 092_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 092_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 087.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255271
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 087_0_end.wav from Shakuhachi 087.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 087_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 087_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 070.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 264066
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 070_0_end.wav from Shakuhachi 070.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 070_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 070_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 080.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255246
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 080_0_end.wav from Shakuhachi 080.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 080_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 080_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255246
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 075_0_end.wav from Shakuhachi 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 075_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 084.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255271
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Shakuhachi 084_0_end.wav from Shakuhachi 084.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 084_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 084_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 092_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 092.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 087_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 087.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 070_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 070.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 080_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 080.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 075.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 084_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-153-Shakuhachi\Shakuhachi 084.flac.wav
+Completed processing source WAV files with 10 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_GM153Shakuhachi",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/GM-153-Shakuhachi/GM-153-Shakuhachi.sfz.json",
+  "name": "GM-153-Shakuhachi"
+}
