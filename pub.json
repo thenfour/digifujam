@@ -739,6 +739,7 @@
           "transpose": 0,
           "sfzExtendRange": true,
           "ignoreLoop": true,
+          "filtCutoffMul": 5000,
           "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
           "name": "011_Vibraphone",
           "sfzPatch": {

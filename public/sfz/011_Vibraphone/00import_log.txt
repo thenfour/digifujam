@@ -71,3 +71,76 @@ Sample JSON instrument spec:
   "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
   "name": "011_Vibraphone"
 }
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\011_Vibraphone.sfz.json
+Region count: 1
+Source samples to read: 1
+Dest samples to create: 1
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Roland_SC-88_sf2\000\..\sf2_smpl.wav
+  Samplerate: 44100
+  Channels: 1
+  Length in samples: 11403488
+  Min offset       : 1413052
+  Max offset       : 2856627
+  Reflen in samples: 1443575
+  > Creating sf2_smpl_1413052_30523.wav from sf2_smpl.wav [1413052-1443575]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_1413052_30523.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_1413052_30523.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_1413052_30523.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_011_Vibraphone",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
+  "name": "011_Vibraphone"
+}
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\011_Vibraphone.sfz.json
+Region count: 40
+Source samples to read: 1
+Dest samples to create: 10
+Loading C:\root\Dropbox\root\MUS\samples\soundfonts\sf2\aria_converted\ARIAConverted\sf2\Musyng_sf2\000\..\sf2_smpl.wav
+  Samplerate: 48000
+  Channels: 1
+  Length in samples: 873182785
+  Min offset       : 131833992
+  Max offset       : 263844971
+  Reflen in samples: 132010979
+  > Creating sf2_smpl_131833992_176987.wav from sf2_smpl.wav [131833992-132010979]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_131833992_176987.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_131833992_176987.m4a"
+  > Creating sf2_smpl_132011002_176987.wav from sf2_smpl.wav [132011002-132187989]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132011002_176987.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132011002_176987.m4a"
+  > Creating sf2_smpl_132188012_161056.wav from sf2_smpl.wav [132188012-132349068]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132188012_161056.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132188012_161056.m4a"
+  > Creating sf2_smpl_132349091_161056.wav from sf2_smpl.wav [132349091-132510147]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132349091_161056.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132349091_161056.m4a"
+  > Creating sf2_smpl_132510170_231894.wav from sf2_smpl.wav [132510170-132742064]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132510170_231894.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132510170_231894.m4a"
+  > Creating sf2_smpl_132742087_231894.wav from sf2_smpl.wav [132742087-132973981]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132742087_231894.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132742087_231894.m4a"
+  > Creating sf2_smpl_132974004_263050.wav from sf2_smpl.wav [132974004-133237054]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132974004_263050.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132974004_263050.m4a"
+  > Creating sf2_smpl_133237077_263050.wav from sf2_smpl.wav [133237077-133500127]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133237077_263050.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133237077_263050.m4a"
+  > Creating sf2_smpl_133500150_232886.wav from sf2_smpl.wav [133500150-133733036]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133500150_232886.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133500150_232886.m4a"
+  > Creating sf2_smpl_133733059_232886.wav from sf2_smpl.wav [133733059-133965945]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133733059_232886.wav" "C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133733059_232886.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_131833992_176987.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132011002_176987.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132188012_161056.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132510170_231894.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132349091_161056.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132742087_231894.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133237077_263050.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_132974004_263050.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133500150_232886.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\011_Vibraphone\sf2_smpl_133733059_232886.wav
+Completed processing source WAV files with 1 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_011_Vibraphone",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/011_Vibraphone/011_Vibraphone.sfz.json",
+  "name": "011_Vibraphone"
+}
