@@ -592,13 +592,14 @@ class DigifuApp {
         //return false;
     }
 
-    NET_OnInstrumentParams(data) // userID, instrumentID, patchObj, isWholePatch
+    NET_OnInstrumentParams(data) // instrumentID, patchObj, isWholePatch
     {
         if (!this.roomState) return;
-        let foundInstrument = this.roomState.FindInstrumentByUserID(data.userID);
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
         if (!foundInstrument) return;
 
-        if (data.userID == this.myUser.userID) {
+        if (foundInstrument.instrument === this.myInstrument) {
+            console.log(`instrument params for my instrument. if you see this we're good; remove this comment.`);
             if (this.monitoringType !== eMonitoringType.Remote) {
                 return;
             }

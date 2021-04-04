@@ -79,10 +79,6 @@
   "chatLog": [],
   "instrumentCloset": [
     {
-      "instrumentID": "mixer1",
-      "copyOfInstrumentID": "mixingdesk"
-    },
-    {
       "instrumentID": "fm4a",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",

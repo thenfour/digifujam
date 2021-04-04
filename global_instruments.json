@@ -106,6 +106,16 @@
           "maxTextLength": 100
         },
         {
+          "paramID": "mixerGainDB",
+          "name": "mixerGainDB",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "hidden": true,
+          "minValue": -12,
+          "maxValue": 12,
+          "defaultValue": 0
+        },
+        {
           "paramID": "masterGain",
           "name": "Master gain",
           "groupName": "master",
@@ -122,6 +132,15 @@
           "minValue": 0.0,
           "maxValue": 1.0,
           "defaultValue": 0.2
+        },
+        {
+          "paramID": "delayMix",
+          "name": "Delay mix",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0
         },
         {
           "paramID": "voicing",
@@ -1504,47 +1523,22 @@
       ]
     },
     {
-      "instrumentID": "soundfont",
-      "sfinstrumentName": "acoustic_grand_piano",
-      "color": "rgb(73, 137, 255)",
-      "engine": "soundfont",
-      "supportsPresets": false,
-      "activityDisplay": "keyboard",
-      "params": [
-        {
-          "paramID": "patchName",
-          "name": "Patch name",
-          "groupName": "master",
-          "parameterType": "textParam",
-          "maxTextLength": 100
-        },
-        {
-          "paramID": "masterGain",
-          "name": "Master gain",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 1.0
-        },
-        {
-          "paramID": "verbMix",
-          "name": "Reverb mix",
-          "groupName": "master",
-          "parameterType": "floatParam",
-          "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 0.2
-        }
-      ]
-    },
-    {
       "instrumentID": "sfzMulti",
       "engine": "sfz",
       "supportsPresets": true,
       "maxPolyphony": 12,
       "activityDisplay": "keyboard",
       "params": [
+        {
+          "paramID": "mixerGainDB",
+          "name": "mixerGainDB",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "hidden": true,
+          "minValue": -12,
+          "maxValue": 12,
+          "defaultValue": 0
+        },
         {
           "paramID": "masterGain",
           "name": "Master gain",
@@ -1562,6 +1556,15 @@
           "minValue": 0.0,
           "maxValue": 1.0,
           "defaultValue": 0.2
+        },
+        {
+          "paramID": "delayMix",
+          "name": "Delay mix",
+          "groupName": "master",
+          "parameterType": "floatParam",
+          "minValue": 0.0,
+          "maxValue": 1.0,
+          "defaultValue": 0
         },
         {
           "paramID": "sfzSelect",

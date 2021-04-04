@@ -623,7 +623,7 @@ class RoomServer {
 
       // broadcast to all clients
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentParams, {
-        userID: foundUser.user.userID,
+        //userID: foundUser.user.userID,
         instrumentID: foundInstrument.instrument.instrumentID,
         patchObj: data.patchObj,
         isWholePatch: data.isWholePatch,

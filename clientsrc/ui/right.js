@@ -561,12 +561,10 @@ class InstFloatParam extends React.Component {
                     if (foundUser) {
                         instActivity = (<span className="instControlledBy"><span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span></span>);
                         instLiveActivity = (<span className="instActivity alt1" id={"mixerActivity_" + sourceInst.instrumentID}></span>);
-                        //idle = foundUser.user.idle;// user is taken, but considered idle. so we can show it.
                     }
                 }
             }
             if (!instActivity) {
-                isReadOnly = true;
                 instActivity = (<span className="instControlledBy empty"></span>);
             }
             if (!instLiveActivity) {

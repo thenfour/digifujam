@@ -162,7 +162,7 @@ class _SFZAssetLoader {
         jsonURLs.forEach(jsonURL => {
             this.CacheSFZAssets(sampleLibrarian, jsonURL, progressCallback, progressSpec,
                 null,
-                ()=> { // json load error
+                () => { // json load error
                     console.log(`Error loading JSON: ${jsonURL}`);
                 },
                 null,
@@ -879,13 +879,19 @@ class sfzInstrument {
         });
     }
 
-    // returns [drygain, wetgain]
+    // returns [drygain, verbgain, delaygain]
     getGainLevels() {
-        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue * (('gain' in this.instrumentSpec) ? this.instrumentSpec.gain : 1);
-        let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        const masterFacter = this.instrumentSpec.GetParamByID("masterGain").currentValue * DFU.DBToLinear(this.instrumentSpec.GetParamByID("mixerGainDB").currentValue);
+        let mainMul = masterFacter * (('gain' in this.instrumentSpec) ? this.instrumentSpec.gain : 1);
+        let verbMul = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        let delayMul = this.instrumentSpec.GetParamByID("delayMix").currentValue;
         // when verb mix is 0, drygain is the real master gain.
         // when verb mix is 1, drygain is 0 and verbmix is mastergain
-        return [(1.0 - vg) * ms, vg * ms * 1.];
+        return [
+            (1.0 - verbMul) * mainMul, // not-verb, scaled by master gain
+            verbMul * mainMul, // verb, scaled by master gain
+            delayMul * mainMul,
+        ];
     }
 
     NoteOn(midiNote, velocity) {
@@ -971,7 +977,7 @@ class sfzInstrument {
             if (!this.isFilterConnected) return; // already disconnected.
 
             //console.log(`DISABLING filter`);
-    
+
             /*
             (voices) --------------> [wetGainer] -> wetDestination
                                    > [dryGainer] -> dryDestination
@@ -1005,7 +1011,7 @@ class sfzInstrument {
             // reconnect voices to the wet/dry destinations instead of filter.
             this.childDest1 = this.graph.nodes.filter;
             this.childDest2 = null;
-                this.voices.forEach(v => {
+            this.voices.forEach(v => {
                 v.setDestNodes(this.childDest1, this.childDest2);
             });
 
@@ -1055,6 +1061,8 @@ class sfzInstrument {
         if (!this.isConnected) return;
         Object.keys(patchObj).forEach(paramID => {
             switch (paramID) {
+                case "mixerGainDB":
+                case "delayMix":
                 case "masterGain":
                 case "verbMix":
                     let levels = this.getGainLevels();

@@ -65,7 +65,7 @@ const ServerMessages = {
     UserAllNotesOff: "UserAllNotesOff", // this is needed for example when you change MIDI device
     PedalDown: "PedalDown", // user
     PedalUp: "PedalUp", // user
-    InstrumentParams: "InstParams",// { userID, instrumentID, isWholePatch, patchObj:{object mapping paramID to newVal} } ]
+    InstrumentParams: "InstParams",// { instrumentID, isWholePatch, patchObj:{object mapping paramID to newVal} } ]
     CreateParamMapping: "CreateParamMapping", // instrumentID, paramID, eParamMappingSource
     RemoveParamMapping: "RemoveParamMapping", // instrumentID, paramID
 
@@ -1010,7 +1010,7 @@ class DigifuInstrumentSpec {
             return ["master", "Macro", "Filter"];
         }
         if (this.engine === "mixingdesk") {
-            return ["master", "Gain"];
+            return ["master", "Faders"];
         }
         // soundfont, sfz
         return ["master", "Macro"];
@@ -1687,7 +1687,7 @@ class DigifuRoomState {
                     return;
                 }
                 //console.log(JSON.stringify(ci));
-                const cigain = ci.params.find(cip => cip.paramID == "masterGain");
+                const cigain = ci.params.find(cip => cip.paramID == "mixerGainDB");
                 if (!cigain) {
                     return;
                 }
@@ -1700,7 +1700,7 @@ class DigifuRoomState {
                 i.params.push({
                     paramID,
                     name: `${ci.name}`,
-                    groupName: "Gain",
+                    groupName: "Faders",
                     sourceInstrumentID: ci.instrumentID,
                     sourceParamID: cigain.paramID,
                     showLinkedInstrumentActivity: true,

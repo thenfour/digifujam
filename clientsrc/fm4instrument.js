@@ -344,13 +344,18 @@ class FMPolySynth {
         this.nodes.lfo2.type = shapes[this.instrumentSpec.GetParamByID("lfo2_wave").currentValue];
     }
 
-    // returns [drygain, wetgain]
+    // returns [drygain, verbgain, delaygain]
     getGainLevels() {
-        let ms = this.instrumentSpec.GetParamByID("masterGain").currentValue;
-        let vg = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        const mainMul = this.instrumentSpec.GetParamByID("masterGain").currentValue * DFU.DBToLinear(this.instrumentSpec.GetParamByID("mixerGainDB").currentValue);
+        let verbMul = this.instrumentSpec.GetParamByID("verbMix").currentValue;
+        let delayMul = this.instrumentSpec.GetParamByID("delayMix").currentValue;
         // when verb mix is 0, drygain is the real master gain.
         // when verb mix is 1, drygain is 0 and verbmix is mastergain
-        return [(1.0 - vg) * ms, vg * ms * 1.];
+        return [
+            (1.0 - verbMul) * mainMul, // not-verb, scaled by master gain
+            verbMul * mainMul, // verb, scaled by master gain
+            delayMul * mainMul,
+        ];
     }
 
     SetParamValues(patchObj) {
@@ -360,6 +365,8 @@ class FMPolySynth {
                 case "pb":
                     this.nodes.pitchbendSemis.offset.value = patchObj[paramID];
                     break;
+                case "mixerGainDB":
+                case "delayMix":
                 case "masterGain":
                 case "verbMix":
                     let levels = this.getGainLevels();
