@@ -1010,7 +1010,7 @@ class DigifuInstrumentSpec {
             return ["master", "Macro", "Filter"];
         }
         if (this.engine === "mixingdesk") {
-            return ["master", "Faders"];
+            return ["master", "Faders", "Delay"];
         }
         // soundfont, sfz
         return ["master", "Macro"];

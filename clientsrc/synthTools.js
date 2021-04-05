@@ -1,6 +1,7 @@
 'use strict';
 
 const DFU = require('./dfutil');
+const DFDelayNode = require('./DelayNode');
 
 // helps disconnecting big-ish audio graphs.
 // in ctor
@@ -204,6 +205,10 @@ let initSynthTools = (audioCtx) => {
         audioCtx.endScope();
         return divider;
     };
+
+    audioCtx.createDFDelayNode = (name, destNodes) => {
+        return new DFDelayNode(audioCtx, name, destNodes);
+    }
 };
 
 // THIS is a drop-in relacement for the OptimalGainer which just uses non-optimized behavior, for debugging

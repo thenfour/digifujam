@@ -1,14 +1,16 @@
 'use strict';
 
 const DF = require("./DFCommon");
+const DFU = require('./dfutil');
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class FMPolySynth {
-    constructor(audioCtx, dryDestination, wetDestination, instrumentSpec, createVoiceFn) {
+    constructor(audioCtx, dryDestination, verbDestination, delayDestination, instrumentSpec, createVoiceFn) {
         this.audioCtx = audioCtx;
         this.dryDestination = dryDestination;
-        this.wetDestination = wetDestination;
+        this.verbDestination = verbDestination;
+        this.delayDestination = delayDestination;
         this.instrumentSpec = instrumentSpec;
 
         this.minGlideS = DF.ClientSettings.InstrumentParamIntervalMS / 1000;
@@ -55,9 +57,9 @@ class FMPolySynth {
         this.audioCtx.beginScope(this.instrumentSpec.getDisplayName());
 
         this.isSustainPedalDown = false;
-        // [LFO1] ----->[lfo1Gain] -------------------------------> (voices)  --> [masterDryGain] -> dryDestination
-        //                                                                    --> [masterWetGain] -> wetDestination
-        //
+        // [LFO1] ----->[lfo1Gain] -------------------------------> (voices)  --> [masterDryGain] -> (dryDestination)
+        //                                                                    --> [masterVerbGain] -> (reverbDestination)
+        //                                                                    --> [masterDelayGain] -> (delayDestination)
         // [LFO2] ----->[lfo2Gain] ------------------------------->
         //                        
 
@@ -146,12 +148,16 @@ class FMPolySynth {
         // masterDryGain
         this.nodes.masterDryGain = this.audioCtx.createGain("inst>master");
 
-        // masterWetGain
-        this.nodes.masterWetGain = this.audioCtx.createGain("inst>master");
+        // masterVerbGain
+        this.nodes.masterVerbGain = this.audioCtx.createGain("inst>master");
+
+        // masterVerbGain
+        this.nodes.masterDelayGain = this.audioCtx.createGain("inst>master");
 
         let gainLevels = this.getGainLevels();
         this.nodes.masterDryGain.gain.value = gainLevels[0];
-        this.nodes.masterWetGain.gain.value = gainLevels[1];
+        this.nodes.masterVerbGain.gain.value = gainLevels[1];
+        this.nodes.masterDelayGain.gain.value = gainLevels[2];
 
         // set up algo
         let algo = parseInt(this.instrumentSpec.GetParamByID("algo").currentValue);
@@ -202,15 +208,16 @@ class FMPolySynth {
         this.isPoly = (this.instrumentSpec.GetParamByID("voicing").currentValue == 1);
         if (this.isPoly) {
             this.voices.forEach(v => {
-                v.connect(this.nodes.lfo1Gain, this.nodes.lfo2Gain, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
+                v.connect(this.nodes.lfo1Gain, this.nodes.lfo2Gain, this.nodes.masterDryGain, this.nodes.masterVerbGain, this.nodes.masterDelayGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
             });
         } else {
             this.isPoly = false;
-            this.voices[0].connect(this.nodes.lfo1Gain, this.nodes.lfo2Gain, this.nodes.masterDryGain, this.nodes.masterWetGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
+            this.voices[0].connect(this.nodes.lfo1Gain, this.nodes.lfo2Gain, this.nodes.masterDryGain, this.nodes.masterVerbGain, this.nodes.masterDelayGain, algoSpec, this.nodes.pitchbendSemis, detuners, oscVariationMap);
         }
 
         this.nodes.masterDryGain.connect(this.dryDestination);
-        this.nodes.masterWetGain.connect(this.wetDestination);
+        this.nodes.masterVerbGain.connect(this.verbDestination);
+        this.nodes.masterDelayGain.connect(this.delayDestination);
 
         this.isConnected = true;
         this.audioCtx.endScope();
@@ -359,6 +366,7 @@ class FMPolySynth {
     }
 
     SetParamValues(patchObj) {
+        if (!this.isConnected) return; // mixing desk can change params when it's not even connected.
         let keys = Object.keys(patchObj);
         keys.forEach(paramID => {
             switch (paramID) {
@@ -370,8 +378,9 @@ class FMPolySynth {
                 case "masterGain":
                 case "verbMix":
                     let levels = this.getGainLevels();
-                    this.nodes.masterDryGain.gain.linearRampToValueAtTime(levels[0], this.audioCtx.currentTime + this.minGlideS);
-                    this.nodes.masterWetGain.gain.linearRampToValueAtTime(levels[1], this.audioCtx.currentTime + this.minGlideS);
+                    this.nodes.masterDryGain.gain.value = levels[0];
+                    this.nodes.masterVerbGain.gain.value = levels[1];
+                    this.nodes.masterDelayGain.gain.value = levels[2];
                     break;
                 case "lfo1_wave":
                 case "lfo2_wave":

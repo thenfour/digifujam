@@ -1,22 +1,16 @@
 'use strict';
 
-const DF = require("./DFCommon");
-const soundFontInstrument = require("./soundFontInstrument.js")
 const DFSynthTools = require("./synthTools");
 const FMPolySynth = require("./fm4instrument");
 const FMVoice = require("./fm4voice");
 const MixingDeskInstrument = require("./MixingDeskInstrument");
 const sfzInstrument = require('./sfzInstrument')
 
-const gGainBoost = 2.0;
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DigifuSynth {
 	constructor() {
 		this.audioCtx = null;
 		this.instruments = {};
-		this.instrumentDryGainers = {}; // key = instrumentID
-		this.instrumentWetGainers = {}; // key = instrumentID
 
 		this.instrumentSpecs = null;
 		this.internalMasterGain = null;
@@ -50,22 +44,16 @@ class DigifuSynth {
 		return this._isMuted; // unfortunately no "is connected" api exists so we must keep state.
 	}
 
-	//                                                                        [metronomeGainNode] -->
-	// (instruments) --> (instrumentDryGainers) ---------------------> [preMasterGain] -------------> [masterGainNode] -->  (destination)
-	//               --> (instrumentWetGainers) --> [masterReverb] -->                             -> [analysis]
 	set isMuted(val) {
-		// instrumentSpecs, internalMasterGain
 		if (val) {
-			// stop all instruments and disconnect our graph temporarily
-			this.masterReverb.disconnect();
 			this.masterGainNode.disconnect();
 			Object.keys(this.instruments).forEach(k => {
 				this.instruments[k].disconnect();
 			});
 		} else {
-			this.masterGainNode.connect(this.audioCtx.destination);
-			this.masterReverb.connect(this.preMasterGain);
-		}
+			 this.masterGainNode.connect(this.audioCtx.destination);
+			 // don't connect instruments because they're connect as needed.
+		 }
 		this._isMuted = !!val;
 	}
 
@@ -144,41 +132,15 @@ class DigifuSynth {
 		this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
 		instrumentSpecs.forEach(spec => {
-
-			spec.loadProgress = 0;
-
-			let dryGainer = this.audioCtx.createGain("inst gainer");
-			dryGainer.gain.value = 1;
-			if (spec.gain) {
-				dryGainer.gain.value = spec.gain;
-			}
-			dryGainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
-			dryGainer.connect(this.preMasterGain);
-			this.instrumentDryGainers[spec.instrumentID] = dryGainer;
-
-			let wetGainer = this.audioCtx.createGain("inst gainer");
-			wetGainer.gain.value = 1;
-			if (spec.gain) {
-				wetGainer.gain.value = spec.gain;
-			}
-			wetGainer.gain.value *= internalMasterGain; // internal fader just for keeping things not too quiet. basically a complement to individual instrument gains.
-			if (this.masterReverb) {
-				wetGainer.connect(this.masterReverb);
-			}
-			this.instrumentWetGainers[spec.instrumentID] = wetGainer;
-
 			switch (spec.engine) {
 				case "minifm":
-					this.instruments[spec.instrumentID] = new FMPolySynth.FMPolySynth(this.audioCtx, dryGainer, wetGainer, spec, (c, s) => new FMVoice.MiniFMSynthVoice(c, s));
-					break;
-				case "soundfont":
-					this.instruments[spec.instrumentID] = new soundFontInstrument.SoundfontInstrument(this.audioCtx, dryGainer, wetGainer, spec);
+					this.instruments[spec.instrumentID] = new FMPolySynth.FMPolySynth(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, (c, s) => new FMVoice.MiniFMSynthVoice(c, s));
 					break;
 				case "sfz":
-					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, dryGainer, wetGainer, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
+					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
 					break;
 				case "mixingdesk":
-					this.instruments[spec.instrumentID] = new MixingDeskInstrument();
+					this.instruments[spec.instrumentID] = new MixingDeskInstrument(this.audioCtx, spec, this.masterDelay, this.delayDryGain, this.delayVerbGain);
 					break;
 				default:
 					alert(`Unknown synth engine '${spec.engine}'`);
@@ -199,16 +161,6 @@ class DigifuSynth {
 			this.instruments[inst].disconnect();
 		}
 
-		for (let inst in this.instrumentDryGainers) {
-			this.instrumentDryGainers[inst].disconnect();
-		}
-		this.instrumentDryGainers = {};
-
-		for (let inst in this.instrumentWetGainers) {
-			this.instrumentWetGainers[inst].disconnect();
-		}
-		this.instrumentWetGainers = {};
-
 		this.instruments = {};
 	}
 
@@ -227,36 +179,40 @@ class DigifuSynth {
 
 		DFSynthTools.initSynthTools(this.audioCtx);
 
-		//                                                                             [metronomeGainNode] --->
-		// (instruments) --> (instrumentDryGainers) --------------------------> [preMasterGain] --------------> [masterGainNode] -->  (destination)
-		//               --> (instrumentWetGainers) ----> [masterReverb] ----->                              -> [analysis]
-		//
-		//this.compressor = this.audioCtx.createDynamicsCompressor("masterCompressor");
-
-		this.preMasterGain = this.audioCtx.createGain("master");
-		this.preMasterGain.gain.value = gGainBoost;
-
-		this.masterGainNode = this.audioCtx.createGain("master");
-		this.preMasterGain.connect(this.masterGainNode);
-
-		this.metronomeGainNode = this.audioCtx.createGain("metronomeGainNode");
-		this.metronomeGainNode.connect(this.masterGainNode);
-
-		// this.analysisNode = this.audioCtx.createAnalyser();
-		// this.masterGainNode.connect(this.analysisNode);
-
-		this.masterGainNode.connect(this.audioCtx.destination);
-
 		// see other possible impulses: https://github.com/burnson/Reverb.js
 		this.masterReverb = this.audioCtx.createReverbFromUrl("./reaper_stems_MidiverbMark2Preset29.m4a", () => { ////./MidiverbMark2Preset29.m4a", () => { // ./LadyChapelStAlbansCathedral.m4a
 
-			for (let inst in this.instrumentWetGainers) {
-				this.instrumentWetGainers[inst].connect(this.masterReverb);
-			}
+			/*
+			                                                                     [metronomeGainNode] --->
+			 (instruments) -----------------------------------------------------------------------------> [masterGainNode] -->  (destination)
+			               --------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
+                                                                      .>
+                                                                     /
+										         .>[delayVerbGain]--'
+                                                |
+			               ---> [masterDelay] -`---[delayDryGain]--------------------------------------->
+			*/
 
-			// create wet signal path
-			this.masterReverb.connect(this.preMasterGain);
+			this.masterGainNode = this.audioCtx.createGain("master");
 
+			this.metronomeGainNode = this.audioCtx.createGain("metronomeGainNode");
+			this.metronomeGainNode.connect(this.masterGainNode);
+
+			this.masterGainNode.connect(this.audioCtx.destination);
+
+
+			this.delayVerbGain = this.audioCtx.createGain("masterDelay");
+			this.delayDryGain = this.audioCtx.createGain("masterDelay");
+
+			this.masterDelay = this.audioCtx.createDFDelayNode("masterDelay", [this.delayVerbGain, this.delayDryGain]);
+
+			// this.masterDelay.connect();
+			// this.masterDelay.connect();
+
+			this.delayVerbGain.connect(this.masterReverb);
+			this.delayDryGain.connect(this.masterGainNode);
+
+			this.masterReverb.connect(this.masterGainNode);
 		});
 	};
 };

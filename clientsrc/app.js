@@ -599,7 +599,6 @@ class DigifuApp {
         if (!foundInstrument) return;
 
         if (foundInstrument.instrument === this.myInstrument) {
-            console.log(`instrument params for my instrument. if you see this we're good; remove this comment.`);
             if (this.monitoringType !== eMonitoringType.Remote) {
                 return;
             }

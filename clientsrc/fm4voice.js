@@ -32,20 +32,21 @@ class MiniFMSynthVoice {
         this.nodes = {};
     }
 
-    connect(lfo1, lfo2, dryDestination, wetDestination, algoSpec, pitchBendSemisNode, oscDetuneSemisMap, oscVariationMap) {
+    connect(lfo1, lfo2, dryDestination, verbDestination, delayDestination, algoSpec, pitchBendSemisNode, oscDetuneSemisMap, oscVariationMap) {
         if (this.isConnected) return;
         this.audioCtx.beginScope("voice");
         this.dryDestination = dryDestination;
-        this.wetDestination = wetDestination;
+        this.verbDestination = verbDestination;
+        this.delayDestination = delayDestination;
         this.algoSpec = algoSpec;
 
         /*
           (pitchBendSemisNode)----->
           (oscDetuneSemisMap[i])--->
-                      (lfos)------->
-                      [env1]------->[child oscillators] -->[oscSum]------> [filter] -----------> (wetdest)
-                                                                           |    |              > (drydest)
-                                                                      freq |   | Q
+                      (lfos)------->                                                           > (dry)
+                      [env1]------->[child oscillators] -->[oscSum]------> [filter] -----------> (verb)
+                                                                           |    |              > (delay)
+                                                                      freq |   | Q             
                                                          [filterFreqLFO1Amt]   [filterQLFO1Amt]
                                                         +[filterFreqLFO2Amt]   [filterQLFO2Amt]
                                                         +[filterFreqENVAmt]   [filterQENVAmt]
@@ -223,14 +224,16 @@ class MiniFMSynthVoice {
 
     _SetFiltType() {
         let disableFilter = () => {
-            // [oscSum]---------> (wetdest)
+            // [oscSum]---------> (verbdest)
             //                  > (drydest)
+            //                  > (delaydest)
             this.nodes.filter.disconnect();
             ///console.log(`disabling filter`);
 
             this.nodes.oscSum.disconnect();
             this.nodes.oscSum.connect(this.dryDestination);
-            this.nodes.oscSum.connect(this.wetDestination);
+            this.nodes.oscSum.connect(this.verbDestination);
+            this.nodes.oscSum.connect(this.delayDestination);
 
             this.isFilterConnected = false;
         };
@@ -244,7 +247,8 @@ class MiniFMSynthVoice {
 
             this.nodes.filter.disconnect();
             this.nodes.filter.connect(this.dryDestination);
-            this.nodes.filter.connect(this.wetDestination);
+            this.nodes.filter.connect(this.verbDestination);
+            this.nodes.filter.connect(this.delayDestination);
 
             this.isFilterConnected = true;
         };
