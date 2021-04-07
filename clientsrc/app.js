@@ -197,8 +197,8 @@ class DigifuApp {
 
         this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
         this.handleRoomWelcome = null; // called when you enter a new room.
-        this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
-        this.noteOffHandler = null;
+        //this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
+        //this.noteOffHandler = null;
         this.handleUserLeave = null;
         this.handleUserAllNotesOff = null;
         this.handleAllNotesOff = null;
@@ -281,8 +281,8 @@ class DigifuApp {
         this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
         this.resetBeatPhaseOnNextNote = false;
         if (this.monitoringType == eMonitoringType.Local) {
-            this.synth.NoteOn(this.myInstrument, note, velocity);
-            this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
+            this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity);
+            //this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
         }
     };
 
@@ -291,8 +291,8 @@ class DigifuApp {
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendNoteOff(note);
         if (this.monitoringType == eMonitoringType.Local) {
-            this.synth.NoteOff(this.myInstrument, note);
-            this.noteOffHandler(this.myUser, this.myInstrument, note);
+            this.synth.NoteOff(this.myUser, this.myInstrument, note);
+            //this.noteOffHandler(this.myUser, this.myInstrument, note);
         }
     };
 
@@ -318,7 +318,7 @@ class DigifuApp {
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendPedalUp();
         if (this.monitoringType == eMonitoringType.Local) {
-            this.synth.PedalUp(this.myInstrument);
+            this.synth.PedalUp(this.myUser, this.myInstrument);
         }
     };
 
@@ -519,8 +519,8 @@ class DigifuApp {
             }
         }
 
-        this.synth.NoteOn(foundInstrument.instrument, note, velocity);
-        this.noteOnHandler(foundUser.user, foundInstrument.instrument, note, velocity);
+        this.synth.NoteOn(foundUser.user, foundInstrument.instrument, note, velocity);
+        //this.noteOnHandler(foundUser.user, foundInstrument.instrument, note, velocity);
     };
 
     NET_OnNoteOff(userID, note) {
@@ -535,8 +535,8 @@ class DigifuApp {
                 return;
             }
         }
-        this.synth.NoteOff(foundInstrument.instrument, note);
-        this.noteOffHandler(foundUser.user, foundInstrument.instrument, note);
+        this.synth.NoteOff(foundUser.user, foundInstrument.instrument, note);
+        //this.noteOffHandler(foundUser.user, foundInstrument.instrument, note);
     };
 
     NET_OnUserAllNotesOff(userID) {
@@ -567,6 +567,8 @@ class DigifuApp {
 
     NET_OnPedalUp(userID) {
         if (!this.roomState) return;
+        let foundUser = this.roomState.FindUserByID(userID);
+        if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
         if (!foundInstrument) return;
 
@@ -575,7 +577,8 @@ class DigifuApp {
                 return;
             }
         }
-        this.synth.PedalUp(foundInstrument.instrument);
+
+        this.synth.PedalUp(foundUser.user, foundInstrument.instrument);
     };
 
     //
@@ -1023,8 +1026,8 @@ class DigifuApp {
         this.myUser.color = userColor;
 
         this.stateChangeHandler = stateChangeHandler;
-        this.noteOnHandler = noteOnHandler;
-        this.noteOffHandler = noteOffHandler;
+        //this.noteOnHandler = noteOnHandler;
+        //this.noteOffHandler = noteOffHandler;
         this.handleUserLeave = handleUserLeave;
         this.handleAllNotesOff = handleAllNotesOff;
         this.handleUserAllNotesOff = handleUserAllNotesOff;
@@ -1053,7 +1056,10 @@ class DigifuApp {
 
         this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress, () => {
             this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
-        });
+        },
+        noteOnHandler,
+        noteOffHandler
+        );
         this.net.Connect(this, roomKey, google_access_token);
     };
 

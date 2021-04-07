@@ -274,6 +274,7 @@ class MiniFMSynthVoice {
 
     get IsPlaying() {
         if (!this.isConnected) return false;
+        if (!this.midiNote) return false;
         return this.oscillators.some(o => o.IsPlaying);
     }
 

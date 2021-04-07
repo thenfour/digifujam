@@ -453,7 +453,7 @@ class sfzVoice {
     // used to match note on to note off.
     get IsPlaying() {
         if (!this.isConnected) return false;
-        if (this.timestamp) return true; // note is definitely playing.
+        if (this.timestamp && this.midiNote) return true; // note is definitely playing.
     }
 
     GetAvailabilityScore() {
@@ -717,7 +717,10 @@ class sfzVoice {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class sfzInstrument {
-    constructor(audioCtx, dryDestination, verbDestination, delayDestination, instrumentSpec, sampleLibrarian, onLoadProgress) {
+    constructor(audioCtx, dryDestination, verbDestination, delayDestination, instrumentSpec, sampleLibrarian, onLoadProgress, noteOnHandler, noteOffHandler) {
+        this.noteOnHandler = noteOnHandler;
+        this.noteOffHandler = noteOffHandler;
+
         this.audioCtx = audioCtx;
         this.dryDestination = dryDestination;
         this.verbDestination = verbDestination;
@@ -897,7 +900,7 @@ class sfzInstrument {
         ];
     }
 
-    NoteOn(midiNote, velocity) {
+    NoteOn(user, midiNote, velocity) {
         if (!this.connect()) return;
 
         const velcurve = this.instrumentSpec.GetParamByID("velCurve").currentValue;
@@ -924,7 +927,11 @@ class sfzInstrument {
             sfzRegion,
             voiceIndex: bestVoiceIndex
         });
+        if (this.voices[bestVoiceIndex].IsPlaying) {
+            this.noteOffHandler(user, this.instrumentSpec, this.voices[bestVoiceIndex].midiNote);
+        }
         this.voices[bestVoiceIndex].physicalAndMusicalNoteOn(sfzRegion, midiNote, velocity, this.childDestinations);
+        this.noteOnHandler(user, this.instrumentSpec, midiNote);
 
         // handle off_by
         //- group=1 off_by=1 polyphony
@@ -935,6 +942,7 @@ class sfzInstrument {
                 if (vi == bestVoiceIndex) return;
                 if (v.sfzRegion && ('off_by' in v.sfzRegion) && (v.sfzRegion.off_by == group) && v.midiNote) {
                     //console.log(`off_by ${v.midiNote}`);
+                    this.noteOffHandler(user, this.instrumentSpec, v.midiNote);
                     v.musicallyRelease(true);
                     //this.NoteOff(v.midiNote, true);
                 }
@@ -942,7 +950,7 @@ class sfzInstrument {
         }
     };
 
-    NoteOff(midiNote, offBecauseGroup) {
+    NoteOff(user, midiNote, offBecauseGroup) {
         if (!this.connect()) return;
         midiNote += this.instrumentSpec.transpose || 0;
         this.physicallyHeldNotes.removeIf(n => n.note === midiNote);
@@ -950,6 +958,7 @@ class sfzInstrument {
 
         let v = this.voices.find(v => v.midiNote == midiNote && v.IsPlaying);
         if (v) {
+            this.noteOffHandler(user, this.instrumentSpec, v.midiNote);
             v.musicallyRelease(offBecauseGroup);
         }
     };
@@ -959,12 +968,13 @@ class sfzInstrument {
         this.isSustainPedalDown = true;
     };
 
-    PedalUp() {
+    PedalUp(user) {
         if (!this.connect()) return;
         this.isSustainPedalDown = false;
         // for each voice that's NOT physically held, but is playing, release the note.
         this.voices.forEach((v, vindex) => {
             if (v.IsPlaying && !this.VoiceIsPhysicalyHeld(vindex)) {
+                this.noteOffHandler(user, this.instrumentSpec, v.midiNote);
                 v.musicallyRelease();
             }
         });

@@ -13,7 +13,6 @@ class DigifuSynth {
 		this.instruments = {};
 
 		this.instrumentSpecs = null;
-		//this.internalMasterGain = null;
 
 		this._isMuted = false;
 		this.sampleLibrarian = null;
@@ -57,14 +56,14 @@ class DigifuSynth {
 		this._isMuted = !!val;
 	}
 
-	NoteOn(instrumentSpec, note, velocity) {
+	NoteOn(user, instrumentSpec, note, velocity) {
 		if (this._isMuted || instrumentSpec.isMuted) return;
-		this.instruments[instrumentSpec.instrumentID].NoteOn(note, velocity);
+		this.instruments[instrumentSpec.instrumentID].NoteOn(user, note, velocity);
 	};
 
-	NoteOff(instrumentSpec, note) {
+	NoteOff(user, instrumentSpec, note) {
 		if (this._isMuted || instrumentSpec.isMuted) return;
-		this.instruments[instrumentSpec.instrumentID].NoteOff(note);
+		this.instruments[instrumentSpec.instrumentID].NoteOff(user, note);
 	};
 
 	AllNotesOff(instrumentSpec) {
@@ -81,9 +80,9 @@ class DigifuSynth {
 		this.instruments[instrumentSpec.instrumentID].AllNotesOff();
 	};
 
-	PedalUp(instrumentSpec) {
+	PedalUp(user, instrumentSpec) {
 		if (this._isMuted || instrumentSpec.isMuted) return;
-		this.instruments[instrumentSpec.instrumentID].PedalUp();
+		this.instruments[instrumentSpec.instrumentID].PedalUp(user);
 	};
 
 	PedalDown(instrumentSpec) {
@@ -134,10 +133,14 @@ class DigifuSynth {
 		instrumentSpecs.forEach(spec => {
 			switch (spec.engine) {
 				case "minifm":
-					this.instruments[spec.instrumentID] = new FMPolySynth.FMPolySynth(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, (c, s) => new FMVoice.MiniFMSynthVoice(c, s));
+					this.instruments[spec.instrumentID] = new FMPolySynth.FMPolySynth(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, (c, s) => new FMVoice.MiniFMSynthVoice(c, s),
+						this.noteOnHandler,
+						this.noteOffHandler);
 					break;
 				case "sfz":
-					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog));
+					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog),
+					this.noteOnHandler,
+					this.noteOffHandler);
 					break;
 				case "mixingdesk":
 					this.instruments[spec.instrumentID] = new MixingDeskInstrument(this.audioCtx, spec, this.masterDelay, this.delayDryGain, this.delayVerbGain);
@@ -165,12 +168,16 @@ class DigifuSynth {
 	}
 
 	// call as a sort of ctor
-	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress, onLoadComplete) {
+	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress, onLoadComplete, noteOnHandler, noteOffHandler) {
 		console.assert(!this.audioCtx); // don't init more than once
 
 		this.onInstrumentLoadProgress = onInstrumentLoadProgress;
 		this.roomStateGetter = roomStateGetter;
 		this.sampleLibrarian = new DFSynthTools.SampleCache(audioCtx);
+
+		// these get called when note ons / note offs are invoked from synths
+		this.noteOnHandler = noteOnHandler;
+		this.noteOffHandler = noteOffHandler;
 
 		this.audioCtx = audioCtx;
 		if (!this.audioCtx.createReverbFromUrl) {

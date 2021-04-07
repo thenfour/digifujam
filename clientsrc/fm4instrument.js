@@ -8,7 +8,10 @@ const GLOBAL_FM4_GAIN = 0.2;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class FMPolySynth {
-    constructor(audioCtx, dryDestination, verbDestination, delayDestination, instrumentSpec, createVoiceFn) {
+    constructor(audioCtx, dryDestination, verbDestination, delayDestination, instrumentSpec, createVoiceFn, noteOnHandler, noteOffHandler) {
+        this.noteOnHandler = noteOnHandler;
+        this.noteOffHandler = noteOffHandler;
+
         this.audioCtx = audioCtx;
         this.dryDestination = dryDestination;
         this.verbDestination = verbDestination;
@@ -244,7 +247,7 @@ class FMPolySynth {
 
 
     // sent when there's a MIDI note on event.
-    NoteOn(midiNote, velocity) {
+    NoteOn(user, midiNote, velocity) {
         if (!this.isConnected) this.connect();
 
         if (this.instrumentSpec.GetParamByID("lfo1_trigMode").currentValue == 1) {
@@ -278,30 +281,44 @@ class FMPolySynth {
                     }
                 }
             }
+            if (this.voices[suitableVoiceIndex].IsPlaying) {
+                this.noteOffHandler(user, this.instrumentSpec, this.voices[suitableVoiceIndex].midiNote);
+            }
             this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
             this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, false);
+            this.noteOnHandler(user, this.instrumentSpec, midiNote);
         } else {
             // monophonic always just uses the 1st voice.
             suitableVoiceIndex = 0;
 
             let isLegato = this.physicallyHeldNotes.length > 0;
+            if (this.voices[0].midiNote) {
+                this.noteOffHandler(user, this.instrumentSpec, this.voices[0].midiNote);
+            }
             this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
             this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, isLegato);
+            this.noteOnHandler(user, this.instrumentSpec, midiNote);
         }
     }
 
-    NoteOff(midiNote) {
+    NoteOff(user, midiNote) {
         if (!this.isConnected) this.connect();
 
         this.physicallyHeldNotes.removeIf(n => n[0] == midiNote);
+
         if (this.isSustainPedalDown) return;
 
         if (this.isPoly) {
             let v = this.voices.find(v => v.midiNote == midiNote && v.IsPlaying);
             if (!v) return;
             v.musicallyRelease(midiNote);
+            this.noteOffHandler(user, this.instrumentSpec, midiNote);
             return;
         }
+
+        // mono...
+
+        this.noteOffHandler(user, this.instrumentSpec, midiNote);
 
         // monophonic doesn't need a search.
         if (this.physicallyHeldNotes.length == 0) {
@@ -309,7 +326,7 @@ class FMPolySynth {
             return;
         }
 
-        // if the note off is'nt the one the voice is currently playing then nothing else needs to be done.
+        // if the note off isn't the one the voice is currently playing then nothing else needs to be done.
         if (midiNote != this.voices[0].midiNote) {
             return;
         }
@@ -318,6 +335,7 @@ class FMPolySynth {
         // and decide whether to trigger envelopes based on trigger behavior.
         let n = this.physicallyHeldNotes[this.physicallyHeldNotes.length - 1];
         this.voices[0].physicalAndMusicalNoteOn(n[0], n[1], true);
+        this.noteOnHandler(user, this.instrumentSpec, n[0]);
     }
 
     PedalDown() {
@@ -329,13 +347,14 @@ class FMPolySynth {
         return this.physicallyHeldNotes.find(x => x[2] == voiceIndex) != null;
     }
 
-    PedalUp() {
+    PedalUp(user) {
         if (!this.isConnected) this.connect();
         this.isSustainPedalDown = false;
         // for each voice that's NOT physically held, but is playing, release the note.
         this.voices.forEach((v, vindex) => {
             if (v.IsPlaying && !this.VoiceIsPhysicalyHeld(vindex)) {
                 //console.log(`musically release note ${v.midiNote}`);
+                this.noteOffHandler(user, this.instrumentSpec, v.midiNote);
                 v.musicallyRelease(v.midiNote);
             }
         });

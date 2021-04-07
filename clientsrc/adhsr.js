@@ -196,7 +196,7 @@ function ADSRNode(ctx, opts) {
         if (lastTrigger !== false) {
             if (when < lastTrigger.when)
                 throw new Error('[ADSRNode] Cannot trigger before future trigger');
-            console.log(`ADSR trigger releasing`);
+            //console.log(`ADSR trigger releasing`);
             this.release(when);
         }
         var v = base;
