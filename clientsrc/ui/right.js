@@ -2332,7 +2332,7 @@ class RootArea extends React.Component {
     }
 
     onClickMute = () => {
-        this.state.app.synth.isMuted = !this.state.app.synth.isMuted;
+        this.state.app.SetMuted(!this.state.app.IsMuted());
         gStateChangeHandler.OnStateChange();
     };
 
@@ -2379,9 +2379,9 @@ class RootArea extends React.Component {
                         {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                         {this.state.app && this.state.app.synth &&
                             <span>
-                                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.app.synth.masterGain * 100} disabled={this.state.app.synth.isMuted} />
+                                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.state.app.synth.masterGain * 100} disabled={this.state.app.IsMuted()} />
                                 <label htmlFor="volume">gain:{Math.trunc(this.state.app.synth.masterGain * 100)}</label>
-                                <button className="muteButton" onClick={this.onClickMute}>{this.state.app.synth.isMuted ? "🔇" : "🔊"}</button>
+                                <button className="muteButton" onClick={this.onClickMute}>{this.state.app.IsMuted() ? "🔇" : "🔊"}</button>
                             </span>
                         }
                     </span>

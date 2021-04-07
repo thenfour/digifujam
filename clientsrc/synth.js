@@ -6,6 +6,40 @@ const FMVoice = require("./fm4voice");
 const MixingDeskInstrument = require("./MixingDeskInstrument");
 const sfzInstrument = require('./sfzInstrument')
 
+
+// when you mute the synth engine, note ons and offs don't flow through synths to drive the keyboard view.
+// so when muted, we use this to drive keyboard view.
+
+// TODO: deal with sustain pedal
+class FallbackNoteOnTracker {
+	constructor(noteOnHandler, noteOffHandler) {
+		this.noteOnHandler = noteOnHandler;
+		this.noteOffHandler = noteOffHandler;
+	}
+
+	AllNotesOff() {
+		//
+	}
+
+	NoteOn(user, instrumentSpec, note) {
+		this.noteOnHandler(user, instrumentSpec, note);
+	}
+
+	NoteOff(user, instrumentSpec, note) {
+		this.noteOffHandler(user, instrumentSpec, note);
+	}
+
+	PedalUp(user, instrumentSpec) {
+
+	}
+
+	PedalDown(user, instrumentSpec) {
+
+	}
+};
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DigifuSynth {
 	constructor() {
@@ -50,23 +84,29 @@ class DigifuSynth {
 				this.instruments[k].disconnect();
 			});
 		} else {
-			 this.masterGainNode.connect(this.audioCtx.destination);
-			 // don't connect instruments because they're connect as needed.
-		 }
+			this.masterGainNode.connect(this.audioCtx.destination);
+			// don't connect instruments because they're connect as needed.
+		}
 		this._isMuted = !!val;
 	}
 
 	NoteOn(user, instrumentSpec, note, velocity) {
-		if (this._isMuted || instrumentSpec.isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) {
+			this.fallbackNoteOnTracker.NoteOn(user, instrumentSpec, note);
+			return;
+		}
 		this.instruments[instrumentSpec.instrumentID].NoteOn(user, note, velocity);
 	};
 
 	NoteOff(user, instrumentSpec, note) {
-		if (this._isMuted || instrumentSpec.isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) {
+			this.fallbackNoteOnTracker.NoteOff(user, instrumentSpec, note);
+		}
 		this.instruments[instrumentSpec.instrumentID].NoteOff(user, note);
 	};
 
 	AllNotesOff(instrumentSpec) {
+		this.fallbackNoteOnTracker.AllNotesOff();
 		if (this._isMuted) return;
 		if (!instrumentSpec) {
 			// do for all instruments.
@@ -81,12 +121,18 @@ class DigifuSynth {
 	};
 
 	PedalUp(user, instrumentSpec) {
-		if (this._isMuted || instrumentSpec.isMuted) return;
+		if (this._isMuted || instrumentSpec.isMuted) {
+			this.fallbackNoteOnTracker.PedalUp(user, instrumentSpec);
+			return;
+		}
 		this.instruments[instrumentSpec.instrumentID].PedalUp(user);
 	};
 
-	PedalDown(instrumentSpec) {
-		if (this._isMuted || instrumentSpec.isMuted) return;
+	PedalDown(user, instrumentSpec) {
+		if (this._isMuted || instrumentSpec.isMuted) {
+			this.fallbackNoteOnTracker.PedalDown(user, instrumentSpec);
+			return;
+		}
 		this.instruments[instrumentSpec.instrumentID].PedalDown();
 	};
 
@@ -139,8 +185,8 @@ class DigifuSynth {
 					break;
 				case "sfz":
 					this.instruments[spec.instrumentID] = new sfzInstrument.sfzInstrument(this.audioCtx, this.masterGainNode, this.masterReverb, this.masterDelay, spec, this.sampleLibrarian, prog => this.onInstrumentLoadProgress(spec, prog),
-					this.noteOnHandler,
-					this.noteOffHandler);
+						this.noteOnHandler,
+						this.noteOffHandler);
 					break;
 				case "mixingdesk":
 					this.instruments[spec.instrumentID] = new MixingDeskInstrument(this.audioCtx, spec, this.masterDelay, this.delayDryGain, this.delayVerbGain);
@@ -171,6 +217,8 @@ class DigifuSynth {
 	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress, onLoadComplete, noteOnHandler, noteOffHandler) {
 		console.assert(!this.audioCtx); // don't init more than once
 
+		this.fallbackNoteOnTracker = new FallbackNoteOnTracker(noteOnHandler, noteOffHandler);
+
 		this.onInstrumentLoadProgress = onInstrumentLoadProgress;
 		this.roomStateGetter = roomStateGetter;
 		this.sampleLibrarian = new DFSynthTools.SampleCache(audioCtx);
@@ -190,14 +238,14 @@ class DigifuSynth {
 		this.masterReverb = this.audioCtx.createReverbFromUrl("./reaper_stems_MidiverbMark2Preset29.m4a", () => { ////./MidiverbMark2Preset29.m4a", () => { // ./LadyChapelStAlbansCathedral.m4a
 
 			/*
-			                                                                     [metronomeGainNode] --->
+																				 [metronomeGainNode] --->
 			 (instruments) -----------------------------------------------------------------------------> [masterGainNode] -->  (destination)
-			               --------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
-                                                                      .>
-                                                                     /
-										         .>[delayVerbGain]--'
-                                                |
-			               ---> [masterDelay] -`---[delayDryGain]--------------------------------------->
+						   --------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
+																	  .>
+																	 /
+												 .>[delayVerbGain]--'
+												|
+						   ---> [masterDelay] -`---[delayDryGain]--------------------------------------->
 			*/
 
 			this.masterGainNode = this.audioCtx.createGain("master");
@@ -212,9 +260,6 @@ class DigifuSynth {
 			this.delayDryGain = this.audioCtx.createGain("masterDelay");
 
 			this.masterDelay = this.audioCtx.createDFDelayNode("masterDelay", [this.delayVerbGain, this.delayDryGain]);
-
-			// this.masterDelay.connect();
-			// this.masterDelay.connect();
 
 			this.delayVerbGain.connect(this.masterReverb);
 			this.delayDryGain.connect(this.masterGainNode);

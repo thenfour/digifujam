@@ -126,20 +126,6 @@ class DFOptionsDialog extends React.Component {
         this.props.stateChangeHandler.OnStateChange();
     }
 
-    // setVolumeVal = (v) => {
-    //     let realVal = parseFloat(v.target.value) / 100;
-    //     this.props.app.synth.masterGain = realVal;
-    //     this.props.stateChangeHandler.OnStateChange();
-    // }
-
-    // onClickMute = () => {
-    //     // this op takes a while so do async
-    //     setTimeout(() => {
-    //         this.props.app.synth.isMuted = !this.props.app.synth.isMuted;
-    //         this.props.stateChangeHandler.OnStateChange();
-    //     }, 0);
-    // };
-
     onSetMonitoringType(mt) {
         this.props.app.setMonitoringType(mt);
         this.setState({});
@@ -236,9 +222,8 @@ class DFOptionsDialog extends React.Component {
 
         let buttonCaption = <span className="optionsBtnContent">
             <span>Settings</span>
-            {/* <span className="masterMuteIndicator">{this.props.app.synth.isMuted ? " 🔇" : " 🔊"}</span> */}
             {!!this.state.quantizationIndex && <span className="quantIndicator">Quant=<span className={this.quantizationOptions[this.state.quantizationIndex].cssClass}>{this.quantizationOptions[this.state.quantizationIndex].caption}</span></span>}
-            {!this.props.app.metronome.isMuted && !this.props.app.synth.isMuted && <span className="metronomeIndicator">🔺</span>}
+            {!this.props.app.metronome.isMuted && !this.props.app.IsMuted() && <span className="metronomeIndicator">🔺</span>}
             {!!this.props.app.myInstrument && <span className="monitoringIndicator">Monitoring:{monitoringCaption}</span>}
         </span>;
 
@@ -248,16 +233,6 @@ class DFOptionsDialog extends React.Component {
 
                 {this.state.isExpanded &&
                     <div className="optionsDialog">
-
-                        {/* <div className="component">
-                            <h2>Master volume</h2>
-                            <div>
-                                <input type="range" id="volume" name="volume" min="0" max="200" onChange={this.setVolumeVal} value={this.props.app.synth.masterGain * 100} disabled={this.props.app.synth.isMuted} />
-                                <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
-                                <button className="muteButton" onClick={this.onClickMute}>{this.props.app.synth.isMuted ? "🔇" : "🔊"}</button>
-                            </div>
-                        </div>
- */}
                         <div className="component">
                             <h2>Pitch bend</h2>
                             <div>
@@ -330,9 +305,9 @@ class DFOptionsDialog extends React.Component {
                             <h2>Metronome</h2>
                             <div className="helpText">Only you will hear the metronome.</div>
                             <div>
-                                <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.synth.isMuted || this.props.app.metronome.isMuted} />
+                                <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.IsMuted() || this.props.app.metronome.isMuted} />
                                 <label htmlFor="metronomeVolume">volume: {Math.trunc(this.props.app.synth.metronomeGain * 100)}</label>
-                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.synth.isMuted) ? "⚪" : "🔺"}</button>
+                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.IsMuted()) ? "⚪" : "🔺"}</button>
                             </div>
                         </div>
 

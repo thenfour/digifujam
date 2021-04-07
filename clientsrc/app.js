@@ -301,7 +301,7 @@ class DigifuApp {
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendPedalDown();
         if (this.monitoringType == eMonitoringType.Local) {
-            this.synth.PedalDown(this.myInstrument);
+            this.synth.PedalDown(this.myUser, this.myInstrument);
         }
     };
 
@@ -546,6 +546,8 @@ class DigifuApp {
 
     NET_OnPedalDown(userID) {
         if (!this.roomState) return;
+        let foundUser = this.roomState.FindUserByID(userID);
+        if (!foundUser) return;
         let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
         if (!foundInstrument) return;
 
@@ -554,7 +556,7 @@ class DigifuApp {
                 return;
             }
         }
-        this.synth.PedalDown(foundInstrument.instrument);
+        this.synth.PedalDown(foundUser.user, foundInstrument.instrument);
     };
 
     NET_OnPedalUp(userID) {
@@ -1012,6 +1014,15 @@ class DigifuApp {
         this.net.SendAdjustBeatPhase(relativeMS);
     }
 
+    IsMuted() {
+        return this.synth.isMuted;
+    }
+
+    SetMuted(b) {
+        this.synth.isMuted = b;
+        this.handleAllNotesOff();
+    }
+
     Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
@@ -1049,8 +1060,8 @@ class DigifuApp {
         this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress, () => {
             this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
         },
-        noteOnHandler,
-        noteOffHandler
+            noteOnHandler,
+            noteOffHandler
         );
         this.net.Connect(this, roomKey, google_access_token);
     };
