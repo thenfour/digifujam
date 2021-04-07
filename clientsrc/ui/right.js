@@ -1867,7 +1867,7 @@ class AnnouncementArea extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
-        let html = this.props.app.roomState.announcementHTML;
+        let html = this.props.app.roomState.announcementHTML || "";
         const countdownPrefix = "{{countdown:";
         const countdownSuffix = "}}";
         let begin = html.indexOf(countdownPrefix);
