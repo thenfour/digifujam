@@ -49,7 +49,7 @@ const ADSREnvelope = require("adsr-envelope");
 const DFSynthTools = require("./synthTools");
 const DFU = require('./dfutil');
 
-const GLOBAL_SFZ_GAIN = 0.2;
+const GLOBAL_SFZ_GAIN = 0.5;
 
 class ProgressSpec {
     constructor(progressCallback) {

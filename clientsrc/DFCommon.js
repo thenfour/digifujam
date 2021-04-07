@@ -1458,7 +1458,7 @@ class DigifuRoomState {
         this.users = [];
         this.chatLog = []; // ordered by time asc
         this.roomItems = [];
-        this.internalMasterGain = 1.0;
+        //this.internalMasterGain = 1.0;
         //this.img = null;
         this.bpm = 55;
         this.width = 16;

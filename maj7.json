@@ -6,7 +6,6 @@
   "width": 1750,
   "height": 1280,
   "bpm": 100,
-  "internalMasterGain": 5.0,
   "announcementHTML": "",
   "roomItems": [
     {
@@ -432,6 +431,7 @@
       "sfzArray": [
         {
           "sfzURL": "/sfz/G83 SynCaliope/G83 SynCaliope.sfz.json",
+          "gain": 1,
           "name": "G83 SynCaliope",
           "sfzExtendRange": true,
           "sfzPatch": {
@@ -446,6 +446,7 @@
         },
         {
           "sfzExtendRange": true,
+          "gain": 1.5,
           "sfzURL": "/sfz/GM-153-Shakuhachi/GM-153-Shakuhachi.sfz.json",
           "name": "GM-153-Shakuhachi",
           "sfzPatch": {

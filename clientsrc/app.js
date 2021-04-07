@@ -387,7 +387,7 @@ class DigifuApp {
         });
 
         // connect instruments to synth
-        this.synth.InitInstruments(this.roomState.instrumentCloset, this.roomState.internalMasterGain);
+        this.synth.InitInstruments(this.roomState.instrumentCloset);
 
         //set metronome bpm to the room bpm
         //this.metronome.bpm = this.roomState.bpm;
@@ -1051,8 +1051,9 @@ class DigifuApp {
             this.audioCtx.endScope = () => { };
         }
 
-        this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress);
-        this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
+        this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress, () => {
+            this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
+        });
         this.net.Connect(this, roomKey, google_access_token);
     };
 

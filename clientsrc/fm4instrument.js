@@ -3,6 +3,8 @@
 const DF = require("./DFCommon");
 const DFU = require('./dfutil');
 
+const GLOBAL_FM4_GAIN = 0.2;
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class FMPolySynth {
@@ -353,7 +355,7 @@ class FMPolySynth {
 
     // returns [drygain, verbgain, delaygain]
     getGainLevels() {
-        const mainMul = this.instrumentSpec.GetParamByID("masterGain").currentValue * DFU.DBToLinear(this.instrumentSpec.GetParamByID("mixerGainDB").currentValue);
+        const mainMul = GLOBAL_FM4_GAIN * this.instrumentSpec.GetParamByID("masterGain").currentValue * DFU.DBToLinear(this.instrumentSpec.GetParamByID("mixerGainDB").currentValue);
         let verbMul = this.instrumentSpec.GetParamByID("verbMix").currentValue;
         let delayMul = this.instrumentSpec.GetParamByID("delayMix").currentValue;
         // when verb mix is 0, drygain is the real master gain.

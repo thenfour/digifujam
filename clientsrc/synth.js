@@ -13,7 +13,7 @@ class DigifuSynth {
 		this.instruments = {};
 
 		this.instrumentSpecs = null;
-		this.internalMasterGain = null;
+		//this.internalMasterGain = null;
 
 		this._isMuted = false;
 		this.sampleLibrarian = null;
@@ -127,9 +127,9 @@ class DigifuSynth {
 	}
 
 	// call when you have a list of instruments
-	InitInstruments(instrumentSpecs, internalMasterGain) {
+	InitInstruments(instrumentSpecs) {
 		this.instrumentSpecs = instrumentSpecs;
-		this.internalMasterGain = internalMasterGain;
+		//this.internalMasterGain = internalMasterGain;
 		this.UninitInstruments();
 		instrumentSpecs.forEach(spec => {
 			switch (spec.engine) {
@@ -165,7 +165,7 @@ class DigifuSynth {
 	}
 
 	// call as a sort of ctor
-	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress) {
+	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress, onLoadComplete) {
 		console.assert(!this.audioCtx); // don't init more than once
 
 		this.onInstrumentLoadProgress = onInstrumentLoadProgress;
@@ -213,6 +213,8 @@ class DigifuSynth {
 			this.delayDryGain.connect(this.masterGainNode);
 
 			this.masterReverb.connect(this.masterGainNode);
+
+			onLoadComplete();
 		});
 	};
 };

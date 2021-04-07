@@ -214,7 +214,7 @@ button:focus {
 .headerArea {
     padding: 3px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 .headerArea>span {
     margin:0;
@@ -1115,13 +1115,14 @@ li.floatParam.expanded.hasMapping
 .socicon {
     height: 24px;
     fill: #0aa;
-    margin-left: 8px;
-    margin-right: 8px;
+    margin-left: 12px;
+    margin-right: 12px;
 }
 
 .logoTxt {
     font-size: medium;
     font-weight: bold;
+    margin-right: 16px;
 }
 
 .signinScreen {
@@ -1214,6 +1215,7 @@ button.stayLoggedIn:hover {
 
 }
 
+.creditsDialog,
 .optionsDialog {
     padding: 10px;
     position: absolute;
@@ -1227,6 +1229,7 @@ button.stayLoggedIn:hover {
     border-top-left-radius:0;
 }
 
+.creditsButton,
 .optionsButton {
     background-color: #033;
     padding: 4px;
@@ -1238,6 +1241,21 @@ button.stayLoggedIn:hover {
     padding-right: 10px;
     cursor: pointer;
 }
+
+.creditsDialog pre {
+    font-size:medium;
+}
+
+.creditsButton {
+    color: #099;
+    border: 0;
+}
+
+.creditsButton.expanded {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 
 .optionsButton:hover {
     background-color: #055;

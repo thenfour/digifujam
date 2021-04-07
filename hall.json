@@ -5,9 +5,6 @@
   "img": "./roomart/DigifuJam_Hallway2_1920x1080.jpg",
   "width": 1920,
   "height": 1080,
-  "bpm": 0,
-  "internalMasterGain": 2.0,
-  "announcementHTML": "yep.",
   "roomItems": [
     {
       "itemID": "doorToPub",

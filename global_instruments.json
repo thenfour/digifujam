@@ -196,9 +196,10 @@
           "name": "Master gain",
           "groupName": "master",
           "parameterType": "floatParam",
+          "valueCurve": 2.5,
           "minValue": 0.0,
-          "maxValue": 1.0,
-          "defaultValue": 0.5
+          "maxValue": 2,
+          "defaultValue": 1.0
         },
         {
           "paramID": "verbMix",
@@ -1620,9 +1621,10 @@
           "name": "Master gain",
           "groupName": "master",
           "parameterType": "floatParam",
+          "valueCurve": 2.5,
           "minValue": 0.0,
-          "maxValue": 3.0,
-          "defaultValue": 0.5
+          "maxValue": 2,
+          "defaultValue": 1.0
         },
         {
           "paramID": "verbMix",
