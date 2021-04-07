@@ -530,8 +530,8 @@ class DigifuInstrumentSpec {
                 supportsMapping: false,
                 minValue: -1.0,
                 maxValue: 1.0,
-                currentValue: 0,
-                rawValue: 0
+                currentValue: 1,
+                rawValue: 1
             });
             //console.log(`created mappingRange param: ${mappingRange.paramID}`);
             this.params.push(mappingRange);
@@ -541,14 +541,14 @@ class DigifuInstrumentSpec {
 
     createParamMappingFromMacro(param, macroIndex) {
         let params = this.ensureParamMappingParams(param, eParamMappingSource.Macro0 + macroIndex);
-        params.mappingRange.currentValue = 0;
-        params.mappingRange.rawValue = 0;
+        params.mappingRange.currentValue = 1;
+        params.mappingRange.rawValue = 1;
     }
 
     createParamMappingFromCC(param, cc) {
         let params = this.ensureParamMappingParams(param, cc);
-        params.mappingRange.currentValue = 0;
-        params.mappingRange.rawValue = 0;
+        params.mappingRange.currentValue = 1;
+        params.mappingRange.rawValue = 1;
     }
 
     // returns a patchObj which the caller should apply updates with, including on this instrument.
@@ -895,11 +895,7 @@ class DigifuInstrumentSpec {
     // call when this instrument ownership is being released to reset some params. must be called from both server & client to keep things in sync.
     ReleaseOwnership() {
         this.controlledByUserID = null;
-        // - set pb and all CC values to 0 when instrument release/take
-        this.params.removeIf(p => {
-            if (p.midiCC) return true;
-            return false;
-        });
+
         const pb = this.GetParamByID("pb");
         if (pb) {
             pb.currentValue = 0;

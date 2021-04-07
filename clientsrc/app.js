@@ -197,8 +197,6 @@ class DigifuApp {
 
         this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
         this.handleRoomWelcome = null; // called when you enter a new room.
-        //this.noteOnHandler = null; // (user, midiNote) callback to trigger animations
-        //this.noteOffHandler = null;
         this.handleUserLeave = null;
         this.handleUserAllNotesOff = null;
         this.handleAllNotesOff = null;
@@ -217,7 +215,6 @@ class DigifuApp {
         this.midi = new DFMidi.DigifuMidi();
         this.metronome = new DFMetronome.DigifuMetronome();
         this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
-        //this.isSelfMuted = false; // ability to mute yourself
 
         // monitoring your own playback
         this.monitoringType = eMonitoringType.Remote;
@@ -247,9 +244,6 @@ class DigifuApp {
 
     set pitchBendRange(val) {
         this._pitchBendRange = val;
-        // Object.keys(this.instruments).forEach(k => {
-        //     this.instruments[k].setPitchBendRange(val);
-        // });
     }
 
     _addChatMessage(msg) {
@@ -282,7 +276,6 @@ class DigifuApp {
         this.resetBeatPhaseOnNextNote = false;
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity);
-            //this.noteOnHandler(this.myUser, this.myInstrument, note, velocity);
         }
     };
 
@@ -292,7 +285,6 @@ class DigifuApp {
         this.net.SendNoteOff(note);
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.NoteOff(this.myUser, this.myInstrument, note);
-            //this.noteOffHandler(this.myUser, this.myInstrument, note);
         }
     };
 
