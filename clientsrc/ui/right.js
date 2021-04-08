@@ -11,6 +11,7 @@ const DFU = require('../dfutil');
 const DFOptionsDialog = require('./optionsDialog');
 const KeybDisplayState = require("./keybDisplayState");
 const CreditsButton = require("./CreditsButton");
+const SequencerMain = require("./SequencerMain");
 
 const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 
@@ -1794,7 +1795,6 @@ class ShortChatLog extends React.Component {
 
         return (
             <div className='shortChatLog'>
-                {/* <button className="switchChatView" onClick={this.props.onToggleView}>Switch view</button> */}
                 {lis}
             </div>
         );
@@ -1841,7 +1841,6 @@ class FullChatLog extends React.Component {
 
         return (
             <div className='fullChatLog'>
-                {/* <button className="switchChatView" onClick={this.props.onToggleView}>Switch view</button> */}
                 <ul style={{ height: "100%" }}>
                     {lis}
                 </ul>
@@ -2042,20 +2041,29 @@ class RoomArea extends React.Component {
             <DFSignIn.Connection app={this.props.app} handleConnect={this.props.handleConnect} handleDisconnect={this.props.handleDisconnect} />
         );
 
-        const switchViewButton = this.props.app && this.props.app.roomState && (<button className="switchChatView" onClick={this.toggleChatView}>chat/room view</button>);
+        const seqViewEnabled = this.props.app && this.props.app.roomState;
+
+        const switchViewButton = this.props.app && this.props.app.roomState && (
+            <div className="switchRoomViews">
+                <button className="switchChatView" onClick={this.toggleChatView}>room view</button>
+                <button className="switchChatView" onClick={this.toggleChatView}>chat view</button>
+                <button className="switchChatView" onClick={this.toggleChatView}>seq view</button>
+            </div>
+        );
 
         return (
             <div id="roomArea" className="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
+                {seqViewEnabled && <SequencerMain></SequencerMain>}
+
                 {userAvatars}
                 {roomItems}
-                { !this.state.showFullChat && <ShortChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
-                { this.state.showFullChat && <FullChatLog app={this.props.app} onToggleView={this.toggleChatView} />}
+                { !this.state.showFullChat && <ShortChatLog app={this.props.app} />}
+                { this.state.showFullChat && <FullChatLog app={this.props.app} />}
                 <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={this}></CheerControls>
                 {switchViewButton}
-
             </div>
         );
     }
