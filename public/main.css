@@ -139,7 +139,7 @@ button:focus {
 }
 
 @keyframes screenFadeOut {
-    10% { opacite: 100%}
+    10% { opacity: 100%}
     100% { opacity: 0%; }
 }
 
@@ -1223,7 +1223,7 @@ button.stayLoggedIn:hover {
     padding: 10px;
     position: absolute;
     z-index: 9991;
-    width: 400px;
+    width: 450px;
     background-color: #111111e8;
     text-align: left;
     box-sizing: content-box;
@@ -1244,6 +1244,11 @@ button.stayLoggedIn:hover {
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
+}
+
+.optionsButton {
+    width: 150px;
+
 }
 
 .creditsDialog pre {
@@ -1297,6 +1302,8 @@ button.quantizationOption {
     padding-top: 0;
     padding-bottom: 0;
     width:35px;
+
+
     /* font-size: 30px;
     line-height: 40px;
     height:40px; */
@@ -1327,6 +1334,7 @@ div.quantizationGroup {
 .headerArea span.quantizationValue
  {
     font-size: 30px;
+    height: 30px;
     /* line-height makes sure the text doesn't stretch the height of the container. */
     line-height: 0;
 }
@@ -1434,7 +1442,6 @@ li.updateAboveStuff {
 }
 
 .liveRoomBeat {
-    height:18px;
     background-color:#022;
     display:flex;
 }
@@ -1449,7 +1456,30 @@ li.updateAboveStuff {
     justify-content: center;
 }
 
+@keyframes liveRoomBeatFlash {
+    0% { background-color:#0ff; }
+    100% { background-color:#066; }
+}
+
 .liveRoomBeat .beat.complete {
     background-color: #066;
-    border-right:2px solid #0ff;
+    border-left:2px solid #0ff;
+    animation: liveRoomBeatFlash 0.2s;
 }
+
+.liveRoomBeat .beat.inProgress {
+    border-left:2px solid #0ff;
+}
+
+
+.optionsDialog fieldset {
+    border-radius: 6px;
+    border: 0;
+    background: linear-gradient(to bottom, #033, #022);
+    margin-bottom: 5px;
+}
+
+.optionsDialog fieldset div.legend {
+
+}
+

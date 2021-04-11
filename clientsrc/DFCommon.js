@@ -166,9 +166,9 @@ class DigifuUser {
 
         this.quantizeSpec = {
             beatDivision: 0,
-            swallowBoundary: 0.33,
+            swallowBoundary: 1.00,
             quantizeBoundary: 0.2,
-            quantizeAmt: 0.95,
+            quantizeAmt: 0.98,
         };
     }
 

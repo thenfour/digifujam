@@ -94,7 +94,7 @@ class SequencerMain extends React.Component {
                             90 : velocity
                         </fieldset>
                         <fieldset>
-                            <h2>Patterns</h2>
+                            <h2>Pattern</h2>
                             <div className="buttonArray">
                                 <button>A</button>
                                 <button>B</button>
