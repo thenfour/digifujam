@@ -6,6 +6,7 @@ const DFMidi = require("./midi");
 const DFMetronome = require("./metronome");
 const DFSynth = require("./synth");
 const DFNet = require("./net");
+const DFMusic = require("./DFMusic");
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -220,6 +221,8 @@ class DigifuApp {
         this.monitoringType = eMonitoringType.Remote;
 
         this.net = new DFNet.DigifuNet();
+
+        this.musicalTimeTracker = new DFMusic.MusicalTimeTracker();
 
         this.deviceNameList = [];
 
@@ -800,12 +803,16 @@ class DigifuApp {
     }
 
     NET_OnRoomBeat(data) {
-        // data.bpm
+        // data.bpm, data.beat, data.timeSig
         this.metronome.OnRoomBeat();
+        if (this.roomState) {
+            this.musicalTimeTracker.onRoomBeat(data.bpm, data.beat, this.roomState.timeSig);
+        }
     }
 
     NET_OnRoomBPMUpdate(data) {
         this.roomState.bpm = data.bpm;
+        this.roomState.timeSig = data.timeSig;
         this.stateChangeHandler();
         //this.metronome.setServerBPM(data.bpm);
     }
@@ -885,10 +892,8 @@ class DigifuApp {
         });
     };
 
-    SendRoomBPM(bpm) {
-        if (bpm != this.roomState.bpm) {
-            this.net.SendRoomBPM(bpm);
-        }
+    SendRoomBPM(bpm, timeSig) {
+        this.net.SendRoomBPM(bpm, timeSig);
     };
 
     SetQuantizationSpec(quantizeSpec) {
@@ -1014,6 +1019,10 @@ class DigifuApp {
         this.net.SendAdjustBeatPhase(relativeMS);
     }
 
+    AdjustBeatOffset(relativeBeats) {
+        this.net.SendAdjustBeatOffset(relativeBeats);
+    }
+
     IsMuted() {
         return this.synth.isMuted;
     }
@@ -1021,6 +1030,10 @@ class DigifuApp {
     SetMuted(b) {
         this.synth.isMuted = b;
         this.handleAllNotesOff();
+    }
+
+    getMusicalTime() {
+        return this.musicalTimeTracker.getCurrentMusicalTime();
     }
 
     Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {

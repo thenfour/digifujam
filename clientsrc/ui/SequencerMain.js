@@ -13,13 +13,30 @@ class SequencerMain extends React.Component {
 
     render() {
         const notes = PianoArea.gNotes.filter(k => k.midiNoteValue >= 24 && k.midiNoteValue <= 88).reverse();
+
         const keys = notes.map(k => (
             <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}>{k.name}</li>
         ));
 
-        const pianoRollRows = (divisionKey) => notes.map(k => (
-            <li key={divisionKey + "_" + k.midiNoteValue} className={k.cssClass}><div></div></li>
-        ));
+        const pianoRollRows = (divisionKey, iDivision, iBeat) => notes.map(k => {
+            let extraClass = k.midiNoteValue == 60 && iDivision == 0 ? "note" : null;
+            if (k.midiNoteValue == 63) {
+                extraClass = iBeat == 0 ? "note" : null;
+            }
+            if (k.midiNoteValue == 69) {
+                extraClass = iBeat > 0 ? "note" : null;
+            }
+            if (k.midiNoteValue == 72) {
+                extraClass = iBeat > 0 ? "note" : null;
+                extraClass += iDivision == 0 ? " noteOn" : " noteOff";
+            }
+            if (k.midiNoteValue == 74) {
+                extraClass = "note noteOn noteOff";
+            }
+            return (
+            <li key={divisionKey + "_" + k.midiNoteValue} className={extraClass + " " + k.cssClass}><div></div></li>
+        )}
+        );
 
         const divisions = [];
 
@@ -32,7 +49,7 @@ class SequencerMain extends React.Component {
                     const className = "pianoRollRows" + (measureBoundary ? " beginMeasure" : ((beatBoundary && !measureBoundary) ? " beginBeat" : ""));
                     divisions.push(
                         <ul key={key} className={className}>
-                            {pianoRollRows(key)}
+                            {pianoRollRows(key, iDivision, iBeat)}
                         </ul>);
                 }
             }
@@ -44,38 +61,25 @@ class SequencerMain extends React.Component {
                 <div className="sequencerMain">
                     <div className="seqTop">
                         <fieldset>
-                            <h2>Time sig</h2>
-                            <div className="buttonArray">
-                                <button>3/4</button>
-                                <button>4/4</button>
-                                <button>5/4</button>
-                                <button>6/8</button>
-                                <button>7/8</button>
-                            </div>
-                        </fieldset>
-                        <fieldset>
                             <h2>Transport</h2>
+                            {this.props.app.getMusicalTime().toString()}
                             <div className="buttonArray">
                                 <button>record</button>
                                 <button>play/stop</button>
                             </div>
+                        </fieldset>
+                        <fieldset>
+                            <h2>Offset</h2>
                             <div className="buttonArray">
-                                <button>record on next note</button>
-                                <button>set room tempo</button>
-                                <button>use existing room tempo</button>
+                                <button>-</button>
+                                <button>+</button>
                             </div>
                         </fieldset>
                         <fieldset>
-                            <h2>Pattern length (meas)</h2>
+                            <h2>Pattern length</h2>
                             <div className="buttonArray">
-                                <button>1</button>
-                                <button>2</button>
-                                <button>4</button>
-                                <button>8</button>
-                            </div>
-                            <div className="buttonArray">
-                                <button>double</button>
-                                <button>half</button>
+                                <button>+</button>
+                                <button>-</button>
                             </div>
                         </fieldset>
                         <fieldset>
@@ -88,8 +92,6 @@ class SequencerMain extends React.Component {
                         <fieldset>
                             <input type="range"></input>
                             90 : velocity
-                            <input type="range"></input>
-                            90 : swing
                         </fieldset>
                         <fieldset>
                             <h2>Patterns</h2>
@@ -107,7 +109,7 @@ class SequencerMain extends React.Component {
                             </div>
                         </fieldset>
 
-{/* 
+                        {/* 
                         <fieldset>
                             <h2>Selection</h2>
                             <div className="buttonArray">

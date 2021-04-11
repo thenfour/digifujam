@@ -1234,6 +1234,7 @@ button.stayLoggedIn:hover {
 
 .creditsButton,
 .optionsButton {
+    display:inline-block;
     background-color: #033;
     padding: 4px;
     border: 1px solid #066;
@@ -1432,3 +1433,23 @@ li.updateAboveStuff {
     border-bottom:2px dotted #077;
 }
 
+.liveRoomBeat {
+    height:18px;
+    background-color:#022;
+    display:flex;
+}
+
+.liveRoomBeat .beat {
+    height: 18px;
+    width: 30px;
+    background-color: transparent;
+    border: 2px solid #066;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.liveRoomBeat .beat.complete {
+    background-color: #066;
+    border-right:2px solid #0ff;
+}

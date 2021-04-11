@@ -19,6 +19,7 @@ let FrameToMS = f => {
 // keep BPM and beat info for the room on the server.
 class ServerRoomMetronome {
     constructor() {
+        this.beatOffset = 0;
         this.rootTime = Date.now();
         this.BPM = 95; // BPM is when denom = 4.
         this.beatRoutine = () => { };
@@ -51,6 +52,10 @@ class ServerRoomMetronome {
         this.resetTimer();
     }
 
+    OffsetBeats(relativeBeats) {
+        this.beatOffset += relativeBeats;
+    }
+
     getBPM() {
         return this.BPM;
     }
@@ -58,6 +63,7 @@ class ServerRoomMetronome {
     setBPM(newBPM) {
         // make it smoothly modulated; "now" should finish out the current beat.
         // so, make the new root time (now - current beat fraction * new bpm)
+        // this is required in order to make BPM changes and not cause total chaos with regards to sequencer timing.
         let b = this.getAbsoluteBeat();
         let ms = DF.BeatsToMS(b, newBPM);
         this.rootTime = Date.now() - ms;
@@ -78,7 +84,7 @@ class ServerRoomMetronome {
     getAbsoluteBeat() {
         const absTimeMS = (Date.now() - this.rootTime);
         const absoluteBeat = DF.MSToBeats(absTimeMS, this.BPM);
-        return absoluteBeat;
+        return absoluteBeat + this.beatOffset;
     }
 };
 

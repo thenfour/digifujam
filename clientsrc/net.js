@@ -166,12 +166,16 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.InstrumentBankMerge, obj);
     };
 
-    SendRoomBPM(bpm) {
-        this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm });
+    SendRoomBPM(bpm, timeSig) {
+        this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm, timeSig });
     };
 
     SendAdjustBeatPhase(relativeMS) {
         this.socket.emit(DF.ClientMessages.AdjustBeatPhase, { relativeMS });
+    }
+
+    SendAdjustBeatOffset(relativeBeats) {
+        this.socket.emit(DF.ClientMessages.AdjustBeatOffset, { relativeBeats });
     }
 
     SendCreateParamMapping(param, srcVal) {
@@ -249,7 +253,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
         this.socket.on(DF.ServerMessages.ChangeRoomState, (data) => this.handler.NET_ChangeRoomState(data));
 
-        this.socket.on(DF.ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data)); //TODO: changeroomstate
+        this.socket.on(DF.ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data));
         this.socket.on(DF.ServerMessages.RoomBPMUpdate, (data) => this.handler.NET_OnRoomBPMUpdate(data))
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };

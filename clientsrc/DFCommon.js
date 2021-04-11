@@ -3,7 +3,7 @@
 const { nanoid } = require("nanoid");
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
-const parseSFZ = require('./sfzParser');
+const DFMusic = require("./DFMusic");
 
 let gDigifujamVersion = 7;
 
@@ -48,8 +48,8 @@ const ClientMessages = {
     Quantization: "Quantization", // quantizeSpec:{beatDivision, swallowBoundary, quantizeBoundary}
     Cheer: "Cheer", // text, x, y
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
-
-    RoomBPMUpdate: "RoomBPMUpdate" //bpm
+    AdjustBeatOffset: "AdjustBeatOffset", // relativeBeats
+    RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:...
 };
 
 const ServerMessages = {
@@ -71,8 +71,8 @@ const ServerMessages = {
 
     ServerStateDump: "ServerStateDump",
 
-    RoomBeat: "RoomBeat", //bpm
-    RoomBPMUpdate: "RoomBPMUpdate", //bpm
+    RoomBeat: "RoomBeat", //bpm, beat, timeSig
+    RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig: ...
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
@@ -1461,6 +1461,7 @@ class DigifuRoomState {
         this.height = 9;
         this.roomTitle = "";
         this.softwareVersion = gDigifujamVersion;
+        this.timeSig = DFMusic.FourFour;
 
         this.stats = {
             noteOns: 0,
@@ -1502,9 +1503,10 @@ class DigifuRoomState {
         this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
     }
 
-    setBPM(bpm) {
+    setBPM(bpm, timeSig) {
         this.bpm = bpm;
         this.metronome.setBPM(bpm);
+        this.timeSig = timeSig;
     }
 
     adminExportRoomState() {
@@ -1840,6 +1842,11 @@ class DigifuRoomState {
         let preset = this.GetInitPreset(instrumentSpec);
         if (preset[param.paramID]) return preset[param.paramID];
         return instrumentSpec.CalculateDefaultValue(param);
+    }
+
+
+    OffsetBeats(relativeBeats) {
+        this.metronome.OffsetBeats(relativeBeats);
     }
 
 }; // DigifuRoomState

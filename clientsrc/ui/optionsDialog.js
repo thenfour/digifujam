@@ -2,6 +2,37 @@ const React = require('react');
 const DFUtils = require("../util");
 const DFU = require('../dfutil');
 const DFApp = require("../app");
+const DFMusic = require("../DFMusic");
+
+class RoomBeat extends React.Component {
+    constructor(props) {
+        super(props);
+        setTimeout(() => { this.onTimer(); }, 50);
+    }
+    onTimer() {
+        this.setState({});
+        setTimeout(() => { this.onTimer(); }, 50);
+    }
+    render() {
+        let beats = [];
+        const musicalTime = this.props.app.getMusicalTime();
+        const beatPercent = Math.trunc(musicalTime.measureBeatFrac * 100);
+        //console.log(`PERC ${beatPercent} / beat frac ${musicalTime.measureBeatFrac}`);
+
+        for (let i = 0; i < this.props.app.roomState.timeSig.num; ++i) {
+            const complete = (i < musicalTime.measureBeatInt) ? " complete" : "";
+            const style = musicalTime.measureBeatInt !== i ? {} : {
+                background: `linear-gradient(to right, #066 0%, #066 ${beatPercent}%, transparent ${beatPercent}%)`
+            };// linear-gradient(to right, #066 0%, #066 50%, transparent 50%)
+            beats.push(<div key={i} className={"beat" + complete} style={style}>{i + 1}</div>);
+        }
+        beats.push(<div key="xx">{musicalTime.measureInt}</div>);
+
+        return <div className="liveRoomBeat">
+            {beats}
+        </div>
+    }
+};
 
 class DFOptionsDialog extends React.Component {
     constructor(props) {
@@ -14,12 +45,6 @@ class DFOptionsDialog extends React.Component {
                 group: 0,
                 cssClass: "quantizationValueOff",
             },
-
-            // {
-            //     caption: "𝅝", // whole
-            //     division: 0.25, // 1/4
-            //     group: 1,
-            // },
             {
                 caption: "𝅗𝅥",
                 division: 0.5,// 1/2
@@ -50,8 +75,6 @@ class DFOptionsDialog extends React.Component {
                 group: 1,
                 cssClass: "quantizationValue",
             },
-
-
             {
                 caption: "𝅗𝅥.",
                 division: 1.0 / 3.0,
@@ -76,8 +99,6 @@ class DFOptionsDialog extends React.Component {
                 group: 2,
                 cssClass: "quantizationValue",
             },
-
-
             {
                 caption: "𝅗𝅥3",
                 division: 3.0 / 4.0,//3/2
@@ -177,7 +198,11 @@ class DFOptionsDialog extends React.Component {
         if (v.target.value < 1 || v.target.value > 200)
             return;
 
-        this.props.app.SendRoomBPM(v.target.value);
+        this.props.app.SendRoomBPM(v.target.value, this.props.app.roomState.timeSig);
+    }
+
+    setRoomTimeSig = (timeSig) => {
+        this.props.app.SendRoomBPM(this.props.app.roomState.bpm, timeSig);
     }
 
     onClickMetronome = () => {
@@ -226,6 +251,10 @@ class DFOptionsDialog extends React.Component {
             {!this.props.app.metronome.isMuted && !this.props.app.IsMuted() && <span className="metronomeIndicator">🔺</span>}
             {!!this.props.app.myInstrument && <span className="monitoringIndicator">Monitoring:{monitoringCaption}</span>}
         </span>;
+
+        let timeSigButtons = this.props.app.roomState && DFMusic.CommonTimeSignatures.map(ts =>
+            <button className={ts.id === this.props.app.roomState.timeSig.id ? "buttonParam active" : "buttonParam"} key={ts.id} onClick={() => this.setRoomTimeSig(ts)}>{ts.name}</button>
+        );
 
         return (
             <div>
@@ -280,6 +309,13 @@ class DFOptionsDialog extends React.Component {
 
                         <div className="component">
                             <h2>Room Tempo</h2>
+                            <fieldset>
+                                <h2>Time sig</h2>
+                                <div className="buttonArray">
+                                    {timeSigButtons}
+                                </div>
+                            </fieldset>
+
                             <div className="helpText">Changes you make here will affect quantization and metronome for everyone in the room.</div>
                             <div>
                                 <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
@@ -293,10 +329,12 @@ class DFOptionsDialog extends React.Component {
                                 <div className="helpText">Listening for next note in order to synchronize the room beat.</div>}
 
                             <div>
-                                <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(-50) }}>-50ms</button>
+                            <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatOffset(-1) }}>-beat</button>
+                            <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(-50) }}>-50ms</button>
                                 <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(-10) }}>-10ms</button>
                                 <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(+10) }}>+10ms</button>
                                 <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatPhase(+50) }}>+50ms</button>
+                                <button className="buttonParam" onClick={() => { this.props.app.AdjustBeatOffset(+1) }}>+beat</button>
                                 Adjust beat phase manually
                             </div>
                         </div>
@@ -316,5 +354,8 @@ class DFOptionsDialog extends React.Component {
     }
 };
 
-module.exports = DFOptionsDialog;
+module.exports = {
+    DFOptionsDialog,
+    RoomBeat,
+}
 
