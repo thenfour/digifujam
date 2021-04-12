@@ -216,6 +216,9 @@ class DFOptionsDialog extends React.Component {
         this.setState({});//gStateChangeHandler.OnStateChange();
     }
 
+    beginTapTempo = () => {
+        //
+    };
 
     render() {
 
@@ -255,6 +258,31 @@ class DFOptionsDialog extends React.Component {
         let timeSigButtons = this.props.app.roomState && DFMusic.CommonTimeSignatures.map(ts =>
             <button className={ts.id === this.props.app.roomState.timeSig.id ? "buttonParam active" : "buttonParam"} key={ts.id} onClick={() => this.setRoomTimeSig(ts)}>{ts.name}</button>
         );
+
+        let tapTempoStuff = null;
+        switch (this.props.app.tapTempoState) {
+            case DFApp.TapTempoState.NA:
+                tapTempoStuff = (<div>
+                    <button onClick={() => { this.props.app.beginTapTempo(); }}>Tap tempo</button>
+                </div>);
+                break;
+            case DFApp.TapTempoState.Waiting:
+                tapTempoStuff = (<div>
+                    <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
+                    <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
+                    <div className="helpText">Play a note or hit the button to start setting the tempo.</div>
+                </div>);
+                break;
+            case DFApp.TapTempoState.Tapping:
+                tapTempoStuff = (<div>
+                    <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
+                    <button onClick={() => { this.props.app.commitTappedTempo(); }}>Save</button>
+                    <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
+                    {this.props.app.tappedTempoBPM} BPM
+                    <div className="helpText">Keep playing this note to refine the tempo. Play a different note to accept the new tempo.</div>
+                </div>);
+                break;
+        };
 
         return (
             <div>
@@ -318,6 +346,9 @@ class DFOptionsDialog extends React.Component {
                                 <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
                                 {this.props.app.roomState.bpm} BPM
                             </div>
+
+                            {tapTempoStuff}
+
                             {this.props.app.myInstrument && <div>
                                 <button className={"buttonParam " + (this.props.app.GetResetBeatPhaseOnNextNote() ? "active" : "")}
                                     onClick={() => { this.props.app.ToggleResetBeatPhaseOnNextNote() }}>Set beat on next note on</button>

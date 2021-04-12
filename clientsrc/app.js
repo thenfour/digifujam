@@ -27,6 +27,14 @@ function _hasSelectiveDisconnect() {
     }
 }
 
+const TapTempoState = {
+    NA: 0,
+    Waiting: 1,
+    Tapping: 2,
+};
+
+const gTempoTapDurationsToConsider = 3;
+
 class AudioContextWrapper {
     constructor() {
         this.connectedNodes = [];
@@ -196,6 +204,8 @@ class DigifuApp {
         this.worldPopulation = 0; // calculated on ping
         this.shortChatLog = []; // contains aggregated entries instead of the full thing
 
+        this.tapTempoState = TapTempoState.NA;
+
         this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
         this.handleRoomWelcome = null; // called when you enter a new room.
         this.handleUserLeave = null;
@@ -273,12 +283,24 @@ class DigifuApp {
 
     // MIDI HANDLERS --------------------------------------------------------------------------------------
     MIDI_NoteOn(note, velocity) {
-        if (this.myInstrument == null) return;
-        if (!this.myInstrument.wantsMIDIInput) return;
-        this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
-        this.resetBeatPhaseOnNextNote = false;
-        if (this.monitoringType == eMonitoringType.Local) {
-            this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity);
+        if (this.tapTempoState === TapTempoState.NA) {
+            if (this.myInstrument == null) return;
+            if (!this.myInstrument.wantsMIDIInput) return;
+            this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
+            this.resetBeatPhaseOnNextNote = false;
+            if (this.monitoringType == eMonitoringType.Local) {
+                this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity);
+            }
+        } else if (this.tapTempoState === TapTempoState.Waiting) {
+            this.tappingNote = note;
+            this.registerTempoTap();
+        } else if (this.tapTempoState === TapTempoState.Tapping) {
+            if (note === this.tappingNote || !this.tappingNote) {
+                this.tappingNote = note;
+                this.registerTempoTap();
+            } else {
+                this.commitTappedTempo();// while tapping, press a different key than you started with to register the new tempo.
+            }
         }
     };
 
@@ -353,6 +375,7 @@ class DigifuApp {
     };
 
     NET_OnWelcome(data) {
+        this.tapTempoState = TapTempoState.NA;
 
         this.resetBeatPhaseOnNextNote = false;
 
@@ -803,6 +826,9 @@ class DigifuApp {
     }
 
     NET_OnRoomBeat(data) {
+        if (this.tapTempoState != TapTempoState.NA) {
+            return;
+        }
         // data.bpm, data.beat, data.timeSig
         this.metronome.OnRoomBeat();
         if (this.roomState) {
@@ -1036,10 +1062,72 @@ class DigifuApp {
         return this.musicalTimeTracker.getCurrentMusicalTime();
     }
 
+    registerTempoTap() {
+        // register tap / duration
+        const now = Date.now();
+        console.log(`now = ${now}, this.lastTempoTick = ${this.lastTempoTick}`);
+        if (!this.lastTempoTick) {
+            console.assert(this.tapTempoState === TapTempoState.Waiting);
+            this.tapTempoState = TapTempoState.Tapping;
+
+            this.lastTempoTick = now;
+            this.metronome.play(true);
+            this.stateChangeHandler();
+            return;
+        }
+        this.tempoTapDurations.push(now - this.lastTempoTick);
+        this.tempoTapDurations = this.tempoTapDurations.slice(-gTempoTapDurationsToConsider);
+
+        console.log(this.tempoTapDurations);
+
+        // calculate new bpm
+        const avgDurationMS = this.tempoTapDurations.reduce((a,b) => a + b, 0) / this.tempoTapDurations.length;
+        // convert MS duration to bpm
+        let bpm = 60.0/avgDurationMS*1000;
+        bpm = Math.max(1, bpm);
+        while (bpm < 20) {
+            bpm *= 2;
+        }
+        while (bpm > 300) {
+            bpm /= 2;
+        }
+        bpm = Math.round(bpm);
+
+        this.tappedTempoBPM = bpm;
+
+        this.lastTempoTick = now;
+        this.metronome.play(true);
+        this.stateChangeHandler();
+    }
+
+    commitTappedTempo() {
+        if (!this.tappedTempoBPM) {
+            return;
+        }
+        this.SendRoomBPM(this.tappedTempoBPM, this.roomState.timeSig, -this.myUser.pingMS);
+        this.tapTempoState = TapTempoState.NA;
+        this.stateChangeHandler();
+    }
+
+    beginTapTempo() {
+        this.tapTempoState = TapTempoState.Waiting;
+        this.tempoTapDurations = [];
+        this.lastTempoTick = null;
+        this.tappedTempoBPM = null;
+        this.stateChangeHandler();
+    }
+
+    cancelTapTempo() {
+        this.tapTempoState = TapTempoState.NA;
+        this.stateChangeHandler();
+    }
+
     Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
+
+        this.tapTempoState = TapTempoState.NA;
 
         this.stateChangeHandler = stateChangeHandler;
         //this.noteOnHandler = noteOnHandler;
@@ -1094,5 +1182,6 @@ module.exports = {
     AudioContextWrapper,
     DigifuApp,
     eMonitoringType,
+    TapTempoState,
 };
 

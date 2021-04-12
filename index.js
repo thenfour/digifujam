@@ -1043,6 +1043,9 @@ class RoomServer {
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
     this.roomState.setBPM(data.bpm, data.timeSig);
+    if (data.phaseRelativeMS) {
+      this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
+    }
     io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM(), timeSig: this.roomState.timeSig }); //update bpm for ALL clients
   }
 

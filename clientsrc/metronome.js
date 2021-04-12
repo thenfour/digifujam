@@ -19,8 +19,10 @@ class DigifuMetronome {
 		this._isMuted = val;
 	}
 
-	play() {
-		if (!this._isMuted && this.sampleBuffer != null) {
+	play(ignoreMutedState) {
+		let isReallyMuted = this._isMuted;
+		if (!!ignoreMutedState) isReallyMuted = false;
+		if (!isReallyMuted && this.sampleBuffer != null) {
 			const source = this.audioCtx.createBufferSource();
 			source.buffer = this.sampleBuffer;
 			source.connect(this.dest);

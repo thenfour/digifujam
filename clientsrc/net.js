@@ -166,8 +166,8 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.InstrumentBankMerge, obj);
     };
 
-    SendRoomBPM(bpm, timeSig) {
-        this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm, timeSig });
+    SendRoomBPM(bpm, timeSig, phaseRelativeMS) {
+        this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm, timeSig, phaseRelativeMS });
     };
 
     SendAdjustBeatPhase(relativeMS) {

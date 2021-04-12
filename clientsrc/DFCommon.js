@@ -49,7 +49,7 @@ const ClientMessages = {
     Cheer: "Cheer", // text, x, y
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
     AdjustBeatOffset: "AdjustBeatOffset", // relativeBeats
-    RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:...
+    RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:..., phaseRelativeMS:
 };
 
 const ServerMessages = {
