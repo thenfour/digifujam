@@ -1443,6 +1443,7 @@ li.updateAboveStuff {
 
 .liveRoomBeat {
     background-color:#022;
+    cursor: pointer;
     display:flex;
 }
 

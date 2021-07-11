@@ -2051,14 +2051,13 @@ class RoomArea extends React.Component {
             <div className="switchRoomViews">
                 <button className="switchChatView" onClick={this.toggleChatView}>room view</button>
                 <button className="switchChatView" onClick={this.toggleChatView}>chat view</button>
-                <button className="switchChatView" onClick={this.toggleChatView}>seq view</button>
             </div>
         );
 
         return (
             <div id="roomArea" className="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
-                {seqViewEnabled &&this.props.app && <SequencerMain app={this.props.app}></SequencerMain>}
+                {/* {seqViewEnabled &&this.props.app && <SequencerMain app={this.props.app}></SequencerMain>} */}
 
                 {userAvatars}
                 {roomItems}
