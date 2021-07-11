@@ -60,7 +60,7 @@ Feel free to report compatibility issues anyway.
 
 ## dev process
 
-- npm run build // build & start local server (for dev)
+- npm run build // build & start local server (for dev) @ http://localhost:8081/
 - npm run start // to start local server without build (for openode deployment)
 - npm run watch // simultaneously call this to monitor & build changes live
 - node --inspect index.js // for chrome inspector debugging the server

@@ -26,6 +26,7 @@ class CreditsButton extends React.Component {
                         <pre>
                         7jam was created by tenfour with tons of help from:<br />
                         <br />
+                        wwhhooami<br />
                         ∮ f⁽ʷ⁾(z) 𝐝w = 0<br />
                         Saga Musix<br />
                         Wayfinder<br />

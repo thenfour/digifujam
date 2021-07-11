@@ -232,7 +232,8 @@ class InstIntParam extends React.Component {
     }
     onChange = (e) => {
         //this.setState(this.state);
-        let val = e.target.value;
+        let val = parseInt(e.target.value);
+        if (isNaN(val)) return;
         this.renderedValue = val;
         this.props.app.SetInstrumentParam(this.props.instrument, this.props.param, val);
         this.setCaption();
@@ -466,6 +467,8 @@ class InstFloatParam extends React.Component {
         if (e.key != 'Enter') return;
         this.setState(this.state);
         let realVal = parseFloat(e.target.value);
+        if (isNaN(realVal)) return;
+
         this.props.app.SetInstrumentParam(null, this.props.param, realVal);
 
         this.setCaption(realVal);
@@ -509,7 +512,8 @@ class InstFloatParam extends React.Component {
     }
 
     GetRawValue() {
-        return this.GetLinkedParam().rawValue;
+        const p =this.GetLinkedParam();
+        return isNaN(p.rawValue) ? 0 : p.rawValue; // coalesce to avoid crashes in case of bad state
     }
 
     GetLinkedParam() {
