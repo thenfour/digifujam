@@ -1042,18 +1042,25 @@ class RoomServer {
 
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
-    this.roomState.setBPM(data.bpm);
-    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: data.bpm }); //update bpm for ALL clients
+    this.roomState.setBPM(data.bpm, data.timeSig);
+    if (data.phaseRelativeMS) {
+      this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
+    }
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM(), timeSig: this.roomState.timeSig }); //update bpm for ALL clients
   }
 
   OnClientAdjustBeatPhase(ws, data) {
     this.roomState.metronome.AdjustPhase(data.relativeMS);
   }
 
+  OnClientAdjustBeatOffset(ws, data) {
+    this.roomState.OffsetBeats(data.relativeBeats);
+  }
+
   // called per every beat, BPM is defined in roomState
   OnRoomBeat() {
     try {
-      io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.metronome.getBPM() }); //send bpm in order to synchronize
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBeat, { bpm: this.roomState.metronome.getBPM(), beat: Math.round(this.roomState.metronome.getAbsoluteBeat()) }); //send bpm in order to synchronize
     } catch (e) {
       log(`OnRoomBeat exception occured`);
       log(e);
@@ -1479,7 +1486,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.Cheer, data => ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
       ws.on(DF.ClientMessages.RoomBPMUpdate, data => ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));
       ws.on(DF.ClientMessages.AdjustBeatPhase, data => ForwardToRoom(ws, room => room.OnClientAdjustBeatPhase(ws, data)));
-
+      ws.on(DF.ClientMessages.AdjustBeatOffset, data => ForwardToRoom(ws, room => room.OnClientAdjustBeatOffset(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 

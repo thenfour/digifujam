@@ -28,6 +28,7 @@ class CreditsButton extends React.Component {
                         <br />
                         wwhhooami<br />
                         ∮ f⁽ʷ⁾(z) 𝐝w = 0<br />
+                        wwhhooami<br />
                         Saga Musix<br />
                         Wayfinder<br />
                         Tony Thai<br />

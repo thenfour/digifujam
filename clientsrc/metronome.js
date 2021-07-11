@@ -1,3 +1,5 @@
+// the client-side metronome instrument. does not perform timing stuff.
+
 'use strict';
 
 const DFQ = require('./quantizer');
@@ -5,26 +7,9 @@ const DFQ = require('./quantizer');
 class DigifuMetronome {
 	constructor() {
 		this.audioCtx = null; //audio context
-		//this._syncWithRoom = true; //synchronize with room BPM  
-
-		// this._timer = new DFQ.ServerRoomMetronome();
-		// this._timer.setBPM(99);
-		// this._timer.setBeatRoutine(() => {
-		// 	if (this._syncWithRoom) return; // server-based timer doesn't play on local timer.
-		// 	this.play();
-		// });
-
 		this.sampleBuffer = null;
 		this._isMuted = true;
 	}
-
-	// get bpm() {
-	// 	return this._timer.getBPM();
-	// }
-
-	// set bpm(val) {
-	// 	this._timer.setBPM(val);
-	// }
 
 	get isMuted() {
 		return this._isMuted;
@@ -34,21 +19,10 @@ class DigifuMetronome {
 		this._isMuted = val;
 	}
 
-	// get syncWithRoom() {
-	// 	return this._syncWithRoom;
-	// }
-
-	// set syncWithRoom(val) {
-	// 	this._syncWithRoom = val;
-
-	// 	if (this._syncWithRoom) {
-	// 		clearTimeout(this.metronomeTimeout); //if syncWithRoom was switched on, stop the local metronome timeout 
-	// 		this.metronomeTimeout = null;
-	// 	}
-	// }
-
-	play() {
-		if (!this._isMuted && this.sampleBuffer != null) {
+	play(ignoreMutedState) {
+		let isReallyMuted = this._isMuted;
+		if (!!ignoreMutedState) isReallyMuted = false;
+		if (!isReallyMuted && this.sampleBuffer != null) {
 			const source = this.audioCtx.createBufferSource();
 			source.buffer = this.sampleBuffer;
 			source.connect(this.dest);
@@ -77,13 +51,7 @@ class DigifuMetronome {
 
 	// from server
 	OnRoomBeat() {
-		//if (this._syncWithRoom) {
-			//console.log("sync tick");
-			//this._bpm = bpm;
-			this.play();
-		// } else if (this.metronomeTimeout == null) {
-		// 	this.tick(); //start the local metronome  
-		// }
+		this.play();
 	}
 
 };
