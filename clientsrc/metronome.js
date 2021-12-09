@@ -1,4 +1,5 @@
 // the client-side metronome instrument. does not perform timing stuff.
+// the server-side metronome is in quantizer.js (for now...)
 
 'use strict';
 

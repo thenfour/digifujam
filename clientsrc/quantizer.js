@@ -19,20 +19,24 @@ let FrameToMS = f => {
 // keep BPM and beat info for the room on the server.
 class ServerRoomMetronome {
     constructor() {
-        this.beatOffset = 0;
-        this.rootTime = Date.now();
+        // advertised beats is time_to_beats(now - roottime) + beatOffset.
+        this.beatOffset = 0; // # of beats added, just for output
+        this.rootTime = Date.now(); // time from when beats are being counted.
         this.BPM = 95; // BPM is when denom = 4.
         this.beatRoutine = () => { };
         this.intervalCookie = null;
     }
 
     scheduleNextTick() {
-        let currentBeat = this.getAbsoluteBeat(); // like 123.34. so next beat will be 1.0-.34 beats from now.
+        let currentBeat = this.getInternalAbsoluteBeat(); // like 123.34. so next beat will be 1.0-.34 beats from now.
         let nextRunBeat = currentBeat + 0.01; // if we're almost at the end of a beat, skip to the next. when making quick BPM adjustments it helps avoid very short glitchy beats.
         nextRunBeat = Math.ceil(nextRunBeat); // the beat to schedule
         let nextRunMS = DF.BeatsToMS(nextRunBeat, this.BPM);
         let absNextRunTime = this.rootTime + nextRunMS;
-        this.intervalCookie = setTimeout(() => { this.timerProc(); }, absNextRunTime - Date.now());
+        let now = Date.now();
+        let interval = absNextRunTime - now;
+        //console.log(`scheduleNextTick interval = ${interval}. currentBeat=${currentBeat} nextRunBeat=${nextRunBeat} nextRunMS=${nextRunMS} rootTime=${this.rootTime} absNextRunTime=${absNextRunTime} now=${now}`);
+        this.intervalCookie = setTimeout(() => { this.timerProc(); }, interval);
     }
 
     resetTimer() {
@@ -53,7 +57,9 @@ class ServerRoomMetronome {
     }
 
     OffsetBeats(relativeBeats) {
+        //console.log(`offset beats ${relativeBeats}`);
         this.beatOffset += relativeBeats;
+        //this.resetTimer();
     }
 
     getBPM() {
@@ -61,10 +67,11 @@ class ServerRoomMetronome {
     }
 
     setBPM(newBPM) {
+        //console.log(`setBPM ${newBPM}`);
         // make it smoothly modulated; "now" should finish out the current beat.
         // so, make the new root time (now - current beat fraction * new bpm)
         // this is required in order to make BPM changes and not cause total chaos with regards to sequencer timing.
-        let b = this.getAbsoluteBeat();
+        let b = this.getInternalAbsoluteBeat();
         let ms = DF.BeatsToMS(b, newBPM);
         this.rootTime = Date.now() - ms;
         this.BPM = newBPM;
@@ -72,19 +79,25 @@ class ServerRoomMetronome {
     }
 
     AdjustPhase(relativeMS) {
+        //console.log(`AdjustPhase ${relativeMS}`);
         this.rootTime += relativeMS;
         this.resetTimer();
     }
 
     resetBeatPhase() {
+        //console.log(`resetBeatPhase`);
         this.rootTime = Date.now();
         this.resetTimer();
     }
 
-    getAbsoluteBeat() {
+    getInternalAbsoluteBeat() {
         const absTimeMS = (Date.now() - this.rootTime);
         const absoluteBeat = DF.MSToBeats(absTimeMS, this.BPM);
-        return absoluteBeat + this.beatOffset;
+        return absoluteBeat;
+    }
+
+    getAbsoluteBeat() {
+        return this.getInternalAbsoluteBeat() + this.beatOffset;
     }
 };
 

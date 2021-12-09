@@ -26,6 +26,29 @@ gServerStartedDate = new Date();
 
 gNanoid = nanoid;
 
+// ----------------------------------------------------------------------------------------------------------------
+// startup assertions
+console.log(".");
+console.log(".");
+console.log(`Checking preconditions ..`);
+let preconditionsPass = true;
+if (!process.env.DF_ADMIN_PASSWORD) {
+  preconditionsPass = false;
+  console.log(`!! YOU HAVE NOT SET AN ADMIN PASSWORD VIA DF_ADMIN_PASSWORD. YOU SHOULD.`);
+}
+if (!process.env.DF_GOOGLE_CLIENT_ID || !process.env.DF_GOOGLE_CLIENT_SECRET) {
+  preconditionsPass = false;
+  console.log(`!! YOU HAVE NOT SET DF_GOOGLE_CLIENT_ID OR DF_GOOGLE_CLIENT_SECRET. GOOGLE LOGIN NOT AVAILABLE.`);
+}
+if (!process.env.DF_MONGO_CONNECTIONSTRING) {
+  preconditionsPass = false;
+  console.log(`!! YOU HAVE NOT SET DF_MONGO_CONNECTIONSTRING. THINGS WILL DEFINITELY BREAK.`);
+}
+console.log(preconditionsPass ? `Preconditions OK` : `Preconditions FAILED. Expect chaos.`);
+console.log(".");
+console.log(".");
+
+
 gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage'; // todo: configure this kind of stuff in ENV at least...
 gStatsDBPath = gStoragePath + '\\DFStatsDB.json';
 gPathSeparator = "\\";
@@ -42,6 +65,8 @@ const gPathLatestServerState = `${gStoragePath}${gPathSeparator}serverState_late
 let gServerStats = null;
 
 let gDB = null;// new DFDB.DFDB();
+
+
 
 // ----------------------------------------------------------------------------------------------------------------
 // BEGIN: google login stuff...
@@ -1434,6 +1459,7 @@ function listUnusedSFZInstruments() {
 
 // load configs
 let roomsAreLoaded = function () {
+  console.log(`[roomsAreLoaded]`);
   // serve the rooms
   io.on('connection', ws => {
     try {
@@ -1550,9 +1576,10 @@ loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
 loadRoom(fs.readFileSync("revisionMainStage.json"), serverRestoreState);
 loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
 
-
 gDB = new DFDB.DFDB(() => {
+  console.log(`[dfdb created]`);
   gServerStats = new DFStats.DFStats(gStatsDBPath, gDB);
+  console.log(`[dfstats created]`);
   roomsAreLoaded();
 }, () => {
   // error

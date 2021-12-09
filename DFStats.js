@@ -47,6 +47,7 @@ class DFStats {
     }
 
     constructor(path, mongoDB) {
+        console.log(`[dfstats ctor]`);
         this.path = path;
         this.mongoDB = mongoDB;
         
