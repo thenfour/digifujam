@@ -929,6 +929,10 @@
           }
         },
         {
+          "sfzURL": "/sfz/Gospel Voice Set/Gospel Voice Set.sfz.json",
+          "name": "Gospel Voice Set"
+        },
+        {
           "gain": 1,
           "transpose": 0,
           "sfzURL": "/sfz/XP-F-414 Vox Menu 1/XP-F-414 Vox Menu 1.sfz.json",

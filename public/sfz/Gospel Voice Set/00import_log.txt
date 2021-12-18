@@ -1,0 +1,469 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set.sfz.json
+Region count: 38
+Source samples to read: 38
+Dest samples to create: 38
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 052.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 052.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 056.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 056.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 059.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 059.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 061.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 061.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 069.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 069.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 070.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 070.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 071.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 071.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 074.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 074.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 076.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 076.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 077.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 077.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 079.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 079.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 080.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 080.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 081.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 081.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 082.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 082.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 083.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 084.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 084.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set\Gospel Voice Set 085.flac" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 085.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 049_0_end.wav from Gospel Voice Set 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 052.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 052_0_end.wav from Gospel Voice Set 052.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 052_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 052_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 060_0_end.wav from Gospel Voice Set 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 051_0_end.wav from Gospel Voice Set 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 051_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 076.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 076_0_end.wav from Gospel Voice Set 076.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 076_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 076_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167580
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 065_0_end.wav from Gospel Voice Set 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 084.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 084_0_end.wav from Gospel Voice Set 084.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 084_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 084_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 048_0_end.wav from Gospel Voice Set 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 059.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 059_0_end.wav from Gospel Voice Set 059.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 059_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 059_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 068_0_end.wav from Gospel Voice Set 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 069.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 069_0_end.wav from Gospel Voice Set 069.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 069_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 069_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 220500
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 072_0_end.wav from Gospel Voice Set 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 085.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 085_0_end.wav from Gospel Voice Set 085.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 085_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 085_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202860
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 067_0_end.wav from Gospel Voice Set 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 082.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176400
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 082_0_end.wav from Gospel Voice Set 082.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 082_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 082_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185220
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 066_0_end.wav from Gospel Voice Set 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 066_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185220
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 064_0_end.wav from Gospel Voice Set 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114660
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 083_0_end.wav from Gospel Voice Set 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 083_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 141120
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 053_0_end.wav from Gospel Voice Set 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 056.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 056_0_end.wav from Gospel Voice Set 056.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 056_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 056_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 070.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176400
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 070_0_end.wav from Gospel Voice Set 070.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 070_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 070_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 055_0_end.wav from Gospel Voice Set 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176400
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 075_0_end.wav from Gospel Voice Set 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 075_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 057_0_end.wav from Gospel Voice Set 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 071.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185220
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 071_0_end.wav from Gospel Voice Set 071.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 071_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 071_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 081.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 081_0_end.wav from Gospel Voice Set 081.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 081_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 081_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 080.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149940
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 080_0_end.wav from Gospel Voice Set 080.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 080_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 080_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 062_0_end.wav from Gospel Voice Set 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 062_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123480
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 054_0_end.wav from Gospel Voice Set 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 063_0_end.wav from Gospel Voice Set 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 061.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 061_0_end.wav from Gospel Voice Set 061.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 061_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 061_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 074.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 074_0_end.wav from Gospel Voice Set 074.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 074_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 074_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 194040
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 073_0_end.wav from Gospel Voice Set 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 077.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158760
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 077_0_end.wav from Gospel Voice Set 077.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 077_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 077_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167580
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 078_0_end.wav from Gospel Voice Set 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 050_0_end.wav from Gospel Voice Set 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185220
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 058_0_end.wav from Gospel Voice Set 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 079.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132300
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Gospel Voice Set 079_0_end.wav from Gospel Voice Set 079.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 079_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 079_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 076_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 076.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 052_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 052.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 049.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 061_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 061.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 062.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 080_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 080.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 081_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 081.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 071_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 071.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 057.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 075.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 070_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 070.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 056_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 056.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 083.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 066.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 082_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 082.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 085_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 085.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 069_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 069.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 068.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 059_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 059.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 084_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 084.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 050.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 077_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 077.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 074_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 074.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 079_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 079.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Gospel Voice Set\Gospel Voice Set 058.flac.wav
+Completed processing source WAV files with 38 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_GospelVoiceSet",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Gospel Voice Set/Gospel Voice Set.sfz.json",
+  "name": "Gospel Voice Set"
+}

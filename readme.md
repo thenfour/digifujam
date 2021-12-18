@@ -83,6 +83,10 @@ Feel free to report compatibility issues anyway.
   - rooms
   - check for exceptions
 
+## Importing SFZ
+
+    node sfzimport.js sfzpath="C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set.sfz"
+
 ## odds & ends & quirks
 
 - Instrument IDs must be conservative wrt characters, because they are used in jq selectors and such.
@@ -94,4 +98,5 @@ Feel free to report compatibility issues anyway.
   - DF_GOOGLE_CLIENT_ID
   - DF_GOOGLE_CLIENT_SECRET
   - DF_MONGO_CONNECTIONSTRING
-
+- SSL:
+  - SSL .crt and .key must be included with deployment. For this, copy `7jam_io.crt` and `csr.key` to `ssl/` before `openode deploy`. Run `openode status` to see the path where they should be.
