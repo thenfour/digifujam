@@ -50,15 +50,27 @@ console.log(".");
 
 
 gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage'; // todo: configure this kind of stuff in ENV at least...
-gStatsDBPath = gStoragePath + '\\DFStatsDB.json';
 gPathSeparator = "\\";
 gGoogleRedirectURL = "http://localhost:8081";
 if (process.env.DF_IS_OPENODE == 1) {
+  console.log(`Openode detected.`);
   gPathSeparator = "/";
   gStoragePath = '/var/www/storage';
-  gStatsDBPath = gStoragePath + '/DFStatsDB.json';
   gGoogleRedirectURL = "https://7jam.io";
 }
+
+if (process.env.DF_STORAGE_PATH) {
+  gStoragePath = process.env.DF_STORAGE_PATH;
+}
+if (process.env.DF_PATH_SEPARATOR) {
+  gPathSeparator = process.env.DF_PATH_SEPARATOR;
+}
+if (process.env.DF_GOOGLE_LOGIN_REDIRECT_URL) {
+  gGoogleRedirectURL = process.env.DF_GOOGLE_LOGIN_REDIRECT_URL;
+}
+
+const gStatsDBPath = `${gStoragePath}${gPathSeparator}DFStatsDB.json`;
+
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
 const gPathLatestServerState = `${gStoragePath}${gPathSeparator}serverState_latest.json`;
 
