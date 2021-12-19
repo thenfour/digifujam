@@ -1561,9 +1561,10 @@ let loadRoom = function (jsonTxt, serverRestoreState) {
 }
 
 
+app.use("/storage", express.static(gStoragePath), serveIndex(gStoragePath, { 'icons': true }));
 
-app.use("/storage", express.static(gStoragePath), serveIndex(gStoragePath, { 'icons': true }))
-
+// webpack compiler outputs to non-public dist; make it accessible as /dist.
+app.use("/dist", express.static("./dist"));
 
 
 const globalInstruments = fs.readFileSync("global_instruments.json");
