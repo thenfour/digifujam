@@ -2,7 +2,7 @@
 
 https://7jam.io/
 
-Online jam space for digital fusion musicians. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session. Thanks https://www.openode.io/ for hosting.
+Online jam space for digital fusion musicians. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session.
 
 Some notes:
 
@@ -33,7 +33,7 @@ You must be using a MIDI-compatible browser (Chrome or Edge on Windows / Mac), a
 
 ### Where is the server located?
 
-The server is hosted in Amsterdam by openode.io.
+The server is hosted in Germany by Uberspace.
 
 ### How to deal with latency?
 
@@ -51,7 +51,7 @@ This project aggressively uses latest tech in order to squeeze out features. I d
 - Chrome Mac I expect full compatibility. I did not manage to get MIDI to work, but everything else looked fine.
 - Edge Windows should work because I smoke-test there occasionally.
 - Edge Mac I have never tested.
-- Firefox does not support MIDI, so it only works for spectators.
+- Firefox does not support MIDI (yet), so it only works for spectators.
 - Safari does not support MIDI or ConstantSourceNode, so it's 100% incompatible.
 
 Feel free to report compatibility issues anyway.
@@ -61,14 +61,13 @@ Feel free to report compatibility issues anyway.
 ## dev process
 
 - npm run build // build & start local server (for dev) @ http://localhost:8081/
-- npm run start // to start local server without build (for openode deployment)
+- npm run start // to start local server without build
 - npm run watch // simultaneously call this to monitor & build changes live
 - node --inspect index.js // for chrome inspector debugging the server
 - node --inspect-brk index.js // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
 
 ## deployment process
 
-- if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1; to make clients have to reconnect.
 - openode deploy
 - openode logs
   - check that latest server state backup was loaded
@@ -87,16 +86,29 @@ Feel free to report compatibility issues anyway.
 
     node sfzimport.js sfzpath="C:\Users\carl\Desktop\Gospel_Voice_Set_Triton\Gospel Voice Set.sfz"
 
-## odds & ends & quirks
+## Config, odds & ends & quirks
 
-- Instrument IDs must be conservative wrt characters, because they are used in jq selectors and such.
+- IDs must be conservative wrt characters, because they are used in jq selectors and such.
 - /stats.html to see activity graphs
 - /storage to view storage (feed, server state...)
-- server environment variables:
-  - DF_IS_OPENODE = 1 or 0
-  - DF_ADMIN_PASSWORD
-  - DF_GOOGLE_CLIENT_ID
-  - DF_GOOGLE_CLIENT_SECRET
-  - DF_MONGO_CONNECTIONSTRING
-- SSL:
-  - SSL .crt and .key must be included with deployment. For this, copy `7jam_io.crt` and `csr.key` to `ssl/` before `openode deploy`. Run `openode status` to see the path where they should be.
+- Uberspace does automatic SSL so no config is required.
+- `config.yaml` is required, and a default is included in the repo. Place a `config2.yaml` file next to `config.yaml` to override anything. It's git-ignored, useful for storing private keys etc.
+
+
+
+## Dev stuff
+
+- if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1; to make clients have to reconnect.
+
+
+### User sources
+
+Discord users should have some properties that normal 7jam users do not:
+
+* avatars are not visible in rooms
+* cannot interact with room objects (naturally)
+* joins/parts/changes are not shown in chat log or in notifications
+* statistics are not collected for these users, and are not included in certain population counts
+
+
+

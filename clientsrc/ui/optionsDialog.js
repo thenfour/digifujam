@@ -8,7 +8,7 @@ class RoomBeat extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isShowingBeats: true,
+            isShowingBeats: false,
         };
         setTimeout(() => { this.onTimer(); }, 100);
     }
@@ -36,7 +36,7 @@ class RoomBeat extends React.Component {
                 beats.push(<div key={i} className={"beat" + complete + inProgress} style={style}>{i + 1}</div>);
             }
         } else {
-            beats.push(<div key="1">click for metronome</div>);
+            beats.push(<div key="1">Metronome</div>);
         }
 
         return <div className="liveRoomBeat" onClick={this.onClick}>
@@ -153,10 +153,10 @@ class DFOptionsDialog extends React.Component {
         });
     };
 
-    setPBRange = (v) => {
-        this.props.app.pitchBendRange = v.target.value;
-        this.props.stateChangeHandler.OnStateChange();
-    }
+    // setPBRange = (v) => {
+    //     this.props.app.pitchBendRange = v.target.value;
+    //     this.props.stateChangeHandler.OnStateChange();
+    // }
 
     onSetMonitoringType(mt) {
         this.props.app.setMonitoringType(mt);
@@ -301,13 +301,13 @@ class DFOptionsDialog extends React.Component {
 
                 {this.state.isExpanded &&
                     <div className="optionsDialog">
-                        <fieldset>
+                        {/* <fieldset>
                             <div className="legend">Pitch bend</div>
                             <div>
                                 <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
                                 <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
                             </div>
-                        </fieldset>
+                        </fieldset> */}
 
                         <fieldset>
                             <div className="legend">Monitoring</div>

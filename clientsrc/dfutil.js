@@ -14,6 +14,10 @@ let minutesToMS = (x) => secondsToMS(x * 60);
 let hoursToMS = (x) => minutesToMS(x * 60);
 let daysToMS = (x) => hoursToMS(x * 24);
 
+function FormatTimeMS(ms) {
+    return new Date(ms).toISOString().substring(11).substring(0,8);
+}
+
 let getArrowText = shown => shown ? '⯆' : '⯈';
 
 // get only the decimal part of a number.  https://stackoverflow.com/a/65046431/402169
@@ -171,6 +175,37 @@ const DBToLinear = dB => {
     return Math.pow(10, dB / 20);
 };
 
+
+
+function StringReplaceAllCaseInsensitive(str, strReplace, strWith) {
+    // See http://stackoverflow.com/a/3561711/556609
+    // https://stackoverflow.com/a/7313467/402169
+    var esc = strReplace.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    var reg = new RegExp(esc, 'ig');
+    return str.replace(reg, strWith);
+ };
+ 
+ function PerformSubstitutions(str, subs) {
+    Object.keys(subs).forEach(k => {
+       str = StringReplaceAllCaseInsensitive(str, k, subs[k]);
+    });
+    return str;
+ }
+ 
+ function ProcessMessageFields(fieldsSpec, subs) {
+    let messageFields = {};
+    if (fieldsSpec) {
+       Object.keys(fieldsSpec).forEach(k => {
+          messageFields[PerformSubstitutions(k, subs)] = PerformSubstitutions(fieldsSpec[k], subs);
+       });
+    }
+    return messageFields;
+ }
+ 
+
+ 
+
+
 module.exports = {
     secondsToMS,
     minutesToMS,
@@ -193,4 +228,8 @@ module.exports = {
     dividedFloor,
     lerp,
     DBToLinear,
+    StringReplaceAllCaseInsensitive,
+    PerformSubstitutions,
+    ProcessMessageFields,
+    FormatTimeMS,
 };

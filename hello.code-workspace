@@ -5,5 +5,21 @@
     }
 	],
 	"settings": {
+		"editor.tabSize": 3
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "pwa-node",
+				"request": "launch",
+				"name": "Launch Program",
+				"skipFiles": [
+					"<node_internals>/**"
+				],
+				"program": "index.js",
+				"__workspaceFolder": ".\\"
+			}
+		]
 	}
 }

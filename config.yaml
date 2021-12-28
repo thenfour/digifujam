@@ -1,0 +1,233 @@
+path_separator: \
+admin_key: myadminkey
+storage_path: C:\root\Dropbox\root\Digifujam\storage
+port: 8081
+host_prefix: http://localhost:8081
+room_json:
+  - pub.json
+  - maj7.json
+  - revisionMainStage.json
+  - hall.json
+#google_client_id: ...
+#google_client_secret: ...
+#google_redirect_url: ... # i think this should become obsolete
+#mongo_connection_string: ...
+#discord_bot_token: ...
+#discord_client_id: ...
+jam_tracker_max_duration: 12 hours
+jam_note_count_backtrack: 30 minutes
+queryVariables:
+  someUserCount: "3"
+  manyUserCount: "5"
+  emptyRoomDelay: 20s
+  singleUserDelay: 7s
+  someUserDelay: 60s
+  manyUserDelay: 120s
+
+  jamNoteCountPartitionDuration: 15s # heavily impacts the nuances in timing. a big partition means the end of a jam may have a LOT of notes then 0 instantly.
+  
+discord_integration_enable_after_uptime_sec: 5
+discord_log_member_count: "4" # to avoid massive log spam when dumping discord data at startup.
+discord_integrations:
+
+  #---------- concrete user count notifications ------------------------------------------------------
+  UserCount_1:
+    engine: UserCountNotification
+    userCountType: global
+    groupName: globalUserCount
+    # no rate-limiting as this is a very precise notification.
+    groupRateLimitTime: 0
+    # ensure RISING to 0. timing just to try and avoid quick joins/parts
+    # - if the room had a bunch of users, drops to 0, then 1 enters, it could
+    #   mean that the room blew up or somtehing.
+    conditionOnUserCount: maintains [0] during [15s]
+    # this is a precise time
+    # it should be long enough to reduce spam of quick pop-ins, but
+    # short enough to actually catch users that may need a welcome.
+    delay: "%singleUserDelay%"
+    # if the user count rises to over %someUserCount%, then suppress this message
+    # because we expect the "some users" notification.
+    triggerOnUserCount: maintains [1,%someUserCount%] during [%singleUserDelay%]
+    messageContent: Someone has joined 7jam via %roomName%!
+
+  UserCount_0:
+    engine: UserCountNotification
+    userCountType: global
+    groupName: globalUserCount
+    # - no rate-limiting because i want discord to have a pretty exact picture
+    #   of activity when it comes to 0 to some users.
+    groupRateLimitTime: 0
+    # match on user join/part when population has been 1+ for some duration
+    # the duration should correspond with the join message so they are always paired.
+    conditionOnUserCount: maintains [>0] during [%singleUserDelay%]
+    delay: "%emptyRoomDelay%"
+    triggerOnUserCount: maintains [0] during [%emptyRoomDelay%]
+    messageContent: 7jam is now empty after a user left %roomName%
+
+  #---------- fuzzy user count notifications ------------------------------------------------------
+  UserCount_Some:
+    # When user count rises a bit more, notify that a jam is forming.
+    # Longer condition duration, because we don't need to ALWAYS fire this. We
+    # want this only when things are escalating from a longer-time-idle state.
+    engine: UserCountNotification
+    groupName: UserCount_Some
+    userCountType: room
+    groupRateLimitTime: 120s
+    # detect RISING from below thresh to above thresh. rely on rate limiting,
+    # but let's not try to avoid something like 2 jams back-to-back with a small "valley".
+    # so this duration is basically the valley. now
+    # if there are small fluctuations, the "touches" takes care of this.
+    conditionOnUserCount: touches [<%someUserCount%] during [60s]
+    delay: "%someUserDelay%"
+    triggerOnUserCount: maintains [%someUserCount%,%manyUserCount%] during [%someUserDelay%]
+    messageContent: "%roomUserCount% people are currently hanging out in %roomName%"
+
+  UserCount_Many:
+    engine: UserCountNotification
+    groupName: UserCount_Many
+    userCountType: room
+    groupRateLimitTime: 120s
+    # Similar to above, detect RISING. and use TOUCHES so we don't miss the notification
+    # based on little fluctuations.
+    conditionOnUserCount: touches [<%manyUserCount%] during [60s]
+    # Then, make sure we're maintaining many users during a significant amount of time.
+    delay: "%manyUserDelay%"
+    triggerOnUserCount: maintains [>=%manyUserCount%] during [%manyUserDelay%]
+    messageContent: A party of %roomUserCount% is happening in %roomName%
+
+  #---------- jam status notifications ------------------------------------------------------
+  JamStarting:
+    engine: NoteCountNotification
+    # these are a bit tricky; all the queries are sorta inter-related.
+    # here we want to detect a rise from "definitely not a jam" to "could be a jam".
+    # with our query style, this is a simple boundary rise check.
+    # 
+    # the trick is mostly the timing. the pre-condition time should be the same as the
+    # trigger time, in order to accurately detect a rise. but this same condition
+    # is used later so to avoid disassociation all jam status timings should be a multiple
+    # of this.
+    groupName: jamStatus
+    groupRateLimitTime: 300s
+    partitionDuration: "%jamNoteCountPartitionDuration%"
+    specialHandling: jamStart # only fires when jam stopped, signifies to remember time / note count / etc.
+    conditionOnNoteCount: sum [<100] during [5min]
+    delay: "5min" # must be the same as trigger query duration
+    triggerOnNoteCount: sum [>=100] during [5min]
+    messageContent: A jam session is warming up in %roomName%.
+    messageFields:
+      Current Players: "%roomUserCount%"
+
+  JamStatus:
+    engine: NoteCountNotification
+    # match when we are in a jam, and some reasonable amount later we're still jamming the whole time.
+    # if the queries don't relate properly to the other jam status notification queries, thne they can disassociate.
+    groupName: jamStatus
+    groupRateLimitTime: 300s
+    partitionDuration: "%jamNoteCountPartitionDuration%"
+    specialHandling: jamStatus # only fires if jam is running
+    conditionOnNoteCount: sum [>=300] during [15min]
+    delay: "15min"
+    triggerOnNoteCount: sum [>=300] during [15min]
+    messageContent: The jam goes on in %roomName%
+    messageFields:
+      Notes: "%roomNoteCount%"
+      Current Players: "%roomUserCount%"
+
+  JamEnding:
+    engine: NoteCountNotification
+    groupName: jamStatus
+    groupRateLimitTime: 300s
+    partitionDuration: "%jamNoteCountPartitionDuration%"
+    specialHandling: jamEnd # only fires if jam is running, stops tracking jam is running
+    conditionOnNoteCount: sum [>=300] during [15min]
+    # the delay must be significantly longer than the trigger query duration. This is the result of
+    # partitioning, buffering, and the fact that we only trigger on note-ons. So as the last notes of the jam session are played,
+    # this notification gets queued. along with jamStatus. there's still a decent chance the trigger won't match,
+    # which is to expected, but the problem is this notification won't get queued up again to check again.
+    delay: "20min" 
+    triggerOnNoteCount: sum [<300] during [10min]
+    messageContent: All great jams must come to an end. Till next time in %roomName%!
+    messageFields:
+      Jam duration: "%jamDuration%"
+      Jam notes: "%jamNotes%"
+      Unique users: "%jamUniqueUsers%"
+      Min user count: "%jamMinUserCount%"
+      Max user count: "%jamMaxUserCount%"
+      Instrument changes: "%jamInstrumentChanges%"
+
+  #---------- jam status DEBUG notifications ------------------------------------------------------
+  DbgJamStarting:
+    engine: NoteCountNotification
+    groupName: jamStart
+    groupRateLimitTime: 5s
+    partitionDuration: "5s"
+    conditionOnNoteCount: sum [<20] during [10s]
+    delay: "10s" # must be the same as trigger query duration
+    triggerOnNoteCount: sum [>=20] during [10s]
+    messageContent: (dbg) A jam session is warming up in %roomName%.
+    specialHandling: jamStart # only fires when jam stopped, signifies to remember time / note count / etc.
+    messageFields:
+      Current Players: "%roomUserCount%"
+
+  DbgJamStatus:
+    engine: NoteCountNotification
+    groupName: jamStatus
+    groupRateLimitTime: 5s
+    partitionDuration: "%jamNoteCountPartitionDuration%"
+    specialHandling: jamStatus # only fires if jam is running
+    conditionOnNoteCount: sum [>=20] during [10s]
+    delay: "10s"
+    triggerOnNoteCount: sum [>=20] during [10s]
+    messageContent: (dbg) The jam goes on in %roomName%
+    messageFields:
+      Jam Duration: "%jamDuration%"
+      Jam Notes: "%jamNotes%"
+      Current Players: "%roomUserCount%"
+
+  DbgJamEnding:
+    engine: NoteCountNotification
+    groupName: jamStatus
+    groupRateLimitTime: 5s
+    verboseDebugLogging: 1
+    specialHandling: jamEnd # only fires if jam is running, stops tracking jam is running
+    partitionDuration: "%jamNoteCountPartitionDuration%"
+    conditionOnNoteCount: sum [>=20] during [10s]
+    delay: "20s"
+    triggerOnNoteCount: sum [<20] during [10s]
+    messageContent: All great jams must come to an end. Till next time in %roomName%!
+    messageFields:
+      Jam duration: "%jamDuration%"
+      Jam notes: "%jamNotes%"
+      Unique users: "%jamUniqueUsers%"
+      Min user count: "%jamMinUserCount%"
+      Max user count: "%jamMaxUserCount%"
+      Instrument changes: "%jamInstrumentChanges%"
+
+  #---------- misc notifications ------------------------------------------------------
+  serverUp:
+    engine: ServerUpDiscordNotification
+    delaySec: 5
+    messageContent: 7jam is now live!
+    messageFields:
+      Notes played: "%serverNoteCount%"
+      Instruments: "%instrumentCount%"
+      Rooms: "%roomCount%"
+      URL: "%homeURL%"
+
+  # Note: this forwards ALL messages, no delay, buffer, or aggregation.
+  ForwardMessageFrom7jamToDiscord:
+    engine: ForwardMessageFrom7jamToDiscord
+
+  # Note: this forwards ALL messages, no delay, buffer, or aggregation.
+  ForwardMessageDiscordTo7jam:
+    engine: ForwardMessageDiscordTo7jam
+
+discord_subscriptions:
+  # This is an array of mappings. We're mapping 7jam room to Discord channel, and specifying the integrations which should be instantiated there.
+
+  # This is the format...
+  #- discord_channel_id: "...."
+  #  7jam_room_id: maj7
+  #  integrations:
+  #    - ForwardMessageFrom7jamToDiscord
+  #    - ForwardMessageDiscordTo7jam

@@ -50,14 +50,15 @@ const ClientMessages = {
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
     AdjustBeatOffset: "AdjustBeatOffset", // relativeBeats
     RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:..., phaseRelativeMS:
+    JoinRoom: "JoinRoom", // roomID
 };
 
 const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
     PleaseReconnect: "PleaseReconnect", // when something on the server requires a reconnection of all users, or when you're not authorized.
     Welcome: "Welcome",// (your UserID & room state, and whether you are an admin)
-    UserEnter: "UserEnter",// (user data), <oldRoomName>
-    UserLeave: "UserLeave",// UserID, <newRoomName>
+    UserEnter: "UserEnter",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
+    UserLeave: "UserLeave",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     Ping: "Ping", // token, users: [{ userid, pingMS, roomID, stats }], rooms: [{roomID, roomName, userCount, stats}]
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
@@ -81,7 +82,7 @@ const ServerMessages = {
 
     ChangeRoomState: "ChangeRoomState",// { cmd:str params:obj }
 
-    UserState: "UserState", // user, name, color, img, x, y
+    UserState: "UserState", // { state: { user, name, color, img, position : { x, y } }, chatMessageEntry }
     Cheer: "Cheer", // userID, text, x, y
 };
 
@@ -135,6 +136,21 @@ const eParamMappingSource = {
     CC11: 11,
 };
 
+const eUserSource = {
+    SevenJam: 1,
+    Discord: 2,
+};
+
+const eMessageSource = {
+    SevenJam: 1,
+    Discord: 2,
+};
+
+const eUserPresence = {
+    Online: 1, // server expects websocket
+    Offline: 2, // server does not expect websocket
+};
+
 
 class DigifuUser {
 
@@ -156,6 +172,9 @@ class DigifuUser {
         this.lastActivity = null; // this allows us to display as idle or release instrument
         this.persistentInfo = null; // if you sign in with google (et al) this gets set to the (public) database info
         this.hasPersistentIdentity = false; // true if your identity is not a guest
+
+        this.source = eUserSource.SevenJam;
+        this.presence = eUserPresence.Online;
 
         this.name = "";
         this.color = "";
@@ -1312,6 +1331,7 @@ class DigifuChatMessage {
         //this.messages = [];// - the latest version of messages for the above events
 
         this.message = null;
+        this.source = eMessageSource.SevenJam;
 
         this.fromUserID = null;
         this.fromUserColor = null; // required because we keep a chat history, so when a user is removed from the list this data would no longer be available. now a client has fallback fields.
@@ -1462,6 +1482,7 @@ class DigifuRoomState {
         this.roomTitle = "";
         this.softwareVersion = gDigifujamVersion;
         this.timeSig = DFMusic.FourFour;
+        this.absoluteURL = "";
 
         this.stats = {
             noteOns: 0,
@@ -1517,9 +1538,10 @@ class DigifuRoomState {
         };
     }
 
-    asJSON() {
+    asFilteredJSON() {
         const replacer = (k, v) => {
             switch (k) {
+                case "discordMemberID": // don't send this to clients.
                 case "metronome":
                 case "quantizer":
                     return undefined;
@@ -1917,4 +1939,7 @@ module.exports = {
     InternalInstrumentParams,
     gDigifujamVersion,
     eParamMappingSource,
+    eUserSource,
+    eUserPresence,
+    eMessageSource,
 };

@@ -7,10 +7,13 @@ const DFUser = require('./models/DFUser')
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
 class DFDB {
-    constructor(onSuccess, onError) {
-        //this.uri = ;// `mongodb+srv://${process.env.DF_ATLAS_USERNAME}:${process.env.DF_ATLAS_PASSWORD}@cluster0.2it8k.mongodb.net`;
-        //this.client = new MongoClient(this.uri, { useNewUrlParser: true });
-        mongoose.connect(process.env.DF_MONGO_CONNECTIONSTRING, { useNewUrlParser: true, useUnifiedTopology: true  });
+    constructor(gConfig, onSuccess, onError) {
+        if (!gConfig.mongo_connection_string) {
+            console.log(`Mongo ignored.`);
+            onSuccess();
+            return;
+        }
+        mongoose.connect(gConfig.mongo_connection_string, { useNewUrlParser: true, useUnifiedTopology: true  });
         const db = mongoose.connection
         db.once('open', _ => {
             console.log(`Mongo connected.`);

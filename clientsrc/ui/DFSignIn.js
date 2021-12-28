@@ -1,6 +1,9 @@
 const React = require('react');
 const DFReactUtils = require("./DFReactUtils");
 
+// Google OAuth flow reference
+// https://developers.google.com/identity/protocols/oauth2
+
 const GetHomepage = () => {
     const st = window.localStorage.getItem("DFHomepage");
     if (st) return st;

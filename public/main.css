@@ -708,6 +708,7 @@ ul.instParamList li.buttonsParam.sfzSelect button {
 
 .component.userList h2 {
     color:#066;
+    margin-bottom:8px;
 }
 .component.userList h2 .roomName{
     color:#0aa;
@@ -717,11 +718,48 @@ ul.instParamList li.buttonsParam.sfzSelect button {
     color:#088;
 }
 
+
+.component.userList ul.onlineUserList {
+    padding-bottom: 0;
+    padding-top:0;
+}
+
+.component.userList ul.offlineUserList {
+    opacity: 75%;
+    padding-bottom: 0;
+    padding-top:0;
+}
+
+
+.component.userList ul.onlineUserList .presenceIndicator {
+    color:#47c447; /* discord color with differet hue*/
+    font-size: 30px;
+    line-height: 0;
+    vertical-align: middle;
+    padding-right: 8px;
+}
+
+.component.userList ul.offlineUserList .presenceIndicator {
+    color:#4752c4; /* discord color */
+    font-size: 30px;
+    line-height: 0;
+    vertical-align: middle;
+    padding-right: 8px;
+}
+
 .component.userList .roomHeaderStats
 {
     color: #066;
     font-size: medium;
     margin-left: 10px;
+}
+
+ul.otherRoomUserList .presenceIndicator {
+    color:#47c447; /* discord color with differet hue*/
+    font-size: 30px;
+    line-height: 0;
+    vertical-align: middle;
+    padding-right: 8px;
 }
 
 
@@ -1484,3 +1522,7 @@ li.updateAboveStuff {
 
 }
 
+
+.discordChatMsgIndicator {
+    width:16px;
+}

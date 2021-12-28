@@ -8,7 +8,11 @@
     "@babel/plugin-transform-react-jsx": "^7.12.16",
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
+    "@discordjs/rest": "^0.2.0-canary.0",
     "adsr-envelope": "^1.0.0",
+    "discord-api-types": "^0.25.2",
+    "discord-webhook-node": "^1.1.8",
+    "discord.js": "^13.3.1",
     "express": "^4.17.1",
     "googleapis": "^67.0.0",
     "mongodb": "^3.6.4",
@@ -22,7 +26,8 @@
     "serve-index": "^1.9.1",
     "socket.io": "^3.0.5",
     "soundfont-player": "^0.12.0",
-    "ws": "^7.4.2"
+    "ws": "^7.4.2",
+    "yaml": "^1.10.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

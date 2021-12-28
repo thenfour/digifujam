@@ -42,6 +42,7 @@ class AudioContextWrapper {
         this.scope = [];
         this.byType = {};
         this.byName = {};
+        this.rooms = {}; // this is the most recent ping data for ALL rooms. badly named.
     }
 
     beginScope(name) {
@@ -382,6 +383,36 @@ class DigifuApp {
         // get user & room state
         let myUserID = data.yourUserID;
 
+        // if the room specifies a URL and you're not currently there, manipulate browser history so you are.
+        const urlsMatch = (a, b) => {
+            if (a.origin != b.origin) {
+                //console.log(`urls dont match; origin ${a.origin} != ${b.origin}.`);
+                return false; // like, "http://localhost:8081"
+            }
+            if (a.pathname != b.pathname) { // path without query string. DONt match querystring. like "/maj7/"
+                //console.log(`urls dont match; path ${a.pathname} != ${b.pathname}.`);
+                return false; // like, "http://localhost:8081"
+            }
+            //console.log(`urls match; ${a} === ${b}.`);
+            return true;
+        };
+        const currentURL = new URL(window.location);
+        const roomURL = new URL(data.roomState.absoluteURL);
+        if (data.roomState.absoluteURL) {
+            if (!urlsMatch(currentURL, roomURL)) {
+                // copy any query strings over to new URL.
+                currentURL.searchParams.forEach((v,k) => {
+                    roomURL.searchParams.set(k, v);
+                });
+                //console.log(`pushing state.`);
+                window.history.pushState({ roomID: data.roomState.roomID  }, '', roomURL);
+            }
+        }
+
+        if (!window.history.state || (!('roomID' in window.history.state))) {
+            window.history.replaceState({ roomID : data.roomState.roomID }, '', window.location);
+        }
+
         this.roomState = DF.DigifuRoomState.FromJSONData(data.roomState);
 
         // room-specific CSS is loaded at startup, so your initial room is also the CSS you load. joining new rooms doesn't load new CSS.
@@ -432,9 +463,11 @@ class DigifuApp {
         nu.thaw();
         this.roomState.users.push(nu);
 
-        let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
-        msg.thaw();
-        this._addChatMessage(msg);
+        if (data.chatMessageEntry) {
+            let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
+            msg.thaw();
+            this._addChatMessage(msg);
+        }
 
         if (this.stateChangeHandler) {
             this.stateChangeHandler();
@@ -451,9 +484,11 @@ class DigifuApp {
         }
         this.roomState.users.splice(foundUser.index, 1);
 
-        let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
-        msg.thaw();
-        this._addChatMessage(msg);
+        if (data.chatMessageEntry) {
+            let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
+            msg.thaw();
+            this._addChatMessage(msg);
+        }
 
         if (this.stateChangeHandler) {
             this.stateChangeHandler();
@@ -741,8 +776,11 @@ class DigifuApp {
             //foundUser.user.pingMS = u.pingMS;
             foundUser.user.IntegrateFromPing(u);
         });
-        this.worldPopulation = data.rooms.reduce((a, b) => a + b.users.length, 0);
         this.serverUptimeSec = data.serverUptimeSec;
+
+        // world population should count UNIQUE userIDs, in case users are in multiple rooms. that may be the case with
+        // discord ("external"/"offline") users.
+        this.worldPopulation = (new Set(data.rooms.map(r => r.users).reduce((a,b)=>a.concat(b), []).map(u => u.userID))).size;
 
         // pings are a great time to do some cleanup.
 
@@ -1164,6 +1202,15 @@ class DigifuApp {
             noteOnHandler,
             noteOffHandler
         );
+
+        //console.log(`APP CONNECT event; installing onpopstate handler`);
+        window.onpopstate = (e) => {
+            if (e.state && e.state.roomID) {
+                //console.log(`you want to move to room ${e.state.roomID}`);
+                this.net.JoinRoom(e.state.roomID);
+            }
+        };
+
         this.net.Connect(this, roomKey, google_access_token);
     };
 

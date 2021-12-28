@@ -199,6 +199,9 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.UploadServerState, data);
     };
 
+    JoinRoom(roomID) {
+        this.socket.emit(DF.ClientMessages.JoinRoom, { roomID });
+    }
 
     Disconnect() {
         this.ResetQueuedParamChangeData();

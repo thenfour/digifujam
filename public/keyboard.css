@@ -9,7 +9,7 @@ ul.keyboard li {
 	margin: 0;
 	padding: 0;
 	list-style: none;
-	transition: background-color 0.45s;
+	transition: background-color 0.15s; /* you want this long enough so very fast notes aren't totally invisible/illegible, but not so long that it creates a visual mess*/
 }
 
 ul.keyboard .white {

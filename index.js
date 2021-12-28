@@ -1,4 +1,5 @@
 const express = require('express')
+const YAML = require('yaml')
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -10,6 +11,7 @@ const DFStats = require('./DFStats.js');
 const serveIndex = require('serve-index')
 const { google } = require('googleapis');
 const DFDB = require('./DFDB');
+const DFDiscordBot = require('./discordBot.js');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -29,66 +31,180 @@ gNanoid = nanoid;
 // ----------------------------------------------------------------------------------------------------------------
 // startup assertions
 console.log(".");
-console.log(".");
 console.log(`Checking preconditions ..`);
 let preconditionsPass = true;
-if (!process.env.DF_ADMIN_PASSWORD) {
-  preconditionsPass = false;
-  console.log(`!! YOU HAVE NOT SET AN ADMIN PASSWORD VIA DF_ADMIN_PASSWORD. YOU SHOULD.`);
+
+
+let gConfig = {};
+
+if (fs.existsSync("./config.yaml")) {
+   console.log(`Loading from config.yaml`);
+   const f = fs.readFileSync("./config.yaml", {encoding : 'utf8', flag : 'r'});
+   gConfig = YAML.parse(f.toString());
+} else {
+   throw new Error(`config.yaml not found`);
 }
-if (!process.env.DF_GOOGLE_CLIENT_ID || !process.env.DF_GOOGLE_CLIENT_SECRET) {
+
+// for server-specific and secret tokens, put in a separate config file which will override the base public one.
+if (fs.existsSync("./config2.yaml")) {
+   console.log(`Loading from config2.yaml`);
+   const f = fs.readFileSync("./config2.yaml", {encoding : 'utf8', flag : 'r'});
+   gConfig = Object.assign(gConfig, YAML.parse(f.toString()));
+}
+
+
+
+if (!gConfig.admin_key) {
+  preconditionsPass = false;
+  console.log(`!! YOU HAVE NOT SET AN ADMIN PASSWORD VIA admin_key. YOU SHOULD.`);
+}
+if (!gConfig.google_client_id || !gConfig.google_client_secret) {
   preconditionsPass = false;
   console.log(`!! YOU HAVE NOT SET DF_GOOGLE_CLIENT_ID OR DF_GOOGLE_CLIENT_SECRET. GOOGLE LOGIN NOT AVAILABLE.`);
 }
-if (!process.env.DF_MONGO_CONNECTIONSTRING) {
+if (!gConfig.mongo_connection_string) {
   preconditionsPass = false;
-  console.log(`!! YOU HAVE NOT SET DF_MONGO_CONNECTIONSTRING. THINGS WILL DEFINITELY BREAK.`);
+  console.log(`!! YOU HAVE NOT SET mongo_connection_string. THINGS WILL DEFINITELY BREAK.`);
 }
+
 console.log(preconditionsPass ? `Preconditions OK` : `Preconditions FAILED. Expect chaos.`);
 console.log(".");
-console.log(".");
 
-
-gStoragePath = 'C:\\root\\Dropbox\\root\\Digifujam\\storage'; // todo: configure this kind of stuff in ENV at least...
-gPathSeparator = "\\";
-gGoogleRedirectURL = "http://localhost:8081";
-if (process.env.DF_IS_OPENODE == 1) {
-  console.log(`Openode detected.`);
-  gPathSeparator = "/";
-  gStoragePath = '/var/www/storage';
-  gGoogleRedirectURL = "https://7jam.io";
-}
-
-if (process.env.DF_STORAGE_PATH) {
-  gStoragePath = process.env.DF_STORAGE_PATH;
-}
-if (process.env.DF_PATH_SEPARATOR) {
-  gPathSeparator = process.env.DF_PATH_SEPARATOR;
-}
-if (process.env.DF_GOOGLE_LOGIN_REDIRECT_URL) {
-  gGoogleRedirectURL = process.env.DF_GOOGLE_LOGIN_REDIRECT_URL;
-}
-
-const gStatsDBPath = `${gStoragePath}${gPathSeparator}DFStatsDB.json`;
+const gStatsDBPath = `${gConfig.storage_path}${gConfig.path_separator}DFStatsDB.json`;
 
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
-const gPathLatestServerState = `${gStoragePath}${gPathSeparator}serverState_latest.json`;
+const gPathLatestServerState = `${gConfig.storage_path}${gConfig.path_separator}serverState_latest.json`;
 
 let gServerStats = null;
+let gDB = null;
+let gDiscordBot = null;
+let gRooms = {}; // map roomID to RoomServer
 
-let gDB = null;// new DFDB.DFDB();
+// to be run when db is initialized...
+let gDBInitProc = () => {
+  const hooks = [
+    new DFStats.StatsLogger(gStatsDBPath, gDB),
+  ];
+  let g7jamAPI = new _7jamAPI();
+  if (gConfig.discord_bot_token) {
+    gDiscordBot = new DFDiscordBot.DiscordBot(gConfig);
+    hooks.push(new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI));
+  }
+  gServerStats = new DFStats.ActivityHook(hooks);
+};
 
+// ----------------------------------------------------------------------------------------------------------------
+class _7jamAPI
+{
+  constructor() {
+    this.serverStartTime = new Date();
+  }
 
+  GenerateDiscordUserID = (discordMemberID) => 'discord_' + discordMemberID;//.replace(/\W/g, '_');  <-- currently not necessary to sanitize.
+
+  GetApproximateGlobalInstrumentCount() {
+    const instrumentNames = new Set();
+    Object.keys(gRooms).forEach(roomID => {
+      gRooms[roomID].roomState.instrumentCloset.forEach(instrument => {
+        instrumentNames.add(instrument.name);
+      });
+    });
+    return instrumentNames.size;
+  }
+
+  GetServerUptimeMS()
+  {
+    return (new Date()) - this.serverStartTime;
+  }
+
+  GetRoomState(roomID) {
+    if (!(roomID in gRooms)){
+      throw new Error(`GetRoomState: nonexistent 7jam room ${roomID}`);
+    }
+    const room = gRooms[roomID];
+    return room.roomState;
+  }
+
+  Get7JamNoteCountForRoom(roomID) {
+    if (!(roomID in gRooms)){
+      throw new Error(`Get7JamNoteCountForRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
+    }
+    const room = gRooms[roomID];
+    return room.roomState.stats.noteOns;
+  }
+
+  GetServerNoteCount() {
+    let ret = 0;
+    Object.keys(gRooms).forEach(roomID => {
+      ret += this.Get7JamNoteCountForRoom(roomID);
+    });
+    return ret;
+  }
+
+  Get7JamUserCountForRoom(roomID) {
+    if (!(roomID in gRooms)){
+      throw new Error(`Get7JamUserCountForRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
+    }
+    const room = gRooms[roomID];
+    return room.roomState.users.filter(u => u.source === DF.eUserSource.SevenJam).length;
+  }
+
+  GetGlobalOnlinePopulation() {
+    let ret = 0;
+    Object.keys(gRooms).forEach(roomID => {
+      ret += this.Get7JamUserCountForRoom(roomID);
+    });
+    return ret;
+  }
+
+  UpdateDiscordUserInRoom(roomID, userName, color, discordMemberID) {
+    if (!(roomID in gRooms)){
+      throw new Error(`UpdateDiscordUserInRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
+    }
+
+    // hack; discord's default color is black which just looks bad. simple workaround: replace ugle colors with better colors
+    color = color === '#000000' ? '#008888' : color;
+
+    const room = gRooms[roomID];
+    let u = room.AddOrUpdateExternalUser(DF.eUserSource.Discord, DF.eUserPresence.Offline, userName, color, this.GenerateDiscordUserID(discordMemberID));
+    if (u)
+      u.discordMemberID = discordMemberID;
+  }
+
+  RemoveDiscordUserInRoom(roomID, discordMemberID) {
+    if (!(roomID in gRooms)){
+      throw new Error(`RemoveDiscordUserInRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
+    }
+    const room = gRooms[roomID];
+    room.RemoveExternalUser(this.GenerateDiscordUserID(discordMemberID));
+  }
+
+  SendDiscordMessageToRoom(roomID, discordMemberID, msgText) {
+    if (!(roomID in gRooms)){
+      throw new Error(`SendDiscordMessageToRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
+    }
+    const room = gRooms[roomID];
+    //const user = room.roomState.users[0]; // TODO: use a real discord user
+    let u = room.roomState.FindUserByID(this.GenerateDiscordUserID(discordMemberID));
+    if (!u) {
+      console.log(`SendDiscordMessageToRoom: Unable to forward this message because the user was not found.`);
+      console.log(`   -> your discord integrations/subscriptions might need to require user list sync?`);
+      console.log(`   -> roomID ${roomID} ${discordMemberID} ${msgText}`);
+      throw new Error(`SendDiscordMessageToRoom: Unable to forward this message because the user was not found.`);
+    }
+
+    room.HandleUserChatMessage(u.user, msgText, DF.eMessageSource.Discord);
+  }
+};
 
 // ----------------------------------------------------------------------------------------------------------------
 // BEGIN: google login stuff...
-const gHasGoogleAPI = () => process.env.DF_GOOGLE_CLIENT_ID && process.env.DF_GOOGLE_CLIENT_SECRET;
-//const gHasGoogleAPI = () => false;
+const gHasGoogleAPI = () => gConfig.google_client_id && gConfig.google_client_secret;
 
 if (!gHasGoogleAPI()) {
   console.log(`DF_GOOGLE_CLIENT_ID or DF_GOOGLE_CLIENT_SECRET are not set; google login will not be available.`);
 } else {
-  console.log(`Google auth enabled with client ID ${process.env.DF_GOOGLE_CLIENT_ID}`);
+  console.log(`Google auth enabled with client ID ${gConfig.google_client_id}`);
 }
 
 // here's an endpoint you can call to get a URL for logging in with google.
@@ -100,9 +216,9 @@ app.get('/google_auth_url', (req, res) => {
       return;
     }
     const oauth2Client = new google.auth.OAuth2(
-      process.env.DF_GOOGLE_CLIENT_ID,
-      process.env.DF_GOOGLE_CLIENT_SECRET,
-      gGoogleRedirectURL
+      gConfig.google_client_id,
+      gConfig.google_client_secret,
+      gConfig.google_redirect_url
     );
 
     const scopes = [
@@ -129,9 +245,9 @@ app.get('/google_complete_authentication', (req, res) => {
     //console.log(`/google_complete_authentication invoked with code ${req.query.code}`);
     const code = req.query.code;
     const oauth2Client = new google.auth.OAuth2(
-      process.env.DF_GOOGLE_CLIENT_ID,
-      process.env.DF_GOOGLE_CLIENT_SECRET,
-      gGoogleRedirectURL
+      gConfig.google_client_id,
+      gConfig.google_client_secret,
+      gConfig.google_redirect_url
     );
 
     oauth2Client.getToken(code).then(function (tokens) {
@@ -146,12 +262,6 @@ app.get('/google_complete_authentication', (req, res) => {
   }
 });
 // END: google login stuff ----------------------------------------------------------------------------------------------------------------
-
-// populate initial room state
-// https://gleitz.github.io/midi-js-soundfonts/MusyngKite/names.json
-
-let gRooms = {}; // map roomID to RoomServer
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // convert a db model DFUser to a struct usable in DigifuUser.persistentInfo
@@ -184,6 +294,12 @@ class RoomServer {
   constructor(data, serverStateObj) {
     // thaw into live classes
     this.roomState = DF.DigifuRoomState.FromJSONData(data, url => fs.readFileSync(url, "utf8"), url => JSON.parse(fs.readFileSync(url)));
+
+    this.roomState.absoluteURL = gConfig.host_prefix + this.roomState.route;
+    if (!this.roomState.absoluteURL.endsWith('/')) {
+      this.roomState.absoluteURL += '/';
+    }
+    console.log(`ROOM state URL ${this.roomState.absoluteURL }`);
 
     // do not do this stuff on the client side, because there it takes whatever the server gives. thaw() is enough there.
     let usedInstrumentIDs = [];
@@ -306,6 +422,16 @@ class RoomServer {
   }
 
   OnClientIdentify(clientSocket, clientUserSpec) {
+    // handler
+    const rejectUserEntry = () => {
+      try {
+        clientSocket.emit(DF.ServerMessages.PleaseReconnect);
+      } catch (e) {
+        log(`rejectUserEntry exception occurred`);
+        log(e);
+      }
+    };
+
     try {
       // the data is actually a DigifuUser object. but for security it should be copied.
       let u = new DF.DigifuUser();
@@ -324,16 +450,6 @@ class RoomServer {
       }
 
       // handler
-      const rejectUserEntry = () => {
-        try {
-          clientSocket.emit(DF.ServerMessages.PleaseReconnect);
-        } catch (e) {
-          log(`rejectUserEntry exception occurred`);
-          log(e);
-        }
-      };
-
-      // handler
       const completeUserEntry = (userID, hasPersistentIdentity, persistentInfo) => {
         u.userID = userID.toString(); // this could be a mongo Objectid
         u.hasPersistentIdentity = hasPersistentIdentity;
@@ -347,7 +463,7 @@ class RoomServer {
         }
         u.img = null;
 
-        if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === process.env.DF_ADMIN_PASSWORD) {
+        if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === gConfig.admin_key) {
           log(`An admin has been identified id=${u.userID} name=${u.name}.`);
           u.addGlobalRole("sysadmin");
         } else {
@@ -366,12 +482,14 @@ class RoomServer {
         chatMessageEntry.fromRoomName = clientSocket.DFFromRoomName;
         this.roomState.chatLog.push(chatMessageEntry);
 
-        gServerStats.OnUserWelcome(this.roomState.roomID, u, this.roomState.users.length);
+        gServerStats.OnUserWelcome(this.roomState, u, this.roomState.users.filter(u => u.source === DF.eUserSource.SevenJam).length,
+          clientSocket.DFIsDoingRoomChange);
+        clientSocket.DFIsDoingRoomChange = false;
 
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
           yourUserID: userID,
-          roomState: JSON.parse(this.roomState.asJSON()) // filter out stuff that shouldn't be sent to clients
+          roomState: JSON.parse(this.roomState.asFilteredJSON()) // filter out stuff that shouldn't be sent to clients
         });
 
         // broadcast user enter to all clients except the user.
@@ -408,7 +526,10 @@ class RoomServer {
             }
           });
       } else { // token.
-        completeUserEntry("guest_" + DF.generateID(), false, EmptyDFUserToPersistentInfo());
+        // try to reuse existing user ID, so we can track this user through the world instead of considering
+        // room changes totally new users.
+        let newUserID = clientSocket.DFUserID || "guest_" + DF.generateID();
+        completeUserEntry(newUserID, false, EmptyDFUserToPersistentInfo());
       }
 
     } catch (e) {
@@ -522,7 +643,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       foundUser.user.persistentInfo.stats.noteOns++;
-      gServerStats.OnNoteOn(this.roomState.roomID, foundUser.user);
+      gServerStats.OnNoteOn(this.roomState, foundUser.user);
       this.roomState.stats.noteOns++;
 
       // broadcast to all clients except foundUser
@@ -656,7 +777,7 @@ class RoomServer {
 
       // set the value.
       this.roomState.integrateRawParamChanges(foundInstrument.instrument, data.patchObj, data.isWholePatch);
-      gServerStats.OnParamChange(this.roomState.roomID, foundUser.user, Object.keys(data.patchObj).length);
+      gServerStats.OnParamChange(this.roomState, foundUser.user, Object.keys(data.patchObj).length);
 
       // broadcast to all clients
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentParams, {
@@ -859,7 +980,7 @@ class RoomServer {
         bank.presets.push(patchObj);
       }
 
-      gServerStats.OnPresetSave(this.roomState.roomID, foundUser.user);
+      gServerStats.OnPresetSave(this.roomState, foundUser.user, foundInstrument.instrument.getDisplayName(), patchObj.patchName);
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentPresetSave, {
         instrumentID: foundInstrument.instrument.instrumentID,
@@ -872,7 +993,29 @@ class RoomServer {
     }
   }
 
+  // chat msgs can come from discord or 7jam itself so this logic is shared.
+  HandleUserChatMessage(fromUser, msgText, source) {
+    let nm = new DF.DigifuChatMessage();
+    nm.messageID = DF.generateID();
+    nm.source = source;
+    nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
+    nm.message = msgText;
+    nm.fromUserID = fromUser.userID;
+    nm.fromUserColor = fromUser.color;
+    nm.fromUserName = fromUser.name;
+    nm.timestampUTC = new Date();
 
+    gServerStats.OnMessage(this.roomState, fromUser, nm);
+    fromUser.persistentInfo.stats.messages++;
+    this.roomState.stats.messages++;
+
+    this.roomState.chatLog.push(nm);
+
+    // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
+    // this allows simpler handling of incorporating the messageID.
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.UserChatMessage, nm);
+  };  
+  
 
   OnClientChatMessage(ws, msg) {
     try {
@@ -887,33 +1030,8 @@ class RoomServer {
       if (msg.message.length < 1) return;
       msg.message = msg.message.substring(0, DF.ServerSettings.ChatMessageLengthMax);
 
-      // "TO" user?
-      let foundToUser = this.roomState.FindUserByID(msg.toUserID);
+      this.HandleUserChatMessage(foundUser.user, msg.message, DF.eMessageSource.SevenJam);
 
-      let nm = new DF.DigifuChatMessage();
-      nm.messageID = DF.generateID();
-      nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
-      nm.message = msg.message;
-      nm.fromUserID = foundUser.user.userID;
-      nm.fromUserColor = foundUser.user.color;
-      nm.fromUserName = foundUser.user.name;
-      nm.timestampUTC = new Date();
-      if (foundToUser != null) {
-        nm.toUserID = foundToUser.user.userID;
-        nm.toUserColor = foundToUser.user.color;
-        nm.toUserName = foundToUser.user.name;
-        return;
-      }
-
-      gServerStats.OnMessage(this.roomState.roomID, foundUser.user);
-      foundUser.user.persistentInfo.stats.messages++;
-      this.roomState.stats.messages++;
-
-      this.roomState.chatLog.push(nm);
-
-      // broadcast to all clients. even though it can feel more responsive and effiicent for the sender to just handle their own,
-      // this allows simpler handling of incorporating the messageID.
-      io.to(this.roomState.roomID).emit(DF.ServerMessages.UserChatMessage, nm);
     } catch (e) {
       log(`OnClientChatMessage exception occurred`);
       log(e);
@@ -933,10 +1051,27 @@ class RoomServer {
   }
 
   DoUserRoomChange(ws, user, params) {
+    if (!params.roomID) {
+      log(`Error: no room ID specified for change.`);
+      return;
+    }
+    if (!(params.roomID in gRooms)) {
+      log(`Error: User ${user.userID} is attempting to join a nonexistent room ${params.roomID}`);
+      return;
+    }
     let newRoom = gRooms[params.roomID];
     //log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
     // send user part to everyone else in old room
+    ws.DFIsDoingRoomChange = true;  // gets unset in welcome
     this.ClientLeaveRoom(ws, user.userID, newRoom.roomState.roomTitle);
+
+    if (!('x' in params)) {
+      params.x = newRoom.roomState.width / 2;
+    }
+    if (!('y' in params)) {
+      params.y = newRoom.roomState.height / 2;
+    }
+
     // enter the new room
     ws.DFPosition = {
       x: params.x,
@@ -951,6 +1086,8 @@ class RoomServer {
       //log(`Item ${item.itemID} has no interaction type ${interactionType}`);
       return;
     }
+    if (user.presence !== DF.eUserPresence.Online) // sanity
+      return;
     if (interactionSpec.processor != "server") {
       return;
     }
@@ -961,6 +1098,22 @@ class RoomServer {
       default:
         log(`Item ${item.itemID} / interaction type ${interactionType} has unknown interaction FN ${interactionSpec.fn}`);
         break;
+    }
+  };
+
+  OnClientJoinRoom(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnClientJoinRoom => unknown user`);
+        return;
+      }
+
+      this.DoUserRoomChange(ws, foundUser.user, { roomID: data.roomID});
+
+    } catch (e) {
+      log(`OnClientJoinRoom exception occurred`);
+      log(e);
     }
   };
 
@@ -1066,7 +1219,7 @@ class RoomServer {
         return;
       }
 
-      gServerStats.OnCheer(this.roomState.roomID, foundUser.user);
+      gServerStats.OnCheer(this.roomState, foundUser.user);
       foundUser.user.persistentInfo.stats.cheers++;
       this.roomState.stats.cheers++;
 
@@ -1158,7 +1311,8 @@ class RoomServer {
       this.roomState.users.removeIf(u => {
         let socketExists = knownConnectedUserIDs.some(id => id == u.userID);
 
-        let shouldDelete = !socketExists;
+        // ONLY sevenjam native users are expected to have a websocket.
+        let shouldDelete = !socketExists && u.source === DF.eUserSource.SevenJam;
         if (shouldDelete) {
           log(`PING USER CLEANUP removing userid ${u.userID}`);
           deletedUsers.push(u);
@@ -1167,7 +1321,9 @@ class RoomServer {
       });
 
       // for the users that deleted, gracefully kill them off.
-      deletedUsers.forEach(u => { this.ClientLeaveRoom(null, u.userID) });
+      deletedUsers.forEach(u => {
+        this.ClientLeaveRoom(null, u.userID);
+      });
 
       this.Idle_CheckIdlenessAndEmit();
 
@@ -1185,6 +1341,8 @@ class RoomServer {
           name: u.name,
           persistentInfo: u.persistentInfo,
           color: u.color,
+          source: u.source,
+          presence: u.presence,
         };
       };
 
@@ -1195,7 +1353,6 @@ class RoomServer {
           isPrivate: !!room.roomState.isPrivate,
           roomName: room.roomState.roomTitle,
           users: room.roomState.users.map(u => transformUser(u)),
-          //users: room.roomState.users,//.map(u => { return { userID: u.userID, name: u.name, color: u.color, pingMS: u.pingMS }; }),
           stats: room.roomState.stats
         };
       });
@@ -1261,6 +1418,10 @@ class RoomServer {
       // remove user from room.
       this.roomState.users.splice(foundUser.index, 1);
 
+      // important to put this AFTER the splice, so the new user count is correct.
+      gServerStats.OnUserLeave(this.roomState, foundUser.user, this.roomState.users.filter(u => u.source === DF.eUserSource.SevenJam).length,
+        ws.DFIsDoingRoomChange);
+
       if (ws) {
         ws.leave(this.roomState.roomID);
       }
@@ -1270,6 +1431,97 @@ class RoomServer {
       log(e);
     }
   };
+
+  UpdateExternalUser(userObj, presence, userName, color) {
+      let newName = DF.sanitizeUsername(userName);
+      if (newName == null) {
+        log(`UpdateExternalUser: invalid username ${userName}.`);
+        return;
+      }
+      let newColor = DF.sanitizeUserColor(color);
+      if (newColor == null) {
+        log(`UpdateExternalUser: invalid color ${color}.`);
+        return;
+      }
+
+      userObj.name = userName;
+      userObj.color = color;
+      userObj.presence = presence;
+
+      const data = {
+        userID: userObj.userID,
+        name: userObj.name,
+        color: userObj.color,
+        img: userObj.img,
+        position: userObj.position,
+        presence,
+      };
+
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.UserState, { state: data });
+  };
+
+  // returns the user object, or null
+  AddOrUpdateExternalUser(source, presence, userName, color, userID) {
+
+    let foundUser = this.roomState.FindUserByID(userID);
+    if (foundUser) {
+      return this.UpdateExternalUser(foundUser.user, presence, userName, color);
+    }
+
+    // create
+    let u = new DF.DigifuUser();
+
+    u.name = DF.sanitizeUsername(userName);
+    if (u.name == null) {
+      log(`AddOrUpdateExternalUser: invalid username ${userName}.`);
+      return null;
+    }
+    u.color = DF.sanitizeUserColor(color);
+    if (u.color == null) {
+      log(`AddOrUpdateExternalUser: invalid color ${color}.`);
+      return null;
+    }
+
+    u.userID = userID.toString(); // this could be a mongo Objectid
+    u.source = source;
+    u.presence = presence;
+    u.hasPersistentIdentity = false;
+    u.persistentInfo = EmptyDFUserToPersistentInfo();
+    u.lastActivity = new Date();
+    u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
+    u.img = null;
+
+    this.roomState.users.push(u);
+
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.UserEnter, { user: u });
+    return u;
+  };
+
+  // call this to leave the socket from this room.
+  RemoveExternalUser(userID) {
+    // find the user object and remove it.
+    let foundUser = this.roomState.FindUserByID(userID);
+    if (foundUser == null) {
+      log(`Error: Removing unknown external userID ${userID}`);
+      return;
+    }
+
+    log(`RemoveExternalUser => ${userID} ${foundUser.user.name}`);
+
+    // remove references to this user.
+    this.roomState.instrumentCloset.forEach(inst => {
+      if (inst.controlledByUserID != foundUser.user.userID) return;
+      inst.ReleaseOwnership();
+      // broadcast this to clients
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
+    });
+
+    // remove user from room.
+    this.roomState.users.splice(foundUser.index, 1);
+
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.UserLeave, { userID });
+  };
+
 
   // call this to join this socket to this room and initiate welcome.
   ClientJoin(ws, fromRoomName) {
@@ -1386,7 +1638,7 @@ let OnBackupServerState = () => {
     const allRoomsJSON = JSON.stringify(allRooms);
 
     const d = new Date();
-    const path = `${gStoragePath}${gPathSeparator}serverState_` +
+    const path = `${gConfig.storage_path}${gConfig.path_separator}serverState_` +
       `${d.getUTCFullYear()}${(d.getUTCMonth() + 1).toString().padStart(2, '0')}${d.getUTCDate().toString().padStart(2, '0')}` +
       `_${d.getUTCHours().toString().padStart(2, '0')}_${d.getUTCMinutes().toString().padStart(2, '0')}_${d.getUTCSeconds().toString().padStart(2, '0')}.json`;
 
@@ -1410,7 +1662,7 @@ let OnPruneServerStateInterval = () => {
     setTimeout(OnPruneServerStateInterval, DF.ServerSettings.ServerStatePruneIntervalMS);
 
     let filesToDelete = [];
-    fs.readdir(gStoragePath, (err, files) => {
+    fs.readdir(gConfig.storage_path, (err, files) => {
       const m1 = new Date();
       files.forEach(file => {
         try {
@@ -1423,8 +1675,7 @@ let OnPruneServerStateInterval = () => {
           let age = m1 - new Date(fileDate);
 
           if (age > DF.ServerSettings.ServerStateMaxAgeMS) {
-            //console.log(`${file} age ${age} maxage=${DF.ServerSettings.ServerStateMaxAgeMS} file=${gStoragePath + gPathSeparator + file}`);
-            filesToDelete.push(gStoragePath + gPathSeparator + file);
+            filesToDelete.push(gConfig.storage_path + gConfig.path_separator + file);
           }
 
         } catch (ex) {
@@ -1501,6 +1752,7 @@ let roomsAreLoaded = function () {
 
       ws.on('disconnect', data => OnDisconnect(ws, data));
       ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
+      ws.on(DF.ClientMessages.JoinRoom, data => ForwardToRoom(ws, room => room.OnClientJoinRoom(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRequest, data => ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRelease, () => ForwardToRoom(ws, room => room.OnClientInstrumentRelease(ws)));
       ws.on(DF.ClientMessages.NoteOn, data => ForwardToRoom(ws, room => room.OnClientNoteOn(ws, data)));
@@ -1544,11 +1796,13 @@ let roomsAreLoaded = function () {
 
   setTimeout(OnPruneServerStateInterval, DF.ServerSettings.ServerStatePruneIntervalMS);
 
-  let port = process.env.PORT || 8081;
+  gServerStats.OnRoomsLoaded(gRooms);
+
+  let port = gConfig.port || 8081;
   http.listen(port, () => {
     log(`listening on *:${port}`);
   });
-};
+}; // roomsAreLoaded
 
 let loadRoom = function (jsonTxt, serverRestoreState) {
   roomState = JSON.parse(jsonTxt);
@@ -1561,7 +1815,7 @@ let loadRoom = function (jsonTxt, serverRestoreState) {
 }
 
 
-app.use("/storage", express.static(gStoragePath), serveIndex(gStoragePath, { 'icons': true }));
+app.use("/storage", express.static(gConfig.storage_path), serveIndex(gConfig.storage_path, { 'icons': true }));
 
 // webpack compiler outputs to non-public dist; make it accessible as /dist.
 app.use("/dist", express.static("./dist"));
@@ -1584,15 +1838,13 @@ try {
   console.log(e);
   serverRestoreState = null;
 }
-loadRoom(fs.readFileSync("pub.json"), serverRestoreState);
-loadRoom(fs.readFileSync("maj7.json"), serverRestoreState);
-loadRoom(fs.readFileSync("revisionMainStage.json"), serverRestoreState);
-loadRoom(fs.readFileSync("hall.json"), serverRestoreState);
 
-gDB = new DFDB.DFDB(() => {
-  console.log(`[dfdb created]`);
-  gServerStats = new DFStats.DFStats(gStatsDBPath, gDB);
-  console.log(`[dfstats created]`);
+gConfig.room_json.forEach(path => {
+  loadRoom(fs.readFileSync(path), serverRestoreState);
+});
+
+gDB = new DFDB.DFDB(gConfig, () => {
+  gDBInitProc();
   roomsAreLoaded();
 }, () => {
   // error
