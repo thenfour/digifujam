@@ -15,7 +15,6 @@ room_json:
 #discord_bot_token: ...
 #discord_client_id: ...
 jam_tracker_max_duration: 12 hours
-jam_note_count_backtrack: 30 minutes
 queryVariables:
   someUserCount: "3"
   manyUserCount: "5"
@@ -113,6 +112,7 @@ discord_integrations:
     conditionOnNoteCount: sum [<100] during [5min]
     delay: "5min" # must be the same as trigger query duration
     triggerOnNoteCount: sum [>=100] during [5min]
+    noteCountBacktrack: 30 minutes # when notifying new jam, how far back to include note count
     messageContent: A jam session is warming up in %roomName%.
     messageFields:
       Current Players: "%roomUserCount%"
@@ -125,9 +125,9 @@ discord_integrations:
     groupRateLimitTime: 300s
     partitionDuration: "%jamNoteCountPartitionDuration%"
     specialHandling: jamStatus # only fires if jam is running
-    conditionOnNoteCount: sum [>=300] during [15min]
-    delay: "15min"
-    triggerOnNoteCount: sum [>=300] during [15min]
+    conditionOnNoteCount: sum [>=600] during [30min]
+    delay: "30min"
+    triggerOnNoteCount: sum [>=600] during [30min]
     messageContent: The jam goes on in %roomName%
     messageFields:
       Notes: "%roomNoteCount%"
@@ -139,12 +139,12 @@ discord_integrations:
     groupRateLimitTime: 300s
     partitionDuration: "%jamNoteCountPartitionDuration%"
     specialHandling: jamEnd # only fires if jam is running, stops tracking jam is running
-    conditionOnNoteCount: sum [>=300] during [15min]
+    conditionOnNoteCount: sum [>=300] during [10min]
     # the delay must be significantly longer than the trigger query duration. This is the result of
     # partitioning, buffering, and the fact that we only trigger on note-ons. So as the last notes of the jam session are played,
     # this notification gets queued. along with jamStatus. there's still a decent chance the trigger won't match,
     # which is to expected, but the problem is this notification won't get queued up again to check again.
-    delay: "20min" 
+    delay: "15min" 
     triggerOnNoteCount: sum [<300] during [10min]
     messageContent: All great jams must come to an end. Till next time in %roomName%!
     messageFields:
@@ -166,6 +166,7 @@ discord_integrations:
     triggerOnNoteCount: sum [>=20] during [10s]
     messageContent: (dbg) A jam session is warming up in %roomName%.
     specialHandling: jamStart # only fires when jam stopped, signifies to remember time / note count / etc.
+    noteCountBacktrack: 30 minutes # when notifying new jam, how far back to include note count
     messageFields:
       Current Players: "%roomUserCount%"
 
@@ -173,7 +174,7 @@ discord_integrations:
     engine: NoteCountNotification
     groupName: jamStatus
     groupRateLimitTime: 5s
-    partitionDuration: "%jamNoteCountPartitionDuration%"
+    partitionDuration: "5s"
     specialHandling: jamStatus # only fires if jam is running
     conditionOnNoteCount: sum [>=20] during [10s]
     delay: "10s"
@@ -188,11 +189,11 @@ discord_integrations:
     engine: NoteCountNotification
     groupName: jamStatus
     groupRateLimitTime: 5s
-    verboseDebugLogging: 1
+    verboseDebugLogging: 0
     specialHandling: jamEnd # only fires if jam is running, stops tracking jam is running
-    partitionDuration: "%jamNoteCountPartitionDuration%"
+    partitionDuration: "5s"
     conditionOnNoteCount: sum [>=20] during [10s]
-    delay: "20s"
+    delay: "15s"
     triggerOnNoteCount: sum [<20] during [10s]
     messageContent: All great jams must come to an end. Till next time in %roomName%!
     messageFields:

@@ -170,8 +170,8 @@ class StaticTimeProvider {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// does not slice or dice data in any way.
-class SimpleValueArrayDataSource {
+// tracks a sampled signal value over time
+class SampledSignalDataSource {
    constructor(initialValue, maxAgeMS, timeProvider) {
       this.maxAgeMS = maxAgeMS || (1000 * 60 * 60 * 24);
 
@@ -221,16 +221,7 @@ class SimpleValueArrayDataSource {
       return this.events.slice(iFirstItemToKeep - 1);
    }
    IsMatch(query) {
-      // query.durationMS
-      // query.matchType = eRangeMatchType.Touch or Maintain
-      // query.range
       let events = this.GetEventWindow(query.durationMS);
-
-      // console.log('IsMatch with event window {');
-      // events.forEach(e => {
-      //    console.log(`  [@ ${e.time} = ${e.value}]`);
-      // });
-      // console.log('}');
 
       let isMatch = false;
       switch (query.matchType) {
@@ -248,15 +239,12 @@ class SimpleValueArrayDataSource {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-// does not slice or dice data in any way.
-class PartitionedValueDataSource {
-   constructor(initialValue, partitionSizeMS, maxAgeMS, timeProvider, reduceFn) {
+// used for keeping stats about impulses/events (note ons) over time.
+class HistogramDataSource {
+   constructor(partitionSizeMS, maxAgeMS, timeProvider) {
       this.maxAgeMS = maxAgeMS || (1000 * 60 * 60 * 24);
       this.partitionSizeMS = partitionSizeMS || 60000; // default 1 minute partitions ()
-      this.reduceFn = reduceFn;
       this.timeProvider = timeProvider || new LiveTimeProvider();
-
-      console.assert(reduceFn, `you must specify a way to aggregate/accumulate/reduce values into partitions.`);
 
       const maxPartitionCount = this.maxAgeMS / this.partitionSizeMS;
       console.log(`Max partition count is ${maxPartitionCount}`);
@@ -264,16 +252,7 @@ class PartitionedValueDataSource {
          throw new Error(`  -> that's too much.`);
       }
 
-      // { partitionID, partitionStartTimeMS, partitionEndTimeMS, accumulator } --- MUST BE SORTED BY TIME for optimization.
-      const now = this.timeProvider.nowMS();
-      const partitionID = Math.floor(now / this.partitionSizeMS);
-      this.events = [ {
-         accumulator : initialValue,
-         partitionID,
-         partitionStartTimeMS : partitionID * this.partitionSizeMS, // NB: don't try to be clever with boundaries: it doesn't really add anything except confusion when things don't behave like you expected.
-         partitionEndTimeMS : (partitionID + 1) * this.partitionSizeMS,
-         lastSampleTimeMS : partitionID * this.partitionSizeMS,
-      } ];
+      this.events = [];
    }
    Prune() {
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
@@ -292,11 +271,13 @@ class PartitionedValueDataSource {
 
       // calculate a partition id
       const partitionID = Math.floor(timeMS / this.partitionSizeMS);
-      const latestPartition = this.events.at(-1);
-      if (latestPartition.partitionID === partitionID) {
-         latestPartition.accumulator = this.reduceFn(latestPartition.accumulator, value);
-         latestPartition.lastSampleTimeMS = timeMS;
-         return;
+      if (this.events.length) {
+         const latestPartition = this.events.at(-1);
+         if (latestPartition.partitionID === partitionID) {
+            latestPartition.accumulator += value;
+            latestPartition.lastSampleTimeMS = timeMS;
+            return;
+         }
       }
 
       this.events.push({
@@ -310,22 +291,15 @@ class PartitionedValueDataSource {
       this.Prune();
    }
    // return an array of events which correspond to a window of time (since now)
+   // any bins which touch the window are returned.
    GetPartitionsInWindow(durationMS) {
       let boundaryTimeMS = this.timeProvider.nowMS() - durationMS;
-      // find the first partition that is fully within the window. later we always add 1 extra to fill
-      // initial state, so don't pick partial windows; that's done naturally later.
-      let iFirstItemToKeep = this.events.findIndex(e => e.partitionStartTimeMS >= boundaryTimeMS);
+      // find the first partition that is partially within the window.
+      let iFirstItemToKeep = this.events.findIndex(e => e.partitionEndTimeMS >= boundaryTimeMS);
       if (iFirstItemToKeep === -1) {
-         // nothing matches; return the latest value which we assume fills this whole window.
-         return [ this.events.at(-1) ];
+         return [];// no data in window.
       }
-      if (iFirstItemToKeep === 0) {
-         // return everything.
-         return this.events.slice();
-      }
-
-      // include previous to backfill.
-      return this.events.slice(iFirstItemToKeep - 1);
+      return this.events.slice(iFirstItemToKeep);
    }
 
    GetSumForDurationMS(ms) {
@@ -356,7 +330,6 @@ class PartitionedValueDataSource {
          break;
       case eRangeMatchType.Sum:
          const sum = events.reduce((acc, e) => acc + e.accumulator, 0);
-         //console.log(` sum = ${sum}`);
          isMatch = query.range.IsMatch(sum);
          break;
       default:
@@ -376,7 +349,7 @@ class PartitionedValueDataSource {
 
 function TestPartitionProvider() {
    let tp = new StaticTimeProvider(0);
-   let ds = new PartitionedValueDataSource(0, 1000, 9000, tp, (a, b) => a + b);
+   let ds = new HistogramDataSource(1000, 9000, tp);
 
    // virtual history.
    console.assert(ds.IsMatch(new RangeDurationQuery('maintains [0] during [300 hr]')));
@@ -454,7 +427,7 @@ function RunTests() {
 
    let tp = new StaticTimeProvider(10000);
 
-   let ds = new SimpleValueArrayDataSource(0, 9000, tp);
+   let ds = new SampledSignalDataSource(0, 9000, tp);
    ds.AddEvent(0, 0);
 
    let q = new RangeDurationQuery('maintains [0] during [3 s]');
@@ -505,7 +478,7 @@ module.exports = {
    DurationSpecToMS,
    eRangeMatchType,
    RangeDurationQuery,
-   SimpleValueArrayDataSource,
-   PartitionedValueDataSource,
+   SampledSignalDataSource,
+   HistogramDataSource,
    RunTests,
 };

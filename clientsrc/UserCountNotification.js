@@ -12,7 +12,7 @@ class UserCountNotification {
       this.triggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.triggerOnUserCount));
       this.conditionQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.conditionOnUserCount));
       this.delayMS = 10 + RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.delay)); // add  for a margin when we recheck the query.
-      this.userCountDataSource = new RangeWindowQuery.SimpleValueArrayDataSource(0);
+      this.userCountDataSource = new RangeWindowQuery.SampledSignalDataSource(0);
       this.groupRateLimitMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.groupRateLimitTime));
    }
 

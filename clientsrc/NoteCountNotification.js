@@ -15,10 +15,7 @@ class NoteCountNotification {
       this.delayMS = 10 + RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.delay)); // add  for a margin when we recheck the query.
       this.partitionDurationMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.partitionDuration), 5000);
       this.noteCountDataSource =
-          new RangeWindowQuery.PartitionedValueDataSource(
-              0, this.partitionDurationMS, null, null,
-              (a, b) => a + b // we are receiving notes on so accumulate them. it's not total notes, but new notes played.
-          );
+          new RangeWindowQuery.HistogramDataSource(this.partitionDurationMS, null, null);
 
       this.fireTimer = null;  // we don't want to set a timer every single note on. instead accumulate
       this.queuedNoteOns = 0; // every time we set the fire timer, reset this. each timer process these.
@@ -75,7 +72,7 @@ class NoteCountNotification {
                return;
             }
 
-            const backtrackMS = RangeWindowQuery.DurationSpecToMS(this.mgr.gConfig.jam_note_count_backtrack);
+            const backtrackMS = RangeWindowQuery.DurationSpecToMS(this.integrationSpec.noteCountBacktrack);
             this.subscription.jamTracker.RegisterJamStart(this.noteCountDataSource.GetSumForDurationMS(backtrackMS));
          }
 
