@@ -114,13 +114,12 @@ function DurationTokenToMS(tok, _default) {
    throw new Error(`Suffix unknown on time duration token ${tok}`);
 }
 
-function DurationSpecToMS(str, _default)
-{
+function DurationSpecToMS(str, _default) {
    if (!str) {
       return _default || 0;
    }
    const tokens = str.split(' ').filter(s => s.length > 0);
-   return tokens.reduce((a,b) => a + DurationTokenToMS(b), 0);
+   return tokens.reduce((a, b) => a + DurationTokenToMS(b), 0);
 }
 
 const eRangeMatchType = {
@@ -177,8 +176,9 @@ class StaticTimeProvider {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // tracks a sampled signal value over time
 class SampledSignalDataSource {
-   constructor(initialValue, maxAgeMS, timeProvider) {
+   constructor(initialValue, maxAgeMS, timeProvider, backup) {
       this.maxAgeMS = maxAgeMS || (1000 * 60 * 60 * 24);
+      this.timeProvider = timeProvider || new LiveTimeProvider();
 
       // { value, time} --- MUST BE SORTED BY TIME for optimization.
       // the first item's time should be *treated* as 0, to fill before we tracked data.
@@ -186,13 +186,30 @@ class SampledSignalDataSource {
          value : initialValue,
          time : 0
       } ];
-      this.timeProvider = timeProvider || new LiveTimeProvider();
+
+      if (backup) {
+         if (backup?.type !== 'SampledSignalDataSource') {
+            console.log(`Mismatched dataset type; expected SampledSignalDataSource`);
+         } else if (!backup.events) {
+            console.log(`SampledSignalDataSource did not find events in the backup; no backup will be restored.`);
+         } else {
+            // validate all events.
+            let valid = backup.events.every(e => {
+               return 'value' in e && 'time' in e;
+            });
+            if (valid) {
+               this.events = JSON.parse(JSON.stringify(backup.events));
+               console.log(`SampledSignalDataSource restored from backup ${this.events.length} events`);
+            }
+         }
+      }
    }
+
    Dump() {
       console.log(JSON.stringify(this.events, null, 2));
    }
 
-   GetDebugData() {
+   Serialize() {
       return {
          binSizeMS : this.binSizeMS,
          type : 'SampledSignalDataSource',
@@ -200,7 +217,13 @@ class SampledSignalDataSource {
       };
    }
 
-   PruneEvents() {
+   HasData() {
+      if (!this.events)
+         return false;
+      return this.events.some(e => !!e.value);
+   }
+
+   Prune() {
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
       let iFirstItemToKeep = this.events.findIndex(e => e.time >= boundaryTime);
       if (iFirstItemToKeep === -1) {
@@ -215,7 +238,7 @@ class SampledSignalDataSource {
       time = (time === undefined) ? this.timeProvider.nowMS() : time;
       console.assert(!this.events.length || this.events.at(-1).time <= time, `Events must be added in chronological order.`);
       this.events.push({value, time});
-      this.PruneEvents();
+      this.Prune();
    }
    // return an array of events which correspond to a window of time (since now)
    // the window should also include the latest known value before the window,
@@ -268,7 +291,7 @@ class SampledSignalDataSource {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // used for keeping stats about impulses/events (note ons) over time.
 class HistogramDataSource {
-   constructor(binSizeMS, maxAgeMS, timeProvider) {
+   constructor(binSizeMS, maxAgeMS, timeProvider, backup) {
       this.maxAgeMS = maxAgeMS || (1000 * 60 * 60 * 24);
       this.binSizeMS = binSizeMS || 60000; // default 1 minute bins ()
       this.timeProvider = timeProvider || new LiveTimeProvider();
@@ -279,20 +302,33 @@ class HistogramDataSource {
          throw new Error(`  -> that's too much.`);
       }
 
-      this.events = [];
+      this.bins = [];
+
+      if (backup) {
+         if (backup?.type !== 'HistogramDataSource') {
+            console.log(`Mismatched dataset type; expected HistogramDataSource`);
+         } else if (!backup.bins) {
+            console.log(`HistogramDataSource did not find bins in the backup; no backup will be restored.`);
+         } else {
+            // validate all bins.
+            let valid = backup.bins.every(e => {
+               return 'binEndTimeMS' in e && 'binID' in e && 'value' in e;
+            });
+            if (valid) {
+               this.bins = JSON.parse(JSON.stringify(backup.bins));
+               console.log(`HistogramDataSource restored from backup ${this.bins.length} bins`);
+            }
+         }
+      }
    }
 
-   GetDebugData() {
-      // do a few preprocess things:
-      // - add empty missing bins to complete the set.
-      // - bake age from now into the data
-      // - calculate the SUM of bins to now
+   Serialize() {
       const nowMS = Date.now();
-      let bins = this.events.map(e => { // create a completely new copy of events
+      let bins = this.bins.map(e => { // create a completely new copy of bins
          return {
-            value: e.value,
-            binID: e.binID,
-            binEndTimeMS: e.binEndTimeMS,
+            value : e.value,
+            binID : e.binID,
+            binEndTimeMS : e.binEndTimeMS,
          };
       });
 
@@ -308,77 +344,83 @@ class HistogramDataSource {
          value : 0,
          binID : binID,
          binEndTimeMS : (binID + 1) * this.binSizeMS,
-      }, props);
+      },
+                           props);
    }
 
    Prune() {
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
-      let iFirstItemToKeep = this.events.findIndex(e => e.binEndTimeMS >= boundaryTime);
+      let iFirstItemToKeep = this.bins.findIndex(e => e.binEndTimeMS >= boundaryTime);
       if (iFirstItemToKeep === -1) {
          // let's keep at least 1 item
-         this.events = [ this.events.at(-1) ];
+         this.bins = [ this.bins.at(-1) ];
          return;
       }
 
-      this.events = this.events.slice(iFirstItemToKeep);
+      this.bins = this.bins.slice(iFirstItemToKeep);
    }
 
    AddEvent(value) {
       const timeMS = this.timeProvider.nowMS();
-      console.assert(!this.events.length || this.events.at(-1).lastSampleTimeMS <= timeMS, `Events must be added in chronological order.`);
 
       // calculate a bin id
       const binID = Math.floor(timeMS / this.binSizeMS);
       let latestBin = null;
-      if (this.events.length) {
-         latestBin = this.events.at(-1);
+      if (this.bins.length) {
+         latestBin = this.bins.at(-1);
          if (latestBin.binID === binID) {
             latestBin.value += value;
-            latestBin.lastSampleTimeMS = timeMS;
+            //latestBin.lastSampleTimeMS = timeMS;
             return;
          }
       }
 
       const newBin = this.ConstructBinWithID(binID, {
-         value: value,
-         lastSampleTimeMS: timeMS,
+         value : value,
+         //lastSampleTimeMS: timeMS,
       });
 
       if (latestBin?.value === 0) {
          // latest was an empty bin; just replace it because it was worthless.
-         this.events[this.events.length - 1] = newBin;
+         this.bins[this.bins.length - 1] = newBin;
       } else {
-         this.events.push(newBin);
+         this.bins.push(newBin);
       }
 
       this.Prune();
    }
 
-   // return an array of events which correspond to a window of time (since now)
+   // return an array of bins which correspond to a window of time (since now)
    // any bins which touch the window are returned.
    GetBinsInWindow(durationMS) {
       let boundaryTimeMS = this.timeProvider.nowMS() - durationMS;
       // find the first bin that is partially within the window.
-      let iFirstItemToKeep = this.events.findIndex(e => e.binEndTimeMS >= boundaryTimeMS);
+      let iFirstItemToKeep = this.bins.findIndex(e => e.binEndTimeMS >= boundaryTimeMS);
       if (iFirstItemToKeep === -1) {
-         return [];// no data in window.
+         return []; // no data in window.
       }
-      return this.events.slice(iFirstItemToKeep);
+      return this.bins.slice(iFirstItemToKeep);
    }
 
    GetSumForDurationMS(ms) {
-      let events = this.GetBinsInWindow(ms);
-      const sum = events.reduce((acc, e) => acc + e.value, 0);
+      let bins = this.GetBinsInWindow(ms);
+      const sum = bins.reduce((acc, e) => acc + e.value, 0);
       return sum;
+   }
+
+   HasData() {
+      if (!this.bins)
+         return false;
+      return this.bins.some(e => !!e.value);
    }
 
    IsMatch(query, tag, verboseDebugLogging) {
       this.AddEvent(0); // ensure a bin exists for "now"
-      let events = this.GetBinsInWindow(query.durationMS);
+      let bins = this.GetBinsInWindow(query.durationMS);
 
       if (verboseDebugLogging) {
          console.log(`${tag} IsMatch with query ${query.spec} with event window ${'{'}`);
-         events.forEach(e => {
+         bins.forEach(e => {
             const endAge = Date.now() - e.binEndTimeMS;
             console.log(`  [id=${e.binID} val=${e.value}, age = ${DFU.FormatTimeMS(endAge)} ]`);
          });
@@ -387,13 +429,13 @@ class HistogramDataSource {
       let isMatch = false;
       switch (query.matchType) {
       case eRangeMatchType.Touch:
-         isMatch = events.some(e => query.range.IsMatch(e.value));
+         isMatch = bins.some(e => query.range.IsMatch(e.value));
          break;
       case eRangeMatchType.Maintain:
-         isMatch = events.every(e => query.range.IsMatch(e.value));
+         isMatch = bins.every(e => query.range.IsMatch(e.value));
          break;
       case eRangeMatchType.Sum:
-         const sum = events.reduce((acc, e) => acc + e.value, 0);
+         const sum = bins.reduce((acc, e) => acc + e.value, 0);
          isMatch = query.range.IsMatch(sum);
          break;
       default:

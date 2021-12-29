@@ -25,7 +25,7 @@ class DiscordBot {
 
         // don't bother looking at channels we don't have integrations with.
         this.relevantChannelIDs = {}; // map channelID to array of member IDs.
-        gConfig.discord_subscriptions?.forEach(s => {
+        Object.values(gConfig.discord_subscriptions).forEach(s => {
             this.relevantChannelIDs[s.discord_channel_id] = new Set();
         });
 

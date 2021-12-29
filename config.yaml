@@ -15,6 +15,7 @@ room_json:
 #discord_bot_token: ...
 #discord_client_id: ...
 jam_tracker_max_duration: 8hours
+ActivityDatasourcesBackupInterval: 5m 17s
 variables:
   # to detect "some users", precondition: (< x users for y duration), then wait z, and check if (>= x users for z duration)
   someUserPreDuration: 5m
@@ -31,14 +32,17 @@ discord_log_member_count: "4" # to avoid massive log spam when dumping discord d
 activity_hook_data_sources:
   UserCounts:
     engine: UserCounts
+    maxAge: 24h
 
   RoomNoteCount:
     engine: NoteCount
     binDuration: 20s # heavily impacts the nuances in timing. a big bin means the end of a jam may have a LOT of notes then 0 instantly.
+    maxAge: 24h
 
   DbgRoomNoteCount:
     engine: NoteCount
     binDuration: 5s
+    maxAge: 24h
 
 discord_integrations:
 
@@ -112,7 +116,7 @@ discord_integrations:
 
     jamStart:
       preCondition: "sum [<200] during [10min]"
-      delay: 10m 1s
+      delay: 11m
       triggerMinRoomUsers: 2
       trigger: "sum [>=200] during [10min]"
       messageContent: "(dbg) A jam session is warming up in %roomName%."
@@ -120,7 +124,7 @@ discord_integrations:
         Current Players: "%roomUserCount%"
 
     jamOngoing:
-      delay: 30m 1s # this naturally sets the min interval between notifications
+      delay: 31m # this naturally sets the min interval between notifications
       trigger: "sum [>=600] during [30min]"
       messageContent: "(dbg) The jam goes on in %roomName%"
       messageFields:
@@ -129,7 +133,7 @@ discord_integrations:
         Current Players: "%roomUserCount%"
 
     jamEnd:
-      delay: 15m 1s
+      delay: 16m
       trigger: "sum [<50] during [15min]"
       messageContent: "All great jams must come to an end. Till next time in %roomName%!"
       messageFields:
@@ -150,7 +154,7 @@ discord_integrations:
 
     jamStart:
       preCondition: "sum [<20] during [10s]"
-      delay: "10s" # must be the same as trigger query duration
+      delay: "16s" # must be the same as trigger query duration
       triggerMinRoomUsers: 2
       trigger: "sum [>=20] during [10s]"
       messageContent: "(dbg) A jam session is warming up in %roomName%."
@@ -158,7 +162,7 @@ discord_integrations:
         Current Players: "%roomUserCount%"
 
     jamOngoing:
-      delay: "21s"
+      delay: "26s"
       trigger: "sum [>=20] during [20s]"
       messageContent: "(dbg) The jam goes on in %roomName%"
       messageFields:
@@ -167,7 +171,7 @@ discord_integrations:
         Current Players: "%roomUserCount%"
 
     jamEnd:
-      delay: "11s" # should be significantly longer than jamOngoing.delay, because they are fired as pairs of events and if the have similar delays there can often be 2 back-to-back discord messages.
+      delay: "16s"
       trigger: "sum [<20] during [10s]"
       messageContent: "All great jams must come to an end. Till next time in %roomName%!"
       messageFields:

@@ -72,8 +72,11 @@ console.log(preconditionsPass ? `Preconditions OK` : `Preconditions FAILED. Expe
 console.log(".");
 
 const gStatsDBPath = `${gConfig.storage_path}${gConfig.path_separator}DFStatsDB.json`;
-
 app.use("/DFStatsDB.json", express.static(gStatsDBPath));
+
+const gActivityDatasetsPath = `${gConfig.storage_path}${gConfig.path_separator}ActivityDatasets.json`;
+app.use("/ActivityDatasets.json", express.static(gActivityDatasetsPath));
+
 const gPathLatestServerState = `${gConfig.storage_path}${gConfig.path_separator}serverState_latest.json`;
 
 let gServerStats = null;
@@ -90,7 +93,7 @@ let gDBInitProc = () => {
   let discordIntegrationMgr = null;
   if (gConfig.discord_bot_token) {
     gDiscordBot = new DFDiscordBot.DiscordBot(gConfig);
-    discordIntegrationMgr = new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI);
+    discordIntegrationMgr = new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI, gActivityDatasetsPath);
     hooks.push(discordIntegrationMgr);
   }
   gServerStats = new DFStats.ActivityHook(hooks);

@@ -6,31 +6,36 @@ const DF = require('./DFCommon');
 // accumulates stats during a detected jam period.
 // it will act as an integration in order to hook events.
 class JamTracker {
-   constructor(gConfig, roomID, _7jamAPI) {
+   constructor(gConfig, roomID, _7jamAPI, backup) {
       this._7jamAPI = _7jamAPI;
       this.roomID = roomID;
 
       this.maxJamDurationMS = RangeWindowQuery.DurationSpecToMS(gConfig.jam_tracker_max_duration);
 
-      this.jamOn = false;
-      this.jamUserIDs = new Set();
-      this.jamOnStartTimeMS = 0;
-      this.jamOnNoteCount = 0;
-
-      this.integrationID = "jamTracker";
+      this.jamOn = backup?.jamOn || false;
+      this.jamUserIDs = new Set(backup?.jamUserIDs || []);
+      this.jamOnStartTimeMS = backup?.jamOnStartTimeMS || 0;
+      this.jamOnNoteCount = backup?.jamOnNoteCount || 0;
+      this.jamInstrumentChanges = backup?.instrumentChanges || 0;
+      this.jamMinUserCount = backup?.minUserCount || 0;
+      this.jamMaxUserCount = backup?.maxUserCount || 0;
    }
 
-   GetDebugData() {
+   Serialize() {
       const durationMS = Date.now() - this.jamOnStartTimeMS
       const notesPlayed = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - this.jamOnNoteCount;
       return {
-         integrationID : this.integrationID,
          durationMS,
          notesPlayed,
          uniqueUsers : this.jamUserIDs.size,
          maxUserCount : this.jamMaxUserCount,
          minUserCount : this.jamMinUserCount,
          instrumentChanges : this.jamInstrumentChanges,
+         jamOnNoteCount : this.jamOnNoteCount,
+         jamOn : this.jamOn,
+         jamOnStartTimeMS : this.jamOnStartTimeMS,
+         jamOnNoteCount : this.jamOnNoteCount,
+         jamUserIDs : [...this.jamUserIDs ],
       };
    }
 
@@ -74,9 +79,9 @@ class JamTracker {
    GetJamStats() {
       if (!this.jamOn)
          return null;
-      const durationMS = Date.now() - this.jamOnStartTimeMS
+      const durationMS = Date.now() - this.jamOnStartTimeMS;
       if (durationMS > this.maxJamDurationMS)
-      return null;
+         return null;
       const notesPlayed = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - this.jamOnNoteCount;
       return {
          durationMS,
@@ -150,19 +155,21 @@ class JamTracker {
    |           ^ push back
    +---+---+---+--------+ trigger will never be satisfied
 
+   So for status messages, they can be missed and are periodic so just ignore them when there's an existing timer.
+
 */
 class JamStatusNotification {
    get RequiresUserListSync() {
       return false;
    }
 
-   constructor(subscription, integrationSpec, mgr, integrationID) {
+   constructor(subscription, integrationSpec, mgr, integrationID, backup) {
       this.mgr = mgr;
       this.subscription = subscription;
       this.integrationSpec = integrationSpec;
       this.integrationID = integrationID;
 
-      this.jamTracker = new JamTracker(this.mgr.gConfig, this.subscription.roomID, this.mgr._7jamAPI);
+      this.jamTracker = new JamTracker(this.mgr.gConfig, this.subscription.roomID, this.mgr._7jamAPI, backup?.jamTracker);
 
       const populateQueries = (spec, specialHandling) => {
          if (spec.preCondition) {
@@ -184,10 +191,9 @@ class JamStatusNotification {
       this.binDurationMS = ds.binDurationMS;
 
       this.fireTimer = null; // we don't want to set a timer every single note on. queue noteons.
-      //this.groupRateLimitMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.groupRateLimitTime));
    }
 
-   GetDebugData() {
+   Serialize() {
       const specToObj = (spec) => {
          return {
             preCondition : spec.conditionQuery?.spec,
@@ -197,13 +203,15 @@ class JamStatusNotification {
       };
       return {
          integrationID : this.integrationID,
-         //groupName : this.integrationSpec.groupName,
-         //groupRateLimitMS : this.groupRateLimitMS,
-         //groupRateLimitRemainingMS : this.subscription.RateLimitedTimeRemainingMS(this.integrationSpec.groupName, 0, this.groupRateLimitMS),
          jamStart : specToObj(this.integrationSpec.jamStart),
          jamOngoing : specToObj(this.integrationSpec.jamOngoing),
          jamEnd : specToObj(this.integrationSpec.jamEnd),
+         jamTracker : this.jamTracker.Serialize(),
       };
+   }
+
+   GetDebugData() {
+      return this.Serialize();
    }
 
    GetDataSource() {
@@ -230,7 +238,7 @@ class JamStatusNotification {
       }, this.binDurationMS); // it's not 100% certain if this is the theoretically correct time to use, but i think it's practical and simple.
    }
 
-   HandlePreCondition(spec, proc) {
+   HandlePreCondition(spec, existingTimerAction, proc) {
       //const spec = this.integrationSpec.jamStart;
       if (!spec.conditionQuery) {
          this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} no precondition; pass by default.`);
@@ -242,7 +250,11 @@ class JamStatusNotification {
       }
 
       if (spec.timer) {
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} clearing existing trigger`);
+         if (existingTimerAction === 'ignore') {
+            this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} ignoring existing timer`);
+            return;
+         }
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} clearing existing timer`);
          clearTimeout(spec.timer);
       }
 
@@ -255,15 +267,15 @@ class JamStatusNotification {
 
       // check for jam starting.
       if (!this.jamTracker.IsJamRunning()) {
-         this.HandlePreCondition(this.integrationSpec.jamStart, () => {this.CheckStartTimerProc()});
+         this.HandlePreCondition(this.integrationSpec.jamStart, 'replace', () => {this.CheckStartTimerProc()});
          return;
       }
 
       // have to do ongoing jam & ending jam in parallel, and just short-circuit in their own procs.
       // they have different delay times, and different conditions, so can't share the same proc.
       // they just need to be associated in that a jam END should cancel a jam STATUS notification.
-      this.HandlePreCondition(this.integrationSpec.jamOngoing, () => {this.CheckOngoingTimerProc()});
-      this.HandlePreCondition(this.integrationSpec.jamEnd, () => {this.CheckEndTimerProc()});
+      this.HandlePreCondition(this.integrationSpec.jamOngoing, 'ignore', () => {this.CheckOngoingTimerProc()});
+      this.HandlePreCondition(this.integrationSpec.jamEnd, 'replace', () => {this.CheckEndTimerProc()});
    }
 
    CheckStartTimerProc() {
@@ -335,14 +347,6 @@ class JamStatusNotification {
    }
 
    HandlePassedTrigger(spec, jamInfo) {
-      // const rateLimitedDelayMS = this.subscription.RateLimitedTimeRemainingMS(
-      //     this.integrationSpec.groupName, 0, this.groupRateLimitMS);
-
-      // if (rateLimitedDelayMS > 0) {
-      //    console.log(`${this.integrationID} ${spec.specialHandling} // notification rate limit; discarded notification before setting timer: ${rateLimitedDelayMS}`);
-      //    return;
-      // }
-
       let messageContent = spec.messageContent;
 
       let substitutions = {};

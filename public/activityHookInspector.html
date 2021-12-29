@@ -196,8 +196,6 @@
          }
 
          OnData(data) {
-            //data.subscriptions.sort((a, b) => a.title > b.title ? 1 : -1);
-            //console.log(`completed downloading data ${data.length}`);
             this.setState({
                data,
                dataLastReceived: new Date(),

@@ -9,24 +9,48 @@ const {ServerUpDiscordNotification} = require('./clientsrc/ServerUpDiscordNotifi
 const {JamStatusNotification} = require('./clientsrc/NoteCountNotification');
 
 class UserCountsDataSource {
-   constructor(mgr, dataSourceSpec) {
+   constructor(mgr, dataSourceSpec, id, ourBackup) {
       this.mgr = mgr;
+      this.id = id;
       this.dataSourceSpec = dataSourceSpec;
-      this.globalDataSource = new RangeWindowQuery.SampledSignalDataSource(0);
-      this.roomDataSources = new Map();
+      this.backup = null;
+      this.maxAgeMS = RangeWindowQuery.DurationSpecToMS(dataSourceSpec.maxAge);
+
+      this.roomDataSets = new Map();
+
+      // recreate datasets which are being restored from backup.
+      Object.keys(ourBackup).forEach(dataSetID => {
+         if (dataSetID === '__global') {
+            this.globalDataSet = new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS, null, ourBackup[dataSetID]);
+            return;
+         }
+         this.roomDataSets.set(dataSetID, new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS, null, ourBackup[dataSetID]));
+      });
+
+      if (!this.globalDataSet) {
+         this.globalDataSet = new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS);
+      }
    }
 
    // data sources: just return a map of underlying data sets
-   GetDebugData() {
+   Serialize() {
       let ret = {
-         __global : this.globalDataSource.GetDebugData(),
+         __global : this.globalDataSet.Serialize(),
       };
-      //const roomDataDmp = {};
-      this.roomDataSources.forEach((v, k) => {
-         ret[`# ${k}`] = v.GetDebugData();
+      this.roomDataSets.forEach((v, k) => {
+         ret[k] = v.Serialize();
       });
 
       return ret;
+   }
+
+   PruneData() {
+      this.globalDataSet.Prune();
+      this.roomDataSets.forEach(v => v.Prune());
+   }
+
+   HasData() {
+      return this.globalDataSet.HasData() || [...this.roomDataSets.values() ].some(v => v.HasData());
    }
 
    // treat both JOIN and PART the same because either way we just want to examine the absolute user count.
@@ -39,10 +63,10 @@ class UserCountsDataSource {
    }
 
    GetDataSourceForRoom(roomID) {
-      if (!this.roomDataSources.has(roomID)) {
-         this.roomDataSources.set(roomID, new RangeWindowQuery.SampledSignalDataSource(0));
+      if (!this.roomDataSets.has(roomID)) {
+         this.roomDataSets.set(roomID, new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS));
       }
-      return this.roomDataSources.get(roomID);
+      return this.roomDataSets.get(roomID);
    }
 
    HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom) {
@@ -51,7 +75,7 @@ class UserCountsDataSource {
       const roomID = roomState.roomID;
       setTimeout(() => {
          const globalRoomUserCount = this.mgr._7jamAPI.GetGlobalOnlinePopulation();
-         this.globalDataSource.AddEvent(globalRoomUserCount);
+         this.globalDataSet.AddEvent(globalRoomUserCount);
          const dsRoom = this.GetDataSourceForRoom(roomID);
          dsRoom.AddEvent(roomUserCount);
       }, 10);
@@ -60,28 +84,41 @@ class UserCountsDataSource {
 
 // data sources: just return a map of underlying data sets
 class NoteCountDataSource {
-   constructor(mgr, dataSourceSpec) {
+   constructor(mgr, dataSourceSpec, id, ourBackup) {
       this.mgr = mgr;
+      this.id = id;
       this.dataSourceSpec = dataSourceSpec;
       this.binDurationMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(this.dataSourceSpec.binDuration), 5000);
-      //this.dataSource = new RangeWindowQuery.HistogramDataSource(this.binDurationMS, null, null);
-      this.roomDataSources = new Map();
+      this.maxAgeMS = RangeWindowQuery.DurationSpecToMS(dataSourceSpec.maxAge);
       this.fireTimer = null;  // we don't want to set a timer every single note on. instead accumulate
       this.queuedNoteOns = 0; // every time we set the fire timer, reset this. each timer process these.
+      this.roomDataSets = new Map();
+
+      // recreate datasets which are being restored from backup.
+      Object.keys(ourBackup).forEach(dataSetID => {
+         const dataSetBackup = ourBackup[dataSetID];
+         if (dataSetBackup.binSizeMS != this.binDurationMS) {
+            console.log(`Looks like bin size changed; can't use backup.`);
+            return;
+         }
+         this.roomDataSets.set(dataSetID, new RangeWindowQuery.HistogramDataSource(this.binDurationMS, this.maxAgeMS, null, dataSetBackup));
+      });
    }
 
-   GetDebugData() {
+   Serialize() {
       const roomDataDmp = {};
-      this.roomDataSources.forEach((v, k) => {
-         roomDataDmp[k] = v.GetDebugData();
+      this.roomDataSets.forEach((v, k) => {
+         roomDataDmp[k] = v.Serialize();
       });
-
       return roomDataDmp;
-      //{
-      //    queuedNoteOns : this.queuedNoteOns,
-      //    binDurationMS : this.binDurationMS,
-      //    roomData : roomDataDmp,
-      // };
+   }
+
+   PruneData() {
+      this.roomDataSets.forEach(v => v.Prune());
+   }
+
+   HasData() {
+      return [...this.roomDataSets.values() ].some(v => v.HasData());
    }
 
    On7jamNoteOn(roomState) {
@@ -100,10 +137,10 @@ class NoteCountDataSource {
    }
 
    GetDataSourceForRoom(roomID) {
-      if (!this.roomDataSources.has(roomID)) {
-         this.roomDataSources.set(roomID, new RangeWindowQuery.HistogramDataSource(this.binDurationMS, null, null));
+      if (!this.roomDataSets.has(roomID)) {
+         this.roomDataSets.set(roomID, new RangeWindowQuery.HistogramDataSource(this.binDurationMS, this.maxAgeMS));
       }
-      return this.roomDataSources.get(roomID);
+      return this.roomDataSets.get(roomID);
    }
 
    ProcessNoteOns(roomID, noteOnsToProcess) {
@@ -170,7 +207,7 @@ class ForwardMessageDiscordTo7jam {
 // replaces the discord_subscriptions config section with a class.
 // a "subscription" really just represents a mapping between discord & 7jam channels.
 class DiscordIntegrationSubscription {
-   constructor(id, subscription, gConfig, mgr) {
+   constructor(id, subscription, gConfig, mgr, backup) {
       this.discordChannelID = subscription['discord_channel_id'];
       this.roomID = subscription['7jam_room_id'];
       this.discordChannelDesc = subscription.discord_channel_desc || this.discordChannelID;
@@ -178,28 +215,25 @@ class DiscordIntegrationSubscription {
       this.gConfig = gConfig;
       this.id = id;
       this.mgr = mgr;
-      this.groups = new Map(); // map group name to time MS last sent
-      //this.jamTracker = new JamTracker(gConfig, this.roomID, this.mgr._7jamAPI);
 
-      this.integrations = subscription.integrations.map(integrationID => this.CreateIntegration(integrationID));
-      //this.integrations.push(this.jamTracker);
+      this.integrations = subscription.integrations.map(integrationID => this.CreateIntegration(integrationID, backup?.integrations?.[integrationID]));
    }
 
-   GetDebugData() {
-      const groupInfo = {};
+   Serialize() {
+      const integrationDmp = {};
+      this.integrations.forEach(i => {
+         integrationDmp[i.integrationID] = i.Serialize?.() || i.integrationID;
+      });
       return {
-         id : this.id,
          title : this.title,
          discordChannelDesc : this.discordChannelDesc,
          discordChannelID : this.discordChannelID,
          sevenJamRoomID : this.roomID,
-         groups : groupInfo,
-         //jamTracker : this.jamTracker.GetDebugData(),
-         integrations : this.integrations.map(i => i.GetDebugData()),
+         integrations : integrationDmp,
       };
    }
 
-   CreateIntegration(integrationID) {
+   CreateIntegration(integrationID, intBackup) {
       if (!integrationID) {
          throw new Error(`Integration ID is required.`);
       }
@@ -209,12 +243,11 @@ class DiscordIntegrationSubscription {
       }
 
       const factory = {
-         'UserCountNotification' : () => new UserCountNotification(this, integrationSpec, this.mgr, integrationID),
-         //'NoteCountNotification' : () => new NoteCountNotification(this, integrationSpec, this.mgr, integrationID),
-         'JamStatusNotification' : () => new JamStatusNotification(this, integrationSpec, this.mgr, integrationID),
-         'ForwardMessageFrom7jamToDiscord' : () => new ForwardMessageFrom7jamToDiscord(this, integrationSpec, this.mgr, integrationID),
-         'ForwardMessageDiscordTo7jam' : () => new ForwardMessageDiscordTo7jam(this, integrationSpec, this.mgr, integrationID),
-         'ServerUpDiscordNotification' : () => new ServerUpDiscordNotification(this, integrationSpec, this.mgr, integrationID),
+         'UserCountNotification' : () => new UserCountNotification(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'JamStatusNotification' : () => new JamStatusNotification(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'ForwardMessageFrom7jamToDiscord' : () => new ForwardMessageFrom7jamToDiscord(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'ForwardMessageDiscordTo7jam' : () => new ForwardMessageDiscordTo7jam(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'ServerUpDiscordNotification' : () => new ServerUpDiscordNotification(this, integrationSpec, this.mgr, integrationID, intBackup),
       };
 
       let ret = null;
@@ -225,44 +258,16 @@ class DiscordIntegrationSubscription {
       ret = factory[integrationSpec.engine]();
 
       console.log(`Discord integration initialized: ${this.id} / ${integrationID}`);
-      // ret.mgr = this.mgr;
-      // ret.subscription = this;
-      // ret.integrationSpec = integrationSpec;
-      // ret.integrationID = integrationID;
 
       return ret;
    }
-
-   // // in order to rate-limit between integration engines/instances
-   // RegisterNotificationSent(groupName) {
-   //    if (!groupName) {
-   //       throw new Error(`RegisterNotificationSent:You must specify a notification groupName`);
-   //    }
-   //    this.groups.set(groupName, Date.now());
-   // }
-
-   // // if positive, then the message should be rate-limited at least this # of MS.
-   // // if <= 0, no rate-limiting is necessary.
-   // RateLimitedTimeRemainingMS(groupName, msInFuture, rateLimitMS) {
-   //    if (isNaN(rateLimitMS) || !rateLimitMS) {
-   //       return 0; // 0 or undefined means we don't want to rate-limit this notification.
-   //    }
-   //    if (!groupName) {
-   //       throw new Error(`RegisterNotificationSent:You must specify a notification groupName`);
-   //    }
-   //    if (!this.groups.has(groupName)) {
-   //       return 0;
-   //    }
-   //    const lastMsgTimeMS = this.groups.get(groupName);
-   //    const timeBoundaryMS = Date.now() - rateLimitMS + msInFuture;
-   //    return lastMsgTimeMS - timeBoundaryMS;
-   // }
 }
 
 // this provides an API for all the various integrations/notification classes to
 // use, wrapping our DiscordBot, and giving a way to access 7jam actions, events
 class DiscordIntegrationManager {
-   constructor(gConfig, gDiscordBot, _7jamAPI) {
+   constructor(gConfig, gDiscordBot, _7jamAPI, activityDatasourcesPath) {
+      this.activityDatasourcesPath = activityDatasourcesPath;
       this.gConfig = gConfig;
       this.bot = gDiscordBot;
       gDiscordBot.EventHook = this;
@@ -270,41 +275,87 @@ class DiscordIntegrationManager {
 
       this.dataSources = new Map(); // lazy-create, so we don't create more than we need.
 
-      this.subscriptions = [];
+      this.subscriptions = new Map();
+
+      this.backedupDatasources = null;
+      try {
+         this.backedupDatasources = JSON.parse(fs.readFileSync(this.activityDatasourcesPath));
+         console.log(`Read backed up activity datasources from ${this.activityDatasourcesPath}`);
+      } catch (e) {
+      }
+      setTimeout(() => this.OnBackupDatasources(), RangeWindowQuery.DurationSpecToMS(gConfig.ActivityDatasourcesBackupInterval));
 
       if (!gConfig.discord_subscriptions) {
          console.log(`No Discord subscriptions are defined.`);
          return;
       }
 
-      for (let i = 0; i < gConfig.discord_subscriptions.length; ++i) {
-         this.subscriptions.push(new DiscordIntegrationSubscription(i, gConfig.discord_subscriptions[i], gConfig, this));
-      }
+      Object.keys(gConfig.discord_subscriptions).forEach(id => {
+         const bu = this.backedupDatasources?.subscriptions?.[id];
+         this.subscriptions.set(id, new DiscordIntegrationSubscription(id, gConfig.discord_subscriptions[id], gConfig, this, bu));
+      });
    }
 
    // return an object which is HTTP served
    GetDebugData() {
       const dataSourcesDmp = {};
       this.dataSources.forEach((v, k) => {
-         dataSourcesDmp[k] = v.GetDebugData();
+         dataSourcesDmp[k] = v.Serialize();
+      });
+
+      const subsDmp = {};
+      this.subscriptions.forEach((v, k) => {
+         subsDmp[k] = v.Serialize();
       });
 
       return {
          dataSources : dataSourcesDmp,
-         subscriptions : this.subscriptions.map(subscription => subscription.GetDebugData()),
+         subscriptions : subsDmp,//this.subscriptions.map(subscription => subscription.GetDebugData()),
          discordInfo : this.bot.GetDebugData()
       };
+   }
+
+   OnBackupDatasources() {
+      try {
+         setTimeout(() => this.OnBackupDatasources(), RangeWindowQuery.DurationSpecToMS(this.gConfig.ActivityDatasourcesBackupInterval));
+
+         const dataSourcesDmp = {
+            dataSources : {},
+            subscriptions: {},
+         };
+
+         this.dataSources.forEach((v, k) => {
+            // rooms to track may change between running instances; it means if the backup
+            // contains like an obsolete room's data, we're going to create a dataset for an obselete room.
+            // pruning means the data can be purged over time, but it implies that i should avoid serializing empty datasources/datasets.
+            v.PruneData();
+            if (v.HasData()) {
+               dataSourcesDmp.dataSources[k] = v.Serialize();
+            }
+         });
+
+         this.subscriptions.forEach((v, k) => {
+            dataSourcesDmp.subscriptions[k] = v.Serialize();
+         });
+   
+         const payload = JSON.stringify(dataSourcesDmp, null, 2);
+         fsp.writeFile(this.activityDatasourcesPath, payload, 'utf8');
+         console.log(`Backed up activity data sources to ${this.activityDatasourcesPath} (${payload.length} len)`);
+
+      } catch (e) {
+         console.log(`DiscordIntegrationManager.OnBackupDatasources exception occurred`);
+         console.log(e);
+      }
    }
 
    GetDataSource(id) {
       if (!this.dataSources.has(id)) {
          console.assert(id in this.gConfig.activity_hook_data_sources, `a subscription is referencing a datasource '${id}' which is not a known data source id`);
-         //Object.keys(gConfig.activity_hook_data_sources).forEach(dsID => {
          const spec = this.gConfig.activity_hook_data_sources[id];
 
          const dataSourceEngineFactory = {
-            'UserCounts' : (mgr, spec) => new UserCountsDataSource(mgr, spec),
-            'NoteCount' : (mgr, spec) => new NoteCountDataSource(mgr, spec),
+            'UserCounts' : (mgr, spec) => new UserCountsDataSource(mgr, spec, id, this.backedupDatasources?.dataSources?.[id]),
+            'NoteCount' : (mgr, spec) => new NoteCountDataSource(mgr, spec, id, this.backedupDatasources?.dataSources?.[id]),
          };
          console.assert(spec.engine in dataSourceEngineFactory, `data source id ${id} references non-existent engine ${spec.engine}`);
 

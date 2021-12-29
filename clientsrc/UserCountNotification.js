@@ -17,7 +17,6 @@ class UserCountNotification {
       this.triggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.triggerOnUserCount));
       this.conditionQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.conditionOnUserCount));
       this.delayMS = 10 + RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.delay)); // add  for a margin when we recheck the query.
-      //this.groupRateLimitMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.groupRateLimitTime));
 
       this.timer = null;
    }
@@ -28,16 +27,13 @@ class UserCountNotification {
          preCondition : this.conditionQuery.spec,
          delayMS : this.delayMS,
          triggerQuery : this.triggerQuery.spec,
-         //groupName : this.integrationSpec.groupName,
-         ////groupRateLimitMS : this.groupRateLimitMS,
-         //groupRateLimitRemainingMS : this.subscription.RateLimitedTimeRemainingMS(this.integrationSpec.groupName, 0, this.groupRateLimitMS),
       };
    }
 
    GetDataSource() {
       const ds = this.mgr.GetDataSource(this.integrationSpec.dataSourceID);
       if (this.integrationSpec.userCountType === 'global') {
-         return ds.globalDataSource;
+         return ds.globalDataSet;
       }
       return ds.GetDataSourceForRoom(this.subscription.roomID);
    }
@@ -78,14 +74,6 @@ class UserCountNotification {
          }
 
          this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Trigger MET: ${this.triggerQuery.spec}`);
-
-         // const rateLimitedDelayMS = this.subscription.RateLimitedTimeRemainingMS(
-         //     this.integrationSpec.groupName, 0, this.groupRateLimitMS);
-
-         // if (rateLimitedDelayMS > 0) {
-         //    console.log(`${this.integrationID} Rate limit; discarded notification before setting timer:${rateLimitedDelayMS} ms`);
-         //    return;
-         // }
 
          let messageContent = this.integrationSpec.messageContent;
 
