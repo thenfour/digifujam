@@ -41,6 +41,8 @@
       li {
          background-color: #222;
          padding: 1px;
+         padding-left: 6px;
+         padding-right: 6px;
          margin: 2px;
          font-family: monospace;
          color: #888;
@@ -65,7 +67,8 @@
          cursor: pointer;
          color: #0cc;
          padding: 2px;
-         border: solid 2px #088;
+         padding-left: 6px;
+         padding-right: 6px;
          margin: 2px;
          border-radius: 7px;
          display: inline-block;
@@ -140,35 +143,31 @@
          return null;
       }
 
-      // props: subscription, onSelectIntegration
-      class Subscription extends React.Component {
+      class DataSource extends React.Component {
          constructor(props) {
             super(props);
-            this.state = {
-            }
          }
 
-         onClickIntegration(integration) {
-            this.props.onSelectIntegration(this.props.subscription, integration);
+         onClickDataSet(dataSourceID) {
+            this.props.onClickDataSet(dataSourceID);
          }
 
          render() {
-            const integrationSelector = this.props.subscription.integrations.map(integration => {
-               console.assert(!!integration.integrationID);
-               if (integration.dataSource && integration.dataSource.type === 'HistogramDataSource')
-                  return (<li className="clickable" key={integration.integrationID} onClick={() => this.onClickIntegration(integration)}>{integration.integrationID}</li>);
-               return (<li key={integration.integrationID}>{integration.integrationID}</li>);
+            const data = this.props.data;
+            const dataSource = data.dataSources[this.props.dataSourceID];
+            const dataSetSelector = Object.keys(dataSource).map(dataSetID => {
+               const dataSet = dataSource[dataSetID];
+               if (dataSet.type === 'HistogramDataSource')
+                  return (<li className="clickable" key={dataSetID} onClick={() => this.onClickDataSet(dataSetID)}>{dataSetID}</li>);
+               return (<li key={dataSetID}>{dataSetID}</li>);
             });
             return (
-               <li className="subscription" key={this.props.subscription.id}><div>{this.props.subscription.id} {this.props.subscription.title}</div>
-                  <ul>
-                     {integrationSelector}
-                  </ul>
+               <li className="dataSource"><div>{this.props.dataSourceID}</div>
+                     <ul>{dataSetSelector}</ul>
                </li>
             );
          }
       }
-
 
       class RootArea extends React.Component {
          constructor(props) {
@@ -176,8 +175,8 @@
             this.state = {
                data: null,
                dataLastReceived: null,
-               subscriptionID: null,
-               integrationID: null,
+               dataSourceID: null,
+               dataSetID: null,
                displayDurationText: "4h",
                displayDurationMS: DurationSpecToMS("4h"),
                showFiller: false,
@@ -197,18 +196,18 @@
          }
 
          OnData(data) {
-            data.subscriptions.sort((a, b) => a.title > b.title ? 1 : -1);
-            console.log(`completed downloading data ${data.length}`);
+            //data.subscriptions.sort((a, b) => a.title > b.title ? 1 : -1);
+            //console.log(`completed downloading data ${data.length}`);
             this.setState({
                data,
                dataLastReceived: new Date(),
             });
          }
 
-         onSelectIntegration = (subscription, integration) => {
+         onClickDataSet = (dataSourceID, dataSetID) => {
             this.setState({
-               subscriptionID: subscription.id,
-               integrationID: integration.integrationID,
+               dataSourceID,
+               dataSetID
             });
          }
 
@@ -233,29 +232,65 @@
          }
 
          UpdateChart() {
-            if (!this.state.integrationID) return;
-            if (!this.state.subscriptionID) return;
+            if (!this.state.dataSourceID) return;
+            if (!this.state.dataSetID) return;
             if (!this.state.data) return;
 
-            const subscription = this.state.data.subscriptions.find(s => s.id === this.state.subscriptionID);
-            console.assert(!!subscription);
-            const integration = subscription.integrations.find(i => i.integrationID === this.state.integrationID);
-            console.assert(!!integration);
+            const dataSource = this.state.data.dataSources[this.state.dataSourceID];
+            console.assert(!!dataSource);
+            const dataSet = dataSource[this.state.dataSetID];
+            console.assert(!!dataSet);
 
             // filter bins to time.
             const maxAgeMS = DurationSpecToMS(this.state.displayDurationText);
-            const bins = integration.dataSource.bins.filter(b => b.partitionEndAgeMS <= maxAgeMS && (!b.isFiller || this.state.showFiller));
 
-            const now = Date.now();
-            const labels = bins.map(b => FormatTimeMS(b.partitionEndAgeMS));
+            let bins = JSON.parse(JSON.stringify(dataSet.bins)); // create a deep copy
+
+            // add age
+            bins.forEach((b, i) => {
+               b.binEndAgeMS = this.state.dataLastReceived - b.binEndTimeMS;
+            });
+
+            // filter by age
+            bins = bins.filter(b => b.binEndAgeMS <= maxAgeMS);
+
+            // add empty bins if desired.
+            if (this.state.showFiller) {
+               let emptyBins = [];
+               bins.forEach((b, i) => {
+                  if (i > 0) {
+                     const prevBinID = bins[i - 1].binID;
+                     for (let emptyBinID = prevBinID + 1; emptyBinID < b.binID; ++emptyBinID) {
+                        const e = {
+                           value: 0,
+                           binID: emptyBinID,
+                           binEndTimeMS: (emptyBinID + 1) * dataSet.binSizeMS,
+                        };
+                        // add age...
+                        e.binEndAgeMS = this.state.dataLastReceived - e.binEndTimeMS;
+                        emptyBins.push(e);
+                     }
+                  }
+               });
+
+               bins = bins.concat(emptyBins);
+               bins.sort((a, b) => a.binID > b.binID ? 1 : -1);
+            }
+
+            // calculate cumulative
+            bins.forEach((b, i) => {
+               b.cumulativeValue = bins.slice(i).reduce((a, b) => a + b.value, 0);
+            });
+
+            const labels = bins.map(b => FormatTimeMS(b.binEndAgeMS));
             const binData = bins.map(b => b.value);
             const cumulativeData = bins.map(b => b.cumulativeValue);
 
-            const dataSet = {
+            const chartData = {
                labels,
                datasets: [
                   {
-                     label: `Bin data for ${subscription.title} ==> ${integration.integrationID}`,
+                     label: `Bin data for ${this.state.dataSourceID} => ${this.state.dataSetID}`,
                      data: binData,
                      backgroundColor: '#0cc',
                      barPercentage: 1.0,
@@ -263,7 +298,7 @@
                      yAxisID: 'yAxis0',
                   },
                   {
-                     label: `Cumulative ${subscription.title} ==> ${integration.integrationID}`,
+                     label: `Cumulative ${this.state.dataSourceID} => ${this.state.dataSetID}`,
                      data: cumulativeData,
                      backgroundColor: '#666',
                      barPercentage: 1.0,
@@ -279,7 +314,7 @@
             var chartCanvas = document.getElementById('chartCanvas');
             this.chart = new Chart(chartCanvas.getContext("2d"), {
                type: 'bar',
-               data: dataSet,
+               data: chartData,
                options: {
                   responsive: true,
                   maintainAspectRatio: false,
@@ -326,8 +361,9 @@
          }
 
          render() {
-            const subscriptionList = this.state.data && this.state.data.subscriptions.map(subscription => (
-               <Subscription key={subscription.id} subscription={subscription} onSelectIntegration={this.onSelectIntegration} />
+
+            const dataSourceList = this.state.data && Object.keys(this.state.data.dataSources).map(dataSourceID => (
+               <DataSource key={dataSourceID} data={this.state.data} dataSourceID={dataSourceID} onClickDataSet={(dataSetID) => this.onClickDataSet(dataSourceID, dataSetID) }></DataSource>
             ));
 
             setTimeout(() => this.UpdateChart(), 1);
@@ -354,7 +390,9 @@
                         <br />
                         <input type="text" style={{ width: "50px" }} value={this.state.displayDurationText} onChange={this.onDisplayDurationChange} /> display duration
                      </div>
-                     <ul>{subscriptionList}</ul>
+                     <ul>
+                        {dataSourceList}
+                     </ul>
                   </div>
                   <div id="canvasContainer">
                      <canvas id="chartCanvas"></canvas>

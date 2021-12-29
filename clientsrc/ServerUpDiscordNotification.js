@@ -4,6 +4,14 @@ class ServerUpDiscordNotification {
    get RequiresUserListSync() {
       return false;
    }
+
+   constructor(subscription, integrationSpec, mgr, integrationID) {
+      this.mgr = mgr;
+      this.subscription = subscription;
+      this.integrationSpec = integrationSpec;
+      this.integrationID = integrationID;
+   }
+
    GetDebugData() {
       return {
          integrationID: this.integrationID,

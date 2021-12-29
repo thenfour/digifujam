@@ -80,40 +80,48 @@ class RangeSpec {
    }
 }
 
-const DurationSpecToMS =
-    (spec, _default) => {
-       if (!spec) {
-          return _default || 0;
-       }
-       spec = spec.toLowerCase().trim();
-       if (spec == '0') {
-          return 0;
-       }
-       const parts = spec.split(/[0-9]+/g);
-       console.assert(parts.length === 2); // there should only be 1 numeric "word", so splitting gives 2
-                                           // maybe empty strings on either side.
+function DurationTokenToMS(tok, _default) {
+   if (!tok) {
+      return _default || 0;
+   }
+   tok = tok.toLowerCase().trim();
+   if (tok == '0') {
+      return 0;
+   }
+   const parts = tok.split(/[0-9]+/g);
+   console.assert(parts.length === 2); // there should only be 1 numeric "word", so splitting gives 2
+                                       // maybe empty strings on either side.
 
-       const num = parseInt(spec);
-       const suffix = parts[1].trim();
+   const num = parseInt(tok);
+   const suffix = parts[1].trim();
 
-       if (suffix === 'ms') {
-          return num;
-       }
-       if ([ 's', 'sec', 'second', 'seconds' ].some(s => suffix === s)) {
-          return num * 1000;
-       }
-       if ([ 'm', 'min', 'mins', 'minute', 'minutes' ].some(s => suffix === s)) {
-          return num * 1000 * 60;
-       }
-       if ([ 'h', 'hr', 'hrs', 'hour', 'hours' ].some(s => suffix === s)) {
-          return num * 1000 * 60 * 60;
-       }
-       if ([ 'd', 'day', 'days' ].some(s => suffix === s)) {
-          return num * 1000 * 60 * 60 * 24;
-       }
+   if (suffix === 'ms') {
+      return num;
+   }
+   if ([ 's', 'sec', 'second', 'seconds' ].some(s => suffix === s)) {
+      return num * 1000;
+   }
+   if ([ 'm', 'min', 'mins', 'minute', 'minutes' ].some(s => suffix === s)) {
+      return num * 1000 * 60;
+   }
+   if ([ 'h', 'hr', 'hrs', 'hour', 'hours' ].some(s => suffix === s)) {
+      return num * 1000 * 60 * 60;
+   }
+   if ([ 'd', 'day', 'days' ].some(s => suffix === s)) {
+      return num * 1000 * 60 * 60 * 24;
+   }
 
-       throw new Error(`Suffix unknown on time duration spec ${spec}`);
-    }
+   throw new Error(`Suffix unknown on time duration token ${tok}`);
+}
+
+function DurationSpecToMS(str, _default)
+{
+   if (!str) {
+      return _default || 0;
+   }
+   const tokens = str.split(' ').filter(s => s.length > 0);
+   return tokens.reduce((a,b) => a + DurationTokenToMS(b), 0);
+}
 
 const eRangeMatchType = {
    Touch : 1,
@@ -186,7 +194,7 @@ class SampledSignalDataSource {
 
    GetDebugData() {
       return {
-         partitionSizeMS : this.partitionSizeMS,
+         binSizeMS : this.binSizeMS,
          type : 'SampledSignalDataSource',
          events : this.events,
       };
@@ -226,8 +234,16 @@ class SampledSignalDataSource {
       // include the previous item.
       return this.events.slice(iFirstItemToKeep - 1);
    }
-   IsMatch(query) {
+   IsMatch(query, tag, verboseDebugLogging) {
       let events = this.GetEventWindow(query.durationMS);
+
+      if (verboseDebugLogging) {
+         console.log(`${tag} IsMatch with query ${query.spec} with event window ${'{'}`);
+         events.forEach(e => {
+            const age = Date.now() - e.time;
+            console.log(`  [val=${e.value}, age = ${DFU.FormatTimeMS(age)} ]`);
+         });
+      }
 
       let isMatch = false;
       switch (query.matchType) {
@@ -240,6 +256,11 @@ class SampledSignalDataSource {
       default:
          throw new Error(`Unsupported range match type ${query.matchType}`);
       }
+
+      if (verboseDebugLogging) {
+         console.log(`  -> ${isMatch ? "MATCH" : "no match."}`);
+         console.log('}');
+      }
       return isMatch;
    };
 };
@@ -247,14 +268,14 @@ class SampledSignalDataSource {
 ////////////////////////////////////////////////////////////////////////////////////////////////
 // used for keeping stats about impulses/events (note ons) over time.
 class HistogramDataSource {
-   constructor(partitionSizeMS, maxAgeMS, timeProvider) {
+   constructor(binSizeMS, maxAgeMS, timeProvider) {
       this.maxAgeMS = maxAgeMS || (1000 * 60 * 60 * 24);
-      this.partitionSizeMS = partitionSizeMS || 60000; // default 1 minute partitions ()
+      this.binSizeMS = binSizeMS || 60000; // default 1 minute bins ()
       this.timeProvider = timeProvider || new LiveTimeProvider();
 
-      const maxPartitionCount = this.maxAgeMS / this.partitionSizeMS;
-      console.log(`Max partition count is ${maxPartitionCount}`);
-      if (maxPartitionCount > 100000) {
+      const maxBinCount = this.maxAgeMS / this.binSizeMS;
+      console.log(`Max bin count is ${maxBinCount}`);
+      if (maxBinCount > 100000) {
          throw new Error(`  -> that's too much.`);
       }
 
@@ -267,45 +288,32 @@ class HistogramDataSource {
       // - bake age from now into the data
       // - calculate the SUM of bins to now
       const nowMS = Date.now();
-      let bins = this.events.map(e => Object.assign({}, e)); // create a completely new copy of events
-      let emptyBins = [];
-      bins.forEach((b, i) => {
-         if (i > 0) {
-            const prevBinID = bins[i-1].partitionID;
-            for (let emptyPartitionID = prevBinID + 1; emptyPartitionID < b.partitionID; ++ emptyPartitionID) {
-               const e = this.ConstructBinWithID(emptyPartitionID, {isFiller:1});
-               emptyBins.push(e);
-            }
-         }
-      });
-
-      bins = bins.concat(emptyBins);
-      bins.sort((a,b) => a.partitionID > b.partitionID ? 1 : -1);
-
-      bins.forEach((b, i) => {
-         b.partitionEndAgeMS = nowMS - b.partitionEndTimeMS;
-         b.cumulativeValue = bins.slice(i).reduce((a, b) => a + b.value, 0);
+      let bins = this.events.map(e => { // create a completely new copy of events
+         return {
+            value: e.value,
+            binID: e.binID,
+            binEndTimeMS: e.binEndTimeMS,
+         };
       });
 
       return {
-         partitionSizeMS : this.partitionSizeMS,
          type : 'HistogramDataSource',
+         binSizeMS : this.binSizeMS,
          bins,
       };
    }
 
    ConstructBinWithID(binID, props) {
-      const timeMS = this.timeProvider.nowMS();
       return Object.assign({
          value : 0,
-         partitionID : binID,
-         partitionEndTimeMS : (binID + 1) * this.partitionSizeMS,
+         binID : binID,
+         binEndTimeMS : (binID + 1) * this.binSizeMS,
       }, props);
    }
 
    Prune() {
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
-      let iFirstItemToKeep = this.events.findIndex(e => e.partitionEndTimeMS >= boundaryTime);
+      let iFirstItemToKeep = this.events.findIndex(e => e.binEndTimeMS >= boundaryTime);
       if (iFirstItemToKeep === -1) {
          // let's keep at least 1 item
          this.events = [ this.events.at(-1) ];
@@ -319,33 +327,39 @@ class HistogramDataSource {
       const timeMS = this.timeProvider.nowMS();
       console.assert(!this.events.length || this.events.at(-1).lastSampleTimeMS <= timeMS, `Events must be added in chronological order.`);
 
-      // calculate a partition id
-      const partitionID = Math.floor(timeMS / this.partitionSizeMS);
+      // calculate a bin id
+      const binID = Math.floor(timeMS / this.binSizeMS);
+      let latestBin = null;
       if (this.events.length) {
-         const latestPartition = this.events.at(-1);
-         if (latestPartition.partitionID === partitionID) {
-            latestPartition.value += value;
-            latestPartition.lastSampleTimeMS = timeMS;
+         latestBin = this.events.at(-1);
+         if (latestBin.binID === binID) {
+            latestBin.value += value;
+            latestBin.lastSampleTimeMS = timeMS;
             return;
          }
       }
 
-      const newBin = this.ConstructBinWithID(partitionID, {
+      const newBin = this.ConstructBinWithID(binID, {
          value: value,
          lastSampleTimeMS: timeMS,
       });
 
-      this.events.push(newBin);
+      if (latestBin?.value === 0) {
+         // latest was an empty bin; just replace it because it was worthless.
+         this.events[this.events.length - 1] = newBin;
+      } else {
+         this.events.push(newBin);
+      }
 
       this.Prune();
    }
 
    // return an array of events which correspond to a window of time (since now)
    // any bins which touch the window are returned.
-   GetPartitionsInWindow(durationMS) {
+   GetBinsInWindow(durationMS) {
       let boundaryTimeMS = this.timeProvider.nowMS() - durationMS;
-      // find the first partition that is partially within the window.
-      let iFirstItemToKeep = this.events.findIndex(e => e.partitionEndTimeMS >= boundaryTimeMS);
+      // find the first bin that is partially within the window.
+      let iFirstItemToKeep = this.events.findIndex(e => e.binEndTimeMS >= boundaryTimeMS);
       if (iFirstItemToKeep === -1) {
          return [];// no data in window.
       }
@@ -353,19 +367,20 @@ class HistogramDataSource {
    }
 
    GetSumForDurationMS(ms) {
-      let events = this.GetPartitionsInWindow(ms);
+      let events = this.GetBinsInWindow(ms);
       const sum = events.reduce((acc, e) => acc + e.value, 0);
       return sum;
    }
 
    IsMatch(query, tag, verboseDebugLogging) {
-      let events = this.GetPartitionsInWindow(query.durationMS);
+      this.AddEvent(0); // ensure a bin exists for "now"
+      let events = this.GetBinsInWindow(query.durationMS);
 
       if (verboseDebugLogging) {
          console.log(`${tag} IsMatch with query ${query.spec} with event window ${'{'}`);
          events.forEach(e => {
-            const endAge = Date.now() - e.partitionEndTimeMS;
-            console.log(`  [id=${e.partitionID} val=${e.value}, age = ${DFU.FormatTimeMS(endAge)} ]`);
+            const endAge = Date.now() - e.binEndTimeMS;
+            console.log(`  [id=${e.binID} val=${e.value}, age = ${DFU.FormatTimeMS(endAge)} ]`);
          });
       }
 
@@ -396,7 +411,7 @@ class HistogramDataSource {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-function TestPartitionProvider() {
+function TestBinProvider() {
    let tp = new StaticTimeProvider(0);
    let ds = new HistogramDataSource(1000, 9000, tp);
 
@@ -405,14 +420,14 @@ function TestPartitionProvider() {
 
    ds.AddEvent(10);
    tp.staticTimeMS = 900;
-   ds.AddEvent(2); // partition 0 should now have 12 and represent between 0-1 sec
+   ds.AddEvent(2); // bin 0 should now have 12 and represent between 0-1 sec
    tp.staticTimeMS = 1050;
-   ds.AddEvent(3); // and partition 1 should have 3 and represent between 1-2 sec
+   ds.AddEvent(3); // and bin 1 should have 3 and represent between 1-2 sec
 
    tp.staticTimeMS = 2010;
 
    console.assert(!ds.IsMatch(new RangeDurationQuery('maintains [0] during [300 hr]')));
-   console.assert(!ds.IsMatch(new RangeDurationQuery('maintains [3] during [1 sec]'))); // won't match because partition boundaries are set to when the first partition sample was taken, not partition theoretical boundary.
+   console.assert(!ds.IsMatch(new RangeDurationQuery('maintains [3] during [1 sec]'))); // won't match because bin boundaries are set to when the first bin sample was taken, not bin theoretical boundary.
 
    tp.staticTimeMS = 3000;
    console.assert(ds.IsMatch(new RangeDurationQuery('maintains [3] during [1 sec]')));
@@ -517,7 +532,7 @@ function RunTests() {
    q = new RangeDurationQuery('maintains [1] during [5 s]');
    console.assert(ds.IsMatch(q));
 
-   TestPartitionProvider();
+   TestBinProvider();
 }
 
 module.exports = {

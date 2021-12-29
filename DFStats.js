@@ -6,21 +6,130 @@ const DFDB = require('./DFDB');
 const RangeWindowQuery = require("./clientsrc/RangeWindowQuery");
 const {UserCountNotification} = require('./clientsrc/UserCountNotification');
 const {ServerUpDiscordNotification} = require('./clientsrc/ServerUpDiscordNotification');
-const {NoteCountNotification} = require('./clientsrc/NoteCountNotification');
+const {JamStatusNotification} = require('./clientsrc/NoteCountNotification');
 
-// these various integration engines will get some properties added by the
-// caller automatically: this.subscription (containing channel mappings)
-// this.integrationSpec (containing the tweakable params for this engine)
-// this.mgr (gateway to actually doing stuff with the app)
+class UserCountsDataSource {
+   constructor(mgr, dataSourceSpec) {
+      this.mgr = mgr;
+      this.dataSourceSpec = dataSourceSpec;
+      this.globalDataSource = new RangeWindowQuery.SampledSignalDataSource(0);
+      this.roomDataSources = new Map();
+   }
+
+   // data sources: just return a map of underlying data sets
+   GetDebugData() {
+      let ret = {
+         __global : this.globalDataSource.GetDebugData(),
+      };
+      //const roomDataDmp = {};
+      this.roomDataSources.forEach((v, k) => {
+         ret[`# ${k}`] = v.GetDebugData();
+      });
+
+      return ret;
+   }
+
+   // treat both JOIN and PART the same because either way we just want to examine the absolute user count.
+   On7jamUserPart(roomState, user, roomUserCount, isJustChangingRoom) {
+      this.HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom);
+   }
+
+   On7jamUserJoin(roomState, user, roomUserCount, isJustChangingRoom) {
+      this.HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom);
+   }
+
+   GetDataSourceForRoom(roomID) {
+      if (!this.roomDataSources.has(roomID)) {
+         this.roomDataSources.set(roomID, new RangeWindowQuery.SampledSignalDataSource(0));
+      }
+      return this.roomDataSources.get(roomID);
+   }
+
+   HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom) {
+      // we want the integrations to run their queries before this event gets added, so integrations can
+      // check preconditions BEFORE this event is registered. simplest way is to just settimeout
+      const roomID = roomState.roomID;
+      setTimeout(() => {
+         const globalRoomUserCount = this.mgr._7jamAPI.GetGlobalOnlinePopulation();
+         this.globalDataSource.AddEvent(globalRoomUserCount);
+         const dsRoom = this.GetDataSourceForRoom(roomID);
+         dsRoom.AddEvent(roomUserCount);
+      }, 10);
+   }
+}
+
+// data sources: just return a map of underlying data sets
+class NoteCountDataSource {
+   constructor(mgr, dataSourceSpec) {
+      this.mgr = mgr;
+      this.dataSourceSpec = dataSourceSpec;
+      this.binDurationMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(this.dataSourceSpec.binDuration), 5000);
+      //this.dataSource = new RangeWindowQuery.HistogramDataSource(this.binDurationMS, null, null);
+      this.roomDataSources = new Map();
+      this.fireTimer = null;  // we don't want to set a timer every single note on. instead accumulate
+      this.queuedNoteOns = 0; // every time we set the fire timer, reset this. each timer process these.
+   }
+
+   GetDebugData() {
+      const roomDataDmp = {};
+      this.roomDataSources.forEach((v, k) => {
+         roomDataDmp[k] = v.GetDebugData();
+      });
+
+      return roomDataDmp;
+      //{
+      //    queuedNoteOns : this.queuedNoteOns,
+      //    binDurationMS : this.binDurationMS,
+      //    roomData : roomDataDmp,
+      // };
+   }
+
+   On7jamNoteOn(roomState) {
+      if (this.fireTimer) {
+         this.queuedNoteOns++;
+         return;
+      }
+      this.queuedNoteOns = 1;
+      const roomID = roomState.roomID;
+      this.fireTimer = setTimeout(() => {
+         const noteOnsToProcess = this.queuedNoteOns;
+         this.queuedNoteOns = 0;
+         this.fireTimer = null;
+         this.ProcessNoteOns(roomID, noteOnsToProcess);
+      }, this.binDurationMS); // it's not 100% certain if this is the theoretically correct time to use, but i think it's practical and simple.
+   }
+
+   GetDataSourceForRoom(roomID) {
+      if (!this.roomDataSources.has(roomID)) {
+         this.roomDataSources.set(roomID, new RangeWindowQuery.HistogramDataSource(this.binDurationMS, null, null));
+      }
+      return this.roomDataSources.get(roomID);
+   }
+
+   ProcessNoteOns(roomID, noteOnsToProcess) {
+      // we want the integrations to run their queries before this event gets added, so integrations can
+      // check preconditions BEFORE this event is registered. simplest way is to just settimeout
+      setTimeout(() => {
+         const dsRoom = this.GetDataSourceForRoom(roomID);
+         dsRoom.AddEvent(noteOnsToProcess);
+      }, 10);
+   }
+}
 
 class ForwardMessageFrom7jamToDiscord {
    get RequiresUserListSync() {
       return false;
    }
+   constructor(subscription, integrationSpec, mgr, integrationID) {
+      this.mgr = mgr;
+      this.subscription = subscription;
+      this.integrationSpec = integrationSpec;
+      this.integrationID = integrationID;
+   }
    GetDebugData() {
       return {
-         integrationID: this.integrationID,
-         engine: "ForwardMessageFrom7jamToDiscord",
+         integrationID : this.integrationID,
+         engine : "ForwardMessageFrom7jamToDiscord",
       };
    }
    On7jamMessage(roomState, user, msg) {
@@ -34,11 +143,17 @@ class ForwardMessageDiscordTo7jam {
    get RequiresUserListSync() {
       return true;
    }
+   constructor(subscription, integrationSpec, mgr, integrationID) {
+      this.mgr = mgr;
+      this.subscription = subscription;
+      this.integrationSpec = integrationSpec;
+      this.integrationID = integrationID;
+   }
 
    GetDebugData() {
       return {
-         integrationID: this.integrationID,
-         engine: "ForwardMessageDiscordTo7jam",
+         integrationID : this.integrationID,
+         engine : "ForwardMessageDiscordTo7jam",
       };
    }
    OnDiscordMessage(message) {
@@ -49,94 +164,6 @@ class ForwardMessageDiscordTo7jam {
           this.subscription.roomID} content=${messageText}`);
       this.mgr._7jamAPI.SendDiscordMessageToRoom(
           this.subscription.roomID, message.member.id, messageText);
-   }
-};
-
-// accumulates stats during a detected jam period.
-// it will act as an integration in order to hook events.
-class JamTracker {
-   constructor(gConfig, roomID, _7jamAPI) {
-      this._7jamAPI = _7jamAPI;
-      this.roomID = roomID;
-
-      this.maxJamDurationMS = RangeWindowQuery.DurationSpecToMS(gConfig.jam_tracker_max_duration);
-
-      this.jamOn = false;
-      this.jamUserIDs = new Set();
-      this.jamOnStartTimeMS = 0;
-      this.jamOnNoteCount = 0;
-
-      this.integrationID = "jamTracker";
-   }
-
-   GetDebugData() {
-      const durationMS = Date.now() - this.jamOnStartTimeMS
-      const notesPlayed = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - this.jamOnNoteCount;
-      return {
-         integrationID: this.integrationID,
-         durationMS,
-         notesPlayed,
-         uniqueUsers : this.jamUserIDs.size,
-         maxUserCount : this.jamMaxUserCount,
-         minUserCount : this.jamMinUserCount,
-         instrumentChanges : this.jamInstrumentChanges,
-      };
-   }
-
-   IsJamRunning() {
-      if (!this.jamOn)
-         return false;
-      const durationMS = Date.now() - this.jamOnStartTimeMS;
-      if (durationMS > this.maxJamDurationMS)
-         return false;
-      return true;
-   }
-
-   RegisterJamStart(initialNoteOns) {
-      this.jamOn = true;
-      this.jamOnStartTimeMS = Date.now();
-      this.jamOnNoteCount = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - initialNoteOns;
-      this.jamMinUserCount = this.jamMaxUserCount = this._7jamAPI.Get7JamUserCountForRoom(this.roomID);
-      this.jamInstrumentChanges = 0;
-      this.jamUserIDs = new Set(this._7jamAPI.GetRoomState(this.roomID).users.filter(u => u.source === DF.eUserSource.SevenJam).map(u => u.userID));
-   }
-
-   RegisterJamEnd() {
-      this.jamOn = false;
-   }
-
-   On7jamUserJoin(roomState, user, roomUserCount, isJustChangingRoom) {
-      if (roomState.roomID !== this.roomID)
-         return;
-      this.jamUserIDs.add(user.userID);
-      this.jamMinUserCount = Math.min(this.jamMinUserCount, roomUserCount);
-      this.jamMaxUserCount = Math.max(this.jamMaxUserCount, roomUserCount);
-   }
-
-   On7jamInstrumentAcquire(roomState, user, instrument) {
-      if (roomState.roomID !== this.roomID)
-         return;
-      this.jamInstrumentChanges++;
-   }
-
-   // may return null if there's nothing to see here.
-   GetJamStats() {
-      if (!this.jamOn)
-         return null;
-      const durationMS = Date.now() - this.jamOnStartTimeMS
-      if (durationMS > this.maxJamDurationMS)
-      return null;
-      const notesPlayed = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - this.jamOnNoteCount;
-      return {
-         durationMS,
-         now: Date.now(),
-         nowIsoString: (new Date()).toISOString(),
-         notesPlayed,
-         uniqueUsers : this.jamUserIDs.size,
-         maxUserCount : this.jamMaxUserCount,
-         minUserCount : this.jamMinUserCount,
-         instrumentChanges : this.jamInstrumentChanges,
-      };
    }
 };
 
@@ -152,23 +179,23 @@ class DiscordIntegrationSubscription {
       this.id = id;
       this.mgr = mgr;
       this.groups = new Map(); // map group name to time MS last sent
-      this.jamTracker = new JamTracker(gConfig, this.roomID, this.mgr._7jamAPI);
+      //this.jamTracker = new JamTracker(gConfig, this.roomID, this.mgr._7jamAPI);
 
       this.integrations = subscription.integrations.map(integrationID => this.CreateIntegration(integrationID));
-      this.integrations.push(this.jamTracker);
+      //this.integrations.push(this.jamTracker);
    }
 
    GetDebugData() {
       const groupInfo = {};
       return {
-         id: this.id,
-         title: this.title,
-         discordChannelDesc: this.discordChannelDesc,
-         discordChannelID: this.discordChannelID,
-         sevenJamRoomID: this.roomID,
-         groups: groupInfo,
-         jamTracker: this.jamTracker.GetDebugData(),
-         integrations: this.integrations.map(i => i.GetDebugData()),
+         id : this.id,
+         title : this.title,
+         discordChannelDesc : this.discordChannelDesc,
+         discordChannelID : this.discordChannelID,
+         sevenJamRoomID : this.roomID,
+         groups : groupInfo,
+         //jamTracker : this.jamTracker.GetDebugData(),
+         integrations : this.integrations.map(i => i.GetDebugData()),
       };
    }
 
@@ -180,54 +207,56 @@ class DiscordIntegrationSubscription {
       if (!integrationSpec) {
          throw new Error(`Integration ID is not found: ${integrationID}. Check your config.json.`);
       }
+
+      const factory = {
+         'UserCountNotification' : () => new UserCountNotification(this, integrationSpec, this.mgr, integrationID),
+         //'NoteCountNotification' : () => new NoteCountNotification(this, integrationSpec, this.mgr, integrationID),
+         'JamStatusNotification' : () => new JamStatusNotification(this, integrationSpec, this.mgr, integrationID),
+         'ForwardMessageFrom7jamToDiscord' : () => new ForwardMessageFrom7jamToDiscord(this, integrationSpec, this.mgr, integrationID),
+         'ForwardMessageDiscordTo7jam' : () => new ForwardMessageDiscordTo7jam(this, integrationSpec, this.mgr, integrationID),
+         'ServerUpDiscordNotification' : () => new ServerUpDiscordNotification(this, integrationSpec, this.mgr, integrationID),
+      };
+
       let ret = null;
-      if (integrationSpec.engine === 'UserCountNotification') {
-         ret = new UserCountNotification(this, integrationSpec, this.mgr);
-      } else if (integrationSpec.engine === 'ForwardMessageFrom7jamToDiscord') {
-         ret = new ForwardMessageFrom7jamToDiscord(this, integrationSpec, this.mgr);
-      } else if (integrationSpec.engine === 'ForwardMessageDiscordTo7jam') {
-         ret = new ForwardMessageDiscordTo7jam(this, integrationSpec, this.mgr);
-      } else if (integrationSpec.engine === 'ServerUpDiscordNotification') {
-         ret = new ServerUpDiscordNotification(this, integrationSpec, this.mgr);
-      } else if (integrationSpec.engine === 'NoteCountNotification') {
-         ret = new NoteCountNotification(this, integrationSpec, this.mgr);
-      } else {
+      if (!(integrationSpec.engine in factory)) {
          throw new Error(`Integration engine ${integrationSpec.engine} is unknown. Either config is bork or you forgot to register this engine in the clunky if/else block.`);
       }
 
+      ret = factory[integrationSpec.engine]();
+
       console.log(`Discord integration initialized: ${this.id} / ${integrationID}`);
-      ret.mgr = this.mgr;
-      ret.subscription = this;
-      ret.integrationSpec = integrationSpec;
-      ret.integrationID = integrationID;
+      // ret.mgr = this.mgr;
+      // ret.subscription = this;
+      // ret.integrationSpec = integrationSpec;
+      // ret.integrationID = integrationID;
 
       return ret;
    }
 
-   // in order to rate-limit between integration engines/instances
-   RegisterNotificationSent(groupName) {
-      if (!groupName) {
-         throw new Error(`RegisterNotificationSent:You must specify a notification groupName`);
-      }
-      this.groups.set(groupName, Date.now());
-   }
+   // // in order to rate-limit between integration engines/instances
+   // RegisterNotificationSent(groupName) {
+   //    if (!groupName) {
+   //       throw new Error(`RegisterNotificationSent:You must specify a notification groupName`);
+   //    }
+   //    this.groups.set(groupName, Date.now());
+   // }
 
-   // if positive, then the message should be rate-limited at least this # of MS.
-   // if <= 0, no rate-limiting is necessary.
-   RateLimitedTimeRemainingMS(groupName, msInFuture, rateLimitMS) {
-      if (isNaN(rateLimitMS) || !rateLimitMS) {
-         return 0; // 0 or undefined means we don't want to rate-limit this notification.
-      }
-      if (!groupName) {
-         throw new Error(`RegisterNotificationSent:You must specify a notification groupName`);
-      }
-      if (!this.groups.has(groupName)) {
-         return 0;
-      }
-      const lastMsgTimeMS = this.groups.get(groupName);
-      const timeBoundaryMS = Date.now() - rateLimitMS + msInFuture;
-      return lastMsgTimeMS - timeBoundaryMS;
-   }
+   // // if positive, then the message should be rate-limited at least this # of MS.
+   // // if <= 0, no rate-limiting is necessary.
+   // RateLimitedTimeRemainingMS(groupName, msInFuture, rateLimitMS) {
+   //    if (isNaN(rateLimitMS) || !rateLimitMS) {
+   //       return 0; // 0 or undefined means we don't want to rate-limit this notification.
+   //    }
+   //    if (!groupName) {
+   //       throw new Error(`RegisterNotificationSent:You must specify a notification groupName`);
+   //    }
+   //    if (!this.groups.has(groupName)) {
+   //       return 0;
+   //    }
+   //    const lastMsgTimeMS = this.groups.get(groupName);
+   //    const timeBoundaryMS = Date.now() - rateLimitMS + msInFuture;
+   //    return lastMsgTimeMS - timeBoundaryMS;
+   // }
 }
 
 // this provides an API for all the various integrations/notification classes to
@@ -238,6 +267,8 @@ class DiscordIntegrationManager {
       this.bot = gDiscordBot;
       gDiscordBot.EventHook = this;
       this._7jamAPI = _7jamAPI;
+
+      this.dataSources = new Map(); // lazy-create, so we don't create more than we need.
 
       this.subscriptions = [];
 
@@ -251,17 +282,41 @@ class DiscordIntegrationManager {
       }
    }
 
-   // return an object which is HTTP served at /discord_integration_data
+   // return an object which is HTTP served
    GetDebugData() {
+      const dataSourcesDmp = {};
+      this.dataSources.forEach((v, k) => {
+         dataSourcesDmp[k] = v.GetDebugData();
+      });
+
       return {
-         "subscriptions" : this.subscriptions.map(subscription => subscription.GetDebugData()),
-         "discordInfo" : this.bot.GetDebugData()
+         dataSources : dataSourcesDmp,
+         subscriptions : this.subscriptions.map(subscription => subscription.GetDebugData()),
+         discordInfo : this.bot.GetDebugData()
       };
    }
 
+   GetDataSource(id) {
+      if (!this.dataSources.has(id)) {
+         console.assert(id in this.gConfig.activity_hook_data_sources, `a subscription is referencing a datasource '${id}' which is not a known data source id`);
+         //Object.keys(gConfig.activity_hook_data_sources).forEach(dsID => {
+         const spec = this.gConfig.activity_hook_data_sources[id];
+
+         const dataSourceEngineFactory = {
+            'UserCounts' : (mgr, spec) => new UserCountsDataSource(mgr, spec),
+            'NoteCount' : (mgr, spec) => new NoteCountDataSource(mgr, spec),
+         };
+         console.assert(spec.engine in dataSourceEngineFactory, `data source id ${id} references non-existent engine ${spec.engine}`);
+
+         this.dataSources.set(id, dataSourceEngineFactory[spec.engine](this, spec));
+      }
+
+      return this.dataSources.get(id);
+   }
+
    ReplaceQueryVariables(str) {
-      Object.keys(this.gConfig.queryVariables).forEach(k => {
-         str = str.toString().replaceAll(`%${k}%`, this.gConfig.queryVariables[k]);
+      Object.keys(this.gConfig.variables).forEach(k => {
+         str = str.toString().replaceAll(`%${k}%`, this.gConfig.variables[k]);
       });
       return str;
    }
@@ -345,6 +400,9 @@ class DiscordIntegrationManager {
    }
 
    DelegateIntegrationsFrom7jam(sevenJamRoomID, fn) {
+      this.dataSources.forEach(ds => {
+         fn(ds);
+      });
       this.subscriptions.forEach(subscription => {
          if (subscription.roomID !== sevenJamRoomID)
             return;
@@ -379,7 +437,6 @@ class DiscordIntegrationManager {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// https://github.com/typicode/lowdb
 class StatsLogger {
    static getHourID(roomID) {
       // YYYYMMDD_HH__roomid
@@ -577,7 +634,6 @@ class StatsLogger {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// https://github.com/typicode/lowdb
 class ActivityHook {
    constructor(hooks) {
       this.Hooks = hooks;

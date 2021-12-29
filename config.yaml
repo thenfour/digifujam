@@ -14,54 +14,64 @@ room_json:
 #mongo_connection_string: ...
 #discord_bot_token: ...
 #discord_client_id: ...
-jam_tracker_max_duration: 12 hours
-queryVariables:
-  someUserCount: "3"
-  manyUserCount: "5"
-  emptyRoomDelay: 20s
-  singleUserDelay: 7s
-  someUserDelay: 60s
-  manyUserDelay: 120s
-
-  jamNoteCountPartitionDuration: 15s # heavily impacts the nuances in timing. a big partition means the end of a jam may have a LOT of notes then 0 instantly.
+jam_tracker_max_duration: 8hours
+variables:
+  # to detect "some users", precondition: (< x users for y duration), then wait z, and check if (>= x users for z duration)
+  someUserPreDuration: 5m
+  someUserCount: 3
+  someUserDelay: 5m
+  # same logic for "many users"
+  manyUserPreDuration: 5m
+  manyUserCount: 5
+  manyUserDelay: 5m
   
 discord_integration_enable_after_uptime_sec: 5
 discord_log_member_count: "4" # to avoid massive log spam when dumping discord data at startup.
+
+activity_hook_data_sources:
+  UserCounts:
+    engine: UserCounts
+
+  RoomNoteCount:
+    engine: NoteCount
+    binDuration: 20s # heavily impacts the nuances in timing. a big bin means the end of a jam may have a LOT of notes then 0 instantly.
+
+  DbgRoomNoteCount:
+    engine: NoteCount
+    binDuration: 5s
+
 discord_integrations:
 
   #---------- concrete user count notifications ------------------------------------------------------
   UserCount_1:
     engine: UserCountNotification
+    dataSourceID: UserCounts
+    # ensure RISING to 0.
+    # - avoid quick joins/parts
+    # - to rate-limit this, require that the server was empty for a while.
+    # - if the server had a bunch of users, drops to 0, then 1 enters, it could
+    #   mean that everyone got disconnected or something too.
     userCountType: global
-    groupName: globalUserCount
-    # no rate-limiting as this is a very precise notification.
-    groupRateLimitTime: 0
-    # ensure RISING to 0. timing just to try and avoid quick joins/parts
-    # - if the room had a bunch of users, drops to 0, then 1 enters, it could
-    #   mean that the room blew up or somtehing.
-    conditionOnUserCount: maintains [0] during [15s]
+    conditionOnUserCount: "maintains [0] during [5m]"
+
     # this is a precise time
     # it should be long enough to reduce spam of quick pop-ins, but
     # short enough to actually catch users that may need a welcome.
-    delay: "%singleUserDelay%"
-    # if the user count rises to over %someUserCount%, then suppress this message
-    # because we expect the "some users" notification.
-    triggerOnUserCount: maintains [1,%someUserCount%] during [%singleUserDelay%]
-    messageContent: Someone has joined 7jam via %roomName%!
+    delay: 7s
+    triggerOnUserCount: "maintains [1] during [6s]"
+    messageContent: "Someone has joined 7jam via %roomName%!"
 
   UserCount_0:
     engine: UserCountNotification
-    userCountType: global
-    groupName: globalUserCount
-    # - no rate-limiting because i want discord to have a pretty exact picture
-    #   of activity when it comes to 0 to some users.
-    groupRateLimitTime: 0
+    dataSourceID: UserCounts
+    verboseDebugLogging: 0
     # match on user join/part when population has been 1+ for some duration
-    # the duration should correspond with the join message so they are always paired.
-    conditionOnUserCount: maintains [>0] during [%singleUserDelay%]
-    delay: "%emptyRoomDelay%"
-    triggerOnUserCount: maintains [0] during [%emptyRoomDelay%]
-    messageContent: 7jam is now empty after a user left %roomName%
+    # the duration should correspond with the join message so they try to be paired.
+    userCountType: global
+    conditionOnUserCount: "maintains [>0] during [10s]" # user stayed for enough time to get the above notification.
+    delay: 31s
+    triggerOnUserCount: "maintains [0] during [30s]" # and stayed out..
+    messageContent: "7jam is now empty after a user left %roomName%"
 
   #---------- fuzzy user count notifications ------------------------------------------------------
   UserCount_Some:
@@ -69,145 +79,110 @@ discord_integrations:
     # Longer condition duration, because we don't need to ALWAYS fire this. We
     # want this only when things are escalating from a longer-time-idle state.
     engine: UserCountNotification
-    groupName: UserCount_Some
-    userCountType: room
-    groupRateLimitTime: 120s
-    # detect RISING from below thresh to above thresh. rely on rate limiting,
+    dataSourceID: UserCounts
+    # detect RISING from below thresh to above thresh.
     # but let's not try to avoid something like 2 jams back-to-back with a small "valley".
     # so this duration is basically the valley. now
     # if there are small fluctuations, the "touches" takes care of this.
-    conditionOnUserCount: touches [<%someUserCount%] during [60s]
-    delay: "%someUserDelay%"
-    triggerOnUserCount: maintains [%someUserCount%,%manyUserCount%] during [%someUserDelay%]
+    userCountType: room
+    conditionOnUserCount: "touches [<%someUserCount%] during [%someUserPreDuration%]"
+    delay: "%someUserDelay% 1s" # add 1s so the trigger cond is always guaranteed to be AFTER the precondition
+    triggerOnUserCount: "maintains [%someUserCount%,%manyUserCount%] during [%someUserDelay%]"
     messageContent: "%roomUserCount% people are currently hanging out in %roomName%"
 
   UserCount_Many:
     engine: UserCountNotification
-    groupName: UserCount_Many
-    userCountType: room
-    groupRateLimitTime: 120s
+    dataSourceID: UserCounts
     # Similar to above, detect RISING. and use TOUCHES so we don't miss the notification
     # based on little fluctuations.
-    conditionOnUserCount: touches [<%manyUserCount%] during [60s]
+    userCountType: room
+    conditionOnUserCount: "touches [<%manyUserCount%] during [%manyUserPreDuration%]"
     # Then, make sure we're maintaining many users during a significant amount of time.
-    delay: "%manyUserDelay%"
-    triggerOnUserCount: maintains [>=%manyUserCount%] during [%manyUserDelay%]
-    messageContent: A party of %roomUserCount% is happening in %roomName%
+    delay: "%manyUserDelay% 1s"
+    triggerOnUserCount: "maintains [>=%manyUserCount%] during [%manyUserDelay%]"
+    messageContent: "A party of %roomUserCount% is happening in %roomName%"
 
-  #---------- jam status notifications ------------------------------------------------------
-  JamStarting:
-    engine: NoteCountNotification
-    # these are a bit tricky; all the queries are sorta inter-related.
-    # here we want to detect a rise from "definitely not a jam" to "could be a jam".
-    # with our query style, this is a simple boundary rise check.
-    # 
-    # the trick is mostly the timing. the pre-condition time should be the same as the
-    # trigger time, in order to accurately detect a rise. but this same condition
-    # is used later so to avoid disassociation all jam status timings should be a multiple
-    # of this.
-    groupName: jamStatus
-    groupRateLimitTime: 300s
-    partitionDuration: "%jamNoteCountPartitionDuration%"
-    specialHandling: jamStart # only fires when jam stopped, signifies to remember time / note count / etc.
-    conditionOnNoteCount: sum [<100] during [5min]
-    delay: "5min" # must be the same as trigger query duration
-    triggerOnNoteCount: sum [>=100] during [5min]
-    noteCountBacktrack: 30 minutes # when notifying new jam, how far back to include note count
-    messageContent: A jam session is warming up in %roomName%.
-    messageFields:
-      Current Players: "%roomUserCount%"
 
-  JamStatus:
-    engine: NoteCountNotification
-    # match when we are in a jam, and some reasonable amount later we're still jamming the whole time.
-    # if the queries don't relate properly to the other jam status notification queries, thne they can disassociate.
-    groupName: jamStatus
-    groupRateLimitTime: 300s
-    partitionDuration: "%jamNoteCountPartitionDuration%"
-    specialHandling: jamStatus # only fires if jam is running
-    conditionOnNoteCount: sum [>=600] during [30min]
-    delay: "30min"
-    triggerOnNoteCount: sum [>=600] during [30min]
-    messageContent: The jam goes on in %roomName%
-    messageFields:
-      Notes: "%roomNoteCount%"
-      Current Players: "%roomUserCount%"
+  #---------- jam status PROD notifications ------------------------------------------------------
+  JamTracker:
+    engine: JamStatusNotification
+    dataSourceID: RoomNoteCount
+    noteCountBacktrack: 30minutes # when notifying new jam, how far back to include note count
+    verboseDebugLogging: 0
 
-  JamEnding:
-    engine: NoteCountNotification
-    groupName: jamStatus
-    groupRateLimitTime: 300s
-    partitionDuration: "%jamNoteCountPartitionDuration%"
-    specialHandling: jamEnd # only fires if jam is running, stops tracking jam is running
-    conditionOnNoteCount: sum [>=300] during [10min]
-    # the delay must be significantly longer than the trigger query duration. This is the result of
-    # partitioning, buffering, and the fact that we only trigger on note-ons. So as the last notes of the jam session are played,
-    # this notification gets queued. along with jamStatus. there's still a decent chance the trigger won't match,
-    # which is to expected, but the problem is this notification won't get queued up again to check again.
-    delay: "15min" 
-    triggerOnNoteCount: sum [<300] during [10min]
-    messageContent: All great jams must come to an end. Till next time in %roomName%!
-    messageFields:
-      Jam duration: "%jamDuration%"
-      Jam notes: "%jamNotes%"
-      Unique users: "%jamUniqueUsers%"
-      Min user count: "%jamMinUserCount%"
-      Max user count: "%jamMaxUserCount%"
-      Instrument changes: "%jamInstrumentChanges%"
+    jamStart:
+      preCondition: "sum [<200] during [10min]"
+      delay: 10m 1s
+      triggerMinRoomUsers: 2
+      trigger: "sum [>=200] during [10min]"
+      messageContent: "(dbg) A jam session is warming up in %roomName%."
+      messageFields:
+        Current Players: "%roomUserCount%"
+
+    jamOngoing:
+      delay: 30m 1s # this naturally sets the min interval between notifications
+      trigger: "sum [>=600] during [30min]"
+      messageContent: "(dbg) The jam goes on in %roomName%"
+      messageFields:
+        Jam Duration: "%jamDuration%"
+        Jam Notes: "%jamNotes%"
+        Current Players: "%roomUserCount%"
+
+    jamEnd:
+      delay: 15m 1s
+      trigger: "sum [<50] during [15min]"
+      messageContent: "All great jams must come to an end. Till next time in %roomName%!"
+      messageFields:
+        Jam duration: "%jamDuration%"
+        Jam notes: "%jamNotes%"
+        NPS: "%jamNotesPerSecond%"
+        Unique users: "%jamUniqueUsers%"
+        Min user count: "%jamMinUserCount%"
+        Max user count: "%jamMaxUserCount%"
+        Instrument changes: "%jamInstrumentChanges%"
 
   #---------- jam status DEBUG notifications ------------------------------------------------------
-  DbgJamStarting:
-    engine: NoteCountNotification
-    groupName: jamStart
-    groupRateLimitTime: 5s
-    partitionDuration: "5s"
-    conditionOnNoteCount: sum [<20] during [10s]
-    delay: "10s" # must be the same as trigger query duration
-    triggerOnNoteCount: sum [>=20] during [10s]
-    messageContent: (dbg) A jam session is warming up in %roomName%.
-    specialHandling: jamStart # only fires when jam stopped, signifies to remember time / note count / etc.
-    noteCountBacktrack: 30 minutes # when notifying new jam, how far back to include note count
-    messageFields:
-      Current Players: "%roomUserCount%"
-
-  DbgJamStatus:
-    engine: NoteCountNotification
-    groupName: jamStatus
-    groupRateLimitTime: 5s
-    partitionDuration: "5s"
-    specialHandling: jamStatus # only fires if jam is running
-    conditionOnNoteCount: sum [>=20] during [10s]
-    delay: "10s"
-    triggerOnNoteCount: sum [>=20] during [10s]
-    messageContent: (dbg) The jam goes on in %roomName%
-    messageFields:
-      Jam Duration: "%jamDuration%"
-      Jam Notes: "%jamNotes%"
-      Current Players: "%roomUserCount%"
-
-  DbgJamEnding:
-    engine: NoteCountNotification
-    groupName: jamStatus
-    groupRateLimitTime: 5s
+  DbgJamTracker:
+    engine: JamStatusNotification
+    dataSourceID: DbgRoomNoteCount
+    noteCountBacktrack: 30minutes # when notifying new jam, how far back to include note count
     verboseDebugLogging: 0
-    specialHandling: jamEnd # only fires if jam is running, stops tracking jam is running
-    partitionDuration: "5s"
-    conditionOnNoteCount: sum [>=20] during [10s]
-    delay: "15s"
-    triggerOnNoteCount: sum [<20] during [10s]
-    messageContent: All great jams must come to an end. Till next time in %roomName%!
-    messageFields:
-      Jam duration: "%jamDuration%"
-      Jam notes: "%jamNotes%"
-      Unique users: "%jamUniqueUsers%"
-      Min user count: "%jamMinUserCount%"
-      Max user count: "%jamMaxUserCount%"
-      Instrument changes: "%jamInstrumentChanges%"
+
+    jamStart:
+      preCondition: "sum [<20] during [10s]"
+      delay: "10s" # must be the same as trigger query duration
+      triggerMinRoomUsers: 2
+      trigger: "sum [>=20] during [10s]"
+      messageContent: "(dbg) A jam session is warming up in %roomName%."
+      messageFields:
+        Current Players: "%roomUserCount%"
+
+    jamOngoing:
+      delay: "21s"
+      trigger: "sum [>=20] during [20s]"
+      messageContent: "(dbg) The jam goes on in %roomName%"
+      messageFields:
+        Jam Duration: "%jamDuration%"
+        Jam Notes: "%jamNotes%"
+        Current Players: "%roomUserCount%"
+
+    jamEnd:
+      delay: "11s" # should be significantly longer than jamOngoing.delay, because they are fired as pairs of events and if the have similar delays there can often be 2 back-to-back discord messages.
+      trigger: "sum [<20] during [10s]"
+      messageContent: "All great jams must come to an end. Till next time in %roomName%!"
+      messageFields:
+        Jam duration: "%jamDuration%"
+        Jam notes: "%jamNotes%"
+        NPS: "%jamNotesPerSecond%"
+        Unique users: "%jamUniqueUsers%"
+        Min user count: "%jamMinUserCount%"
+        Max user count: "%jamMaxUserCount%"
+        Instrument changes: "%jamInstrumentChanges%"
 
   #---------- misc notifications ------------------------------------------------------
   serverUp:
     engine: ServerUpDiscordNotification
-    delaySec: 5
+    delaySec: 10
     messageContent: 7jam is now live!
     messageFields:
       Notes played: "%serverNoteCount%"
