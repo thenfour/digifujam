@@ -22,6 +22,19 @@ class NoteCountNotification {
       this.groupRateLimitMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.groupRateLimitTime));
    }
 
+   GetDebugData() {
+      return {
+         integrationID: this.integrationID,
+         preCondition: this.conditionQuery.spec,
+         delayMS: this.delayMS,
+         triggerQuery: this.triggerQuery.spec,
+         groupName: this.integrationSpec.groupName,
+         groupRateLimitMS: this.groupRateLimitMS,
+         groupRateLimitRemainingMS: this.subscription.RateLimitedTimeRemainingMS(this.integrationSpec.groupName, 0, this.groupRateLimitMS),
+         dataSource: this.noteCountDataSource.GetDebugData(),
+      };
+   }
+
    // treat both JOIN and PART the same because either way we just want to examine the absolute user count.
    On7jamNoteOn() {
       if (this.fireTimer) {

@@ -4,7 +4,13 @@ class ServerUpDiscordNotification {
    get RequiresUserListSync() {
       return false;
    }
-   
+   GetDebugData() {
+      return {
+         integrationID: this.integrationID,
+         engine: "ServerUpDiscordNotification",
+      };
+   }
+
    On7jamRoomsLoaded(_rooms) {
       const timerProc = () => {
          let messageContent = this.integrationSpec.messageContent;

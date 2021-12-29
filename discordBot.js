@@ -140,6 +140,20 @@ class DiscordBot {
         this.client.login(gConfig.discord_bot_token);
     }; // ctor
 
+    GetDebugData() {
+        return {
+            "guilds": this.client.guilds.cache.map(g => ({
+                name: g.name,
+                id: g.id,
+                channels: g.channels.cache.filter(ch => ch.type === 'GUILD_TEXT').map(ch => ({
+                    name: ch.name,
+                    id: ch.id,
+                    type: ch.type,
+                }))
+            }))
+        };
+     }
+
     CachedDumpAllChannels() {
         //console.log(`-- CachedDumpAllChannels ------------`);
         //const startTime = Date.now();

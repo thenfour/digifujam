@@ -17,6 +17,12 @@ class ForwardMessageFrom7jamToDiscord {
    get RequiresUserListSync() {
       return false;
    }
+   GetDebugData() {
+      return {
+         integrationID: this.integrationID,
+         engine: "ForwardMessageFrom7jamToDiscord",
+      };
+   }
    On7jamMessage(roomState, user, msg) {
       this.mgr.bot.SendDiscordChatMessage(
           this.subscription.discordChannelID, user.name, msg.message,
@@ -27,6 +33,13 @@ class ForwardMessageFrom7jamToDiscord {
 class ForwardMessageDiscordTo7jam {
    get RequiresUserListSync() {
       return true;
+   }
+
+   GetDebugData() {
+      return {
+         integrationID: this.integrationID,
+         engine: "ForwardMessageDiscordTo7jam",
+      };
    }
    OnDiscordMessage(message) {
       if (!this.mgr.bot.IsMemberValidForIntegration(message.member))
@@ -52,6 +65,22 @@ class JamTracker {
       this.jamUserIDs = new Set();
       this.jamOnStartTimeMS = 0;
       this.jamOnNoteCount = 0;
+
+      this.integrationID = "jamTracker";
+   }
+
+   GetDebugData() {
+      const durationMS = Date.now() - this.jamOnStartTimeMS
+      const notesPlayed = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - this.jamOnNoteCount;
+      return {
+         integrationID: this.integrationID,
+         durationMS,
+         notesPlayed,
+         uniqueUsers : this.jamUserIDs.size,
+         maxUserCount : this.jamMaxUserCount,
+         minUserCount : this.jamMinUserCount,
+         instrumentChanges : this.jamInstrumentChanges,
+      };
    }
 
    IsJamRunning() {
@@ -100,11 +129,13 @@ class JamTracker {
       const notesPlayed = this._7jamAPI.Get7JamNoteCountForRoom(this.roomID) - this.jamOnNoteCount;
       return {
          durationMS,
+         now: Date.now(),
+         nowIsoString: (new Date()).toISOString(),
          notesPlayed,
-         uniqueUsers: this.jamUserIDs.size,
-         maxUserCount: this.jamMaxUserCount,
-         minUserCount: this.jamMinUserCount,
-         instrumentChanges: this.jamInstrumentChanges,
+         uniqueUsers : this.jamUserIDs.size,
+         maxUserCount : this.jamMaxUserCount,
+         minUserCount : this.jamMinUserCount,
+         instrumentChanges : this.jamInstrumentChanges,
       };
    }
 };
@@ -115,18 +146,36 @@ class DiscordIntegrationSubscription {
    constructor(id, subscription, gConfig, mgr) {
       this.discordChannelID = subscription['discord_channel_id'];
       this.roomID = subscription['7jam_room_id'];
-      this.description = subscription.description;
+      this.discordChannelDesc = subscription.discord_channel_desc || this.discordChannelID;
+      this.title = `7jam:${this.roomID} => ${this.discordChannelDesc}`;
       this.gConfig = gConfig;
       this.id = id;
       this.mgr = mgr;
-      this.groups = new Map(); // map group name to some info including time MS last sent
+      this.groups = new Map(); // map group name to time MS last sent
       this.jamTracker = new JamTracker(gConfig, this.roomID, this.mgr._7jamAPI);
 
       this.integrations = subscription.integrations.map(integrationID => this.CreateIntegration(integrationID));
       this.integrations.push(this.jamTracker);
    }
 
+   GetDebugData() {
+      const groupInfo = {};
+      return {
+         id: this.id,
+         title: this.title,
+         discordChannelDesc: this.discordChannelDesc,
+         discordChannelID: this.discordChannelID,
+         sevenJamRoomID: this.roomID,
+         groups: groupInfo,
+         jamTracker: this.jamTracker.GetDebugData(),
+         integrations: this.integrations.map(i => i.GetDebugData()),
+      };
+   }
+
    CreateIntegration(integrationID) {
+      if (!integrationID) {
+         throw new Error(`Integration ID is required.`);
+      }
       const integrationSpec = this.gConfig.discord_integrations[integrationID];
       if (!integrationSpec) {
          throw new Error(`Integration ID is not found: ${integrationID}. Check your config.json.`);
@@ -146,7 +195,7 @@ class DiscordIntegrationSubscription {
          throw new Error(`Integration engine ${integrationSpec.engine} is unknown. Either config is bork or you forgot to register this engine in the clunky if/else block.`);
       }
 
-      console.log(`Discord integration initialized: ${this.id} / ${integrationID} // ${this.description}`);
+      console.log(`Discord integration initialized: ${this.id} / ${integrationID}`);
       ret.mgr = this.mgr;
       ret.subscription = this;
       ret.integrationSpec = integrationSpec;
@@ -200,6 +249,14 @@ class DiscordIntegrationManager {
       for (let i = 0; i < gConfig.discord_subscriptions.length; ++i) {
          this.subscriptions.push(new DiscordIntegrationSubscription(i, gConfig.discord_subscriptions[i], gConfig, this));
       }
+   }
+
+   // return an object which is HTTP served at /discord_integration_data
+   GetDebugData() {
+      return {
+         "subscriptions" : this.subscriptions.map(subscription => subscription.GetDebugData()),
+         "discordInfo" : this.bot.GetDebugData()
+      };
    }
 
    ReplaceQueryVariables(str) {

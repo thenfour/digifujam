@@ -82,9 +82,6 @@ class RangeSpec {
 
 const DurationSpecToMS =
     (spec, _default) => {
-       // by replacing numeric strings with an asterisk, i should always get a
-       // string like, *ms, where the suffix is at the end, and there's exactly 1
-       // asterisk. it's a quick&dirty way to check syntax,
        if (!spec) {
           return _default || 0;
        }
@@ -186,6 +183,15 @@ class SampledSignalDataSource {
    Dump() {
       console.log(JSON.stringify(this.events, null, 2));
    }
+
+   GetDebugData() {
+      return {
+         partitionSizeMS : this.partitionSizeMS,
+         type : 'SampledSignalDataSource',
+         events : this.events,
+      };
+   }
+
    PruneEvents() {
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
       let iFirstItemToKeep = this.events.findIndex(e => e.time >= boundaryTime);
@@ -254,9 +260,52 @@ class HistogramDataSource {
 
       this.events = [];
    }
+
+   GetDebugData() {
+      // do a few preprocess things:
+      // - add empty missing bins to complete the set.
+      // - bake age from now into the data
+      // - calculate the SUM of bins to now
+      const nowMS = Date.now();
+      let bins = this.events.map(e => Object.assign({}, e)); // create a completely new copy of events
+      let emptyBins = [];
+      bins.forEach((b, i) => {
+         if (i > 0) {
+            const prevBinID = bins[i-1].partitionID;
+            for (let emptyPartitionID = prevBinID + 1; emptyPartitionID < b.partitionID; ++ emptyPartitionID) {
+               const e = this.ConstructBinWithID(emptyPartitionID, {isFiller:1});
+               emptyBins.push(e);
+            }
+         }
+      });
+
+      bins = bins.concat(emptyBins);
+      bins.sort((a,b) => a.partitionID > b.partitionID ? 1 : -1);
+
+      bins.forEach((b, i) => {
+         b.partitionEndAgeMS = nowMS - b.partitionEndTimeMS;
+         b.cumulativeValue = bins.slice(i).reduce((a, b) => a + b.value, 0);
+      });
+
+      return {
+         partitionSizeMS : this.partitionSizeMS,
+         type : 'HistogramDataSource',
+         bins,
+      };
+   }
+
+   ConstructBinWithID(binID, props) {
+      const timeMS = this.timeProvider.nowMS();
+      return Object.assign({
+         value : 0,
+         partitionID : binID,
+         partitionEndTimeMS : (binID + 1) * this.partitionSizeMS,
+      }, props);
+   }
+
    Prune() {
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
-      let iFirstItemToKeep = this.events.findIndex(e => e.partitionStartTimeMS >= boundaryTime);
+      let iFirstItemToKeep = this.events.findIndex(e => e.partitionEndTimeMS >= boundaryTime);
       if (iFirstItemToKeep === -1) {
          // let's keep at least 1 item
          this.events = [ this.events.at(-1) ];
@@ -265,6 +314,7 @@ class HistogramDataSource {
 
       this.events = this.events.slice(iFirstItemToKeep);
    }
+
    AddEvent(value) {
       const timeMS = this.timeProvider.nowMS();
       console.assert(!this.events.length || this.events.at(-1).lastSampleTimeMS <= timeMS, `Events must be added in chronological order.`);
@@ -274,22 +324,22 @@ class HistogramDataSource {
       if (this.events.length) {
          const latestPartition = this.events.at(-1);
          if (latestPartition.partitionID === partitionID) {
-            latestPartition.accumulator += value;
+            latestPartition.value += value;
             latestPartition.lastSampleTimeMS = timeMS;
             return;
          }
       }
 
-      this.events.push({
-         accumulator : value,
-         partitionID : partitionID,
-         partitionStartTimeMS : partitionID * this.partitionSizeMS,
-         partitionEndTimeMS : (partitionID + 1) * this.partitionSizeMS,
-         lastSampleTimeMS : timeMS,
+      const newBin = this.ConstructBinWithID(partitionID, {
+         value: value,
+         lastSampleTimeMS: timeMS,
       });
+
+      this.events.push(newBin);
 
       this.Prune();
    }
+
    // return an array of events which correspond to a window of time (since now)
    // any bins which touch the window are returned.
    GetPartitionsInWindow(durationMS) {
@@ -304,7 +354,7 @@ class HistogramDataSource {
 
    GetSumForDurationMS(ms) {
       let events = this.GetPartitionsInWindow(ms);
-      const sum = events.reduce((acc, e) => acc + e.accumulator, 0);
+      const sum = events.reduce((acc, e) => acc + e.value, 0);
       return sum;
    }
 
@@ -314,22 +364,21 @@ class HistogramDataSource {
       if (verboseDebugLogging) {
          console.log(`${tag} IsMatch with query ${query.spec} with event window ${'{'}`);
          events.forEach(e => {
-            const startAge = Date.now() - e.partitionStartTimeMS;
             const endAge = Date.now() - e.partitionEndTimeMS;
-            console.log(`  [id=${e.partitionID} val=${e.accumulator}, age = ${DFU.FormatTimeMS(endAge)} - ${DFU.FormatTimeMS(startAge)} ]`);
+            console.log(`  [id=${e.partitionID} val=${e.value}, age = ${DFU.FormatTimeMS(endAge)} ]`);
          });
       }
 
       let isMatch = false;
       switch (query.matchType) {
       case eRangeMatchType.Touch:
-         isMatch = events.some(e => query.range.IsMatch(e.accumulator));
+         isMatch = events.some(e => query.range.IsMatch(e.value));
          break;
       case eRangeMatchType.Maintain:
-         isMatch = events.every(e => query.range.IsMatch(e.accumulator));
+         isMatch = events.every(e => query.range.IsMatch(e.value));
          break;
       case eRangeMatchType.Sum:
-         const sum = events.reduce((acc, e) => acc + e.accumulator, 0);
+         const sum = events.reduce((acc, e) => acc + e.value, 0);
          isMatch = query.range.IsMatch(sum);
          break;
       default:

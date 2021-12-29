@@ -12,6 +12,7 @@ const serveIndex = require('serve-index')
 const { google } = require('googleapis');
 const DFDB = require('./DFDB');
 const DFDiscordBot = require('./discordBot.js');
+const DFU = require('./clientsrc/dfutil');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -86,11 +87,22 @@ let gDBInitProc = () => {
     new DFStats.StatsLogger(gStatsDBPath, gDB),
   ];
   let g7jamAPI = new _7jamAPI();
+  let discordIntegrationMgr = null;
   if (gConfig.discord_bot_token) {
     gDiscordBot = new DFDiscordBot.DiscordBot(gConfig);
-    hooks.push(new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI));
+    discordIntegrationMgr = new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI);
+    hooks.push(discordIntegrationMgr);
   }
   gServerStats = new DFStats.ActivityHook(hooks);
+
+  app.get('/activityHookData.json', (req, res) => {
+        res.setHeader('Content-Type', 'application/json');
+        const startTime = Date.now();
+        const payload = JSON.stringify(discordIntegrationMgr.GetDebugData(), null, 2);
+        res.send(payload);
+        console.log(`Served /activityHookData.json in ${(Date.now() - startTime)} ms; payload_size = ${payload.length}`);
+  });
+
 };
 
 // ----------------------------------------------------------------------------------------------------------------
