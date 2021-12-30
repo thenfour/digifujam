@@ -1285,8 +1285,8 @@ button.stayLoggedIn:hover {
 }
 
 .optionsButton {
-    width: 150px;
-
+    min-width: 150px;
+    width: fit-content;
 }
 
 .creditsDialog pre {
