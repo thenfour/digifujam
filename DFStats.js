@@ -19,13 +19,15 @@ class UserCountsDataSource {
       this.roomDataSets = new Map();
 
       // recreate datasets which are being restored from backup.
-      Object.keys(ourBackup).forEach(dataSetID => {
-         if (dataSetID === '__global') {
-            this.globalDataSet = new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS, null, ourBackup[dataSetID]);
-            return;
-         }
-         this.roomDataSets.set(dataSetID, new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS, null, ourBackup[dataSetID]));
-      });
+      if (ourBackup) {
+         Object.keys(ourBackup).forEach(dataSetID => {
+            if (dataSetID === '__global') {
+               this.globalDataSet = new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS, null, ourBackup[dataSetID]);
+               return;
+            }
+            this.roomDataSets.set(dataSetID, new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS, null, ourBackup[dataSetID]));
+         });
+      }
 
       if (!this.globalDataSet) {
          this.globalDataSet = new RangeWindowQuery.SampledSignalDataSource(0, this.maxAgeMS);
@@ -95,14 +97,16 @@ class NoteCountDataSource {
       this.roomDataSets = new Map();
 
       // recreate datasets which are being restored from backup.
-      Object.keys(ourBackup).forEach(dataSetID => {
-         const dataSetBackup = ourBackup[dataSetID];
-         if (dataSetBackup.binSizeMS != this.binDurationMS) {
-            console.log(`Looks like bin size changed; can't use backup.`);
-            return;
-         }
-         this.roomDataSets.set(dataSetID, new RangeWindowQuery.HistogramDataSource(this.binDurationMS, this.maxAgeMS, null, dataSetBackup));
-      });
+      if (ourBackup) {
+         Object.keys(ourBackup).forEach(dataSetID => {
+            const dataSetBackup = ourBackup[dataSetID];
+            if (dataSetBackup.binSizeMS != this.binDurationMS) {
+               console.log(`Looks like bin size changed; can't use backup.`);
+               return;
+            }
+            this.roomDataSets.set(dataSetID, new RangeWindowQuery.HistogramDataSource(this.binDurationMS, this.maxAgeMS, null, dataSetBackup));
+         });
+      }
    }
 
    Serialize() {
@@ -310,7 +314,7 @@ class DiscordIntegrationManager {
 
       return {
          dataSources : dataSourcesDmp,
-         subscriptions : subsDmp,//this.subscriptions.map(subscription => subscription.GetDebugData()),
+         subscriptions : subsDmp, //this.subscriptions.map(subscription => subscription.GetDebugData()),
          discordInfo : this.bot.GetDebugData()
       };
    }
@@ -321,7 +325,7 @@ class DiscordIntegrationManager {
 
          const dataSourcesDmp = {
             dataSources : {},
-            subscriptions: {},
+            subscriptions : {},
          };
 
          this.dataSources.forEach((v, k) => {
@@ -337,7 +341,7 @@ class DiscordIntegrationManager {
          this.subscriptions.forEach((v, k) => {
             dataSourcesDmp.subscriptions[k] = v.Serialize();
          });
-   
+
          const payload = JSON.stringify(dataSourcesDmp, null, 2);
          fsp.writeFile(this.activityDatasourcesPath, payload, 'utf8');
          console.log(`Backed up activity data sources to ${this.activityDatasourcesPath} (${payload.length} len)`);

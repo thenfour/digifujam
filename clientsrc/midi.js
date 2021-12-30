@@ -38,7 +38,7 @@ class DigifuMidi {
     switch (statusHi) {
       case 9: // noteOn
         if (d2 > 0) {
-          //log ("self note on");
+          //console.log (`note on @ ${Date.now()}`);
           this.EventHandler.MIDI_NoteOn(d1, d2);
         } else {
           //log ("self note off");

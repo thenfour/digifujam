@@ -629,6 +629,8 @@ class sfzVoice {
         releaseLength *= this.playbackRatio;
         this.releaseLengthMS = releaseLength * 1000;
 
+        //console.log (` -> sfz note on @ ${Date.now()}`);
+
         if (this.perfGraph.nodes.bufferSourceNode1) this.perfGraph.nodes.bufferSourceNode1.start();
         if (this.perfGraph.nodes.bufferSourceNode2) this.perfGraph.nodes.bufferSourceNode2.start();
 
