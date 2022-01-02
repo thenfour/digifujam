@@ -195,6 +195,9 @@ class JamStatusNotification {
       this.binDurationMS = ds.binDurationMS;
 
       this.fireTimer = null; // we don't want to set a timer every single note on. queue noteons.
+      
+      // warm up data source
+      this.GetDataSource();
    }
 
    GetAdminHelp() {

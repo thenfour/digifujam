@@ -244,18 +244,36 @@ class SampledSignalDataSource {
    // the window should also include the latest known value before the window,
    // to build a complete picture of the activity in this window.
    GetEventWindow(durationMS) {
-      let boundaryTime = this.timeProvider.nowMS() - durationMS;
+      if (!this.events.length) return [];
+      const now = this.timeProvider.nowMS();
+      const boundaryTime = now - durationMS;
+      // ignore events which occurred in the past 20 ms; precondition queries can sometimes have
+      // state updated before the query is made so don't push it to the limit like that. this
+      // gives a sort of margin so precondition queries are more reliable. and for trigger queries
+      // they won't be affected by this.
+      const veryRecentBoundary = now - 20;
+      let iEnd = this.events.findIndex(e => e.time >= veryRecentBoundary);
+      
+      if (iEnd === -1) {
+         // nothing too recent; fill to end.
+         iEnd = this.events.length;
+      }
+      if (iEnd === 0) {
+         // the first item is too recent... nothing will match.
+         return [];
+      }
+
       let iFirstItemToKeep = this.events.findIndex(e => e.time >= boundaryTime);
       if (iFirstItemToKeep === -1) {
          // nothing matches; return the latest value which we assume fills this whole window.
-         return [ this.events.at(-1) ];
+         return [ this.events.at(iEnd-1) ];
       }
       if (iFirstItemToKeep === 0) {
-         // return everything.
-         return this.events.slice();
+         // return everything to end.
+         return this.events.slice(0, iEnd);
       }
       // include the previous item.
-      return this.events.slice(iFirstItemToKeep - 1);
+      return this.events.slice(iFirstItemToKeep - 1, iEnd);
    }
    IsMatch(query, tag, verboseDebugLogging) {
       let events = this.GetEventWindow(query.durationMS);
@@ -393,6 +411,8 @@ class HistogramDataSource {
    // return an array of bins which correspond to a window of time (since now)
    // any bins which touch the window are returned.
    GetBinsInWindow(durationMS) {
+      // NB: The "too recent" concept like for sampled data source above is less
+      // impactful for histogram because of the buffered bin concept.
       let boundaryTimeMS = this.timeProvider.nowMS() - durationMS;
       // find the first bin that is partially within the window.
       let iFirstItemToKeep = this.bins.findIndex(e => e.binEndTimeMS >= boundaryTimeMS);

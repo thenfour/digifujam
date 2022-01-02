@@ -61,6 +61,7 @@ discord_integrations:
     # - to rate-limit this, require that the server was empty for a while.
     # - if the server had a bunch of users, drops to 0, then 1 enters, it could
     #   mean that everyone got disconnected or something too.
+    verboseDebugLogging: 0
     userCountType: global
     conditionOnUserCount: "maintains [0] during [5m]"
 
@@ -70,11 +71,12 @@ discord_integrations:
     delay: 7s
     triggerOnUserCount: "maintains [1] during [6s]"
     messageContent: "Someone has joined 7jam via %roomName%!"
+    messageKey: "%userName%" # rate-limit sending based on the same message key. the message content may be generic, but we want to track unique users so put username here to key off of.
+    uniqueMessageAge: 8h # remember message keys this long before allowing a dupe to be sent.
 
   UserCount_0:
     engine: UserCountNotification
     dataSourceID: NonAdminUserCounts
-    verboseDebugLogging: 0
     # match on user join/part when population has been 1+ for some duration
     # the duration should correspond with the join message so they try to be paired.
     userCountType: global
@@ -82,6 +84,8 @@ discord_integrations:
     delay: 31s
     triggerOnUserCount: "maintains [0] during [30s]" # and stayed out..
     messageContent: "7jam is now empty after a user left %roomName%"
+    messageKey: "%userName%" # rate-limit sending based on the same message key. the message content may be generic, but we want to track unique users so put username here to key off of.
+    uniqueMessageAge: 8h # remember message keys this long before allowing a dupe to be sent.
 
   #---------- fuzzy user count notifications ------------------------------------------------------
   UserCount_Some:

@@ -14,6 +14,8 @@ class UserCountNotification {
       // set defaults
       this.integrationSpec.enabled ??= true;
       this.integrationSpec.silent ??= false;
+      this.integrationSpec.messageKey ??= '';
+      this.integrationSpec.uniqueMessageAge ??= '4h';
 
       this.lastSentTimeMS = 0;
       console.assert(!!integrationSpec.triggerOnUserCount, `UserCountNotification triggerOnUserCount is required`);
@@ -21,8 +23,14 @@ class UserCountNotification {
       this.triggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.triggerOnUserCount));
       this.conditionQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.conditionOnUserCount));
       this.delayMS = 10 + RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.delay)); // add  for a margin when we recheck the query.
+      this.uniqueMessageAgeMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(this.integrationSpec.uniqueMessageAge));
+
+      this.uniqueMessages = new Map(); // map messagekey to time when first sent
 
       this.timer = null;
+
+      // warm up data source
+      this.GetDataSource();
    }
 
    GetAdminHelp() {
@@ -84,21 +92,38 @@ class UserCountNotification {
       return ds.GetDataSourceForRoom(this.subscription.roomID);
    }
 
+   PruneMessageKeys() {
+      //this.uniqueMessages = new Map(); // map messagekey to time when first sent
+      const boundary = Date.now() - this.uniqueMessageAgeMS;
+      const keysToDelete = [];
+      this.uniqueMessages.forEach((v, k) => {
+         if (v <= boundary) keysToDelete.push(k);
+      });
+      if (keysToDelete.length) {
+         if (this.integrationSpec.verboseDebugLogging) {
+            console.log(`${this.integrationID} Deleting ${keysToDelete.length} message keys:`);
+            keysToDelete.forEach(k => { console.log(`  - ${k}`); });
+         }
+      }
+      keysToDelete.forEach(k => this.uniqueMessages.delete(k));
+   }
+
+
    // treat both JOIN and PART the same because either way we just want to examine the absolute user count.
    On7jamUserPart(roomState, user, roomUserCount, isJustChangingRoom) {
-      this.HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom);
+      this.HandleRoomUserCountChange(roomState, user, roomUserCount, isJustChangingRoom);
    }
 
    On7jamUserJoin(roomState, user, roomUserCount, isJustChangingRoom) {
-      this.HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom);
+      this.HandleRoomUserCountChange(roomState, user, roomUserCount, isJustChangingRoom);
    }
 
-   HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom) {
+   HandleRoomUserCountChange(roomState, user, roomUserCount, isJustChangingRoom) {
       if (!this.integrationSpec.enabled) {
          this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Suppressing HandleRoomUserCountChange because disabled.`);
          return;
       }
-      // make sure to test the condition BEFORE registering the new event, when the user count will include the new user.
+
       let conditionMet = this.GetDataSource().IsMatch(this.conditionQuery, this.integrationID, this.integrationSpec.verboseDebugLogging);
 
       if (!conditionMet) {
@@ -128,15 +153,23 @@ class UserCountNotification {
             this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Suppressing notification because of silent mode.`);
             return;
          }
-   
-         let messageContent = this.integrationSpec.messageContent;
 
          let substitutions = {};
          substitutions[`%roomName%`] = roomState.roomTitle;
+         substitutions[`%userName%`] = user.name;
          substitutions['%roomUserCount%'] = this.mgr._7jamAPI.Get7JamUserCountForRoom(this.subscription.roomID);
          substitutions['%roomNoteCount%'] = this.mgr._7jamAPI.Get7JamNoteCountForRoom(this.subscription.roomID).toLocaleString();
 
-         let messageText = DFU.PerformSubstitutions(messageContent, substitutions);
+         let messageText = DFU.PerformSubstitutions(this.integrationSpec.messageContent, substitutions);
+         let messageKey = DFU.PerformSubstitutions(this.integrationSpec.messageKey, substitutions);
+
+         this.PruneMessageKeys();
+         if (this.uniqueMessages.has(messageKey)) {
+            this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Suppressing notification because we already sent it.`);
+            return;
+         }
+
+         this.uniqueMessages.set(messageKey, Date.now());
 
          console.log(`${this.integrationID} ** sending discord notification: ${messageText}`);
          //this.subscription.RegisterNotificationSent(this.integrationSpec.groupName);
