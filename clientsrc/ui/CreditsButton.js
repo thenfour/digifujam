@@ -18,11 +18,11 @@ class CreditsButton extends React.Component {
     render() {
 
         return (
-            <div>
-                <div className={"creditsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>greetz</div>
+            <div className='dropdownMenu right'>
+                <div className={"dropdownMenuButton creditsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>greetz</div>
 
                 {this.state.isExpanded &&
-                    <div className="creditsDialog">
+                    <div className="creditsDialog popUpDialog">
                         <pre>
                         7jam was created by tenfour with tons of help from:<br />
                         <br />

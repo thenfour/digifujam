@@ -209,7 +209,7 @@ discord_integrations:
     messages:
       - Hey, %userName%! Welcome to 7jam!
       - To get started, select an instrument from the Instrument Closet. You'll need a MIDI keyboard, and it only works on desktop (not mobile yet)
-      - If nobody's around, feel free to join our Discord to discover upcoming events and hang out
+      - If nobody's around, head to our [Discord](https://discord.gg/kkf9gQfKAd) to discover upcoming events and hang out
 
   WelcomeMessageSome:
     engine: WelcomeMessage

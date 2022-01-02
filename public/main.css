@@ -225,6 +225,12 @@ button:focus {
     align-items: center;
 }
 
+.headerArea .headerTitle {
+    font-size: 20px;
+    color: #cc0;
+    font-weight: bold;
+}
+
 .headerArea a:link,
 .headerArea a:visited,
 .headerArea a {
@@ -399,6 +405,29 @@ button:focus {
     font-size: smaller;
     opacity:50%;
     font-weight: normal;
+}
+
+.chatLogEntryChat .messageBody
+{
+    margin-left:4px;
+}
+
+.chatLogEntryChat .timestamp {
+    color:#888;
+    margin-right:4px;
+}
+
+.chatLogEntryChat .userName {
+}
+
+.chatLogEntryChat .messageBody a,
+.chatLogEntryChat .messageBody a:link,
+.chatLogEntryChat .messageBody a:visited,
+.chatLogEntryChat .messageBody a:hover
+{
+    color:#cc0;
+    text-decoration: none;
+    pointer-events: auto;
 }
 
 .chatLogEntryChat.server .messageBody {
@@ -1269,10 +1298,18 @@ button.stayLoggedIn:hover {
 
 }
 
+.dropdownMenu
+{
+    position:relative;
+}
+
 .creditsDialog,
-.optionsDialog {
+.userSettingsDialog,
+.optionsDialog,
+.popUpDialog {
     padding: 10px;
     position: absolute;
+    font-size: 16px;
     z-index: 9991;
     width: 450px;
     background-color: #111111e8;
@@ -1284,6 +1321,8 @@ button.stayLoggedIn:hover {
 }
 
 .creditsButton,
+.dropdownMenuButton,
+.userSettingsButton,
 .optionsButton {
     display:inline-block;
     background-color: #033;
@@ -1297,6 +1336,24 @@ button.stayLoggedIn:hover {
     cursor: pointer;
 }
 
+.userSettingsButton {
+    font-weight: bold;
+}
+
+.dropdownMenu.right .popUpDialog /* buttons on right */
+{
+    right:0;
+}
+.userSettings .colorSwatchRow {
+    display: flex;
+}
+
+.userSettings .colorSwatch {
+    width:24px;
+    height:24px;
+    display:inline-block;
+}
+
 .optionsButton {
     min-width: 150px;
     width: fit-content;
@@ -1307,7 +1364,7 @@ button.stayLoggedIn:hover {
 }
 
 .creditsButton {
-    color: #099;
+    color: #0cc;
     border: 0;
 }
 
