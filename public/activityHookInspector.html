@@ -158,12 +158,14 @@
             const dataSetSelector = Object.keys(dataSource).map(dataSetID => {
                const dataSet = dataSource[dataSetID];
                if (dataSet.type === 'HistogramDataSource')
-                  return (<li className="clickable" key={dataSetID} onClick={() => this.onClickDataSet(dataSetID)}>{dataSetID}</li>);
+                  return (<li className="clickable" key={dataSetID} onClick={() => this.onClickDataSet(dataSetID)}>📊{dataSetID}</li>);
+               if (dataSet.type === 'SampledSignalDataSource')
+                  return (<li className="clickable" key={dataSetID} onClick={() => this.onClickDataSet(dataSetID)}>📈{dataSetID}</li>);
                return (<li key={dataSetID}>{dataSetID}</li>);
             });
             return (
                <li className="dataSource"><div>{this.props.dataSourceID}</div>
-                     <ul>{dataSetSelector}</ul>
+                  <ul>{dataSetSelector}</ul>
                </li>
             );
          }
@@ -233,12 +235,101 @@
             if (!this.state.dataSourceID) return;
             if (!this.state.dataSetID) return;
             if (!this.state.data) return;
-
             const dataSource = this.state.data.dataSources[this.state.dataSourceID];
             console.assert(!!dataSource);
             const dataSet = dataSource[this.state.dataSetID];
             console.assert(!!dataSet);
+            if (dataSet.type === 'HistogramDataSource') {
+               this.UpdateHistogramChart(dataSource, dataSet);
+            } else if (dataSet.type === 'SampledSignalDataSource') {
+               this.UpdateSampledChart(dataSource, dataSet);
+            }
+         }
 
+         UpdateSampledChart(dataSource, dataSet) {
+            // filter data to time.
+            const maxAgeMS = DurationSpecToMS(this.state.displayDurationText);
+
+            let samples = JSON.parse(JSON.stringify(dataSet.events)); // create a deep copy
+
+            // add age
+            samples.forEach((b, i) => {
+               b.ageMS = this.state.dataLastReceived - b.time;
+            });
+
+            // filter by age
+            samples = samples.filter(b => b.ageMS <= maxAgeMS);
+
+            const labels = samples.map(b => [`${new Date(b.time).toLocaleString()}`, `${FormatTimeMS(b.ageMS)} ago`]);
+            const binData = samples.map(b => b.value);
+
+            const chartData = {
+               labels,
+               datasets: [
+                  {
+                     label: `User count for ${this.state.dataSourceID} => ${this.state.dataSetID}`,
+                     data: binData,
+                     fill: false,
+                     borderColor: '#cc0',
+                     tension: 0
+                  }
+               ]
+            };
+
+            // possibility to update data & chart.update, but i found it doesn't correct some things like scale
+            this.chart && this.chart.destroy();
+
+            var chartCanvas = document.getElementById('chartCanvas');
+            this.chart = new Chart(chartCanvas.getContext("2d"), {
+               type: 'line',
+               data: chartData,
+               options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  legend: {
+                     display: true,
+                     labels: {
+                        fontSize: 24, // https://www.chartjs.org/docs/2.9.4/configuration/legend.html
+                        fontColor: '#0cc'
+                     }
+                  },
+                  animation: {
+                     duration: 200 // general animation time
+                  },
+                  scales: {
+                     yAxis0: {
+                        type: 'linear'
+                     }
+                  },
+
+                  plugins: {
+                     legend: {
+                        labels: {
+                           font: { size: 24 }
+                        }
+                     },
+                     tooltip: {
+                        callbacks: {
+                           title: (context) => '',
+                           label: (context) => {
+
+                              return [`${context.formattedValue} users`, ...labels[context.dataIndex]]
+                              //console.log
+                           },//[`${context.formattedValue} users`, ],
+                        },
+                        titleFont: {
+                           size: 28
+                        },
+                        bodyFont: {
+                           size: 28
+                        },
+                     }
+                  } // options.plugins
+               }, // options
+            });
+         } // UpdateHistogramChart()
+
+         UpdateHistogramChart(dataSource, dataSet) {
             // filter bins to time.
             const maxAgeMS = DurationSpecToMS(this.state.displayDurationText);
 
@@ -356,12 +447,12 @@
                   }
                }
             });
-         }
+         } // UpdateHistogramChart()
 
          render() {
 
             const dataSourceList = this.state.data && Object.keys(this.state.data.dataSources).map(dataSourceID => (
-               <DataSource key={dataSourceID} data={this.state.data} dataSourceID={dataSourceID} onClickDataSet={(dataSetID) => this.onClickDataSet(dataSourceID, dataSetID) }></DataSource>
+               <DataSource key={dataSourceID} data={this.state.data} dataSourceID={dataSourceID} onClickDataSet={(dataSetID) => this.onClickDataSet(dataSourceID, dataSetID)}></DataSource>
             ));
 
             setTimeout(() => this.UpdateChart(), 1);

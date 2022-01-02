@@ -18,6 +18,17 @@ function FormatTimeMS(ms) {
     return new Date(ms).toISOString().substring(11).substring(0,8);
 }
 
+   // strip args off args, return them and the remaining unparsed string.
+function GrabArgs(args, count) {
+    let ret = [args ?? ''];
+    for (let i = 0; i < count; ++ i) {
+       let tmp = ret.at(-1)?.trim().split(/(\s.*)/).map(s => s.trim()); // awkward way of splitting by 1st whitespace
+       tmp ??= [];
+       ret = ret.slice(0, ret.length - 1).concat(tmp.filter(t => t.trim().length));
+    }
+    return ret;
+ }
+
 let getArrowText = shown => shown ? '⯆' : '⯈';
 
 // get only the decimal part of a number.  https://stackoverflow.com/a/65046431/402169
@@ -232,4 +243,5 @@ module.exports = {
     PerformSubstitutions,
     ProcessMessageFields,
     FormatTimeMS,
+    GrabArgs,
 };

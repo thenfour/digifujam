@@ -169,6 +169,10 @@ class JamStatusNotification {
       this.integrationSpec = integrationSpec;
       this.integrationID = integrationID;
 
+      // set defaults
+      this.integrationSpec.enabled ??= true;
+      this.integrationSpec.silent ??= false;
+
       this.jamTracker = new JamTracker(this.mgr.gConfig, this.subscription.roomID, this.mgr._7jamAPI, backup?.jamTracker);
 
       const populateQueries = (spec, specialHandling) => {
@@ -191,6 +195,48 @@ class JamStatusNotification {
       this.binDurationMS = ds.binDurationMS;
 
       this.fireTimer = null; // we don't want to set a timer every single note on. queue noteons.
+   }
+
+   GetAdminHelp() {
+      return [
+         "JamStatusNotification: Sending fuzzy notifications based off user counts and note count.",
+         "Commands:",
+         "  log [0,1]      Enable verbose logging",
+         "  enable [0,1]   Enables/disables this integration (no processing)",
+         "  silent [0,1]   Suppress the notification sent",
+      ];
+   }
+
+   GetAdminStatus() {
+      return [
+         `Verbose logging: ${this.integrationSpec.verboseDebugLogging ? "on" : "off"}`,
+         `Enabled        : ${this.integrationSpec.enabled ? "yes" : "no"}`,
+         `Silent         : ${this.integrationSpec.silent ? "yes" : "no"}`,
+      ];
+   }
+
+   DoAdminCmd(args, adminLogFn) {
+      args = DFU.GrabArgs(args, 2);
+      if (args.length != 2) {
+         adminLogFn("Incorrect args to JamStatusNotification");
+         return;
+      }
+      if (args[0] == 'log') {
+         this.integrationSpec.verboseDebugLogging = !!parseInt(args[1]);
+         adminLogFn(`Verbose logging is now: ${this.integrationSpec.verboseDebugLogging ? "on" : "off"}`);
+         return;
+      }
+      if (args[0] == 'enable') {
+         this.integrationSpec.enabled = !!parseInt(args[1]);
+         adminLogFn(`Now:  ${this.integrationSpec.enabled ? "enabled" : "disabled"}`);
+         return;
+      }
+      if (args[0] == 'silent') {
+         this.integrationSpec.silent = !!parseInt(args[1]);
+         adminLogFn(`${this.integrationSpec.silent ? "Notifications will now be suppressed" : "Notifications will be allowed to be sent."}`);
+         return;
+      }
+      adminLogFn(`Unknown arg ${args[0]}`);
    }
 
    Serialize() {
@@ -232,6 +278,9 @@ class JamStatusNotification {
       if (this.fireTimer) {
          return;
       }
+      if (!this.integrationSpec.enabled) {
+         return;
+      }
       this.fireTimer = setTimeout(() => {
          this.fireTimer = null;
          this.ProcessNoteOns();
@@ -264,6 +313,10 @@ class JamStatusNotification {
    }
 
    ProcessNoteOns() {
+      if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing ProcessNoteOns because disabled.`);
+         return;
+      }
 
       // check for jam starting.
       if (!this.jamTracker.IsJamRunning()) {
@@ -279,6 +332,10 @@ class JamStatusNotification {
    }
 
    CheckStartTimerProc() {
+      if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing CheckStartTimerProc because disabled.`);
+         return;
+      }
       const spec = this.integrationSpec.jamStart;
       spec.timer = null;
       const dataSource = this.GetDataSource();
@@ -311,6 +368,10 @@ class JamStatusNotification {
    }
 
    CheckOngoingTimerProc() {
+      if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing CheckOngoingTimerProc because disabled.`);
+         return;
+      }
       const spec = this.integrationSpec.jamOngoing;
       spec.timer = null;
 
@@ -329,6 +390,10 @@ class JamStatusNotification {
    }
 
    CheckEndTimerProc() {
+      if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing CheckEndTimerProc because disabled.`);
+         return;
+      }
       const spec = this.integrationSpec.jamEnd;
       spec.timer = null;
       console.assert(this.jamTracker.IsJamRunning());
@@ -347,6 +412,11 @@ class JamStatusNotification {
    }
 
    HandlePassedTrigger(spec, jamInfo) {
+      if (this.integrationSpec.silent) {
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing notification because of silent mode.`);
+         return;
+      }
+
       let messageContent = spec.messageContent;
 
       let substitutions = {};

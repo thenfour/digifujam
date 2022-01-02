@@ -1,0 +1,114 @@
+
+
+a,
+a:link,
+a:visited,
+a:hover {
+   color:#cc0;
+   text-decoration: none;
+}
+a:hover {
+   background-color: #044;
+}
+
+pre {
+   background-color: #222;
+   margin:20px;
+   padding:20px;
+}
+
+#mainContainer {
+   height:100%;
+   display:flex;
+   font-family: 'Overpass Mono', monospace;
+   font-size: larger;
+}
+
+#appsSidebar {
+   border:2px solid #0cc;
+}
+
+#appsSidebar > ul {
+   list-style: none;
+   padding: 10px;
+   margin: 0;
+   padding-left: 0;
+   padding-right: 0;   
+}
+
+#appsSidebar > ul > li {
+   border:2px solid #033;
+   background-color: #033;
+   padding: 10px;
+   white-space: nowrap;
+   margin: 10px;
+   margin-left: 0;
+   margin-right: 0;
+   cursor: pointer;
+}
+#appsSidebar > ul > li:hover {
+   background-color: #055;
+   border:2px solid #0cc;
+}
+#appsSidebar > ul > li.selected {
+   border:2px solid #cc0;
+   background-color: #660;
+}
+#appMain {
+   flex-grow: 1;
+   display:flex;
+}
+.consoleApp {
+   display: flex;
+   flex-direction: column;
+   flex-grow: 1;
+   margin: 20px;
+   color: #7d7;
+    background-color: #222;
+}
+.consoleApp .log {
+   flex-grow: 1;
+}
+.consoleApp .inputArea {
+   width:100%;
+   display:flex;
+}
+.consoleApp .inputArea input {
+   flex-grow: 1;
+   font-size: 30px;
+   color:#7d7;
+   background-color: #303;
+}
+
+.consoleApp .logContainer {
+}
+
+.consoleApp .logContainer .log{
+   display: flex;
+   flex-direction: column;
+   justify-content: flex-end;
+}
+
+.consoleApp .log {
+   flex-grow: 1;
+   flex-basis: 0;
+   overflow: auto;
+}
+
+.consoleApp .log li .date {
+   color: #444;
+   margin-right: 20px;   
+}
+
+.consoleApp .log li .msg {
+   white-space: pre;
+}
+
+
+.consoleApp .log li .msg.client {
+   color:#888;
+}
+
+.consoleApp .log li.dummyScrollEnd {
+   visibility: hidden;
+}

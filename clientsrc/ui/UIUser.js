@@ -22,11 +22,12 @@ class UIUserName extends React.Component {
             //<span className="role noteOns">♫ {this.props.user.persistentInfo.stats.noteOns}</span>
         );
 
+        const className = (this.props.user.presence === DF.eUserPresence.Online) ? "userName online" : "userName offline";
+
         return (
-            <span className="userName" style={{ color: this.props.user.color }}>
+            <span className={className} style={{ color: this.props.user.color }}>
                 {this.props.user.name}
                 {this.props.user.hasPersistentIdentity && <span className="role hasPersistentIdentity">✓</span>}
-                {/* {this.props.user.IsAdmin() && <span className="role sysadmin">@</span>} */}
                 {this.props.user.persistentInfo && this.props.user.persistentInfo.global_roles && this.props.user.persistentInfo.global_roles.map(r => {
                     const displayTxt = this.getRoleDisplayText(r);
                     return displayTxt && (<span className="role" key={r}>{displayTxt}</span>);

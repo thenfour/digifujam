@@ -391,15 +391,6 @@ button:focus {
     animation: blinker3 .8s ease-in-out infinite alternate;     
 }
 
-.chatLogEntryNick {
-}
-
-.chatLogEntryJoin {
-}
-
-.chatLogEntryPart {
-}
-
 .chatLogEntryAggregate,
 .chatLogEntryNick,
 .chatLogEntryJoin,
@@ -410,7 +401,14 @@ button:focus {
     font-weight: normal;
 }
 
-.chatLogEntryChat {
+.chatLogEntryChat.server .messageBody {
+    font-size: larger;
+    color:#6dd;
+}
+
+.chatLogEntryChat.server .serverTag {
+    color: #aa0;
+    font-weight: bold;
 }
 
 
@@ -422,9 +420,24 @@ button.muteButton:focus
 
 
 .userName {
-    font-weight: bold;
     display: inline-flex;
     align-items: center;
+}
+
+.userName.online {
+    font-weight: bold;
+}
+
+.moreOfflineUserIndicator,
+.lessOfflineUserIndicator {
+    font-style: italic;
+    cursor: pointer;
+}
+
+.moreOfflineUserIndicator:hover,
+.lessOfflineUserIndicator:hover {
+    font-style: italic;
+    background-color: #044;
 }
 
 .userName .role {

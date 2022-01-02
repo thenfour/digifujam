@@ -73,7 +73,7 @@ class RangeSpec {
       // 0|1|2|3|4
       // 1,5|10,15
       // 1|>=5
-      this.windows = spec.split('|').map(w => new RangeWindow(w));
+      this.windows = spec.toString().split('|').map(w => new RangeWindow(w));
    }
    IsMatch(x) {
       return this.windows.some(w => w.IsMatch(x));

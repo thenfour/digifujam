@@ -239,6 +239,7 @@ class DigifuSynth {
 
 			/*
 																				 [metronomeGainNode] --->
+																				 [soundEffectGainNode] --->
 			 (instruments) -----------------------------------------------------------------------------> [masterGainNode] -->  (destination)
 						   --------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
 																	  .>
@@ -253,8 +254,10 @@ class DigifuSynth {
 			this.metronomeGainNode = this.audioCtx.createGain("metronomeGainNode");
 			this.metronomeGainNode.connect(this.masterGainNode);
 
-			this.masterGainNode.connect(this.audioCtx.destination);
+			this.soundEffectGainNode = this.audioCtx.createGain("soundEffectGainNode");
+			this.soundEffectGainNode.connect(this.masterGainNode);
 
+			this.masterGainNode.connect(this.audioCtx.destination);
 
 			this.delayVerbGain = this.audioCtx.createGain("masterDelay");
 			this.delayDryGain = this.audioCtx.createGain("masterDelay");

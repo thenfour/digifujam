@@ -7,6 +7,9 @@ const RangeWindowQuery = require("./clientsrc/RangeWindowQuery");
 const {UserCountNotification} = require('./clientsrc/UserCountNotification');
 const {ServerUpDiscordNotification} = require('./clientsrc/ServerUpDiscordNotification');
 const {JamStatusNotification} = require('./clientsrc/NoteCountNotification');
+const {UserListSyncOnly} = require('./clientsrc/UserListSyncOnly');
+const {WelcomeMessageIntegration} = require('./clientsrc/WelcomeMessage');
+const DFU = require('./clientsrc/dfutil');
 
 class UserCountsDataSource {
    constructor(mgr, dataSourceSpec, id, ourBackup) {
@@ -15,6 +18,14 @@ class UserCountsDataSource {
       this.dataSourceSpec = dataSourceSpec;
       this.backup = null;
       this.maxAgeMS = RangeWindowQuery.DurationSpecToMS(dataSourceSpec.maxAge);
+
+      const knownFilters = {
+         '7jam' : (u) => u.source === DF.eUserSource.SevenJam,
+         '7jamNonAdmins' : (u) => u.source === DF.eUserSource.SevenJam && !u.IsAdmin(),
+      };
+      dataSourceSpec.userFilter = dataSourceSpec.userFilter || '7jam'; // default filter.
+      console.assert(dataSourceSpec.userFilter in knownFilters, `The specified user filter '${dataSourceSpec.userFilter}' is not known.`);
+      this.userFilter = knownFilters[dataSourceSpec.userFilter];
 
       this.roomDataSets = new Map();
 
@@ -57,11 +68,11 @@ class UserCountsDataSource {
 
    // treat both JOIN and PART the same because either way we just want to examine the absolute user count.
    On7jamUserPart(roomState, user, roomUserCount, isJustChangingRoom) {
-      this.HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom);
+      this.HandleRoomUserCountChange(roomState);
    }
 
-   On7jamUserJoin(roomState, user, roomUserCount, isJustChangingRoom) {
-      this.HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom);
+   On7jamUserJoin(roomState, user, roomUserCount) {
+      this.HandleRoomUserCountChange(roomState);
    }
 
    GetDataSourceForRoom(roomID) {
@@ -71,14 +82,15 @@ class UserCountsDataSource {
       return this.roomDataSets.get(roomID);
    }
 
-   HandleRoomUserCountChange(roomState, roomUserCount, isJustChangingRoom) {
+   HandleRoomUserCountChange(roomState) {
       // we want the integrations to run their queries before this event gets added, so integrations can
       // check preconditions BEFORE this event is registered. simplest way is to just settimeout
       const roomID = roomState.roomID;
       setTimeout(() => {
-         const globalRoomUserCount = this.mgr._7jamAPI.GetGlobalOnlinePopulation();
+         const globalRoomUserCount = this.mgr._7jamAPI.GetGlobalOnlinePopulation(this.userFilter);
          this.globalDataSet.AddEvent(globalRoomUserCount);
          const dsRoom = this.GetDataSourceForRoom(roomID);
+         const roomUserCount = this.mgr._7jamAPI.Get7JamUserCountForRoom(roomID, this.userFilter);
          dsRoom.AddEvent(roomUserCount);
       }, 10);
    }
@@ -157,6 +169,7 @@ class NoteCountDataSource {
    }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class ForwardMessageFrom7jamToDiscord {
    get RequiresUserListSync() {
       return false;
@@ -166,20 +179,73 @@ class ForwardMessageFrom7jamToDiscord {
       this.subscription = subscription;
       this.integrationSpec = integrationSpec;
       this.integrationID = integrationID;
+
+      // set defaults
+      this.integrationSpec.enabled ??= true;
+      this.integrationSpec.sevenJamRoomUserCount ??= '*';
+
+      // process some args
+      this.roomUserCountRange = new RangeWindowQuery.RangeSpec(this.integrationSpec.sevenJamRoomUserCount);
    }
+
+   GetAdminHelp() {
+      return [
+         "ForwardMessageFrom7jamToDiscord: Relay messages from 7jam rooms to discord channels.",
+         "Commands:",
+         "  enable [0,1]               Enables/disables this integration (no processing)",
+         "  roomUserCount [rangeSpec]  Sets the room usercount requirement",
+      ];
+   }
+
+   GetAdminStatus() {
+      return [
+         `Enabled          : ${this.integrationSpec.enabled ? "yes" : "no"}`,
+         `roomUserCount    : ${this.integrationSpec.sevenJamRoomUserCount}`,
+      ];
+   }
+
+   DoAdminCmd(args, adminLogFn) {
+      args = DFU.GrabArgs(args, 2);
+      if (args.length != 2) {
+         adminLogFn("Incorrect args to UserCountNotification");
+         return;
+      }
+      if (args[0] == 'enable') {
+         this.integrationSpec.enabled = !!parseInt(args[1]);
+         adminLogFn(`Now:  ${this.integrationSpec.enabled ? "enabled" : "disabled"}`);
+         return;
+      }
+      if (args[0] == 'roomUserCount') {
+         //this.integrationSpec.sevenJamRoomUserCount = args[1];
+         adminLogFn(`not implemented yet.`);
+         return;
+      }
+      adminLogFn(`Unknown arg ${args[0]}`);
+   }
+
    GetDebugData() {
       return {
          integrationID : this.integrationID,
          engine : "ForwardMessageFrom7jamToDiscord",
+         roomUserCountSpec: this.integrationSpec.sevenJamRoomUserCount,
       };
    }
    On7jamMessage(roomState, user, msg) {
+      if (!this.integrationSpec.enabled) {
+         return;
+      }
+
+      const roomUserCount = this.mgr._7jamAPI.Get7JamUserCountForRoom(this.subscription.roomID);
+      if (!this.roomUserCountRange.IsMatch(roomUserCount)) {
+         return;
+      }
       this.mgr.bot.SendDiscordChatMessage(
           this.subscription.discordChannelID, user.name, msg.message,
           roomState.absoluteURL, roomState.roomTitle);
    }
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class ForwardMessageDiscordTo7jam {
    get RequiresUserListSync() {
       return true;
@@ -189,6 +255,36 @@ class ForwardMessageDiscordTo7jam {
       this.subscription = subscription;
       this.integrationSpec = integrationSpec;
       this.integrationID = integrationID;
+
+      // set defaults
+      this.integrationSpec.enabled = (typeof this.integrationSpec.enabled === 'undefined') ? true : false;
+   }
+   GetAdminHelp() {
+      return [
+         "ForwardMessageDiscordTo7jam: Relay messages from discord channels to 7jam rooms.",
+         "Commands:",
+         "  enable [0,1]   Enables/disables this integration (no processing)",
+      ];
+   }
+
+   GetAdminStatus() {
+      return [
+         `Enabled        : ${this.integrationSpec.enabled ? "yes" : "no"}`,
+      ];
+   }
+
+   DoAdminCmd(args, adminLogFn) {
+      args = DFU.GrabArgs(args, 2);
+      if (args.length != 2) {
+         adminLogFn("Incorrect args to UserCountNotification");
+         return;
+      }
+      if (args[0] == 'enable') {
+         this.integrationSpec.enabled = !!parseInt(args[1]);
+         adminLogFn(`Now:  ${this.integrationSpec.enabled ? "enabled" : "disabled"}`);
+         return;
+      }
+      adminLogFn(`Unknown arg ${args[0]}`);
    }
 
    GetDebugData() {
@@ -198,6 +294,9 @@ class ForwardMessageDiscordTo7jam {
       };
    }
    OnDiscordMessage(message) {
+      if (!this.integrationSpec.enabled) {
+         return;
+      }
       if (!this.mgr.bot.IsMemberValidForIntegration(message.member))
          return;
       const messageText = this.mgr.bot.DiscordMessageToString(message);
@@ -220,12 +319,12 @@ class DiscordIntegrationSubscription {
       this.id = id;
       this.mgr = mgr;
 
-      this.integrations = subscription.integrations.map(integrationID => this.CreateIntegration(integrationID, backup?.integrations?.[integrationID]));
+      this.integrations = subscription.integrations?.map(integrationID => this.CreateIntegration(integrationID, backup?.integrations?.[integrationID]));
    }
 
    Serialize() {
       const integrationDmp = {};
-      this.integrations.forEach(i => {
+      this.integrations?.forEach(i => {
          integrationDmp[i.integrationID] = i.Serialize?.() || i.integrationID;
       });
       return {
@@ -252,6 +351,8 @@ class DiscordIntegrationSubscription {
          'ForwardMessageFrom7jamToDiscord' : () => new ForwardMessageFrom7jamToDiscord(this, integrationSpec, this.mgr, integrationID, intBackup),
          'ForwardMessageDiscordTo7jam' : () => new ForwardMessageDiscordTo7jam(this, integrationSpec, this.mgr, integrationID, intBackup),
          'ServerUpDiscordNotification' : () => new ServerUpDiscordNotification(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'UserListSyncOnly' : () => new UserListSyncOnly(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'WelcomeMessage' : () => new WelcomeMessageIntegration(this, integrationSpec, this.mgr, integrationID, intBackup),
       };
 
       let ret = null;
@@ -317,6 +418,10 @@ class DiscordIntegrationManager {
          subscriptions : subsDmp, //this.subscriptions.map(subscription => subscription.GetDebugData()),
          discordInfo : this.bot.GetDebugData()
       };
+   }
+
+   GetAdminDumpObject() {
+      return this.GetDebugData();
    }
 
    OnBackupDatasources() {
@@ -411,7 +516,7 @@ class DiscordIntegrationManager {
    // Notifications from 7jam
    OnRoomsLoaded(rooms) {
       this.subscriptions.forEach(subscription => {
-         subscription.integrations.forEach(integration => {
+         subscription.integrations?.forEach(integration => {
             integration.On7jamRoomsLoaded?.(rooms);
          });
       });
@@ -461,7 +566,7 @@ class DiscordIntegrationManager {
       this.subscriptions.forEach(subscription => {
          if (subscription.roomID !== sevenJamRoomID)
             return;
-         subscription.integrations.forEach(integration => {
+         subscription.integrations?.forEach(integration => {
             fn(integration);
          });
       });
@@ -471,7 +576,7 @@ class DiscordIntegrationManager {
       this.subscriptions.forEach(subscription => {
          if (subscription.discordChannelID !== channelId)
             return;
-         subscription.integrations.forEach(integration => {
+         subscription.integrations?.forEach(integration => {
             fn(integration);
          });
       });
@@ -482,7 +587,7 @@ class DiscordIntegrationManager {
       this.subscriptions.forEach(subscription => {
          if (subscription.discordChannelID !== channelId)
             return;
-         if (!subscription.integrations.some(integration => integration.RequiresUserListSync))
+         if (!subscription.integrations?.some(integration => integration.RequiresUserListSync))
             return;
          ret.add(subscription.roomID);
       });

@@ -7,6 +7,7 @@ const DFMetronome = require("./metronome");
 const DFSynth = require("./synth");
 const DFNet = require("./net");
 const DFMusic = require("./DFMusic");
+const {eSoundEffects, SoundFxManager} = require('./soundFx');
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -815,6 +816,7 @@ class DigifuApp {
         let ncm = Object.assign(new DF.DigifuChatMessage(), msg);
         ncm.thaw();
         this._addChatMessage(ncm);
+        this.soundEffectManager.play(eSoundEffects.ChatMessageNotification);
 
         this.stateChangeHandler();
     }
@@ -1196,9 +1198,11 @@ class DigifuApp {
             this.audioCtx.endScope = () => { };
         }
 
-        this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress, () => {
-            this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
-        },
+        this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress,
+            () => {
+                this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
+                this.soundEffectManager = new SoundFxManager(this.audioCtx, this.synth.soundEffectGainNode);
+            },
             noteOnHandler,
             noteOffHandler
         );

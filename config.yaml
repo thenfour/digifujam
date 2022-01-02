@@ -3,6 +3,7 @@ admin_key: myadminkey
 storage_path: C:\root\Dropbox\root\Digifujam\storage
 port: 8081
 host_prefix: http://localhost:8081
+log_command: supervisorctl tail -9000 7jam
 room_json:
   - pub.json
   - maj7.json
@@ -26,13 +27,19 @@ variables:
   manyUserCount: 5
   manyUserDelay: 5m
   
-discord_integration_enable_after_uptime_sec: 5
-discord_log_member_count: "4" # to avoid massive log spam when dumping discord data at startup.
+discord_log_member_count: 4 # to avoid massive log spam when dumping discord data at startup.
 
 activity_hook_data_sources:
+
   UserCounts:
     engine: UserCounts
     maxAge: 24h
+    userFilter: 7jam # see UserCountsDataSource for a list
+
+  NonAdminUserCounts:
+    engine: UserCounts
+    maxAge: 24h
+    userFilter: 7jamNonAdmins # see UserCountsDataSource for a list
 
   RoomNoteCount:
     engine: NoteCount
@@ -45,11 +52,10 @@ activity_hook_data_sources:
     maxAge: 24h
 
 discord_integrations:
-
   #---------- concrete user count notifications ------------------------------------------------------
   UserCount_1:
     engine: UserCountNotification
-    dataSourceID: UserCounts
+    dataSourceID: NonAdminUserCounts
     # ensure RISING to 0.
     # - avoid quick joins/parts
     # - to rate-limit this, require that the server was empty for a while.
@@ -67,7 +73,7 @@ discord_integrations:
 
   UserCount_0:
     engine: UserCountNotification
-    dataSourceID: UserCounts
+    dataSourceID: NonAdminUserCounts
     verboseDebugLogging: 0
     # match on user join/part when population has been 1+ for some duration
     # the duration should correspond with the join message so they try to be paired.
@@ -187,6 +193,7 @@ discord_integrations:
   serverUp:
     engine: ServerUpDiscordNotification
     delaySec: 10
+    manualSend: 1 # don't send automatically; requires an admin to manually send it from the admin console.
     messageContent: 7jam is now live!
     messageFields:
       Notes played: "%serverNoteCount%"
@@ -194,13 +201,48 @@ discord_integrations:
       Rooms: "%roomCount%"
       URL: "%homeURL%"
 
+  WelcomeMessageLonely:
+    engine: WelcomeMessage
+    delay: 8s
+    delayPerMessage: 5s
+    roomUserCount: 1
+    messages:
+      - Hey, %userName%! Welcome to 7jam!
+      - To get started, select an instrument from the Instrument Closet. You'll need a MIDI keyboard, and it only works on desktop (not mobile yet)
+      - If nobody's around, feel free to join our Discord to discover upcoming events and hang out
+
+  WelcomeMessageSome:
+    engine: WelcomeMessage
+    delay: 5s
+    delayPerMessage: 5s
+    roomUserCount: 2,3
+    messages:
+      - Hey, %userName%! Welcome to 7jam!
+      - To get started, select an instrument from the Instrument Closet. You'll need a MIDI keyboard, and it only works on desktop (not mobile yet)
+
+  WelcomeMessageMany:
+    engine: WelcomeMessage
+    delay: 5s
+    delayPerMessage: 5s
+    roomUserCount: 4,10
+    messages:
+      - Hey, %userName%! Welcome to 7jam!
+
   # Note: this forwards ALL messages, no delay, buffer, or aggregation.
-  ForwardMessageFrom7jamToDiscord:
+  ForwardAllMessageFrom7jamToDiscord:
     engine: ForwardMessageFrom7jamToDiscord
+    
+  # Note: this forwards raw 7jam messages to discord only when a single user is present in the room
+  ForwardLonelyMessageFrom7jamToDiscord:
+    engine: ForwardMessageFrom7jamToDiscord
+    sevenJamRoomUserCount: 1 # a range spec
 
   # Note: this forwards ALL messages, no delay, buffer, or aggregation.
   ForwardMessageDiscordTo7jam:
     engine: ForwardMessageDiscordTo7jam
+
+  UserListSyncOnly:
+    engine: UserListSyncOnly
 
 discord_subscriptions:
   # This is an array of mappings. We're mapping 7jam room to Discord channel, and specifying the integrations which should be instantiated there.

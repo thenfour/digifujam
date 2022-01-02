@@ -3,7 +3,8 @@ module.exports = {
     mode: "development",
     context: __dirname,
     entry: {
-        main: './clientsrc/7jam.js'
+        '7jam': './clientsrc/7jam.js',
+        '7jamAdmin': './clientsrc/7jamAdminClient.js'
     },
     module: {
         rules: [

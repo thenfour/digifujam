@@ -116,6 +116,7 @@ const ClientSettings = {
     MinCheerIntervalMS: 200,
     InstrumentParamIntervalMS: 30,
     InstrumentFloatParamDiscreteValues: 64000,
+    OfflineUserListLimit: 15, // 0 = no maximum
 };
 
 const eParamMappingSource = {
@@ -141,9 +142,11 @@ const eUserSource = {
     Discord: 2,
 };
 
+// used for displaying indicators next to the chat msgs
 const eMessageSource = {
     SevenJam: 1,
     Discord: 2,
+    Server: 3,
 };
 
 const eUserPresence = {

@@ -154,6 +154,10 @@ class DiscordBot {
         };
      }
 
+     GetAdminDumpObject() {
+         return this.GetDebugData();
+     }
+
     CachedDumpAllChannels() {
         //console.log(`-- CachedDumpAllChannels ------------`);
         //const startTime = Date.now();
@@ -264,8 +268,8 @@ class DiscordBot {
             channels.forEach((channel, id) => {
                 if (channel.type !== 'GUILD_TEXT')
                     return;
-                if (!(channel.id in this.relevantChannelIDs))
-                    return;
+                // if (!(channel.id in this.relevantChannelIDs))
+                //     return;
                 console.log(`${guild.name} / ${channel.name} [Guild ${channel.guildId} Channel ${id}]`);
                 let count = 0;
                 let skipped = 0;

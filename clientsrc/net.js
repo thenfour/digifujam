@@ -213,6 +213,7 @@ class DigifuNet {
         this.handler = handler;
         this.ResetQueuedParamChangeData();
         let query = Object.assign({
+            '7jamRealm': 'main',
             jamroom: window.location.pathname,
             roomKey,
         }, Object.fromEntries(new URLSearchParams(location.search)));

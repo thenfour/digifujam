@@ -7,12 +7,13 @@ const { nanoid } = require("nanoid");
 const DF = require('./clientsrc/DFCommon');
 const fs = require('fs');
 const fsp = fs.promises;
-const DFStats = require('./DFStats.js');
+const DFStats = require('./DFStats');
 const serveIndex = require('serve-index')
 const { google } = require('googleapis');
 const DFDB = require('./DFDB');
-const DFDiscordBot = require('./discordBot.js');
+const DFDiscordBot = require('./discordBot');
 const DFU = require('./clientsrc/dfutil');
+const {ServerAdminApp} = require('./server/serverAdminApp');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -35,6 +36,7 @@ console.log(".");
 console.log(`Checking preconditions ..`);
 let preconditionsPass = true;
 
+let gAdminApp = null;
 
 let gConfig = {};
 
@@ -83,25 +85,26 @@ let gServerStats = null;
 let gDB = null;
 let gDiscordBot = null;
 let gRooms = {}; // map roomID to RoomServer
+let g7jamAPI = null;
+let gDiscordIntegrationManager = null;
 
 // to be run when db is initialized...
 let gDBInitProc = () => {
   const hooks = [
     new DFStats.StatsLogger(gStatsDBPath, gDB),
   ];
-  let g7jamAPI = new _7jamAPI();
-  let discordIntegrationMgr = null;
+  g7jamAPI = new _7jamAPI();
   if (gConfig.discord_bot_token) {
     gDiscordBot = new DFDiscordBot.DiscordBot(gConfig);
-    discordIntegrationMgr = new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI, gActivityDatasetsPath);
-    hooks.push(discordIntegrationMgr);
+    gDiscordIntegrationManager = new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI, gActivityDatasetsPath);
+    hooks.push(gDiscordIntegrationManager);
   }
   gServerStats = new DFStats.ActivityHook(hooks);
 
   app.get('/activityHookData.json', (req, res) => {
         res.setHeader('Content-Type', 'application/json');
         const startTime = Date.now();
-        const payload = JSON.stringify(discordIntegrationMgr.GetDebugData(), null, 2);
+        const payload = JSON.stringify(gDiscordIntegrationManager.GetDebugData(), null, 2);
         res.send(payload);
         console.log(`Served /activityHookData.json in ${(Date.now() - startTime)} ms; payload_size = ${payload.length}`);
   });
@@ -116,6 +119,10 @@ class _7jamAPI
   }
 
   GenerateDiscordUserID = (discordMemberID) => 'discord_' + discordMemberID;//.replace(/\W/g, '_');  <-- currently not necessary to sanitize.
+
+  GetRoomCount() {
+    return Object.keys(gRooms).length;
+  }
 
   GetApproximateGlobalInstrumentCount() {
     const instrumentNames = new Set();
@@ -156,18 +163,23 @@ class _7jamAPI
     return ret;
   }
 
-  Get7JamUserCountForRoom(roomID) {
+  Get7JamUsersForRoom(roomID, userFilter) {
     if (!(roomID in gRooms)){
       throw new Error(`Get7JamUserCountForRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
     }
+    userFilter = userFilter || ((u) => u.source === DF.eUserSource.SevenJam);
     const room = gRooms[roomID];
-    return room.roomState.users.filter(u => u.source === DF.eUserSource.SevenJam).length;
+    return room.roomState.users.filter(userFilter);
   }
 
-  GetGlobalOnlinePopulation() {
+  Get7JamUserCountForRoom(roomID, userFilter) {
+    return this.Get7JamUsersForRoom(roomID, userFilter).length;
+  }
+
+  GetGlobalOnlinePopulation(userFilter) {
     let ret = 0;
     Object.keys(gRooms).forEach(roomID => {
-      ret += this.Get7JamUserCountForRoom(roomID);
+      ret += this.Get7JamUserCountForRoom(roomID, userFilter);
     });
     return ret;
   }
@@ -210,6 +222,39 @@ class _7jamAPI
 
     room.HandleUserChatMessage(u.user, msgText, DF.eMessageSource.Discord);
   }
+
+  SendWelcomeMessageToUser(userID, msgText) {
+    let nm = new DF.DigifuChatMessage();
+    nm.messageID = DF.generateID();
+    nm.source = DF.eMessageSource.Server;
+    nm.messageType = DF.ChatMessageType.chat;
+    nm.message = msgText;
+    nm.timestampUTC = new Date();
+    const ws = this.SocketFromUserID(userID);
+    if (!ws) return; // user left
+    ws.emit(DF.ServerMessages.UserChatMessage, nm);
+  }
+
+  FindUserByID(userID) {
+    let u = null;
+    Object.values(gRooms).find(room => {
+      u = room.roomState.FindUserByID(userID);
+      if (!u) return false;
+      u = u.user;
+      return true;
+    });
+    return u;
+  }
+
+  SocketFromUserID(userID) {
+    for (let ws of io.of('/').sockets.values()) {
+      if (ws.DFUserID === userID)
+        return ws;
+    }
+    //console.log(`SocketFromUserID(${userID}) => socket not found.`); <-- not necessarily an error; let callers treat it such
+    return null;
+  }
+
 };
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -1030,7 +1075,6 @@ class RoomServer {
     // this allows simpler handling of incorporating the messageID.
     io.to(this.roomState.roomID).emit(DF.ServerMessages.UserChatMessage, nm);
   };  
-  
 
   OnClientChatMessage(ws, msg) {
     try {
@@ -1737,10 +1781,19 @@ function listUnusedSFZInstruments() {
 
 // load configs
 let roomsAreLoaded = function () {
-  console.log(`[roomsAreLoaded]`);
   // serve the rooms
   io.on('connection', ws => {
     try {
+      if (!ws.handshake.query['7jamRealm']) {
+        console.log(`A websocket connected with no realm requested.`);
+        ws.disconnect();
+        return;
+      }
+      if (ws.handshake.query['7jamRealm'] == 'admin') {
+        gAdminApp.OnClientConnect(ws);
+        return;
+      }
+
       let worldUserCount = 0;
       Object.keys(gRooms).forEach(k => {
         worldUserCount += gRooms[k].roomState.users.length;
@@ -1812,6 +1865,8 @@ let roomsAreLoaded = function () {
   setTimeout(OnPruneServerStateInterval, DF.ServerSettings.ServerStatePruneIntervalMS);
 
   gServerStats.OnRoomsLoaded(gRooms);
+
+  gAdminApp = new ServerAdminApp(gConfig, gRooms, g7jamAPI, gServerStats, gDiscordBot, gDiscordIntegrationManager);
 
   let port = gConfig.port || 8081;
   http.listen(port, () => {
