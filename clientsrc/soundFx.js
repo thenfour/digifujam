@@ -44,11 +44,16 @@ class SoundEffect {
 };
 
 const eSoundEffects = {
-   ChatMessageNotification : 'ChatMessageNotification'
+   ChatMessageNotification : 'ChatMessageNotification',
+   UserJoinNotification : 'UserJoinNotification',
+   UserPartNotification : 'UserPartNotification',
 };
 
+// key should match val of eSoundEffects
 const SoundEffectSpecs = {
-   'ChatMessageNotification' : 'chatMessageNotification.mp3'
+   'ChatMessageNotification' : 'uisfx/chatMessage.mp3',
+   'UserJoinNotification' : 'uisfx/userJoin.mp3',
+   'UserPartNotification' : 'uisfx/userPart.mp3',
 };
 
 class SoundFxManager {

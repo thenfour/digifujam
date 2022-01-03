@@ -464,6 +464,8 @@ class DigifuApp {
         nu.thaw();
         this.roomState.users.push(nu);
 
+        this.soundEffectManager.play(eSoundEffects.UserJoinNotification);
+
         if (data.chatMessageEntry) {
             let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
             msg.thaw();
@@ -484,6 +486,8 @@ class DigifuApp {
             return;
         }
         this.roomState.users.splice(foundUser.index, 1);
+
+        this.soundEffectManager.play(eSoundEffects.UserPartNotification);
 
         if (data.chatMessageEntry) {
             let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
