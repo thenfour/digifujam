@@ -38,28 +38,28 @@ class GestureTracker {
         this.events = new EventEmitter();
         this.__hasUserGestured = false;
         $(document).on('keydown', (e) => {
-            console.log(`GestureTracker -> keydown`);
+            //console.log(`GestureTracker -> keydown`);
             if (!this.__hasUserGestured) {
                 this.__hasUserGestured = true;
                 this.events.emit('gesture');
             }
         });
         $(document).on('keyup', (e) => {
-            console.log(`GestureTracker -> keyup`);
+            //console.log(`GestureTracker -> keyup`);
             if (!this.__hasUserGestured) {
                 this.__hasUserGestured = true;
                 this.events.emit('gesture');
             }
         });
         $(document).on('touchstart', (e) => {
-            console.log(`GestureTracker -> touchstart`);
+            //console.log(`GestureTracker -> touchstart`);
             if (!this.__hasUserGestured) {
                 this.__hasUserGestured = true;
                 this.events.emit('gesture');
             }
         });
         $(document).on('click', (e) => {
-            console.log(`GestureTracker -> click`);
+            //console.log(`GestureTracker -> click`);
             if (!this.__hasUserGestured) {
                 this.__hasUserGestured = true;
                 this.events.emit('gesture');

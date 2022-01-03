@@ -824,6 +824,29 @@ class DigifuApp {
 
         let ncm = Object.assign(new DF.DigifuChatMessage(), msg);
         ncm.thaw();
+
+        // ignore server welcome messages which we've already seen.
+        if (ncm.welcomeMsgID && ncm.source === DF.eMessageSource.Server) {
+            const existingStr = window.localStorage.getItem("seenServerWelcomeMessages");
+            if (existingStr) {
+                let existingArray = null;
+                try {
+                    existingArray = JSON.parse(existingStr);
+                } catch (e) {
+                    existingArray = [];
+                }
+                if (existingArray.some(id => id === ncm.welcomeMsgID)) {
+                    console.log(`Ignoring already seen welcome msg ${ncm.welcomeMsgID}`);
+                    return;
+                }
+                existingArray.push(ncm.welcomeMsgID);
+                window.localStorage.setItem("seenServerWelcomeMessages", JSON.stringify(existingArray));
+            } else {
+                window.localStorage.setItem("seenServerWelcomeMessages", JSON.stringify([ncm.welcomeMsgID]));
+            }
+        }
+
+
         this._addChatMessage(ncm);
         this.soundEffectManager.play(eSoundEffects.ChatMessageNotification);
 

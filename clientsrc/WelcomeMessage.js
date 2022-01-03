@@ -26,7 +26,7 @@ class WelcomeMessageIntegration {
 
    GetAdminHelp() {
       return [
-         "WelcomeMessageIntegration: Send a notification to visitors who are lonely.",
+         "WelcomeMessageIntegration: Send a notification to visitors with special 'welcome message' treatment.",
          "Commands:",
          "  enable [0,1]   Enables/disables this integration (no processing)",
       ];
@@ -85,12 +85,17 @@ class WelcomeMessageIntegration {
          substitutions[`%roomName%`] = roomState.roomTitle;
          substitutions['%userName%'] = userName;
 
-         let messages = this.integrationSpec.messages.map(msg => DFU.PerformSubstitutions(msg, substitutions));
+         let messages = this.integrationSpec.messages.map((msg, idx) => {
+            return {
+               text : DFU.PerformSubstitutions(msg, substitutions),
+               id : `${this.subscription.id}/${this.integrationID}/${idx}`
+            };
+         });
 
          let i = 0;
 
          const proc = () => {
-            this.mgr._7jamAPI.SendWelcomeMessageToUser(userID, messages[i]);
+            this.mgr._7jamAPI.SendWelcomeMessageToUser(userID, messages[i].text, messages[i].id);
             ++i;
             if (i < messages.length) {
                setTimeout(proc, this.delayPerMessageMS);

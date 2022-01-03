@@ -205,7 +205,7 @@ discord_integrations:
       Rooms: "%roomCount%"
       URL: "%homeURL%"
 
-  WelcomeMessageLonely:
+  WelcomeMessage1:
     engine: WelcomeMessage
     delay: 8s
     delayPerMessage: 5s

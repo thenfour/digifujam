@@ -221,10 +221,11 @@ class _7jamAPI
     room.HandleUserChatMessage(u.user, msgText, DF.eMessageSource.Discord);
   }
 
-  SendWelcomeMessageToUser(userID, msgText) {
+  SendWelcomeMessageToUser(userID, msgText, welcomeMsgID) {
     let nm = new DF.DigifuChatMessage();
     nm.messageID = DF.generateID();
     nm.source = DF.eMessageSource.Server;
+    nm.welcomeMsgID = welcomeMsgID;
     nm.messageType = DF.ChatMessageType.chat;
     nm.message = msgText;
     nm.timestampUTC = new Date();
