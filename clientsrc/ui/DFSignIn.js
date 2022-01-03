@@ -107,7 +107,7 @@ class Connection extends React.Component {
 
                         {showLoginControls &&
                             <li>
-                                <button onClick={this.onClickLoginAnonymous}>Enter as guest</button>
+                                <button onClick={this.onClickLoginAnonymous}>Enter</button>
                             </li>}
                         {
                             <li>

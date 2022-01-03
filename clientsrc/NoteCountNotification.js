@@ -5,6 +5,7 @@ const DF = require('./DFCommon');
 // ---------------------------------------------------------------------------------------
 // accumulates stats during a detected jam period.
 // it will act as an integration in order to hook events.
+// caller must explicitly start / end tracking.
 class JamTracker {
    constructor(gConfig, roomID, _7jamAPI, backup) {
       this._7jamAPI = _7jamAPI;
@@ -172,16 +173,23 @@ class JamStatusNotification {
       // set defaults
       this.integrationSpec.enabled ??= true;
       this.integrationSpec.silent ??= false;
+      this.integrationSpec.timerInterval ??= "20s";
 
       this.jamTracker = new JamTracker(this.mgr.gConfig, this.subscription.roomID, this.mgr._7jamAPI, backup?.jamTracker);
 
       const populateQueries = (spec, specialHandling) => {
-         if (spec.preCondition) {
-            spec.conditionQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(spec.preCondition));
+         if (spec.notePreCondition) {
+            spec.noteConditionQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(spec.notePreCondition));
          }
+         spec.delay ??= "0";
          spec.delayMS = 10 + RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(spec.delay));
-         if (spec.trigger) {
-            spec.triggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(spec.trigger));
+         spec.interval ??= "0";
+         spec.intervalMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(spec.interval));
+         if (spec.noteTrigger) {
+            spec.noteTriggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(spec.noteTrigger));
+         }
+         if (spec.userCountTrigger) {
+            spec.userCountTriggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(spec.userCountTrigger));
          }
          spec.specialHandling = specialHandling;
          spec.timer = null;
@@ -191,13 +199,13 @@ class JamStatusNotification {
       populateQueries(integrationSpec.jamOngoing, 'jamOngoing');
       populateQueries(integrationSpec.jamEnd, 'jamEnd');
 
-      const ds = mgr.GetDataSource(this.integrationSpec.dataSourceID);
+      // warm up data source
+      this.GetNoteDataSource();
+
+      const ds = mgr.GetDataSource(this.integrationSpec.noteDataSourceID);
       this.binDurationMS = ds.binDurationMS;
 
       this.fireTimer = null; // we don't want to set a timer every single note on. queue noteons.
-      
-      // warm up data source
-      this.GetDataSource();
    }
 
    GetAdminHelp() {
@@ -245,9 +253,9 @@ class JamStatusNotification {
    Serialize() {
       const specToObj = (spec) => {
          return {
-            preCondition : spec.conditionQuery?.spec,
+            notePreCondition : spec.noteConditionQuery?.spec,
             delayMS : spec.delayMS,
-            trigger : spec.triggerQuery.spec,
+            noteTrigger : spec.noteTriggerQuery.spec,
          };
       };
       return {
@@ -263,8 +271,16 @@ class JamStatusNotification {
       return this.Serialize();
    }
 
-   GetDataSource() {
-      const ds = this.mgr.GetDataSource(this.integrationSpec.dataSourceID);
+   GetNoteDataSource() {
+      const ds = this.mgr.GetDataSource(this.integrationSpec.noteDataSourceID);
+      return ds.GetDataSourceForRoom(this.subscription.roomID);
+   }
+
+   GetUserCountDataSource() {
+      const ds = this.mgr.GetDataSource(this.integrationSpec.userCountDataSourceID);
+      if (this.integrationSpec.userCountType === 'global') {
+         return ds.globalDataSet;
+      }
       return ds.GetDataSourceForRoom(this.subscription.roomID);
    }
 
@@ -290,29 +306,14 @@ class JamStatusNotification {
       }, this.binDurationMS); // it's not 100% certain if this is the theoretically correct time to use, but i think it's practical and simple.
    }
 
-   HandlePreCondition(spec, existingTimerAction, proc) {
-      //const spec = this.integrationSpec.jamStart;
-      if (!spec.conditionQuery) {
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} no precondition; pass by default.`);
-      } else {
-         const conditionMet = this.GetDataSource().IsMatch(spec.conditionQuery, `${this.integrationID} ${spec.specialHandling} PRECOND`, this.integrationSpec.verboseDebugLogging);
-         if (!conditionMet) {
-            return false;
-         }
-      }
-
+   HandlePreConditionForJamStart(spec, proc) {
       if (spec.timer) {
-         if (existingTimerAction === 'ignore') {
-            this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} ignoring existing timer`);
-            return;
-         }
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} clearing existing timer`);
-         clearTimeout(spec.timer);
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} ignoring existing timer`);
+         return;
       }
 
       spec.timer = setTimeout(proc, spec.delayMS);
       this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} setting timer for ${spec.delayMS} ms`);
-      return true;
    }
 
    ProcessNoteOns() {
@@ -323,38 +324,15 @@ class JamStatusNotification {
 
       // check for jam starting.
       if (!this.jamTracker.IsJamRunning()) {
-         this.HandlePreCondition(this.integrationSpec.jamStart, 'replace', () => {this.CheckStartTimerProc()});
+         this.HandlePreConditionForJamStart(this.integrationSpec.jamStart, () => {this.CheckStartTimerProc()});
          return;
       }
-
-      // have to do ongoing jam & ending jam in parallel, and just short-circuit in their own procs.
-      // they have different delay times, and different conditions, so can't share the same proc.
-      // they just need to be associated in that a jam END should cancel a jam STATUS notification.
-      this.HandlePreCondition(this.integrationSpec.jamOngoing, 'ignore', () => {this.CheckOngoingTimerProc()});
-      this.HandlePreCondition(this.integrationSpec.jamEnd, 'replace', () => {this.CheckEndTimerProc()});
    }
 
    CheckStartTimerProc() {
       if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
          this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing CheckStartTimerProc because disabled.`);
          return;
-      }
-      const spec = this.integrationSpec.jamStart;
-      spec.timer = null;
-      const dataSource = this.GetDataSource();
-
-      if (!dataSource.IsMatch(spec.triggerQuery, `${this.integrationID} ${spec.specialHandling} TRIG`, this.integrationSpec.verboseDebugLogging)) {
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} TrigCondition not met: ${spec.triggerQuery.spec}`);
-         return;
-      }
-
-      if (spec.triggerMinRoomUsers) {
-         // get current room user count.
-         const roomPop = this.mgr._7jamAPI.Get7JamUserCountForRoom(this.subscription.roomID);
-         if (roomPop < spec.triggerMinRoomUsers) {
-            this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} min room pop (${roomPop}) too low.`);
-            return;
-         }
       }
 
       if (this.jamTracker.IsJamRunning()) {
@@ -364,54 +342,71 @@ class JamStatusNotification {
          return;
       }
 
+      const spec = this.integrationSpec.jamStart;
+      spec.timer = null;
+      const noteDataSource = this.GetNoteDataSource();
+
+      if (!noteDataSource.IsMatch(spec.noteTriggerQuery, `${this.integrationID} ${spec.specialHandling} NOTE TRIG`, this.integrationSpec.verboseDebugLogging)) {
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Note TrigCondition not met: ${spec.noteTriggerQuery.spec}`);
+         return;
+      }
+
+      const userCountDataSource = this.GetUserCountDataSource();
+      if (!userCountDataSource.IsMatch(spec.userCountTriggerQuery, `${this.integrationID} ${spec.specialHandling} USERCOUNT TRIG`, this.integrationSpec.verboseDebugLogging)) {
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Usercount TrigCondition not met: ${spec.userCountTriggerQuery.spec}`);
+         return;
+      }
+
       const backtrackMS = RangeWindowQuery.DurationSpecToMS(this.integrationSpec.noteCountBacktrack);
-      this.jamTracker.RegisterJamStart(dataSource.GetSumForDurationMS(backtrackMS));
+      this.jamTracker.RegisterJamStart(noteDataSource.GetSumForDurationMS(backtrackMS));
+
+      this.BeginOngoingInterval();
 
       this.HandlePassedTrigger(spec, this.jamTracker.GetJamStats());
+   }
+
+   BeginOngoingInterval() {
+      const ongoingSpec = this.integrationSpec.jamOngoing;
+      ongoingSpec.timer = setTimeout(() => this.CheckOngoingTimerProc(), ongoingSpec.intervalMS);
    }
 
    CheckOngoingTimerProc() {
+      const ongoingSpec = this.integrationSpec.jamOngoing;
+      ongoingSpec.timer = null;
+
       if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing CheckOngoingTimerProc because disabled.`);
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${ongoingSpec.specialHandling} Suppressing CheckOngoingTimerProc because disabled.`);
          return;
       }
-      const spec = this.integrationSpec.jamOngoing;
-      spec.timer = null;
 
-      // this is how, when ending & ongoing timers are running parallel, the ending one will prevent ongoing from continuing.
       if (!this.jamTracker.IsJamRunning()) {
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} // jam is not running; bailing.`);
-         return;
-      }
-      const dataSource = this.GetDataSource();
-      if (!dataSource.IsMatch(spec.triggerQuery, `${this.integrationID} ${spec.specialHandling} TRIG`, this.integrationSpec.verboseDebugLogging)) {
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} TrigCondition not met: ${spec.triggerQuery.spec}`);
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${ongoingSpec.specialHandling} // jam is not running; bailing.`);
          return;
       }
 
-      this.HandlePassedTrigger(spec, this.jamTracker.GetJamStats());
-   }
-
-   CheckEndTimerProc() {
-      if (!this.integrationSpec.enabled) { // could have been disabled in meantime.
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} Suppressing CheckEndTimerProc because disabled.`);
-         return;
-      }
-      const spec = this.integrationSpec.jamEnd;
-      spec.timer = null;
-      console.assert(this.jamTracker.IsJamRunning());
-      const dataSource = this.GetDataSource();
-      if (!dataSource.IsMatch(spec.triggerQuery, `${this.integrationID} ${spec.specialHandling} TRIG`, this.integrationSpec.verboseDebugLogging)) {
-         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${spec.specialHandling} TrigCondition not met: ${spec.triggerQuery.spec}`);
+      // is the jam ended?
+      const endSpec = this.integrationSpec.jamEnd;
+      const noteDataSource = this.GetNoteDataSource();
+      if (noteDataSource.IsMatch(endSpec.noteTriggerQuery, `${this.integrationID} ${endSpec.specialHandling} TRIG`, this.integrationSpec.verboseDebugLogging)) {
+         // we have detected the end of a jam session.
+         let jamInfo = this.jamTracker.GetJamStats(); // DO this before ending the jam (which would reset the stats)
+         this.jamTracker.RegisterJamEnd();
+         this.HandlePassedTrigger(endSpec, jamInfo);
          return;
       }
 
-      // we have detected the end of a jam session.
-      let jamInfo = this.jamTracker.GetJamStats(); // DO this before ending the jam (which would reset the stats)
+      this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} so the jam has not ended.`);
 
-      this.jamTracker.RegisterJamEnd();
+      // at this point the timer should be reinstated because it's ongoing.
+      // but only send the notification if the trigger passes.
+      this.BeginOngoingInterval();
 
-      this.HandlePassedTrigger(spec, jamInfo);
+      if (!noteDataSource.IsMatch(ongoingSpec.noteTriggerQuery, `${this.integrationID} ${ongoingSpec.specialHandling} TRIG`, this.integrationSpec.verboseDebugLogging)) {
+         this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ${ongoingSpec.specialHandling} TrigCondition not met: ${ongoingSpec.noteTriggerQuery.spec}`);
+         return;
+      }
+
+      this.HandlePassedTrigger(ongoingSpec, this.jamTracker.GetJamStats());
    }
 
    HandlePassedTrigger(spec, jamInfo) {
@@ -436,8 +431,6 @@ class JamStatusNotification {
       substitutions['%jamMinUserCount%'] = jamInfo ? jamInfo.minUserCount.toLocaleString() : "";
       substitutions['%jamInstrumentChanges%'] = jamInfo ? jamInfo.instrumentChanges.toLocaleString() : "";
 
-      //this.subscription.RegisterNotificationSent(this.integrationSpec.groupName);
-
       const messageText = DFU.PerformSubstitutions(messageContent, substitutions);
 
       console.log(`${this.integrationID} ** sending discord notification: ${messageText}`);
@@ -447,153 +440,6 @@ class JamStatusNotification {
    };
 };
 
-// // ---------------------------------------------------------------------------------------
-// class NoteCountNotification {
-//    get RequiresUserListSync() {
-//       return false;
-//    }
-//    constructor(subscription, integrationSpec, mgr, integrationID) {
-//       this.mgr = mgr;
-//       this.subscription = subscription;
-//       this.integrationSpec = integrationSpec;
-//       this.integrationID = integrationID;
-
-//       this.lastSentTimeMS = 0;
-//       this.triggerQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.triggerOnNoteCount));
-//       this.conditionQuery = new RangeWindowQuery.RangeDurationQuery(mgr.ReplaceQueryVariables(integrationSpec.conditionOnNoteCount));
-//       this.delayMS = 10 + RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.delay)); // add  for a margin when we recheck the query.
-
-//       const ds = mgr.GetDataSource(this.integrationSpec.dataSourceID);
-//       this.binDurationMS = ds.binDurationMS;
-
-//       this.fireTimer = null;  // we don't want to set a timer every single note on. instead accumulate
-//       this.groupRateLimitMS = RangeWindowQuery.DurationSpecToMS(mgr.ReplaceQueryVariables(integrationSpec.groupRateLimitTime));
-//       this.triggerTimer = null;
-//    }
-
-//    GetDebugData() {
-//       return {
-//          integrationID: this.integrationID,
-//          preCondition: this.conditionQuery.spec,
-//          delayMS: this.delayMS,
-//          triggerQuery: this.triggerQuery.spec,
-//          groupName: this.integrationSpec.groupName,
-//          groupRateLimitMS: this.groupRateLimitMS,
-//          groupRateLimitRemainingMS: this.subscription.RateLimitedTimeRemainingMS(this.integrationSpec.groupName, 0, this.groupRateLimitMS),
-//       };
-//    }
-
-//    GetDataSource() {
-//       const ds = this.mgr.GetDataSource(this.integrationSpec.dataSourceID);
-//       return ds.GetDataSourceForRoom(this.subscription.roomID);
-//    }
-
-//    // treat both JOIN and PART the same because either way we just want to examine the absolute user count.
-//    On7jamNoteOn(roomState) {
-//       if (this.fireTimer) {
-//          return;
-//       }
-//       this.fireTimer = setTimeout(() => {
-//          this.fireTimer = null;
-//          this.ProcessNoteOns();
-//       }, this.binDurationMS); // it's not 100% certain if this is the theoretically correct time to use, but i think it's practical and simple.
-//    }
-
-//    ProcessNoteOns() {
-
-//       if (this.triggerTimer) {
-//          // avoid parallel processing; it messes with timings.
-//          this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} ignoring due to existing trigger`);
-//          return;
-//       }
-
-//       let conditionMet = this.GetDataSource().IsMatch(this.conditionQuery, `${this.integrationID} PRECOND`, this.integrationSpec.verboseDebugLogging);
-//       // if (conditionMet) {
-//       //    //console.log(`${this.integrationID}: PreCondition met: ${this.conditionQuery.spec}`);
-//       // }
-
-//       if (!conditionMet) {
-//          this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} PreCondition not met:  ${this.conditionQuery.spec}`);
-//          return;
-//       }
-
-//       const timerProc = () => {
-//          this.triggerTimer = null;
-//          const dataSource = this.GetDataSource();
-
-//          if (!dataSource.IsMatch(this.triggerQuery, `${this.integrationID} TIMER TRIG`, this.integrationSpec.verboseDebugLogging)) {
-//             this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} TrigCondition not met: ${this.triggerQuery.spec}`);
-//             return;
-//          }
-
-//          if (this.integrationSpec.specialHandling == 'jamStart') {
-//             // execute this before rate-limiting; no reason to rate-limit this
-//             if (this.subscription.jamTracker.IsJamRunning()) {
-//                this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Not firing because jam is already running.`);
-//                return;
-//             }
-
-//             const backtrackMS = RangeWindowQuery.DurationSpecToMS(this.integrationSpec.noteCountBacktrack);
-//             this.subscription.jamTracker.RegisterJamStart(dataSource.GetSumForDurationMS(backtrackMS));
-//          }
-
-//          if (this.integrationSpec.specialHandling == 'jamStatus') {
-//             // execute this before rate-limiting; no reason to rate-limit this
-//             if (!this.subscription.jamTracker.IsJamRunning()) {
-//                this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Not firing because jam isn't running.`);
-//                return;
-//             }
-//          }
-
-//          let jamInfo = this.subscription.jamTracker.GetJamStats(); // DO this before ending the jam (which would reset the stats)
-
-//          if (this.integrationSpec.specialHandling == 'jamEnd') {
-//             // execute this before rate-limiting; no reason to rate-limit this
-//             if (!this.subscription.jamTracker.IsJamRunning()) {
-//                this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} Not firing because jam is not running.`);
-//                return;
-//             }
-//             this.subscription.jamTracker.RegisterJamEnd();
-//          }
-
-//          const rateLimitedDelayMS = this.subscription.RateLimitedTimeRemainingMS(
-//              this.integrationSpec.groupName, 0, this.groupRateLimitMS);
-
-//          if (rateLimitedDelayMS > 0) {
-//             this.integrationSpec.verboseDebugLogging && console.log(`${this.integrationID} notification rate limit; discarded notification before setting timer: ${rateLimitedDelayMS}`);
-//             return;
-//          }
-
-//          let messageContent = this.integrationSpec.messageContent;
-
-//          let substitutions = {};
-//          substitutions[`%roomName%`] = this.mgr._7jamAPI.GetRoomState(this.subscription.roomID).roomTitle;
-//          substitutions['%roomUserCount%'] = this.mgr._7jamAPI.Get7JamUserCountForRoom(this.subscription.roomID);
-//          substitutions['%roomNoteCount%'] = this.mgr._7jamAPI.Get7JamNoteCountForRoom(this.subscription.roomID).toLocaleString();
-//          substitutions['%jamDuration%'] = jamInfo ? DFU.FormatTimeMS(jamInfo.durationMS) : "";
-//          substitutions['%jamNotes%'] = jamInfo ? jamInfo.notesPlayed.toLocaleString() : "";
-
-//          substitutions['%jamUniqueUsers%'] = jamInfo ? jamInfo.uniqueUsers.toLocaleString() : "";
-//          substitutions['%jamMaxUserCount%'] = jamInfo ? jamInfo.maxUserCount.toLocaleString() : "";
-//          substitutions['%jamMinUserCount%'] = jamInfo ? jamInfo.minUserCount.toLocaleString() : "";
-//          substitutions['%jamInstrumentChanges%'] = jamInfo ? jamInfo.instrumentChanges.toLocaleString() : "";
-
-//          this.subscription.RegisterNotificationSent(this.integrationSpec.groupName);
-
-//          const messageText = DFU.PerformSubstitutions(messageContent, substitutions);
-
-//          console.log(`${this.integrationID} ** sending discord notification: ${messageText}`);
-//          this.mgr.bot.SendDiscordEmbedMessage(this.subscription.discordChannelID, roomState.absoluteURL,
-//             messageText,
-//                                               DFU.ProcessMessageFields(this.integrationSpec.messageFields, substitutions));
-//       };
-
-//       //console.log(`${this.integrationID} setting timer for ${this.delayMS}`);
-//       this.triggerTimer = setTimeout(timerProc, this.delayMS);
-//    }
-// };
-
 module.exports = {
-   //NoteCountNotification,
    JamStatusNotification,
 };

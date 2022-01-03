@@ -120,22 +120,23 @@ discord_integrations:
   #---------- jam status PROD notifications ------------------------------------------------------
   JamTracker:
     engine: JamStatusNotification
-    dataSourceID: RoomNoteCount
+    noteDataSourceID: RoomNoteCount
+    userCountDataSourceID: UserCounts
     noteCountBacktrack: 30minutes # when notifying new jam, how far back to include note count
     verboseDebugLogging: 0
 
     jamStart:
-      preCondition: "sum [<200] during [10min]"
-      delay: 11m
-      triggerMinRoomUsers: 2
-      trigger: "sum [>=200] during [10min]"
+      delay: 2m
+      noteTrigger: "sum [>=200] during [10min]"
+      userCountTrigger: "maintains [>=2] during [5min]"
+      userCountType: global
       messageContent: "(dbg) A jam session is warming up in %roomName%."
       messageFields:
         Current Players: "%roomUserCount%"
 
     jamOngoing:
-      delay: 31m # this naturally sets the min interval between notifications
-      trigger: "sum [>=600] during [30min]"
+      interval: 31m
+      noteTrigger: "sum [>=600] during [30min]"
       messageContent: "(dbg) The jam goes on in %roomName%"
       messageFields:
         Jam Duration: "%jamDuration%"
@@ -143,8 +144,7 @@ discord_integrations:
         Current Players: "%roomUserCount%"
 
     jamEnd:
-      delay: 16m
-      trigger: "sum [<50] during [15min]"
+      noteTrigger: "sum [<50] during [15min]"
       messageContent: "All great jams must come to an end. Till next time in %roomName%!"
       messageFields:
         Jam duration: "%jamDuration%"
@@ -158,22 +158,24 @@ discord_integrations:
   #---------- jam status DEBUG notifications ------------------------------------------------------
   DbgJamTracker:
     engine: JamStatusNotification
-    dataSourceID: DbgRoomNoteCount
+    noteDataSourceID: DbgRoomNoteCount
+    userCountDataSourceID: UserCounts
     noteCountBacktrack: 30minutes # when notifying new jam, how far back to include note count
     verboseDebugLogging: 0
 
+    # to detect jam start, we immediately check condition, delay, and check it again
     jamStart:
-      preCondition: "sum [<20] during [10s]"
-      delay: "16s" # must be the same as trigger query duration
-      triggerMinRoomUsers: 2
-      trigger: "sum [>=20] during [10s]"
+      delay: "16s"
+      noteTrigger: "sum [>=20] during [10s]"
+      userCountTrigger: "maintains [>=2] during [10s]"
+      userCountType: global
       messageContent: "(dbg) A jam session is warming up in %roomName%."
       messageFields:
         Current Players: "%roomUserCount%"
 
     jamOngoing:
-      delay: "26s"
-      trigger: "sum [>=20] during [20s]"
+      interval: "20s"
+      noteTrigger: "sum [>=20] during [20s]"
       messageContent: "(dbg) The jam goes on in %roomName%"
       messageFields:
         Jam Duration: "%jamDuration%"
@@ -181,8 +183,7 @@ discord_integrations:
         Current Players: "%roomUserCount%"
 
     jamEnd:
-      delay: "16s"
-      trigger: "sum [<20] during [10s]"
+      noteTrigger: "sum [<20] during [10s]"
       messageContent: "All great jams must come to an end. Till next time in %roomName%!"
       messageFields:
         Jam duration: "%jamDuration%"
