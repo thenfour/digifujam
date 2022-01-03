@@ -15,6 +15,7 @@ const SequencerMain = require("./SequencerMain");
 const {InlinePitchBendCtrl, InlineMasterGainCtrl} = require('./InlinePitchBendCtrl');
 const {UserSettingsButton} = require("./userSettings");
 const {GoogleOAuthModule} = require('../googleSignIn');
+const {GestureSplash} = require('./splash');
 
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
@@ -2322,6 +2323,8 @@ class RootArea extends React.Component {
         );
 
         return (
+            <div id="allContentContainer">
+            <GestureSplash app={this.state.app}></GestureSplash>
             <div id="grid-container" className={!hasRightArea ? "noright" : (this.state.wideMode ? "wide" : undefined)}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>
@@ -2353,6 +2356,7 @@ class RootArea extends React.Component {
                 <RightArea app={this.state.app} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
                 <LeftArea app={this.state.app} />
 
+            </div>
             </div>
         );
     }

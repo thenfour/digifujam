@@ -235,7 +235,7 @@ class DigifuSynth {
 		DFSynthTools.initSynthTools(this.audioCtx);
 
 		// see other possible impulses: https://github.com/burnson/Reverb.js
-		this.masterReverb = this.audioCtx.createReverbFromUrl("./reaper_stems_MidiverbMark2Preset29.m4a", () => { ////./MidiverbMark2Preset29.m4a", () => { // ./LadyChapelStAlbansCathedral.m4a
+		this.masterReverb = this.audioCtx.createReverbFromUrl("uisfx/reaper_stems_MidiverbMark2Preset29.m4a", () => { ////./MidiverbMark2Preset29.m4a", () => { // ./LadyChapelStAlbansCathedral.m4a
 
 			/*
 																				 [metronomeGainNode] --->

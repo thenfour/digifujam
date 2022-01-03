@@ -83,6 +83,12 @@ button:focus {
     color:red;
 }
 
+#allContentContainer
+{
+    height: 100vh;
+    width: 100%;
+}
+
 /* https://grid.layoutit.com/ */
 #grid-container {
     height: 100vh;
@@ -1611,3 +1617,39 @@ li.preloadSFZ {
 .discordChatMsgIndicator {
     width:16px;
 }
+
+
+#gestureSplash {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    background-color: #000d;
+    z-index: 10000;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    
+    overflow: hidden;
+}
+
+#splashLogo {
+
+}
+#splashTextContainer {
+
+}
+#splashTitle {
+
+    font-size: 48px;
+    font-weight: bold;
+    color: #cc0;
+    letter-spacing: -1px;
+}
+#splashClickToContinue {
+    font-style: italic;
+    font-weight: bold;
+}
+
+
