@@ -721,8 +721,8 @@ class StatsLogger {
       this.serverStats.byHour[hourID] = updateRoomStatsCallback(
           this.serverStats.byHour[hourID] || StatsLogger.emptyStatsObj());
       if (user.hasPersistentIdentity) {
-         this.queuedUserStats[user.userID] = updateUserStatsCallback(
-             this.queuedUserStats[user.userID] || DF.DigifuUser.emptyStatsObj());
+         this.queuedUserStats[user.persistentID] = updateUserStatsCallback(
+             this.queuedUserStats[user.persistentID] || DF.DigifuUser.emptyStatsObj());
       }
    }
 

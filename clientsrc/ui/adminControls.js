@@ -7,9 +7,6 @@ class AdminControls extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            isShown: false,
-        }
     }
 
     copyServerState = () => {
@@ -51,46 +48,67 @@ class AdminControls extends React.Component {
         this.props.app.net.SendAdminChangeRoomState("backupServerState");
     }
 
-    onClickHeader = e => {
-        this.setState({ isShown: !this.state.isShown });
-    }
-
     render() {
 
-        const uptimeInSec = this.props.app.serverUptimeSec;
-        const uptimeInMin = uptimeInSec / 60;
-        const uptimeInHours = uptimeInMin / 60;
-        const uptimeHours = Math.trunc(uptimeInHours).toString().padStart(2, "0");
-        const uptimeMinutes = Math.trunc(DF.getDecimalPart(uptimeInHours) * 60).toString().padStart(2, "0");
-        const uptimeSec = Math.trunc(DF.getDecimalPart(uptimeInMin) * 60).toString().padStart(2, "0");
-
-        const uptimeStr = `${uptimeHours}h ${uptimeMinutes}m ${uptimeSec}s`;
+        const uptime = new DF.TimeSpan(this.props.app.serverUptimeSec * 1000);
 
         return (
-            <div className="component" style={{ whiteSpace: "nowrap" }}>
-                <h2 onClick={this.onClickHeader}>{DF.getArrowText(this.state.isShown)} Admin</h2>
-                {this.state.isShown &&
                     <div>
-                        <div>uptime: {uptimeStr}</div>
+                        <div>uptime: {uptime.longString}</div>
+                        <div><a href="/stats.html" target="_blank">Stats</a></div>
+                        <div><a href="/activityHookInspector.html" target="_blank">Activity graphs</a></div>
+                        <div><a href="/admin.html?DF_ADMIN_PASSWORD=xyz" target="_blank">Admin page</a></div>
                         <button onClick={this.copyServerState}>Copy server state</button><br />
                         <button onClick={this.pasteServerState}>Paste server state</button><br />
                         <button onClick={this._handleBackupServerState}>Manually backup server state</button><br />
-                        <div style={{ fontSize: "x-small" }}>
+                        <div>
                             announcement HTML (live update):<br />
-                            <textarea value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChangeAnnouncementHTML(e.target.value)} />
+                            <textarea style={{width:"100%", height:"250px"}} value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChangeAnnouncementHTML(e.target.value)} />
                         </div>
-                        <div style={{ fontSize: "x-small" }}>
-                            roomimg:<br />
-                            <input type="text" value={this.props.app.roomState.img} onChange={e => this._handleChangeRoomImg(e.target.value)} />
+                        <div>
+                            background image:<br />
+                            <input style={{width:"100%"}} type="text" value={this.props.app.roomState.img} onChange={e => this._handleChangeRoomImg(e.target.value)} />
                         </div>
                     </div>
-                }
-            </div>
         );
     }
 }
 
+class AdminControlsButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isExpanded: false,
+        };
+    }
+ 
+    onClickExpand = () => {
+        this.setState({
+            isExpanded: !this.state.isExpanded,
+        });
+    };
+ 
+    render() {
+ 
+       if (!this.props.app) return null;
+
+       return (
+            <div className='dropdownMenu left'>
+                <div className={"dropdownMenuButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>
+                   <span>Admin</span>
+                   </div>
+ 
+                {this.state.isExpanded &&
+                    <div className="userSettingsDialog popUpDialog">
+                       <AdminControls app={this.props.app}></AdminControls>
+                    </div>}
+            </div>);
+    }
+ };
+ 
+
+ 
 
 module.exports = {
-    AdminControls
+    AdminControlsButton
 }

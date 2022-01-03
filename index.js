@@ -9,11 +9,11 @@ const fs = require('fs');
 const fsp = fs.promises;
 const DFStats = require('./DFStats');
 const serveIndex = require('serve-index')
-const { google } = require('googleapis');
 const DFDB = require('./DFDB');
 const DFDiscordBot = require('./discordBot');
 const DFU = require('./clientsrc/dfutil');
 const {ServerAdminApp} = require('./server/serverAdminApp');
+const {ServerGoogleOAuthSupport} = require('./server/serverGoogleOAuth');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -56,14 +56,9 @@ if (fs.existsSync("./config2.yaml")) {
 }
 
 
-
 if (!gConfig.admin_key) {
   preconditionsPass = false;
   console.log(`!! YOU HAVE NOT SET AN ADMIN PASSWORD VIA admin_key. YOU SHOULD.`);
-}
-if (!gConfig.google_client_id || !gConfig.google_client_secret) {
-  preconditionsPass = false;
-  console.log(`!! YOU HAVE NOT SET DF_GOOGLE_CLIENT_ID OR DF_GOOGLE_CLIENT_SECRET. GOOGLE LOGIN NOT AVAILABLE.`);
 }
 if (!gConfig.mongo_connection_string) {
   preconditionsPass = false;
@@ -87,9 +82,13 @@ let gDiscordBot = null;
 let gRooms = {}; // map roomID to RoomServer
 let g7jamAPI = null;
 let gDiscordIntegrationManager = null;
+let gGoogleOAuth = null;
 
 // to be run when db is initialized...
 let gDBInitProc = () => {
+
+  gGoogleOAuth = new ServerGoogleOAuthSupport(gConfig, app, gDB);
+
   const hooks = [
     new DFStats.StatsLogger(gStatsDBPath, gDB),
   ];
@@ -211,8 +210,7 @@ class _7jamAPI
       throw new Error(`SendDiscordMessageToRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
     }
     const room = gRooms[roomID];
-    //const user = room.roomState.users[0]; // TODO: use a real discord user
-    let u = room.roomState.FindUserByID(this.GenerateDiscordUserID(discordMemberID));
+    let u = room.roomState.FindUserByPersistentID(this.GenerateDiscordUserID(discordMemberID));
     if (!u) {
       console.log(`SendDiscordMessageToRoom: Unable to forward this message because the user was not found.`);
       console.log(`   -> your discord integrations/subscriptions might need to require user list sync?`);
@@ -255,96 +253,6 @@ class _7jamAPI
     return null;
   }
 
-};
-
-// ----------------------------------------------------------------------------------------------------------------
-// BEGIN: google login stuff...
-const gHasGoogleAPI = () => gConfig.google_client_id && gConfig.google_client_secret;
-
-if (!gHasGoogleAPI()) {
-  console.log(`DF_GOOGLE_CLIENT_ID or DF_GOOGLE_CLIENT_SECRET are not set; google login will not be available.`);
-} else {
-  console.log(`Google auth enabled with client ID ${gConfig.google_client_id}`);
-}
-
-// here's an endpoint you can call to get a URL for logging in with google.
-app.get('/google_auth_url', (req, res) => {
-  try {
-    if (!gHasGoogleAPI()) {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify({ url: null }));
-      return;
-    }
-    const oauth2Client = new google.auth.OAuth2(
-      gConfig.google_client_id,
-      gConfig.google_client_secret,
-      gConfig.google_redirect_url
-    );
-
-    const scopes = [
-      'https://www.googleapis.com/auth/userinfo.email',
-    ];
-
-    const url = oauth2Client.generateAuthUrl({
-      access_type: 'offline',
-      prompt: 'consent',
-      scope: scopes,
-    });
-
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({ url }));
-  } catch (e) {
-    console.log(`Exception in /google_auth_url`);
-    console.log(e);
-  }
-});
-
-
-app.get('/google_complete_authentication', (req, res) => {
-  try {
-    //console.log(`/google_complete_authentication invoked with code ${req.query.code}`);
-    const code = req.query.code;
-    const oauth2Client = new google.auth.OAuth2(
-      gConfig.google_client_id,
-      gConfig.google_client_secret,
-      gConfig.google_redirect_url
-    );
-
-    oauth2Client.getToken(code).then(function (tokens) {
-      //console.log(`  => tokens retrieved: ${JSON.stringify(tokens)}`);
-      //console.log(`  => access token: ${tokens.tokens.access_token}`);
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify({ google_access_token: tokens.tokens.access_token }));
-    });
-  } catch (e) {
-    console.log(`Exception in /google_complete_authentication`);
-    console.log(e);
-  }
-});
-// END: google login stuff ----------------------------------------------------------------------------------------------------------------
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-// convert a db model DFUser to a struct usable in DigifuUser.persistentInfo
-// see models/DFUser.js for the src format
-const DFUserToPersistentInfo = (doc, followersCount) => {
-  return {
-    global_roles: doc.global_roles,
-    bands: doc.bands,
-    room_roles: doc.room_roles,
-    stats: doc.stats,
-    followingUsersCount: doc.following_users.length,
-    followersCount,
-  };
-};
-const EmptyDFUserToPersistentInfo = () => {
-  return {
-    global_roles: [],
-    bands: [],
-    room_roles: [],
-    stats: DF.DigifuUser.emptyStatsObj(),
-    followingUsersCount: 0,
-    followersCount: 0,
-  };
 };
 
 
@@ -509,9 +417,14 @@ class RoomServer {
         return;
       }
 
+      // try to reuse existing user ID, so we can track this user through the world instead of considering
+      // room changes totally new users.
+      let userID = clientSocket.DFUserID || DF.generateUserID();
+
       // handler
-      const completeUserEntry = (userID, hasPersistentIdentity, persistentInfo) => {
+      const completeUserEntry = (hasPersistentIdentity, persistentInfo, persistentID) => {
         u.userID = userID.toString(); // this could be a mongo Objectid
+        u.persistentID = persistentID?.toString();
         u.hasPersistentIdentity = hasPersistentIdentity;
         clientSocket.DFUserID = userID;
         console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
@@ -556,40 +469,8 @@ class RoomServer {
         clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
       }; // completeUserEntry
 
-      const token = clientSocket.handshake.query.google_access_token;
-      if (token) {
-        // use google auth token to get a google user id.
-        var oaclient = new google.auth.OAuth2();
-        oaclient.setCredentials({ access_token: token });
-        var googleUser = google.oauth2({
-          auth: oaclient,
-          version: 'v2'
-        });
-
-        googleUser.userinfo.get(
-          (err, res) => {
-            if (err) {
-              console.log(`google_access_token validation failed for token ${token}`);
-              console.log(JSON.stringify(err.errors));
-              rejectUserEntry();
-            } else {
-              // <email scope>
-              //     "id": "1234567789345783495",
-              //     "email": "email@something.com",
-              //     "verified_email": true,
-              gDB.GetOrCreateGoogleUser(u.name, u.color, res.data.id).then(userDoc => {
-                gDB.GetFollowerCount(userDoc._id).then(followersCount => {
-                  //console.log(`OK i have this user doc: ${JSON.stringify(userDoc, null, 2)}`);
-                  completeUserEntry(userDoc._id, true, DFUserToPersistentInfo(userDoc, followersCount));
-                });
-              });
-            }
-          });
-      } else { // token.
-        // try to reuse existing user ID, so we can track this user through the world instead of considering
-        // room changes totally new users.
-        let newUserID = clientSocket.DFUserID || "guest_" + DF.generateID();
-        completeUserEntry(newUserID, false, EmptyDFUserToPersistentInfo());
+      if (!gGoogleOAuth.TryProcessHandshake(u, clientSocket, completeUserEntry, rejectUserEntry)) {
+        completeUserEntry(false, DF.EmptyDFUserToPersistentInfo(), null);
       }
 
     } catch (e) {
@@ -1520,9 +1401,9 @@ class RoomServer {
   };
 
   // returns the user object, or null
-  AddOrUpdateExternalUser(source, presence, userName, color, userID) {
+  AddOrUpdateExternalUser(source, presence, userName, color, persistentID) {
 
-    let foundUser = this.roomState.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByPersistentID(persistentID);
     if (foundUser) {
       return this.UpdateExternalUser(foundUser.user, presence, userName, color);
     }
@@ -1541,11 +1422,12 @@ class RoomServer {
       return null;
     }
 
-    u.userID = userID.toString(); // this could be a mongo Objectid
+    u.userID = DF.generateUserID();
+    u.persistentID = persistentID?.toString();
     u.source = source;
     u.presence = presence;
     u.hasPersistentIdentity = false;
-    u.persistentInfo = EmptyDFUserToPersistentInfo();
+    u.persistentInfo = DF.EmptyDFUserToPersistentInfo();
     u.lastActivity = new Date();
     u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
     u.img = null;
@@ -1557,15 +1439,15 @@ class RoomServer {
   };
 
   // call this to leave the socket from this room.
-  RemoveExternalUser(userID) {
+  RemoveExternalUser(persistentID) {
     // find the user object and remove it.
-    let foundUser = this.roomState.FindUserByID(userID);
+    let foundUser = this.roomState.FindUserByPersistentID(persistentID);
     if (foundUser == null) {
-      log(`Error: Removing unknown external userID ${userID}`);
+      log(`Error: Removing unknown external persistentID ${persistentID}`);
       return;
     }
 
-    log(`RemoveExternalUser => ${userID} ${foundUser.user.name}`);
+    log(`RemoveExternalUser => ${persistentID} = ${foundUser.user.name}`);
 
     // remove references to this user.
     this.roomState.instrumentCloset.forEach(inst => {
@@ -1578,7 +1460,7 @@ class RoomServer {
     // remove user from room.
     this.roomState.users.splice(foundUser.index, 1);
 
-    io.to(this.roomState.roomID).emit(DF.ServerMessages.UserLeave, { userID });
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.UserLeave, { userID: foundUser.user.userID });
   };
 
 
@@ -1627,6 +1509,25 @@ let gFindUserFromSocket = (ws) => {
   });
   return ret;
 };
+
+
+function OnPersistentSignOut(ws, data) {
+  try {
+    let foundUser = gFindUserFromSocket(ws);
+    if (foundUser == null) {
+      log(`OnPersistentSignOut => unknown user`);
+      return;
+    }
+
+    foundUser.PersistentSignOut();
+    
+    ws.emit(DF.ServerMessages.PersistentSignOutComplete);
+
+  } catch (e) {
+    log(`OnPersistentSignOut exception occurred`);
+    log(e);
+  }
+}
 
 
 let OnClientDownloadServerState = (ws) => {
@@ -1819,6 +1720,7 @@ let roomsAreLoaded = function () {
       }
 
       ws.on('disconnect', data => OnDisconnect(ws, data));
+      ws.on(DF.ClientMessages.PersistentSignOut, data => OnPersistentSignOut(ws, data));
       ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
       ws.on(DF.ClientMessages.JoinRoom, data => ForwardToRoom(ws, room => room.OnClientJoinRoom(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRequest, data => ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));

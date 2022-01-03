@@ -301,7 +301,6 @@ class DiscordBot {
     }
 
     DiscordMessageToString(message) {
-        // TODO!
         // message.stickers is an array of sticker IDs. let's ignore them.
         // message.embeds *tend* to be included in content. for example a youtube embed is normally an accompaniment to a text url in content. so i think for now we can ignore it.
         // message.attachments

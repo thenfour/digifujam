@@ -1198,8 +1198,15 @@ li.floatParam.expanded.hasMapping
 .socicon {
     height: 24px;
     fill: #0aa;
-    margin-left: 12px;
-    margin-right: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+    padding-top:4px;
+    padding-bottom: 4px;
+}
+
+.socicon:hover {
+    background-color: #055;
+    fill: #0aa;
 }
 
 .logoTxt {
@@ -1212,6 +1219,23 @@ li.floatParam.expanded.hasMapping
     min-width: 400px;
 }
 
+.userSettingsGoogleSignInContainer
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 20px;
+    border: solid 3px #033;
+    padding: 6px;
+}
+
+.homeGoogleSignInContainer
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .googleLoginButton {
     background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_normal_web.png');
     display: inline-block;
@@ -1219,7 +1243,6 @@ li.floatParam.expanded.hasMapping
     height: 46px;
     border: 0;
     border-radius:0;
-    margin-top:20px;
  }
  .googleLoginButton:hover {
     background-image: url('/google_signin_buttons/web/1x/btn_google_signin_dark_focus_web.png');
@@ -1238,16 +1261,22 @@ li.floatParam.expanded.hasMapping
     border-radius:0;
  }
 
+ .homeGoogleSignInContainer .googleLoginButton
+ {
+     margin-top: 20px;
+ }
  
   
 button.stayLoggedIn {
     border: 0;
+    color: #aaa;
+    background: none;
 }
 
 button.stayLoggedIn.on {
-    background-color: #077;
+    color: #0dd;
+    background-color: #044;
 }
-
 
 button.stayLoggedIn:hover {
     background-color: #066;
@@ -1322,19 +1351,31 @@ button.stayLoggedIn:hover {
 
 .creditsButton,
 .dropdownMenuButton,
-.userSettingsButton,
-.optionsButton {
+.userSettingsButton {
     display:inline-block;
     background-color: #033;
     padding: 4px;
     border: 1px solid #066;
-    border-radius: 10px;
+    border-radius: 5px;
     margin: 0;
     margin-right: 20px;
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
 }
+
+.popUpDialog fieldset {
+    border-radius: 6px;
+    border: 0;
+    background: #022;
+    margin-bottom: 5px;
+}
+
+.popUpDialog fieldset .legend {
+    color:#aa0;
+    font-weight: bold;
+}
+
 
 .userSettingsButton {
     font-weight: bold;
@@ -1354,11 +1395,6 @@ button.stayLoggedIn:hover {
     display:inline-block;
 }
 
-.optionsButton {
-    min-width: 150px;
-    width: fit-content;
-}
-
 .creditsDialog pre {
     font-size:medium;
 }
@@ -1368,27 +1404,18 @@ button.stayLoggedIn:hover {
     border: 0;
 }
 
-.creditsButton.expanded {
+.creditsButton.expanded,
+.dropdownMenuButton.expanded
+{
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
+    border-bottom: 0;
 }
 
 
-.optionsButton:hover {
+.dropdownMenuButton:hover
+{
     background-color: #055;
-}
-
-.optionsButton:hover {
-    background-color: #055;
-}
-
-.optionsButton:active {
-    background-color: #077;
-}
-
-.optionsButton.expanded {
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
 }
 
 .optionsDialog .component {
@@ -1543,11 +1570,11 @@ li.preloadSFZ {
     margin-top:5px;
     border-top:2px dotted #077;
 }
-li.updateAboveStuff {
+/* li.updateAboveStuff {
     padding-bottom:5px;
     margin-bottom:5px;
     border-bottom:2px dotted #077;
-}
+} */
 
 .liveRoomBeat {
     background-color:#022;
@@ -1578,18 +1605,6 @@ li.updateAboveStuff {
 
 .liveRoomBeat .beat.inProgress {
     border-left:2px solid #0ff;
-}
-
-
-.optionsDialog fieldset {
-    border-radius: 6px;
-    border: 0;
-    background: linear-gradient(to bottom, #033, #022);
-    margin-bottom: 5px;
-}
-
-.optionsDialog fieldset div.legend {
-
 }
 
 

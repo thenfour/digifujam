@@ -15,6 +15,10 @@ let generateID = function () {
     return ret;
 }
 
+function generateUserID() {
+    return "u" + generateID();
+}
+
 let gGlobalInstruments = [];
 
 let SetGlobalInstrumentList = function (x) {
@@ -51,6 +55,7 @@ const ClientMessages = {
     AdjustBeatOffset: "AdjustBeatOffset", // relativeBeats
     RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:..., phaseRelativeMS:
     JoinRoom: "JoinRoom", // roomID
+    PersistentSignOut: "PersistentSignOut",
 };
 
 const ServerMessages = {
@@ -60,6 +65,7 @@ const ServerMessages = {
     UserEnter: "UserEnter",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserLeave: "UserLeave",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
+    PersistentSignOutComplete: "PersistentSignOutComplete",// sent to you only
     Ping: "Ping", // token, users: [{ userid, pingMS, roomID, stats }], rooms: [{roomID, roomName, userCount, stats}]
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
     NoteEvents: "NoteEvents", // { noteOns: [ user, note, velocity ], noteOffs: [ user, note ] }
@@ -170,11 +176,12 @@ class DigifuUser {
     }
 
     constructor() {
-        this.userID = null; // if guest, this is "guest<id>", if it's from a database user, then it's the ObjectId from users table.
+        this.userID = null;
         this.pingMS = 0;
         this.lastActivity = null; // this allows us to display as idle or release instrument
         this.persistentInfo = null; // if you sign in with google (et al) this gets set to the (public) database info
-        this.hasPersistentIdentity = false; // true if your identity is not a guest
+        this.hasPersistentIdentity = false; // true if you have an identity living longer than your session. not sure how useful this is.
+        this.persistentID = null; // persistent identity ID (database id). Not the same as your user ID because you can "promote" your guest access to google access by signing into google (..discord, et al)
 
         this.source = eUserSource.SevenJam;
         this.presence = eUserPresence.Online;
@@ -227,6 +234,13 @@ class DigifuUser {
     IntegrateFromPing(u) {
         this.pingMS = u.pingMS;
         this.persistentInfo = u.persistentInfo;
+    }
+
+    PersistentSignOut() {
+        this.hasPersistentIdentity = false;
+        this.persistentID = null;
+        // prevent signout/signin from artificially inflating stats. when you connect to persistent state, we reset the stats. and vice-vesa.
+        this.persistentInfo = EmptyDFUserToPersistentInfo();
     }
 
 }; // DigifuUser
@@ -1585,22 +1599,31 @@ class DigifuRoomState {
     }
 
     // returns { user, index } or null.
+    // we need to return an index in order to splice() on removal.
     FindUserByID(userID) {
-        let idx = this.users.findIndex(user => user.userID == userID);
+        const idx = this.users.findIndex(user => user.userID === userID);
+        if (idx == -1) return null;
+        return { user: this.users[idx], index: idx };
+    };
+
+    // returns { user, index } or null.
+    // we need to return an index in order to splice() on removal.
+    FindUserByPersistentID(persistentID) {
+        const idx = this.users.findIndex(user => user.persistentID === persistentID);
         if (idx == -1) return null;
         return { user: this.users[idx], index: idx };
     };
 
     // returns { instrument, index } or null.
     FindInstrumentById(instrumentID) {
-        let idx = this.instrumentCloset.findIndex(instrument => instrument.instrumentID == instrumentID);
+        let idx = this.instrumentCloset.findIndex(instrument => instrument.instrumentID === instrumentID);
         if (idx == -1) return null;
         return { instrument: this.instrumentCloset[idx], index: idx };
     };
 
     // returns { instrument, index } or null.
     FindInstrumentByUserID(userID) {
-        let idx = this.instrumentCloset.findIndex(instrument => instrument.controlledByUserID == userID);
+        let idx = this.instrumentCloset.findIndex(instrument => instrument.controlledByUserID === userID);
         if (idx == -1) return null;
         return { instrument: this.instrumentCloset[idx], index: idx };
     };
@@ -1917,6 +1940,31 @@ let sanitizeCheerText = function (n) {
     return String.fromCodePoint(n.codePointAt(0));
 }
 
+// convert a db model DFUser to a struct usable in DigifuUser.persistentInfo
+// see models/DFUser.js for the src format
+const DFUserToPersistentInfo = (doc, followersCount) => {
+    return {
+      global_roles: doc.global_roles,
+      bands: doc.bands,
+      room_roles: doc.room_roles,
+      stats: doc.stats,
+      followingUsersCount: doc.following_users.length,
+      followersCount,
+    };
+  };
+  
+  const EmptyDFUserToPersistentInfo = () => {
+    return {
+      global_roles: [],
+      bands: [],
+      room_roles: [],
+      stats: DigifuUser.emptyStatsObj(),
+      followingUsersCount: 0,
+      followersCount: 0,
+    };
+  };
+  
+
 module.exports = {
     ClientMessages,
     ServerMessages,
@@ -1945,4 +1993,7 @@ module.exports = {
     eUserSource,
     eUserPresence,
     eMessageSource,
+    DFUserToPersistentInfo,
+    EmptyDFUserToPersistentInfo,
+    generateUserID,
 };

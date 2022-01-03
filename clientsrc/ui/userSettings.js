@@ -1,6 +1,6 @@
 const React = require('react');
 const DFReactUtils = require("./DFReactUtils");
-
+const {GoogleUserSettings} = require('../googleSignIn');
 
 
 class UserState extends React.Component {
@@ -10,7 +10,6 @@ class UserState extends React.Component {
        this.state = {
            userName: '',
            userColor: '',
-           //isShown: false,
            cacheLoadProgress: null,
        };
 
@@ -24,10 +23,6 @@ class UserState extends React.Component {
        this.props.app.SetUserNameColor(this.state.userName, this.state.userColor);
    };
 
-   // handleToggleShownClick = () => {
-   //     this.setState({ isShown: !this.state.isShown });
-   // };
-
    clickCacheSamples = () => {
        this.props.app.synth.cacheSFZInstruments(cacheLoadProgress => {
            this.setState({ cacheLoadProgress });
@@ -38,20 +33,20 @@ class UserState extends React.Component {
        let inputList = null;
        if (this.props.app && this.props.app.midi) {
            if (this.props.app.deviceNameList.length == 0) {
-               inputList = (<li>(no midi devices found)</li>);
+               inputList = (<div>(no midi devices found)</div>);
            } else {
                inputList = this.props.app.deviceNameList.map(i => {
                    if (this.props.app.midi.IsListeningOnDevice(i)) {
                        return (
-                           <li key={i}>
+                           <div key={i}>
                                <button onClick={() => this.props.app.midi.StopListeningOnDevice(i)}>Stop using {i}</button>
-                           </li>
+                           </div>
                        );
                    } else {
                        return (
-                           <li key={i}>
+                           <div key={i}>
                                <button onClick={() => this.props.app.midi.ListenOnDevice(i)}>Start using {i}</button>
-                           </li>
+                           </div>
                        );
                    }
                });
@@ -59,7 +54,7 @@ class UserState extends React.Component {
        }
 
        const changeUserStateBtn = this.props.app ? (
-           <li className="updateAboveStuff"><button onClick={this.sendUserStateChange}>Save</button></li>
+           <div className="updateAboveStuff"><button onClick={this.sendUserStateChange}>Save</button></div>
        ) : null;
 
        const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
@@ -71,30 +66,40 @@ class UserState extends React.Component {
 
        let cacheHasErrors = this.state.cacheLoadProgress && this.state.cacheLoadProgress.errors > 0;
 
-       const cacheSamplesButton = this.props.app && (<li className="preloadSFZ">
+       const cacheSamplesButton = this.props.app && (<div className="preloadSFZ">
            <button onClick={this.clickCacheSamples}>Preload all samples</button>
            {this.state.cacheLoadProgress && <div>
                {this.state.cacheLoadProgress.successes} success,
                {this.state.cacheLoadProgress.errors} errors /
                {this.state.cacheLoadProgress.totalFiles} total</div>}
-       </li>);
+       </div>);
 
        return (
            <div className="userSettings">
-               <ul>
-                   <li><DFReactUtils.TextInputField style={{ width: 160 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /> name</li>
-                   <li className='colorSwatchRow'><div style={{backgroundColor:this.state.userColor}} className="colorSwatch"></div><DFReactUtils.TextInputFieldExternalState
+               <fieldset>
+                    <div className="legend">Identity</div>
+                   <div><DFReactUtils.TextInputField style={{ width: 160 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /> Name</div>
+                   <div className='colorSwatchRow'><DFReactUtils.TextInputFieldExternalState
                        style={{ width: 160 }}
                        value={this.state.userColor}
                        onChange={(val) => this.setState({ userColor: val })}
-                       onEnter={this.sendUserStateChange} /> color
-                       <button onClick={() => { this.setState({ userColor: randomColor }) }} >random</button>
-                   </li>
+                       onEnter={this.sendUserStateChange} />
+                       <div style={{backgroundColor:this.state.userColor}} className="colorSwatch"></div>
+                       Color
+                       <button onClick={() => { this.setState({ userColor: randomColor }) }} >randomize</button>
+                   </div>
                    {validationMarkup}
                    {changeUserStateBtn}
+                   <GoogleUserSettings module={this.props.googleOAuthModule}></GoogleUserSettings>
+                </fieldset>
+                <fieldset>
+                    <div className="legend">MIDI devices</div>
                    {inputList}
+                </fieldset>
+                <fieldset>
+                    <div className="legend">System</div>
                    {cacheSamplesButton}
-               </ul>
+                </fieldset>
            </div>
        );
    }
@@ -129,7 +134,7 @@ class UserSettingsButton extends React.Component {
 
                {this.state.isExpanded &&
                    <div className="userSettingsDialog popUpDialog">
-                      <UserState app={this.props.app}></UserState>
+                      <UserState app={this.props.app} googleOAuthModule={this.props.googleOAuthModule}></UserState>
                    </div>}
            </div>);
    }

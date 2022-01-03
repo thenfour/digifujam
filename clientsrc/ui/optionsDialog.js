@@ -297,10 +297,10 @@ class DFOptionsDialog extends React.Component {
 
         return (
             <div>
-                <div className={"optionsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>{buttonCaption}</div>
+                <div className={"dropdownMenuButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>{buttonCaption}</div>
 
                 {this.state.isExpanded &&
-                    <div className="optionsDialog">
+                    <div className="optionsDialog popUpDialog">
                         {/* <fieldset>
                             <div className="legend">Pitch bend</div>
                             <div>

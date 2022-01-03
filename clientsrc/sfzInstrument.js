@@ -818,7 +818,6 @@ class sfzInstrument {
                         this.onJSONLoadSuccess(sfzSpec, regions);
                     },
                     () => { // json error.
-                        // todo. not even sure what to do here.
                         throw new Error(`ERROR loading JSON ${sfzSpec.sfzURL}`);
                     },
                     (sampleURL, buffer) => { // on sample success. fill out buffers.

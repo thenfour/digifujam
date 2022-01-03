@@ -759,7 +759,12 @@ class DigifuApp {
 
         this.stateChangeHandler();
     }
-
+    NET_OnPersistentSignOutComplete(data) {
+        if (!this.roomState) return;
+        if (!this.myUser) return;
+        this.myUser.PersistentSignOut();
+        this.stateChangeHandler();
+    }
     NET_OnPing(data) {
         if (!this.roomState) return;
         this.net.SendPong(data.token);
@@ -1086,6 +1091,10 @@ class DigifuApp {
 
     AdjustBeatOffset(relativeBeats) {
         this.net.SendAdjustBeatOffset(relativeBeats);
+    }
+
+    GoogleSignOut() {
+        this.net.PersistentSignOut();
     }
 
     IsMuted() {

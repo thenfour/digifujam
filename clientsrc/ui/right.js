@@ -5,7 +5,7 @@ const DFApp = require("../app");
 const DFUtils = require("../util");
 const DFSignIn = require("./DFSignIn");
 const DFReactUtils = require("./DFReactUtils");
-const DFAdminControls = require("./adminControls");
+const {AdminControlsButton} = require("./adminControls");
 const UIUser = require("./UIUser");
 const DFU = require('../dfutil');
 const DFOptionsDialog = require('./optionsDialog');
@@ -14,6 +14,8 @@ const CreditsButton = require("./CreditsButton");
 const SequencerMain = require("./SequencerMain");
 const {InlinePitchBendCtrl, InlineMasterGainCtrl} = require('./InlinePitchBendCtrl');
 const {UserSettingsButton} = require("./userSettings");
+const {GoogleOAuthModule} = require('../googleSignIn');
+
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
     xhtmlOut:     false,        // Use '/' to close single tags (<br />).
@@ -50,54 +52,6 @@ const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
 let gStateChangeHandler = null;
 
 let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
-
-const GetHomepage = () => {
-    const st = window.localStorage.getItem("DFHomepage");
-    if (st) return st;
-    return window.location.origin;
-};
-
-const getTimeSpanInfo = (ms) => {
-    //const Sign = Math.sign(ms);
-    //ms = Math.abs(ms);
-    if (ms < 0) ms = 0;
-    const TotalSeconds = Math.floor(ms / 1000);
-    const TotalMinutes = Math.floor(ms / 60000);
-    const TotalHours = Math.floor(ms / (60000 * 60));
-    const TotalDays = Math.floor(ms / (60000 * 60 * 24));
-    const SecondsPart = TotalSeconds % 60;
-    const MinutesPart = TotalMinutes % 60;
-    const HoursPart = TotalHours % 24;
-    let ShortString = `${TotalHours}h ${MinutesPart}m ${SecondsPart}s`;
-    if (!TotalHours && !!MinutesPart) {
-        ShortString = `${MinutesPart}m ${SecondsPart}s`;
-    } else if (!TotalHours && !MinutesPart) {
-        ShortString = `${SecondsPart}s`;
-    }
-
-    let LongString = `${TotalDays} days ${HoursPart} hours ${MinutesPart} minutes ${SecondsPart} seconds`;
-    if (!TotalDays) {
-        LongString = `${HoursPart} hours ${MinutesPart} minutes ${SecondsPart} seconds`;
-        if (!HoursPart) {
-            LongString = `${MinutesPart} minutes ${SecondsPart} seconds`;
-            if (!MinutesPart) {
-                LongString = `${SecondsPart} seconds`;
-            }
-        }
-    }
-
-    return {
-        TotalSeconds,
-        TotalMinutes,
-        TotalHours,
-        TotalDays,
-        SecondsPart,
-        MinutesPart,
-        HoursPart,
-        ShortString,
-        LongString,
-    };
-};
 
 class InstTextParam extends React.Component {
     constructor(props) {
@@ -1561,15 +1515,11 @@ class RightArea extends React.Component {
 class LeftArea extends React.Component {
 
     render() {
-        const adminControls = (this.props.app && this.props.app.myUser.IsAdmin()) && (
-            <DFAdminControls.AdminControls app={this.props.app}></DFAdminControls.AdminControls>
-        );
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }}>
                 <InstrumentList app={this.props.app} />
                 <UserList app={this.props.app} />
                 <WorldStatus app={this.props.app} />
-                {adminControls}
             </div>
         );
     }
@@ -1883,10 +1833,10 @@ class AnnouncementArea extends React.Component {
                     // countdown timer
                     let dt = html.substring(begin + countdownPrefix.length, end);
                     let remainingMS = (new Date(dt)) - (new Date());
-                    const info = getTimeSpanInfo(remainingMS);
+                    const info = new DFU.TimeSpan(remainingMS);
                     //console.log(`countdown time: ${dt}; remaining ms: ${remainingMS}`);
                     //console.log(info);
-                    html = html.substring(0, begin) + info.LongString + html.substring(end + countdownSuffix.length);
+                    html = html.substring(0, begin) + info.longString + html.substring(end + countdownSuffix.length);
                     setTimeout(() => {
                         this.setState({});
                     }, 1000);
@@ -2046,7 +1996,7 @@ class RoomArea extends React.Component {
 
 
         let connection = (this.props.app) ? null : (
-            <DFSignIn.Connection app={this.props.app} handleConnect={this.props.handleConnect} />
+            <DFSignIn.Connection app={this.props.app} handleConnect={this.props.handleConnect} googleOAuthModule={this.props.googleOAuthModule} />
         );
 
         const seqViewEnabled = this.props.app && this.props.app.roomState;
@@ -2305,6 +2255,10 @@ class RootArea extends React.Component {
         this.setState({ observingInstrument: inst });
     }
 
+    componentDidMount() {
+        this.googleOAuthModule.OnPageLoaded(true);
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -2312,6 +2266,11 @@ class RootArea extends React.Component {
             wideMode: false,
             observingInstrument: null,
         };
+
+        this.googleOAuthModule = new GoogleOAuthModule();
+        this.googleOAuthModule.events.on(GoogleOAuthModule.Events.signOut, () => {
+            this.state.app.GoogleSignOut();
+        });
 
         window.DFStateChangeHandler = this;
         gStateChangeHandler = this;
@@ -2358,12 +2317,16 @@ class RootArea extends React.Component {
 
         let hasRightArea = this.state.app && (this.state.app.observingInstrument || this.state.app.myInstrument);
 
+        const adminControls = (this.state.app && this.state.app.myUser.IsAdmin()) && (
+            <AdminControlsButton app={this.state.app}></AdminControlsButton>
+        );
 
         return (
             <div id="grid-container" className={!hasRightArea ? "noright" : (this.state.wideMode ? "wide" : undefined)}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>
-                        <UserSettingsButton app={this.state.app}></UserSettingsButton>
+                        <UserSettingsButton app={this.state.app} googleOAuthModule={this.googleOAuthModule}></UserSettingsButton>
+                        {adminControls}
                         {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                         {this.state.app?.synth && <InlineMasterGainCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlineMasterGainCtrl>}
                         {this.state.app?.synth && <InlinePitchBendCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlinePitchBendCtrl>}
@@ -2383,16 +2346,12 @@ class RootArea extends React.Component {
                         </a>
                         <CreditsButton></CreditsButton>
                     </span>
-                    {/* <span>
-                        <a className="logoTxt" href={GetHomepage()}>7jam.io</a>
-                    </span> */}
                 </div>
                 <DFPiano.PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
-                <RoomArea app={this.state.app} handleConnect={this.HandleConnect}
-                    ref={this.roomRef} />
-                <RightArea app={this.state.app} handleConnect={this.HandleConnect} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
-                <LeftArea app={this.state.app} handleConnect={this.HandleConnect} />
+                <RoomArea app={this.state.app} handleConnect={this.HandleConnect} ref={this.roomRef} googleOAuthModule={this.googleOAuthModule} />
+                <RightArea app={this.state.app} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
+                <LeftArea app={this.state.app} />
 
             </div>
         );
@@ -2400,34 +2359,6 @@ class RootArea extends React.Component {
 }
 
 module.exports = {
-    AnnouncementArea,
-    ChatArea,
-    CheerControls,
-    FullChatLog,
-    InstButtonsParam,
-    InstCbxParam,
-    InstDropdownParam,
-    InstFloatParam,
-    InstIntParam,
-    InstrumentList,
-    InstrumentParamGroup,
-    InstrumentParams,
-    InstrumentPreset,
-    InstrumentPresetList,
-    InstTextParam,
-    LeftArea,
-    MidiCCMappingInfo,
-    ParamMappingBox,
-    RightArea,
-    RoomAlertArea,
-    RoomArea,
     RootArea,
-    ShortChatLog,
-    UIAudioVisualizationRoomItem,
-    UIRoomItem,
-    UpperRightControls,
-    UserAvatar,
-    UserList,
-    WorldStatus,
 };
 

@@ -203,6 +203,10 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.JoinRoom, { roomID });
     }
 
+    PersistentSignOut() {
+        this.socket.emit(DF.ClientMessages.PersistentSignOut);
+    }
+
     Disconnect() {
         this.ResetQueuedParamChangeData();
         this.socket.disconnect(true);
@@ -253,6 +257,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.InstrumentBankMerge, data => this.handler.NET_OnInstrumentBankMerge(data));
 
         this.socket.on(DF.ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
+        this.socket.on(DF.ServerMessages.PersistentSignOutComplete, (data) => this.handler.NET_OnPersistentSignOutComplete(data));
         this.socket.on(DF.ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
         this.socket.on(DF.ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
         this.socket.on(DF.ServerMessages.ChangeRoomState, (data) => this.handler.NET_ChangeRoomState(data));
