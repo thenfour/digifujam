@@ -157,9 +157,12 @@ class UserSettingsButton extends React.Component {
 
        return (
            <div className='dropdownMenu left'>
-               <div className={"dropdownMenuButton userSettingsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>
-                    <div style={{backgroundColor:color}} className="colorSwatch"></div>
-                  <span style={{color}}>{userName}</span>
+               <div
+                    className={"dropdownMenuButton userSettingsButton " + (this.state.isExpanded ? "expanded" : "")}
+                    onClick={this.onClickExpand}
+                    style={{borderColor: color, color}}
+                    >
+                  {userName}
                   </div>
 
                {this.state.isExpanded &&

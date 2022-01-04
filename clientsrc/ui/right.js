@@ -2301,7 +2301,14 @@ class RootArea extends React.Component {
         this.setState({ observingInstrument: inst });
     }
 
+    
+    onWindowResize() {
+        this.setState({});
+    }
+  
+
     componentDidMount() {
+        window.addEventListener('resize', () => this.onWindowResize());
         this.googleOAuthModule.OnPageLoaded(true);
     }
 
@@ -2367,10 +2374,29 @@ class RootArea extends React.Component {
             <AdminControlsButton app={this.state.app}></AdminControlsButton>
         );
 
+        // dynamically set the column sizes. media queries don't work because there are a bunch of dynamic states here.
+        // grid-template-columns: 270px minmax(0, 1fr) 320px;
+        let leftSize = 270;
+        let rightSize = 320;
+        if (this.state.wideMode) {
+            rightSize = 550; // wide mode
+        } else if (!hasRightArea) {
+            rightSize = 0; // no right area mode
+        }
+
+        if (window.outerWidth < 800) { // for mobile
+            rightSize = 0;
+            leftSize = 0;
+        }
+
+        gridContainerStyle = {
+            gridTemplateColumns: `${leftSize}px minmax(0, 1fr) ${rightSize}px`,
+        };
+
         return (
             <div id="allContentContainer">
             <GestureSplash app={this.state.app}></GestureSplash>
-            <div id="grid-container" className={!hasRightArea ? "noright" : (this.state.wideMode ? "wide" : undefined)}>
+            <div id="grid-container" style={gridContainerStyle}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>
                         <UserSettingsButton app={this.state.app} googleOAuthModule={this.googleOAuthModule}></UserSettingsButton>
