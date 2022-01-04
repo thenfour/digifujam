@@ -21,10 +21,12 @@ class GestureSplash extends React.Component {
          return null;
        return (
            <div id="gestureSplash">
-              <img id="splashLogo" src="uiimg/splash_logo.png"></img>
-              <div id="splashTextContainer">
-              <div id="splashTitle">Welcome to 7jam!</div>
-              <div id="splashClickToContinue">Click to continue...</div>
+              <div id="gestureSplash2">
+               <img id="splashLogo" src="uiimg/splash_logo.png"></img>
+               <div id="splashTextContainer">
+               <div id="splashTitle">Welcome to 7jam!</div>
+               <div id="splashClickToContinue">Click or press a key to continue...</div>
+               </div>
               </div>
             </div>
        );

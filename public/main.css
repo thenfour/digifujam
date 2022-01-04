@@ -1623,15 +1623,27 @@ li.preloadSFZ {
     position: absolute;
     height: 100vh;
     width: 100%;
-    background-color: #000d;
+    background-color: #0008;
     z-index: 10000;
     display: flex;
     flex-direction: row;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    
+    align-content: stretch;
+    justify-content: stretch;
+    align-items: stretch;
     overflow: hidden;
+}
+
+#gestureSplash2 {
+       background-color: #000d;
+       flex-grow: 1;
+       display: flex;
+       flex-direction: row;
+       margin: 25vh;
+       align-content: center;
+       justify-content: center;
+       align-items: center;
+       border-radius: 10vh;
+       border: 10px solid #044;
 }
 
 #splashLogo {
