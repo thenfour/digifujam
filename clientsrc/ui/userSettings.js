@@ -2,6 +2,7 @@ const React = require('react');
 const DFReactUtils = require("./DFReactUtils");
 const {GoogleUserSettings} = require('../googleSignIn');
 const {GenerateUserName} = require('../NameGenerator');
+const {UIUserName} = require("./UIUser");
 
 class UserState extends React.Component {
    constructor(props) {
@@ -122,6 +123,7 @@ class UserState extends React.Component {
                 <fieldset>
                     <div className="legend">MIDI devices</div>
                     <ul className='midiDevices'>
+                        {this.props.app?.IsWaitingForAutoMIDIDeviceSelect() && <p className='autoMIDIDeviceSelectExplanation'>Play a note to automatically select the best MIDI device.</p>}
                        {inputList}
                     </ul>
                 </fieldset>
@@ -162,7 +164,8 @@ class UserSettingsButton extends React.Component {
                     onClick={this.onClickExpand}
                     style={{borderColor: color, color}}
                     >
-                  {userName}
+                  {/* {userName} */}
+                  <UIUserName user={this.props.app?.myUser}></UIUserName>
                   </div>
 
                {this.state.isExpanded &&

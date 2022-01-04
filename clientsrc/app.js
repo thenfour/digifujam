@@ -308,6 +308,10 @@ class DigifuApp {
         this.shortChatLog.push(msg.toAggregate());
     };
 
+    IsWaitingForAutoMIDIDeviceSelect() {
+        return this.autoMIDIDeviceSelection && !this.hasAutoSelectedMIDIDevice;
+    }
+
     // MIDI HANDLERS --------------------------------------------------------------------------------------
     MIDI_NoteOn(note, velocity, deviceName) {
 

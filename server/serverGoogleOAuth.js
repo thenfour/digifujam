@@ -99,8 +99,9 @@ class ServerGoogleOAuthSupport {
 
    // completeUserEntry is (hasPersistentIdentity, persistentInfo, persistentID)
    // rejectUserEntry is ()
-   DoGoogleSignIn(/*google_access_*/token, user, completeUserEntry, rejectUserEntry) {
+   DoGoogleSignIn(ws, /*google_access_*/token, user, completeUserEntry, rejectUserEntry) {
       // use google auth token to get a google user id.
+      ws.DFGoogleAccessToken = token;
       var oaclient = new google.auth.OAuth2();
       oaclient.setCredentials({access_token : token});
       var googleUser = google.oauth2({
@@ -133,11 +134,11 @@ class ServerGoogleOAuthSupport {
    // if so, returns true and asynchronously completes login, eventually calling either completeUserEntry or rejectUserEntry
    // if not, returns false immediately.
    TryProcessHandshake(user, clientSocket, completeUserEntry, rejectUserEntry) {
-      const token = clientSocket.handshake.query.google_access_token;
+      const token = clientSocket.handshake.query.google_access_token ?? clientSocket.DFGoogleAccessToken;
       if (!token) {
          return;
       }
-      this.DoGoogleSignIn(token, user, completeUserEntry, rejectUserEntry);
+      this.DoGoogleSignIn(clientSocket, token, user, completeUserEntry, rejectUserEntry);
       return true;
    }
 };

@@ -74,6 +74,15 @@ discord_integrations:
       messageContent: "7jam is now empty after someone left %roomName%"
 
 
+  AllJoins:
+    engine: AllJoinsNotification
+    verboseDebugLogging: 0
+    dataSourceID: UserCounts
+    startupMessageContent: "7jam has started ========================================="
+    joinMessageContent: "%userName% has joined 7jam via %roomName%. Global pop = %globalPopulation%"
+    partMessageContent: "%userName% has left 7jam via %roomName%. Global pop = %globalPopulation%"
+
+
   # #---------- fuzzy user count notifications ------------------------------------------------------
   # UserCount_Some:
   #   # When user count rises a bit more, notify that a jam is forming.

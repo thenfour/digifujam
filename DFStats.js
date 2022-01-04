@@ -9,6 +9,7 @@ const {ServerUpDiscordNotification} = require('./clientsrc/ServerUpDiscordNotifi
 const {JamStatusNotification} = require('./clientsrc/NoteCountNotification');
 const {UserListSyncOnly} = require('./clientsrc/UserListSyncOnly');
 const {WelcomeMessageIntegration} = require('./clientsrc/WelcomeMessage');
+const {AllJoinsNotification} = require('./clientsrc/AllJoinsNotification');
 const DFU = require('./clientsrc/dfutil');
 
 class UserCountsDataSource {
@@ -257,7 +258,7 @@ class ForwardMessageDiscordTo7jam {
       this.integrationID = integrationID;
 
       // set defaults
-      this.integrationSpec.enabled = (typeof this.integrationSpec.enabled === 'undefined') ? true : false;
+      this.integrationSpec.enabled = !!(this.integrationSpec.enabled ?? true);
    }
    GetAdminHelp() {
       return [
@@ -353,6 +354,7 @@ class DiscordIntegrationSubscription {
          'ServerUpDiscordNotification' : () => new ServerUpDiscordNotification(this, integrationSpec, this.mgr, integrationID, intBackup),
          'UserListSyncOnly' : () => new UserListSyncOnly(this, integrationSpec, this.mgr, integrationID, intBackup),
          'WelcomeMessage' : () => new WelcomeMessageIntegration(this, integrationSpec, this.mgr, integrationID, intBackup),
+         'AllJoinsNotification' : () => new AllJoinsNotification(this, integrationSpec, this.mgr, integrationID, intBackup),
       };
 
       let ret = null;
@@ -518,6 +520,14 @@ class DiscordIntegrationManager {
       this.subscriptions.forEach(subscription => {
          subscription.integrations?.forEach(integration => {
             integration.On7jamRoomsLoaded?.(rooms);
+         });
+      });
+   }
+
+   OnDiscordInitialized() {
+      this.subscriptions.forEach(subscription => {
+         subscription.integrations?.forEach(integration => {
+            integration.OnDiscordInitialized?.();
          });
       });
    }
@@ -803,6 +813,14 @@ class ActivityHook {
       setTimeout(() => {
          this.Hooks.forEach(o => {
             o?.OnRoomsLoaded?.(rooms);
+         });
+      }, 0);
+   }
+
+   OnDiscordInitialized() {
+      setTimeout(() => {
+         this.Hooks.forEach(o => {
+            o?.OnDiscordInitialized?.();
          });
       }, 0);
    }

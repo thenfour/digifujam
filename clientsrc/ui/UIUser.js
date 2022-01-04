@@ -17,7 +17,7 @@ class UIUserName extends React.Component {
 
     render() {
 
-        let noteOnBadge = this.props.user.persistentInfo.stats.noteOns > 1000 && (
+        let noteOnBadge = this.props.user.persistentInfo && this.props.user.persistentInfo.stats && this.props.user.persistentInfo.stats.noteOns > 1000 && (
             <span className="role noteOns">♫ {Math.floor(this.props.user.persistentInfo.stats.noteOns / 1000)}K</span>
             //<span className="role noteOns">♫ {this.props.user.persistentInfo.stats.noteOns}</span>
         );

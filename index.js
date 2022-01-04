@@ -84,6 +84,10 @@ let g7jamAPI = null;
 let gDiscordIntegrationManager = null;
 let gGoogleOAuth = null;
 
+function onDiscordInitialized() {
+  gServerStats.OnDiscordInitialized();
+}
+
 // to be run when db is initialized...
 let gDBInitProc = () => {
 
@@ -94,7 +98,7 @@ let gDBInitProc = () => {
   ];
   g7jamAPI = new _7jamAPI();
   if (gConfig.discord_bot_token) {
-    gDiscordBot = new DFDiscordBot.DiscordBot(gConfig);
+    gDiscordBot = new DFDiscordBot.DiscordBot(gConfig, onDiscordInitialized);
     gDiscordIntegrationManager = new DFStats.DiscordIntegrationManager(gConfig, gDiscordBot, g7jamAPI, gActivityDatasetsPath);
     hooks.push(gDiscordIntegrationManager);
   }
@@ -175,12 +179,23 @@ class _7jamAPI
     return this.Get7JamUsersForRoom(roomID, userFilter).length;
   }
 
+  GetGlobalUniqueIdentities() {
+    return this.GetGlobalOnlinePopulation((u) => true);
+  }
+
   GetGlobalOnlinePopulation(userFilter) {
-    let ret = 0;
-    Object.keys(gRooms).forEach(roomID => {
-      ret += this.Get7JamUserCountForRoom(roomID, userFilter);
+    // by default, return only 7jam users.
+    userFilter ??= ((u) => u.source === DF.eUserSource.SevenJam);
+
+    let userIdentities = new Set();
+    Object.values(gRooms).forEach(rs => {
+      rs.roomState.users.forEach(u => {
+        if (!userFilter(u)) return;
+        userIdentities.add(u.persistentID ?? u.userID);
+      });
     });
-    return ret;
+
+    return userIdentities.size;
   }
 
   UpdateDiscordUserInRoom(roomID, userName, color, discordMemberID) {
@@ -333,7 +348,8 @@ class RoomServer {
   // returns { user, index } or null.
   FindUserFromSocket(clientSocket) {
     if (!clientSocket.DFUserID) {
-      throw new Error(`Socket ${clientSocket.id} has no DFUserID`);
+      //throw new Error(`Socket ${clientSocket.id} has no DFUserID`);
+      return null; // this is not exception-worthy; reconnection and refresh exchanges can cause these kinds of things.
     }
     return this.roomState.FindUserByID(clientSocket.DFUserID);
   };
@@ -441,7 +457,7 @@ class RoomServer {
           log(`An admin has been identified id=${u.userID} name=${u.name}.`);
           u.addGlobalRole("sysadmin");
         } else {
-          log(`Welcoming user id=${u.userID} name=${u.name}, persistentInfo:${JSON.stringify(persistentInfo)}`);
+          log(`Welcoming user id=${u.userID} name=${u.name}`);//, persistentInfo:${JSON.stringify(persistentInfo)}`);
         }
 
         this.roomState.users.push(u);
@@ -1276,16 +1292,11 @@ class RoomServer {
 
       // world population is not the sum of room population, because some users may represent identities which are in multiple rooms
       // e.g. sync'd discord users.
-      let userIdentities = new Set();
-      Object.values(gRooms).forEach(rs => {
-        rs.roomState.users.forEach(u => {
-          userIdentities.add(u.persistentID ?? u.userID);
-        });
-      });
+      const worldPopulation = g7jamAPI.GetGlobalUniqueIdentities();
 
       var payload = {
         token: (new Date()).toISOString(),
-        worldPopulation: userIdentities.size,
+        worldPopulation,
         serverUptimeSec: ((new Date()) - gServerStartedDate) / 1000,
         rooms: [],
       };
@@ -1625,7 +1636,7 @@ function OnGoogleSignIn(ws, data) {
       log(`OnGoogleSignIn => google sign in suceeded but user disappeared.`);
       return;
     }
-    gGoogleOAuth.DoGoogleSignIn(google_access_token, foundUser, complete, () => {
+    gGoogleOAuth.DoGoogleSignIn(ws, google_access_token, foundUser, complete, () => {
       console.log(`google sign in failed`);
     });
 

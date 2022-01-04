@@ -71,6 +71,8 @@ class SoundFxManager {
 
    // effect is from eSoundEffects
    play(effect) {
+      if (document.visibilityState === 'visible')
+         return;
       this.effects[effect].play(this.audioCtx, this.destNode);
    }
 };

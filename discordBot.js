@@ -18,10 +18,11 @@ const { Client, Intents, MessageActionRow, MessageButton, MessageEmbed } = requi
 // put users in channels during events rather than guild-global.
 class DiscordBot {
 
-    constructor(gConfig) {
+    constructor(gConfig, initProc) {
 
         this.gConfig = gConfig;
         this.EventHook = {};
+        this.initProc = initProc;
 
         // don't bother looking at channels we don't have integrations with.
         this.relevantChannelIDs = {}; // map channelID to array of member IDs.
@@ -250,6 +251,10 @@ class DiscordBot {
         });
 
         console.log(`SyncChannelUserMap took (${Date.now() - startTime} ms), with ${joins.length} joins & ${parts.length} parts`);
+
+        // first channel sync, run init routine.
+        this.initProc();
+        this.initProc = null;
     }
 
     async FetchAndDump() {
@@ -336,8 +341,10 @@ class DiscordBot {
 
     async SendDiscordChatMessage(channelID, userName, text, url, roomName) {
         // https://discordjs.guide/popular-topics/embeds.html#embed-preview
-        const content = `${roomName}: <${userName}> ${text}`
-        this.client.channels.cache.get(channelID)?.send(content);
+        const content = `${roomName}: <${userName}> ${text}`;
+        const chan = this.client.channels.cache.get(channelID);
+
+        chan?.send(content);
     }
 
 };
