@@ -1753,11 +1753,9 @@ let roomsAreLoaded = function () {
         return;
       }
 
-      let worldUserCount = 0;
-      Object.keys(gRooms).forEach(k => {
-        worldUserCount += gRooms[k].roomState.users.length;
-      });
+      let worldUserCount = g7jamAPI.GetGlobalOnlinePopulation(DF.eUserSource.SevenJam);
       if (worldUserCount >= DF.ServerSettings.WorldUserCountMaximum) {
+        console.log(`Too many users ${worldUserCount}; disconnecting.`);
         ws.disconnect();
         return;
       }
@@ -1815,7 +1813,8 @@ let roomsAreLoaded = function () {
       room.ClientJoin(ws);
 
     } catch (e) {
-      log("Exception on connection: " + e);
+      console.log("Exception on connection");
+      console.log(e);
     }
   }); // io.on(connection)
 
