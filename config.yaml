@@ -53,68 +53,55 @@ activity_hook_data_sources:
 
 discord_integrations:
   #---------- concrete user count notifications ------------------------------------------------------
-  UserCount_1:
+  LoneUser:
     engine: UserCountNotification
-    dataSourceID: NonAdminUserCounts
-    # ensure RISING to 0.
-    # - avoid quick joins/parts
-    # - to rate-limit this, require that the server was empty for a while.
-    # - if the server had a bunch of users, drops to 0, then 1 enters, it could
-    #   mean that everyone got disconnected or something too.
     verboseDebugLogging: 0
-    userCountType: global
-    conditionOnUserCount: "maintains [0] during [5m]"
-
-    # this is a precise time
-    # it should be long enough to reduce spam of quick pop-ins, but
-    # short enough to actually catch users that may need a welcome.
-    delay: 7s
-    triggerOnUserCount: "maintains [1] during [6s]"
-    messageContent: "Someone has joined 7jam via %roomName%!"
-    messageKey: "%userName%" # rate-limit sending based on the same message key. the message content may be generic, but we want to track unique users so put username here to key off of.
-    uniqueMessageAge: 8h # remember message keys this long before allowing a dupe to be sent.
-
-  UserCount_0:
-    engine: UserCountNotification
     dataSourceID: NonAdminUserCounts
-    # match on user join/part when population has been 1+ for some duration
-    # the duration should correspond with the join message so they try to be paired.
-    userCountType: global
-    conditionOnUserCount: "maintains [>0] during [10s]" # user stayed for enough time to get the above notification.
-    delay: 31s
-    triggerOnUserCount: "maintains [0] during [30s]" # and stayed out..
-    messageContent: "7jam is now empty after a user left %roomName%"
+
     messageKey: "%userName%" # rate-limit sending based on the same message key. the message content may be generic, but we want to track unique users so put username here to key off of.
     uniqueMessageAge: 8h # remember message keys this long before allowing a dupe to be sent.
 
-  #---------- fuzzy user count notifications ------------------------------------------------------
-  UserCount_Some:
-    # When user count rises a bit more, notify that a jam is forming.
-    # Longer condition duration, because we don't need to ALWAYS fire this. We
-    # want this only when things are escalating from a longer-time-idle state.
-    engine: UserCountNotification
-    dataSourceID: UserCounts
-    # detect RISING from below thresh to above thresh.
-    # but let's not try to avoid something like 2 jams back-to-back with a small "valley".
-    # so this duration is basically the valley. now
-    # if there are small fluctuations, the "touches" takes care of this.
-    userCountType: room
-    conditionOnUserCount: "touches [<%someUserCount%] during [%someUserPreDuration%]"
-    delay: "%someUserDelay% 1s" # add 1s so the trigger cond is always guaranteed to be AFTER the precondition
-    triggerOnUserCount: "maintains [%someUserCount%,%manyUserCount%] during [%someUserDelay%]"
-    messageContent: "%roomUserCount% people are currently hanging out in %roomName%"
+    join:
+      # this should be long enough to reduce spam of quick pop-ins, but
+      # short enough to actually catch users that may need a welcome.
+      delay: 7s
+      query: "maintains [1] during [6s]"
+      messageContent: "Someone has joined 7jam via %roomName%!"
 
-  UserCount_Many:
-    engine: UserCountNotification
-    dataSourceID: UserCounts
-    # Similar to above, detect RISING. and use TOUCHES so we don't miss the notification
-    # based on little fluctuations.
-    userCountType: room
-    conditionOnUserCount: "touches [<%manyUserCount%] during [%manyUserPreDuration%]"
-    # Then, make sure we're maintaining many users during a significant amount of time.
-    delay: "%manyUserDelay% 1s"
-    triggerOnUserCount: "maintains [>=%manyUserCount%] during [%manyUserDelay%]"
-    messageContent: "A party of %roomUserCount% is happening in %roomName%"
+    part:
+      interval: 10s # once we register 7jam as non-empty, we check periodically to see if they are gone and staying gone.
+      query: "maintains [0] during [30s]"
+      messageContent: "7jam is now empty after someone left %roomName%"
+
+
+  # #---------- fuzzy user count notifications ------------------------------------------------------
+  # UserCount_Some:
+  #   # When user count rises a bit more, notify that a jam is forming.
+  #   # Longer condition duration, because we don't need to ALWAYS fire this. We
+  #   # want this only when things are escalating from a longer-time-idle state.
+  #   engine: UserCountNotification
+  #   dataSourceID: UserCounts
+  #   # detect RISING from below thresh to above thresh.
+  #   # but let's not try to avoid something like 2 jams back-to-back with a small "valley".
+  #   # so this duration is basically the valley. now
+  #   # if there are small fluctuations, the "touches" takes care of this.
+  #   userCountType: room
+  #   conditionOnUserCount: "touches [<%someUserCount%] during [%someUserPreDuration%]"
+  #   delay: "%someUserDelay% 1s" # add 1s so the trigger cond is always guaranteed to be AFTER the precondition
+  #   triggerOnUserCount: "maintains [%someUserCount%,%manyUserCount%] during [%someUserDelay%]"
+  #   messageContent: "%roomUserCount% people are currently hanging out in %roomName%"
+
+  # UserCount_Many:
+  #   engine: UserCountNotification
+  #   dataSourceID: UserCounts
+  #   # Similar to above, detect RISING. and use TOUCHES so we don't miss the notification
+  #   # based on little fluctuations.
+  #   userCountType: room
+  #   conditionOnUserCount: "touches [<%manyUserCount%] during [%manyUserPreDuration%]"
+  #   # Then, make sure we're maintaining many users during a significant amount of time.
+  #   delay: "%manyUserDelay% 1s"
+  #   triggerOnUserCount: "maintains [>=%manyUserCount%] during [%manyUserDelay%]"
+  #   messageContent: "A party of %roomUserCount% is happening in %roomName%"
 
 
   #---------- jam status PROD notifications ------------------------------------------------------
