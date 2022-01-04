@@ -19,6 +19,13 @@ class UserState extends React.Component {
        }
    }
 
+   resetUserState = (e) => {
+       this.setState({
+        userName: this.props.app.myUser.name,
+        userColor: this.props.app.myUser.color,
+       });
+   }
+
    sendUserStateChange = (e) => {
        this.props.app.SetUserNameColor(this.state.userName, this.state.userColor);
    };
@@ -43,20 +50,25 @@ class UserState extends React.Component {
        let inputList = null;
        if (this.props.app && this.props.app.midi) {
            if (this.props.app.deviceNameList.length == 0) {
-               inputList = (<div>(no midi devices found)</div>);
+               inputList = (
+                    <div className='noMidiDevices'>
+                        <div className='title'>No midi devices found</div>
+                        <p>It means you will not be able to play any instruments, however it doesn't mean you can't spectate.</p>
+                    </div>
+                );
            } else {
                inputList = this.props.app.deviceNameList.map(i => {
-                   if (this.props.app.midi.IsListeningOnDevice(i)) {
+                   if (this.props.app.IsListeningOnDevice(i)) {
                        return (
-                           <div key={i}>
-                               <button onClick={() => this.props.app.midi.StopListeningOnDevice(i)}>Stop using {i}</button>
-                           </div>
+                           <li className='active clickable' key={i}>
+                               <div onClick={() => this.props.app.StopListeningOnDevice(i)}>🎹 Listening on {i}</div>
+                           </li>
                        );
                    } else {
                        return (
-                           <div key={i}>
-                               <button onClick={() => this.props.app.midi.ListenOnDevice(i)}>Start using {i}</button>
-                           </div>
+                           <li className='clickable' key={i}>
+                               <div onClick={() => this.props.app.ListenOnDevice(i)}>Not listening on {i}</div>
+                           </li>
                        );
                    }
                });
@@ -64,7 +76,10 @@ class UserState extends React.Component {
        }
 
        const changeUserStateBtn = this.props.app ? (
-           <div className="updateAboveStuff"><button onClick={this.sendUserStateChange}>Save</button></div>
+           <div className="updateAboveStuff">
+               <button onClick={this.resetUserState}>Reset</button>
+               <button onClick={this.sendUserStateChange}>Save</button>
+           </div>
        ) : null;
 
        const validationMsg = DFReactUtils.getValidationErrorMsg(this.state.userName, this.state.userColor);
@@ -106,7 +121,9 @@ class UserState extends React.Component {
                 </fieldset>
                 <fieldset>
                     <div className="legend">MIDI devices</div>
-                   {inputList}
+                    <ul className='midiDevices'>
+                       {inputList}
+                    </ul>
                 </fieldset>
                 <fieldset>
                     <div className="legend">System</div>
@@ -141,6 +158,7 @@ class UserSettingsButton extends React.Component {
        return (
            <div className='dropdownMenu left'>
                <div className={"dropdownMenuButton userSettingsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>
+                    <div style={{backgroundColor:color}} className="colorSwatch"></div>
                   <span style={{color}}>{userName}</span>
                   </div>
 

@@ -22,7 +22,11 @@ class DigifuMidi {
     this.learningCompletionHandlers.push(completion);
   }
 
-  OnMIDIMessage(message) {
+  OnMIDIMessage(message, deviceName) {
+
+    if (!this.IsListeningOnDevice(deviceName)) {
+        return; // guarantee caller won't get any messages they are not expecting, due to timing
+    }
 
     // https://www.midi.org/specifications-old/item/table-1-summary-of-midi-message
 
@@ -32,22 +36,22 @@ class DigifuMidi {
     let d2 = (message.data.length > 2) ? message.data[2] : 0; // a velocity value might not be included with a noteOff command
 
     // if (statusHi != 15) {
-    //   console.log(`midi msg ${statusHi} ${statusLo} ${d1} ${d2}`);
+    //   console.log(`MIDI message on device ${deviceName} - ${statusHi} ${statusLo} ${d1} ${d2}`);
     // }
 
     switch (statusHi) {
       case 9: // noteOn
         if (d2 > 0) {
           //console.log (`note on @ ${Date.now()}`);
-          this.EventHandler.MIDI_NoteOn(d1, d2);
+          this.EventHandler.MIDI_NoteOn(d1, d2, deviceName);
         } else {
           //log ("self note off");
-          this.EventHandler.MIDI_NoteOff(d1);
+          this.EventHandler.MIDI_NoteOff(d1, deviceName);
         }
         break;
       case 8: // noteOff
         //log ("self note off");
-        this.EventHandler.MIDI_NoteOff(d1);
+        this.EventHandler.MIDI_NoteOff(d1, deviceName);
         break;
       // pitch
       // exp
@@ -61,7 +65,7 @@ class DigifuMidi {
         if (v < -1) v = -1;
         if (v > 1) v = 1;
 
-        this.EventHandler.MIDI_PitchBend(v);
+        this.EventHandler.MIDI_PitchBend(v, deviceName);
         break;
       }
       case 11: // cc
@@ -76,14 +80,14 @@ class DigifuMidi {
         switch (d1) {
           case 64:
             if (d2 > 64) {
-              this.EventHandler.MIDI_PedalDown();
+              this.EventHandler.MIDI_PedalDown(deviceName);
             } else {
-              this.EventHandler.MIDI_PedalUp();
+              this.EventHandler.MIDI_PedalUp(deviceName);
             }
             break;
           default:
             // todo: combine MSB & LSB.
-            this.EventHandler.MIDI_CC(d1, d2);
+            this.EventHandler.MIDI_CC(d1, d2, deviceName);
             break;
         }
         break;
@@ -91,20 +95,26 @@ class DigifuMidi {
   };
 
   ListenOnDevice(midiInputDeviceName) {
+    if (this.IsListeningOnDevice(midiInputDeviceName))
+      return;
     for (var input of gMidiAccess.inputs.values()) {
       if (input.name == midiInputDeviceName) {
-        //log(`attaching to device ${input.name}`);
+        //console.log(`MIDI listening on device ${input.name}`);
         this.currentlyListeningOn.push(midiInputDeviceName);
-        input.onmidimessage = this.OnMIDIMessage.bind(this);
+        input.onmidimessage = (msg) => {
+          this.OnMIDIMessage(msg, midiInputDeviceName);
+        }
         this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
       }
     }
   };
 
   StopListeningOnDevice(midiInputDeviceName) {
+    if (!this.IsListeningOnDevice(midiInputDeviceName))
+      return;
     for (var input of gMidiAccess.inputs.values()) {
       if (input.name == midiInputDeviceName) {
-        //log(`detaching from device ${input.name}`);
+        //console.log(`MIDI disconnecting form device ${input.name}`);
         input.onmidimessage = null;
         this.currentlyListeningOn.removeIf(o => o == midiInputDeviceName);
         this.EventHandler.MIDI_AllNotesOff(); // abrupt changes to possible state mean we should just restart state.
@@ -145,23 +155,30 @@ let GetMidiInputDeviceList = function () {
   };
 
   if (gMidiAccess) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       resolve(formResult());
     });
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     navigator.requestMIDIAccess()
       .then(midiAccess => {
         gMidiAccess = midiAccess;
         resolve(formResult());
       }, () => {
-        //log('Could not access your MIDI devices.');
-        reject();
+        console.log('Could not access your MIDI devices.');
+        resolve([]);
       });
   });
 
 };
+
+// simulate no devices
+// function GetMidiInputDeviceList() {
+//   return new Promise((resolve) => {
+//     resolve([]);
+//   });
+// }
 
 
 module.exports = {

@@ -75,6 +75,9 @@ button {
     border-radius: 6px;
     cursor:pointer;
 }
+button:hover {
+    background-color: #066;
+}
 button:focus {
     border: 1px solid #0ff;
 }
@@ -813,6 +816,9 @@ ul.otherRoomUserList .presenceIndicator {
     padding-right: 8px;
 }
 
+ul.userList li.userRow {
+    white-space: nowrap;
+}
 
 .worldStatus .room {
     margin:10px;
@@ -1380,7 +1386,7 @@ button.stayLoggedIn:hover {
 .creditsButton,
 .dropdownMenuButton,
 .userSettingsButton {
-    display:inline-block;
+    display: flex;
     background-color: #033;
     padding: 4px;
     border: 1px solid #066;
@@ -1390,6 +1396,8 @@ button.stayLoggedIn:hover {
     padding-left: 10px;
     padding-right: 10px;
     cursor: pointer;
+    flex-direction: row;
+    align-items: center;
 }
 
 .popUpDialog fieldset {
@@ -1417,10 +1425,39 @@ button.stayLoggedIn:hover {
     display: flex;
 }
 
+.colorSwatch,
 .userSettings .colorSwatch {
     width:24px;
     height:24px;
     display:inline-block;
+
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+
+.userSettings .noMidiDevices .title {
+    color:red;
+    font-weight: bold;
+}
+
+.userSettings ul.midiDevices li.clickable {
+    cursor: pointer;
+}
+
+.userSettings ul.midiDevices li.clickable:hover {
+    background-color: #044;
+}
+
+.userSettings ul.midiDevices li {
+    margin: 4px;
+    background-color: #333;
+    color: #888;
+    padding: 4px;}
+
+.userSettings ul.midiDevices li.active {
+    color: #cc0;
+    background-color: #044;
 }
 
 .creditsDialog pre {

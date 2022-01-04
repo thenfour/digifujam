@@ -1303,8 +1303,7 @@ class UserList extends React.Component {
         const offlineUsers = room?.users?.filter(u => u.presence !== DF.eUserPresence.Online);
 
         const onlineUsersR = onlineUsers?.map(u => (
-                <li key={u.userID}>
-                    {this.props.app.myUser.IsAdmin() && <UIUser.AdminUserMgmt user={u} />}
+                <li className='userRow' key={u.userID}>
                     <span className='presenceIndicator'>•</span>
                     <UIUser.UIUserName user={u} />
                     <span className="userPing"> ({u.pingMS}ms ping)</span>
@@ -1318,8 +1317,7 @@ class UserList extends React.Component {
             offlineUsersR = offlineUsersR?.slice(0, DF.ClientSettings.OfflineUserListLimit);
         }
         offlineUsersR = offlineUsersR?.map(u => (
-                <li key={u.userID}>
-                    {this.props.app.myUser.IsAdmin() && <UIUser.AdminUserMgmt user={u} />}
+                <li className='userRow' key={u.userID}>
                     <span className='presenceIndicator'>•</span>
                     <UIUser.UIUserName user={u} />
                 </li>
@@ -1337,10 +1335,10 @@ class UserList extends React.Component {
                             ] ♫<span className="noteOns">{room?.stats.noteOns}</span></span>
                     }
                 </h2>
-                <ul className="onlineUserList">
+                <ul className="userList onlineUserList">
                 {onlineUsersR}
                 </ul>
-                <ul className="offlineUserList">
+                <ul className="userList offlineUserList">
                 {offlineUsersR}
                 {!this.state.showingAllOfflineUsers && (totalOfflineUserCount > shownOfflineUserCount) &&
                                 <li><span onClick={() => { this.setState({showingAllOfflineUsers : true}) }} className="moreOfflineUserIndicator">(... {totalOfflineUserCount - shownOfflineUserCount} more)</span></li>

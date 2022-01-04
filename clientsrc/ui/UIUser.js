@@ -40,28 +40,8 @@ class UIUserName extends React.Component {
     }
 };
 
-
-
-// TODO: this. ability to add badges, whatever stuff.
-class AdminUserMgmt extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <span className="userMgmtGearIcon">⚙</span>
-
-        );
-    }
-
-    // add global role, remove global role
-};
-
-
 module.exports = {
     UIUserName,
-    AdminUserMgmt,
 }
 
 

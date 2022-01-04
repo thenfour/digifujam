@@ -236,14 +236,39 @@ class DigifuApp {
 
         this.musicalTimeTracker = new DFMusic.MusicalTimeTracker();
 
+        this.autoMIDIDeviceSelection = true;
+        this.hasAutoSelectedMIDIDevice = false;
         this.deviceNameList = [];
 
         DFMidi.GetMidiInputDeviceList().then(inputs => {
             this.deviceNameList = inputs;
+
+            // when you first launch, we listen on ALL devices.
+            // when the first note is heard, stop listening on all other devices.
+            // ignore devices which are not being listened.
+            // when a user explicitly changes device, stop making any automatic device selection.
+            inputs.forEach(deviceName => this.midi.ListenOnDevice(deviceName));
+
             if (this.stateChangeHandler) {
                 this.stateChangeHandler();
             }
         });
+    }
+
+    IsListeningOnDevice(midiInputDeviceName) {
+        return this.midi.IsListeningOnDevice(midiInputDeviceName);
+    }
+
+    StopListeningOnDevice(midiInputDeviceName) {
+        this.autoMIDIDeviceSelection = false;
+        this.stateChangeHandler();
+        return this.midi.StopListeningOnDevice(midiInputDeviceName);
+    }
+
+    ListenOnDevice(midiInputDeviceName) {
+        this.autoMIDIDeviceSelection = false;
+        this.stateChangeHandler();
+        return this.midi.ListenOnDevice(midiInputDeviceName);
     }
 
     get RoomID() {
@@ -284,7 +309,18 @@ class DigifuApp {
     };
 
     // MIDI HANDLERS --------------------------------------------------------------------------------------
-    MIDI_NoteOn(note, velocity) {
+    MIDI_NoteOn(note, velocity, deviceName) {
+
+        if (this.autoMIDIDeviceSelection && !this.hasAutoSelectedMIDIDevice) {
+            // stop listening on any other devices.
+            this.hasAutoSelectedMIDIDevice = true;
+            this.deviceNameList.forEach(allDeviceName => {
+                if (allDeviceName === deviceName) return;
+                this.midi.StopListeningOnDevice(allDeviceName);
+            });
+            this.stateChangeHandler();
+        }
+
         if (this.tapTempoState === TapTempoState.NA) {
             if (this.myInstrument == null) return;
             if (!this.myInstrument.wantsMIDIInput) return;
