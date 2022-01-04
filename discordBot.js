@@ -253,8 +253,10 @@ class DiscordBot {
         console.log(`SyncChannelUserMap took (${Date.now() - startTime} ms), with ${joins.length} joins & ${parts.length} parts`);
 
         // first channel sync, run init routine.
-        this.initProc();
-        this.initProc = null;
+        if (this.initProc) {
+            this.initProc();
+            this.initProc = null;
+        }
     }
 
     async FetchAndDump() {
