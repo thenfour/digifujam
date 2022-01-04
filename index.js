@@ -1274,23 +1274,70 @@ class RoomServer {
 
       this.Idle_CheckIdlenessAndEmit();
 
-      // token, rooms: [{roomID, roomName, users [{ userid, name, pingMS }], stats}]
+      // world population is not the sum of room population, because some users may represent identities which are in multiple rooms
+      // e.g. sync'd discord users.
+      let userIdentities = new Set();
+      Object.values(gRooms).forEach(rs => {
+        rs.roomState.users.forEach(u => {
+          userIdentities.add(u.persistentID ?? u.userID);
+        });
+      });
+
       var payload = {
         token: (new Date()).toISOString(),
+        worldPopulation: userIdentities.size,
         serverUptimeSec: ((new Date()) - gServerStartedDate) / 1000,
         rooms: [],
       };
 
-      const transformUser = (u) => {
-        return {
-          userID: u.userID,
-          pingMS: u.pingMS,
-          name: u.name,
-          persistentInfo: u.persistentInfo,
-          color: u.color,
-          source: u.source,
-          presence: u.presence,
+      // todo: make persistentinfo and stats structured; this is a mess
+      const TransformPersistentInfo = (tp) => {
+        const ret = {};
+        if (tp?.global_roles?.length) {
+          ret.gr = tp.global_roles;
+        }
+        if (tp?.room_roles?.length) {
+          ret.rr = tp.room_roles;
+        }
+        if (tp?.stats?.cheers) {
+          ret.ch = tp.stats.cheers;
+        }
+        if (tp?.stats?.connectionTimeSec) {
+          ret.cts = tp.stats.connectionTimeSec;
+        }
+        if (tp?.stats?.joins) {
+          ret.j = tp.stats.joins;
+        }
+        if (tp?.stats?.messages) {
+          ret.m = tp.stats.messages;
+        }
+        if (tp?.stats?.noteOns) {
+          ret.n = tp.stats.noteOns;
+        }
+        if (tp?.stats?.paramChanges) {
+          ret.pc = tp.stats.paramChanges;
+        }
+        if (tp?.stats?.presetsSaved) {
+          ret.ps = tp.stats.presetsSaved;
+        }
+        
+        return ret;
+      };
+
+      const transformUser = (u, includePersistentInfo) => {
+        // pings are significant size so important to minimize field name bloat
+        const ret = {
+          id: u.userID,
+          n: u.name,
+          c: u.color,
+          s: u.source,
+          p: u.presence,
         };
+
+        if (u.pingMS) ret.pingMS = u.pingMS;
+        if (includePersistentInfo) ret.pi = TransformPersistentInfo(u.persistentInfo);
+
+        return ret;
       };
 
       payload.rooms = Object.keys(gRooms).map(k => {
@@ -1299,7 +1346,7 @@ class RoomServer {
           roomID: room.roomState.roomID,
           isPrivate: !!room.roomState.isPrivate,
           roomName: room.roomState.roomTitle,
-          users: room.roomState.users.map(u => transformUser(u)),
+          users: room.roomState.users.map(u => transformUser(u, k === this.roomState.roomID)),
           stats: room.roomState.stats
         };
       });

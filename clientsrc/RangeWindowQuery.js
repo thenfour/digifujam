@@ -244,7 +244,8 @@ class SampledSignalDataSource {
    // the window should also include the latest known value before the window,
    // to build a complete picture of the activity in this window.
    GetEventWindow(durationMS) {
-      if (!this.events.length) return [];
+      if (!this.events.length)
+         return [];
       const now = this.timeProvider.nowMS();
       const boundaryTime = now - durationMS;
       // ignore events which occurred in the past 20 ms; precondition queries can sometimes have
@@ -253,7 +254,7 @@ class SampledSignalDataSource {
       // they won't be affected by this.
       const veryRecentBoundary = now - 20;
       let iEnd = this.events.findIndex(e => e.time >= veryRecentBoundary);
-      
+
       if (iEnd === -1) {
          // nothing too recent; fill to end.
          iEnd = this.events.length;
@@ -266,7 +267,7 @@ class SampledSignalDataSource {
       let iFirstItemToKeep = this.events.findIndex(e => e.time >= boundaryTime);
       if (iFirstItemToKeep === -1) {
          // nothing matches; return the latest value which we assume fills this whole window.
-         return [ this.events.at(iEnd-1) ];
+         return [ this.events.at(iEnd - 1) ];
       }
       if (iFirstItemToKeep === 0) {
          // return everything to end.
@@ -367,6 +368,8 @@ class HistogramDataSource {
    }
 
    Prune() {
+      if (!this.bins.length)
+         return;
       const boundaryTime = this.timeProvider.nowMS() - this.maxAgeMS;
       let iFirstItemToKeep = this.bins.findIndex(e => e.binEndTimeMS >= boundaryTime);
       if (iFirstItemToKeep === -1) {

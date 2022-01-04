@@ -21,6 +21,7 @@ class ServerUpDiscordNotification {
    }
 
    DoAdminCmd(args, adminLogFn) {
+      args = DFU.GrabArgs(args, 1);
       if (!args.length) {
          adminLogFn("No args");
          return;

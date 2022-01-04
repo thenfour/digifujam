@@ -1414,7 +1414,7 @@ button.stayLoggedIn:hover {
 
 .userSettingsButton {
     font-weight: bold;
-    border-left-width: 20px;
+    border-left-width: 15px;
     border-radius: 5px;
     padding: 7px;
     font-size: initial;

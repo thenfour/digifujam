@@ -239,7 +239,9 @@ class DigifuUser {
 
     IntegrateFromPing(u) {
         this.pingMS = u.pingMS;
-        this.persistentInfo = u.persistentInfo;
+        if (u.pi) {
+            this.persistentInfo = u.pi;
+        }
     }
 
     PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo) {

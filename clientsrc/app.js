@@ -812,17 +812,57 @@ class DigifuApp {
         this.myUser.PersistentSignIn(data.hasPersistentIdentity, data.persistentID, data.persistentInfo);
         window.localStorage.setItem("adminKey", data.adminKey);
         this.stateChangeHandler();
-    }    
+    }
+
+    TransformPingUserStatsToWorldData(pi) {
+        if (!pi) return null;
+        return {
+            cheers: pi.ch ?? 0,
+            connectionTimeSec: pi.cts ?? 0,
+            joins: pi.j ?? 0,
+            messages: pi.m ?? 0,
+            noteOns: pi.n ?? 0,
+            paramChanges: pi.pc ?? 0,
+            presetsSaved: pi.ps ?? 0,
+          };
+    }
+
+    TransformPingPersistentInfoToWorldData(pi) {
+        if (!pi) return null;
+        const ret = {
+            global_roles: pi.gr ?? [],
+            room_roles: pi.rr ?? [],
+            stats: this.TransformPingUserStatsToWorldData(pi),
+        };
+        return ret;
+    }
+
+    TransformPingUserToWorldData(user) {
+        const ret = {
+            userID: user.id,
+            name: user.n,
+            color: user.c,
+            source: user.s,
+            presence: user.p,
+            persistentInfo: this.TransformPingPersistentInfoToWorldData(user.pi),
+        };
+        return ret;
+    }
+
+    TransformPingRoomToWorldData(room) {
+        room.users = room.users.map(user => this.TransformPingUserToWorldData(user));
+        return room;
+    }
+
     NET_OnPing(data) {
         if (!this.roomState) return;
         this.net.SendPong(data.token);
         if (!this.roomState) return; // technically a ping could be sent before we've populated room state.
 
-        // token, rooms: [{roomID, roomName, users [{ userid, pingMS }], stats}]
-        this.rooms = data.rooms;
+        this.rooms = data.rooms.map(room => this.TransformPingRoomToWorldData(room));
 
         // bring user stats to our room's user list
-        let room = data.rooms.find(r => r.roomID == this.roomState.roomID);
+        let room = this.rooms.find(r => r.roomID == this.roomState.roomID);
         console.assert(!!room, "what, we're in a room, get a ping that doesn't have stats about this room???");
         room.users.forEach(u => {
             let foundUser = this.roomState.FindUserByID(u.userID);
@@ -834,7 +874,7 @@ class DigifuApp {
 
         // world population should count UNIQUE userIDs, in case users are in multiple rooms. that may be the case with
         // discord ("external"/"offline") users.
-        this.worldPopulation = (new Set(data.rooms.map(r => r.users).reduce((a,b)=>a.concat(b), []).map(u => u.userID))).size;
+        this.worldPopulation = data.worldPopulation;// (new Set(this.rooms.map(r => r.users).reduce((a,b)=>a.concat(b), []).map(u => u.userID))).size;
 
         // pings are a great time to do some cleanup.
 
