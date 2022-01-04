@@ -425,6 +425,7 @@ button:focus {
 }
 
 .chatLogEntryChat .userName {
+    white-space: nowrap;
 }
 
 .chatLogEntryChat .messageBody a,
@@ -458,6 +459,7 @@ button.muteButton:focus
 .userName {
     display: inline-flex;
     align-items: center;
+    white-space: nowrap;
 }
 
 .userName.online {
@@ -1089,6 +1091,12 @@ ul.instParamList li.inlineLabel
 .component.instrumentCloset li.instrument:hover {
     background-color:#044;
 }
+
+.component.instrumentCloset li.instrument.bigClick {
+    cursor: pointer;
+}
+
+
 .component.instrumentCloset li.instrument button,
 li.floatParam .paramMappingBox button
 {
@@ -1113,6 +1121,19 @@ li.floatParam .paramMappingBox button:hover
 .component.instrumentCloset li.instrument:hover .buttonContainer {
     visibility: visible;
 }
+
+
+.component.instrumentCloset li.instrument:hover .buttonContainer span {
+    color: #077;
+    background-color: #044;
+    font-family: 'Overpass', sans-serif;
+    font-weight: bold;
+    margin: 2px;
+    border-radius: 6px;
+    font-style: italic;
+}
+
+
 
 .component.instrumentCloset li.instrument .takenBy {
     font-size: small;

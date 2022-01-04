@@ -117,14 +117,14 @@ discord_integrations:
       noteTrigger: "sum [>=200] during [10min]"
       userCountTrigger: "maintains [>=2] during [5min]"
       userCountType: global
-      messageContent: "(dbg) A jam session is warming up in %roomName%."
+      messageContent: "A jam session is warming up in %roomName%."
       messageFields:
         Current Players: "%roomUserCount%"
 
     jamOngoing:
       interval: 31m
       noteTrigger: "sum [>=600] during [30min]"
-      messageContent: "(dbg) The jam goes on in %roomName%"
+      messageContent: "The jam goes on in %roomName%"
       messageFields:
         Jam Duration: "%jamDuration%"
         Jam Notes: "%jamNotes%"

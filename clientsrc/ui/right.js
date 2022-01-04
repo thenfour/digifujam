@@ -1389,21 +1389,11 @@ class WorldStatus extends React.Component {
 }
 
 
-
-
-
-
-class InstrumentList extends React.Component {
-
+class Instrument extends  React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isShowing: true
         };
-    }
-
-    onClickHeader = () => {
-        this.setState({ isShowing: !this.state.isShowing });
     }
 
     observeInstrument(instrument) {
@@ -1415,8 +1405,19 @@ class InstrumentList extends React.Component {
         gStateChangeHandler.observingInstrument = null;
     }
 
-    renderInstrument(i) {
-        let app = this.props.app;
+    OnBigClickPlay() {
+        this.stopObserving();
+        this.props.app.RequestInstrument(this.props.instrument.instrumentID);
+        this.setState({});
+    }
+
+    OnBigClickRelease() {
+        this.props.app.ReleaseInstrument();
+    }
+
+    render() {
+        const app = this.props.app;
+        const i = this.props.instrument;
 
         let inUse = !!i.controlledByUserID;
         let idle = false;
@@ -1432,35 +1433,52 @@ class InstrumentList extends React.Component {
         let loadIndicator = null;
         if (i.loadProgress > 0 && i.loadProgress < 1) {
             loadIndicator = (<span className="instrumentLoadingIndicator">{Math.trunc(i.loadProgress * 100)}%</span>);
-            //loadIndicator = (<span className="instrumentLoadingIndicator">86%</span>);
         }
 
         const isYours = (i.controlledByUserID == app.myUser.userID);
         const takeable = app.midi.AnyMidiDevicesAvailable() && (!inUse || idle);
 
-        const releaseBtn = isYours && (
+        let playBtn = takeable && (
+            <button onClick={() => this.OnClickInstrument(i)}>play</button>
+        );
+
+        let releaseBtn = isYours && (
             <button className="release" onClick={() => this.props.app.ReleaseInstrument()}>release</button>
         );
 
         const isYourObserving = gStateChangeHandler.observingInstrument && gStateChangeHandler.observingInstrument.instrumentID == i.instrumentID;
 
+        const observeBtn = !isYourObserving && !isYours && i.supportsObservation && inUse && (
+            <button className="observe" onClick={() => this.observeInstrument(i)}>observe</button>
+        );
+
         const stopObservingBtn = isYourObserving && (<button className="stopObserving" onClick={() => this.stopObserving()}>stop obs</button>);
 
         idle = idle && (<span className="idleIndicator">(Idle)</span>);
 
-        const playBtn = takeable && (
-            <button onClick={() => {
-                this.stopObserving();
-                app.RequestInstrument(i.instrumentID);
-            }}>play</button>
-        );
 
-        const observeBtn = !isYours && i.supportsObservation && inUse && (
-            <button className="observe" onClick={() => this.observeInstrument(i)}>observe</button>
-        );
+        // several buttons are possible
+        // - take or release
+        // - observe or stop observing
+        //
+        // when only take is available, allow clicking.
+        let bigClickHandler = () => {};
+        let allowBigClick = false;
+
+        if (playBtn && !releaseBtn && !observeBtn && !stopObservingBtn) {
+            playBtn = (<span>click to play</span>);
+            allowBigClick = true;
+            bigClickHandler = () => { this.OnBigClickPlay(); };
+        }
+
+        if (!playBtn && releaseBtn && !observeBtn && !stopObservingBtn) {
+            releaseBtn = (<span>click to release</span>);
+            allowBigClick = true;
+            bigClickHandler = () => { this.OnBigClickRelease(); };
+        }
 
         return (
-            <li className="instrument" key={i.instrumentID} style={{ color: i.color }}>
+            <li className={"instrument" + (allowBigClick ? " bigClick" : "")} onClick={bigClickHandler} style={{ color: i.color }}>
                 <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
                 {idle}
                 {i.getDisplayName()}
@@ -1469,12 +1487,26 @@ class InstrumentList extends React.Component {
             </li>
         );
     }
+}
+
+
+class InstrumentList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShowing: true
+        };
+    }
+
+    onClickHeader = () => {
+        this.setState({ isShowing: !this.state.isShowing });
+    }
 
     render() {
         if (!this.props.app || !this.props.app.roomState || (this.props.app.roomState.instrumentCloset.length < 1)) {
             return null;
         }
-        const instruments = this.props.app.roomState.instrumentCloset.map(i => this.renderInstrument(i));
+        const instruments = this.props.app.roomState.instrumentCloset.map(i => (<Instrument instrument={i} key={i.instrumentID} app={this.props.app}></Instrument>));
         return (
             <div className="component instrumentCloset" style={{ whiteSpace: "nowrap" }}>
                 <h2 style={{ cursor: "pointer" }} onClick={this.onClickHeader}>{DFU.getArrowText(this.state.isShowing)} Instrument Closet</h2>
