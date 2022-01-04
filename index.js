@@ -166,7 +166,7 @@ class _7jamAPI
     if (!(roomID in gRooms)){
       throw new Error(`Get7JamUserCountForRoom: A discord mapping is pointing to nonexistent 7jam room ${roomID}`);
     }
-    userFilter = userFilter || ((u) => u.source === DF.eUserSource.SevenJam);
+    userFilter = userFilter ?? ((u) => u.source === DF.eUserSource.SevenJam);
     const room = gRooms[roomID];
     return room.roomState.users.filter(userFilter);
   }
@@ -1753,7 +1753,7 @@ let roomsAreLoaded = function () {
         return;
       }
 
-      let worldUserCount = g7jamAPI.GetGlobalOnlinePopulation(DF.eUserSource.SevenJam);
+      let worldUserCount = g7jamAPI.GetGlobalOnlinePopulation();
       if (worldUserCount >= DF.ServerSettings.WorldUserCountMaximum) {
         console.log(`Too many users ${worldUserCount}; disconnecting.`);
         ws.disconnect();
