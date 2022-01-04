@@ -146,6 +146,9 @@ class DigifuMidi {
 
 // returns a promise(array of names)
 let GetMidiInputDeviceList = function () {
+  if (!navigator.requestMIDIAccess) return new Promise((resolve) => {
+    resolve([]);
+  });
   let formResult = () => {
     let arr = [];
     for (var input of gMidiAccess.inputs.values()) {

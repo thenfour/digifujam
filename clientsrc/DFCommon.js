@@ -238,7 +238,9 @@ class DigifuUser {
     }
 
     IntegrateFromPing(u) {
-        this.pingMS = u.pingMS;
+        if (u.pingMS) {
+            this.pingMS = u.pingMS;
+        }
         if (u.pi) {
             this.persistentInfo = u.pi;
         }

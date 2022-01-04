@@ -2,34 +2,45 @@
 
 https://7jam.io/
 
-Online jam space for digital fusion musicians. Users connect with their MIDI instruments and everyone can play music together remotely, simulating a physical jam session.
+Online interactive jam session simulation. Check out our monthly jam sessions on the 7th of each month at 7pm CEST.
 
-Some notes:
+Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest news, discussion, ask questions, meet musicians, learn about events.
 
-- There are multiple rooms; move between them by clicking on the doors (marked as a big blue outlined rectangle).
-  - Rooms have their own instrument closets, own preset banks.
-- Synth instruments of the same kind share a preset bank. So if you save a preset in FM4a, it will also be available in FM4b.
-- Nothing is stored on the server, period. Only 1 hour of chat log history is ever preserved; after that it vanishes into the void.
-- Muting the audio disconnects everything (TRUE BYPASS), saving CPU if you're just idling
-- Limitation of the sampled instruments:
-  - Pitch bend not supported for sampled instruments
-  - Sampled instruments also do not support loop points so they don't sustain very long.
-- For synth instruments, click on a parameter value to be able to type it in. Hit "enter" to make sure it updates.
-- ADSR parameters don't automate well; they don't take effect until the next note on, and have quirks largely due to the odd nature of Web Audio modulation.
-- If you are idle on your instrument for a while, it becomes available for others to take. Longer and it gets automatically released.
+## Features
+
+- Multiple music rooms, each with different instrument sets
+- Many sample-based instruments are available, each with multiple variations
+- Two different synthesizer engines available
+  - 4-oscilltors, each with pulse width modulation capability
+  - Monophonic or polyphonic mode, with portamento
+  - oscillator linking and copying for quick editing
+  - FM algorithms
+  - 2 modulation LFOs and an ADSR envelope
+  - Automatable filters
+  - MIDI CC mapping with MIDI Learn
+  - Modulation of many parameters
+  - Macro parameters which can be mapped to multiple parameters
+  - Pitch bend
+  - Vast preset library, and you can create your own presets!
+- Configurable master effects chain
+- Chat log and basic (but anonymous!) social features
+- Room metronome so everyone is playing to the same tempo
+- Quantization options
+- Free and open to explore and play with
+
 
 ## FAQ
 
 ### The site doesn't work, what's up?
 
-- Firefox does not support midi. Maybe it will work as a spectator, but not as a performer.
+- Firefox does not support midi. It will work as a spectator, but not as a performer.
 - I test on Chrome, and a bit on Edge.
 
-Basically, this is a labor of love and cobbled together, so please expect problems unless you're on Chrome.
+This is a labor of love and cobbled together, so please expect problems unless you're on Chrome.
 
 ### How do you start jamming?
 
-You must be using a MIDI-compatible browser (Chrome or Edge on Windows / Mac), and have a midi device connected and available. Hover over an instrument and click "play".
+You must be using a MIDI-compatible browser (Chrome or Edge on Windows / Mac), and have a midi device connected. Just click an instrument to start playing. If this doesn't work, please tell someone on our [Discord](https://discord.gg/kkf9gQfKAd).
 
 ### Where is the server located?
 
@@ -39,9 +50,11 @@ The server is hosted in Germany by Uberspace.
 
 Latency causes funny things. It's actually not a deal-breaker if you learn how to cope with it. For example fast, rhythmic funk music will probably never be a great hit on Digifujam. But if you go for ambient synth styles, then I doubt latency will ever cause an issue.
 
-So, tip #1: Try not to expect millisecond latency, try and find creative ways to accept latency.
-
-Tip #2 is to use Edge. Chrome I find adds a lot of latency for MIDI devices. But Edge feels significantly more responsive.
+- Tip #1: Try not to expect DAW-like latency. try and find creative ways to accept latency.
+- Tip #2: Your system settings can hugely affect latency. For example in Windows, sound devices are often configured in surround configuration by default, which adds ~50ms latency (unbearable). Switch this to Stereo configuration to solve. Ask in our [Discord](https://discord.gg/kkf9gQfKAd) for the latest ideas.
+- Tip #3: Use headphones. If you hear your fingers on the keyboard, it's harder to adjust your ears to the latent signal. Using headphones lets you focus more on the sound and less on the key noise.
+- Tip #4: Use local monitoring in 7jam. By default, you hear yourself after a roundtrip to the server ("remote monitoring"). If you have a high ping this can be too much delay to be bearable.
+- Tip #5: Play music that doesn't require tight rhythms. If everyone else is playing a tight funky groove, and you have too much latency to mix in, try playing a soft pad or other long-attack sfx.
 
 
 # Browser Compatibility
@@ -51,12 +64,14 @@ This project aggressively uses latest tech in order to squeeze out features. I d
 - Chrome Mac I expect full compatibility. I did not manage to get MIDI to work, but everything else looked fine.
 - Edge Windows should work because I smoke-test there occasionally.
 - Edge Mac I have never tested.
-- Firefox does not support MIDI (yet), so it only works for spectators.
+- Firefox does not support MIDI ([yet](https://twitter.com/gabrielesvelto/status/1474097074253803521)), so it only works for spectators.
 - Safari does not support MIDI or ConstantSourceNode, so it's 100% incompatible.
+- Opera has been reported to work
+- Mobile iOS definitely doesn't work due to Safari incompatibility
 
-Feel free to report compatibility issues anyway.
+Please report compatibility in our [Discord](https://discord.gg/kkf9gQfKAd).
 
-# tech stuff
+# Dev stuff
 
 ## dev process
 
@@ -66,21 +81,7 @@ Feel free to report compatibility issues anyway.
 - node --inspect index.js // for chrome inspector debugging the server
 - node --inspect-brk index.js // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
 
-## deployment process
-
-- openode deploy
-- openode logs
-  - check that latest server state backup was loaded
-  - check mongo connection
-  - check google config
-  - no exceptions
-- smoke test
-  - play synth, samples, drums
-  - load a preset
-  - cheer
-  - message
-  - rooms
-  - check for exceptions
+You will need a `config2.yaml`.
 
 ## Importing SFZ
 
@@ -89,17 +90,12 @@ Feel free to report compatibility issues anyway.
 ## Config, odds & ends & quirks
 
 - IDs must be conservative wrt characters, because they are used in jq selectors and such.
-- /stats.html to see activity graphs
-- /storage to view storage (feed, server state...)
-- Uberspace does automatic SSL so no config is required.
+- `/stats.html` to see activity graphs
+- `/admin.html` with admin key for admin view / console
+- `/activityHookInspector.html`
+- `/storage` to view storage (feed, server state...)
+- Uberspace does automatic SSL so no config is required there.
 - `config.yaml` is required, and a default is included in the repo. Place a `config2.yaml` file next to `config.yaml` to override anything. It's git-ignored, useful for storing private keys etc.
-
-
-
-## Dev stuff
-
-- if client & server are no longer compatible (for example a difference in room schema or in comm prototocol), then increment DFCommon.js  gDigifujamVersion = 1; to make clients have to reconnect.
-
 
 ### User sources
 

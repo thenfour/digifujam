@@ -849,6 +849,7 @@ class DigifuApp {
             source: user.s,
             presence: user.p,
             persistentInfo: this.TransformPingPersistentInfoToWorldData(user.pi),
+            pingMS: user.pingMS,
         };
         return ret;
     }
@@ -924,7 +925,7 @@ class DigifuApp {
                     existingArray = [];
                 }
                 if (existingArray.some(id => id === ncm.welcomeMsgID)) {
-                    console.log(`Ignoring already seen welcome msg ${ncm.welcomeMsgID}`);
+                    //console.log(`Ignoring already seen welcome msg ${ncm.welcomeMsgID}`);
                     return;
                 }
                 existingArray.push(ncm.welcomeMsgID);
@@ -1318,9 +1319,21 @@ class DigifuApp {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
         if (gUseDebugCtx) {
             this.audioCtx = new AudioContextWrapper();
-            this.audioCtx.audioCtx = new AudioContext();
+            try {
+                this.audioCtx.audioCtx = new AudioContext({latencyHint:0});
+            }
+            catch (e) {
+                console.log(e);
+            }
         } else {
-            this.audioCtx = new AudioContext();
+            try {
+                // a higher sample rate means slightly less latency (buffer size is in samples therefore higher sample rate is faster)
+                // however it complicates things wrt hardware support. and i did not feel any noticeable change in latency; i think it's not at all the bottleneck.
+                this.audioCtx = new AudioContext({latencyHint:0});
+            }
+            catch (e) {
+                console.log(e);
+            }
             this.audioCtx.beginScope = () => { };
             this.audioCtx.endScope = () => { };
         }
