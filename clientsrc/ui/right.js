@@ -2089,6 +2089,14 @@ class RootArea extends React.Component {
     }
 
     HandleConnect = (userName, color, roomKey, google_access_token) => {
+
+        if (this.state.app) {
+            // this happens when you receive google token but are already connected.
+            console.assert(google_access_token, "this should only happen when signing in with google...");
+            this.state.app.GoogleSignIn(google_access_token);
+            return;
+        }
+
         let app = new DFApp.DigifuApp();
 
         // copied from ctor
@@ -2096,6 +2104,13 @@ class RootArea extends React.Component {
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
         for (let i = 0; i < 128; ++i) {
             this.notesOn.push([]); // empty initially.
+        }
+
+        // if no google access token has been received for initial connect, then attempt to sign in after entry.
+        if (!google_access_token) {
+            this.googleOAuthModule.events.on(GoogleOAuthModule.Events.receivedToken, (access_token) => {
+                this.state.app.GoogleSignIn(access_token);
+            });
         }
 
         app.Connect(userName, color, roomKey, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,

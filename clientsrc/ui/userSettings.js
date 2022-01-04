@@ -1,7 +1,7 @@
 const React = require('react');
 const DFReactUtils = require("./DFReactUtils");
 const {GoogleUserSettings} = require('../googleSignIn');
-
+const {GenerateUserName} = require('../NameGenerator');
 
 class UserState extends React.Component {
    constructor(props) {
@@ -28,6 +28,16 @@ class UserState extends React.Component {
            this.setState({ cacheLoadProgress });
        });
    };
+
+   OnClickRandomName = () => {
+       const randomName = GenerateUserName(Date.now());
+       this.setState({userName : randomName});
+   }
+
+   OnClickRandomColor = () => {
+        const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
+        this.setState({userColor : randomColor});
+    }
 
    render() {
        let inputList = null;
@@ -57,8 +67,6 @@ class UserState extends React.Component {
            <div className="updateAboveStuff"><button onClick={this.sendUserStateChange}>Save</button></div>
        ) : null;
 
-       const randomColor = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
-
        const validationMsg = DFReactUtils.getValidationErrorMsg(this.state.userName, this.state.userColor);
        const validationMarkup = validationMsg.length ? (
            <div className="validationError">{validationMsg}</div>
@@ -78,7 +86,11 @@ class UserState extends React.Component {
            <div className="userSettings">
                <fieldset>
                     <div className="legend">Identity</div>
-                   <div><DFReactUtils.TextInputField style={{ width: 160 }} default={this.state.userName} onChange={(val) => this.setState({ userName: val })} onEnter={this.sendUserStateChange} /> Name</div>
+                   <div>
+                       <input type="text" value={this.state.userName} onChange={(e) => this.setState({ userName: e.target.value })}></input>
+                        Name
+                        <button onClick={this.OnClickRandomName} >randomize</button>
+                   </div>
                    <div className='colorSwatchRow'><DFReactUtils.TextInputFieldExternalState
                        style={{ width: 160 }}
                        value={this.state.userColor}
@@ -86,7 +98,7 @@ class UserState extends React.Component {
                        onEnter={this.sendUserStateChange} />
                        <div style={{backgroundColor:this.state.userColor}} className="colorSwatch"></div>
                        Color
-                       <button onClick={() => { this.setState({ userColor: randomColor }) }} >randomize</button>
+                       <button onClick={this.OnClickRandomColor} >randomize</button>
                    </div>
                    {validationMarkup}
                    {changeUserStateBtn}

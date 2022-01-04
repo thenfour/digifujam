@@ -206,7 +206,9 @@ class DigifuNet {
     PersistentSignOut() {
         this.socket.emit(DF.ClientMessages.PersistentSignOut);
     }
-
+    GoogleSignIn(google_access_token) {
+        this.socket.emit(DF.ClientMessages.GoogleSignIn, {google_access_token});
+    }
     Disconnect() {
         this.ResetQueuedParamChangeData();
         this.socket.disconnect(true);
@@ -242,7 +244,6 @@ class DigifuNet {
 
         this.socket.on(DF.ServerMessages.InstrumentOwnership, data => this.handler.NET_OnInstrumentOwnership(data.instrumentID, data.userID, data.idle));
         this.socket.on(DF.ServerMessages.NoteEvents, data => this.handler.NET_OnNoteEvents(data.noteOns, data.noteOffs));
-        //this.socket.on(DF.ServerMessages.NoteOff, data => this.handler.NET_OnNoteOff(data.userID, data.note));
         this.socket.on(DF.ServerMessages.UserAllNotesOff, data => this.handler.NET_OnUserAllNotesOff(data));
         this.socket.on(DF.ServerMessages.PedalDown, data => this.handler.NET_OnPedalDown(data.userID));
         this.socket.on(DF.ServerMessages.PedalUp, data => this.handler.NET_OnPedalUp(data.userID));
@@ -258,6 +259,8 @@ class DigifuNet {
 
         this.socket.on(DF.ServerMessages.Ping, (data) => this.handler.NET_OnPing(data));
         this.socket.on(DF.ServerMessages.PersistentSignOutComplete, (data) => this.handler.NET_OnPersistentSignOutComplete(data));
+        this.socket.on(DF.ServerMessages.GoogleSignInComplete, (data) => this.handler.NET_OnGoogleSignInComplete(data));
+        
         this.socket.on(DF.ServerMessages.ServerStateDump, (data) => this.serverDumpHandler(data));
         this.socket.on(DF.ServerMessages.PleaseReconnect, (data) => this.handler.NET_pleaseReconnectHandler());
         this.socket.on(DF.ServerMessages.ChangeRoomState, (data) => this.handler.NET_ChangeRoomState(data));

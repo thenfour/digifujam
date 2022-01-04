@@ -4,6 +4,7 @@ const { nanoid } = require("nanoid");
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
+const {GenerateUserName} = require('./NameGenerator');
 
 let gDigifujamVersion = 7;
 
@@ -56,6 +57,7 @@ const ClientMessages = {
     RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:..., phaseRelativeMS:
     JoinRoom: "JoinRoom", // roomID
     PersistentSignOut: "PersistentSignOut",
+    GoogleSignIn: "GoogleSignIn", // { google_access_token }
 };
 
 const ServerMessages = {
@@ -66,6 +68,7 @@ const ServerMessages = {
     UserLeave: "UserLeave",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     PersistentSignOutComplete: "PersistentSignOutComplete",// sent to you only
+    GoogleSignInComplete: "GoogleSignInComplete", // sent to you only. { hasPersistentIdentity, persistentInfo, persistentID }
     Ping: "Ping", // token, users: [{ userid, pingMS, roomID, stats }], rooms: [{roomID, roomName, userCount, stats}]
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
     NoteEvents: "NoteEvents", // { noteOns: [ user, note, velocity ], noteOffs: [ user, note ] }
@@ -99,9 +102,9 @@ const ServerSettings = {
     InstrumentIdleTimeoutMS: (1000 * 60),
     InstrumentAutoReleaseTimeoutMS: (60000 * 5),
 
-    UsernameLengthMax: 20,
+    UsernameLengthMax: 30,
     UsernameLengthMin: 1,
-    UserColorLengthMax: 100,
+    UserColorLengthMax: 50,
     UserColorLengthMin: 1,
 
     ChatMessageLengthMax: 288,
@@ -234,6 +237,12 @@ class DigifuUser {
     IntegrateFromPing(u) {
         this.pingMS = u.pingMS;
         this.persistentInfo = u.persistentInfo;
+    }
+
+    PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo) {
+        this.hasPersistentIdentity = hasPersistentIdentity;
+        this.persistentID = persistentID?.toString();
+        this.persistentInfo = persistentInfo;
     }
 
     PersistentSignOut() {
@@ -1924,6 +1933,13 @@ let sanitizeUsername = function (n) {
     return n;
 };
 
+function EnsureValidUsername(n) {
+    n = sanitizeUsername(n);
+    if (n !== null) return n;
+    n = GenerateUserName(Date.now());
+    return n;
+}
+
 // returns null if not a valid username.
 let sanitizeUserColor = function (n) {
     if (typeof (n) != 'string') return null;
@@ -1932,6 +1948,13 @@ let sanitizeUserColor = function (n) {
     if (n.length > ServerSettings.UserColorLengthMax) return null;
     return n;
 };
+
+function EnsureValidUserColor(n) {
+    n = sanitizeUsername(n);
+    if (n !== null) return n;
+    n = `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`;
+    return n;
+}
 
 let sanitizeCheerText = function (n) {
     if (typeof (n) != 'string') return null;
@@ -1979,7 +2002,9 @@ module.exports = {
     ClientSettings,
     routeToRoomID,
     sanitizeUsername,
+    EnsureValidUsername,
     sanitizeUserColor,
+    EnsureValidUserColor,
     sanitizeCheerText,
     generateID,
     RoomItem,

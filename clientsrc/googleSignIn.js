@@ -194,10 +194,17 @@ class GoogleSignInButton extends React.Component {
          staySignedIn : false,
       };
 
-      this.props.module.events.on(GoogleOAuthModule.Events.receivedGoogleURL, () => {
-         this.setState({});
-      });
+      this.props.module.events.on(GoogleOAuthModule.Events.receivedGoogleURL, this.OnGoogleURLReceived);
    }
+
+   OnGoogleURLReceived = () => {
+      this.setState({});
+   };
+
+   componentWillUnmount() {
+      this.props.module.events.removeListener(GoogleOAuthModule.Events.receivedGoogleURL, this.OnGoogleURLReceived);
+   }
+
 
    onClickGoogleSignin = () => {
       this.props.module.InitiateSignIn(this.state.staySignedIn);

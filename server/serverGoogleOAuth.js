@@ -97,12 +97,9 @@ class ServerGoogleOAuthSupport {
       return this.gConfig.google_client_id && this.gConfig.google_client_secret;
    }
 
-   // checks if the websocket has a google access token
-   TryProcessHandshake(user, clientSocket, completeUserEntry, rejectUserEntry) {
-      const token = clientSocket.handshake.query.google_access_token;
-      if (!token) {
-         return;
-      }
+   // completeUserEntry is (hasPersistentIdentity, persistentInfo, persistentID)
+   // rejectUserEntry is ()
+   DoGoogleSignIn(/*google_access_*/token, user, completeUserEntry, rejectUserEntry) {
       // use google auth token to get a google user id.
       var oaclient = new google.auth.OAuth2();
       oaclient.setCredentials({access_token : token});
@@ -130,6 +127,17 @@ class ServerGoogleOAuthSupport {
                 });
              }
           });
+   }
+
+   // checks if the websocket has a google access token.
+   // if so, returns true and asynchronously completes login, eventually calling either completeUserEntry or rejectUserEntry
+   // if not, returns false immediately.
+   TryProcessHandshake(user, clientSocket, completeUserEntry, rejectUserEntry) {
+      const token = clientSocket.handshake.query.google_access_token;
+      if (!token) {
+         return;
+      }
+      this.DoGoogleSignIn(token, user, completeUserEntry, rejectUserEntry);
       return true;
    }
 };

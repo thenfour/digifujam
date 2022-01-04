@@ -1,6 +1,9 @@
 const React = require('react');
 const DFReactUtils = require("./DFReactUtils");
 const {GoogleOAuthModule, GoogleSignInButton} = require('../googleSignIn');
+const DF = require("../DFCommon");
+
+const gAutoJoin = true;
 
 class Connection extends React.Component {
     constructor(props) {
@@ -13,23 +16,8 @@ class Connection extends React.Component {
             showValidationErrors: false, // don't show until you try to connect
         };
 
-        this.props.googleOAuthModule.events.on(GoogleOAuthModule.Events.receivedToken, 
-            (access_token) => 
-            {
-                this.goConnect(access_token);
-            });
-
-        this.props.googleOAuthModule.events.on(GoogleOAuthModule.Events.beforeRedirect, (e) => {
-            let msg = DFReactUtils.getValidationErrorMsg(this.state.userName, this.state.userColor);
-            if (msg) {
-                this.setState({showValidationErrors : true});
-                e.valid = false;
-                return;
-            }
-            window.localStorage.setItem("userName", this.state.userName);
-            window.localStorage.setItem("userColor", this.state.userColor);
-            window.localStorage.setItem("roomKey", this.state.roomKey);
-        });
+        this.props.googleOAuthModule.events.on(GoogleOAuthModule.Events.receivedToken, this.OnReceiveGoogleAccessToken);
+        this.props.googleOAuthModule.events.on(GoogleOAuthModule.Events.beforeRedirect, this.OnBeforeRedirect);
 
         if (window.localStorage.getItem("staySignedIn")) {
             this.state.staySignedIn = window.localStorage.getItem("staySignedIn");
@@ -43,6 +31,25 @@ class Connection extends React.Component {
         if (window.localStorage.getItem("roomKey")) {
             this.state.roomKey = window.localStorage.getItem("roomKey");
         }
+        if (gAutoJoin) {
+            this.goConnect();
+        }
+    }
+
+    OnReceiveGoogleAccessToken = (access_token) => {
+        this.goConnect(access_token);
+    }
+
+    OnBeforeRedirect = (e) => {
+        let msg = DFReactUtils.getValidationErrorMsg(this.state.userName, this.state.userColor);
+        if (msg) {
+            this.setState({showValidationErrors : true});
+            e.valid = false;
+            return;
+        }
+        window.localStorage.setItem("userName", this.state.userName);
+        window.localStorage.setItem("userColor", this.state.userColor);
+        window.localStorage.setItem("roomKey", this.state.roomKey);
     }
 
     componentDidMount() {
@@ -51,13 +58,31 @@ class Connection extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.props.googleOAuthModule.events.removeListener(GoogleOAuthModule.Events.receivedToken, this.OnReceiveGoogleAccessToken);
+        this.props.googleOAuthModule.events.removeListener(GoogleOAuthModule.Events.beforeRedirect, this.OnBeforeRedirect);
+    }
+
     goConnect = (google_access_token) => {
-        let msg = DFReactUtils.getValidationErrorMsg(this.state.userName, this.state.userColor);
+
+        let userName = this.state.userName;
+        let userColor = this.state.userColor;
+
+        if (gAutoJoin) {
+            // ensure a valid username.
+            userName = DF.EnsureValidUsername(userName);
+            userColor = DF.EnsureValidUserColor(userColor);
+            this.props.handleConnect(userName, userColor, this.state.roomKey, google_access_token);
+            return;
+        }
+
+        let msg = DFReactUtils.getValidationErrorMsg(userName, userColor);
         if (msg) {
             this.setState({ showValidationErrors: true });
             return;
         }
-        this.props.handleConnect(this.state.userName, this.state.userColor, this.state.roomKey, google_access_token);
+
+        this.props.handleConnect(userName, userColor, this.state.roomKey, google_access_token);
     }
 
     onClickLoginAnonymous = (e) => {
@@ -126,9 +151,6 @@ class Connection extends React.Component {
 }
 
 
-
-
-
 module.exports = {
-    Connection
+    Connection,
 };

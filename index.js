@@ -1521,7 +1521,13 @@ function OnPersistentSignOut(ws, data) {
     }
 
     foundUser.PersistentSignOut();
-    
+
+    // restore admin role if specified in query params
+    // todo: synchronize with completeUserEntry processing
+    if (ws.handshake.query.DF_ADMIN_PASSWORD === gConfig.admin_key) {
+      u.addGlobalRole("sysadmin");
+    }
+
     ws.emit(DF.ServerMessages.PersistentSignOutComplete);
 
   } catch (e) {
@@ -1530,6 +1536,45 @@ function OnPersistentSignOut(ws, data) {
   }
 }
 
+function OnGoogleSignIn(ws, data) {
+  try {
+    const google_access_token = data.google_access_token;
+
+    const complete = (hasPersistentIdentity, persistentInfo, persistentID) => {
+      let foundUser = gFindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnGoogleSignIn => google sign in suceeded but user disappeared.`);
+        return;
+      }
+
+      foundUser.PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo);
+
+      if (ws.handshake.query.DF_ADMIN_PASSWORD === gConfig.admin_key) {
+        u.addGlobalRole("sysadmin");
+      }
+
+      // notify this 1 user of their user id & room state
+      ws.emit(DF.ServerMessages.GoogleSignInComplete, {
+        hasPersistentIdentity,
+        persistentInfo,
+        persistentID,
+      });
+    }; // completeUserEntry
+
+    let foundUser = gFindUserFromSocket(ws);
+    if (foundUser == null) {
+      log(`OnGoogleSignIn => google sign in suceeded but user disappeared.`);
+      return;
+    }
+    gGoogleOAuth.DoGoogleSignIn(google_access_token, foundUser, complete, () => {
+      console.log(`google sign in failed`);
+    });
+
+  } catch (e) {
+    log(`OnGoogleSignIn exception occurred`);
+    log(e);
+  }
+}
 
 let OnClientDownloadServerState = (ws) => {
   try {
@@ -1722,6 +1767,7 @@ let roomsAreLoaded = function () {
 
       ws.on('disconnect', data => OnDisconnect(ws, data));
       ws.on(DF.ClientMessages.PersistentSignOut, data => OnPersistentSignOut(ws, data));
+      ws.on(DF.ClientMessages.GoogleSignIn, data => OnGoogleSignIn(ws, data));      
       ws.on(DF.ClientMessages.Identify, data => ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
       ws.on(DF.ClientMessages.JoinRoom, data => ForwardToRoom(ws, room => room.OnClientJoinRoom(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRequest, data => ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));
