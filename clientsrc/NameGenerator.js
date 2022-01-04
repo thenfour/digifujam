@@ -55,12 +55,13 @@ const gAdj = [
    'rattling',
    'kpop',
    'untitled',
+   'noisy',
+   '4-track',
 ];
 
 const gNouns = [
    ' chicken',
    ' chord',
-   ' voicing',
    ' clarinet',
    ' scale',
    ' arpeggio',

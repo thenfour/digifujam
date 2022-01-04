@@ -63,12 +63,12 @@ const ClientMessages = {
 const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
     PleaseReconnect: "PleaseReconnect", // when something on the server requires a reconnection of all users, or when you're not authorized.
-    Welcome: "Welcome",// (your UserID & room state, and whether you are an admin)
+    Welcome: "Welcome",// { yourUserID, roomState, adminKey }
     UserEnter: "UserEnter",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserLeave: "UserLeave",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
     PersistentSignOutComplete: "PersistentSignOutComplete",// sent to you only
-    GoogleSignInComplete: "GoogleSignInComplete", // sent to you only. { hasPersistentIdentity, persistentInfo, persistentID }
+    GoogleSignInComplete: "GoogleSignInComplete", // sent to you only. { hasPersistentIdentity, persistentInfo, persistentID, adminKey }
     Ping: "Ping", // token, users: [{ userid, pingMS, roomID, stats }], rooms: [{roomID, roomName, userCount, stats}]
     InstrumentOwnership: "InstrumentOwnership",// [InstrumentID, UserID_nullabl, idle]
     NoteEvents: "NoteEvents", // { noteOns: [ user, note, velocity ], noteOffs: [ user, note ] }
@@ -224,6 +224,9 @@ class DigifuUser {
         if (!this.persistentInfo.global_roles) {
             this.persistentInfo.global_roles = [role];
             return;
+        }
+        if (this.persistentInfo.global_roles.some(r => r === role)) {
+            return; // already exists
         }
         this.persistentInfo.global_roles.push(role);
     }

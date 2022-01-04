@@ -22,24 +22,20 @@ class AdminApp {
 
    NET_OnAuthorized(data) {
       this.authorized = true;
-      console.log(`NET_OnAuthorized`);
       this.refreshHandler();
    }
 
    NET_OnMainInfo(data) {
-      console.log(`NET_OnMainInfo`);
       this.mainInfo = data;
       this.refreshHandler();
    }
 
    NET_OnDiscordInfo(data) {
-      console.log(`NET_OnDiscordInfo`);
       this.refreshHandler();
    }
 
    NET_OnConsoleLog(data) {
       this.ConsoleLogSerial ++;
-      console.log(`NET_OnConsoleLog`);
       this.ConsoleLog = this.ConsoleLog.concat(data.messages);
       this.refreshHandler();
    }

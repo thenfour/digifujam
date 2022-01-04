@@ -379,6 +379,7 @@ button:focus {
     text-align: center;
     background-color: #00000087;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    pointer-events: none;
 }
 
 @keyframes blinker3 { to { opacity: 0; } }

@@ -14,8 +14,12 @@ const eApps = {
 class AdminRootArea extends React.Component {
    constructor(props) {
       super(props);
+
+      const query = Object.fromEntries([ [ '7jamRealm', 'admin' ], ...new URLSearchParams(location.search) ]);
+      query.DF_ADMIN_PASSWORD ??= window.localStorage.getItem('adminKey');
+
       this.state = {
-         app : new AdminApp(Object.fromEntries([ [ '7jamRealm', 'admin' ], ...new URLSearchParams(location.search) ]), () => this.RefreshUI()),
+         app : new AdminApp(query, () => this.RefreshUI()),
          selectedAppID : Object.keys(eApps)[0],
       }
    }

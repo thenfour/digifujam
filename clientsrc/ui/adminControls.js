@@ -57,7 +57,7 @@ class AdminControls extends React.Component {
                         <div>uptime: {uptime.longString}</div>
                         <div><a href="/stats.html" target="_blank">Stats</a></div>
                         <div><a href="/activityHookInspector.html" target="_blank">Activity graphs</a></div>
-                        <div><a href="/admin.html?DF_ADMIN_PASSWORD=xyz" target="_blank">Admin page</a></div>
+                        <div><a href="/admin.html" target="_blank">Admin page</a></div>
                         <button onClick={this.copyServerState}>Copy server state</button><br />
                         <button onClick={this.pasteServerState}>Paste server state</button><br />
                         <button onClick={this._handleBackupServerState}>Manually backup server state</button><br />

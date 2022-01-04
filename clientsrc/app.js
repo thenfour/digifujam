@@ -428,6 +428,7 @@ class DigifuApp {
         // find "you"
         this.myUser = this.roomState.FindUserByID(myUserID).user;
 
+        window.localStorage.setItem("adminKey", data.adminKey);
         window.localStorage.setItem("userName", this.myUser.name);
         window.localStorage.setItem("userColor", this.myUser.color);
 
@@ -773,6 +774,7 @@ class DigifuApp {
         if (!this.roomState) return;
         if (!this.myUser) return;
         this.myUser.PersistentSignIn(data.hasPersistentIdentity, data.persistentID, data.persistentInfo);
+        window.localStorage.setItem("adminKey", data.adminKey);
         this.stateChangeHandler();
     }    
     NET_OnPing(data) {

@@ -460,10 +460,16 @@ class RoomServer {
           clientSocket.DFIsDoingRoomChange);
         clientSocket.DFIsDoingRoomChange = false;
 
+        let adminKey = null;
+        if (u.IsAdmin()) {
+          adminKey = gConfig.admin_key;
+        }
+
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
           yourUserID: userID,
-          roomState: JSON.parse(this.roomState.asFilteredJSON()) // filter out stuff that shouldn't be sent to clients
+          roomState: JSON.parse(this.roomState.asFilteredJSON()), // filter out stuff that shouldn't be sent to clients
+          adminKey,
         });
 
         // broadcast user enter to all clients except the user.
@@ -1550,7 +1556,12 @@ function OnGoogleSignIn(ws, data) {
       foundUser.PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo);
 
       if (ws.handshake.query.DF_ADMIN_PASSWORD === gConfig.admin_key) {
-        u.addGlobalRole("sysadmin");
+        foundUser.addGlobalRole("sysadmin");
+      }
+
+      let adminKey = null;
+      if (foundUser.IsAdmin()) {
+        adminKey = gConfig.admin_key;
       }
 
       // notify this 1 user of their user id & room state
@@ -1558,6 +1569,7 @@ function OnGoogleSignIn(ws, data) {
         hasPersistentIdentity,
         persistentInfo,
         persistentID,
+        adminKey,
       });
     }; // completeUserEntry
 
