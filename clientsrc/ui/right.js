@@ -666,9 +666,9 @@ class InstrumentPreset extends React.Component {
         return (
             <li key={this.props.presetObj.patchName}>
                 <div className="buttonContainer">
-                    {!this.props.observerMode && <button onClick={() => this.onClickLoad()}>📂Load</button>}
-                    {canWrite && <button onClick={this.onBeginOverwrite}>💾Save</button>}
-                    {canWrite && <button onClick={this.onBeginDelete}>🗑Delete</button>}
+                    {!this.props.observerMode && <button onClick={() => this.onClickLoad()}><i className="material-icons">file_open</i>Load</button>}
+                    {canWrite && <button onClick={this.onBeginOverwrite}><i className="material-icons">save</i>Save</button>}
+                    {canWrite && <button onClick={this.onBeginDelete}><i className="material-icons">delete</i>Delete</button>}
                 </div>
                 <span className="presetName">{this.props.presetObj.patchName}</span>
                 {
@@ -747,13 +747,13 @@ class InstrumentPresetList extends React.Component {
         return (
             <div className="presetList">
                 Presets
-                <div className="presetFilter">🔎<DFReactUtils.TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></DFReactUtils.TextInputFieldExternalState></div>
+                <div className="presetFilter"><i className="material-icons">search</i><DFReactUtils.TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></DFReactUtils.TextInputFieldExternalState></div>
                 <ul>
 
 
                     <li>
                         <div className="buttonContainer">
-                            {!this.props.observerMode && <button onClick={this.onClickInitPreset}>📂Load</button>}
+                            {!this.props.observerMode && <button onClick={this.onClickInitPreset}><i className="material-icons">file_open</i>Load</button>}
                         </div>
                         <span className="presetName">init</span>
                     </li>
@@ -1094,7 +1094,7 @@ class InstrumentParams extends React.Component {
                     <button className={this.state.showingAllGroups ? "active paramGroupFocusBtn" : "paramGroupFocusBtn"} onClick={() => this.clickAllGroup()}>All</button>
                     {presetsFocusButton}
                     {groupFocusButtons}
-                    <div className="paramFilter">Param filter🔎<DFReactUtils.TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></DFReactUtils.TextInputFieldExternalState></div>
+                    <div className="paramFilter">Param filter<i className="material-icons">search</i><DFReactUtils.TextInputFieldExternalState onChange={this.onFilterChange} value={this.state.filterTxt}></DFReactUtils.TextInputFieldExternalState></div>
                 </fieldset>
             </div>
         );
@@ -1137,7 +1137,7 @@ class InstrumentParams extends React.Component {
                                     <InstTextParam key="patchDescription" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("description")}></InstTextParam>
                                     <InstTextParam key="patchTags" observerMode={this.props.observerMode} app={this.props.app} instrument={this.props.instrument} param={this.props.instrument.GetParamByID("tags")}></InstTextParam>
                                     {!this.props.observerMode && <li className="instPresetButtons">
-                                        {writableExistingPreset && <button onClick={this.onBeginOverwrite}>💾 Overwrite "{writableExistingPreset.patchName}"</button>}
+                                        {writableExistingPreset && <button onClick={this.onBeginOverwrite}><i className="material-icons">save</i> Overwrite "{writableExistingPreset.patchName}"</button>}
 
                                         {this.state.showingOverwriteConfirmation &&
                                             <div className="confirmationBox">
@@ -1148,8 +1148,8 @@ class InstrumentParams extends React.Component {
                                         }
 
 
-                                        <button onClick={this.onSaveNewPreset}>💾 Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
-                                        {allowFactoryReset && <button onClick={this.onBeginFactoryReset}>⚠ Factory reset</button>}
+                                        <button onClick={this.onSaveNewPreset}><i className="material-icons">save</i> Save as new preset "{this.props.instrument.GetParamByID("patchName").currentValue}"</button>
+                                        {allowFactoryReset && <button onClick={this.onBeginFactoryReset}><i className="material-icons">dangerous</i> Factory reset</button>}
                                         {this.state.showingFactoryResetConfirmation &&
                                             <div className="confirmationBox">
                                                 Click OK to reset all presets to factory defaults. It applies only to this instrument.
@@ -1165,10 +1165,10 @@ class InstrumentParams extends React.Component {
                                             <legend onClick={this.onClipboardShownClick}>{DFU.getArrowText(this.state.showingClipboardControls)} Clipboard</legend>
                                             {this.state.showingClipboardControls && (
                                                 <div>
-                                                    <button onClick={this.onExportClicked}>Copy live settings to clipboard</button>
-                                                    { !this.props.observerMode && <button onClick={this.onImportClicked}>Paste live settings from clipboard</button>}<br />
-                                                    <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button>
-                                                    { !this.props.observerMode && <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button>}<br />
+                                                    <button onClick={this.onExportClicked}><i className="material-icons">content_copy</i>Copy current patch to clipboard</button>
+                                                    { !this.props.observerMode && <button onClick={this.onImportClicked}><i className="material-icons">content_paste</i>Paste current patch from clipboard</button>}<br />
+                                                    {/* <button onClick={this.onExportBankClicked}>Export preset bank to clipboard</button> */}
+                                                    {/* !this.props.observerMode && <button onClick={this.onImportBankClicked}>Import preset bank from clipboard</button>*/}<br />
                                                 </div>
                                             )}
                                         </fieldset>

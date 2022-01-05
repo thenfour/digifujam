@@ -55,28 +55,21 @@ input[type="password" i]:focus
     border: 2px solid #0cc;
 }
 
-/* input[type="number" i] {
-    background-color: #444;
-    border: 2px solid #055;
-    color: #0cc;
-    font-family: 'Overpass', sans-serif; 
-    font-weight: normal;
-    font-size: small;
-    margin: 2px;
-}
-input[type="number" i]:focus {
-    border: 2px solid #0cc;
-}*/
 
 button {
+    display: inline-flex;
+    align-content: center;
+    align-items: center;
+
     background-color: #444;
     border: 1px solid #888;
     color: #0bb;
-    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+    /*font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
     font-weight: bold;
     font-size: small;
     margin: 2px;
-    border-radius: 6px;
+    padding: 4px;
+    border-radius: 4px;
     cursor:pointer;
 }
 button:hover {
@@ -631,6 +624,8 @@ ul.instParamList li.buttonsParam.sfzSelect button {
 
 .presetList {
     padding:8px;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .presetList ul {
@@ -1399,6 +1394,11 @@ button.stayLoggedIn:hover {
     align-items: center;
 }
 
+.dropdownMenuButton > *:not(:first-child)
+{
+    margin-left:10px;
+}
+
 .popUpDialog fieldset {
     border-radius: 6px;
     border: 0;
@@ -1726,4 +1726,12 @@ li.preloadSFZ {
     font-weight: bold;
 }
 
+
+
+/*
+https://mui.com/components/material-icons/?query=search
+https://www.w3schools.com/icons/google_icons_intro.asp
+*/
+.material-icons { font-size: 18px; }
+.material-icons.highlight { color: #cc0;}
 

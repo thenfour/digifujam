@@ -259,12 +259,8 @@ class DFOptionsDialog extends React.Component {
             monitoringCaption = "Remote";
         }
 
-        let buttonCaption = <span className="optionsBtnContent">
-            <span>Settings</span>
-            {!!this.state.quantizationIndex && <span className="quantIndicator">Quant=<span className={this.quantizationOptions[this.state.quantizationIndex].cssClass}>{this.quantizationOptions[this.state.quantizationIndex].caption}</span></span>}
-            {!this.props.app.metronome.isMuted && !this.props.app.IsMuted() && <span className="metronomeIndicator">🔺</span>}
-            {!!this.props.app.myInstrument && <span className="monitoringIndicator">Monitoring:{monitoringCaption}</span>}
-        </span>;
+        // let buttonCaption = <span className="optionsBtnContent">
+        // </span>;
 
         let timeSigButtons = this.props.app.roomState && DFMusic.CommonTimeSignatures.map(ts =>
             <button className={ts.id === this.props.app.roomState.timeSig.id ? "buttonParam active" : "buttonParam"} key={ts.id} onClick={() => this.setRoomTimeSig(ts)}>{ts.name}</button>
@@ -297,7 +293,14 @@ class DFOptionsDialog extends React.Component {
 
         return (
             <div>
-                <div className={"dropdownMenuButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>{buttonCaption}</div>
+                <div className={"dropdownMenuButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickOptions}>
+                    <i className="material-icons">settings</i>
+                    <span>Settings</span>
+            {!!this.state.quantizationIndex && <span className="quantIndicator">Q=<span className={this.quantizationOptions[this.state.quantizationIndex].cssClass}>{this.quantizationOptions[this.state.quantizationIndex].caption}</span></span>}
+            {!this.props.app.metronome.isMuted && !this.props.app.IsMuted() && <i className="material-icons highlight">volume_up</i>}
+            {!!this.props.app.myInstrument && <span className="monitoringIndicator">Monitoring:{monitoringCaption}</span>}
+
+                </div>
 
                 {this.state.isExpanded &&
                     <div className="optionsDialog popUpDialog">
@@ -383,7 +386,12 @@ class DFOptionsDialog extends React.Component {
                             <div>
                                 <input type="range" id="metronomeVolume" name="metronomeVolume" min="0" max="200" onChange={this.setMetronomeVolume} value={this.props.app.synth.metronomeGain * 100} disabled={this.props.app.IsMuted() || this.props.app.metronome.isMuted} />
                                 <label htmlFor="metronomeVolume">volume: {Math.trunc(this.props.app.synth.metronomeGain * 100)}</label>
-                                <button className="muteButton" onClick={this.onClickMetronome}>{(this.props.app.metronome.isMuted || this.props.app.IsMuted()) ? "⚪" : "🔺"}</button>
+                                <button className="muteButton" onClick={this.onClickMetronome}>
+                                    	{(this.props.app.metronome.isMuted || this.props.app.IsMuted()) ?
+                                            (<i className="material-icons">volume_off</i>) :
+                                            (<i className="material-icons highlight">volume_up</i>)
+                                            }
+                                </button>
                             </div>
                         </fieldset>
 
