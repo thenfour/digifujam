@@ -168,11 +168,7 @@ class DFOptionsDialog extends React.Component {
     }
 
     setRoomBPM = (v) => {
-        this.props.app.SendRoomBPM(v.target.value, this.props.app.roomState.timeSig);
-    }
-
-    setRoomTimeSig = (timeSig) => {
-        this.props.app.SendRoomBPM(this.props.app.roomState.bpm, timeSig);
+        this.props.app.SendRoomBPM(v.target.value);
     }
 
     onClickMetronome = () => {
@@ -217,13 +213,6 @@ class DFOptionsDialog extends React.Component {
         else if (this.props.app.monitoringType == DFApp.eMonitoringType.Remote) {
             monitoringCaption = "Remote";
         }
-
-        // let buttonCaption = <span className="optionsBtnContent">
-        // </span>;
-
-        let timeSigButtons = this.props.app.roomState && DFMusic.CommonTimeSignatures.map(ts =>
-            <button className={ts.id === this.props.app.roomState.timeSig.id ? "buttonParam active" : "buttonParam"} key={ts.id} onClick={() => this.setRoomTimeSig(ts)}>{ts.name}</button>
-        );
 
         let tapTempoStuff = null;
         switch (this.props.app.tapTempoState) {
@@ -312,9 +301,6 @@ class DFOptionsDialog extends React.Component {
                         <fieldset>
                             <div className="legend">Room Tempo</div>
                             <div className="helpText">Changes you make here affect everyone in the room.</div>
-                            <div className="buttonArray">
-                                {timeSigButtons}
-                            </div>
 
                             <div>
                                 <input type="range" id="metronomeBPM" name="metronomeBPM" min={DF.ServerSettings.MinBPM} max={DF.ServerSettings.MaxBPM} onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />

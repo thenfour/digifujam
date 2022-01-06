@@ -53,10 +53,14 @@ const ClientMessages = {
     Cheer: "Cheer", // text, x, y
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
     AdjustBeatOffset: "AdjustBeatOffset", // relativeBeats
-    RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig:..., phaseRelativeMS:
+    RoomBPMUpdate: "RoomBPMUpdate", //bpm, phaseRelativeMS:
     JoinRoom: "JoinRoom", // roomID
     PersistentSignOut: "PersistentSignOut",
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
+
+    // SEQ
+    SeqPlayStop: "SeqPlayStop", // { isPlaying }
+    SeqSetTimeSig: "SeqSetTimeSig", // { timeSigID }
 };
 
 const ServerMessages = {
@@ -80,8 +84,8 @@ const ServerMessages = {
 
     ServerStateDump: "ServerStateDump",
 
-    RoomBeat: "RoomBeat", //bpm, beat, timeSig
-    RoomBPMUpdate: "RoomBPMUpdate", //bpm, timeSig: ...
+    RoomBeat: "RoomBeat", //bpm, beat
+    RoomBPMUpdate: "RoomBPMUpdate", //bpm: ...
 
     InstrumentPresetDelete: "InstrumentPresetDelete", // instrumentID, presetID
     InstrumentPresetSave: "InstrumentPresetSave", // instrumentID, {params} just like InstParams, except will be saved. the "presetID" param specifies preset to overwrite. may be new.
@@ -92,6 +96,11 @@ const ServerMessages = {
 
     UserState: "UserState", // { state: { user, name, color, img, position : { x, y } }, chatMessageEntry }
     Cheer: "Cheer", // userID, text, x, y
+
+    // sequencer control
+    SeqPlayStop: "SeqPlayStop", // { instrumentID, isPlaying }
+    SeqSetTimeSig: "SeqSetTimeSig", // { instrumentID, timeSigID }
+
 };
 
 const ServerSettings = {
@@ -966,7 +975,7 @@ class DigifuInstrumentSpec {
 
         if (this.behaviorAdjustmentsApplied) return;
 
-        this.sequencerConfig = new Seq.SequencerConfig(this.sequencerConfig);
+        this.sequencerDevice = new Seq.SequencerDevice(this.sequencerDevice);
 
         // for restrictive behaviorStyles, we force params to a certain value and hide from gui always.
         this.paramsToForceAndHide = {};
@@ -1518,7 +1527,6 @@ class DigifuRoomState {
         this.height = 9;
         this.roomTitle = "";
         this.softwareVersion = gDigifujamVersion;
-        this.timeSig = DFMusic.FourFour;
         this.absoluteURL = "";
 
         this.stats = {
@@ -1530,8 +1538,6 @@ class DigifuRoomState {
 
     // call after Object.assign() to this object, to handle child objects.
     thaw() {
-        this.timeSig = new DFMusic.TimeSig(this.timeSig);
-        
         this.instrumentCloset = this.instrumentCloset.map(o => {
             let n = Object.assign(new DigifuInstrumentSpec(), o);
             n.thaw();
@@ -1563,10 +1569,9 @@ class DigifuRoomState {
         this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
     }
 
-    setBPM(bpm, timeSig) {
+    setBPM(bpm) {
         this.bpm = bpm;
         this.metronome.setBPM(bpm);
-        this.timeSig = new DFMusic.TimeSig(timeSig);
     }
 
     adminExportRoomState() {

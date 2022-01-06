@@ -143,6 +143,12 @@
     width:90px;
 }
 
+.sequencerMain button.playButton.active  {
+    background-color: #7f7;
+    color: #444;
+    box-shadow: 0 0 20px #8f8, inset 0 0 18px #888c;
+}
+
 .sequencerMain button.playButton > * {
     font-size: 72px;
 }

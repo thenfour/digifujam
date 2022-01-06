@@ -1,13 +1,37 @@
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
 
-class SequencerPattern
+const SequencerSettings = {
+   PatternCount: 4,
+};
+
+class SequencerNote
 {
-   // list of notes [noteval, time(measure:subdiv), velocity, length(subdiv)]
-   // length measures
-   // division
+   constructor(params) {
+      if (params)
+         Object.assign(this, params);
+      
+      console.assert(DFMusic.isValidNoteValue(this.noteVal));
+      this.velocity ??= 0.5;
+      this.lengthBeats ??= 1;
+      this.timeBeats ??= 0; // beat relative to pattern start
+   }
 }
 
+class SequencerPattern
+{
+   constructor(params) {
+      if (params)
+         Object.assign(this, params);
+      
+      if (!Array.isArray(this.notes))
+         this.notes = [];
+      this.notes = this.notes.map(n => new SequencerNote(n));
+
+      this.lengthBeats ??= 8;
+      this.divisions ??= 2;
+   }
+}
 
 // this encapsulates the configuration for the whole sequencer
 // it gets serialized as saveable presets
@@ -16,45 +40,59 @@ class SequencerPatch
    constructor(params) {
       if (params)
          Object.assign(this, params);
-      // timesig
-      // preset info: name, desc, tags, author, date
-      // selected pattern
-      // patterns
 
-      // speed
-      // swing
-      // is playing
+      this.timeSig = new DFMusic.TimeSig(this.timeSig);
+
+      this.presetName ??= '(init)';
+      this.presetDescription ??= '';
+      this.presetTags ??= '';
+      this.presetAuthor ??= '';
+      this.presetSavedDate ??= Date.now();
+
+      this.selectedPatternIdx ??= 0;
+
+      if (!Array.isArray(this.patterns) || (this.patterns.length != SequencerSettings.PatternCount)) {
+         this.patterns = [];
+      } else {
+         this.patterns = this.patterns.map(p => new SequencerPattern(p));
+      }
+
+      this.speed ??= 1;
+      this.swing ??= 0; // -1 to +1
       
-      // muted note list
+      if (!Array.isArray(this.mutedNotes))
+         this.mutedNotes = [];
    }
 }
 
 
-class SequencerConfig {
+class SequencerDevice {
    constructor(params) {
       if (params)
          Object.assign(this, params);
 
-      // and ensure values/defaults
-      // note names
+      // note legend
+      
+      this.isPlaying = false;
+
       this.livePatch = new SequencerPatch(this.livePatch);
-      // preset list
+
+      if (!Array.isArray(this.presetList))
+         this.presetList = [];
+      this.presetList = this.presetList.map(p => new SequencerPatch(p));
    }
 
-   // returns [{name, midivalue, cssclass, velocities}]
+   // returns [{name, midiNoteValue, cssClass}]
    GetNoteLegend() {
-      //
+      return DFMusic.MidiNoteInfo.filter(n => n.midiNoteValue > 60 && n.midiNoteValue < 80);
    }
 }
 
-
-class SequencerPatternView
-{
-}
 
 
 
 module.exports = {
-   SequencerConfig,
+   SequencerSettings,
+   SequencerDevice,
 };
 

@@ -496,7 +496,7 @@ class DiscordIntegrationManager {
    // gDiscordBot.EventHook
    OnDiscordMemberJoin(channel, member) {
       this.Get7JamRoomsIDsForDiscordMemberSync(channel.id).forEach(roomID => {
-         console.log(`OnDiscordMemberJoin ${channel.id} <--> 7jam room ${roomID} += ${member.displayName} color=${member.displayHexColor}`);
+         //console.log(`OnDiscordMemberJoin ${channel.id} <--> 7jam room ${roomID} += ${member.displayName} color=${member.displayHexColor}`);
          this._7jamAPI.UpdateDiscordUserInRoom(roomID, member.displayName, member.displayHexColor, member.id);
       });
    }

@@ -25,9 +25,10 @@ class RoomBeat extends React.Component {
 
    render() {
       let beats = [];
-      const musicalTime = this.props.app.getMusicalTime();
+      const absoluteBeatFloat = this.props.app.getAbsoluteBeatFloat();
+      const ts = this.props.timeSig;
+      const musicalTime = ts.getMusicalTime(absoluteBeatFloat);
 
-      const ts = this.props.app.roomState.timeSig;
       for (let i = 0; i < ts.num; ++i) {
          const complete = (i == musicalTime.measureBeatInt) ? " complete" : "";
          const isMajor = ts.isMajorBeat(i) ? " majorBeat" : " minorBeat";
@@ -38,9 +39,17 @@ class RoomBeat extends React.Component {
             {beats}
         </div>
       }
-   };
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const gTempoBPMStep = 5;
+const gSpeeds = [ 8, 4, 3, 2, 1, .75, 2.0/3.0, .5, 1.0/3.0, .25];
+const gDivisions = [ 1, 2, 3, 4, 5, 6, 7, 8];
+
+class SequencerPatternView
+{
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SequencerMain extends React.Component {
@@ -62,13 +71,13 @@ class SequencerMain extends React.Component {
       onClickLowerTempo = () => {
         let bpm = this.props.app.roomState.bpm;
         bpm = Math.floor((bpm - 1) / gTempoBPMStep) * gTempoBPMStep;
-      this.props.app.SendRoomBPM(bpm, this.props.app.roomState.timeSig);
+      this.props.app.SendRoomBPM(bpm);
     }
 
       onClickHigherTempo = () => {
           let bpm = this.props.app.roomState.bpm;
           bpm = Math.ceil((bpm + 1) / gTempoBPMStep) * gTempoBPMStep;
-        this.props.app.SendRoomBPM(bpm, this.props.app.roomState.timeSig);
+        this.props.app.SendRoomBPM(bpm);
       }
 
       onClickToggleMetronome = () => {
@@ -77,14 +86,20 @@ class SequencerMain extends React.Component {
       }
 
       onClickTimeSig = (ts) => {
-        this.props.app.SendRoomBPM(this.props.app.roomState.bpm, ts);
+        this.props.app.SeqSetTimeSig(ts);
         this.setState({showTimeSigDropdown:false});
         }
 
-      render() {
-         const notes = DFMusic.MidiNoteInfo.filter(k => k.midiNoteValue >= 64 && k.midiNoteValue <= 88).reverse();
+    onClickPlayStop = () => {
+        this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying);
+    }
 
-        //  const notes = this.props.instrument.sequencerConfig;
+      render() {
+         //const notes = DFMusic.MidiNoteInfo.filter(k => k.midiNoteValue >= 74 && k.midiNoteValue <= 88).reverse();
+
+         const seq = this.props.instrument.sequencerDevice;
+         const patch = seq.livePatch;
+         const notes = seq.GetNoteLegend();
 
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
@@ -138,7 +153,9 @@ class SequencerMain extends React.Component {
                             <fieldset>
                                 <div className='paramGroup'>
                                     <div className='paramBlock'>
-                                            <button className='playButton'><i className="material-icons">play_arrow</i></button>
+                                            <button className={seq.isPlaying ? 'playButton active' : "playButton"} onClick={this.onClickPlayStop}>
+                                                <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
+                                            </button>
                                     </div>
                                 </div>
                             </fieldset>
@@ -171,29 +188,6 @@ class SequencerMain extends React.Component {
                             </div>
                         </fieldset>
 
-
-
-                        <fieldset>
-                            <div className='paramGroup'>
-                                <div className='legend'>Timesig</div>
-                                <div className='paramBlock'>
-                                    <div className='paramValue clickable' onClick={()=> {this.setState({showTimeSigDropdown:!this.state.showTimeSigDropdown});}}>
-                                        {this.props.app.roomState.timeSig.toString()}
-                                    </div>
-                                    {this.state.showTimeSigDropdown && (
-                                        <ClickAwayListener onClickAway={() => { this.setState({showTimeSigDropdown:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({showTimeSigDropdown:false});}}>Select a time signature</legend>
-                                            <ul className='dropDownMenu'>
-                                                {timeSigList}
-                                            </ul>
-                                        </div>
-                                        </ClickAwayListener>
-                                        )
-                                        }
-                                </div>
-                            </div>
-                        </fieldset>
 
 
                         <fieldset>
@@ -253,6 +247,16 @@ class SequencerMain extends React.Component {
                             </div>
                         </div>
                         <div className='paramGroup'>
+                            <div className='legend'>Div</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>8</div>
+                                <div className="buttonArray vertical">
+                                    <button><i className="material-icons">arrow_drop_up</i></button>
+                                    <button><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='paramGroup'>
                             <div className='legend'>Swing</div>
                             <div className='paramBlock'>
                                 <div className='paramValue'>33%</div>
@@ -265,6 +269,25 @@ class SequencerMain extends React.Component {
 
 
                     <fieldset>
+                            <div className='paramGroup'>
+                                <div className='legend'>Timesig</div>
+                                <div className='paramBlock'>
+                                    <div className='paramValue clickable' onClick={()=> {this.setState({showTimeSigDropdown:!this.state.showTimeSigDropdown});}}>
+                                        {patch.timeSig.toString()}
+                                    </div>
+                                    {this.state.showTimeSigDropdown && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({showTimeSigDropdown:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({showTimeSigDropdown:false});}}>Select a time signature</legend>
+                                            <ul className='dropDownMenu'>
+                                                {timeSigList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                        }
+                                </div>
+                            </div>
                         <div className='paramGroup'>
                             <div className='legend'>Length</div>
                             <div className='paramBlock'>
@@ -275,23 +298,13 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className='paramGroup'>
-                            <div className='legend'>Div</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>8</div>
-                                <div className="buttonArray vertical">
-                                    <button><i className="material-icons">arrow_drop_up</i></button>
-                                    <button><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
                         </fieldset>
 
 
 
                     <fieldset>
                         <div className='paramGroup'>
-                            <RoomBeat app={this.props.app}></RoomBeat>
+                            <RoomBeat app={this.props.app} timeSig={patch.timeSig}></RoomBeat>
                         </div>
                     </fieldset>
 

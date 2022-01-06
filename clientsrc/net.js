@@ -166,8 +166,8 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.InstrumentBankMerge, obj);
     };
 
-    SendRoomBPM(bpm, timeSig, phaseRelativeMS) {
-        this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm, timeSig, phaseRelativeMS });
+    SendRoomBPM(bpm, phaseRelativeMS) {
+        this.socket.emit(DF.ClientMessages.RoomBPMUpdate, { bpm, phaseRelativeMS });
     };
 
     SendAdjustBeatPhase(relativeMS) {
@@ -209,6 +209,19 @@ class DigifuNet {
     GoogleSignIn(google_access_token) {
         this.socket.emit(DF.ClientMessages.GoogleSignIn, {google_access_token});
     }
+
+    // SEQUENCER
+
+    SeqSetTimeSig(timeSig) {
+        this.socket.emit(DF.ClientMessages.SeqSetTimeSig, {timeSigID: timeSig.id});
+    }
+
+    SeqPlayStop(isPlaying) {
+        this.socket.emit(DF.ClientMessages.SeqPlayStop, {isPlaying});
+    }
+
+    // --------------
+
     Disconnect() {
         this.ResetQueuedParamChangeData();
         this.socket.disconnect(true);
@@ -267,6 +280,11 @@ class DigifuNet {
 
         this.socket.on(DF.ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data));
         this.socket.on(DF.ServerMessages.RoomBPMUpdate, (data) => this.handler.NET_OnRoomBPMUpdate(data))
+
+        // SEQ
+        this.socket.on(DF.ServerMessages.SeqPlayStop, (data) => this.handler.NET_SeqPlayStop(data));
+        this.socket.on(DF.ServerMessages.SeqSetTimeSig, (data) => this.handler.NET_SeqSetTimeSig(data));
+
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };
 };

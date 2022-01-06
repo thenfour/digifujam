@@ -822,6 +822,33 @@ class DigifuApp {
         this.stateChangeHandler();
     }
 
+    // inbound SEQ stuff
+    NET_SeqPlayStop(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.isPlaying = data.isPlaying;
+
+        this.stateChangeHandler();
+    }
+
+    NET_SeqSetTimeSig(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.timeSig = DFMusic.GetTimeSigById(data.timeSigID);
+
+        this.stateChangeHandler();
+    }
+
+    // ----------------------
+
     TransformPingUserStatsToWorldData(pi) {
         if (!pi) return null;
         return {
@@ -994,18 +1021,16 @@ class DigifuApp {
         if (this.tapTempoState != TapTempoState.NA) {
             return;
         }
-        // data.bpm, data.beat, data.timeSig
+        // data.bpm, data.beat
         this.metronome.OnRoomBeat();
         if (this.roomState) {
-            this.musicalTimeTracker.onRoomBeat(data.bpm, data.beat, this.roomState.timeSig);
+            this.musicalTimeTracker.onRoomBeat(data.bpm, data.beat);
         }
     }
 
     NET_OnRoomBPMUpdate(data) {
         this.roomState.bpm = data.bpm;
-        this.roomState.timeSig = new DFMusic.TimeSig(data.timeSig);
         this.stateChangeHandler();
-        //this.metronome.setServerBPM(data.bpm);
     }
 
     NET_pleaseReconnectHandler() {
@@ -1082,8 +1107,8 @@ class DigifuApp {
         });
     };
 
-    SendRoomBPM(bpm, timeSig) {
-        this.net.SendRoomBPM(bpm, timeSig);
+    SendRoomBPM(bpm, phaseRelativeMS) {
+        this.net.SendRoomBPM(bpm, phaseRelativeMS);
     };
 
     SetQuantizationSpec(quantizeSpec) {
@@ -1230,8 +1255,8 @@ class DigifuApp {
         this.handleAllNotesOff();
     }
 
-    getMusicalTime() {
-        return this.musicalTimeTracker.getCurrentMusicalTime();
+    getAbsoluteBeatFloat() {
+        return this.musicalTimeTracker.getAbsoluteBeatFloat();
     }
 
     registerTempoTap() {
@@ -1276,7 +1301,7 @@ class DigifuApp {
         if (!this.tappedTempoBPM) {
             return;
         }
-        this.SendRoomBPM(this.tappedTempoBPM, this.roomState.timeSig, -this.myUser.pingMS);
+        this.SendRoomBPM(this.tappedTempoBPM, -this.myUser.pingMS);
         this.tapTempoState = TapTempoState.NA;
         this.stateChangeHandler();
     }
@@ -1293,6 +1318,19 @@ class DigifuApp {
         this.tapTempoState = TapTempoState.NA;
         this.stateChangeHandler();
     }
+
+    // SEQUENCER
+
+    SeqSetTimeSig(timeSig) {
+        this.net.SeqSetTimeSig(timeSig);
+    }
+
+    SeqPlayStop(isPlaying) {
+        this.net.SeqPlayStop(isPlaying);
+    }
+
+    // --------------
+
 
     Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
         this.myUser = new DF.DigifuUser();

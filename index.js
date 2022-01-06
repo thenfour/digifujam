@@ -12,6 +12,7 @@ const serveIndex = require('serve-index')
 const DFDB = require('./DFDB');
 const DFDiscordBot = require('./discordBot');
 const DFU = require('./clientsrc/dfutil');
+const DFMusic = require("./clientsrc/DFMusic");
 const {ServerAdminApp} = require('./server/serverAdminApp');
 const {ServerGoogleOAuthSupport} = require('./server/serverGoogleOAuth');
 
@@ -1186,11 +1187,11 @@ class RoomServer {
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
     data.bpm = DFU.baseClamp(data.bpm, DF.ServerSettings.MinBPM, DF.ServerSettings.MaxBPM);
-    this.roomState.setBPM(data.bpm, data.timeSig);
+    this.roomState.setBPM(data.bpm);
     if (data.phaseRelativeMS) {
       this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
     }
-    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM(), timeSig: this.roomState.timeSig }); //update bpm for ALL clients
+    io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM() }); //update bpm for ALL clients
   }
 
   OnClientAdjustBeatPhase(ws, data) {
@@ -1241,6 +1242,51 @@ class RoomServer {
     }
   }
 
+
+  // BEGIN: SEQUENCER
+  OnSeqPlayStop(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`OnSeqPlayStop => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+
+      foundInstrument.instrument.sequencerDevice.isPlaying = data.isPlaying;
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPlayStop, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        isPlaying: data.isPlaying
+      });
+
+    } catch (e) {
+      console.log(`OnSeqPlayStop exception occurred`);
+      console.log(e);
+    }
+  }
+
+  OnSeqSetTimeSig(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`OnSeqPlayStop => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+
+      foundInstrument.instrument.sequencerDevice.livePatch.timeSig = DFMusic.GetTimeSigById(data.timeSigID);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetTimeSig, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        timeSigID: data.timeSigID
+      });
+
+    } catch (e) {
+      console.log(`OnSeqSetTimeSig exception occurred`);
+      console.log(e);
+    }
+  }
+  // END: SEQUENCER
+
   // every X seconds, this is called. here we can just do a generic push to clients and they're expected
   // to return a pong. for now used for timing, and reporting user ping.
   OnPingInterval() {
@@ -1248,6 +1294,8 @@ class RoomServer {
       setTimeout(() => {
         this.OnPingInterval();
       }, DF.ServerSettings.PingIntervalMS);
+
+      if (!g7jamAPI) return;
 
       this.CleanUpChatLog();
 
@@ -1855,6 +1903,11 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.AdjustBeatOffset, data => ForwardToRoom(ws, room => room.OnClientAdjustBeatOffset(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
+
+      // SEQ
+      ws.on(DF.ClientMessages.SeqPlayStop, data => ForwardToRoom(ws, room => room.OnSeqPlayStop(ws, data)));
+      ws.on(DF.ClientMessages.SeqSetTimeSig, data => ForwardToRoom(ws, room => room.OnSeqSetTimeSig(ws, data)));
+      // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));
       ws.on(DF.ClientMessages.UploadServerState, data => OnClientUploadServerState(ws, data));
