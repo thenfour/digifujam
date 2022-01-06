@@ -413,7 +413,11 @@ class DigifuApp {
 
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
     NET_OnPleaseIdentify() {
-        this.net.SendIdentify(this.myUser);
+        this.net.SendIdentify({
+            name: this.myUser.name,
+            color: this.myUser.color,
+            google_refresh_token: window.localStorage.getItem('google_refresh_token'),
+        });
     };
 
     NET_OnWelcome(data) {

@@ -406,7 +406,7 @@ class RoomServer {
     }
   }
 
-  OnClientIdentify(clientSocket, clientUserSpec) {
+  async OnClientIdentify(clientSocket, clientUserSpec) {
     // handler
     const rejectUserEntry = () => {
       try {
@@ -421,18 +421,8 @@ class RoomServer {
       // the data is actually a DigifuUser object. but for security it should be copied.
       let u = new DF.DigifuUser();
 
-      u.name = DF.sanitizeUsername(clientUserSpec.name);
-      if (u.name == null) {
-        clientSocket.disconnect();
-        log(`OnClientIdentify: Client had invalid username ${clientUserSpec.name}; disconnecting them.`);
-        return;
-      }
-      u.color = DF.sanitizeUserColor(clientUserSpec.color);
-      if (u.color == null) {
-        clientSocket.disconnect();
-        log(`OnClientIdentify: Client had invalid color ${clientUserSpec.color}; disconnecting them.`);
-        return;
-      }
+      u.name = DF.EnsureValidUsername(clientUserSpec.name);
+      u.color = DF.EnsureValidUserColor(clientUserSpec.color);
 
       // try to reuse existing user ID, so we can track this user through the world instead of considering
       // room changes totally new users.
@@ -492,7 +482,7 @@ class RoomServer {
         clientSocket.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserEnter, { user: u, chatMessageEntry });
       }; // completeUserEntry
 
-      if (!gGoogleOAuth.TryProcessHandshake(u, clientSocket, completeUserEntry, rejectUserEntry)) {
+      if (!await gGoogleOAuth.TryProcessHandshake(u, clientSocket, completeUserEntry, rejectUserEntry, clientUserSpec.google_refresh_token)) {
         completeUserEntry(false, DF.EmptyDFUserToPersistentInfo(), null);
       }
 

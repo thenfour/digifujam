@@ -20,23 +20,19 @@ class ServerGoogleOAuthSupport {
                res.send(JSON.stringify({url : null}));
                return;
             }
-            const oauth2Client = new google.auth.OAuth2(
-                this.gConfig.google_client_id,
-                this.gConfig.google_client_secret,
-                this.gConfig.google_redirect_url);
 
             if (req.query.google_refresh_token) {
-               oauth2Client.setCredentials({
-                  refresh_token : req.query.google_refresh_token
-               });
-
-               try {
-                  const resp = await oauth2Client.getAccessToken();
-                  res.send(JSON.stringify({google_access_token : resp.token}));
+               const token = await this.UseRefreshToken(req.query.google_refresh_token);
+               if (token) {
+                  res.send(JSON.stringify({google_access_token : token}));
                   return;
-               } catch (e) {
                }
             }
+
+            const oauth2Client = new google.auth.OAuth2(
+               this.gConfig.google_client_id,
+               this.gConfig.google_client_secret,
+               this.gConfig.google_redirect_url);
 
             const scopes = [
                'https://www.googleapis.com/auth/userinfo.email',
@@ -97,6 +93,24 @@ class ServerGoogleOAuthSupport {
       return this.gConfig.google_client_id && this.gConfig.google_client_secret;
    }
 
+   async UseRefreshToken(google_refresh_token) {
+      const oauth2Client = new google.auth.OAuth2(
+         this.gConfig.google_client_id,
+         this.gConfig.google_client_secret,
+         this.gConfig.google_redirect_url);
+
+      oauth2Client.setCredentials({
+         refresh_token : google_refresh_token,
+      });
+
+      try {
+         const resp = await oauth2Client.getAccessToken();
+         return resp.token;
+      } catch (e) {
+      }
+      return null;
+   }
+
    // completeUserEntry is (hasPersistentIdentity, persistentInfo, persistentID)
    // rejectUserEntry is ()
    DoGoogleSignIn(ws, /*google_access_*/token, user, completeUserEntry, rejectUserEntry) {
@@ -133,13 +147,18 @@ class ServerGoogleOAuthSupport {
    // checks if the websocket has a google access token.
    // if so, returns true and asynchronously completes login, eventually calling either completeUserEntry or rejectUserEntry
    // if not, returns false immediately.
-   TryProcessHandshake(user, clientSocket, completeUserEntry, rejectUserEntry) {
-      const token = clientSocket.handshake.query.google_access_token ?? clientSocket.DFGoogleAccessToken;
-      if (!token) {
-         return;
+   async TryProcessHandshake(user, clientSocket, completeUserEntry, rejectUserEntry, google_refresh_token) {
+      let token = null;
+      if (google_refresh_token) {
+         token = await this.UseRefreshToken(google_refresh_token);
+         clientSocket.DFGoogleAccessToken = token;
       }
-      this.DoGoogleSignIn(clientSocket, token, user, completeUserEntry, rejectUserEntry);
-      return true;
+      token = clientSocket.handshake.query.google_access_token ?? clientSocket.DFGoogleAccessToken;
+      if (token) {
+         this.DoGoogleSignIn(clientSocket, token, user, completeUserEntry, rejectUserEntry, google_refresh_token);
+         return true;
+      }
+      return false;
    }
 };
 

@@ -29,7 +29,7 @@ let SetGlobalInstrumentList = function (x) {
 
 
 const ClientMessages = {
-    Identify: "Identify", // user info, and optional admin password
+    Identify: "Identify", // { name, color, google_refresh_token }
     InstrumentRequest: "InstrumentRequest", // instid
     InstrumentRelease: "InstrumentRelease",
     ChatMessage: "ChatMessage",// (to_userID_null, msg)
