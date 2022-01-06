@@ -1324,7 +1324,7 @@ class DigifuApp {
         if (gUseDebugCtx) {
             this.audioCtx = new AudioContextWrapper();
             try {
-                this.audioCtx.audioCtx = new AudioContext({latencyHint:0});
+                this.audioCtx.audioCtx = new AudioContext();
             }
             catch (e) {
                 console.log(e);
@@ -1333,7 +1333,7 @@ class DigifuApp {
             try {
                 // a higher sample rate means slightly less latency (buffer size is in samples therefore higher sample rate is faster)
                 // however it complicates things wrt hardware support. and i did not feel any noticeable change in latency; i think it's not at all the bottleneck.
-                this.audioCtx = new AudioContext({latencyHint:0});
+                this.audioCtx = new AudioContext();
             }
             catch (e) {
                 console.log(e);
