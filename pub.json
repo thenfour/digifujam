@@ -968,6 +968,7 @@
       "instrumentID": "sfzDrums",
       "activityDisplay": "drums",
       "copyOfInstrumentID": "sfzMulti",
+      "allowSequencer": "1",
       "color": "rgb(91, 91, 255)",
       "name": "Drum kits",
       "sfzArray": [

@@ -16,6 +16,7 @@ const {InlinePitchBendCtrl, InlineMasterGainCtrl} = require('./InlinePitchBendCt
 const {UserSettingsButton} = require("./userSettings");
 const {GoogleOAuthModule} = require('../googleSignIn');
 const {GestureSplash} = require('./splash');
+const {SequencerParamGroup} = require('./SequencerParamGroup');
 
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
@@ -1179,7 +1180,8 @@ class InstrumentParams extends React.Component {
                                 </ul>)}
 
                         </fieldset>
-                    }
+                    /* instrumentSupportsPresets */}
+                    <SequencerParamGroup app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} instrument={this.props.instrument} observerMode={this.props.observerMode}></SequencerParamGroup>
                     {groups}
                 </div>
             </div>
@@ -1528,10 +1530,10 @@ class RightArea extends React.Component {
             if (myInstrument) myInstrument = myInstrument.instrument;
         }
         if (myInstrument && myInstrument.params.length > 0) {
-            instParams = (<InstrumentParams app={this.props.app} observerMode={false} instrument={myInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
+            instParams = (<InstrumentParams app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} observerMode={false} instrument={myInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
         } else {
             if (gStateChangeHandler.observingInstrument) {
-                instParams = (<InstrumentParams app={this.props.app} observerMode={true} instrument={gStateChangeHandler.observingInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
+                instParams = (<InstrumentParams app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} observerMode={true} instrument={gStateChangeHandler.observingInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
             }
         }
 
@@ -2042,7 +2044,7 @@ class RoomArea extends React.Component {
             <DFSignIn.Connection app={this.props.app} handleConnect={this.props.handleConnect} googleOAuthModule={this.props.googleOAuthModule} />
         );
 
-        const seqViewEnabled = this.props.app && this.props.app.roomState;
+        const seqViewVisible = this.props.app && this.props.app.roomState && this.props.sequencerShown;
 
         const switchViewButton = this.props.app && this.props.app.roomState && (
             <div className="switchRoomViews">
@@ -2054,7 +2056,7 @@ class RoomArea extends React.Component {
         return (
             <div id="roomArea" className="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
-                {/* {seqViewEnabled &&this.props.app && <SequencerMain app={this.props.app}></SequencerMain>} */}
+                {seqViewVisible && <SequencerMain app={this.props.app}></SequencerMain>}
 
                 {userAvatars}
                 {roomItems}
@@ -2313,7 +2315,22 @@ class RootArea extends React.Component {
         this.setState({ observingInstrument: inst });
     }
 
-    
+    get focusedInstrument() {
+        return this.state.app?.myInstrument ?? this.state.observingInstrument;
+    }
+
+    get isSequencerShown() {
+        const ss = this.state.sequencerShown;
+        const ret = ss && !!this.focusedInstrument;
+        // if our state is out of sync with this property, update.
+        //setTimeout(() => this.setState({sequencerShown:ret}), 1);
+        return ret;
+    }
+
+    setSequencerShown = (sequencerShown) => {
+        this.setState({sequencerShown});
+    }
+
     onWindowResize() {
         this.setState({});
     }
@@ -2435,8 +2452,8 @@ class RootArea extends React.Component {
                 </div>
                 <DFPiano.PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
-                <RoomArea app={this.state.app} handleConnect={this.HandleConnect} ref={this.roomRef} googleOAuthModule={this.googleOAuthModule} />
-                <RightArea app={this.state.app} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
+                <RoomArea app={this.state.app} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} handleConnect={this.HandleConnect} ref={this.roomRef} googleOAuthModule={this.googleOAuthModule} />
+                <RightArea app={this.state.app} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
                 <LeftArea app={this.state.app} />
 
             </div>

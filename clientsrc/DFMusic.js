@@ -1,3 +1,4 @@
+const DFUtil = require('./dfutil');
 
 // this is like MIDI PPQ, parts per quarter. We want to work in integral divisions
 // even while working in triplets, 5tuplets, etc. This calls for a highly composite
@@ -13,15 +14,19 @@
 const BeatDivisions = 221760;
 
 class MusicalTime {
-    constructor(bpm, measureInt, measureBeatFloat) {
+    constructor(bpm, measureInt, measureBeatFloat, nowMS) {
         this.bpm = bpm; // from server
+        this.nowMS = nowMS;
 
         this.measureInt = measureInt;
         this.measureBeatFloat = measureBeatFloat; // decimal beat. So like, 0.5 means on the 1st 8th note boundary.
         this.measureBeatInt = Math.trunc(this.measureBeatFloat);
         this.measureBeatFrac = this.measureBeatFloat - this.measureBeatInt;
     }
-    toString() { return this.str; }
+    get msSinceLastBeat() {
+        return DFUtil.BeatsToMS(this.measureBeatFrac);
+    }
+    toString() { return `${this.measureBeatFloat.toFixed(2)}`; }
 };
 
 
@@ -60,7 +65,8 @@ class MusicalTimeTracker {
     }
 
     getCurrentMusicalTime() {
-        const ageMS = Date.now() - this.beatTime;
+        const now = Date.now();
+        const ageMS = now - this.beatTime;
         let ageBeats = ageMS / (60000 / this.bpm); // beats since roomBeat message. may be >=1
         let absBeatsFloat = ageBeats + this.beat;
 
@@ -73,7 +79,7 @@ class MusicalTimeTracker {
 
         let measureBeatFloat = (measureFloat - measureInt) * this.timeSig.num;
 
-        return new MusicalTime(this.bpm, measureInt, measureBeatFloat);
+        return new MusicalTime(this.bpm, measureInt, measureBeatFloat, now);
     }
 };
 
@@ -83,8 +89,6 @@ module.exports = {
     MusicalTimeTracker,
     CommonTimeSignatures,
     FourFour,
-    //getBeatsPerMeasure,
-    //getNumeratorsPerBeat,
 };
 
 

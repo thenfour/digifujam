@@ -1638,41 +1638,43 @@ li.preloadSFZ {
     margin-top:5px;
     border-top:2px dotted #077;
 }
-/* li.updateAboveStuff {
-    padding-bottom:5px;
-    margin-bottom:5px;
-    border-bottom:2px dotted #077;
-} */
 
 .liveRoomBeat {
     background-color:#022;
-    cursor: pointer;
     display:flex;
+    pointer-events: none;
 }
 
 .liveRoomBeat .beat {
-    height: 18px;
-    width: 30px;
-    background-color: transparent;
-    border: 2px solid #066;
+    color:#0cc;
+    /* height: 18px; */
+    width: 20px;
+    background-color: #022;
+    /* border: 1px solid #066; */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 @keyframes liveRoomBeatFlash {
-    0% { background-color:#0ff; }
-    100% { background-color:#066; }
+    0% { background-color:#ff0; } /* on downbeat */
+    5%{ background-color:#ff0; } 
+    100% { background-color:#044; } /* as fades away, this should be the same as beat.complete background-color */
 }
 
 .liveRoomBeat .beat.complete {
-    background-color: #066;
-    border-left:2px solid #0ff;
+    background-color: #044;
     animation: liveRoomBeatFlash 0.2s;
 }
 
+@keyframes liveRoomBeatAnticipation {
+    0% { background-color:#022; } /* match .beat background-color */
+    100% { background-color:#0cc; } /* as fades away, this should be the same as beat.complete background-color */
+}
+
 .liveRoomBeat .beat.inProgress {
-    border-left:2px solid #0ff;
+    background-color: #066;
+    animation: liveRoomBeatAnticipation 3.0s; /* long enough so it's always animating during a beat. */
 }
 
 

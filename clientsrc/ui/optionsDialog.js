@@ -4,46 +4,6 @@ const DFU = require('../dfutil');
 const DFApp = require("../app");
 const DFMusic = require("../DFMusic");
 
-class RoomBeat extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isShowingBeats: false,
-        };
-        setTimeout(() => { this.onTimer(); }, 100);
-    }
-    onTimer() {
-        this.setState({});
-        setTimeout(() => { this.onTimer(); }, 100);
-    }
-
-    onClick = () => {
-        this.setState({ isShowingBeats: !this.state.isShowingBeats });
-    };
-
-    render() {
-        let beats = [];
-        if (this.state.isShowingBeats) {
-            const musicalTime = this.props.app.getMusicalTime();
-            const beatPercent = Math.trunc(musicalTime.measureBeatFrac * 100);
-
-            for (let i = 0; i < this.props.app.roomState.timeSig.num; ++i) {
-                const complete = (i < musicalTime.measureBeatInt) ? " complete" : "";
-                const inProgress = musicalTime.measureBeatInt === i ? " inProgress" : "";
-                const style = musicalTime.measureBeatInt !== i ? {} : {
-                    background: `linear-gradient(to right, #066 0%, #066 ${beatPercent}%, transparent ${beatPercent}%)`
-                };// linear-gradient(to right, #066 0%, #066 50%, transparent 50%)
-                beats.push(<div key={i} className={"beat" + complete + inProgress} style={style}>{i + 1}</div>);
-            }
-        } else {
-            beats.push(<div key="1">Metronome</div>);
-        }
-
-        return <div className="liveRoomBeat" onClick={this.onClick}>
-            {beats}
-        </div>
-    }
-};
 
 class DFOptionsDialog extends React.Component {
     constructor(props) {
@@ -402,6 +362,6 @@ class DFOptionsDialog extends React.Component {
 
 module.exports = {
     DFOptionsDialog,
-    RoomBeat,
+    //RoomBeat,
 }
 

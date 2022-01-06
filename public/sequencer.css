@@ -5,56 +5,129 @@
     height: 100%;
     margin: 0;
     border: 0;
-    background-color: #00000055;
+    /* background-color: #00000055; */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     position: absolute;
+    font-family: monospace;
 }
 
 .sequencerMain {
-    color: #0aa;
-    
-    background-color: #000d;
-    height: calc(100% - 50px);
-    width: calc(100% - 50px);
-    border-radius: 15px;
-    border: 3px solid #0aa;
-    z-index: 8999; /* ugh */
-
-    
+    color: #044;
+    background-color: #ffd;
+    max-height: calc(100% - 25px);
+    max-width: calc(100% - 25px);
+    z-index: 8999;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    padding: 20px;
+    padding-top:10px;
+    margin-top: 15px;
+
+    box-shadow: 0px 0px 7px #000, inset 0px 0px 4px #000;
 }
 
 .sequencerMain .seqTop {
-    background-color:#033;
+    display: flex;
+    align-items: flex-start;
+    max-width: 1100px;
 }
 
+.sequencerMain .seqTopColumn {
+    display: flex;
+}
+
+.sequencerMain .seqTopRow {
+    margin-bottom: 7px;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
 
 .sequencerMain fieldset {
-    display: inline-flex;
-    justify-content: center;
-    padding: 5px;
-    margin: 5px;
-    
-    border: 0;
-    background-color: #044;
-    border-radius: 8px;
-}
-.sequencerMain fieldset > h2 {
-    font-size:small;
-    margin:0;
-    padding:0;
-}
-
-.sequencerMain fieldset > legend {
-    color: #0aa;
-
+    display: flex;
     margin: 0;
+    margin-right: 15px;
+    border: 3px solid #c88;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 6px;
     padding: 0;
+    margin-bottom: 10px; /* for when the flexbox wraps */
+}
+
+.sequencerMain fieldset > *:first-child { /* allows param groups without a legend */
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.sequencerMain fieldset .legend {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+
+    padding-left: 8px;
+    padding-right: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* fieldset -> multiple paramgroups -> legend, paramblock -> whatever controls*/
+.sequencerMain fieldset .paramBlock {
+    display: flex;
+    padding: 0px;
+}
+
+.sequencerMain .paramGroup
+{
+    display: flex;
+    margin-left: 12px;
+    background-color: #c554;
+    padding-right: 10px;
+    height: 40px
+}
+
+.sequencerMain .paramGroup:first-child
+{
+    margin-left: 0px;
+}
+
+.sequencerMain .paramGroup:hover {
+    background-color: #c558;
+}
+
+.sequencerMain fieldset .paramValue {
+    display: flex;
+    background-color: #044;
+    width: 50px;
+    color: #0cc;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    font-family: monospace;
+    font-size: 16px;
+    box-shadow: inset 0 0 10px black;
+    text-shadow: 0 0 7px #fff8;
+}
+
+.sequencerMain .seqTopColumn.playButton .paramGroup {
+    height: unset; /* need to undo the fixed row right */
+}
+
+.sequencerMain button.playButton  {
+    height: 90px;
+    margin-left: 10px;
+    width:90px;
+}
+
+.sequencerMain button.playButton > * {
+    font-size: 72px;
 }
 
 .sequencerMain .pianoRollScrollCont {
@@ -65,34 +138,70 @@
     display: flex;
 }
 
-
-
-/* SCROLLBAR:  */
-.sequencerMain ::-webkit-scrollbar {
-width: 10px;
-height:10px;
-}
-/* Track */
-.sequencerMain   ::-webkit-scrollbar-track {
-background: #044;
-}
-
-/* Handle */
-.sequencerMain   ::-webkit-scrollbar-thumb {
-background: #088;
-border-radius:2px;
-
+.sequencerMain button {
+    border: 0;
+    /* border-radius: 4px; */
+    min-width: 30px;
+    padding: 10px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: inset 0px 0px 18px #8888, 0 0 2px #888;
+    color: #088;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Handle on hover */
-.sequencerMain   ::-webkit-scrollbar-thumb:hover {
-background: #0cc;
+.sequencerMain button:hover {
+    background-color: #ddd;
 }
 
-.sequencerMain ::-webkit-scrollbar-corner {
-visibility:hidden;
+.sequencerMain button.active {
+    background-color: #fd0;
 }
 
+.sequencerMain .buttonArray  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+input[type="text" i]
+{
+    border: 0;
+    font-size: 18px;
+    text-align: center;
+    background: none;
+    font-family: monospace;
+    color: #0ff;
+}
+
+input[type="text" i]:focus
+{
+    border: 0;
+}
+
+
+
+.sequencerMain button.altui
+{
+    background-color: rgb(84, 68, 136);
+    color: #ccc;
+    box-shadow: none;
+}
+
+.sequencerMain button.powerButton
+{
+    height: 40px;
+    width: 40px;
+}
+.sequencerMain button.powerButton > * {
+    font-size: 28px;
+}
 
 
 
@@ -107,153 +216,103 @@ visibility:hidden;
 	margin: 0;
 	padding: 0;
 	list-style: none;
+    font-weight: bold;
 
     width: 100px;
-    background-color: #ffd;
-    height: 18px;
+    background-color: #ffe;
+    height: 36px;
     box-shadow:0 0 9px #0003 inset, 0 0 1px #000;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     margin-right:4px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+.sequencerMain ul.pianoRollLegend  li.white {
+    color:#066;
 }
 .sequencerMain ul.pianoRollLegend  li.black {
-    background-color: #444;
+    background-color: #333;
     box-shadow:0 0 9px #ffd2 inset;
 }
 
-
-/*
-.sequencerMain ul.pianoRollLegend {
-	display:flex;
-	margin:0;
-	padding:0;
-    flex-direction: column;
+.sequencerMain ul.pianoRollLegend li .rowName {
+    color:#888;
 }
 
-.sequencerMain ul.pianoRollLegend  li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+.sequencerMain ul.pianoRollLegend li .muteRow {
+    width: 18px;
+    height: 18px;
+    background-color: #8885;
+    margin-left: 10px;
+    margin-right: 10px;    
 }
 
-.sequencerMain ul.pianoRollLegend  .white {
-	height: 20px;
-	z-index: 1;
-	width: 108px;
-	border-radius: 0 0 3px 3px;
-	background-color:white;
-}
-
-.sequencerMain ul.pianoRollLegend  .black {
-	height: 14px;
-	width: 62px;
-	z-index: 2;
-	margin-top: -7px;
-	margin-bottom: -7px;
-	background-color: black;
+.sequencerMain ul.pianoRollLegend li .muteRow.muted {
+    background-color: #f44;
 }
 
 
 
-.sequencerMain ul.pianoRollLegend   li.white {
-	box-shadow:
-		0 0 5px #ccc inset,
-		0 0 1px black;
-
-		display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        font-size: small;
-        color:#022;
-    }
-
-.sequencerMain ul.pianoRollLegend   li.black {
-	box-shadow:
-		0 2px 4px rgba(0, 0, 0, 0.3);
-		display: flex;
-
-    align-items: center;
-    justify-content: flex-end;
-    font-size: small;
-    color:#0cc;
-}
-*/
 
 .sequencerMain ul.pianoRollRows {
     padding: 0;
     margin: 0;
-    /*flex-grow: 1;*/
 }
 
 .sequencerMain ul.pianoRollRows li {
-    background: linear-gradient(135deg, #344, #344a);
-    height: 18px;
+    height: 36px;
     border: 0;
     box-sizing: border-box;
-    width: 30px;
-    /* border-radius: 3px; */
-
-    /* for note content to be centered*/
+    width: 36px;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
+.sequencerMain ul.pianoRollRows li > div,
+.sequencerMain ul.pianoRollRows li.white > div {
+    background: #888;
+    border-radius: 6px;
+    box-shadow: inset 0px 0px 36px #000b;
+    margin: 2px;
+    flex-grow: 1;
+}
+
 .sequencerMain ul.pianoRollRows li.black {
-    background:0;
     background-color:#081010;
 }
 
 .sequencerMain ul.pianoRollRows.beginBeat li {
-    border-left: 3px solid #444;
-    /* border-top-left-radius: 1px;
-    border-bottom-left-radius: 1px; */
+    border-left: 2px solid #333;
 }
 
 .sequencerMain ul.pianoRollRows.beginMeasure li {
-    border-left: 3px solid #488;
-    /* border-top-left-radius: 1px;
-    border-bottom-left-radius: 1px; */
+    border-left: 4px solid #664;
 }
 
 
 
 .sequencerMain ul.pianoRollRows li.note div {
-    background: linear-gradient(180deg, #749, #779);
-    height: calc(100% - 4px);
+    box-shadow: inset 0px 0px 18px #cc0, 0 0 20px #cc06;
+    background-color: #ccc;
 }
 
 .sequencerMain ul.pianoRollRows li.noteOn div {
-    border-top-left-radius: 8px;
-    border-bottom-left-radius: 8px;
-    margin-left: 2px;
+    box-shadow: inset 0px 0px 36px #cc0;
+    border-left: 6px solid #ff0;
 }
 
 .sequencerMain ul.pianoRollRows li.noteOff div {
-    border-top-right-radius:  8px;
-    border-bottom-right-radius:  8px;
-    margin-right: 2px;
+    margin-right: 6px;
 }
 
-/* selected */
-/* mouse over */
-/* playing */
 .sequencerMain ul.pianoRollRows li.playing div {
     box-shadow: 0px 0px 8px 0px #0ff, inset 0px 0px 5px 0px #0ff;
 }
 
 
 
-
-
-.sequencerMain .buttonArray  {
-    display: flex;
-    justify-content: center;
-    margin-left: 5px;
-    margin-right: 5px;
-}
-
-.sequencerMain .buttonArray button {
-    margin: 0;
-    border-radius: 0;
-}
