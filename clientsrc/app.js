@@ -1343,13 +1343,12 @@ class DigifuApp {
         }
 
         this.synth.Init(this.audioCtx, () => { return this.roomState; }, onInstrumentLoadProgress,
-            () => {
-                this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
-                this.soundEffectManager = new SoundFxManager(this.audioCtx, this.synth.soundEffectGainNode);
-            },
             noteOnHandler,
             noteOffHandler
         );
+
+        this.metronome.Init(this.audioCtx, this.synth.metronomeGainNode);
+        this.soundEffectManager = new SoundFxManager(this.audioCtx, this.synth.soundEffectGainNode);
 
         //console.log(`APP CONNECT event; installing onpopstate handler`);
         window.onpopstate = (e) => {

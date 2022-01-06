@@ -460,6 +460,7 @@ class OptimalGainer {
 
 module.exports = {
     initSynthTools,
+    gLoadSample,
     OptimalGainer,
     AudioGraphHelper,
     SampleCache,

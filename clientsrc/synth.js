@@ -214,7 +214,7 @@ class DigifuSynth {
 	}
 
 	// call as a sort of ctor
-	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress, onLoadComplete, noteOnHandler, noteOffHandler) {
+	Init(audioCtx, roomStateGetter, onInstrumentLoadProgress, noteOnHandler, noteOffHandler) {
 		console.assert(!this.audioCtx); // don't init more than once
 
 		this.fallbackNoteOnTracker = new FallbackNoteOnTracker(noteOnHandler, noteOffHandler);
@@ -228,49 +228,50 @@ class DigifuSynth {
 		this.noteOffHandler = noteOffHandler;
 
 		this.audioCtx = audioCtx;
-		if (!this.audioCtx.createReverbFromUrl) {
-			reverbjs.extend(this.audioCtx);
-		}
 
 		DFSynthTools.initSynthTools(this.audioCtx);
 
-		// see other possible impulses: https://github.com/burnson/Reverb.js
-		this.masterReverb = this.audioCtx.createReverbFromUrl("uisfx/reaper_stems_MidiverbMark2Preset29.m4a", () => { ////./MidiverbMark2Preset29.m4a", () => { // ./LadyChapelStAlbansCathedral.m4a
+		/*
+																				[metronomeGainNode] --->
+																				[soundEffectGainNode] --->
+			(instruments) -----------------------------------------------------------------------------> [masterGainNode] -->  (destination)
+						--------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
+																	.>
+																	/
+												.>[delayVerbGain]--'
+											|
+						---> [masterDelay] -`---[delayDryGain]--------------------------------------->
+		*/
+		this.masterReverb = this.audioCtx.createConvolver("masterVerb");
 
-			/*
-																				 [metronomeGainNode] --->
-																				 [soundEffectGainNode] --->
-			 (instruments) -----------------------------------------------------------------------------> [masterGainNode] -->  (destination)
-						   --------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
-																	  .>
-																	 /
-												 .>[delayVerbGain]--'
-												|
-						   ---> [masterDelay] -`---[delayDryGain]--------------------------------------->
-			*/
+		this.masterGainNode = this.audioCtx.createGain("master");
 
-			this.masterGainNode = this.audioCtx.createGain("master");
+		this.metronomeGainNode = this.audioCtx.createGain("metronomeGainNode");
+		this.metronomeGainNode.connect(this.masterGainNode);
 
-			this.metronomeGainNode = this.audioCtx.createGain("metronomeGainNode");
-			this.metronomeGainNode.connect(this.masterGainNode);
+		this.soundEffectGainNode = this.audioCtx.createGain("soundEffectGainNode");
+		this.soundEffectGainNode.connect(this.masterGainNode);
 
-			this.soundEffectGainNode = this.audioCtx.createGain("soundEffectGainNode");
-			this.soundEffectGainNode.connect(this.masterGainNode);
+		this.masterGainNode.connect(this.audioCtx.destination);
 
-			this.masterGainNode.connect(this.audioCtx.destination);
+		this.delayVerbGain = this.audioCtx.createGain("masterDelay");
+		this.delayDryGain = this.audioCtx.createGain("masterDelay");
 
-			this.delayVerbGain = this.audioCtx.createGain("masterDelay");
-			this.delayDryGain = this.audioCtx.createGain("masterDelay");
+		this.masterDelay = this.audioCtx.createDFDelayNode("masterDelay", [this.delayVerbGain, this.delayDryGain]);
 
-			this.masterDelay = this.audioCtx.createDFDelayNode("masterDelay", [this.delayVerbGain, this.delayDryGain]);
+		this.delayVerbGain.connect(this.masterReverb);
+		this.delayDryGain.connect(this.masterGainNode);
+		this.masterReverb.connect(this.masterGainNode);
 
-			this.delayVerbGain.connect(this.masterReverb);
-			this.delayDryGain.connect(this.masterGainNode);
-
-			this.masterReverb.connect(this.masterGainNode);
-
-			onLoadComplete();
-		});
+		DFSynthTools.gLoadSample(this.audioCtx, "uisfx/reaper_stems_MidiverbMark2Preset29.m4a",
+			(buffer) => {
+				this.masterReverb.buffer = buffer;
+			},
+			(e) => {
+				console.log(`Error loading reverb impulse`);
+				console.log(e);
+			}
+		);
 	};
 };
 
