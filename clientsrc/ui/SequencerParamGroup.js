@@ -17,6 +17,7 @@ class SequencerParamGroup extends React.Component {
   };
 
    render() {
+      return null;
       if (!this.props.app || !this.props.instrument || !this.props.instrument.allowSequencer) return null;
       const arrowText = this.state.expanded ? '⯆' : '⯈';
       return (

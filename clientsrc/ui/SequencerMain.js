@@ -1,16 +1,21 @@
 const React = require('react');
-const PianoArea = require('./pianoArea');
+const DFU = require('../dfutil');
+const DFMusic = require("../DFMusic");
+const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
+const DF = require("../DFCommon");
+const SequencerPresetDialog = require("./SequencerPresetDialog");
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomBeat extends React.Component {
    constructor(props) {
       super(props);
       this.state = {};
    }
    onTimer() {
-      //this.setState({});
+      this.setState({});
    }
    componentDidMount() {
-      this.timer = setInterval(() => { this.onTimer(); }, 100);
+      this.timer = setInterval(() => { this.onTimer(); }, 50);
    }
    componentWillUnmount() {
       if (this.timer)
@@ -21,14 +26,12 @@ class RoomBeat extends React.Component {
    render() {
       let beats = [];
       const musicalTime = this.props.app.getMusicalTime();
-      const beatPercent = Math.trunc(musicalTime.measureBeatFrac * 100);
 
-      //completeBeat = musicalTime.measureBeatInt % this.props.app.roomState.timeSig.num;
-
-      for (let i = 0; i < this.props.app.roomState.timeSig.num; ++i) {
-         const complete = (i < musicalTime.measureBeatInt) || ((i === this.props.app.roomState.timeSig.num - 1) && (musicalTime.measureBeatInt === 0)) ? " complete" : "";
-         const inProgress = musicalTime.measureBeatInt === i ? " inProgress" : "";
-        beats.push(<div key={i} className={"beat" + complete + inProgress}>{i + 1}</div>);
+      const ts = this.props.app.roomState.timeSig;
+      for (let i = 0; i < ts.num; ++i) {
+         const complete = (i == musicalTime.measureBeatInt) ? " complete" : "";
+         const isMajor = ts.isMajorBeat(i) ? " majorBeat" : " minorBeat";
+        beats.push(<div key={i} className={"beat" + complete + isMajor}>{i + 1}</div>);
         }
 
         return <div className="liveRoomBeat">
@@ -37,18 +40,57 @@ class RoomBeat extends React.Component {
       }
    };
 
-   class SequencerMain extends React.Component {
+const gTempoBPMStep = 5;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+class SequencerMain extends React.Component {
       constructor(props) {
          super(props);
          this.state = {
             measuresPerPattern : 4,
             beatsPerMeasure : 4,
             divisionsPerBeat : 2, // 16ths
+            showTimeSigDropdown: false,
+            isPresetsExpanded: false,
          };
       }
 
+      onPowerButtonClick = () => {
+          this.props.setSequencerShown(false);
+      }
+
+      onClickLowerTempo = () => {
+        let bpm = this.props.app.roomState.bpm;
+        bpm = Math.floor((bpm - 1) / gTempoBPMStep) * gTempoBPMStep;
+      this.props.app.SendRoomBPM(bpm, this.props.app.roomState.timeSig);
+    }
+
+      onClickHigherTempo = () => {
+          let bpm = this.props.app.roomState.bpm;
+          bpm = Math.ceil((bpm + 1) / gTempoBPMStep) * gTempoBPMStep;
+        this.props.app.SendRoomBPM(bpm, this.props.app.roomState.timeSig);
+      }
+
+      onClickToggleMetronome = () => {
+        this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
+        this.setState({});
+      }
+
+      onClickTimeSig = (ts) => {
+        this.props.app.SendRoomBPM(this.props.app.roomState.bpm, ts);
+        this.setState({showTimeSigDropdown:false});
+        }
+
       render() {
-         const notes = PianoArea.gNotes.filter(k => k.midiNoteValue >= 64 && k.midiNoteValue <= 88).reverse();
+         const notes = DFMusic.MidiNoteInfo.filter(k => k.midiNoteValue >= 64 && k.midiNoteValue <= 88).reverse();
+
+        //  const notes = this.props.instrument.sequencerConfig;
+
+         const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
+             return (
+                 <li key={ts.id} onClick={() => this.onClickTimeSig(ts)}>{ts.toString()}</li>
+             );
+         });
 
         const keys = notes.map(k => (
             <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}>
@@ -58,28 +100,8 @@ class RoomBeat extends React.Component {
         ));
 
         const pianoRollRows = (divisionKey, iDivision, iBeat) => notes.map(k => {
-            //let extraClass = k.midiNoteValue == 60 && iDivision == 0 ? "note" : null;
-            // if (k.midiNoteValue == 63) {
-            //     extraClass = iBeat == 0 ? "note" : null;
-            // }
-            // if (k.midiNoteValue == 69) {
-            //     extraClass = iBeat > 0 ? "note" : null;
-            // }
-            // if (k.midiNoteValue == 72) {
-            //     extraClass = iBeat > 0 ? "note" : null;
-            //     extraClass += iDivision == 0 ? " noteOn" : " noteOff";
-            // }
-            // if (k.midiNoteValue == 74) {
-            //     extraClass = "note noteOn noteOff";
-            // }
-            // if (k.midiNoteValue == 79) {
-            //     extraClass = "note noteOn noteOff";
-            // }
-
-            const extraClass = '';
-
             return (
-                <li key={divisionKey + "_" + k.midiNoteValue} className={extraClass + " " + k.cssClass}><div></div></li>
+                <li key={divisionKey + "_" + k.midiNoteValue} className={k.cssClass}><div></div></li>
             )
       });
 
@@ -100,15 +122,16 @@ class RoomBeat extends React.Component {
             }
         }
 
-
         return (
             <div className="sequencerFrame">
                 <div className="sequencerMain">
-
+                    <div className='overlay'>
                     <div className='powerButton'>
-                        <button className='powerButton'><i className="material-icons">power_settings_new</i></button>
+                        <button className='powerButton' onClick={this.onPowerButtonClick}><i className="material-icons">visibility_off</i></button>
+                    </div>
                     </div>
 
+                    <div className='notOverlay'>
                     <div className='seqTop'>
                     <div className='seqTopColumn playButton'>
                         <div className="seqTopRow">
@@ -123,38 +146,79 @@ class RoomBeat extends React.Component {
                     </div>
                     <div className='seqTopColumn'>
                     <div className="seqTopRow">
+
+
+
+                    <fieldset>
+                            <div className='paramGroup'>
+                                <div className='legend'>Room BPM</div>
+                                <div className='paramBlock'>
+                                <div className='paramValue'>
+                                    {this.props.app.roomState.bpm}
+                                </div>
+                                <div className='buttonArray vertical'>
+                                    <button onClick={this.onClickHigherTempo}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button onClick={this.onClickLowerTempo}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                                <div className='buttonArray'>
+                                    <button className={this.props.app.metronome.isMuted ? 'metronome' : 'metronome active'} onClick={this.onClickToggleMetronome}>
+                                    {(this.props.app.metronome.isMuted || this.props.app.IsMuted()) ? 
+                                        (<i className="material-icons">volume_off</i>)
+                                        : (<i className="material-icons">volume_up</i>)}
+                                    </button>
+                                </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+
+
                         <fieldset>
                             <div className='paramGroup'>
                                 <div className='legend'>Timesig</div>
                                 <div className='paramBlock'>
-                                    <div className='paramValue'>12/8</div>
-                                </div>
-                            </div>
-                            <div className='paramGroup'>
-                                <div className='legend'>BPM</div>
-                                <div className='paramBlock'>
-                                <div className='paramValue'>
-                                    <input type="text"></input>
-                                </div>
-                                <div className='buttonArray'>
-                                    <button><i className="material-icons">remove</i></button>
-                                    <button><i className="material-icons">add</i></button>
+                                    <div className='paramValue clickable' onClick={()=> {this.setState({showTimeSigDropdown:!this.state.showTimeSigDropdown});}}>
+                                        {this.props.app.roomState.timeSig.toString()}
                                     </div>
+                                    {this.state.showTimeSigDropdown && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({showTimeSigDropdown:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({showTimeSigDropdown:false});}}>Select a time signature</legend>
+                                            <ul className='dropDownMenu'>
+                                                {timeSigList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                        }
                                 </div>
                             </div>
                         </fieldset>
+
+
                         <fieldset>
                         <div className='paramGroup'>
-                            <div className='legend'>Beat offset</div>
+                            <div className='legend'>Preset</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>+3</div>
+                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Funker2</div>
+                            { this.state.isPresetsExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isPresetsExpanded:false});}}>
+                                      <div className='dialog'>
+                                        <SequencerPresetDialog app={this.props.app} onClose={() => { this.setState({isPresetsExpanded:false});}}></SequencerPresetDialog>
+                                        </div>
+                                    </ClickAwayListener>
+                                    }
+
+
+
                                 <div className="buttonArray">
-                                    <button><i className="material-icons">remove</i></button>
-                                    <button><i className="material-icons">add</i></button>
+                                    {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
+                                    <button className='altui disabled'><i className="material-icons">save</i></button>
+                                    <button className='clearPattern initPreset'>INIT</button>
                                 </div>
                             </div>
                         </div>
-                    </fieldset>
+                        </fieldset>
 
                     <fieldset>
                             <div className='paramGroup'>
@@ -170,49 +234,21 @@ class RoomBeat extends React.Component {
                                 <button className='altui'><i className="material-icons">content_copy</i></button>
                                 <button className='altui'><i className="material-icons">content_paste</i></button>
                                 </div>
+                                <div className="buttonArray">
+                                <button className='clearPattern'><i className="material-icons">clear</i></button>
+                                </div>
                             </div>
                             </div>
                         </fieldset>
-
-                    <fieldset>
-                        <div className='paramGroup'>
-                            <RoomBeat app={this.props.app}></RoomBeat>
-                        </div>
-                    </fieldset>
-
-
-                    <fieldset>
-                        <div className='paramGroup'>
-                            <div className='legend'>Length</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>6</div>
-                                <div className="buttonArray">
-                                <button><i className="material-icons">remove</i></button>
-                                <button><i className="material-icons">add</i></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='paramGroup'>
-                            <div className='legend'>Subdivide</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>8</div>
-                                <div className="buttonArray">
-                                    <button><i className="material-icons">remove</i></button>
-                                    <button><i className="material-icons">add</i></button>
-                                </div>
-                            </div>
-                        </div>
-                        </fieldset>
-
 
                         <fieldset>
                         <div className='paramGroup'>
                             <div className='legend'>Speed</div>
                             <div className='paramBlock'>
                             <div className='paramValue'>0.5x</div>
-                                <div className="buttonArray">
-                                    <button><i className="material-icons">remove</i></button>
-                                    <button><i className="material-icons">add</i></button>
+                                <div className="buttonArray vertical">
+                                    <button><i className="material-icons">arrow_drop_up</i></button>
+                                    <button><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>
@@ -222,10 +258,43 @@ class RoomBeat extends React.Component {
                                 <div className='paramValue'>33%</div>
                                 <div className="buttonArray">
                                 </div>
-                                <input type='range'></input>
+                                <input type='range' style={{width:"50px"}}></input>
                             </div>
                         </div>
                     </fieldset>
+
+
+                    <fieldset>
+                        <div className='paramGroup'>
+                            <div className='legend'>Length</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>6</div>
+                                <div className="buttonArray vertical">
+                                <button><i className="material-icons">arrow_drop_up</i></button>
+                                <button><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='paramGroup'>
+                            <div className='legend'>Div</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>8</div>
+                                <div className="buttonArray vertical">
+                                    <button><i className="material-icons">arrow_drop_up</i></button>
+                                    <button><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+                        </fieldset>
+
+
+
+                    <fieldset>
+                        <div className='paramGroup'>
+                            <RoomBeat app={this.props.app}></RoomBeat>
+                        </div>
+                    </fieldset>
+
 
                     </div>
                     </div>
@@ -240,7 +309,9 @@ class RoomBeat extends React.Component {
                         {divisions}
                     </div>
                 </div>
-            </div>);
+            </div>
+        </div>
+        );
     }
 };
 

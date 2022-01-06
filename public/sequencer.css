@@ -27,6 +27,19 @@
     margin-top: 15px;
 
     box-shadow: 0px 0px 7px #000, inset 0px 0px 4px #000;
+    position:relative; /* allow absolute positioning on the seq */
+}
+
+.sequencerMain .overlay {
+    position:absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.sequencerMain .notOverlay {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .sequencerMain .seqTop {
@@ -116,13 +129,17 @@
     text-shadow: 0 0 7px #fff8;
 }
 
+.paramValue.clickable
+{
+    cursor: pointer;
+}
+
 .sequencerMain .seqTopColumn.playButton .paramGroup {
     height: unset; /* need to undo the fixed row right */
 }
 
 .sequencerMain button.playButton  {
     height: 90px;
-    margin-left: 10px;
     width:90px;
 }
 
@@ -140,9 +157,7 @@
 
 .sequencerMain button {
     border: 0;
-    /* border-radius: 4px; */
-    min-width: 30px;
-    padding: 10px;
+    width: 20px;
     height: 30px;
     background-color: #fff;
     border-radius: 3px;
@@ -170,7 +185,23 @@
     margin-left: 3px;
 }
 
-input[type="text" i]
+.sequencerMain .buttonArray.vertical {
+    flex-direction: column;
+    margin-left: 0px;
+}
+
+
+.sequencerMain .buttonArray.vertical button {
+    margin: 0;
+    box-shadow: inset 0 0 12px #8888, inset 0 0 1px #888;
+    height: 50%;
+    width: 30px;
+    border-radius: 0;
+}
+
+
+
+.sequencerMain input[type="text" i]
 {
     border: 0;
     font-size: 18px;
@@ -178,30 +209,110 @@ input[type="text" i]
     background: none;
     font-family: monospace;
     color: #0ff;
+    width: inherit;
 }
 
-input[type="text" i]:focus
+.sequencerMain input[type="text" i]:focus
 {
     border: 0;
 }
 
 
+.sequencerMain .buttonArray:not(.vertical) button:first-child {
+    margin-left: 5px;
+}
+
 
 .sequencerMain button.altui
 {
-    background-color: rgb(84, 68, 136);
+    background-color: #548;
+    color: #dcf;
+    box-shadow: 0 0 6px #5488;
+}
+
+.sequencerMain button.altui:hover
+{
+    background-color: #dcf;
+    color: #fff;
+}
+
+.sequencerMain button.altui.disabled
+{
+    background-color: #888;
     color: #ccc;
-    box-shadow: none;
+    box-shadow: 0 0 6px #8888;
+}
+
+.sequencerMain button.clearPattern
+{
+    background-color: #854;
+    color: #dcf;
+    box-shadow: 0 0 6px #8548;
+}
+
+.sequencerMain button.clearPattern:hover
+{
+    background-color: #fcd;
+    color: #fff;
+}
+
+.sequencerMain button.initPreset {
+    width:unset; /* allow text */
+}
+
+
+.sequencerMain .paramValue.presetName {
+    width: unset;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .sequencerMain button.powerButton
 {
     height: 40px;
     width: 40px;
+    box-shadow: inset 0px 0px 18px #8884, 0 0 12px #8884, 0 0 2px #0008;
 }
+
 .sequencerMain button.powerButton > * {
     font-size: 28px;
 }
+
+
+
+.sequencerMain .dialog {
+    position: absolute;
+    background-color: #022;
+    border:2px solid #055;
+    color:#0cc;
+    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+    font-size: 16px;
+}
+.sequencerMain .dialog legend {
+    color: #aa0;
+    padding: 7px;
+    background-color: #220;
+}
+
+.sequencerMain ul.dropDownMenu {
+    padding:0;
+}
+.sequencerMain ul.dropDownMenu li {
+    padding:6px;
+    cursor: pointer;
+}
+.sequencerMain ul.dropDownMenu li:hover {
+    background-color: #066;
+}
+
+.sequencerMain .dialog .dialogContainer {
+    height: 100%;
+    width: 100%;
+}
+
+
+
+
 
 
 
@@ -275,7 +386,7 @@ input[type="text" i]:focus
 
 .sequencerMain ul.pianoRollRows li > div,
 .sequencerMain ul.pianoRollRows li.white > div {
-    background: #888;
+    background: #666;
     border-radius: 6px;
     box-shadow: inset 0px 0px 36px #000b;
     margin: 2px;
@@ -287,7 +398,7 @@ input[type="text" i]:focus
 }
 
 .sequencerMain ul.pianoRollRows.beginBeat li {
-    border-left: 2px solid #333;
+    border-left: 2px solid #355;
 }
 
 .sequencerMain ul.pianoRollRows.beginMeasure li {

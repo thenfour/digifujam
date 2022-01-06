@@ -10,7 +10,16 @@ ul.keyboard li {
 	padding: 0;
 	list-style: none;
 	transition: background-color 0.15s; /* you want this long enough so very fast notes aren't totally invisible/illegible, but not so long that it creates a visual mess*/
+
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-direction: column;
+
+	color: #888;
+	font-size: 10px;
 }
+
 
 ul.keyboard .white {
 	height: 108px;
@@ -58,18 +67,11 @@ ul.keyboard li.white {
 	box-shadow:
 		0 0 5px #ccc inset,
 		0 0 1px black;
-
-		display: flex;
-		align-items: flex-end;
-		justify-content: center;		
 }
 
 ul.keyboard li.black {
 	box-shadow:
 		0 2px 4px rgba(0, 0, 0, 0.3);
-		display: flex;
-		align-items: flex-end;
-		justify-content: center;		
 }
 
 
@@ -83,4 +85,10 @@ ul.keyboard li span.drum {
 
 ul.keyboard li span.drum.active {
 	transition: background-color 0s;
+}
+
+ul.keyboard li span.noteName {
+	background-color: #888c;
+	color: #fff;
+	padding: 1px;
 }

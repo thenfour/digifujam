@@ -50,7 +50,8 @@ class InlineMasterGainCtrl extends React.Component {
       return (<span>
               <input type = "range" id = "volume" name = "volume" min = "0" max = "200" onChange = {this.setVolumeVal} value = {this.props.app.synth.masterGain * 100} disabled = { this.props.app.IsMuted() } />
          <label htmlFor="volume">gain:{Math.trunc(this.props.app.synth.masterGain * 100)}</label>
-              <button className = "muteButton" onClick = {this.onClickMute}>{this.props.app.IsMuted() ? (<i className="material-icons">volume_off</i>) : <i className="material-icons">volume_up</i>}</button>
+              <button className = "muteButton" onClick = {this.onClickMute}>{this.props.app.IsMuted() ?
+              (<i className="material-icons">volume_off</i>) : (<i className="material-icons">volume_up</i>)}</button>
       </span>);
    }
 };

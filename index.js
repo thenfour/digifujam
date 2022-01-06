@@ -1185,6 +1185,7 @@ class RoomServer {
 
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
+    data.bpm = DFU.baseClamp(data.bpm, DF.ServerSettings.MinBPM, DF.ServerSettings.MaxBPM);
     this.roomState.setBPM(data.bpm, data.timeSig);
     if (data.phaseRelativeMS) {
       this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);

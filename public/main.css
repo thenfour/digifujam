@@ -350,14 +350,38 @@ button:focus {
 }
 
 /*  button.switchChatView */
-.switchRoomViews
+.roomOverlayControlsRight
 {
     position:absolute;
     top:0;
     right:40px;
-    display:flex;
+    display: flex;
     flex-direction: column;
+    align-items: flex-end;
 }
+
+.roomOverlayControlsRight div.showSequencer button.showSequencerButton
+{
+    border: 0;
+    background-color: #ccc;
+    border-radius: 3px;
+    color: #044;
+    display: flex;
+    justify-content: center;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+    box-shadow: inset 0px 0px 1em #fff, 0 0 2px white;
+    margin-top: 10px;
+}
+
+.roomOverlayControlsRight div.showSequencer button.showSequencerButton:hover{
+    background-color: #ffa;
+    box-shadow: inset 0px 0px 1em #fff, 0 0 2px white;
+}
+
 
 #pianoArea {
     overflow-y:hidden;
@@ -1647,35 +1671,38 @@ li.preloadSFZ {
 
 .liveRoomBeat .beat {
     color:#0cc;
-    /* height: 18px; */
     width: 20px;
-    background-color: #022;
-    /* border: 1px solid #066; */
+    background-color: #033;
     display: flex;
     align-items: center;
     justify-content: center;
 }
+.liveRoomBeat .beat.minorBeat {
+    background-color: #000;
+    color:#066;
+}
 
-@keyframes liveRoomBeatFlash {
+
+@keyframes liveRoomMajorBeatFlash {
     0% { background-color:#ff0; } /* on downbeat */
     5%{ background-color:#ff0; } 
-    100% { background-color:#044; } /* as fades away, this should be the same as beat.complete background-color */
+    100% { background-color:#033; } /* as fades away, this should be the same as beat.complete background-color */
 }
 
 .liveRoomBeat .beat.complete {
-    background-color: #044;
-    animation: liveRoomBeatFlash 0.2s;
+    animation: liveRoomMajorBeatFlash 0.15s;
 }
 
-@keyframes liveRoomBeatAnticipation {
-    0% { background-color:#022; } /* match .beat background-color */
-    100% { background-color:#0cc; } /* as fades away, this should be the same as beat.complete background-color */
+@keyframes liveRoomMinorBeatFlash {
+    0% { background-color:#033; } /* on downbeat */
+    5%{ background-color:#033; } 
+    100% { background-color:#000; } /* as fades away, this should be the same as beat.complete background-color */
 }
 
-.liveRoomBeat .beat.inProgress {
-    background-color: #066;
-    animation: liveRoomBeatAnticipation 3.0s; /* long enough so it's always animating during a beat. */
+.liveRoomBeat .beat.complete.minorBeat {
+    animation: liveRoomMinorBeatFlash 0.15s;
 }
+
 
 
 .discordChatMsgIndicator {
@@ -1687,7 +1714,7 @@ li.preloadSFZ {
     position: absolute;
     height: 100vh;
     width: 100%;
-    background-color: #0008;
+    background-color: #0006;
     z-index: 10000;
     display: flex;
     flex-direction: row;
@@ -1698,16 +1725,17 @@ li.preloadSFZ {
 }
 
 #gestureSplash2 {
-       background-color: #000d;
-       flex-grow: 1;
-       display: flex;
-       flex-direction: row;
-       margin: 25vh;
-       align-content: center;
-       justify-content: center;
-       align-items: center;
-       border-radius: 10vh;
-       border: 10px solid #044;
+
+    background-color: #000d;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    margin: 25vh;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    border: 3px solid #022;
 }
 
 #splashLogo {

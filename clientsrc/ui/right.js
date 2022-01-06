@@ -2049,14 +2049,29 @@ class RoomArea extends React.Component {
         const switchViewButton = this.props.app && this.props.app.roomState && (
             <div className="switchRoomViews">
                 <button className="switchChatView" onClick={this.toggleChatView}>room / chat view</button>
-                {/* <button className="switchChatView" onClick={this.toggleChatView}>chat view</button> */}
+            </div>
+        );
+
+        const seqViewAvailable = this.props.focusedInstrument?.allowSequencer;
+        const seqViewButton = seqViewAvailable && !seqViewVisible && (
+            <div className="showSequencer">
+                <button className="showSequencerButton" onClick={() => {this.props.setSequencerShown(true) }}>
+                    SHOW SEQUENCER
+                </button>
             </div>
         );
 
         return (
             <div id="roomArea" className="roomArea" onClick={e => this.onClick(e)} style={style}>
                 {connection}
-                {seqViewVisible && <SequencerMain app={this.props.app}></SequencerMain>}
+                {seqViewVisible && <SequencerMain
+                    app={this.props.app}
+                    sequencerShown={this.props.sequencerShown}
+                    setSequencerShown={this.props.setSequencerShown}
+                    instrument={this.props.instrument}
+                    observerMode={this.props.observerMode}
+
+                    ></SequencerMain>}
 
                 {userAvatars}
                 {roomItems}
@@ -2065,7 +2080,10 @@ class RoomArea extends React.Component {
                 <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={this}></CheerControls>
-                {switchViewButton}
+                <div className='roomOverlayControlsRight'>
+                    {switchViewButton}
+                    {seqViewButton}
+                </div>
             </div>
         );
     }
@@ -2452,7 +2470,7 @@ class RootArea extends React.Component {
                 </div>
                 <DFPiano.PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
-                <RoomArea app={this.state.app} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} handleConnect={this.HandleConnect} ref={this.roomRef} googleOAuthModule={this.googleOAuthModule} />
+                <RoomArea app={this.state.app} focusedInstrument={this.focusedInstrument} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} handleConnect={this.HandleConnect} ref={this.roomRef} googleOAuthModule={this.googleOAuthModule} />
                 <RightArea app={this.state.app} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
                 <LeftArea app={this.state.app} />
 

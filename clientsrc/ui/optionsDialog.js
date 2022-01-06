@@ -3,6 +3,8 @@ const DFUtils = require("../util");
 const DFU = require('../dfutil');
 const DFApp = require("../app");
 const DFMusic = require("../DFMusic");
+const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
+const DF = require("../DFCommon");
 
 
 class DFOptionsDialog extends React.Component {
@@ -166,9 +168,6 @@ class DFOptionsDialog extends React.Component {
     }
 
     setRoomBPM = (v) => {
-        if (v.target.value < 1 || v.target.value > 200)
-            return;
-
         this.props.app.SendRoomBPM(v.target.value, this.props.app.roomState.timeSig);
     }
 
@@ -263,6 +262,7 @@ class DFOptionsDialog extends React.Component {
                 </div>
 
                 {this.state.isExpanded &&
+                <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
                     <div className="optionsDialog popUpDialog">
                         {/* <fieldset>
                             <div className="legend">Pitch bend</div>
@@ -317,7 +317,7 @@ class DFOptionsDialog extends React.Component {
                             </div>
 
                             <div>
-                                <input type="range" id="metronomeBPM" name="metronomeBPM" min="40" max="200" onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
+                                <input type="range" id="metronomeBPM" name="metronomeBPM" min={DF.ServerSettings.MinBPM} max={DF.ServerSettings.MaxBPM} onChange={this.setRoomBPM} value={this.props.app.roomState.bpm} />
                                 {this.props.app.roomState.bpm} BPM
                             </div>
 
@@ -355,7 +355,9 @@ class DFOptionsDialog extends React.Component {
                             </div>
                         </fieldset>
 
-                    </div>}
+                    </div>
+                    </ClickAwayListener>
+                    }
             </div>);
     }
 };

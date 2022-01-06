@@ -3,6 +3,8 @@ const DFReactUtils = require("./DFReactUtils");
 const {GoogleUserSettings} = require('../googleSignIn');
 const {GenerateUserName} = require('../NameGenerator');
 const {UIUserName} = require("./UIUser");
+const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
+
 
 class UserState extends React.Component {
    constructor(props) {
@@ -169,9 +171,12 @@ class UserSettingsButton extends React.Component {
                   </div>
 
                {this.state.isExpanded &&
-                   <div className="userSettingsDialog popUpDialog">
-                      <UserState app={this.props.app} googleOAuthModule={this.props.googleOAuthModule}></UserState>
-                   </div>}
+                <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
+                    <div className="userSettingsDialog popUpDialog">
+                        <UserState app={this.props.app} googleOAuthModule={this.props.googleOAuthModule}></UserState>
+                    </div>
+                   </ClickAwayListener>
+                    }
            </div>);
    }
 };

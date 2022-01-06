@@ -1,10 +1,9 @@
-'use strict';
-
 const { nanoid } = require("nanoid");
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
 const {GenerateUserName} = require('./NameGenerator');
+const Seq = require('./SequencerCore');
 
 let gDigifujamVersion = 7;
 
@@ -118,6 +117,9 @@ const ServerSettings = {
     ServerStateBackupIntervalMS: DFUtil.minutesToMS(5),
     ServerStatePruneIntervalMS: DFUtil.hoursToMS(24),
     ServerStateMaxAgeMS: DFUtil.daysToMS(5),
+
+    MinBPM: 30,
+    MaxBPM: 200,
 };
 
 const ClientSettings = {
@@ -964,6 +966,8 @@ class DigifuInstrumentSpec {
 
         if (this.behaviorAdjustmentsApplied) return;
 
+        this.sequencerConfig = new Seq.SequencerConfig(this.sequencerConfig);
+
         // for restrictive behaviorStyles, we force params to a certain value and hide from gui always.
         this.paramsToForceAndHide = {};
 
@@ -1526,6 +1530,8 @@ class DigifuRoomState {
 
     // call after Object.assign() to this object, to handle child objects.
     thaw() {
+        this.timeSig = new DFMusic.TimeSig(this.timeSig);
+        
         this.instrumentCloset = this.instrumentCloset.map(o => {
             let n = Object.assign(new DigifuInstrumentSpec(), o);
             n.thaw();
@@ -1560,7 +1566,7 @@ class DigifuRoomState {
     setBPM(bpm, timeSig) {
         this.bpm = bpm;
         this.metronome.setBPM(bpm);
-        this.timeSig = timeSig;
+        this.timeSig = new DFMusic.TimeSig(timeSig);
     }
 
     adminExportRoomState() {

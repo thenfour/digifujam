@@ -101,6 +101,7 @@ const gNouns = [
    ' filter',
    ' rainbow',
    ' album',
+   '.gif',
 ];
 
 

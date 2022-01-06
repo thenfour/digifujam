@@ -1003,7 +1003,7 @@ class DigifuApp {
 
     NET_OnRoomBPMUpdate(data) {
         this.roomState.bpm = data.bpm;
-        this.roomState.timeSig = data.timeSig;
+        this.roomState.timeSig = new DFMusic.TimeSig(data.timeSig);
         this.stateChangeHandler();
         //this.metronome.setServerBPM(data.bpm);
     }
