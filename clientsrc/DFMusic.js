@@ -1,5 +1,18 @@
 const DFUtil = require('./dfutil');
 
+// this is like MIDI PPQ, parts per quarter. We want to work in integral divisions
+// even while working in triplets, 5tuplets, etc. This calls for a highly composite
+// number. MIDI PPQ used to be 120 standard, many DAWs up this to 480, 960, or super 
+// high numbers to allow sample-accurate timing.
+//
+// this number works pretty well and allows triplets, 5tuplets, 7tuplets, 9tuplets, 11tuplets
+// down to the 256th notes.
+//
+// such a high number only risks that we run out of significant bits for expressing long times.
+// a signed 32-bit int can represent about 9600 beats at this resolution, which is about
+// 32 minutes at 300bpm. this is more than enough for our case.
+const BeatDivisions = 221760;
+
 
 let keyNote = function (midiNoteValue, name, cssClass) {
     return { midiNoteValue, name, cssClass };
@@ -126,11 +139,8 @@ const MidiNoteInfo = [
 
 
 class MusicalTime {
-    constructor(measureInt, measureBeatFloat) {
-        this.measureInt = measureInt;
-        this.measureBeatFloat = measureBeatFloat; // decimal beat. So like, 0.5 means on the 1st 8th note boundary.
-        this.measureBeatInt = Math.trunc(this.measureBeatFloat);
-        this.measureBeatFrac = this.measureBeatFloat - this.measureBeatInt;
+    constructor(params) {
+        Object.assign(this, params);
     }
     toString() { return `${this.measureBeatFloat.toFixed(2)}`; }
 };
@@ -138,47 +148,84 @@ class MusicalTime {
 
 
 
-// this is like MIDI PPQ, parts per quarter. We want to work in integral divisions
-// even while working in triplets, 5tuplets, etc. This calls for a highly composite
-// number. MIDI PPQ used to be 120 standard, many DAWs up this to 480, 960, or super 
-// high numbers to allow sample-accurate timing.
-//
-// this number works pretty well and allows triplets, 5tuplets, 7tuplets, 9tuplets, 11tuplets
-// down to the 256th notes.
-//
-// such a high number only risks that we run out of significant bits for expressing long times.
-// a signed 32-bit int can represent about 9600 beats at this resolution, which is about
-// 32 minutes at 300bpm. this is more than enough for our case.
-const BeatDivisions = 221760;
+const FourFourSpec = { id: "4_4", name: "4/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1] };
 
-const FourFourSpec = { num: 4, denom: 4, beatDivs:4, name: "4/4", id: "4_4", };
-
+// timesig defines how BPM relate to:
+// measures
+// subdivisions
+// subdivision grouping (like in 6/8 time, two groups of 3 subdivisions. and 5/8 time, 2+3 or 3+2.)
+//
+// remember that "BEAT" is NOT the same as we normally think of a beat, because that's pretty fuzzy & complex.
+// in 5/8, what is a "beat"? In 7jam, a "BEAT" is a quarter note, the way timesigs are spec'd out.
+// typically the metronome pulses in quarter notes
 class TimeSig {
     constructor(params) {
         Object.assign(this, params);
-        if (!this.num || !this.denom || !this.beatDivs) {
+        if (!this.id) {
             Object.assign(this, FourFourSpec);
         }
+        console.assert(this.subdivGroups);
+        console.assert(this.subdivsPerBeat);
+        console.assert(this.name);
+
+        this.subdivCount = this.subdivGroups.reduce((a,b)=>a+b,0);
+        this.beatsPerMeasure = this.subdivCount / this.subdivsPerBeat;
+        this.subdivInfo = [];
+        this.subdivGroups.forEach((groupSubdivCount, groupIndex) => {
+            for (var groupSubdivIndex = 0; groupSubdivIndex < groupSubdivCount; ++ groupSubdivIndex) {
+                this.subdivInfo.push({
+                    groupSubdivIndex,
+                    measureSubdivIndex: this.subdivInfo.length,
+                    isMajorSubdiv: groupSubdivIndex == 0,
+                });
+            }
+        });
     }
 
-    // beat is 0 based; can be floating point.
-    isMajorBeat(beat) {
-        return Math.floor(beat)%(this.num / this.beatDivs) === 0;
+    GetSubdivInfo(subdiv) {
+        isubdiv = Math.floor(subdiv);
+        isubdiv = DFUtil.modulo(isubdiv, this.subdivCount);
+        return this.subdivInfo[isubdiv];
     }
 
-    isMinorBeat(beat) {
-        return !this.isMajorBeat(beat);
+    isMajorSubdiv(subdiv) {
+        return this.GetSubdivInfo(subdiv).isMajorSubdiv;
     }
 
-    getMusicalTime(absBeatFloat) {
-        // so n/4 timesigs = 1
-        // and n/8 timesigs = 2
-        let measureFloat = absBeatFloat / this.beatDivs;
-        let measureInt = Math.trunc(measureFloat);
+    isMinorSubDiv(subdiv) {
+        return !this.isMajorSubdiv(subdiv);
+    }
 
-        let measureBeatFloat = (measureFloat - measureInt) * this.num;
+    getMusicalTimeForSubdiv(subdiv) {
+        const subdivFloat = DFUtil.modulo(subdiv, this.subdivCount);
+        const subdivInfo = this.GetSubdivInfo(subdivFloat);
 
-        return new MusicalTime(measureInt, measureBeatFloat);
+        const measureFloat = subdivFloat / this.subdivsPerBeat;
+        const measureInt = Math.floor(measureFloat);
+        const measureFrac = measureFloat - measureInt;
+
+        return new MusicalTime({
+            measureFloat,
+            measureInt,
+            measureFrac,
+            subdivFloat,
+            subdivInfo,
+        });
+    }
+
+    getMusicalTimeForBeat(beat) {
+        const measureFloat = beat / this.beatsPerMeasure; // -.5 / 4 = -.125
+        const measureInt = Math.floor(measureFloat); // beat -.5 = -1
+        const measureFrac = measureFloat - measureInt; // beat -.5 => .875
+        const subdivFloat = measureFrac * this.subdivCount;
+        const subdivInfo = this.GetSubdivInfo(subdivFloat);
+        return new MusicalTime({
+            measureFloat,
+            measureInt,
+            measureFrac,
+            subdivFloat,
+            subdivInfo,
+        });
     }
 
     toString() {
@@ -187,21 +234,18 @@ class TimeSig {
 
 }
 
-// time signatures. the room has a time signature which interacts with the room BPM.
-// num = numerator, denom = denominator
-// beatDivs = how many metronome ticks per measure.
 const FourFour = new TimeSig(FourFourSpec);
 const CommonTimeSignatures = [
-    new TimeSig({ num: 3, denom: 4, beatDivs:4, name: "3/4", id: "3_4", }),
+    new TimeSig({ id: "3_4", name: "3/4", subdivsPerBeat: 1, subdivGroups: [1,1,1] }),
     FourFour,
-    new TimeSig({ num: 5, denom: 4, beatDivs:5, name: "5/4", id: "5_4", }),
-    new TimeSig({ num: 6, denom: 4, beatDivs:6, name: "6/4", id: "6_4", }),
-    new TimeSig({ num: 7, denom: 4, beatDivs:7, name: "7/4", id: "7_4", }),
-    new TimeSig({ num: 5, denom: 8, beatDivs:1, name: "5/8", id: "5_8", }),
-    new TimeSig({ num: 6, denom: 8, beatDivs:2, name: "6/8", id: "6_8", }),
-    new TimeSig({ num: 7, denom: 8, beatDivs:1, name: "7/8", id: "7_8", }),
-    new TimeSig({ num: 9, denom: 8, beatDivs:3, name: "9/8", id: "9_8", }),
-    new TimeSig({ num: 12, denom: 8, beatDivs:4, name: "12/8", id: "12_8", }),
+    new TimeSig({ id: "5_4", name: "5/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1,1] }),
+    new TimeSig({ id: "6_4", name: "6/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1,1,1] }),
+    new TimeSig({ id: "7_4", name: "7/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1,1,1,1] }),
+    new TimeSig({ id: "5_8", name: "5/8", subdivsPerBeat: 2, subdivGroups: [3,2] }),
+    new TimeSig({ id: "6_8", name: "6/8", subdivsPerBeat: 2, subdivGroups: [3,3] }),
+    new TimeSig({ id: "7_8", name: "7/8", subdivsPerBeat: 2, subdivGroups: [4,3] }),
+    new TimeSig({ id: "9_8", name: "9/8", subdivsPerBeat: 2, subdivGroups: [3,3,3] }),
+    new TimeSig({ id: "12_8", name: "12/8", subdivsPerBeat: 2, subdivGroups: [3,3,3,3] }),
 ];
 
 // client uses this to get realtime musical time. the server sends RoomBeat periodically

@@ -929,7 +929,8 @@ div.presetFilter input[type="text"]
 
 
 input[type="range"].floatParam,
-input[type="range"].intParam
+input[type="range"].intParam,
+input[type="range"].stylizedRange
  {
     border: 0;
     border-radius: 8px;
@@ -939,7 +940,8 @@ input[type="range"].intParam
 }
 
 input[type="range"].floatParam::-webkit-slider-thumb,
-input[type="range"].intParam::-webkit-slider-thumb
+input[type="range"].intParam::-webkit-slider-thumb,
+input[type="range"].stylizedRange::-webkit-slider-thumb
 {
     -webkit-appearance: none;
     background: #0aa;
@@ -950,13 +952,15 @@ input[type="range"].intParam::-webkit-slider-thumb
 }
 
 .modAmtParam input[type="range"].floatParam,
-.modAmtParam input[type="range"].intParam
+.modAmtParam input[type="range"].intParam,
+.modAmtParam input[type="range"].stylizedRange
 {
     height: 4px;
 }
 
 .modAmtParam input[type="range"].floatParam::-webkit-slider-thumb,
-.modAmtParam input[type="range"].intParam::-webkit-slider-thumb
+.modAmtParam input[type="range"].intParam::-webkit-slider-thumb,
+.modAmtParam input[type="range"].stylizedRange::-webkit-slider-thumb
 {
     background: #aaa;
     height: 9px;

@@ -13,6 +13,7 @@ const DFDB = require('./DFDB');
 const DFDiscordBot = require('./discordBot');
 const DFU = require('./clientsrc/dfutil');
 const DFMusic = require("./clientsrc/DFMusic");
+const Seq = require('./clientsrc/SequencerCore');
 const {ServerAdminApp} = require('./server/serverAdminApp');
 const {ServerGoogleOAuthSupport} = require('./server/serverGoogleOAuth');
 
@@ -1285,6 +1286,147 @@ class RoomServer {
       console.log(e);
     }
   }
+
+  SetSetNoteMuted(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SetSetNoteMuted => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!DFMusic.isValidNoteValue(data.midiNoteValue)) throw new Error(`invalid midi note value sent`);
+
+      data.isMuted = !!data.isMuted; // force bool
+
+      foundInstrument.instrument.sequencerDevice.livePatch.SetNoteMuted(data.midiNoteValue, data.isMuted);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SetSetNoteMuted, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        midiNoteValue: data.midiNoteValue,
+        isMuted: data.isMuted,
+      });
+
+    } catch (e) {
+      console.log(`SetSetNoteMuted exception occurred`);
+      console.log(e);
+    }
+  }
+
+  SeqSelectPattern(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqSelectPattern => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!Seq.IsValidSequencerPatternIndex(data.selectedPatternIdx)) throw new Error(`invalid pattern index.`);
+
+      foundInstrument.instrument.sequencerDevice.livePatch.SelectPatternIndex(data.selectedPatternIdx);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSelectPattern, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        selectedPatternIdx: data.selectedPatternIdx,
+      });
+
+    } catch (e) {
+      console.log(`SeqSelectPattern exception occurred`);
+      console.log(e);
+    }
+  }
+
+  SeqSetSpeed(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqSetSpeed => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!Seq.IsValidSequencerSpeed(data.speed)) throw new Error(`invalid sequencer speed.`);
+
+      foundInstrument.instrument.sequencerDevice.livePatch.SetSpeed(data.speed);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetSpeed, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        speed: data.speed,
+      });
+
+    } catch (e) {
+      console.log(`SeqSetSpeed exception occurred`);
+      console.log(e);
+    }
+  }
+
+  SeqSetSwing(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqSetSwing => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!Seq.IsValidSequencerSwing(data.swing)) throw new Error(`invalid sequencer swing.`);
+
+      foundInstrument.instrument.sequencerDevice.livePatch.SetSwing(data.swing);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetSwing, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        swing: data.swing,
+      });
+
+    } catch (e) {
+      console.log(`SeqSetSwing exception occurred`);
+      console.log(e);
+    }
+  }
+
+  SeqSetDiv(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqSetDiv => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!Seq.IsValidSequencerDivisions(data.divisions)) throw new Error(`invalid sequencer divisions.`);
+
+      foundInstrument.instrument.sequencerDevice.livePatch.SetDivisions(data.divisions);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetDiv, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        divisions: data.divisions,
+      });
+
+    } catch (e) {
+      console.log(`SeqSetDiv exception occurred`);
+      console.log(e);
+    }
+  }
+
+  SeqSetLength(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqSetLength => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!Seq.IsValidSequencerLengthSubdivs(data.lengthSubdivs)) throw new Error(`invalid sequencer lengthSubdivs.`);
+
+      foundInstrument.instrument.sequencerDevice.livePatch.SetLengthSubdivs(data.lengthSubdivs);
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetLength, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        lengthSubdivs: data.lengthSubdivs,
+      });
+
+    } catch (e) {
+      console.log(`SeqSetLength exception occurred`);
+      console.log(e);
+    }
+  }
+
+
+
+
+  
+  
   // END: SEQUENCER
 
   // every X seconds, this is called. here we can just do a generic push to clients and they're expected
@@ -1907,6 +2049,12 @@ let roomsAreLoaded = function () {
       // SEQ
       ws.on(DF.ClientMessages.SeqPlayStop, data => ForwardToRoom(ws, room => room.OnSeqPlayStop(ws, data)));
       ws.on(DF.ClientMessages.SeqSetTimeSig, data => ForwardToRoom(ws, room => room.OnSeqSetTimeSig(ws, data)));
+      ws.on(DF.ClientMessages.SetSetNoteMuted, data => ForwardToRoom(ws, room => room.SetSetNoteMuted(ws, data)));
+      ws.on(DF.ClientMessages.SeqSelectPattern, data => ForwardToRoom(ws, room => room.SeqSelectPattern(ws, data)));
+      ws.on(DF.ClientMessages.SeqSetSpeed, data => ForwardToRoom(ws, room => room.SeqSetSpeed(ws, data)));
+      ws.on(DF.ClientMessages.SeqSetSwing, data => ForwardToRoom(ws, room => room.SeqSetSwing(ws, data)));
+      ws.on(DF.ClientMessages.SeqSetDiv, data => ForwardToRoom(ws, room => room.SeqSetDiv(ws, data)));
+      ws.on(DF.ClientMessages.SeqSetLength, data => ForwardToRoom(ws, room => room.SeqSetLength(ws, data)));
       // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));

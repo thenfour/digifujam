@@ -61,6 +61,16 @@ const ClientMessages = {
     // SEQ
     SeqPlayStop: "SeqPlayStop", // { isPlaying }
     SeqSetTimeSig: "SeqSetTimeSig", // { timeSigID }
+    SetSetNoteMuted: "SetSetNoteMuted", // { midiNoteValue, isMuted }
+    SeqSelectPattern: "SeqSelectPattern", // { selectedPatternIdx }
+    SeqSetSpeed: "SeqSetSpeed", // { speed }
+    SeqSetSwing: "SeqSetSwing", // { swing }
+    SeqSetDiv: "SeqSetDiv", // { divisions }
+    SeqSetLength: "SeqSetLength", // { lengthSubdivs }
+    // set pattern data (array of modifications: note add, note del, clear)
+    // save preset as
+    // load preset
+    // delete preset?
 };
 
 const ServerMessages = {
@@ -98,9 +108,14 @@ const ServerMessages = {
     Cheer: "Cheer", // userID, text, x, y
 
     // sequencer control
+    SetSetNoteMuted: "SetSetNoteMuted", // { instrumentID, midiNoteValue, isMuted }
     SeqPlayStop: "SeqPlayStop", // { instrumentID, isPlaying }
     SeqSetTimeSig: "SeqSetTimeSig", // { instrumentID, timeSigID }
-
+    SeqSelectPattern: "SeqSelectPattern", // { instrumentID, selectedPatternIdx }
+    SeqSetSpeed: "SeqSetSpeed", // { instrumentID, speed }
+    SeqSetSwing: "SeqSetSwing", // { instrumentID, swing }
+    SeqSetDiv: "SeqSetDiv", // { instrumentID, divisions }
+    SeqSetLength: "SeqSetLength", // { instrumentID, lengthSubdivs }
 };
 
 const ServerSettings = {

@@ -280,7 +280,7 @@ class DiscordBot {
                 console.log(`${guild.name} / ${channel.name} [Guild ${channel.guildId} Channel ${id}]`);
                 let count = 0;
                 let skipped = 0;
-                const maxCount = this.gConfig.discord_log_member_count || 5;
+                const maxCount = this.gConfig.discord_log_member_count ?? 5;
                 channel.members.forEach(m => {
                     if (count >= maxCount) {
                         skipped ++;
@@ -290,7 +290,7 @@ class DiscordBot {
                     count ++;
                 });
                 if (skipped > 0) {
-                    console.log(`  ... (+ ${skipped} more)`);
+                    console.log(`  ... (+ ${skipped} members)`);
                 }
             });
         }

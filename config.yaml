@@ -27,7 +27,7 @@ variables:
   manyUserCount: 5
   manyUserDelay: 5m
   
-discord_log_member_count: 4 # to avoid massive log spam when dumping discord data at startup.
+discord_log_member_count: 0 # to avoid massive log spam when dumping discord data at startup.
 
 activity_hook_data_sources:
 

@@ -220,6 +220,26 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.SeqPlayStop, {isPlaying});
     }
 
+    SetSetNoteMuted(midiNoteValue, isMuted) {
+        this.socket.emit(DF.ClientMessages.SetSetNoteMuted, {midiNoteValue, isMuted});
+    }
+    SeqSelectPattern(selectedPatternIdx) {
+        this.socket.emit(DF.ClientMessages.SeqSelectPattern, {selectedPatternIdx});
+    }
+    SeqSetSpeed(speed) {
+        this.socket.emit(DF.ClientMessages.SeqSetSpeed, {speed});
+    }
+    SeqSetSwing(swing) {
+        this.socket.emit(DF.ClientMessages.SeqSetSwing, {swing});
+    }
+    SeqSetDiv(divisions) {
+        this.socket.emit(DF.ClientMessages.SeqSetDiv, {divisions});
+    }
+    SeqSetLength(lengthSubdivs) {
+        this.socket.emit(DF.ClientMessages.SeqSetLength, {lengthSubdivs});
+    }
+
+
     // --------------
 
     Disconnect() {
@@ -284,6 +304,13 @@ class DigifuNet {
         // SEQ
         this.socket.on(DF.ServerMessages.SeqPlayStop, (data) => this.handler.NET_SeqPlayStop(data));
         this.socket.on(DF.ServerMessages.SeqSetTimeSig, (data) => this.handler.NET_SeqSetTimeSig(data));
+
+        this.socket.on(DF.ServerMessages.SetSetNoteMuted, (data) => this.handler.NET_SetSetNoteMuted(data));
+        this.socket.on(DF.ServerMessages.SeqSelectPattern, (data) => this.handler.NET_SeqSelectPattern(data));
+        this.socket.on(DF.ServerMessages.SeqSetSpeed, (data) => this.handler.NET_SeqSetSpeed(data));
+        this.socket.on(DF.ServerMessages.SeqSetSwing, (data) => this.handler.NET_SeqSetSwing(data));
+        this.socket.on(DF.ServerMessages.SeqSetDiv, (data) => this.handler.NET_SeqSetDiv(data));
+        this.socket.on(DF.ServerMessages.SeqSetLength, (data) => this.handler.NET_SeqSetLength(data));
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };

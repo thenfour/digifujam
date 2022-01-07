@@ -3,7 +3,70 @@ const DFU = require('../dfutil');
 const DFMusic = require("../DFMusic");
 const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
 const DF = require("../DFCommon");
+const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
+const Seq = require('../SequencerCore');
+
+const gTempoBPMStep = 5;
+const gSpeeds = [//[ 8, 4, 3, 2, 1, .75, 2.0/3.0, .5, 1.0/3.0, .25];
+    { caption: ".25x", speed: .25 },
+    { caption: ".33x", speed: 1.0/3.0 },
+    { caption: ".5x", speed: .5 },
+    { caption: ".66x", speed: 2.0/3.0 },
+    { caption: ".75x", speed: .75 },
+    { caption: "1x", speed: 1 },
+    { caption: "2x", speed: 2 },
+    { caption: "3x", speed: 3 },
+    { caption: "4x", speed: 4 },
+    { caption: "8x", speed: 8 },
+];
+
+function GetNearestSpeedMatch(speed, indexDelta) {
+    let minDist = Math.abs(gSpeeds[0].speed - speed);
+    let minObjIndex = 0;
+    for (let i = 1; i < gSpeeds.length; ++ i) {
+        let dist = Math.abs(gSpeeds[i].speed - speed);
+        if (dist >= minDist) continue;
+        minDist = dist;
+        minObjIndex = i;
+    }
+    minObjIndex += indexDelta ?? 0;
+    if (minObjIndex < 0) minObjIndex = 0;
+    if (minObjIndex >= gSpeeds.length - 1) minObjIndex = gSpeeds.length - 1;
+    return gSpeeds[minObjIndex];
+}
+
+const gDivisionsMin = 1;
+const gDivisionsMax = 8;
+const gDivisions = [...new Array(gDivisionsMax - gDivisionsMin + 1)].map((_, i) => i);
+
+const gSwingMax = 90;
+const gSwingMin = -gSwingMax;
+const gSwingSnapValues = [
+    gSwingMin, -85,-80,-75,-66,-63,-60,-55,-50,-45,-40,-36,-33,-30,-25,-20,-15,-10,-5,
+    0,5,10,15,20,25,30,33,36,40,45,50,55,60,63,66,70,75,80,85,gSwingMax/*,95,100*/];
+
+// accepts values -100,100, returns the same.
+function SnapSwingValue(v, delta) {
+    delta ??= 0;
+
+    // find nearest snap value.
+    let minDist = 20000;
+    let closestSnapIndex = 0;
+    gSwingSnapValues.forEach((snapVal, idx) => {
+        const dist = Math.abs(snapVal - v);
+        if (dist >= minDist) return;
+        minDist = dist;
+        closestSnapIndex = idx;
+    });
+
+    closestSnapIndex += delta;
+    if (closestSnapIndex < 0) closestSnapIndex = 0;
+    if (closestSnapIndex >= gSwingSnapValues.length - 1) closestSnapIndex = gSwingSnapValues.length - 1;
+
+    v = gSwingSnapValues[closestSnapIndex];
+    return v;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomBeat extends React.Component {
@@ -27,12 +90,12 @@ class RoomBeat extends React.Component {
       let beats = [];
       const absoluteBeatFloat = this.props.app.getAbsoluteBeatFloat();
       const ts = this.props.timeSig;
-      const musicalTime = ts.getMusicalTime(absoluteBeatFloat);
+      const musicalTime = ts.getMusicalTimeForBeat(absoluteBeatFloat);
 
-      for (let i = 0; i < ts.num; ++i) {
-         const complete = (i == musicalTime.measureBeatInt) ? " complete" : "";
-         const isMajor = ts.isMajorBeat(i) ? " majorBeat" : " minorBeat";
-        beats.push(<div key={i} className={"beat" + complete + isMajor}>{i + 1}</div>);
+      for (let subdiv = 0; subdiv < ts.subdivCount; ++subdiv) {
+         const complete = (subdiv == musicalTime.subdivInfo.measureSubdivIndex) ? " complete" : "";
+         const isMajor = ts.isMajorSubdiv(subdiv) ? " majorBeat" : " minorBeat";
+        beats.push(<div key={subdiv} className={"beat" + complete + isMajor}>{subdiv + 1}</div>);
         }
 
         return <div className="liveRoomBeat">
@@ -40,29 +103,31 @@ class RoomBeat extends React.Component {
         </div>
       }
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-const gTempoBPMStep = 5;
-const gSpeeds = [ 8, 4, 3, 2, 1, .75, 2.0/3.0, .5, 1.0/3.0, .25];
-const gDivisions = [ 1, 2, 3, 4, 5, 6, 7, 8];
-
-class SequencerPatternView
-{
-}
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SequencerMain extends React.Component {
       constructor(props) {
          super(props);
          this.state = {
-            measuresPerPattern : 4,
-            beatsPerMeasure : 4,
-            divisionsPerBeat : 2, // 16ths
             showTimeSigDropdown: false,
             isPresetsExpanded: false,
+            isSpeedExpanded: false,
+            isDivExpanded :  false,
          };
+
+         this.swingSliderID = "seqSwingSlider";
       }
+
+      
+    componentDidMount() {
+        DFUtils.stylizeRangeInput(this.swingSliderID, {
+                bgNegColorSpec: "#444",
+                negColorSpec: "#666",
+                posColorSpec: "#666",
+                bgPosColorSpec: "#444",
+                zeroVal: 0,
+            });
+    }
 
       onPowerButtonClick = () => {
           this.props.setSequencerShown(false);
@@ -90,16 +155,90 @@ class SequencerMain extends React.Component {
         this.setState({showTimeSigDropdown:false});
         }
 
-    onClickPlayStop = () => {
-        this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying);
-    }
+        onClickDivision = (d) => {
+            this.props.app.SeqSetDiv(d);
+            this.setState({isDivExpanded:false});
+        }
+
+        onClickDivAdj = (delta) => {
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            let newDivisions = patch.GetDivisions() + delta;
+            if (newDivisions < gDivisionsMin) return;
+            if (newDivisions > gDivisionsMax) return;
+            this.props.app.SeqSetDiv(newDivisions);
+        }
+
+        onClickPlayStop = () => {
+            this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying);
+        }
+
+
+        onClickSwingSlider = (e) => {
+            //
+        }
+        onDoubleClickSwingSlider = (e) => {
+            console.log(`reset swing slide`);
+            this.props.app.SeqSetSwing(0);
+            $("#" + this.swingSliderID).val(0);
+            $("#" + this.swingSliderID).trigger("change");
+        }
+        onChangeSwing = (e) => {
+            let v = SnapSwingValue(e.target.value);
+            v /= 100;
+            this.props.app.SeqSetSwing(v);
+        }
+
+        onClickSwingAdj = (delta) => {
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            let v = SnapSwingValue(patch.swing * 100, delta);
+            v /= 100;
+            this.props.app.SeqSetSwing(v);
+        }
+        
+        onClickPattern = (pattern, index) => {
+            this.props.app.SeqSelectPattern(index);
+        }
+
+        onClickMuteNote = (noteInfo, isMuted) => {
+            this.props.app.SetSetNoteMuted(noteInfo.midiNoteValue, isMuted);
+        }
+
+        onClickLength = (deltaMeasures) => {
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            let len = patch.GetLengthSubdivs();
+            let meas = len / patch.timeSig.subdivCount;
+            if (deltaMeasures > 0) {
+                meas = Math.ceil(meas+0.1);
+            }
+            if (deltaMeasures < 0) {
+                meas = Math.floor(meas - .1);
+            }
+            len = meas * patch.timeSig.subdivCount;
+            if (!Seq.IsValidSequencerLengthSubdivs(len)) return;
+            this.props.app.SeqSetLength(len);
+        }
+        
+        onClickSpeed = (s) => {
+            this.props.app.SeqSetSpeed(s.speed);
+            this.setState({isSpeedExpanded:false});
+        }
+
+        onClickSpeedAdj = (delta) => {
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            const newSpeed = GetNearestSpeedMatch(patch.speed, delta).speed;
+            this.props.app.SeqSetSpeed(newSpeed);
+        }
 
       render() {
-         //const notes = DFMusic.MidiNoteInfo.filter(k => k.midiNoteValue >= 74 && k.midiNoteValue <= 88).reverse();
-
          const seq = this.props.instrument.sequencerDevice;
          const patch = seq.livePatch;
          const notes = seq.GetNoteLegend();
+         const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
+         const playheadInfo = patch.GetPlayheadState(playheadAbsBeat);
+
+         const isReadOnly = this.props.observerMode;
+
+         const speedObj = GetNearestSpeedMatch(patch.speed, 0);
 
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
@@ -107,35 +246,74 @@ class SequencerMain extends React.Component {
              );
          });
 
-        const keys = notes.map(k => (
-            <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}>
-                <div className='rowName'>{k.name}</div>
-                <div className={k.midiNoteValue%7 ? 'muteRow' : 'muteRow muted'}></div>
-            </li>
-        ));
-
-        const pianoRollRows = (divisionKey, iDivision, iBeat) => notes.map(k => {
+         const speedList = this.state.isSpeedExpanded && gSpeeds.map(s => {
             return (
-                <li key={divisionKey + "_" + k.midiNoteValue} className={k.cssClass}><div></div></li>
+               <li key={s.caption} onClick={() => this.onClickSpeed(s)}>{s.caption}</li>
+           );
+        });
+
+        const divisionsList = this.state.isDivExpanded && gDivisions.map(s => {
+            return (
+               <li key={s} onClick={() => this.onClickDivision(s)}>{s}</li>
+           );
+        });
+
+        const keys = notes.map(k => {
+            const isMuted = patch.IsNoteMuted(k.midiNoteValue);
+            return (
+                <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}>
+                    <div className='rowName'>{k.name}</div>
+                    <div
+                        className={isMuted ? 'muteRow muted' : 'muteRow'}
+                        onClick={()=>this.onClickMuteNote(k, !isMuted)}
+                    >M</div>
+                </li>
+                );
+        });
+
+        const patternButtons = patch.patterns.map((pattern, index) => {
+            return (<button
+                key={index}
+                onClick={() => this.onClickPattern(pattern, index)}
+                className={("patternSelect") + (pattern.hasData() ? "" : " disabled") + (index === patch.selectedPatternIdx ? " active" : "")}>
+                    {"ABCDEFGHIJKLMNOPQRSTUV"[index]}
+                </button>);
+        });
+
+        const pianoRollColumn = (divisionKey, beginPatternBeat, endPatternBeat) => notes.map(k => {
+            let cssClass = k.cssClass;
+            if (patch.IsNoteMuted(k.midiNoteValue))
+                cssClass += ' muted';
+            // if note touches range, note
+            return (
+                <li key={divisionKey + "_" + k.midiNoteValue} className={cssClass}><div></div></li>
             )
-      });
+        });
 
-      const divisions = [];
+        const pianoRoll = [];
 
-      for(let iMeasure = 0; iMeasure < this.state.measuresPerPattern; ++iMeasure) {
-         for (let iBeat = 0; iBeat < this.state.beatsPerMeasure; ++iBeat) {
-            for (let iDivision = 0; iDivision < this.state.divisionsPerBeat; ++iDivision) {
-               const key = iDivision + "_" + iBeat + "_" + iMeasure;
-               const beatBoundary = !iDivision;
-               const measureBoundary = beatBoundary && !iBeat;
-               const className = "pianoRollRows" + (measureBoundary ? " beginMeasure" : ((beatBoundary && !measureBoundary) ? " beginBeat" : ""));
-                    divisions.push(
-                        <ul key={key} className={className}>
-                            {pianoRollRows(key, iDivision, iBeat)}
-                        </ul>);
-                }
-            }
-        }
+        const divisionCount = patch.GetDivisions();
+        for (let patternSubdiv = 0; patternSubdiv < patch.GetLengthSubdivs(); ++ patternSubdiv) {
+            let subdivMusicalTime = patch.timeSig.getMusicalTimeForSubdiv(patternSubdiv);
+            for (let iDivision = 0; iDivision < divisionCount; ++ iDivision) {
+                const key = iDivision + "_" + patternSubdiv;
+                const measureBoundary = iDivision === 0 && subdivMusicalTime.subdivInfo.measureSubdivIndex === 0; // beatBoundary && !iBeat;
+                const majorSubdiv = iDivision === 0 && !measureBoundary && subdivMusicalTime.subdivInfo.isMajorSubdiv;
+
+                //const beginBeat;
+                //const endBeat;
+                const isPlaying = false;
+
+                const className = `subdiv_${patternSubdiv} div${divisionCount} pianoRollColumn` +
+                    (measureBoundary ? " beginMeasure" : (majorSubdiv ? " majorSubdiv" : "")) +
+                    (isPlaying ? " playing" : "");
+                pianoRoll.push(
+                         <ul key={key} className={className}>
+                             {pianoRollColumn(key)}
+                         </ul>);
+                 }
+             }
+
 
         return (
             <div className="sequencerFrame">
@@ -202,9 +380,6 @@ class SequencerMain extends React.Component {
                                         </div>
                                     </ClickAwayListener>
                                     }
-
-
-
                                 <div className="buttonArray">
                                     {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
                                     <button className='altui disabled'><i className="material-icons">save</i></button>
@@ -219,10 +394,7 @@ class SequencerMain extends React.Component {
                                 <div className='legend'>Pattern</div>
                                 <div className='paramBlock'>
                                 <div className="buttonArray">
-                                    <button>A</button>
-                                    <button>B</button>
-                                    <button className='active'>C</button>
-                                    <button>D</button>
+                                    {patternButtons}
                                 </div>
                                 <div className="buttonArray">
                                 <button className='altui'><i className="material-icons">content_copy</i></button>
@@ -239,30 +411,61 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Speed</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>0.5x</div>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isSpeedExpanded:!this.state.isSpeedExpanded});}}>{speedObj.caption}</div>
+                                { this.state.isSpeedExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isSpeedExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isSpeedExpanded:false});}}>Select a speed</legend>
+                                            <ul className='dropDownMenu'>
+                                                {speedList}
+                                            </ul>
+                                        </div>
+                                    </ClickAwayListener>
+                                }
                                 <div className="buttonArray vertical">
-                                    <button><i className="material-icons">arrow_drop_up</i></button>
-                                    <button><i className="material-icons">arrow_drop_down</i></button>
+                                    <button onClick={() => this.onClickSpeedAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button onClick={() => this.onClickSpeedAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>
                         <div className='paramGroup'>
                             <div className='legend'>Div</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>8</div>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>{patch.GetDivisions()}</div>
+                                { this.state.isDivExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
+                                            <ul className='dropDownMenu'>
+                                                {divisionsList}
+                                            </ul>
+                                        </div>
+                                    </ClickAwayListener>
+                                }
                                 <div className="buttonArray vertical">
-                                    <button><i className="material-icons">arrow_drop_up</i></button>
-                                    <button><i className="material-icons">arrow_drop_down</i></button>
+                                    <button onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>
                         <div className='paramGroup'>
                             <div className='legend'>Swing</div>
                             <div className='paramBlock'>
-                                <div className='paramValue'>33%</div>
-                                <div className="buttonArray">
+                                <div className='paramValue'>{Math.floor(patch.swing * 100)}%</div>
+                                <div className="buttonArray vertical">
+                                    <button onClick={() =>{this.onClickSwingAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button onClick={() =>{this.onClickSwingAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
-                                <input type='range' style={{width:"50px"}}></input>
+                                <div className="buttonArray">
+                                <input id={this.swingSliderID} disabled={isReadOnly} style={{width:"60px"}} type="range"
+                                    className='stylizedRange'
+                                    min={gSwingMin} max={gSwingMax}
+                                    onClick={this.onClickSwingSlider}
+                                    onDoubleClick={this.onDoubleClickSwingSlider}
+                                    onChange={this.onChangeSwing}
+                                    value={patch.swing * 100}
+                                />
+                                </div>
                             </div>
                         </div>
                     </fieldset>
@@ -291,16 +494,14 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Length</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>6</div>
+                            <div className='paramValue'>{patch.GetLengthSubdivs()}</div>
                                 <div className="buttonArray vertical">
-                                <button><i className="material-icons">arrow_drop_up</i></button>
-                                <button><i className="material-icons">arrow_drop_down</i></button>
+                                    <button onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>
                         </fieldset>
-
-
 
                     <fieldset>
                         <div className='paramGroup'>
@@ -319,7 +520,9 @@ class SequencerMain extends React.Component {
                                 {keys}
                             </ul>
                         </div>
-                        {divisions}
+                        <div className='pianoRollContainer'>
+                        {pianoRoll}
+                        </div>
                     </div>
                 </div>
             </div>

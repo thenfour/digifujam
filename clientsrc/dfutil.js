@@ -79,9 +79,18 @@ function GrabArgs(args, count) {
 let getArrowText = shown => shown ? '⯆' : '⯈';
 
 // get only the decimal part of a number.  https://stackoverflow.com/a/65046431/402169
-function getDecimalPart(decNum) {
-   return Math.round((decNum % 1) * 100000000) / 100000000;
+// function getDecimalPart(decNum) {
+//    return Math.round((decNum % 1) * 100000000) / 100000000;
+// }
+// i don't like that function... wtf really.
+function getDecimalPart(x) {
+   return x - Math.trunc(x);
 }
+
+// retains repeating pattern into the negative.
+function modulo(x, n) {
+   return ((x % n) + n) % n;
+ };
 
 function array_move(arr, old_index, new_index) {
    if (new_index >= arr.length) {
@@ -290,4 +299,5 @@ module.exports = {
    FormatTimeMS,
    GrabArgs,
    TimeSpan,
+   modulo,
 };

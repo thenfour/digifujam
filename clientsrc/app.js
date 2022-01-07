@@ -842,10 +842,79 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.sequencerDevice.livePatch.timeSig = DFMusic.GetTimeSigById(data.timeSigID);
+        foundInstrument.instrument.sequencerDevice.livePatch.SetTimeSig(DFMusic.GetTimeSigById(data.timeSigID));
 
         this.stateChangeHandler();
     }
+
+    NET_SetSetNoteMuted(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SetNoteMuted(data.midiNoteValue, data.isMuted);
+        this.stateChangeHandler();
+    }
+
+    NET_SeqSelectPattern(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SelectPatternIndex(data.selectedPatternIdx);
+        this.stateChangeHandler();
+    }
+
+    NET_SeqSetSpeed(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SetSpeed(data.speed);
+        this.stateChangeHandler();
+    }
+
+    NET_SeqSetSwing(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SetSwing(data.swing);
+
+        this.stateChangeHandler();
+    }
+
+    NET_SeqSetDiv(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SetDivisions(data.divisions);
+        this.stateChangeHandler();
+    }
+
+    NET_SeqSetLength(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SetLengthSubdivs(data.lengthSubdivs);
+        this.stateChangeHandler();
+    }
+
+
 
     // ----------------------
 
@@ -1327,6 +1396,25 @@ class DigifuApp {
 
     SeqPlayStop(isPlaying) {
         this.net.SeqPlayStop(isPlaying);
+    }
+
+    SetSetNoteMuted(midiNoteValue, isMuted) {
+        this.net.SetSetNoteMuted(midiNoteValue, isMuted);
+    }
+    SeqSelectPattern(selectedPatternIdx) {
+        this.net.SeqSelectPattern(selectedPatternIdx);
+    }
+    SeqSetSpeed(speed) {
+        this.net.SeqSetSpeed(speed);
+    }
+    SeqSetSwing(swing) {
+        this.net.SeqSetSwing(swing);
+    }
+    SeqSetDiv(divisions) {
+        this.net.SeqSetDiv(divisions);
+    }
+    SeqSetLength(lengthSubdivs) {
+        this.net.SeqSetLength(lengthSubdivs);
     }
 
     // --------------

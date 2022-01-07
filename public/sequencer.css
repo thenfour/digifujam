@@ -1,6 +1,7 @@
 
 
 .sequencerFrame {
+    user-select: none;
     width: 100%;
     height: 100%;
     margin: 0;
@@ -45,7 +46,7 @@
 .sequencerMain .seqTop {
     display: flex;
     align-items: flex-start;
-    max-width: 1100px;
+    max-width: 1400px;
 }
 
 .sequencerMain .seqTopColumn {
@@ -146,7 +147,7 @@
 .sequencerMain button.playButton.active  {
     background-color: #7f7;
     color: #444;
-    box-shadow: 0 0 20px #8f8, inset 0 0 18px #888c;
+    box-shadow: 0 0 10px #7F7, inset 0 0 18px #888c;
 }
 
 .sequencerMain button.playButton > * {
@@ -177,8 +178,12 @@
 .sequencerMain button:hover {
     background-color: #ddd;
 }
+.sequencerMain button.disabled {
+    background-color: #bbb;
+}
 
-.sequencerMain button.active {
+.sequencerMain button.active,
+.sequencerMain button.active.disabled { 
     background-color: #fd0;
 }
 
@@ -337,7 +342,7 @@
 
     width: 100px;
     background-color: #ffe;
-    height: 36px;
+    height: 44px;
     box-shadow:0 0 9px #0003 inset, 0 0 1px #000;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
@@ -366,32 +371,83 @@
     background-color: #8885;
     margin-left: 10px;
     margin-right: 10px;    
+    cursor:pointer;
+    text-align: center;
+    color: #8888;
+}
+
+.sequencerMain ul.pianoRollLegend li .muteRow:hover {
+    background-color: #ccc5;
+    color: #888;
 }
 
 .sequencerMain ul.pianoRollLegend li .muteRow.muted {
+    background-color: #c44;
+    color: #ccc;
+}
+
+.sequencerMain ul.pianoRollLegend li .muteRow.muted:hover {
     background-color: #f44;
 }
 
 
 
+.sequencerMain .pianoRollContainer {
+    display:flex;
+}
 
-.sequencerMain ul.pianoRollRows {
+.sequencerMain ul.pianoRollColumn {
     padding: 0;
     margin: 0;
 }
 
-.sequencerMain ul.pianoRollRows li {
-    height: 36px;
+.sequencerMain ul.pianoRollColumn li {
+    height: 44px;
     border: 0;
     box-sizing: border-box;
-    width: 36px;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.sequencerMain ul.pianoRollRows li > div,
-.sequencerMain ul.pianoRollRows li.white > div {
+/*
+based on 80px for div1, and we want each div to grow total width by 10%.
+that means each div width is (previous div total width + 10%) / div#
+*/
+.sequencerMain ul.pianoRollColumn.div1 li {
+    width: 80px;
+}
+
+.sequencerMain ul.pianoRollColumn.div2 li {
+    width: 44px;
+}
+
+.sequencerMain ul.pianoRollColumn.div3 li {
+    width: 32px;
+}
+
+.sequencerMain ul.pianoRollColumn.div4 li {
+    width: 26px;
+}
+
+.sequencerMain ul.pianoRollColumn.div5 li {
+    width: 23px;
+}
+
+.sequencerMain ul.pianoRollColumn.div6 li {
+    width: 21px;
+}
+
+.sequencerMain ul.pianoRollColumn.div7 li {
+    width: 20px;
+}
+
+.sequencerMain ul.pianoRollColumn.div8 li {
+    width: 19px;
+}
+
+.sequencerMain ul.pianoRollColumn li > div,
+.sequencerMain ul.pianoRollColumn li.white > div {
     background: #666;
     border-radius: 6px;
     box-shadow: inset 0px 0px 36px #000b;
@@ -399,37 +455,48 @@
     flex-grow: 1;
 }
 
-.sequencerMain ul.pianoRollRows li.black {
-    background-color:#081010;
+/* too much information to show black/white in the grid*/
+.sequencerMain ul.pianoRollColumn li.black {
+    /* background-color:#081010; */
 }
 
-.sequencerMain ul.pianoRollRows.beginBeat li {
+.sequencerMain ul.pianoRollColumn.majorSubdiv li {
     border-left: 2px solid #355;
 }
 
-.sequencerMain ul.pianoRollRows.beginMeasure li {
+.sequencerMain ul.pianoRollColumn.beginMeasure li {
     border-left: 4px solid #664;
 }
 
 
 
-.sequencerMain ul.pianoRollRows li.note div {
+.sequencerMain ul.pianoRollColumn li.note div {
     box-shadow: inset 0px 0px 18px #cc0, 0 0 20px #cc06;
     background-color: #ccc;
 }
 
-.sequencerMain ul.pianoRollRows li.noteOn div {
+.sequencerMain ul.pianoRollColumn li.noteOn div {
     box-shadow: inset 0px 0px 36px #cc0;
     border-left: 6px solid #ff0;
 }
 
-.sequencerMain ul.pianoRollRows li.noteOff div {
+.sequencerMain ul.pianoRollColumn li.noteOff div {
     margin-right: 6px;
 }
 
-.sequencerMain ul.pianoRollRows li.playing div {
+.sequencerMain ul.pianoRollColumn li.playing div {
     box-shadow: 0px 0px 8px 0px #0ff, inset 0px 0px 5px 0px #0ff;
 }
 
+
+
+
+.sequencerMain ul.pianoRollColumn.playing {
+    background-color: #066;
+}
+
+.sequencerMain ul.pianoRollColumn li.muted div {
+    background-color: #222;
+}
 
 
