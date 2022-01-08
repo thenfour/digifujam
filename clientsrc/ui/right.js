@@ -1849,6 +1849,14 @@ class AnnouncementArea extends React.Component {
         super(props);
         this.state = {
         };
+        this.timer = null;
+        this.timerRefs = 0;
+    }
+    componentWillUnmount() {
+        if (this.timer) {
+            clearTimerout(this.timer);
+            this.timer = null;
+        }
     }
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
@@ -1865,12 +1873,16 @@ class AnnouncementArea extends React.Component {
                     let dt = html.substring(begin + countdownPrefix.length, end);
                     let remainingMS = (new Date(dt)) - (new Date());
                     const info = new DFU.TimeSpan(remainingMS);
-                    //console.log(`countdown time: ${dt}; remaining ms: ${remainingMS}`);
-                    //console.log(info);
                     html = html.substring(0, begin) + info.longString + html.substring(end + countdownSuffix.length);
-                    setTimeout(() => {
-                        this.setState({});
-                    }, 1000);
+                    if (!this.timer) {
+                        this.timerRefs ++;
+                        console.log(this.timerRefs);
+                        this.timer = setTimeout(() => {
+                            this.timer = null;
+                            this.timerRefs --;
+                            this.setState({});
+                        }, 1000);
+                    }
                 } catch (e) {
                     // whatever.
                 }
