@@ -1416,7 +1416,12 @@ class Instrument extends  React.Component {
     }
 
     clickSequencerIndicator() {
-        this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
+        const app = this.props.app;
+        const i = this.props.instrument;
+        const hasMIDIDevices = app.midi.AnyMidiDevicesAvailable();
+        if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices))
+            return;
+        this.props.app.SeqPlayStop(!i.sequencerDevice.isPlaying, i.instrumentID);
     }
 
     render() {
@@ -1456,11 +1461,10 @@ class Instrument extends  React.Component {
         const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices);
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
-            <div className={"seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty"))}>
-                <div
-                    className={'seqIndicator' + (canCtrlSequencer ? " clickable" : "")}
-                    onClick={() => this.clickSequencerIndicator()}
-                    ></div>
+            <div className={"seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
+                onClick={() => this.clickSequencerIndicator()}
+                >
+                <div className='seqIndicator'></div>
             </div>
         );
 

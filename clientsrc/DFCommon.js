@@ -1391,7 +1391,8 @@ class DigifuInstrumentSpec {
     
     CanSequencerBeStartStoppedByUser(roomState, user, userHasMIDIInstruments) {
         userHasMIDIInstruments ??= true; // assume the best when this info is not specified.
-        return (user.userID === this.controlledByUserID) || this.IsTakeable(roomState, userHasMIDIInstruments);
+        if (user.userID === this.controlledByUserID) return true;
+        return this.IsTakeable(roomState, userHasMIDIInstruments) && this.sequencerDevice.HasData();
     }
 
 }; // InstrumentSpec
