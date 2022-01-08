@@ -1,3 +1,11 @@
+// here's how divisions work in the sequencer:
+// "loop" is the # of times a pattern has played; an absolute concept
+// "pattern" is a looping range
+// measure -> subdiv group -> subdiv -> div
+//   ^ a pattern concept
+//                ^-------------^ a timesig concept
+//                                        ^ a pattern concept
+
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
 
@@ -151,22 +159,33 @@ class SequencerPatch
       return this.GetSelectedPattern().lengthSubdivs;
    }
 
-   GetPlayheadState(absBeat) {
+   SubdivsToDivs(subdivs) {
+      return subdivs * this.GetDivisions();
+   }
+
+   BeatsToDivs(beats) {
+      return this.SubdivsToDivs(this.timeSig.BeatsToSubdivs(beats));
+   }
+
+   GetInfoAtAbsBeat(absBeat) {
       // consider some kind of offset? (todo)
       // consider swing
-      // consider speed
       const pattern = this.GetSelectedPattern();
       const speedAdjustedBeat = absBeat * this.speed;
-      const patternLengthBeats = pattern.lengthSubdivs / this.timeSig.subdivCount;
+      const patternLengthMeasures = pattern.lengthSubdivs / this.timeSig.subdivCount;
+      const patternLengthBeats = patternLengthMeasures * this.timeSig.beatsPerMeasure;
       const absLoop = speedAdjustedBeat / patternLengthBeats;
       const patternBeat = DFUtil.getDecimalPart(absLoop) * patternLengthBeats;
       const patternTime = this.timeSig.getMusicalTimeForBeat(patternBeat);
+      const patternDiv = this.BeatsToDivs(patternBeat);
       return {
          speedAdjustedBeat,
+         patternLengthMeasures,
          patternLengthBeats,
          absLoop,
          patternBeat,
          patternTime,
+         patternDiv,
       };
    }
 }
@@ -179,7 +198,7 @@ class SequencerDevice {
 
       // note legend
       
-      this.isPlaying = false;
+      this.isPlaying ??= false;
 
       this.livePatch = new SequencerPatch(this.livePatch);
 

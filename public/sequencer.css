@@ -446,20 +446,6 @@ that means each div width is (previous div total width + 10%) / div#
     width: 19px;
 }
 
-.sequencerMain ul.pianoRollColumn li > div,
-.sequencerMain ul.pianoRollColumn li.white > div {
-    background: #666;
-    border-radius: 6px;
-    box-shadow: inset 0px 0px 36px #000b;
-    margin: 2px;
-    flex-grow: 1;
-}
-
-/* too much information to show black/white in the grid*/
-.sequencerMain ul.pianoRollColumn li.black {
-    /* background-color:#081010; */
-}
-
 .sequencerMain ul.pianoRollColumn.majorSubdiv li {
     border-left: 2px solid #355;
 }
@@ -470,33 +456,31 @@ that means each div width is (previous div total width + 10%) / div#
 
 
 
-.sequencerMain ul.pianoRollColumn li.note div {
-    box-shadow: inset 0px 0px 18px #cc0, 0 0 20px #cc06;
-    background-color: #ccc;
+
+/*  ----- note cells ----- */
+
+.sequencerMain ul.pianoRollColumn li > div {
+    margin:2px;
 }
 
-.sequencerMain ul.pianoRollColumn li.noteOn div {
-    box-shadow: inset 0px 0px 36px #cc0;
-    border-left: 6px solid #ff0;
+.sequencerMain ul.pianoRollColumn li div {
+    border-radius: 6px;
+    height:100%;
 }
 
-.sequencerMain ul.pianoRollColumn li.noteOff div {
-    margin-right: 6px;
+.sequencerMain ul.pianoRollColumn li .noteOL {
+    background-color: #666;
+    box-shadow: inset 0px 0px 36px #000b;
 }
 
-.sequencerMain ul.pianoRollColumn li.playing div {
-    box-shadow: 0px 0px 8px 0px #0ff, inset 0px 0px 5px 0px #0ff;
+.sequencerMain ul.pianoRollColumn.playing .playheadOL {
+    border-bottom:4px solid #0c02;
 }
 
-
-
-
-.sequencerMain ul.pianoRollColumn.playing {
-    background-color: #066;
+.sequencerMain ul.pianoRollColumn.playing.majorSubdiv .playheadOL {
+    border-bottom:4px solid #ff02;
 }
 
-.sequencerMain ul.pianoRollColumn li.muted div {
-    background-color: #222;
+.sequencerMain ul.pianoRollColumn li.muted .muteOL {
+    background-color: #0008;
 }
-
-

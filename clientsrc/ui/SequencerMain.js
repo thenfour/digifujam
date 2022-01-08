@@ -7,6 +7,14 @@ const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 
+const gPlayingUpdateInterval = 100;
+
+// a timer that attempts to update things at metronomic intervals
+class MetronomeTimer {
+    //
+}
+
+
 const gTempoBPMStep = 5;
 const gSpeeds = [//[ 8, 4, 3, 2, 1, .75, 2.0/3.0, .5, 1.0/3.0, .25];
     { caption: ".25x", speed: .25 },
@@ -116,6 +124,7 @@ class SequencerMain extends React.Component {
          };
 
          this.swingSliderID = "seqSwingSlider";
+         this.timer = null;
       }
 
       
@@ -128,7 +137,12 @@ class SequencerMain extends React.Component {
                 zeroVal: 0,
             });
     }
-
+    componentWillUnmount() {
+        if (this.timer)
+           clearTimeout(this.timer);
+        this.timer = null;
+     }
+  
       onPowerButtonClick = () => {
           this.props.setSequencerShown(false);
       }
@@ -229,16 +243,34 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetSpeed(newSpeed);
         }
 
+        timerProc() {
+            this.timer = null;
+            const seq = this.props.instrument.sequencerDevice;
+            if (seq.isPlaying) {
+                this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
+            }
+            this.setState({});
+        }
+
       render() {
          const seq = this.props.instrument.sequencerDevice;
          const patch = seq.livePatch;
          const notes = seq.GetNoteLegend();
          const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
-         const playheadInfo = patch.GetPlayheadState(playheadAbsBeat);
+         const playheadInfo = patch.GetInfoAtAbsBeat(playheadAbsBeat);
+         //console.log(`playhead pattern div = ${playheadInfo.patternDiv.toFixed(2)}, absLoop=${playheadInfo.absLoop.toFixed(2)} patternBeat=${playheadInfo.patternBeat.toFixed(2)} patternLengthBeats=${playheadInfo.patternLengthBeats}`);
 
          const isReadOnly = this.props.observerMode;
 
          const speedObj = GetNearestSpeedMatch(patch.speed, 0);
+
+         if (seq.isPlaying && !this.timer) {
+             this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
+         }
+         if (!seq.isPlaying && this.timer) {
+             clearTimeout(this.timer);
+             this.timer = null;
+         }
 
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
@@ -285,27 +317,41 @@ class SequencerMain extends React.Component {
             if (patch.IsNoteMuted(k.midiNoteValue))
                 cssClass += ' muted';
             // if note touches range, note
+            // playhead indicator
+            // hover
+            // note color
+            // mute
             return (
-                <li key={divisionKey + "_" + k.midiNoteValue} className={cssClass}><div></div></li>
+                <li key={divisionKey + "_" + k.midiNoteValue} className={cssClass}>
+                    <div className='noteBase'>
+                    <div className='noteOL'>
+                    <div className='playheadOL'>
+                        <div className='muteOL'>
+                        <div className='hoverOL'></div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                </li>
             )
         });
 
         const pianoRoll = [];
 
         const divisionCount = patch.GetDivisions();
+        let patternDiv = 0; // index of the div across the whole pattern
         for (let patternSubdiv = 0; patternSubdiv < patch.GetLengthSubdivs(); ++ patternSubdiv) {
             let subdivMusicalTime = patch.timeSig.getMusicalTimeForSubdiv(patternSubdiv);
-            for (let iDivision = 0; iDivision < divisionCount; ++ iDivision) {
+            for (let iDivision = 0; iDivision < divisionCount; ++ iDivision, ++ patternDiv) {
                 const key = iDivision + "_" + patternSubdiv;
                 const measureBoundary = iDivision === 0 && subdivMusicalTime.subdivInfo.measureSubdivIndex === 0; // beatBoundary && !iBeat;
-                const majorSubdiv = iDivision === 0 && !measureBoundary && subdivMusicalTime.subdivInfo.isMajorSubdiv;
+                const majorSubdiv = iDivision === 0 && subdivMusicalTime.subdivInfo.isMajorSubdiv;
 
-                //const beginBeat;
-                //const endBeat;
-                const isPlaying = false;
+                const isPlaying = seq.isPlaying && Math.floor(playheadInfo.patternDiv) === patternDiv;
 
-                const className = `subdiv_${patternSubdiv} div${divisionCount} pianoRollColumn` +
-                    (measureBoundary ? " beginMeasure" : (majorSubdiv ? " majorSubdiv" : "")) +
+                const className = `div${divisionCount} pianoRollColumn` +
+                    (measureBoundary ? " beginMeasure" : "") +
+                    (majorSubdiv ? " majorSubdiv" : "") +
                     (isPlaying ? " playing" : "");
                 pianoRoll.push(
                          <ul key={key} className={className}>

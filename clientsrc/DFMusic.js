@@ -196,6 +196,10 @@ class TimeSig {
         return !this.isMajorSubdiv(subdiv);
     }
 
+    BeatsToSubdivs(beats) {
+        return beats * this.subdivsPerBeat;
+    }
+
     getMusicalTimeForSubdiv(subdiv) {
         const subdivFloat = DFUtil.modulo(subdiv, this.subdivCount);
         const subdivInfo = this.GetSubdivInfo(subdivFloat);
