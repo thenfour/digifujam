@@ -59,7 +59,7 @@ const ClientMessages = {
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
 
     // SEQ
-    SeqPlayStop: "SeqPlayStop", // { isPlaying }
+    SeqPlayStop: "SeqPlayStop", // { isPlaying, instrumentID }
     SeqSetTimeSig: "SeqSetTimeSig", // { timeSigID }
     SetSetNoteMuted: "SetSetNoteMuted", // { midiNoteValue, isMuted }
     SeqSelectPattern: "SeqSelectPattern", // { selectedPatternIdx }
@@ -1370,6 +1370,29 @@ class DigifuInstrumentSpec {
         if (newVal > param.maxValue) return param.maxValue;
         return newVal;
     };
+
+    IsInUse() { return !!this.controlledByUserID; }
+
+    IsIdle(roomState) {
+        if (!this.IsInUse())
+            return false;
+
+        let foundUser = roomState.FindUserByID(this.controlledByUserID);
+        if (foundUser) {
+            return foundUser.user.idle;
+        }
+        return false;
+    } 
+
+    IsTakeable(roomState, userHasMIDIInstruments) {
+        userHasMIDIInstruments ??= true; // assume the best when this info is not specified.
+        return userHasMIDIInstruments && (!this.IsInUse() || this.IsIdle(roomState));
+    } 
+    
+    CanSequencerBeStartStoppedByUser(roomState, user, userHasMIDIInstruments) {
+        userHasMIDIInstruments ??= true; // assume the best when this info is not specified.
+        return (user.userID === this.controlledByUserID) || this.IsTakeable(roomState, userHasMIDIInstruments);
+    }
 
 }; // InstrumentSpec
 

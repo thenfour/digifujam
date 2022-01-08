@@ -1248,9 +1248,15 @@ class RoomServer {
   OnSeqPlayStop(ws, data) {
     try {
       const foundUser = this.FindUserFromSocket(ws);
-      if (!foundUser) throw new Error(`OnSeqPlayStop => unknown user`);
-      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
-      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+      if (!foundUser)
+        throw new Error(`OnSeqPlayStop => unknown user`);
+
+      const foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+      if (foundInstrument === null)
+        throw new Error(`OnSeqPlayStop => unknown instrument ${data.instrumentID}`);
+
+      if (!foundInstrument.instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user))
+        throw new Error(`OnSeqPlayStop => Instrument's sequencer cannot be controlled by this user. ${data.instrumentID}, userid ${foundUser.user.userID}`);
 
       foundInstrument.instrument.sequencerDevice.isPlaying = data.isPlaying;
 

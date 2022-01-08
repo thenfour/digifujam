@@ -1394,8 +1394,8 @@ class DigifuApp {
         this.net.SeqSetTimeSig(timeSig);
     }
 
-    SeqPlayStop(isPlaying) {
-        this.net.SeqPlayStop(isPlaying);
+    SeqPlayStop(isPlaying, instrumentID) {
+        this.net.SeqPlayStop(isPlaying, instrumentID);
     }
 
     SetSetNoteMuted(midiNoteValue, isMuted) {

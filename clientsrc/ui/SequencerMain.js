@@ -126,9 +126,9 @@ class SequencerMain extends React.Component {
         this.timer = null;
      }
   
-    //   onPowerButtonClick = () => {
-    //       this.props.setSequencerShown(false);
-    //   }
+      onPowerButtonClick = () => {
+          this.props.setSequencerShown(false);
+      }
 
       onClickLowerTempo = () => {
         let bpm = this.props.app.roomState.bpm;
@@ -164,7 +164,7 @@ class SequencerMain extends React.Component {
         }
 
         onClickPlayStop = () => {
-            this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying);
+            this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
         }
 
 
@@ -290,7 +290,7 @@ class SequencerMain extends React.Component {
             return (<button
                 key={index}
                 onClick={() => this.onClickPattern(pattern, index)}
-                className={("patternSelect") + (pattern.hasData() ? "" : " disabled") + (index === patch.selectedPatternIdx ? " active" : "")}>
+                className={("patternSelect") + (pattern.HasData() ? "" : " disabled") + (index === patch.selectedPatternIdx ? " active" : "")}>
                     {"ABCDEFGHIJKLMNOPQRSTUV"[index]}
                 </button>);
         });
@@ -353,11 +353,11 @@ class SequencerMain extends React.Component {
         return (
             <div className="sequencerFrame">
                 <div className="sequencerMain">
-                    {/* <div className='overlay'>
+                    <div className='overlay'>
                     <div className='powerButton'>
-                        <button className='powerButton' onClick={this.onPowerButtonClick}><i className="material-icons">visibility_off</i></button>
+                        <button className='powerButton' onClick={this.onPowerButtonClick}><i className="material-icons">remove</i></button>
                     </div>
-                    </div> */}
+                    </div>
 
                     <div className='notOverlay'>
                     <div className='seqTop'>

@@ -216,8 +216,8 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.SeqSetTimeSig, {timeSigID: timeSig.id});
     }
 
-    SeqPlayStop(isPlaying) {
-        this.socket.emit(DF.ClientMessages.SeqPlayStop, {isPlaying});
+    SeqPlayStop(isPlaying, instrumentID) {
+        this.socket.emit(DF.ClientMessages.SeqPlayStop, {isPlaying, instrumentID});
     }
 
     SetSetNoteMuted(midiNoteValue, isMuted) {

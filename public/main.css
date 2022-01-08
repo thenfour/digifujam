@@ -83,6 +83,10 @@ button:focus {
     color:red;
 }
 
+.clickable {
+    cursor:pointer;
+}
+
 #allContentContainer
 {
     height: 100vh;
@@ -1109,49 +1113,90 @@ ul.instParamList li.inlineLabel
 }
 
 
+
+/* --- instrument closet --- */
+
 .component.instrumentCloset>ul {
     overflow-x: hidden;
+    padding-right: 0;
+    padding-left: 5px;
 }
 
-.component.instrumentCloset li.instrument {
+.component.instrumentCloset li {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    align-content: stretch;
+}
+
+.component.instrumentCloset li .instrument {
     position:relative;
-    padding: 3px;}
-.component.instrumentCloset li.instrument:hover {
+    padding: 3px;
+    flex-grow:1;
+}
+.component.instrumentCloset li .instrument:hover {
     background-color:#044;
 }
 
-.component.instrumentCloset li.instrument.bigClick {
+.component.instrumentCloset li .seqCtrlContainer {
+    display:flex;
+    align-items: center;
+}
+.component.instrumentCloset li .seqCtrlContainer .seqIndicator { /* empty */
+    width: 12px;
+    height: 12px;
+
+    /* background-color: #222; */
+
+    margin-right: 3px;
+    margin-left: 3px;
+    border-radius: 50%;
+}
+.component.instrumentCloset li:hover .seqCtrlContainer .seqIndicator { /* empty */
+    border: 1px solid #444;
+}
+.component.instrumentCloset li .seqCtrlContainer.on .seqIndicator {
+    background-color: #c33;
+    box-shadow: 0 0 12px #f44;
+}
+.component.instrumentCloset li .seqCtrlContainer.off .seqIndicator {
+    background-color: #444;
+}
+
+
+.component.instrumentCloset li .instrument.bigClick {
     cursor: pointer;
 }
 
 
-.component.instrumentCloset li.instrument button,
+.component.instrumentCloset li .instrument button,
 li.floatParam .paramMappingBox button
 {
     border:0;
     background-color: #066;
     color: #0cc;
 }
-.component.instrumentCloset li.instrument button:hover,
+.component.instrumentCloset li .instrument button:hover,
 li.floatParam .paramMappingBox button:hover
 {
     background-color: #088;
     color: #0cc;
 }
 
-.component.instrumentCloset li.instrument .buttonContainer {
+.component.instrumentCloset li .instrument .buttonContainer {
     position:absolute;
     right:0;
     z-index: 9999;
     visibility: hidden;
 }
 
-.component.instrumentCloset li.instrument:hover .buttonContainer {
+.component.instrumentCloset li .instrument:hover .buttonContainer {
     visibility: visible;
 }
 
 
-.component.instrumentCloset li.instrument:hover .buttonContainer span {
+.component.instrumentCloset li .instrument:hover .buttonContainer span {
     color: #077;
     background-color: #044;
     font-family: 'Overpass', sans-serif;
@@ -1163,13 +1208,13 @@ li.floatParam .paramMappingBox button:hover
 
 
 
-.component.instrumentCloset li.instrument .takenBy {
+.component.instrumentCloset li .instrument .takenBy {
     font-size: small;
     font-style: italic;
     opacity: 50%;
 }
 
-
+/* --- */
 
 
 li.floatParam .paramMappingBox {
@@ -1759,7 +1804,6 @@ li.preloadSFZ {
     font-style: italic;
     font-weight: bold;
 }
-
 
 
 /*

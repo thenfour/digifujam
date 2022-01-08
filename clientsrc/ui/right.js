@@ -1415,18 +1415,25 @@ class Instrument extends  React.Component {
         this.props.app.ReleaseInstrument();
     }
 
+    clickSequencerIndicator() {
+        this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
+    }
+
     render() {
         const app = this.props.app;
         const i = this.props.instrument;
 
-        let inUse = !!i.controlledByUserID;
-        let idle = false;
+        const inUse = i.IsInUse();
+        const isYours = (i.controlledByUserID == app.myUser.userID);
+        const hasMIDIDevices = app.midi.AnyMidiDevicesAvailable();
+        const takeable = i.IsTakeable(app.roomState, hasMIDIDevices);
+
         let ownedBy = null;
         if (inUse) {
             let foundUser = this.props.app.roomState.FindUserByID(i.controlledByUserID);
             if (foundUser) {
                 ownedBy = (<span className="takenBy">(<span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span>)</span>);
-                idle = foundUser.user.idle;// user is taken, but considered idle. so we can show it.
+                //idle = foundUser.user.idle;// user is taken, but considered idle. so we can show it.
             }
         }
 
@@ -1434,9 +1441,6 @@ class Instrument extends  React.Component {
         if (i.loadProgress > 0 && i.loadProgress < 1) {
             loadIndicator = (<span className="instrumentLoadingIndicator">{Math.trunc(i.loadProgress * 100)}%</span>);
         }
-
-        const isYours = (i.controlledByUserID == app.myUser.userID);
-        const takeable = app.midi.AnyMidiDevicesAvailable() && (!inUse || idle);
 
         let playBtn = takeable && (
             <button onClick={() => this.OnClickInstrument(i)}>play</button>
@@ -1448,14 +1452,25 @@ class Instrument extends  React.Component {
 
         const isYourObserving = gStateChangeHandler.observingInstrument && gStateChangeHandler.observingInstrument.instrumentID == i.instrumentID;
 
+        const isSequencerOn = i.sequencerDevice.isPlaying;
+        const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices);
+        const sequencerHasData = i.sequencerDevice.HasData();
+        const sequencerCtrl = (
+            <div className={"seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty"))}>
+                <div
+                    className={'seqIndicator' + (canCtrlSequencer ? " clickable" : "")}
+                    onClick={() => this.clickSequencerIndicator()}
+                    ></div>
+            </div>
+        );
+
         const observeBtn = !isYourObserving && !isYours && i.supportsObservation && inUse && (
             <button className="observe" onClick={() => this.observeInstrument(i)}>observe</button>
         );
 
         const stopObservingBtn = isYourObserving && (<button className="stopObserving" onClick={() => this.stopObserving()}>stop obs</button>);
 
-        idle = idle && (<span className="idleIndicator">(Idle)</span>);
-
+        const idle = i.IsIdle(app.roomState) && (<span className="idleIndicator">(Idle)</span>);
 
         // several buttons are possible
         // - take or release
@@ -1478,12 +1493,15 @@ class Instrument extends  React.Component {
         }
 
         return (
-            <li className={"instrument" + (allowBigClick ? " bigClick" : "")} onClick={bigClickHandler} style={{ color: i.color }}>
-                <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
-                {idle}
-                {i.getDisplayName()}
-                {loadIndicator}
-                {ownedBy}
+            <li>
+                <div className={"instrument" + (allowBigClick ? " bigClick" : "")} onClick={bigClickHandler} style={{ color: i.color }}>
+                    <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
+                    {idle}
+                    {i.getDisplayName()}
+                    {loadIndicator}
+                    {ownedBy}
+                </div>
+                {sequencerCtrl}
             </li>
         );
     }

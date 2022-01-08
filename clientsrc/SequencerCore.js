@@ -66,7 +66,7 @@ class SequencerPattern {
       this.divisionType ??= eDivisionType.MinorBeat;
    }
 
-   hasData() {
+   HasData() {
       return this.notes.length > 0;
    }
 }
@@ -329,6 +329,10 @@ class SequencerDevice {
       if (!Array.isArray(this.presetList))
          this.presetList = [];
       this.presetList = this.presetList.map(p => new SequencerPatch(p));
+   }
+
+   HasData() {
+      return this.livePatch.GetSelectedPattern().HasData();
    }
 
    // returns [{name, midiNoteValue, cssClass}]
