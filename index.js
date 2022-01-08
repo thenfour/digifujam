@@ -1384,14 +1384,14 @@ class RoomServer {
       if (!foundUser) throw new Error(`SeqSetDiv => unknown user`);
       const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
-      if (!Seq.IsValidSequencerDivisions(data.divisions)) throw new Error(`invalid sequencer divisions.`);
+      if (!Seq.IsValidSequencerDivisionType(data.divisionType)) throw new Error(`invalid sequencer divisionType.`);
 
-      foundInstrument.instrument.sequencerDevice.livePatch.SetDivisions(data.divisions);
+      foundInstrument.instrument.sequencerDevice.livePatch.SetDivisionType(data.divisionType);
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetDiv, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        divisions: data.divisions,
+        divisionType: data.divisionType,
       });
 
     } catch (e) {
@@ -1406,14 +1406,14 @@ class RoomServer {
       if (!foundUser) throw new Error(`SeqSetLength => unknown user`);
       const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
-      if (!Seq.IsValidSequencerLengthSubdivs(data.lengthSubdivs)) throw new Error(`invalid sequencer lengthSubdivs.`);
+      if (!Seq.IsValidSequencerLengthMinorBeats(data.lengthMinorBeats)) throw new Error(`invalid sequencer lengthMinorBeats.`);
 
-      foundInstrument.instrument.sequencerDevice.livePatch.SetLengthSubdivs(data.lengthSubdivs);
+      foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMinorBeats(data.lengthMinorBeats);
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetLength, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        lengthSubdivs: data.lengthSubdivs,
+        lengthMinorBeats: data.lengthMinorBeats,
       });
 
     } catch (e) {

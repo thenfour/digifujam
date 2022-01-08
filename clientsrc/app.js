@@ -899,7 +899,7 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.sequencerDevice.livePatch.SetDivisions(data.divisions);
+        foundInstrument.instrument.sequencerDevice.livePatch.SetDivisionType(data.divisionType);
         this.stateChangeHandler();
     }
 
@@ -910,7 +910,7 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.sequencerDevice.livePatch.SetLengthSubdivs(data.lengthSubdivs);
+        foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMinorBeats(data.lengthMinorBeats);
         this.stateChangeHandler();
     }
 
@@ -1413,8 +1413,8 @@ class DigifuApp {
     SeqSetDiv(divisions) {
         this.net.SeqSetDiv(divisions);
     }
-    SeqSetLength(lengthSubdivs) {
-        this.net.SeqSetLength(lengthSubdivs);
+    SeqSetLength(lengthMinorBeats) {
+        this.net.SeqSetLength(lengthMinorBeats);
     }
 
     // --------------

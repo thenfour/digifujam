@@ -2053,10 +2053,10 @@ class RoomArea extends React.Component {
         );
 
         const seqViewAvailable = this.props.focusedInstrument?.allowSequencer;
-        const seqViewButton = seqViewAvailable && !seqViewVisible && (
+        const seqViewButton = seqViewAvailable && (
             <div className="showSequencer">
-                <button className="showSequencerButton" onClick={() => {this.props.setSequencerShown(true) }}>
-                    SHOW SEQUENCER
+                <button className="showSequencerButton" onClick={() => {this.props.setSequencerShown(!seqViewVisible) }}>
+                    {seqViewVisible ? "HIDE SEQUENCER" : "SHOW SEQUENCER"}
                 </button>
             </div>
         );

@@ -232,11 +232,11 @@ class DigifuNet {
     SeqSetSwing(swing) {
         this.socket.emit(DF.ClientMessages.SeqSetSwing, {swing});
     }
-    SeqSetDiv(divisions) {
-        this.socket.emit(DF.ClientMessages.SeqSetDiv, {divisions});
+    SeqSetDiv(divisionType) {
+        this.socket.emit(DF.ClientMessages.SeqSetDiv, {divisionType});
     }
-    SeqSetLength(lengthSubdivs) {
-        this.socket.emit(DF.ClientMessages.SeqSetLength, {lengthSubdivs});
+    SeqSetLength(lengthMinorBeats) {
+        this.socket.emit(DF.ClientMessages.SeqSetLength, {lengthMinorBeats});
     }
 
 

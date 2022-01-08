@@ -7,16 +7,12 @@ const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 
-const gPlayingUpdateInterval = 100;
-
-// a timer that attempts to update things at metronomic intervals
-class MetronomeTimer {
-    //
-}
+const gPlayingUpdateInterval = 35;
 
 
 const gTempoBPMStep = 5;
-const gSpeeds = [//[ 8, 4, 3, 2, 1, .75, 2.0/3.0, .5, 1.0/3.0, .25];
+
+const gSpeeds = new DFUtils.FuzzySelector([
     { caption: ".25x", speed: .25 },
     { caption: ".33x", speed: 1.0/3.0 },
     { caption: ".5x", speed: .5 },
@@ -27,54 +23,37 @@ const gSpeeds = [//[ 8, 4, 3, 2, 1, .75, 2.0/3.0, .5, 1.0/3.0, .25];
     { caption: "3x", speed: 3 },
     { caption: "4x", speed: 4 },
     { caption: "8x", speed: 8 },
-];
+], (val, obj) => Math.abs(val - obj.speed));
 
-function GetNearestSpeedMatch(speed, indexDelta) {
-    let minDist = Math.abs(gSpeeds[0].speed - speed);
-    let minObjIndex = 0;
-    for (let i = 1; i < gSpeeds.length; ++ i) {
-        let dist = Math.abs(gSpeeds[i].speed - speed);
-        if (dist >= minDist) continue;
-        minDist = dist;
-        minObjIndex = i;
-    }
-    minObjIndex += indexDelta ?? 0;
-    if (minObjIndex < 0) minObjIndex = 0;
-    if (minObjIndex >= gSpeeds.length - 1) minObjIndex = gSpeeds.length - 1;
-    return gSpeeds[minObjIndex];
-}
 
-const gDivisionsMin = 1;
-const gDivisionsMax = 8;
-const gDivisions = [...new Array(gDivisionsMax - gDivisionsMin + 1)].map((_, i) => i);
+// ok not really logical to use fuzzyselector here because we only accept exact matches but whatev
+const gDivisionInfo = {
+    /*Seq.eDivisionType.MajorBeat*/MajorBeat: { caption: "Beat", cssClass:"div1"},
+    /*Seq.eDivisionType.MinorBeat*/MinorBeat: { caption: "8th" , cssClass:"div2"},
 
-const gSwingMax = 90;
-const gSwingMin = -gSwingMax;
-const gSwingSnapValues = [
-    gSwingMin, -85,-80,-75,-66,-63,-60,-55,-50,-45,-40,-36,-33,-30,-25,-20,-15,-10,-5,
-    0,5,10,15,20,25,30,33,36,40,45,50,55,60,63,66,70,75,80,85,gSwingMax/*,95,100*/];
+    /*Seq.eDivisionType.MinorBeat_x2*/MinorBeat_x2: { caption: "16th" , cssClass:"div3"},
+    /*Seq.eDivisionType.MinorBeat_x3*/MinorBeat_x3: { caption: "24th" , cssClass:"div4"},
+    /*Seq.eDivisionType.MinorBeat_x4*/MinorBeat_x4: { caption: "32nd" , cssClass:"div5"},
+};
+const gDivisionSortedInfo = Object.keys(gDivisionInfo).map(divisionTypeKey => {
+    const o = gDivisionInfo[divisionTypeKey];
+    return {
+        val: divisionTypeKey,
+        caption: o.caption,
+        cssClass: o.cssClass,
+    };
+});
 
-// accepts values -100,100, returns the same.
-function SnapSwingValue(v, delta) {
-    delta ??= 0;
+const gDivisions = new DFUtils.FuzzySelector(gDivisionSortedInfo, (val, obj) => val === obj.val ? 0 : 1);
 
-    // find nearest snap value.
-    let minDist = 20000;
-    let closestSnapIndex = 0;
-    gSwingSnapValues.forEach((snapVal, idx) => {
-        const dist = Math.abs(snapVal - v);
-        if (dist >= minDist) return;
-        minDist = dist;
-        closestSnapIndex = idx;
-    });
 
-    closestSnapIndex += delta;
-    if (closestSnapIndex < 0) closestSnapIndex = 0;
-    if (closestSnapIndex >= gSwingSnapValues.length - 1) closestSnapIndex = gSwingSnapValues.length - 1;
 
-    v = gSwingSnapValues[closestSnapIndex];
-    return v;
-}
+
+const gSwingSnapValues = new DFUtils.FuzzySelector([
+    -90, -85,-80,-75,-66,-63,-60,-55,-50,-45,-40,-36,-33,-30,-25,-20,-15,-10,-5,
+    0,5,10,15,20,25,30,33,36,40,45,50,55,60,63,66,70,75,80,85,90
+], (val, obj) => Math.abs(val - obj));
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomBeat extends React.Component {
@@ -95,16 +74,20 @@ class RoomBeat extends React.Component {
    }
 
    render() {
-      let beats = [];
-      const absoluteBeatFloat = this.props.app.getAbsoluteBeatFloat();
-      const ts = this.props.timeSig;
-      const musicalTime = ts.getMusicalTimeForBeat(absoluteBeatFloat);
+    const ts = this.props.timeSig;
+    const playheadQuarter = this.props.app.getAbsoluteBeatFloat();
+    const playheadMeasureFrac = ts.getMeasureFracForAbsQuarter(playheadQuarter);
 
-      for (let subdiv = 0; subdiv < ts.subdivCount; ++subdiv) {
-         const complete = (subdiv == musicalTime.subdivInfo.measureSubdivIndex) ? " complete" : "";
-         const isMajor = ts.isMajorSubdiv(subdiv) ? " majorBeat" : " minorBeat";
-        beats.push(<div key={subdiv} className={"beat" + complete + isMajor}>{subdiv + 1}</div>);
-        }
+      const beats = ts.minorBeatInfo.map(mbi => {
+        const isComplete = playheadMeasureFrac >= mbi.beginMeasureFrac && playheadMeasureFrac < mbi.endMeasureFrac;  // does mbi contain the playhead cursor
+        return (<div key={mbi.minorBeatOfMeasure} className={"beat " + (isComplete ? " complete" : "") + (mbi.isMajorBeatBoundary ? " majorBeat" : " minorBeat")}>{mbi.minorBeatOfMeasure + 1}</div>);
+      });
+
+    //   for (let subdiv = 0; subdiv < ts.subdivCount; ++subdiv) {
+//         const complete = (subdiv == musicalTime.subdivInfo.measureSubdivIndex) ? " complete" : "";
+         //const isMajor = ts.isMajorSubdiv(subdiv) ? " majorBeat" : " minorBeat";
+        //beats.push(<div key={subdiv} className={"beat" + complete + isMajor}>{subdiv + 1}</div>);
+        //}
 
         return <div className="liveRoomBeat">
             {beats}
@@ -143,9 +126,9 @@ class SequencerMain extends React.Component {
         this.timer = null;
      }
   
-      onPowerButtonClick = () => {
-          this.props.setSequencerShown(false);
-      }
+    //   onPowerButtonClick = () => {
+    //       this.props.setSequencerShown(false);
+    //   }
 
       onClickLowerTempo = () => {
         let bpm = this.props.app.roomState.bpm;
@@ -176,10 +159,8 @@ class SequencerMain extends React.Component {
 
         onClickDivAdj = (delta) => {
             const patch = this.props.instrument.sequencerDevice.livePatch;
-            let newDivisions = patch.GetDivisions() + delta;
-            if (newDivisions < gDivisionsMin) return;
-            if (newDivisions > gDivisionsMax) return;
-            this.props.app.SeqSetDiv(newDivisions);
+            const newDivisions = gDivisions.GetClosestMatch(patch.GetDivisionType(), delta);
+            this.props.app.SeqSetDiv(newDivisions.val);
         }
 
         onClickPlayStop = () => {
@@ -197,14 +178,14 @@ class SequencerMain extends React.Component {
             $("#" + this.swingSliderID).trigger("change");
         }
         onChangeSwing = (e) => {
-            let v = SnapSwingValue(e.target.value);
+            let v = gSwingSnapValues.GetClosestMatch(e.target.value, 0);
             v /= 100;
             this.props.app.SeqSetSwing(v);
         }
 
         onClickSwingAdj = (delta) => {
             const patch = this.props.instrument.sequencerDevice.livePatch;
-            let v = SnapSwingValue(patch.swing * 100, delta);
+            let v = gSwingSnapValues.GetClosestMatch(patch.swing * 100, delta);
             v /= 100;
             this.props.app.SeqSetSwing(v);
         }
@@ -219,16 +200,16 @@ class SequencerMain extends React.Component {
 
         onClickLength = (deltaMeasures) => {
             const patch = this.props.instrument.sequencerDevice.livePatch;
-            let len = patch.GetLengthSubdivs();
-            let meas = len / patch.timeSig.subdivCount;
+            let len = patch.GetLengthMinorBeats();
+            let meas = len / patch.timeSig.minorBeatsPerMeasure;
             if (deltaMeasures > 0) {
                 meas = Math.ceil(meas+0.1);
             }
             if (deltaMeasures < 0) {
                 meas = Math.floor(meas - .1);
             }
-            len = meas * patch.timeSig.subdivCount;
-            if (!Seq.IsValidSequencerLengthSubdivs(len)) return;
+            len = meas * patch.timeSig.minorBeatsPerMeasure;
+            if (!Seq.IsValidSequencerLengthMinorBeats(len)) return;
             this.props.app.SeqSetLength(len);
         }
         
@@ -239,7 +220,7 @@ class SequencerMain extends React.Component {
 
         onClickSpeedAdj = (delta) => {
             const patch = this.props.instrument.sequencerDevice.livePatch;
-            const newSpeed = GetNearestSpeedMatch(patch.speed, delta).speed;
+            const newSpeed = gSpeeds.GetClosestMatch(patch.speed, delta).speed;
             this.props.app.SeqSetSpeed(newSpeed);
         }
 
@@ -257,12 +238,14 @@ class SequencerMain extends React.Component {
          const patch = seq.livePatch;
          const notes = seq.GetNoteLegend();
          const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
-         const playheadInfo = patch.GetInfoAtAbsBeat(playheadAbsBeat);
+         const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsBeat);
          //console.log(`playhead pattern div = ${playheadInfo.patternDiv.toFixed(2)}, absLoop=${playheadInfo.absLoop.toFixed(2)} patternBeat=${playheadInfo.patternBeat.toFixed(2)} patternLengthBeats=${playheadInfo.patternLengthBeats}`);
+         //console.log(`division count = ${patch.GetPatternDivisionCount()}`);
+         //console.log(`playheadPatternFrac = ${playheadPatternFrac.toFixed(2)}`);
 
          const isReadOnly = this.props.observerMode;
 
-         const speedObj = GetNearestSpeedMatch(patch.speed, 0);
+         const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
 
          if (seq.isPlaying && !this.timer) {
              this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
@@ -278,15 +261,15 @@ class SequencerMain extends React.Component {
              );
          });
 
-         const speedList = this.state.isSpeedExpanded && gSpeeds.map(s => {
+         const speedList = this.state.isSpeedExpanded && gSpeeds.sortedValues.map(s => {
             return (
                <li key={s.caption} onClick={() => this.onClickSpeed(s)}>{s.caption}</li>
            );
         });
 
-        const divisionsList = this.state.isDivExpanded && gDivisions.map(s => {
+        const divisionsList = this.state.isDivExpanded && gDivisions.sortedValues.map(s => {
             return (
-               <li key={s} onClick={() => this.onClickDivision(s)}>{s}</li>
+               <li key={s.val} onClick={() => this.onClickDivision(s.val)}>{s.caption}</li>
            );
         });
 
@@ -325,50 +308,56 @@ class SequencerMain extends React.Component {
                 <li key={divisionKey + "_" + k.midiNoteValue} className={cssClass}>
                     <div className='noteBase'>
                     <div className='noteOL'>
-                    <div className='playheadOL'>
+                    {/* <div className='playheadOL'> */}
                         <div className='muteOL'>
                         <div className='hoverOL'></div>
                         </div>
                     </div>
-                    </div>
+                    {/* </div> */}
                     </div>
                 </li>
             )
         });
 
-        const pianoRoll = [];
+        const patternDivisions = patch.GetPatternDivisionInfo();
+        const pianoRoll = patternDivisions.map(divInfo => {
+            const isPlaying = seq.isPlaying && (playheadPatternFrac >= divInfo.beginPatternFrac) && (playheadPatternFrac < divInfo.endPatternFrac);
 
-        const divisionCount = patch.GetDivisions();
-        let patternDiv = 0; // index of the div across the whole pattern
-        for (let patternSubdiv = 0; patternSubdiv < patch.GetLengthSubdivs(); ++ patternSubdiv) {
-            let subdivMusicalTime = patch.timeSig.getMusicalTimeForSubdiv(patternSubdiv);
-            for (let iDivision = 0; iDivision < divisionCount; ++ iDivision, ++ patternDiv) {
-                const key = iDivision + "_" + patternSubdiv;
-                const measureBoundary = iDivision === 0 && subdivMusicalTime.subdivInfo.measureSubdivIndex === 0; // beatBoundary && !iBeat;
-                const majorSubdiv = iDivision === 0 && subdivMusicalTime.subdivInfo.isMajorSubdiv;
+            const className = `${gDivisionInfo[patch.GetDivisionType()].cssClass} pianoRollColumn` +
+                (divInfo.isMeasureBoundary ? " beginMeasure" : "") +
+                (divInfo.isMajorBeatBoundary ? " majorSubdiv" : "") +
+                (isPlaying ? " playing" : "");
+            
+            return (
+                <ul key={divInfo.patternDivIndex} className={className}>
+                    {pianoRollColumn(divInfo)}
+                </ul>
+                );
+        });
 
-                const isPlaying = seq.isPlaying && Math.floor(playheadInfo.patternDiv) === patternDiv;
+        const topIndicators = patternDivisions.map(divInfo => {
+            const isPlaying = seq.isPlaying && (playheadPatternFrac >= divInfo.beginPatternFrac) && (playheadPatternFrac < divInfo.endPatternFrac);
 
-                const className = `div${divisionCount} pianoRollColumn` +
-                    (measureBoundary ? " beginMeasure" : "") +
-                    (majorSubdiv ? " majorSubdiv" : "") +
-                    (isPlaying ? " playing" : "");
-                pianoRoll.push(
-                         <ul key={key} className={className}>
-                             {pianoRollColumn(key)}
-                         </ul>);
-                 }
-             }
-
+            const className = `${gDivisionInfo[patch.GetDivisionType()].cssClass} pianoRollColumn` +
+                (divInfo.isMeasureBoundary ? " beginMeasure" : "") +
+                (divInfo.isMajorBeatBoundary ? " majorSubdiv" : "") +
+                (isPlaying ? " playing" : "");
+            
+            return (
+                <ul key={divInfo.patternDivIndex} className={className}>
+                    <li className='playhead'>{divInfo.patternDivIndex}</li>
+                </ul>
+                );
+        });
 
         return (
             <div className="sequencerFrame">
                 <div className="sequencerMain">
-                    <div className='overlay'>
+                    {/* <div className='overlay'>
                     <div className='powerButton'>
                         <button className='powerButton' onClick={this.onPowerButtonClick}><i className="material-icons">visibility_off</i></button>
                     </div>
-                    </div>
+                    </div> */}
 
                     <div className='notOverlay'>
                     <div className='seqTop'>
@@ -477,7 +466,9 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Div</div>
                             <div className='paramBlock'>
-                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>{patch.GetDivisions()}</div>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
+                                {gDivisionInfo[patch.GetDivisionType()].caption}
+                            </div>
                                 { this.state.isDivExpanded &&
                                     <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
                                         <div className='dialog'>
@@ -505,7 +496,7 @@ class SequencerMain extends React.Component {
                                 <div className="buttonArray">
                                 <input id={this.swingSliderID} disabled={isReadOnly} style={{width:"60px"}} type="range"
                                     className='stylizedRange'
-                                    min={gSwingMin} max={gSwingMax}
+                                    min={gSwingSnapValues.min} max={gSwingSnapValues.max}
                                     onClick={this.onClickSwingSlider}
                                     onDoubleClick={this.onDoubleClickSwingSlider}
                                     onChange={this.onChangeSwing}
@@ -540,7 +531,7 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Length</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetLengthSubdivs()}</div>
+                            <div className='paramValue'>{patch.GetLengthMinorBeats()}</div>
                                 <div className="buttonArray vertical">
                                     <button onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
                                     <button onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
@@ -560,6 +551,23 @@ class SequencerMain extends React.Component {
                     </div>
                     </div>
 
+
+
+                    <div className="pianoRollTopIndicators">
+                        <div className="pianoRollLegendCont">
+                            <ul className="pianoRollLegend">
+                                <li>
+                                    {/* <div className='muteRow muted'>M</div> */}
+                                </li>
+                            </ul>
+                        </div>
+                        <div className='pianoRollContainer'>
+                            {topIndicators}
+                        </div>
+                    </div>
+
+
+
                     <div className="pianoRollScrollCont">
                         <div className="pianoRollLegendCont">
                             <ul className="pianoRollLegend">
@@ -567,9 +575,11 @@ class SequencerMain extends React.Component {
                             </ul>
                         </div>
                         <div className='pianoRollContainer'>
-                        {pianoRoll}
+                            {pianoRoll}
                         </div>
                     </div>
+
+
                 </div>
             </div>
         </div>

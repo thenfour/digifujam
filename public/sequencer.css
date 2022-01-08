@@ -6,26 +6,24 @@
     height: 100%;
     margin: 0;
     border: 0;
-    /* background-color: #00000055; */
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
     position: absolute;
     font-family: monospace;
+    padding: 20px;
+    padding-right: 150px;
+    padding-left: 50px;
 }
 
 .sequencerMain {
     color: #044;
     background-color: #ffd;
-    max-height: calc(100% - 25px);
-    max-width: calc(100% - 25px);
     z-index: 8999;
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    padding-top:10px;
-    margin-top: 15px;
+    padding: 8px;
+
+    height: 100%;
 
     box-shadow: 0px 0px 7px #000, inset 0px 0px 4px #000;
     position:relative; /* allow absolute positioning on the seq */
@@ -54,7 +52,6 @@
 }
 
 .sequencerMain .seqTopRow {
-    margin-bottom: 7px;
     display: flex;
     align-items: flex-start;
     flex-direction: row;
@@ -155,7 +152,7 @@
 }
 
 .sequencerMain .pianoRollScrollCont {
-    width: calc(100% - 20px);
+    /* width: calc(100% - 20px); */
     background-color: black;
     flex-grow: 1;
     overflow: scroll;
@@ -298,6 +295,7 @@
     color:#0cc;
     font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
     font-size: 16px;
+    z-index: 10000;
 }
 .sequencerMain .dialog legend {
     color: #aa0;
@@ -399,6 +397,7 @@
 .sequencerMain ul.pianoRollColumn {
     padding: 0;
     margin: 0;
+    position:relative; /* allow abs position children (beat indicator) */
 }
 
 .sequencerMain ul.pianoRollColumn li {
@@ -454,6 +453,40 @@ that means each div width is (previous div total width + 10%) / div#
     border-left: 4px solid #664;
 }
 
+/*  ----- play indicators ----- */
+
+.sequencerMain .pianoRollTopIndicators {
+    display:flex;
+}
+
+.sequencerMain .pianoRollTopIndicators li,
+.sequencerMain .pianoRollTopIndicators ul.pianoRollLegend li,
+.sequencerMain .pianoRollTopIndicators ul.pianoRollColumn li
+ {
+    height: auto; /* as long as i'm putting text three.*/
+    /* padding-left: 5px; */
+    font-size: xx-small;
+    text-align: center;
+}
+
+.sequencerMain .pianoRollTopIndicators ul.pianoRollLegend li{
+    background-color:transparent;
+    box-shadow:none;
+}
+
+.sequencerMain .pianoRollTopIndicators .playhead {
+    background-color:#8884;
+}
+
+.sequencerMain .pianoRollTopIndicators ul.playing .playhead {
+    background-color:#8888;
+}
+
+.sequencerMain .pianoRollTopIndicators ul.playing.majorSubdiv li {
+    background-color:#f44;
+}
+
+
 
 
 
@@ -473,13 +506,22 @@ that means each div width is (previous div total width + 10%) / div#
     box-shadow: inset 0px 0px 36px #000b;
 }
 
-.sequencerMain ul.pianoRollColumn.playing .playheadOL {
-    border-bottom:4px solid #0c02;
+.sequencerMain ul.pianoRollColumn li .hoverOL:hover {
+    background-color: #0883;
 }
 
-.sequencerMain ul.pianoRollColumn.playing.majorSubdiv .playheadOL {
-    border-bottom:4px solid #ff02;
+/*
+.sequencerMain ul.pianoRollColumn .playheadOL {
+    transition: border-bottom-color .1s;
+    border-bottom: 6px solid #8882;
 }
+
+.sequencerMain ul.pianoRollColumn.playing .playheadOL {
+    border-bottom-color:#8885;
+    transition:border-bottom-color 0s;
+}
+*/
+
 
 .sequencerMain ul.pianoRollColumn li.muted .muteOL {
     background-color: #0008;

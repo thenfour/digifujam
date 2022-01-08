@@ -1,5 +1,3 @@
-'use strict';
-
 const DF = require("./DFCommon");
 const EventEmitter = require('events');
 
@@ -150,10 +148,46 @@ let testImportValue = (min, max, v) => {
 };
 
 
+// a sorted array of objects, with ability to find object based on distance to val
+// and increment/decrement clamped. used by UI value selection.
+class FuzzySelector
+{
+    constructor(sortedValues, distFn) {
+        this.sortedValues = sortedValues;
+        this.distFn = distFn;
+    }
+
+    GetClosestMatch(val, indexDelta) {
+        if (!this.sortedValues.length)
+            return null;
+        let minDist = 0x7FFFFFFF;
+        let minObjIndex = 0;
+        for (let i = 0; i < this.sortedValues.length; ++ i) {
+            let dist = this.distFn(val, this.sortedValues[i]);
+            if (dist >= minDist)
+                continue;
+            minDist = dist;
+            minObjIndex = i;
+        }
+        minObjIndex += indexDelta ?? 0;
+        if (minObjIndex < 0)
+            minObjIndex = 0;
+        if (minObjIndex >= this.sortedValues.length - 1)
+            minObjIndex = this.sortedValues.length - 1;
+        return this.sortedValues[minObjIndex];
+    }
+
+    get min() { return this.sortedValues.at(0); }
+    get max() { return this.sortedValues.at(-1); }
+}
+
+
+
 module.exports = {
     stylizeRangeInput,
     IsValidJSONString,
     ModifierKeyTracker,
     GestureTracker,
+    FuzzySelector,
 };
 

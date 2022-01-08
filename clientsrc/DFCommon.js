@@ -66,7 +66,7 @@ const ClientMessages = {
     SeqSetSpeed: "SeqSetSpeed", // { speed }
     SeqSetSwing: "SeqSetSwing", // { swing }
     SeqSetDiv: "SeqSetDiv", // { divisions }
-    SeqSetLength: "SeqSetLength", // { lengthSubdivs }
+    SeqSetLength: "SeqSetLength", // { lengthMinorBeats }
     // set pattern data (array of modifications: note add, note del, clear)
     // save preset as
     // load preset
@@ -115,7 +115,7 @@ const ServerMessages = {
     SeqSetSpeed: "SeqSetSpeed", // { instrumentID, speed }
     SeqSetSwing: "SeqSetSwing", // { instrumentID, swing }
     SeqSetDiv: "SeqSetDiv", // { instrumentID, divisions }
-    SeqSetLength: "SeqSetLength", // { instrumentID, lengthSubdivs }
+    SeqSetLength: "SeqSetLength", // { instrumentID, lengthMinorBeats }
 };
 
 const ServerSettings = {
@@ -988,9 +988,9 @@ class DigifuInstrumentSpec {
             return n;
         });
 
-        if (this.behaviorAdjustmentsApplied) return;
-
         this.sequencerDevice = new Seq.SequencerDevice(this.sequencerDevice);
+
+        if (this.behaviorAdjustmentsApplied) return;
 
         // for restrictive behaviorStyles, we force params to a certain value and hide from gui always.
         this.paramsToForceAndHide = {};

@@ -4,7 +4,6 @@
   "description": "multiplayer jam session",
   "main": "index.js",
   "dependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.12.13",
     "@babel/plugin-transform-react-jsx": "^7.12.16",
     "@babel/preset-env": "^7.12.16",
     "@babel/preset-react": "^7.12.13",
@@ -32,6 +31,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-private-methods": "^7.16.7",
     "babel-loader": "^8.2.3",
     "path": "^0.12.7",
     "webpack": "^5.65.0",

@@ -148,14 +148,14 @@ class MusicalTime {
 
 
 
-const FourFourSpec = { id: "4_4", name: "4/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1] };
+const FourFourSpec = { id: "4_4", name: "4/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1] };
 
 // timesig defines how BPM relate to:
 // measures
-// subdivisions
-// subdivision grouping (like in 6/8 time, two groups of 3 subdivisions. and 5/8 time, 2+3 or 3+2.)
+// majorbeats
+// minorbeats (like in 6/8 time, two groups (aka major beats) of 3 minor beats. and 5/8 time, 2+3 or 3+2.)
 //
-// remember that "BEAT" is NOT the same as we normally think of a beat, because that's pretty fuzzy & complex.
+// "BEAT" is NOT the same as we normally think of a beat, because that's pretty fuzzy & complex.
 // in 5/8, what is a "beat"? In 7jam, a "BEAT" is a quarter note, the way timesigs are spec'd out.
 // typically the metronome pulses in quarter notes
 class TimeSig {
@@ -164,73 +164,105 @@ class TimeSig {
         if (!this.id) {
             Object.assign(this, FourFourSpec);
         }
-        console.assert(this.subdivGroups);
-        console.assert(this.subdivsPerBeat);
+        console.assert(this.minorBeatGroups);
+        console.assert(this.minorBeatsPerQuarter);
         console.assert(this.name);
 
-        this.subdivCount = this.subdivGroups.reduce((a,b)=>a+b,0);
-        this.beatsPerMeasure = this.subdivCount / this.subdivsPerBeat;
-        this.subdivInfo = [];
-        this.subdivGroups.forEach((groupSubdivCount, groupIndex) => {
-            for (var groupSubdivIndex = 0; groupSubdivIndex < groupSubdivCount; ++ groupSubdivIndex) {
-                this.subdivInfo.push({
-                    groupSubdivIndex,
-                    measureSubdivIndex: this.subdivInfo.length,
-                    isMajorSubdiv: groupSubdivIndex == 0,
+        this.majorBeatsPerMeasure = this.minorBeatGroups.length; // NOT EQUAL length
+        this.minorBeatsPerMeasure = this.minorBeatGroups.reduce((a,b)=>a+b,0); // EQUAL length
+        this.quartersPerMeasure = this.minorBeatsPerMeasure / this.minorBeatsPerQuarter;
+        let iMinorBeatOfMeasure = 0;
+        this.minorBeatInfo = [];
+        this.minorBeatGroups.forEach((minorBeatCount, majorBeatIndex) => {
+            for (var iMinorBeat = 0; iMinorBeat < minorBeatCount; ++ iMinorBeat) {
+                this.minorBeatInfo.push({
+                    // for maintainability only return what's actually needed.
+                    majorBeatIndex,
+                    beginMeasureFrac : iMinorBeatOfMeasure / this.minorBeatsPerMeasure,
+                    endMeasureFrac : (iMinorBeatOfMeasure + 1) / this.minorBeatsPerMeasure,
+                    minorBeatOfMajorBeat: iMinorBeat,
+                    minorBeatOfMeasure: iMinorBeatOfMeasure,
+                    isMajorBeatBoundary: iMinorBeat === 0,
+                    // isMeasureBoundary: iMinorBeat === 0 && majorBeatIndex === 0,
                 });
+                iMinorBeatOfMeasure ++;
             }
         });
-    }
 
-    GetSubdivInfo(subdiv) {
-        isubdiv = Math.floor(subdiv);
-        isubdiv = DFUtil.modulo(isubdiv, this.subdivCount);
-        return this.subdivInfo[isubdiv];
-    }
-
-    isMajorSubdiv(subdiv) {
-        return this.GetSubdivInfo(subdiv).isMajorSubdiv;
-    }
-
-    isMinorSubDiv(subdiv) {
-        return !this.isMajorSubdiv(subdiv);
-    }
-
-    BeatsToSubdivs(beats) {
-        return beats * this.subdivsPerBeat;
-    }
-
-    getMusicalTimeForSubdiv(subdiv) {
-        const subdivFloat = DFUtil.modulo(subdiv, this.subdivCount);
-        const subdivInfo = this.GetSubdivInfo(subdivFloat);
-
-        const measureFloat = subdivFloat / this.subdivsPerBeat;
-        const measureInt = Math.floor(measureFloat);
-        const measureFrac = measureFloat - measureInt;
-
-        return new MusicalTime({
-            measureFloat,
-            measureInt,
-            measureFrac,
-            subdivFloat,
-            subdivInfo,
+        // create major beat info as well. so when subdividing by major beats we have info like above.
+        this.majorBeatInfo = [...new Array(this.majorBeatsPerMeasure)];
+        this.minorBeatInfo.forEach(minbi => {
+            let majbi = this.majorBeatInfo[minbi.majorBeatIndex];
+            if (!majbi) {
+                majbi = {
+                    minorBeats: [],
+                    beginMeasureFrac : 2,
+                    endMeasureFrac: -1,
+                    index: minbi.majorBeatIndex,
+                };
+                this.majorBeatInfo[minbi.majorBeatIndex] = majbi;
+            }
+            majbi.minorBeats.push(minbi);
+            majbi.beginMeasureFrac = Math.min(majbi.beginMeasureFrac, minbi.beginMeasureFrac);
+            majbi.endMeasureFrac = Math.max(majbi.endMeasureFrac, minbi.endMeasureFrac);
         });
     }
 
-    getMusicalTimeForBeat(beat) {
-        const measureFloat = beat / this.beatsPerMeasure; // -.5 / 4 = -.125
-        const measureInt = Math.floor(measureFloat); // beat -.5 = -1
-        const measureFrac = measureFloat - measureInt; // beat -.5 => .875
-        const subdivFloat = measureFrac * this.subdivCount;
-        const subdivInfo = this.GetSubdivInfo(subdivFloat);
-        return new MusicalTime({
-            measureFloat,
-            measureInt,
-            measureFrac,
-            subdivFloat,
-            subdivInfo,
-        });
+    // GetMinorBeatInfo(minorBeat) {
+    //     minorBeat = Math.floor(minorBeat);
+    //     minorBeat = DFUtil.modulo(minorBeat, this.minorBeatsPerMeasure);
+    //     return this.minorBeatInfo[minorBeat];
+    // }
+
+    // isMajorSubdiv(subdiv) {
+    //     return this.GetSubdivInfo(subdiv).isMajorSubdiv;
+    // }
+
+    // isMinorSubDiv(subdiv) {
+    //     return !this.isMajorSubdiv(subdiv);
+    // }
+
+    // BeatsToSubdivs(beats) {
+    //     return beats * this.subdivsPerBeat;
+    // }
+
+    // getMusicalTimeForSubdiv(subdiv) {
+    //     const subdivFloat = DFUtil.modulo(subdiv, this.subdivCount);
+    //     const subdivInfo = this.GetSubdivInfo(subdivFloat);
+
+    //     const measureFloat = subdivFloat / this.subdivsPerBeat;
+    //     const measureInt = Math.floor(measureFloat);
+    //     const measureFrac = measureFloat - measureInt;
+
+    //     return new MusicalTime({
+    //         measureFloat,
+    //         measureInt,
+    //         measureFrac,
+    //         subdivFloat,
+    //         subdivInfo,
+    //     });
+    // }
+
+    getMeasureFracForAbsQuarter(quarter) {
+        return DFUtil.getDecimalPart(quarter / this.quartersPerMeasure);
     }
+
+    // getMusicalTimeForBeat(beat) {
+    //     const measureFloat = beat / this.beatsPerMeasure; // -.5 / 4 = -.125
+    //     const measureInt = Math.floor(measureFloat); // beat -.5 = -1
+    //     const measureFrac = measureFloat - measureInt; // beat -.5 => .875
+    //     const subdivFloat = measureFrac * this.subdivCount;
+    //     const subdivInfo = this.GetSubdivInfo(subdivFloat);
+
+    //     // for maintainability only return what's actually needed.
+    //     return new MusicalTime({
+    //         // measureFloat,
+    //         // measureInt,
+    //         // measureFrac,
+    //         // subdivFloat,
+    //         // subdivInfo,
+    //     });
+    // }
 
     toString() {
         return this.name;
@@ -240,16 +272,16 @@ class TimeSig {
 
 const FourFour = new TimeSig(FourFourSpec);
 const CommonTimeSignatures = [
-    new TimeSig({ id: "3_4", name: "3/4", subdivsPerBeat: 1, subdivGroups: [1,1,1] }),
+    new TimeSig({ id: "3_4", name: "3/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1] }),
     FourFour,
-    new TimeSig({ id: "5_4", name: "5/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1,1] }),
-    new TimeSig({ id: "6_4", name: "6/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1,1,1] }),
-    new TimeSig({ id: "7_4", name: "7/4", subdivsPerBeat: 1, subdivGroups: [1,1,1,1,1,1,1] }),
-    new TimeSig({ id: "5_8", name: "5/8", subdivsPerBeat: 2, subdivGroups: [3,2] }),
-    new TimeSig({ id: "6_8", name: "6/8", subdivsPerBeat: 2, subdivGroups: [3,3] }),
-    new TimeSig({ id: "7_8", name: "7/8", subdivsPerBeat: 2, subdivGroups: [4,3] }),
-    new TimeSig({ id: "9_8", name: "9/8", subdivsPerBeat: 2, subdivGroups: [3,3,3] }),
-    new TimeSig({ id: "12_8", name: "12/8", subdivsPerBeat: 2, subdivGroups: [3,3,3,3] }),
+    new TimeSig({ id: "5_4", name: "5/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1] }),
+    new TimeSig({ id: "6_4", name: "6/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1,1] }),
+    new TimeSig({ id: "7_4", name: "7/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1,1,1] }),
+    new TimeSig({ id: "5_8", name: "5/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,2] }),
+    new TimeSig({ id: "6_8", name: "6/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,3] }),
+    new TimeSig({ id: "7_8", name: "7/8", minorBeatsPerQuarter: 2, minorBeatGroups: [4,3] }),
+    new TimeSig({ id: "9_8", name: "9/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,3,3] }),
+    new TimeSig({ id: "12_8", name: "12/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,3,3,3] }),
 ];
 
 // client uses this to get realtime musical time. the server sends RoomBeat periodically

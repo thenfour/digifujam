@@ -82,6 +82,9 @@
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",
       "presetBankID": "fm4",
+      "allowSequencer": "1",
+      "sequencerDevice": {
+      },
       "name": "Mini FM A"
     },
     {
@@ -89,6 +92,9 @@
       "copyOfInstrumentID": "minifm",
       "presetBankID": "fm4",
       "namePrefix": "FM4b: ",
+      "allowSequencer": "1",
+      "sequencerDevice": {
+      },
       "name": "Mini FM B"
     },
     {
@@ -97,6 +103,9 @@
       "presetBankID": "microFM",
       "namePrefix": "MicroA: ",
       "name": "MicroA",
+      "allowSequencer": "1",
+      "sequencerDevice": {
+      },
       "behaviorStyle": "microSub"
     },
     {
@@ -105,6 +114,9 @@
       "namePrefix": "MicroB: ",
       "presetBankID": "microFM",
       "name": "MicroB",
+      "allowSequencer": "1",
+      "sequencerDevice": {
+      },
       "behaviorStyle": "microSub"
     },    {
       "instrumentID": "sfzACPno",
