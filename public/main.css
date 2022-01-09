@@ -1157,8 +1157,8 @@ ul.instParamList li.inlineLabel
     border: 1px solid #444;
 }
 .component.instrumentCloset li .seqCtrlContainer.on .seqIndicator {
-    background-color: #c33;
-    box-shadow: 0 0 12px #f44;
+    background-color: #3c3;
+    box-shadow: 0 0 12px #4f4;
 }
 .component.instrumentCloset li .seqCtrlContainer.off .seqIndicator {
     background-color: #444;

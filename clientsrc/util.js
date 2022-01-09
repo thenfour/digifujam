@@ -80,6 +80,7 @@ function IsValidJSONString(str) {
 // https://stackoverflow.com/questions/18389224/how-to-style-html5-range-input-to-have-different-color-before-and-after-slider
 let stylizeRangeInput = (elementID, opts) => {
     let stylize = (target) => {
+        if (!target) return;
         let min = parseFloat(target.min);
         let max = parseFloat(target.max);
         let v = parseFloat(target.value);

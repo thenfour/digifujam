@@ -1,0 +1,88 @@
+velocitySets:
+
+  general2:
+    - vel: 100
+      cssClass: "genvel0"
+    - vel: 30
+      cssClass: "genvel1"
+
+legends:
+  GeneralNotes:
+
+  - name: "C5"
+    midiNoteValue: 72
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "B4"
+    midiNoteValue: 71
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "A#4"
+    midiNoteValue: 70
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "A4"
+    midiNoteValue: 69
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "G#4"
+    midiNoteValue: 68
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "G4"
+    midiNoteValue: 67
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "F#4"
+    midiNoteValue: 66
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "F4"
+    midiNoteValue: 65
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "E4"
+    midiNoteValue: 64
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "D#4"
+    midiNoteValue: 63
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "D4"
+    midiNoteValue: 62
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "C#4"
+    midiNoteValue: 61
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"
+
+  - name: "C4"
+    midiNoteValue: 60
+    legendCssClass: ""
+    cssClass: ""
+    velocitySetRef: "general2"

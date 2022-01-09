@@ -5,7 +5,7 @@
     }
 	],
 	"settings": {
-		"editor.tabSize": 3
+		"editor.tabSize": 2
 	},
 	"launch": {
 		"version": "0.2.0",

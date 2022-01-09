@@ -240,7 +240,7 @@ class _7jamAPI
 
   SendWelcomeMessageToUser(userID, msgText, welcomeMsgID) {
     let nm = new DF.DigifuChatMessage();
-    nm.messageID = DF.generateID();
+    nm.messageID = DFU.generateID();
     nm.source = DF.eMessageSource.Server;
     nm.welcomeMsgID = welcomeMsgID;
     nm.messageType = DF.ChatMessageType.chat;
@@ -295,7 +295,7 @@ class RoomServer {
       }
       if (!i.instrumentID) {
         log(`${i.name} warning: Instruments need a constant instrumentID.`);
-        i.instrumentID = DF.generateID();
+        i.instrumentID = DFU.generateID();
       }
       usedInstrumentIDs.push(i.instrumentID);
 
@@ -455,7 +455,7 @@ class RoomServer {
         this.roomState.users.push(u);
 
         let chatMessageEntry = new DF.DigifuChatMessage();
-        chatMessageEntry.messageID = DF.generateID();
+        chatMessageEntry.messageID = DFU.generateID();
         chatMessageEntry.messageType = DF.ChatMessageType.join; // of ChatMessageType. "chat", "part", "join", "nick"
         chatMessageEntry.fromUserID = u.userID;
         chatMessageEntry.fromUserColor = u.color;
@@ -478,6 +478,7 @@ class RoomServer {
           yourUserID: userID,
           roomState: JSON.parse(this.roomState.asFilteredJSON()), // filter out stuff that shouldn't be sent to clients
           adminKey,
+          globalSequencerConfig: Seq.GetGlobalSequencerConfig(),
         });
 
         // broadcast user enter to all clients except the user.
@@ -914,7 +915,7 @@ class RoomServer {
       // fix some things up.
       patchObj.author = foundUser.user.name;
       patchObj.savedDate = new Date();
-      if (!patchObj.presetID) patchObj.presetID = DF.generateID();
+      if (!patchObj.presetID) patchObj.presetID = DFU.generateID();
       patchObj.isReadOnly = false;
 
       // if there's an existing preset with the same ID, then overwrite. otherwise push.
@@ -952,7 +953,7 @@ class RoomServer {
   // chat msgs can come from discord or 7jam itself so this logic is shared.
   HandleUserChatMessage(fromUser, msgText, source) {
     let nm = new DF.DigifuChatMessage();
-    nm.messageID = DF.generateID();
+    nm.messageID = DFU.generateID();
     nm.source = source;
     nm.messageType = DF.ChatMessageType.chat; // of ChatMessageType. "chat", "part", "join", "nick"
     nm.message = msgText;
@@ -1096,7 +1097,7 @@ class RoomServer {
       let nm = null;
       if (foundUser.user.name != data.name) { // new chat message entry for this event
         nm = new DF.DigifuChatMessage();
-        nm.messageID = DF.generateID();
+        nm.messageID = DFU.generateID();
         nm.messageType = DF.ChatMessageType.nick; // of ChatMessageType. "chat", "part", "join", "nick"
         nm.message = "";
         nm.fromUserID = foundUser.user.userID;
@@ -1412,18 +1413,42 @@ class RoomServer {
       if (!foundUser) throw new Error(`SeqSetLength => unknown user`);
       const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
-      if (!Seq.IsValidSequencerLengthMinorBeats(data.lengthMinorBeats)) throw new Error(`invalid sequencer lengthMinorBeats.`);
+      if (!Seq.IsValidSequencerLengthMajorBeats(data.lengthMajorBeats)) throw new Error(`invalid sequencer lengthMajorBeats.`);
 
-      foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMinorBeats(data.lengthMinorBeats);
+      foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMajorBeats(data.lengthMajorBeats);
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetLength, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        lengthMinorBeats: data.lengthMinorBeats,
+        lengthMajorBeats: data.lengthMajorBeats,
       });
 
     } catch (e) {
       console.log(`SeqSetLength exception occurred`);
+      console.log(e);
+    }
+  }
+
+
+  SeqPatternOps(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqPatternOps => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+
+      if (!foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops)) {
+        throw new Error(`Sequencer ProcessOps returned false.`);
+      }
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPatternOps, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+        ops: data.ops,
+      });
+
+    } catch (e) {
+      console.log(`SeqPatternOps exception occurred`);
       console.log(e);
     }
   }
@@ -1598,7 +1623,7 @@ class RoomServer {
       });
 
       let chatMessageEntry = new DF.DigifuChatMessage();
-      chatMessageEntry.messageID = DF.generateID();
+      chatMessageEntry.messageID = DFU.generateID();
       chatMessageEntry.messageType = DF.ChatMessageType.part; // of ChatMessageType. "chat", "part", "join", "nick"
       chatMessageEntry.timestampUTC = new Date();
       chatMessageEntry.fromUserID = foundUser.user.userID;
@@ -2061,6 +2086,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.SeqSetSwing, data => ForwardToRoom(ws, room => room.SeqSetSwing(ws, data)));
       ws.on(DF.ClientMessages.SeqSetDiv, data => ForwardToRoom(ws, room => room.SeqSetDiv(ws, data)));
       ws.on(DF.ClientMessages.SeqSetLength, data => ForwardToRoom(ws, room => room.SeqSetLength(ws, data)));
+      ws.on(DF.ClientMessages.SeqPatternOps, data => ForwardToRoom(ws, room => room.SeqPatternOps(ws, data)));
       // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));
@@ -2109,6 +2135,25 @@ app.use("/dist", express.static("./dist"));
 
 const globalInstruments = fs.readFileSync("global_instruments.json");
 DF.SetGlobalInstrumentList(JSON.parse(globalInstruments).globalInstruments);
+
+
+// load sequencer global configuration files. instrument JSON can refer to these configs.
+const seqConfigPath = `.${gConfig.path_separator}sequencer_configs`;
+const seqConfigs = fs.readdirSync(seqConfigPath);
+seqConfigs.forEach(leaf => {
+  const path = `${seqConfigPath + gConfig.path_separator + leaf}`;
+  console.log(`reading sequencer config file: ${path}`);
+  const configStr = fs.readFileSync(path, {encoding : 'utf8', flag : 'r'});
+  const config = YAML.parse(configStr);
+  Seq.IntegrateSequencerConfig(config);
+});
+Seq.ResolveSequencerConfig();
+
+
+
+
+
+
 
 let serverRestoreState = fs.readFileSync("server_state.json");
 if (fs.existsSync(gPathLatestServerState)) {

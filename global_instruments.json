@@ -95,6 +95,10 @@
       "color": "rgb(138, 224, 153)",
       "engine": "minifm",
       "supportsObservation": true,
+      "allowSequencer": "1",
+      "sequencerDevice": {
+        "legendRef": "GeneralNotes"
+      },
       "activityDisplay": "keyboard",
       "params": [
         {

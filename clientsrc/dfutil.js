@@ -1,3 +1,4 @@
+const { nanoid } = require("nanoid");
 
 
 Array.prototype.removeIf = function(callback) {
@@ -91,6 +92,21 @@ function getDecimalPart(x) {
 function modulo(x, n) {
    return ((x % n) + n) % n;
  };
+
+ 
+  // todo: optimize for sorted arrays
+  function findNearest(array, distFn) {
+   let closestDistance = 0x7fffffff;
+   let closestIndex = -1;
+   array.forEach((e,i) => {
+     const dist = distFn(e, i);
+     if (dist < closestDistance) {
+       closestDistance = dist;
+       closestIndex = i;
+     }
+   });
+   return array[closestIndex];
+ }
 
 function array_move(arr, old_index, new_index) {
    if (new_index >= arr.length) {
@@ -271,6 +287,19 @@ function ProcessMessageFields(fieldsSpec, subs) {
    return messageFields;
 }
 
+
+function generateID() {
+   return nanoid(/*8*/); // not really necessary to limit the hash size. it's just not a bottleneck.
+}
+
+
+function IsServer() {
+   return typeof window === 'undefined';
+}
+
+function IsClient() {
+   return !IsServer();
+}
 module.exports = {
    secondsToMS,
    minutesToMS,
@@ -300,4 +329,8 @@ module.exports = {
    GrabArgs,
    TimeSpan,
    modulo,
+   findNearest,
+   generateID,
+   IsClient,
+   IsServer,
 };

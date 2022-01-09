@@ -7,7 +7,7 @@ const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 
-const gPlayingUpdateInterval = 35;
+const gPlayingUpdateInterval = 50;
 
 
 const gTempoBPMStep = 5;
@@ -28,7 +28,7 @@ const gSpeeds = new DFUtils.FuzzySelector([
 
 // ok not really logical to use fuzzyselector here because we only accept exact matches but whatev
 const gDivisionInfo = {
-    /*Seq.eDivisionType.MajorBeat*/MajorBeat: { caption: "Beat", cssClass:"div1"},
+    /*Seq.eDivisionType.MajorBeat*/MajorBeat: { caption: "Major beat", cssClass:"div1"},
     /*Seq.eDivisionType.MinorBeat*/MinorBeat: { caption: "8th" , cssClass:"div2"},
 
     /*Seq.eDivisionType.MinorBeat_x2*/MinorBeat_x2: { caption: "16th" , cssClass:"div3"},
@@ -82,12 +82,6 @@ class RoomBeat extends React.Component {
         const isComplete = playheadMeasureFrac >= mbi.beginMeasureFrac && playheadMeasureFrac < mbi.endMeasureFrac;  // does mbi contain the playhead cursor
         return (<div key={mbi.minorBeatOfMeasure} className={"beat " + (isComplete ? " complete" : "") + (mbi.isMajorBeatBoundary ? " majorBeat" : " minorBeat")}>{mbi.minorBeatOfMeasure + 1}</div>);
       });
-
-    //   for (let subdiv = 0; subdiv < ts.subdivCount; ++subdiv) {
-//         const complete = (subdiv == musicalTime.subdivInfo.measureSubdivIndex) ? " complete" : "";
-         //const isMajor = ts.isMajorSubdiv(subdiv) ? " majorBeat" : " minorBeat";
-        //beats.push(<div key={subdiv} className={"beat" + complete + isMajor}>{subdiv + 1}</div>);
-        //}
 
         return <div className="liveRoomBeat">
             {beats}
@@ -200,16 +194,16 @@ class SequencerMain extends React.Component {
 
         onClickLength = (deltaMeasures) => {
             const patch = this.props.instrument.sequencerDevice.livePatch;
-            let len = patch.GetLengthMinorBeats();
-            let meas = len / patch.timeSig.minorBeatsPerMeasure;
+            let len = patch.GetLengthMajorBeats();
+            let meas = len / patch.timeSig.majorBeatsPerMeasure;
             if (deltaMeasures > 0) {
                 meas = Math.ceil(meas+0.1);
             }
             if (deltaMeasures < 0) {
                 meas = Math.floor(meas - .1);
             }
-            len = meas * patch.timeSig.minorBeatsPerMeasure;
-            if (!Seq.IsValidSequencerLengthMinorBeats(len)) return;
+            len = meas * patch.timeSig.majorBeatsPerMeasure;
+            if (!Seq.IsValidSequencerLengthMajorBeats(len)) return;
             this.props.app.SeqSetLength(len);
         }
         
@@ -224,6 +218,15 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetSpeed(newSpeed);
         }
 
+        onCellClick = (patternView, divInfo, note) => {
+            // toggle a 1-div-length 
+            //console.log(`clicked note ${note.midiNoteValue} @ pattern major beat ${divInfo.beginPatternMajorBeat}, div major beat length = ${divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat}`);
+            // convert this click to an ops struct
+            //const seq = this.props.instrument.sequencerDevice;
+            const ops = patternView.GetPatternOpsForCellCycle(divInfo, note);
+            this.props.app.SeqPatternOps(ops);
+        }
+
         timerProc() {
             this.timer = null;
             const seq = this.props.instrument.sequencerDevice;
@@ -234,18 +237,28 @@ class SequencerMain extends React.Component {
         }
 
       render() {
+          if (!this.props.instrument.allowSequencer)
+            return null;
          const seq = this.props.instrument.sequencerDevice;
          const patch = seq.livePatch;
-         const notes = seq.GetNoteLegend();
+         const noteLegend = seq.GetNoteLegend();
+         const patternViewData = new Seq.SequencerPatternView(patch, noteLegend);
          const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
          const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsBeat);
          //console.log(`playhead pattern div = ${playheadInfo.patternDiv.toFixed(2)}, absLoop=${playheadInfo.absLoop.toFixed(2)} patternBeat=${playheadInfo.patternBeat.toFixed(2)} patternLengthBeats=${playheadInfo.patternLengthBeats}`);
          //console.log(`division count = ${patch.GetPatternDivisionCount()}`);
          //console.log(`playheadPatternFrac = ${playheadPatternFrac.toFixed(2)}`);
+         //console.log(patternViewData.divInfo);
 
          const isReadOnly = this.props.observerMode;
 
          const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
+
+         
+        const widthpx = Math.min(75, 20 + (400 / patternViewData.divs.length));
+        const columnStyle = {width:`${widthpx}px`};
+        const heightpx = 50;
+        const rowStyle = {height:`${heightpx}px`};
 
          if (seq.isPlaying && !this.timer) {
              this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
@@ -273,14 +286,14 @@ class SequencerMain extends React.Component {
            );
         });
 
-        const keys = notes.map(k => {
-            const isMuted = patch.IsNoteMuted(k.midiNoteValue);
+        const keys = noteLegend.map(note => {
+            const isMuted = patch.IsNoteMuted(note.midiNoteValue);
             return (
-                <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}>
-                    <div className='rowName'>{k.name}</div>
+                <li key={note.midiNoteValue} id={"key_" + note.midiNoteValue} style={rowStyle} className={note.cssClass}>
+                    <div className='rowName'>{note.name}</div>
                     <div
                         className={isMuted ? 'muteRow muted' : 'muteRow'}
-                        onClick={()=>this.onClickMuteNote(k, !isMuted)}
+                        onClick={()=>this.onClickMuteNote(note, !isMuted)}
                     >M</div>
                 </li>
                 );
@@ -295,56 +308,55 @@ class SequencerMain extends React.Component {
                 </button>);
         });
 
-        const pianoRollColumn = (divisionKey, beginPatternBeat, endPatternBeat) => notes.map(k => {
-            let cssClass = k.cssClass;
-            if (patch.IsNoteMuted(k.midiNoteValue))
+        const pianoRollColumn = (divInfo) => noteLegend.map(note => {
+            let cssClass = note.cssClass ?? "";
+            if (patch.IsNoteMuted(note.midiNoteValue))
                 cssClass += ' muted';
-            // if note touches range, note
-            // playhead indicator
-            // hover
-            // note color
-            // mute
+            
+            if (divInfo.noteMap[note.midiNoteValue].hasNote) {
+                cssClass += divInfo.noteMap[note.midiNoteValue].cssClass + " note";
+            }
+
             return (
-                <li key={divisionKey + "_" + k.midiNoteValue} className={cssClass}>
-                    <div className='noteBase'>
+                <li key={divInfo.patternDivIndex + "_" + note.midiNoteValue} style={rowStyle} className={cssClass}>
+                    <div className='noteBase' onClick={()=>this.onCellClick(patternViewData, divInfo, note)}>
                     <div className='noteOL'>
-                    {/* <div className='playheadOL'> */}
                         <div className='muteOL'>
-                        <div className='hoverOL'></div>
+                        {/* <div className='hoverOL'></div> */}
                         </div>
                     </div>
-                    {/* </div> */}
                     </div>
                 </li>
             )
         });
 
-        const patternDivisions = patch.GetPatternDivisionInfo();
-        const pianoRoll = patternDivisions.map(divInfo => {
+        const pianoRoll = patternViewData.divs.map(divInfo => {
             const isPlaying = seq.isPlaying && (playheadPatternFrac >= divInfo.beginPatternFrac) && (playheadPatternFrac < divInfo.endPatternFrac);
 
             const className = `${gDivisionInfo[patch.GetDivisionType()].cssClass} pianoRollColumn` +
                 (divInfo.isMeasureBoundary ? " beginMeasure" : "") +
-                (divInfo.isMajorBeatBoundary ? " majorSubdiv" : "") +
+                (divInfo.isMajorBeatBoundary ? " majorBeat" : "") +
+                (divInfo.isMinorBeatBoundary ? " minorBeat" : "") +
                 (isPlaying ? " playing" : "");
             
             return (
-                <ul key={divInfo.patternDivIndex} className={className}>
+                <ul key={divInfo.patternDivIndex} style={columnStyle} className={className}>
                     {pianoRollColumn(divInfo)}
                 </ul>
                 );
         });
 
-        const topIndicators = patternDivisions.map(divInfo => {
+        const topIndicators = patternViewData.divs.map(divInfo => {
             const isPlaying = seq.isPlaying && (playheadPatternFrac >= divInfo.beginPatternFrac) && (playheadPatternFrac < divInfo.endPatternFrac);
 
             const className = `${gDivisionInfo[patch.GetDivisionType()].cssClass} pianoRollColumn` +
                 (divInfo.isMeasureBoundary ? " beginMeasure" : "") +
-                (divInfo.isMajorBeatBoundary ? " majorSubdiv" : "") +
+                (divInfo.isMajorBeatBoundary ? " majorBeat" : "") +
+                (divInfo.isMinorBeatBoundary ? " minorBeat" : "") +
                 (isPlaying ? " playing" : "");
             
             return (
-                <ul key={divInfo.patternDivIndex} className={className}>
+                <ul key={divInfo.patternDivIndex} style={columnStyle} className={className}>
                     <li className='playhead'>{divInfo.patternDivIndex}</li>
                 </ul>
                 );
@@ -528,10 +540,11 @@ class SequencerMain extends React.Component {
                                         }
                                 </div>
                             </div>
+
                         <div className='paramGroup'>
                             <div className='legend'>Length</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetLengthMinorBeats()}</div>
+                            <div className='paramValue'>{patch.GetLengthMajorBeats()}</div>
                                 <div className="buttonArray vertical">
                                     <button onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
                                     <button onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>

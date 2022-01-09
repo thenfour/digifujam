@@ -1,4 +1,3 @@
-const { nanoid } = require("nanoid");
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
@@ -7,16 +6,8 @@ const Seq = require('./SequencerCore');
 
 let gDigifujamVersion = 7;
 
-// make sure IDDomain is set, this is needed to differentiate IDs generated on server versus client to make sure they don't collide.
-let gNextID = 1;
-let generateID = function () {
-    let ret = nanoid(8);
-    gNextID++;
-    return ret;
-}
-
 function generateUserID() {
-    return "u" + generateID();
+    return "u" + DFUtil.generateID();
 }
 
 let gGlobalInstruments = [];
@@ -66,8 +57,8 @@ const ClientMessages = {
     SeqSetSpeed: "SeqSetSpeed", // { speed }
     SeqSetSwing: "SeqSetSwing", // { swing }
     SeqSetDiv: "SeqSetDiv", // { divisions }
-    SeqSetLength: "SeqSetLength", // { lengthMinorBeats }
-    // set pattern data (array of modifications: note add, note del, clear)
+    SeqSetLength: "SeqSetLength", // { lengthMajorBeats }
+    SeqPatternOps: "SeqPatternOps", // { ops:[{type:clear|addNote|deleteNote, note:{}}]}
     // save preset as
     // load preset
     // delete preset?
@@ -76,7 +67,7 @@ const ClientMessages = {
 const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
     PleaseReconnect: "PleaseReconnect", // when something on the server requires a reconnection of all users, or when you're not authorized.
-    Welcome: "Welcome",// { yourUserID, roomState, adminKey }
+    Welcome: "Welcome",// { yourUserID, roomState, adminKey, globalSequencerConfig }
     UserEnter: "UserEnter",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserLeave: "UserLeave",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
@@ -115,7 +106,8 @@ const ServerMessages = {
     SeqSetSpeed: "SeqSetSpeed", // { instrumentID, speed }
     SeqSetSwing: "SeqSetSwing", // { instrumentID, swing }
     SeqSetDiv: "SeqSetDiv", // { instrumentID, divisions }
-    SeqSetLength: "SeqSetLength", // { instrumentID, lengthMinorBeats }
+    SeqSetLength: "SeqSetLength", // { instrumentID, lengthMajorBeats }
+    SeqPatternOps: "SeqPatternOps", // { instrumentID, ops:[{type:clear|addNote|deleteNote, note:{}}]}
 };
 
 const ServerSettings = {
@@ -171,6 +163,7 @@ const eParamMappingSource = {
     CC10: 10,
     CC11: 11,
 };
+
 
 const eUserSource = {
     SevenJam: 1,
@@ -526,7 +519,7 @@ class DigifuInstrumentSpec {
             case "patchName":
                 return "init";
             case "presetID":
-                return generateID();
+                return DFUtil.generateID();
         }
         if (param.defaultValue) return param.defaultValue;
         switch (param.parameterType) {
@@ -1441,7 +1434,7 @@ class DigifuChatMessage {
 
     toAggregate() {
         let ret = new DigifuChatMessage();
-        ret.messageID = generateID();
+        ret.messageID = DFUtil.generateID();
         ret.messageType = ChatMessageType.aggregate;
         ret.aggregateMessages = [this];
         ret.timestampUTC = this.timestampUTC;
@@ -1946,7 +1939,7 @@ class DigifuRoomState {
         instrumentSpec.params.forEach(param => {
             ret[param.paramID] = instrumentSpec.CalculateDefaultValue(param);
         });
-        ret.presetID = generateID();
+        ret.presetID = DFUtil.generateID();
         return ret;
     }
 
@@ -2063,7 +2056,6 @@ module.exports = {
     sanitizeUserColor,
     EnsureValidUserColor,
     sanitizeCheerText,
-    generateID,
     RoomItem,
     RoomFn,
     RoomFns,

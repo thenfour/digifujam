@@ -183,7 +183,8 @@ class TimeSig {
                     minorBeatOfMajorBeat: iMinorBeat,
                     minorBeatOfMeasure: iMinorBeatOfMeasure,
                     isMajorBeatBoundary: iMinorBeat === 0,
-                    // isMeasureBoundary: iMinorBeat === 0 && majorBeatIndex === 0,
+                    beginMeasureMajorBeat: majorBeatIndex + (iMinorBeat / minorBeatCount),
+                    endMeasureMajorBeat: majorBeatIndex + ((iMinorBeat + 1) / minorBeatCount),
                 });
                 iMinorBeatOfMeasure ++;
             }
@@ -277,11 +278,11 @@ const CommonTimeSignatures = [
     new TimeSig({ id: "5_4", name: "5/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1] }),
     new TimeSig({ id: "6_4", name: "6/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1,1] }),
     new TimeSig({ id: "7_4", name: "7/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1,1,1] }),
-    new TimeSig({ id: "5_8", name: "5/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,2] }),
-    new TimeSig({ id: "6_8", name: "6/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,3] }),
-    new TimeSig({ id: "7_8", name: "7/8", minorBeatsPerQuarter: 2, minorBeatGroups: [4,3] }),
-    new TimeSig({ id: "9_8", name: "9/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,3,3] }),
-    new TimeSig({ id: "12_8", name: "12/8", minorBeatsPerQuarter: 2, minorBeatGroups: [3,3,3,3] }),
+    new TimeSig({ id: "5_8", name: "5/8 (3+2)", minorBeatsPerQuarter: 2, minorBeatGroups: [3,2] }),
+    new TimeSig({ id: "6_8", name: "6/8", minorBeatsPerQuarter: 3, minorBeatGroups: [3,3] }),
+    new TimeSig({ id: "7_8", name: "7/8 (4+3)", minorBeatsPerQuarter: 2, minorBeatGroups: [4,3] }),
+    new TimeSig({ id: "9_8", name: "9/8", minorBeatsPerQuarter: 3, minorBeatGroups: [3,3,3] }),
+    new TimeSig({ id: "12_8", name: "12/8", minorBeatsPerQuarter: 3, minorBeatGroups: [3,3,3,3] }),
 ];
 
 // client uses this to get realtime musical time. the server sends RoomBeat periodically

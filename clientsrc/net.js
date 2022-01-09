@@ -235,10 +235,12 @@ class DigifuNet {
     SeqSetDiv(divisionType) {
         this.socket.emit(DF.ClientMessages.SeqSetDiv, {divisionType});
     }
-    SeqSetLength(lengthMinorBeats) {
-        this.socket.emit(DF.ClientMessages.SeqSetLength, {lengthMinorBeats});
+    SeqSetLength(lengthMajorBeats) {
+        this.socket.emit(DF.ClientMessages.SeqSetLength, {lengthMajorBeats});
     }
-
+    SeqPatternOps(ops) {
+        this.socket.emit(DF.ClientMessages.SeqPatternOps, {ops});
+    }
 
     // --------------
 
@@ -311,6 +313,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.SeqSetSwing, (data) => this.handler.NET_SeqSetSwing(data));
         this.socket.on(DF.ServerMessages.SeqSetDiv, (data) => this.handler.NET_SeqSetDiv(data));
         this.socket.on(DF.ServerMessages.SeqSetLength, (data) => this.handler.NET_SeqSetLength(data));
+        this.socket.on(DF.ServerMessages.SeqPatternOps, (data) => this.handler.NET_SeqPatternOps(data));
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };

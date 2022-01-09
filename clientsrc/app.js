@@ -8,6 +8,7 @@ const DFSynth = require("./synth");
 const DFNet = require("./net");
 const DFMusic = require("./DFMusic");
 const {eSoundEffects, SoundFxManager} = require('./soundFx');
+const Seq = require('./SequencerCore');
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -73,13 +74,13 @@ class AudioContextWrapper {
     addTrackerForNode(node, nodeType, name) {
         node.oldconnect = node.connect;
         node.olddisconnect = node.disconnect;
-        node.DFID = DF.generateID();
+        node.DFID = DFU.generateID();
         node.DFName = name;//this.scope.join(" > ") + " > " + (name || "unnamed");
         node.DFType = nodeType;
         node.DFConnectedTo = {};
 
         node.connect = (dest) => {
-            dest.DFID = dest.DFID || DF.generateID();
+            dest.DFID = dest.DFID ?? DFU.generateID();
             node.DFConnectedTo[dest.DFID] = true;
 
             const idx = this.connectedNodes.findIndex(n => n.DFID == node.DFID);
@@ -424,6 +425,8 @@ class DigifuApp {
         this.tapTempoState = TapTempoState.NA;
 
         this.resetBeatPhaseOnNextNote = false;
+
+        Seq.IntegrateSequencerConfig(data.globalSequencerConfig);
 
         // get user & room state
         let myUserID = data.yourUserID;
@@ -910,7 +913,20 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMinorBeats(data.lengthMinorBeats);
+        foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMajorBeats(data.lengthMajorBeats);
+        this.stateChangeHandler();
+    }
+
+    NET_SeqPatternOps(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+        
+        if (!foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops)) {
+            throw new Error(`NET_SeqPatternOps failed to apply received ops. Bork`);
+        }
         this.stateChangeHandler();
     }
 
@@ -1413,8 +1429,11 @@ class DigifuApp {
     SeqSetDiv(divisions) {
         this.net.SeqSetDiv(divisions);
     }
-    SeqSetLength(lengthMinorBeats) {
-        this.net.SeqSetLength(lengthMinorBeats);
+    SeqSetLength(lengthMajorBeats) {
+        this.net.SeqSetLength(lengthMajorBeats);
+    }
+    SeqPatternOps(ops) {
+        this.net.SeqPatternOps(ops);
     }
 
     // --------------
