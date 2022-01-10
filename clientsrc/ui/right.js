@@ -2094,7 +2094,7 @@ class RoomArea extends React.Component {
                     sequencerShown={this.props.sequencerShown}
                     setSequencerShown={this.props.setSequencerShown}
                     instrument={this.props.focusedInstrument}
-                    observerMode={this.props.observerMode}
+                    observerMode={!!this.props.app.observingInstrument}
 
                     ></SequencerMain>}
 

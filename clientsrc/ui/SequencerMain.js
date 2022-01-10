@@ -125,12 +125,14 @@ class SequencerMain extends React.Component {
       }
 
       onClickLowerTempo = () => {
+        if (this.props.observerMode) return; // even though you DO have access to this, it would just feel weird to allow it on the observer-mode sequencer.
         let bpm = this.props.app.roomState.bpm;
         bpm = Math.floor((bpm - 1) / gTempoBPMStep) * gTempoBPMStep;
       this.props.app.SendRoomBPM(bpm);
     }
 
       onClickHigherTempo = () => {
+        if (this.props.observerMode) return; // even though you DO have access to this, it would just feel weird to allow it on the observer-mode sequencer.
           let bpm = this.props.app.roomState.bpm;
           bpm = Math.ceil((bpm + 1) / gTempoBPMStep) * gTempoBPMStep;
         this.props.app.SendRoomBPM(bpm);
@@ -142,22 +144,26 @@ class SequencerMain extends React.Component {
       }
 
       onClickTimeSig = (ts) => {
+        if (this.props.observerMode) return;
         this.props.app.SeqSetTimeSig(ts);
         this.setState({showTimeSigDropdown:false});
         }
 
         onClickDivision = (d) => {
+            if (this.props.observerMode) return;
             this.props.app.SeqSetDiv(d);
             this.setState({isDivExpanded:false});
         }
 
         onClickDivAdj = (delta) => {
+            if (this.props.observerMode) return;
             const patch = this.props.instrument.sequencerDevice.livePatch;
             const newDivisions = gDivisions.GetClosestMatch(patch.GetDivisionType(), delta);
             this.props.app.SeqSetDiv(newDivisions.val);
         }
 
         onClickPlayStop = () => {
+            if (this.props.observerMode) return;
             this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
         }
 
@@ -166,18 +172,20 @@ class SequencerMain extends React.Component {
             //
         }
         onDoubleClickSwingSlider = (e) => {
-            console.log(`reset swing slide`);
+            if (this.props.observerMode) return;
             this.props.app.SeqSetSwing(0);
             $("#" + this.swingSliderID).val(0);
             $("#" + this.swingSliderID).trigger("change");
         }
         onChangeSwing = (e) => {
+            if (this.props.observerMode) return;
             let v = gSwingSnapValues.GetClosestMatch(e.target.value, 0);
             v /= 100;
             this.props.app.SeqSetSwing(v);
         }
 
         onClickSwingAdj = (delta) => {
+            if (this.props.observerMode) return;
             const patch = this.props.instrument.sequencerDevice.livePatch;
             let v = gSwingSnapValues.GetClosestMatch(patch.swing * 100, delta);
             v /= 100;
@@ -185,14 +193,17 @@ class SequencerMain extends React.Component {
         }
         
         onClickPattern = (pattern, index) => {
+            if (this.props.observerMode) return;
             this.props.app.SeqSelectPattern(index);
         }
 
         onClickMuteNote = (noteInfo, isMuted) => {
+            if (this.props.observerMode) return;
             this.props.app.SetSetNoteMuted(noteInfo.midiNoteValue, isMuted);
         }
 
         onClickLength = (deltaMeasures) => {
+            if (this.props.observerMode) return;
             const patch = this.props.instrument.sequencerDevice.livePatch;
             let len = patch.GetLengthMajorBeats();
             let meas = len / patch.timeSig.majorBeatsPerMeasure;
@@ -208,17 +219,20 @@ class SequencerMain extends React.Component {
         }
         
         onClickSpeed = (s) => {
+            if (this.props.observerMode) return;
             this.props.app.SeqSetSpeed(s.speed);
             this.setState({isSpeedExpanded:false});
         }
 
         onClickSpeedAdj = (delta) => {
+            if (this.props.observerMode) return;
             const patch = this.props.instrument.sequencerDevice.livePatch;
             const newSpeed = gSpeeds.GetClosestMatch(patch.speed, delta).speed;
             this.props.app.SeqSetSpeed(newSpeed);
         }
 
         onCellClick = (patternView, divInfo, note) => {
+            if (this.props.observerMode) return;
             // toggle a 1-div-length 
             //console.log(`clicked note ${note.midiNoteValue} @ pattern major beat ${divInfo.beginPatternMajorBeat}, div major beat length = ${divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat}`);
             // convert this click to an ops struct
@@ -251,6 +265,7 @@ class SequencerMain extends React.Component {
          //console.log(patternViewData.divInfo);
 
          const isReadOnly = this.props.observerMode;
+         const clickableIfEditable = isReadOnly ? "" : " clickable";
 
          const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
 
@@ -292,7 +307,7 @@ class SequencerMain extends React.Component {
                 <li key={note.midiNoteValue} id={"key_" + note.midiNoteValue} style={rowStyle} className={note.cssClass}>
                     <div className='rowName'>{note.name}</div>
                     <div
-                        className={isMuted ? 'muteRow muted' : 'muteRow'}
+                        className={(isMuted ? 'muteRow muted' : 'muteRow') + clickableIfEditable}
                         onClick={()=>this.onClickMuteNote(note, !isMuted)}
                     >M</div>
                 </li>
@@ -303,7 +318,7 @@ class SequencerMain extends React.Component {
             return (<button
                 key={index}
                 onClick={() => this.onClickPattern(pattern, index)}
-                className={("patternSelect") + (pattern.HasData() ? "" : " disabled") + (index === patch.selectedPatternIdx ? " active" : "")}>
+                className={("patternSelect") + (pattern.HasData() ? "" : " disabled") + (index === patch.selectedPatternIdx ? " active" : "") + clickableIfEditable}>
                     {"ABCDEFGHIJKLMNOPQRSTUV"[index]}
                 </button>);
         });
@@ -378,7 +393,7 @@ class SequencerMain extends React.Component {
                             <fieldset>
                                 <div className='paramGroup'>
                                     <div className='paramBlock'>
-                                            <button className={seq.isPlaying ? 'playButton active' : "playButton"} onClick={this.onClickPlayStop}>
+                                            <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
                                                 <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
                                             </button>
                                     </div>
@@ -399,11 +414,11 @@ class SequencerMain extends React.Component {
                                     {this.props.app.roomState.bpm}
                                 </div>
                                 <div className='buttonArray vertical'>
-                                    <button onClick={this.onClickHigherTempo}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button onClick={this.onClickLowerTempo}><i className="material-icons">arrow_drop_down</i></button>
+                                    <button onClick={this.onClickHigherTempo} className={clickableIfEditable}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button onClick={this.onClickLowerTempo} className={clickableIfEditable}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                                 <div className='buttonArray'>
-                                    <button className={this.props.app.metronome.isMuted ? 'metronome' : 'metronome active'} onClick={this.onClickToggleMetronome}>
+                                    <button className={"clickable metronome" + (this.props.app.metronome.isMuted ? '' : ' active')} onClick={this.onClickToggleMetronome}>
                                     {(this.props.app.metronome.isMuted || this.props.app.IsMuted()) ? 
                                         (<i className="material-icons">volume_off</i>)
                                         : (<i className="material-icons">volume_up</i>)}
@@ -426,11 +441,11 @@ class SequencerMain extends React.Component {
                                         <SequencerPresetDialog app={this.props.app} onClose={() => { this.setState({isPresetsExpanded:false});}}></SequencerPresetDialog>
                                         </div>
                                     </ClickAwayListener>
-                                    }
+                            }
                                 <div className="buttonArray">
                                     {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
-                                    <button className='altui disabled'><i className="material-icons">save</i></button>
-                                    <button className='clearPattern initPreset'>INIT</button>
+                                    <button className={'altui disabled' + clickableIfEditable}><i className="material-icons">save</i></button>
+                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable}>INIT</button>
                                 </div>
                             </div>
                         </div>
@@ -444,11 +459,11 @@ class SequencerMain extends React.Component {
                                     {patternButtons}
                                 </div>
                                 <div className="buttonArray">
-                                <button className='altui'><i className="material-icons">content_copy</i></button>
-                                <button className='altui'><i className="material-icons">content_paste</i></button>
+                                <button title="Copy pattern" className={'altui clickable'}><i className="material-icons">content_copy</i></button>
+                                <button title="Paste pattern" className={'altui' + clickableIfEditable}><i className="material-icons">content_paste</i></button>
                                 </div>
                                 <div className="buttonArray">
-                                <button className='clearPattern'><i className="material-icons">clear</i></button>
+                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable}><i className="material-icons">clear</i></button>
                                 </div>
                             </div>
                             </div>
@@ -470,8 +485,8 @@ class SequencerMain extends React.Component {
                                     </ClickAwayListener>
                                 }
                                 <div className="buttonArray vertical">
-                                    <button onClick={() => this.onClickSpeedAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button onClick={() => this.onClickSpeedAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                                    <button className={clickableIfEditable} onClick={() => this.onClickSpeedAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={() => this.onClickSpeedAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>
@@ -492,8 +507,8 @@ class SequencerMain extends React.Component {
                                     </ClickAwayListener>
                                 }
                                 <div className="buttonArray vertical">
-                                    <button onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>
@@ -551,8 +566,8 @@ class SequencerMain extends React.Component {
                             <div className='paramBlock'>
                             <div className='paramValue'>{patch.GetLengthMajorBeats()}</div>
                                 <div className="buttonArray vertical">
-                                    <button onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                             </div>
                         </div>

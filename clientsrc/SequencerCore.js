@@ -584,6 +584,12 @@ class SequencerPatternView {
   }
 }
 
+class SeqPresetBank {
+  constructor(params) {
+    Object.assign(this, params);
+  }
+}
+
 module.exports = {
   SequencerSettings,
   SequencerDevice,
@@ -598,4 +604,5 @@ module.exports = {
   IntegrateSequencerConfig,
   GetGlobalSequencerConfig,
   ResolveSequencerConfig,
+  SeqPresetBank,
 };

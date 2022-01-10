@@ -482,6 +482,7 @@ class DigifuInstrumentSpec {
         this.supportsPresets = true;
         this.wantsMIDIInput = true; // default. mixing board doesn't care about midi input for example
         this.presetBankID = null; // which bankID will this instrumentspec refer to for its presets
+        this.seqPresetBankID = null; // 
         this.maxTextLength = 100;
         this.behaviorAdjustmentsApplied = false; // upon thaw, based on teh behaviorstyle, we rearrange params and stuff. but once it's done, don't do it again (on the client)
         this.supportsObservation = false; // there's no point allowing certain instruments' params to be observed like drum kit or sampler
@@ -983,6 +984,8 @@ class DigifuInstrumentSpec {
         });
 
         this.sequencerDevice = new Seq.SequencerDevice(this.sequencerDevice);
+
+        this.seqPresetBankID ??= this.presetBankID;
 
         if (this.behaviorAdjustmentsApplied) return;
 
@@ -1550,6 +1553,7 @@ class DigifuRoomState {
     constructor() {
         this.instrumentCloset = []; // list of DigifuInstrument instances
         this.presetBanks = [];
+        this.seqPresetBanks = []; // of Seq.SeqPresetBank
         this.users = [];
         this.chatLog = []; // ordered by time asc
         this.roomItems = [];
@@ -1607,14 +1611,6 @@ class DigifuRoomState {
         this.metronome.setBPM(bpm);
     }
 
-    adminExportRoomState() {
-        return {
-            presetBanks: this.presetBanks,
-            chatLog: [],//this.chatLog,
-            stats: this.stats,
-        };
-    }
-
     asFilteredJSON() {
         const replacer = (k, v) => {
             switch (k) {
@@ -1628,6 +1624,15 @@ class DigifuRoomState {
         return JSON.stringify(this, replacer);
     }
 
+    adminExportRoomState() {
+        return {
+            presetBanks: this.presetBanks,
+            seqPresetBanks: this.seqPresetBanks,
+            chatLog: [],//this.chatLog,
+            stats: this.stats,
+        };
+    }
+
     adminImportRoomState(data) {
         if (data.presetBanks) {
             this.presetBanks = data.presetBanks.map(o => {
@@ -1636,6 +1641,9 @@ class DigifuRoomState {
                 return n;
             });
         }
+
+        data.seqPresetBanks?.map(o => new Seq.SeqPresetBank(o));
+        this.seqPresetBanks ??= [];
 
         this.stats = data.stats;
 

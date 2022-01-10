@@ -29,6 +29,10 @@
     position:relative; /* allow absolute positioning on the seq */
 }
 
+.sequencerMain button {
+    cursor: auto; /* to support observer mode / read-only states, default to no pointer. make it explicit */
+}
+
 .sequencerMain .overlay {
     position:absolute;
     right: 20px;
@@ -127,10 +131,6 @@
     text-shadow: 0 0 7px #fff8;
 }
 
-.paramValue.clickable
-{
-    cursor: pointer;
-}
 
 .sequencerMain .seqTopColumn.playButton .paramGroup {
     height: unset; /* need to undo the fixed row right */
@@ -309,7 +309,6 @@
 }
 .sequencerMain ul.dropDownMenu li {
     padding:6px;
-    cursor: pointer;
 }
 .sequencerMain ul.dropDownMenu li:hover {
     background-color: #066;
@@ -370,7 +369,6 @@
     background-color: #8885;
     margin-left: 10px;
     margin-right: 10px;    
-    cursor:pointer;
     text-align: center;
     color: #8888;
 }
@@ -497,7 +495,6 @@
                 <div class="muteOL">
 */
 .sequencerMain ul.pianoRollColumn li .noteBase {
-    cursor: pointer;
 }
 
 .sequencerMain ul.pianoRollColumn li.note .noteOL {
