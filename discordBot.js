@@ -194,6 +194,11 @@ class DiscordBot {
         return new Set([...a].filter(x => !b.has(x)));            
     }
 
+    ReannounceUserMapTo7jam() {
+        Object.values(this.relevantChannelIDs).forEach(s => s.clear());
+        this.SyncChannelUserMap();
+    }
+
     SyncChannelUserMap() {
         //console.log(`-- SyncChannelUserMap ------------`);
         const startTime = Date.now();

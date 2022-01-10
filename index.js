@@ -1959,6 +1959,8 @@ let OnClientUploadServerState = (ws, data) => {
       room.adminImportRoomState(rs.dump);
     });
 
+    gDiscordBot?.ReannounceUserMapTo7jam();
+
     io.of('/').sockets.forEach(ws => {
       ws.emit(DF.ServerMessages.PleaseReconnect);
     });
