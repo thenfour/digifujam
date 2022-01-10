@@ -181,7 +181,8 @@
 
 .sequencerMain button.active,
 .sequencerMain button.active.disabled { 
-    background-color: #fd0;
+    background-color: #fc0;
+    box-shadow: inset 0px 0px 18px #fff;
 }
 
 .sequencerMain .buttonArray  {
@@ -505,5 +506,7 @@
 }
 
 .sequencerMain ul.pianoRollColumn li.note.vel1 .noteOL {
-    filter: hue-rotate(145deg) brightness(0.5);
+    background-color: #7e0d9b;
+    box-shadow: inset 0px 0px 18px #444, 0px 0px 18px #7e0d9b;
+    
 }

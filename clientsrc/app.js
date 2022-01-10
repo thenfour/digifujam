@@ -605,44 +605,76 @@ class DigifuApp {
 
     NET_OnNoteEvents(noteOns, noteOffs) {
         noteOns.forEach(e => {
-            this.NET_OnNoteOn(e.userID, e.note, e.velocity);
+            this.NET_OnNoteOn(e.userID, e.note, e.velocity, e.seqInstrumentID);
         });
         noteOffs.forEach(e => {
-            this.NET_OnNoteOff(e.userID, e.note);
+            this.NET_OnNoteOff(e.userID, e.note, e.seqInstrumentID);
         });
     }
 
-    NET_OnNoteOn(userID, note, velocity) {
-        if (!this.roomState) return;
-        let foundUser = this.roomState.FindUserByID(userID);
-        if (!foundUser) return;
-        let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
-        if (!foundInstrument) return;
+    NET_OnNoteOn(userID, note, velocity, seqInstrumentID) {
+        if (!this.roomState)
+            return;
+        let user = null;
+        let instrument = null;
+        if (seqInstrumentID) {
+            // there won't be a user specified here.
+            instrument = this.roomState.FindInstrumentById(seqInstrumentID).instrument;
+            let foundUser = this.roomState.FindUserByID(instrument.controlledByUserID);
+            if (foundUser) {
+                user = foundUser.user;
+            }
+        } else {
+            let foundUser = this.roomState.FindUserByID(userID);
+            if (!foundUser)
+                return;
+            user = foundUser.user;
+            let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
+            if (!foundInstrument)
+                return;
+            instrument = foundInstrument.instrument;
+        }
 
-        if (foundUser.user.userID == this.myUser.userID) {
-            if (this.monitoringType !== eMonitoringType.Remote) {
+        if (user?.userID == this.myUser.userID) {
+            // sequencer notes don't have any local monitoring option; let them through
+            if (!seqInstrumentID && (this.monitoringType !== eMonitoringType.Remote)) {
                 return;
             }
         }
 
-        this.synth.NoteOn(foundUser.user, foundInstrument.instrument, note, velocity);
-        //this.noteOnHandler(foundUser.user, foundInstrument.instrument, note, velocity);
+        this.synth.NoteOn(user, instrument, note, velocity);
     };
 
-    NET_OnNoteOff(userID, note) {
-        if (!this.roomState) return;
-        let foundUser = this.roomState.FindUserByID(userID);
-        if (!foundUser) return;
-        let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
-        if (!foundInstrument) return;
+    NET_OnNoteOff(userID, note, seqInstrumentID) {
+        if (!this.roomState)
+            return;
+        let user = null;
+        let instrument = null;
+        if (seqInstrumentID) {
+            // there won't be a user specified here.
+            instrument = this.roomState.FindInstrumentById(seqInstrumentID).instrument;
+            let foundUser = this.roomState.FindUserByID(instrument.controlledByUserID);
+            if (foundUser) {
+                user = foundUser.user;
+            }
+        } else {
+            let foundUser = this.roomState.FindUserByID(userID);
+            if (!foundUser)
+                return;
+            user = foundUser.user;
+            let foundInstrument = this.roomState.FindInstrumentByUserID(userID);
+            if (!foundInstrument)
+                return;
+            instrument = foundInstrument.instrument;
+        }
 
-        if (foundUser.user.userID == this.myUser.userID) {
-            if (this.monitoringType !== eMonitoringType.Remote) {
+        if (user?.userID == this.myUser.userID) {
+            // sequencer notes don't have any local monitoring option; let them through
+            if (!seqInstrumentID && (this.monitoringType !== eMonitoringType.Remote)) {
                 return;
             }
         }
-        this.synth.NoteOff(foundUser.user, foundInstrument.instrument, note);
-        //this.noteOffHandler(foundUser.user, foundInstrument.instrument, note);
+        this.synth.NoteOff(user, instrument, note);
     };
 
     NET_OnUserAllNotesOff(userID) {
@@ -1124,6 +1156,8 @@ class DigifuApp {
 
 
     NET_OnDisconnect() {
+        this.synth.AllNotesOff(this.myInstrument); // prevent disconnect leaving you in a noisy state. anyway when you reconnect you'll reset all synths anyway.
+        this.stateChangeHandler();
     }
 
     // --------------------------------------------------------------------------------------
@@ -1437,6 +1471,9 @@ class DigifuApp {
     }
 
     // --------------
+    IsConnected() {
+        return !!(this.net?.IsConnected());
+    }
 
 
     Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
@@ -1447,8 +1484,6 @@ class DigifuApp {
         this.tapTempoState = TapTempoState.NA;
 
         this.stateChangeHandler = stateChangeHandler;
-        //this.noteOnHandler = noteOnHandler;
-        //this.noteOffHandler = noteOffHandler;
         this.handleUserLeave = handleUserLeave;
         this.handleAllNotesOff = handleAllNotesOff;
         this.handleUserAllNotesOff = handleUserAllNotesOff;

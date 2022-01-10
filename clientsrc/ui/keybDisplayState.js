@@ -1,7 +1,10 @@
 
+const gDefaultColor = "#888";
+const gDefaultUserID = "seq";
+
 class KeybDisplayState {
     constructor(generateDOMIDProc) {
-        this.generateDOMIDProc = generateDOMIDProc;
+        this.generateDOMIDProc = generateDOMIDProc; // (midiNote) => { ... }
         this.notesOn = []; // not part of state because it's pure jquery
 
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
@@ -11,15 +14,18 @@ class KeybDisplayState {
     }
 
     PushNoteOn(user, midiNote) {
-        this.notesOn[midiNote].push({ userID: user.userID, color: user.color });
+        const userID = (user?.userID) ?? gDefaultUserID;
+        const color = (user?.color) ?? gDefaultColor;
+        this.notesOn[midiNote].push({ userID, color });
         let k = $(this.generateDOMIDProc(midiNote));
         if (!k.hasClass('active')) {
             k.addClass("active");
         }
-        k.css("background-color", user.color);
+        k.css("background-color", color);
     }
 
     RemoveUserNoteRef(userID, midiNote) {
+        userID ??= gDefaultUserID;
         let refs = this.notesOn[midiNote];
         if (refs.length < 1) return; // 
         refs.removeIf(r => (r.userID == userID));
@@ -50,6 +56,7 @@ class KeybDisplayState {
     }
 
     AllUserNotesOff(userID) {
+        userID ??= gDefaultUserID;
         for (let midiNote = 0; midiNote < 128; ++midiNote) {
             this.RemoveUserNoteRef(userID, midiNote);
         }

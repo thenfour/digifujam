@@ -244,6 +244,10 @@ class DigifuNet {
 
     // --------------
 
+    IsConnected() {
+        return !!(this.socket?.connected);
+    }
+
     Disconnect() {
         this.ResetQueuedParamChangeData();
         this.socket.disconnect(true);

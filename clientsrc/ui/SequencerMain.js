@@ -313,7 +313,7 @@ class SequencerMain extends React.Component {
             if (patch.IsNoteMuted(note.midiNoteValue))
                 cssClass += ' muted';
             
-            if (divInfo.noteMap[note.midiNoteValue].hasNote) {
+            if ((note.midiNoteValue in divInfo.noteMap) && divInfo.noteMap[note.midiNoteValue].hasNote) {
                 cssClass += divInfo.noteMap[note.midiNoteValue].cssClass + " note";
             }
 
@@ -357,7 +357,7 @@ class SequencerMain extends React.Component {
             
             return (
                 <ul key={divInfo.patternDivIndex} style={columnStyle} className={className}>
-                    <li className='playhead'>{divInfo.patternDivIndex}</li>
+                    <li className='playhead'>{divInfo.patternDivIndex + 1}</li>
                 </ul>
                 );
         });
@@ -497,7 +497,9 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className='paramGroup'>
+
+
+                        {/* <div className='paramGroup'>
                             <div className='legend'>Swing</div>
                             <div className='paramBlock'>
                                 <div className='paramValue'>{Math.floor(patch.swing * 100)}%</div>
@@ -516,7 +518,10 @@ class SequencerMain extends React.Component {
                                 />
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
+
+
+
                     </fieldset>
 
 

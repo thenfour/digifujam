@@ -1498,7 +1498,7 @@ class Instrument extends  React.Component {
 
         return (
             <li>
-                <div className={"instrument" + (allowBigClick ? " bigClick" : "")} onClick={bigClickHandler} style={{ color: i.color }}>
+                <div className={"instrument" + (allowBigClick ? " bigClick" : "") + (isYours ? " selected" : "")} onClick={bigClickHandler} style={{ color: i.color }}>
                     <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
                     {idle}
                     {i.getDisplayName()}
@@ -1570,8 +1570,9 @@ class RightArea extends React.Component {
 class LeftArea extends React.Component {
 
     render() {
+        const isDisconnected = !this.props.app?.IsConnected();
         return (
-            <div id="leftArea" style={{ gridArea: "leftArea" }}>
+            <div id="leftArea" style={{ gridArea: "leftArea" }} className={isDisconnected ? "disconnectedGrayscale" : ""}>
                 <InstrumentList app={this.props.app} />
                 <UserList app={this.props.app} />
                 <WorldStatus app={this.props.app} />
@@ -2083,8 +2084,10 @@ class RoomArea extends React.Component {
             </div>
         );
 
+        const isDisconnected = !this.props.app?.IsConnected();
+
         return (
-            <div id="roomArea" className="roomArea" onClick={e => this.onClick(e)} style={style}>
+            <div id="roomArea" className={"roomArea" + (isDisconnected ? " disconnectedGrayscale" : "")} onClick={e => this.onClick(e)} style={style}>
                 {connection}
                 {seqViewVisible && <SequencerMain
                     app={this.props.app}
@@ -2301,7 +2304,9 @@ class RootArea extends React.Component {
             gInstActivityHandlers[id](instrument, midiNote);
         });
 
-        $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
+        if (user) {
+            $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
+        }
 
         this.activityCount++;
 
@@ -2325,7 +2330,7 @@ class RootArea extends React.Component {
     }
 
     handleNoteOff = (user, instrument, midiNote) => {
-        this.removeUserNoteRef(user.userID, midiNote, instrument);
+        this.removeUserNoteRef(user?.userID, midiNote, instrument);
     }
 
     handleUserAllNotesOff = (user) => {
@@ -2462,6 +2467,11 @@ class RootArea extends React.Component {
             gridTemplateColumns: `${leftSize}px minmax(0, 1fr) ${rightSize}px`,
         };
 
+        const isDisconnected = !this.state.app?.IsConnected();
+        const connectionIndicator = isDisconnected && (
+            <span className='connectionIndicator disconnected' title="Trying to reconnect to 7jam..."><i className="material-icons">power_off</i></span>
+        );
+
         return (
             <div id="allContentContainer">
             <GestureSplash app={this.state.app}></GestureSplash>
@@ -2476,6 +2486,7 @@ class RootArea extends React.Component {
                         {/*this.state.app && this.state.app.roomState && <DFOptionsDialog.RoomBeat app={this.state.app}></DFOptionsDialog.RoomBeat>*/}
                     </span>
                     <span>
+                        {connectionIndicator}
                         <span className='headerTitle'>7jam.io</span>
                         {/* i think these are from https://simpleicons.org/ */}
                         <a href="https://discord.gg/kkf9gQfKAd" target="_blank"> {/* https://discord.gg/cKSF3Mg maj7*/}

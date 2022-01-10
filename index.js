@@ -16,6 +16,7 @@ const DFMusic = require("./clientsrc/DFMusic");
 const Seq = require('./clientsrc/SequencerCore');
 const {ServerAdminApp} = require('./server/serverAdminApp');
 const {ServerGoogleOAuthSupport} = require('./server/serverGoogleOAuth');
+const {RoomSequencerPlayer} = require('./server/SequencerPlayer.js');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -341,6 +342,8 @@ class RoomServer {
     // set routines for metronome / quantization events
     this.roomState.metronome.setBeatRoutine(() => { this.OnRoomBeat(); });
     this.roomState.quantizer.setNoteEventsRoutine((noteOns, noteOffs) => { this.FlushQuantizedNoteEvents(noteOns, noteOffs); });
+
+    this.sequencerPlayer = new RoomSequencerPlayer(this.roomState);
   }
 
   adminImportRoomState(data) {
@@ -1267,6 +1270,12 @@ class RoomServer {
         isPlaying: data.isPlaying
       });
 
+      this.sequencerPlayer.onChanged_PlayStop(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
     } catch (e) {
       console.log(`OnSeqPlayStop exception occurred`);
       console.log(e);
@@ -1287,6 +1296,12 @@ class RoomServer {
         instrumentID: foundInstrument.instrument.instrumentID,
         timeSigID: data.timeSigID
       });
+
+      this.sequencerPlayer.onChanged_TimeSig(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
 
     } catch (e) {
       console.log(`OnSeqSetTimeSig exception occurred`);
@@ -1313,6 +1328,12 @@ class RoomServer {
         isMuted: data.isMuted,
       });
 
+      this.sequencerPlayer.onChanged_SetNoteMuted(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
     } catch (e) {
       console.log(`SetSetNoteMuted exception occurred`);
       console.log(e);
@@ -1334,6 +1355,12 @@ class RoomServer {
         instrumentID: foundInstrument.instrument.instrumentID,
         selectedPatternIdx: data.selectedPatternIdx,
       });
+
+      this.sequencerPlayer.onChanged_SelectPattern(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
 
     } catch (e) {
       console.log(`SeqSelectPattern exception occurred`);
@@ -1357,6 +1384,12 @@ class RoomServer {
         speed: data.speed,
       });
 
+      this.sequencerPlayer.onChanged_SetSpeed(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
     } catch (e) {
       console.log(`SeqSetSpeed exception occurred`);
       console.log(e);
@@ -1378,6 +1411,12 @@ class RoomServer {
         instrumentID: foundInstrument.instrument.instrumentID,
         swing: data.swing,
       });
+
+      this.sequencerPlayer.onChanged_SetSwing(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
 
     } catch (e) {
       console.log(`SeqSetSwing exception occurred`);
@@ -1401,6 +1440,12 @@ class RoomServer {
         divisionType: data.divisionType,
       });
 
+      this.sequencerPlayer.onChanged_SetDiv(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
     } catch (e) {
       console.log(`SeqSetDiv exception occurred`);
       console.log(e);
@@ -1422,6 +1467,12 @@ class RoomServer {
         instrumentID: foundInstrument.instrument.instrumentID,
         lengthMajorBeats: data.lengthMajorBeats,
       });
+
+      this.sequencerPlayer.onChanged_SetLength(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
 
     } catch (e) {
       console.log(`SeqSetLength exception occurred`);
@@ -1446,6 +1497,12 @@ class RoomServer {
         instrumentID: foundInstrument.instrument.instrumentID,
         ops: data.ops,
       });
+
+      this.sequencerPlayer.onChanged_PatternOps(foundInstrument.instrument, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
 
     } catch (e) {
       console.log(`SeqPatternOps exception occurred`);

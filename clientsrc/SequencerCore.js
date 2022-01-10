@@ -78,6 +78,12 @@ const eDivisionType = {
   MinorBeat_x4 : "MinorBeat_x4",
 };
 
+
+const gDefaultPatternLengthMajorBeats = 4;
+const gDefaultPatternDivisionType = eDivisionType.MajorBeat;
+
+
+
 function IsValidSequencerDivisionType(n) {
   return n in eDivisionType;
 }
@@ -106,8 +112,8 @@ class SequencerPattern {
       this.notes = [];
     this.notes = this.notes.map(n => new SequencerNote(n));
 
-    this.lengthMajorBeats ??= 8;
-    this.divisionType ??= eDivisionType.MinorBeat;
+    this.lengthMajorBeats ??= gDefaultPatternLengthMajorBeats;
+    this.divisionType ??= gDefaultPatternDivisionType;
   }
 
   HasData() {
@@ -162,25 +168,27 @@ class SequencerPattern {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 this gets a LOT of properties; just adds some methods to it.
-beginMeasureFrac
-beginMeasureMajorBeat
-beginPatternFrac
-beginPatternMajorBeat
-endMeasureFrac
-endMeasureMajorBeat
-endPatternFrac
-endPatternMajorBeat
-isMajorBeatBoundary
-isMeasureBoundary
-isMinorBeatBoundary
-measureDivIndex
-minorBeatDivIndex
-patternDivIndex
-patternMeasure
+beginMeasureFrac:0
+beginMeasureMajorBeat:0
+beginPatternFrac:0
+beginPatternMajorBeat:0
+endMeasureFrac:0.125
+endMeasureMajorBeat:0.5
+endPatternFrac:0.0625
+endPatternMajorBeat:0.5
+isMajorBeatBoundary:true
+isMeasureBoundary:true
+isMinorBeatBoundary:true
+measureDivIndex:0
+minorBeatDivIndex:0
+noteMap:{}
+patternDivIndex:0
+patternMeasure:0
 */
 class SeqDivInfo {
   constructor(params) {
     Object.assign(this, params);
+    this.noteMap = {}; // convenience for pattern view.
   }
   IncludesPatternMajorBeat(b) {
     return (b >= this.beginPatternMajorBeat) && (b < this.endPatternMajorBeat);
@@ -282,7 +290,7 @@ class SequencerPatch {
       // subdivide minbi.
       const minorBeatsInThisMajorBeat = this.timeSig.majorBeatInfo[minbi.majorBeatIndex].minorBeats.length;
       const minorBeatDurationInMeasures = minbi.endMeasureFrac - minbi.beginMeasureFrac;
-      divDurationInMeasures = minorBeatDurationInMeasures / n;
+      const divDurationInMeasures = minorBeatDurationInMeasures / n;
       for (let minorBeatDivIndex = 0; minorBeatDivIndex < n; ++minorBeatDivIndex) {
         ret.push({
           __minbi : minbi,
@@ -373,16 +381,31 @@ class SequencerPatch {
     return this.GetMeasureDivisionInfo().length;
   }
 
-  GetPatternFracAtAbsQuarter(absQuarter) {
+  // must account for speed!
+  GetPatternLengthQuarters() {
     const pattern = this.GetSelectedPattern();
-    // could theoretically be precalculated
     const patternLengthMeasures = pattern.lengthMajorBeats / this.timeSig.majorBeatsPerMeasure;
-    const patternLengthQuarters = patternLengthMeasures * this.timeSig.quartersPerMeasure;
+    return patternLengthMeasures * this.timeSig.quartersPerMeasure / this.speed;
+  }
 
-    const speedAdjustedQuarter = absQuarter * this.speed;
+  GetPatternFracAtAbsQuarter(absQuarter) {
+    const i = this.GetAbsQuarterInfo(absQuarter);
+    return i.patternFrac;
+  }
 
-    const absPatternPosition = speedAdjustedQuarter / patternLengthQuarters;
-    return DFUtil.getDecimalPart(absPatternPosition);
+  // given abs quarter (absolute room beat), calculate some pattern times.
+  GetAbsQuarterInfo(absQuarter) {
+    //const speedAdjustedQuarter = absQuarter * this.speed;
+
+    const patternLengthQuarters = this.GetPatternLengthQuarters();
+    const absPatternFloat = absQuarter / patternLengthQuarters;
+    const patternFrac = DFUtil.getDecimalPart(absPatternFloat);
+    return {
+      absPatternFloat,
+      patternLengthQuarters,
+      patternFrac,
+      patternQuarter: patternFrac * patternLengthQuarters,
+    };
   }
 }
 
@@ -413,8 +436,21 @@ class SequencerDevice {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+beginNoteContinue:false
+beginNoteOn:true
+cssClass:' vel0 genvel0'
+endNoteContinue:false
+endNoteOff:true
+hasNote:true
+midiNoteValue:69
+underlyingNotes:(1) [SequencerNote]
+velocity:100
+velocityIndex:0
+noteID
+*/
 class PatternViewNote {
-  constructor(midiNoteValue) {
+  constructor(midiNoteValue, patch) {
     this.midiNoteValue = midiNoteValue;
 
     this.hasNote = false;
@@ -422,20 +458,42 @@ class PatternViewNote {
     this.beginNoteContinue = false; // beginning of cell = continuation
     this.endNoteOff = false;        // end of cell = note off
     this.endNoteContinue = false;
+    this.id = "pvn_";
+    this.isMuted = patch.IsNoteMuted(midiNoteValue);
 
     // time & length are assumed to be beginning & end of this cell.
 
     this.underlyingNotes = [];
   }
 
+  // note is of SequencerNote
   Integrate(div, note, legend) {
     this.hasNote = true;
 
     // TODO: this can be much more sophisticated
+
+    // the ID is important, because it's how the scheduler knows whether a note should get noteoff or not.
+    // when the timer hits,
+    // 1. pattern data is cleared
+    // 2. any notes which were still playing will either:
+    //    a. get their noteoff rescheduled if they still exist on the patternview
+    //    b. or, get noteoff immediately if it's been deleted (not found in the current patternview)
+    // 
+    // if we use uniqueIDs, it means there's no way to know if a note existing previously. all notes playing at the time
+    // of the timerproc will be killed because we assume they've been deleted.
+    //
+    // that could be mitigated by caching patternviews, but i don't like the complexity of forming that relationship.
+    //
+    // we could use the ID of just 1 note too, but there are scenarios ( think user changing speeds or timesigs) where
+    // notes will get shuffled into other bins and basically, the most "safe" is to hash all underlying notes.
+    // well the MOST safe would be to hash underlying notes AND pattern config like speed and divs bpm, etc, anything that could
+    // potentially change arrangement. but that will be handled in other more musical ways in the server sequencerplayer.
+
+    this.id += note.id; // in order to know if this is a new note, the ID must be a hash of all underlying notes
     this.beginNoteOn = true;
     this.endNoteOff = true;
     this.velocityIndex = note.velocityIndex;
-    this.underlyingNotes = [ note ];
+    this.underlyingNotes.push(note);
     this.cssClass = "";
     const legendNote = legend.find(n => n.midiNoteValue === note.midiNoteValue);
     if (legendNote && legendNote.cssClass) {
@@ -463,25 +521,24 @@ class SequencerPatternView {
     const pattern = patch.GetSelectedPattern();
     this.divs = patch.GetPatternDivisionInfo(); // get COLUMN info.
 
-    // initialize rows: arrays for each div to correspond with underlying pattern notes
-    this.divs.forEach(div => {
-      div.noteMap = [...new Array(128) ].map((_, i) => new PatternViewNote(i));
-    });
-
     // place each pattern note in the correct div-note cell
     pattern.notes.forEach(note => {
-      this.#bringNoteIntoView(note, legend);
+      this.#bringNoteIntoView(patch, note, legend);
     });
 
     const duration = (Date.now() - start);
-    console.log(`generating pattern view took ${duration} ms`);
+    //console.log(`generating pattern view took ${duration} ms`);
+  }
+
+  HasViewNoteID(id) {
+    return this.divs.some(div => Object.entries(div.noteMap).some(e => e[1].id === id));
   }
 
   // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
   GetPatternOpsForCellCycle(divInfo, note) {
     // determine what needs to happen.
     const patternViewNote = divInfo.noteMap[note.midiNoteValue];
-    if (patternViewNote.hasNote) {
+    if (patternViewNote?.hasNote) {
       // remove note & add new with cycled vel
       const ret = [];
       // we don't modify notes, we remove & add them. it's simpler this way, and resolves some ambiguities regarding underlying note data.
@@ -514,9 +571,15 @@ class SequencerPatternView {
     } ];
   }
 
-  #bringNoteIntoView(note, legend) {
+  #bringNoteIntoView(patch, note, legend) {
     let div = DFUtil.findNearest(this.divs, (div) => Math.abs(div.beginPatternMajorBeat - note.patternMajorBeat));
-    const viewNote = div.noteMap[note.midiNoteValue];
+    let viewNote = null;
+    if (note.midiNoteValue in div.noteMap) {
+      viewNote = div.noteMap[note.midiNoteValue];
+    } else {
+      viewNote = new PatternViewNote(note.midiNoteValue, patch);
+      div.noteMap[note.midiNoteValue] = viewNote;
+    }
     viewNote.Integrate(div, note, legend);
   }
 }

@@ -93,6 +93,7 @@ button:focus {
     width: 100%;
 }
 
+
 /* https://grid.layoutit.com/ */
 #grid-container {
     height: 100vh;
@@ -131,6 +132,7 @@ button:focus {
     justify-content: center;
     align-items: flex-start; /* announcement area fix */
 }
+
 
 .roomArea.roomWelcomeNoTransition {
 	transition: background-position 0s;
@@ -1132,12 +1134,19 @@ ul.instParamList li.inlineLabel
 
 .component.instrumentCloset li .instrument {
     position:relative;
-    padding: 3px;
+    padding: 2px;
+    padding-bottom:0;
     flex-grow:1;
+    border: 2px solid transparent;
 }
 .component.instrumentCloset li .instrument:hover {
     background-color:#044;
 }
+.component.instrumentCloset li .instrument.selected {
+    border: 2px solid #066;
+}
+
+
 
 .component.instrumentCloset li .seqCtrlContainer {
     display:flex;
@@ -1805,6 +1814,27 @@ li.preloadSFZ {
     font-weight: bold;
 }
 
+
+@keyframes errorBlink {
+    0% { opacity: 100%}
+    25% { opacity: 100%}
+    50% { opacity: 0%; }
+    75% { opacity: 0%; }
+}
+
+.connectionIndicator.disconnected i
+{
+    font-size: 24px;
+    color: #f44;
+    margin-right: 10px;
+    animation: errorBlink 1s;
+    animation-iteration-count: infinite;
+}
+
+
+.disconnectedGrayscale {
+    filter:grayscale(1);
+}
 
 /*
 https://mui.com/components/material-icons/?query=search

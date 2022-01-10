@@ -3,6 +3,7 @@ const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
 const {GenerateUserName} = require('./NameGenerator');
 const Seq = require('./SequencerCore');
+const {ServerRoomMetronome} = require('../server/serverMetronome');
 
 let gDigifujamVersion = 7;
 
@@ -1597,7 +1598,7 @@ class DigifuRoomState {
             return n;
         });
 
-        this.metronome = new DBQuantizer.ServerRoomMetronome();
+        this.metronome = new ServerRoomMetronome();
         this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
     }
 

@@ -957,10 +957,10 @@ class sfzInstrument {
         this.physicallyHeldNotes.removeIf(n => n.note === midiNote);
         if (this.isSustainPedalDown) return;
 
-        let v = this.voices.find(v => v.midiNote == midiNote && v.IsPlaying);
-        if (v) {
-            this.noteOffHandler(user, this.instrumentSpec, v.midiNote);
-            v.musicallyRelease(offBecauseGroup);
+        let v = this.voices.filter(v => v.midiNote == midiNote && v.IsPlaying);
+        if (v.length) {
+            v.forEach(x => x.musicallyRelease(offBecauseGroup));
+            this.noteOffHandler(user, this.instrumentSpec, midiNote);
         }
     };
 

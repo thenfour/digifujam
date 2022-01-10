@@ -309,9 +309,9 @@ class FMPolySynth {
         if (this.isSustainPedalDown) return;
 
         if (this.isPoly) {
-            let v = this.voices.find(v => v.midiNote == midiNote && v.IsPlaying);
-            if (!v) return;
-            v.musicallyRelease(midiNote);
+            let v = this.voices.filter(v => v.midiNote == midiNote && v.IsPlaying);
+            if (!v.length) return;
+            v.forEach(x => x.musicallyRelease(midiNote));
             this.noteOffHandler(user, this.instrumentSpec, midiNote);
             return;
         }

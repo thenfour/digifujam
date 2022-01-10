@@ -1,18 +1,5 @@
 const DFUtil = require('./dfutil');
 
-// this is like MIDI PPQ, parts per quarter. We want to work in integral divisions
-// even while working in triplets, 5tuplets, etc. This calls for a highly composite
-// number. MIDI PPQ used to be 120 standard, many DAWs up this to 480, 960, or super 
-// high numbers to allow sample-accurate timing.
-//
-// this number works pretty well and allows triplets, 5tuplets, 7tuplets, 9tuplets, 11tuplets
-// down to the 256th notes.
-//
-// such a high number only risks that we run out of significant bits for expressing long times.
-// a signed 32-bit int can represent about 9600 beats at this resolution, which is about
-// 32 minutes at 300bpm. this is more than enough for our case.
-const BeatDivisions = 221760;
-
 
 let keyNote = function (midiNoteValue, name, cssClass) {
     return { midiNoteValue, name, cssClass };
@@ -324,7 +311,6 @@ function GetTimeSigById(timeSigID) {
 }
 
 module.exports = {
-    BeatDivisions,
     MusicalTimeTracker,
     CommonTimeSignatures,
     FourFour,
