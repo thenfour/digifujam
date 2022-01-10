@@ -426,6 +426,38 @@ class SequencerDevice {
     this.presetList = this.presetList.map(p => new SequencerPatch(p));
   }
 
+  InitPatch() {
+    this.livePatch = new SequencerPatch({});
+  }
+
+  SerializePattern() {
+    return JSON.stringify(this.livePatch.GetSelectedPattern());
+  }
+
+  GetPatternOpsForClearPattern() {
+    return [{type: eSeqPatternOp.ClearPattern}];
+  }
+
+  GetPatternOpsForPastePattern(json) {
+    try {
+      const ret = [{type: eSeqPatternOp.ClearPattern}]; // start by clearing pattern.
+      const pat = new SequencerPattern(JSON.parse(json));
+      pat.notes.forEach(note => {
+        ret.push({
+          type : eSeqPatternOp.AddNote,
+          midiNoteValue : note.midiNoteValue,
+          velocityIndex : note.velocityIndex,
+          patternMajorBeat : note.patternMajorBeat,
+          lengthMajorBeats : note.lengthMajorBeats,
+        });
+      });
+
+      return ret;
+    } catch (e) {
+      return null;
+    }
+  }
+
   HasData() {
     return this.livePatch.GetSelectedPattern().HasData();
   }

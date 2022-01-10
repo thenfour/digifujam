@@ -241,6 +241,39 @@ class SequencerMain extends React.Component {
             this.props.app.SeqPatternOps(ops);
         }
 
+        onClickInitPatch = () => {
+            if (this.props.observerMode) return;
+            this.props.app.SeqPatchInit();
+        }
+
+        onClickCopyPattern = () => {
+            const seq = this.props.instrument.sequencerDevice;
+            const txt = seq.SerializePattern();
+            navigator.clipboard.writeText(txt).then(() => {
+                alert('Pattern was copied to the clipboard.')
+            }, () => {
+                alert('Unable to copy.')
+            });
+        }
+        onClickPastePattern = () => {
+            if (this.props.observerMode) return;
+            navigator.clipboard.readText().then(text => {
+                const seq = this.props.instrument.sequencerDevice;
+                const ops = seq.GetPatternOpsForPastePattern(text);
+                if (!ops) {
+                    alert('There was some problem importing the pattern.')
+                } else {
+                    this.props.app.SeqPatternOps(ops);
+                }
+            });
+        }
+        onClickClearPattern = () => {
+            if (this.props.observerMode) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const ops = seq.GetPatternOpsForClearPattern();
+            this.props.app.SeqPatternOps(ops);
+        }
+
         timerProc() {
             this.timer = null;
             const seq = this.props.instrument.sequencerDevice;
@@ -382,7 +415,7 @@ class SequencerMain extends React.Component {
                 <div className="sequencerMain">
                     <div className='overlay'>
                     <div className='powerButton'>
-                        <button className='powerButton' onClick={this.onPowerButtonClick}><i className="material-icons">remove</i></button>
+                        <button className='powerButton' title='Hide sequencer' onClick={this.onPowerButtonClick}><i className="material-icons">close</i></button>
                     </div>
                     </div>
 
@@ -445,7 +478,7 @@ class SequencerMain extends React.Component {
                                 <div className="buttonArray">
                                     {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
                                     <button className={'altui disabled' + clickableIfEditable}><i className="material-icons">save</i></button>
-                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable}>INIT</button>
+                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
                                 </div>
                             </div>
                         </div>
@@ -459,11 +492,11 @@ class SequencerMain extends React.Component {
                                     {patternButtons}
                                 </div>
                                 <div className="buttonArray">
-                                <button title="Copy pattern" className={'altui clickable'}><i className="material-icons">content_copy</i></button>
-                                <button title="Paste pattern" className={'altui' + clickableIfEditable}><i className="material-icons">content_paste</i></button>
+                                <button title="Copy pattern" className={'altui clickable'} onClick={() => this.onClickCopyPattern()}><i className="material-icons">content_copy</i></button>
+                                <button title="Paste pattern" className={'altui' + clickableIfEditable} onClick={() => this.onClickPastePattern()}><i className="material-icons">content_paste</i></button>
                                 </div>
                                 <div className="buttonArray">
-                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable}><i className="material-icons">clear</i></button>
+                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable} onClick={() => this.onClickClearPattern()}><i className="material-icons">playlist_remove</i></button>
                                 </div>
                             </div>
                             </div>

@@ -76,6 +76,9 @@ class RoomSequencerPlayer {
     //console.log(`onChanged_PatternOps(${JSON.stringify(data)})`);
     this.#invokeTimer();
   }
+  onChanged_General() {
+    this.#invokeTimer();
+  }
 
   timerProc() {
     //console.log(`{ --- seq timer proc --------------`);

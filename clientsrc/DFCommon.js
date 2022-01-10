@@ -60,6 +60,7 @@ const ClientMessages = {
     SeqSetDiv: "SeqSetDiv", // { divisions }
     SeqSetLength: "SeqSetLength", // { lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { ops:[{type:clear|addNote|deleteNote, note:{}}]}
+    SeqPatchInit: "SeqPatchInit",
     // save preset as
     // load preset
     // delete preset?
@@ -109,6 +110,7 @@ const ServerMessages = {
     SeqSetDiv: "SeqSetDiv", // { instrumentID, divisions }
     SeqSetLength: "SeqSetLength", // { instrumentID, lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { instrumentID, ops:[{type:clear|addNote|deleteNote, note:{}}]}
+    SeqPatchInit: "SeqPatchInit", // {instrumentID}
 };
 
 const ServerSettings = {

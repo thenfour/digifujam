@@ -1462,6 +1462,7 @@ class Instrument extends  React.Component {
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
             <div className={"seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
+                title={"Sequencer activity"}
                 onClick={() => this.clickSequencerIndicator()}
                 >
                 <div className='seqIndicator'></div>

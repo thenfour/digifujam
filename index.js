@@ -619,6 +619,21 @@ class RoomServer {
 
   FlushQuantizedNoteEvents(noteOns, noteOffs) {
     try {
+
+      // for sequencer events, give stats to the user who controls the instrument
+      noteOns.forEach(note => {
+        if (note.seqInstrumentID) {
+          const foundInstrument = this.roomState.FindInstrumentById(note.seqInstrumentID);
+          console.assert(foundInstrument);
+          const foundUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
+          if (foundUser) {
+            foundUser.user.persistentInfo.stats.noteOns++;
+            gServerStats.OnNoteOn(this.roomState, foundUser.user);
+            this.roomState.stats.noteOns++; // <-- correct. don't add sequencer notes to the room stats if nobody's controlling it. would just sorta blow out of control.
+          }
+        }
+      });
+
       // broadcast to all clients
       io.to(this.roomState.roomID).emit(DF.ServerMessages.NoteEvents, {
         noteOns,
@@ -1510,7 +1525,33 @@ class RoomServer {
     }
   }
 
+  SeqPatchInit(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqPatchInit => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
 
+      foundInstrument.instrument.sequencerDevice.InitPatch();
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPatchInit, {
+        instrumentID: foundInstrument.instrument.instrumentID,
+      });
+
+      this.sequencerPlayer.onChanged_General();
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
+    } catch (e) {
+      console.log(`SeqPatchInit exception occurred`);
+      console.log(e);
+    }
+  }
+
+  
 
 
   
@@ -2146,6 +2187,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.SeqSetDiv, data => ForwardToRoom(ws, room => room.SeqSetDiv(ws, data)));
       ws.on(DF.ClientMessages.SeqSetLength, data => ForwardToRoom(ws, room => room.SeqSetLength(ws, data)));
       ws.on(DF.ClientMessages.SeqPatternOps, data => ForwardToRoom(ws, room => room.SeqPatternOps(ws, data)));
+      ws.on(DF.ClientMessages.SeqPatchInit, data => ForwardToRoom(ws, room => room.SeqPatchInit(ws, data)));
       // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));

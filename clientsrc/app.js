@@ -962,6 +962,17 @@ class DigifuApp {
         this.stateChangeHandler();
     }
 
+    NET_SeqPatchInit(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+        
+        foundInstrument.instrument.sequencerDevice.InitPatch();
+        this.stateChangeHandler();
+    }
+
 
 
     // ----------------------
@@ -1468,6 +1479,9 @@ class DigifuApp {
     }
     SeqPatternOps(ops) {
         this.net.SeqPatternOps(ops);
+    }
+    SeqPatchInit() {
+        this.net.SeqPatchInit();
     }
 
     // --------------
