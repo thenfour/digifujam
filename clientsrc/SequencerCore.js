@@ -99,6 +99,15 @@ function IsValidSequencerOctave(oct) {
   return Number.isInteger(oct) && oct >= -3 && oct <= 3;
 }
 
+function IsValidSequencerTranspose(transpose) {
+  transpose = parseInt(transpose);
+  if (transpose < -12) return false;
+  if (transpose > 12) return false;
+  this.transpose = transpose;
+  return true;
+}
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SequencerNote {
   constructor(params) {
@@ -132,12 +141,12 @@ class SequencerPattern {
     return this.notes.length > 0;
   }
 
-  Clear() {
+  #Clear() {
     this.notes = [];
     return true;
   }
 
-  AddNoteOp(op) {
+  #AddNoteOp(op) {
     if (DFUtil.IsServer()) {
       op.id ??= DFUtil.generateID(); // hm why ??=? shouldn't the id always be generated?
       op.timestamp = Date.now();
@@ -155,7 +164,7 @@ class SequencerPattern {
     return true;
   }
 
-  DeleteNoteOp(op) {
+  #DeleteNoteOp(op) {
     console.assert(op.id);
     const i = this.notes.findIndex(n => n.id === op.id);
     if (i === -1) {
@@ -167,15 +176,16 @@ class SequencerPattern {
   }
 
   // this not only processes, but ADDS ids and timestamps where necessary (server)
-  ProcessOps(ops) {
+  ProcessOps(ops, patch) {
+    patch.MarkCachedViewDirty();
     ops.forEach(op => {
       switch (op.type) {
       case eSeqPatternOp.ClearPattern:
-        return this.Clear();
+        return this.#Clear();
       case eSeqPatternOp.AddNote:
-        return this.AddNoteOp(op);
+        return this.#AddNoteOp(op);
       case eSeqPatternOp.DeleteNote:
-        return this.DeleteNoteOp(op);
+        return this.#DeleteNoteOp(op);
       }
     });
   }
@@ -242,6 +252,11 @@ class SeqDivInfo {
 // this encapsulates the configuration for the whole sequencer
 // it gets serialized as saveable presets
 class SequencerPatch {
+
+  // private fields are not JSON serialized
+  #cachedView;
+  #cachedViewDirty;
+
   constructor(params) {
     if (params)
       Object.assign(this, params);
@@ -267,17 +282,35 @@ class SequencerPatch {
     this.speed ??= 1;
     this.swing ??= 0; // -1 to +1
     this.octave ??= 0;
+    this.transpose ??= 0;
 
     // this could be a Set(), but it doesn't automatically serialize via JSON.serialize, and there should rarely be many entries.
     // since there are only 128 midi notes, an option is also to just create a fixed-size array of bools
     if (!Array.isArray(this.mutedNotes))
       this.mutedNotes = [];
+
+    this.#cachedView = null;
+    this.#cachedViewDirty = true;
+  }
+
+  GetCachedView() {
+    if (this.#cachedViewDirty) return null;
+    return this.#cachedView; // may still return null.
+  }
+  SetCachedView(v) {
+    this.#cachedView = v;
+    this.#cachedViewDirty = false;
+  }
+  MarkCachedViewDirty() {
+    this.#cachedView = null;
+    this.#cachedViewDirty = true;
   }
 
   // can return nullish if out of range / should not be played.
   AdjustMidiNoteValue(midiNoteValue) {
     let ret = midiNoteValue;
     midiNoteValue += this.octave * 12;
+    midiNoteValue += this.transpose;
     // todo: other transposition?
     if (midiNoteValue < 1)
       return 0;
@@ -291,6 +324,7 @@ class SequencerPatch {
   }
 
   SetNoteMuted(midiNoteValue, isMuted) {
+    this.#cachedViewDirty = true;
     if (isMuted) {
       // ensure exists in array.
       if (!this.IsNoteMuted(midiNoteValue)) {
@@ -306,15 +340,19 @@ class SequencerPatch {
     this.mutedNotes.splice(i, 1);
   }
   SelectPatternIndex(selectedPatternIdx) {
+    this.#cachedViewDirty = true;
     this.selectedPatternIdx = selectedPatternIdx;
   }
   SetSpeed(speed) {
+    this.#cachedViewDirty = true;
     this.speed = speed;
   }
   SetSwing(swing) {
+    this.#cachedViewDirty = true;
     this.swing = swing;
   }
   SetDivisionType(divisionType) {
+    this.#cachedViewDirty = true;
     // if setting div type results in a pattern that's too long, don't allow.
     const oldVal = this.patterns[this.selectedPatternIdx].divisionType;
     this.patterns[this.selectedPatternIdx].divisionType = divisionType;
@@ -323,6 +361,7 @@ class SequencerPatch {
     }
   }
   SetLengthMajorBeats(lengthMajorBeats) {
+    this.#cachedViewDirty = true;
     const oldVal = this.patterns[this.selectedPatternIdx].lengthMajorBeats;
     this.patterns[this.selectedPatternIdx].lengthMajorBeats = lengthMajorBeats;
     if (this.GetPatternDivisionCount() > SequencerSettings.MaxDivs) {
@@ -331,6 +370,7 @@ class SequencerPatch {
   }
 
   SetTimeSig(ts) {
+    this.#cachedViewDirty = true;
     this.timeSig = ts;
     if (this.GetLengthMeasures() < 1) {
       // easy case; try to always keep at least 1 measure.
@@ -373,10 +413,22 @@ class SequencerPatch {
   }
 
   SetOctave(oct) {
+    this.#cachedViewDirty = true;
     this.octave = oct;
   }
   GetOctave() {
     return this.octave;
+  }
+
+  SetTranspose(transpose) {
+    if (!IsValidSequencerTranspose(transpose)) return false;
+    this.#cachedViewDirty = true;
+    this.transpose = parseInt(transpose);
+    return true;
+  }
+
+  GetTranspose() {
+    return this.transpose;
   }
 
   #SubdivideMeasureMinorBeats(mbiArray, n) {
@@ -610,6 +662,11 @@ class SequencerDevice {
       case "pasteBank":
         {
           bank.ReplaceBank(data.bank);
+          return true;
+        }
+      case "SeqSetTranspose":
+        {
+          this.livePatch.SetTranspose(data.transpose);
           return true;
         }
     }
@@ -897,6 +954,14 @@ class SeqPresetBank {
   }
 }
 
+function GetPatternView(patch, noteLegend) {
+  let ret = patch.GetCachedView();
+  if (ret) return ret;
+  ret = new SequencerPatternView(patch, noteLegend);
+  patch.SetCachedView(ret);
+  return ret;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = {
   SequencerSettings,
@@ -908,6 +973,7 @@ module.exports = {
   IsValidSequencerDivisionType,
   IsValidSequencerLengthMajorBeats,
   IsValidSequencerOctave,
+  IsValidSequencerTranspose,
   eDivisionType,
   eSeqPatternOp,
   SequencerPatternView,
@@ -915,4 +981,5 @@ module.exports = {
   GetGlobalSequencerConfig,
   ResolveSequencerConfig,
   SeqPresetBank,
+  GetPatternView,
 };

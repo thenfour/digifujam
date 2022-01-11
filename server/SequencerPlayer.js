@@ -99,7 +99,7 @@ class RoomSequencerPlayer {
     //console.log(`for instrument ${instrument.instrumentID}`);
 
     const patch = instrument.sequencerDevice.livePatch;
-    const patternView = new Seq.SequencerPatternView(patch, instrument.sequencerDevice.GetNoteLegend());
+    const patternView = Seq.GetPatternView(patch, instrument.sequencerDevice.GetNoteLegend());
 
     if (!instrument.sequencerDevice.isPlaying) {
       //console.log(`not playing; clearing data.`);

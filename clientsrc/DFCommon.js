@@ -67,6 +67,7 @@ const ClientMessages = {
     // { op:"delete", presetID:<>}
     // { op:"pastePatch", patch:{...} }
     // { op:"pasteBank", bank:{...} }
+    // { op:"SeqSetTranspose", transpose: }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { title, description, tags }
 };
@@ -122,6 +123,7 @@ const ServerMessages = {
     // { instrumentID, op:"delete", presetID:<>}
     // { instrumentID, op:"pastePatch", patch:{...} }
     // { instrumentID, op:"pasteBank", bank:{...} }
+    // { instrumentID, op:"SeqSetTranspose", transpose: }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
 };

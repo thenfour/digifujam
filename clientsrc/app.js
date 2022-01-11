@@ -988,7 +988,7 @@ class DigifuApp {
             return;
         }
         
-        foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops);
+        foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops, foundInstrument.instrument.sequencerDevice.livePatch);
         this.stateChangeHandler();
     }
 
@@ -1542,6 +1542,12 @@ class DigifuApp {
     }
     SeqMetadata(params) {
         this.net.SeqMetadata(params);
+    }
+    SeqSetTranspose(transpose) {
+        this.net.SeqPresetOp({
+            op: "SeqSetTranspose",
+            transpose,
+        });
     }
 
     // --------------

@@ -166,7 +166,7 @@
     height: 30px;
     background-color: #fff;
     border-radius: 3px;
-    box-shadow: inset 0px 0px 18px #8888, 0 0 2px #888;
+    box-shadow: inset 0px 0px 10px #8886, 0 0 2px #888;
     color: #088;
     display: flex;
     align-items: center;
@@ -307,6 +307,8 @@
 
 .sequencerMain ul.dropDownMenu {
     padding:0;
+    max-height: 250px;
+    overflow: auto;    
 }
 .sequencerMain ul.dropDownMenu li {
     padding:6px;
@@ -393,13 +395,15 @@
 
 
 .sequencerMain .pianoRollContainer {
-    display:flex;
+    /* display:flex; tempting but this causes the sticky header to not work. */
 }
 
 .sequencerMain ul.pianoRollColumn {
     padding: 0;
     margin: 0;
-    position:relative; /* allow abs position children (beat indicator) */
+    /* position:relative; */ /* allow abs position children (beat indicator) */
+    /* flex-grow: 1; */
+    display: inline-block; /* required for the sticky header row*/
 }
 
 .sequencerMain ul.pianoRollColumn li {
@@ -424,41 +428,6 @@
 .sequencerMain ul.pianoRollColumn.beginMeasure li {
     border-left: 4px solid #aa8;
 }
-
-/*  ----- play indicators ----- */
-
-.sequencerMain .pianoRollTopIndicators {
-    display:flex;
-}
-
-.sequencerMain .pianoRollTopIndicators li,
-.sequencerMain .pianoRollTopIndicators ul.pianoRollLegend li,
-.sequencerMain .pianoRollTopIndicators ul.pianoRollColumn li
- {
-    height: auto; /* as long as i'm putting text three.*/
-    /* padding-left: 5px; */
-    font-size: xx-small;
-    text-align: center;
-}
-
-.sequencerMain .pianoRollTopIndicators ul.pianoRollLegend li{
-    background-color:transparent;
-    box-shadow:none;
-}
-
-.sequencerMain .pianoRollTopIndicators .playhead {
-    background-color:#8884;
-}
-
-.sequencerMain .pianoRollTopIndicators ul.playing .playhead {
-    background-color:#8888;
-}
-
-.sequencerMain .pianoRollTopIndicators ul.playing.majorBeat li {
-    background-color:#f44;
-}
-
-
 
 
 
@@ -714,3 +683,30 @@
 .sequencerMain .dialog.presetDialog .presetItem.selected {
     border-left: 8px solid #cc0;
 }
+
+
+
+/*  ----- play indicators ----- */
+.sequencerMain ul.pianoRollLegend li.topIndicator,
+.sequencerMain ul.pianoRollColumn li.playhead {
+  height:10px;
+  position:sticky;
+  top:0;
+  border-radius:0;
+  font-size: small;
+  text-align: center;
+  color:#ccc;
+  font-weight:bold;
+    background-color:black;
+    box-shadow:none;
+    text-shadow:none;
+}
+
+.sequencerMain ul.pianoRollColumn.playing li.playhead {
+    background-color:#8888;
+}
+.sequencerMain ul.pianoRollColumn.playing.majorBeat li.playhead {
+    background-color:#f44;
+}
+
+

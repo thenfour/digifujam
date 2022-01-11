@@ -1534,7 +1534,7 @@ class RoomServer {
       const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
 
-      foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops);
+      foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops, foundInstrument.instrument.sequencerDevice.livePatch);
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPatternOps, {
@@ -1622,6 +1622,11 @@ class RoomServer {
     return this.roomState.GetSeqPresetBankForInstrument(instrument).ReplaceBank(data.bank);
   }
 
+  SeqPreset_Transpose(user, instrument, data) {
+    return instrument.sequencerDevice.livePatch.SetTranspose(data.transpose);
+  }
+
+
   SeqPresetOp(ws, data) {
     try {
       const foundUser = this.FindUserFromSocket(ws);
@@ -1645,6 +1650,9 @@ class RoomServer {
           break;
         case "pasteBank":
           if (!this.SeqPreset_PasteBank(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "SeqSetTranspose":
+          if (!this.SeqPreset_Transpose(foundUser.user, foundInstrument.instrument, data)) return;
           break;
         default:
           console.log(`client sent us a bad seq preset op`);

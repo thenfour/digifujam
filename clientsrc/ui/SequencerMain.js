@@ -25,6 +25,7 @@ const gSpeeds = new DFUtils.FuzzySelector([
     { caption: "8x", speed: 8 },
 ], (val, obj) => Math.abs(val - obj.speed));
 
+const gTransposeValues = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5,6, 7, 8, 9, 10, 11, 12];
 
 // ok not really logical to use fuzzyselector here because we only accept exact matches but whatev
 const gDivisionInfo = {
@@ -98,6 +99,7 @@ class SequencerMain extends React.Component {
             isPresetsExpanded: false,
             isSpeedExpanded: false,
             isDivExpanded :  false,
+            isTransposeExpanded: false,
             zoom: 10,
          };
 
@@ -154,6 +156,12 @@ class SequencerMain extends React.Component {
             if (this.props.observerMode) return;
             this.props.app.SeqSetDiv(d);
             this.setState({isDivExpanded:false});
+        }
+
+        onClickTranspose = (d) => {
+            if (this.props.observerMode) return;
+            this.props.app.SeqSetTranspose(d);
+            this.setState({isTransposeExpanded:false});
         }
 
         onClickDivAdj = (delta) => {
@@ -238,6 +246,14 @@ class SequencerMain extends React.Component {
             const newOct = patch.GetOctave() + delta;
             if (!Seq.IsValidSequencerOctave(newOct)) return;
             this.props.app.SeqSetOct(newOct);
+        }
+
+        onClickTransposeAdj = (delta) => {
+            if (this.props.observerMode) return;
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            const n = patch.GetTranspose() + delta;
+            if (!Seq.IsValidSequencerTranspose(n)) return;
+            this.props.app.SeqSetTranspose(n);
         }
 
         onCellClick = (patternView, divInfo, note) => {
@@ -343,7 +359,7 @@ class SequencerMain extends React.Component {
          const seq = this.props.instrument.sequencerDevice;
          const patch = seq.livePatch;
          const noteLegend = seq.GetNoteLegend();
-         const patternViewData = new Seq.SequencerPatternView(patch, noteLegend);
+         const patternViewData = Seq.GetPatternView(patch, noteLegend);
          const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
          const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsBeat);
          //console.log(`playhead pattern div = ${playheadInfo.patternDiv.toFixed(2)}, absLoop=${playheadInfo.absLoop.toFixed(2)} patternBeat=${playheadInfo.patternBeat.toFixed(2)} patternLengthBeats=${playheadInfo.patternLengthBeats}`);
@@ -389,6 +405,12 @@ class SequencerMain extends React.Component {
         const divisionsList = this.state.isDivExpanded && gDivisions.sortedValues.map(s => {
             return (
                <li key={s.val} onClick={() => this.onClickDivision(s.val)}>{s.caption}</li>
+           );
+        });
+
+        const transposeList = this.state.isTransposeExpanded && gTransposeValues.map(s => {
+            return (
+               <li key={s} onClick={() => this.onClickTranspose(s)}>{s}</li>
            );
         });
 
@@ -456,23 +478,8 @@ class SequencerMain extends React.Component {
             
             return (
                 <ul key={divInfo.patternDivIndex} style={columnStyle} className={className}>
+                    <li className={className + ' playhead'}>{divInfo.patternDivIndex + 1}</li>
                     {pianoRollColumn(divInfo)}
-                </ul>
-                );
-        });
-
-        const topIndicators = patternViewData.divs.map(divInfo => {
-            const isPlaying = seq.isPlaying && (playheadPatternFrac >= divInfo.beginPatternFrac) && (playheadPatternFrac < divInfo.endPatternFrac);
-
-            const className = `${gDivisionInfo[patch.GetDivisionType()].cssClass} pianoRollColumn` +
-                (divInfo.isMeasureBoundary ? " beginMeasure" : "") +
-                (divInfo.isMajorBeatBoundary ? " majorBeat" : "") +
-                (divInfo.isMinorBeatBoundary ? " minorBeat" : "") +
-                (isPlaying ? " playing" : "");
-            
-            return (
-                <ul key={divInfo.patternDivIndex} style={columnStyle} className={className}>
-                    <li className='playhead'>{divInfo.patternDivIndex + 1}</li>
                 </ul>
                 );
         });
@@ -577,6 +584,28 @@ class SequencerMain extends React.Component {
                         <fieldset>
 
                         <div className='paramGroup'>
+                                <div className='legend'>Timesig</div>
+                                <div className='paramBlock'>
+                                    <div className='paramValue clickable' onClick={()=> {this.setState({showTimeSigDropdown:!this.state.showTimeSigDropdown});}}>
+                                        {patch.timeSig.toString()}
+                                    </div>
+                                    {this.state.showTimeSigDropdown && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({showTimeSigDropdown:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({showTimeSigDropdown:false});}}>Select a time signature</legend>
+                                            <ul className='dropDownMenu'>
+                                                {timeSigList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                        }
+                                </div>
+                            </div>
+
+
+
+                        <div className='paramGroup'>
                             <div className='legend'>Speed</div>
                             <div className='paramBlock'>
                             <div className='paramValue clickable' onClick={() => { this.setState({isSpeedExpanded:!this.state.isSpeedExpanded});}}>{speedObj.caption}</div>
@@ -596,44 +625,6 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </div>
-
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Div</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
-                                {gDivisionInfo[patch.GetDivisionType()].caption}
-                            </div>
-                                { this.state.isDivExpanded &&
-                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
-                                            <ul className='dropDownMenu'>
-                                                {divisionsList}
-                                            </ul>
-                                        </div>
-                                    </ClickAwayListener>
-                                }
-                                <div className="buttonArray vertical">
-                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Oct</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetOctave()}</div>
-                            <div className="buttonArray vertical">
-                                <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
-                                <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
-                            </div>
-                            </div>
-                        </div>
-
 
 
                         {/* <div className='paramGroup'>
@@ -663,25 +654,6 @@ class SequencerMain extends React.Component {
 
 
                     <fieldset>
-                            <div className='paramGroup'>
-                                <div className='legend'>Timesig</div>
-                                <div className='paramBlock'>
-                                    <div className='paramValue clickable' onClick={()=> {this.setState({showTimeSigDropdown:!this.state.showTimeSigDropdown});}}>
-                                        {patch.timeSig.toString()}
-                                    </div>
-                                    {this.state.showTimeSigDropdown && (
-                                        <ClickAwayListener onClickAway={() => { this.setState({showTimeSigDropdown:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({showTimeSigDropdown:false});}}>Select a time signature</legend>
-                                            <ul className='dropDownMenu'>
-                                                {timeSigList}
-                                            </ul>
-                                        </div>
-                                        </ClickAwayListener>
-                                        )
-                                        }
-                                </div>
-                            </div>
 
                         <div className='paramGroup'>
                             <div className='legend'>Measures</div>
@@ -693,7 +665,81 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        </fieldset>
+
+
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Div</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
+                                {gDivisionInfo[patch.GetDivisionType()].caption}
+                            </div>
+                                { this.state.isDivExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
+                                            <ul className='dropDownMenu'>
+                                                {divisionsList}
+                                            </ul>
+                                        </div>
+                                    </ClickAwayListener>
+                                }
+                                <div className="buttonArray vertical">
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </fieldset>
+
+
+                    <fieldset>
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Oct</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>{patch.GetOctave()}</div>
+                            <div className="buttonArray vertical">
+                                <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                            </div>
+                            </div>
+                        </div>
+
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Transp</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isTransposeExpanded:!this.state.isTransposeExpanded});}}>
+                                {patch.GetTranspose()}
+                            </div>
+                            { this.state.isTransposeExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isTransposeExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isTransposeExpanded:false});}}>Select a transposition</legend>
+                                            <ul className='dropDownMenu'>
+                                                {transposeList}
+                                            </ul>
+                                        </div>
+                                    </ClickAwayListener>
+                            }
+
+                            <div className="buttonArray vertical">
+                                <button className={clickableIfEditable} onClick={() => this.onClickTransposeAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                <button className={clickableIfEditable} onClick={() => this.onClickTransposeAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                            </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </fieldset>
 
                     <fieldset>
 
@@ -728,24 +774,11 @@ class SequencerMain extends React.Component {
 
 
 
-                    <div className="pianoRollTopIndicators">
-                        <div className="pianoRollLegendCont">
-                            <ul className="pianoRollLegend">
-                                <li>
-                                    {/* <div className='muteRow muted'>M</div> */}
-                                </li>
-                            </ul>
-                        </div>
-                        <div className='pianoRollContainer'>
-                            {topIndicators}
-                        </div>
-                    </div>
-
-
 
                     <div className="pianoRollScrollCont">
                         <div className="pianoRollLegendCont">
                             <ul className="pianoRollLegend">
+                                <li className='topIndicator'></li>
                                 {keys}
                             </ul>
                         </div>
