@@ -291,7 +291,7 @@
 
 
 .sequencerMain .dialog {
-    position: absolute;
+    position: fixed;
     background-color: #022;
     border:2px solid #055;
     color:#0cc;
@@ -543,3 +543,174 @@
     background-color: #bbe;
 }
 
+
+
+
+
+
+/*  ----- preset dialog ----- */
+
+.sequencerMain .dialog.presetDialog {
+    transform:translate(-50%,25px);
+    background-color: #222;
+    color: #0aa;
+    width: 400px;
+}
+
+.sequencerMain .dialog.presetDialog .dialogContainer > legend {
+    text-align:center;
+    background-color:#033;
+    font-weight:bold;
+}
+
+.sequencerMain .dialog.presetDialog fieldset {
+    display:block;
+    margin: 6px;
+    padding: 1px;
+    min-inline-size: auto;
+    border: 2px solid #003838;
+    border-radius: 15px;
+    background: linear-gradient(to bottom, #00cccc15, #00cccc07);
+    font-size: small;
+}
+
+.sequencerMain .dialog.presetDialog fieldset > .legend {
+    font-weight:bold;
+    /* text-align: left; */
+    justify-content: left;
+    color: #aa0;
+}
+
+
+.sequencerMain .dialog.presetDialog input[type="text" i] {
+    background-color: #444;
+    border: 2px solid #055;
+    text-align: unset;
+    color: #0cc;
+    font-family: 'Overpass', sans-serif;
+    font-weight: normal;
+    font-size: small;
+    margin: 2px;
+
+}
+
+.sequencerMain .dialog.presetDialog button {
+    background-color:#444;
+    color:#888;
+    box-shadow:none;
+    display: inline-flex;
+    justify-content: flex-start;
+    padding: 2px;
+    height: unset;
+    width: unset;
+    /* flex-grow: 1; */
+}
+
+.sequencerMain .dialog.presetDialog button.clickable
+{
+    background-color:#055;
+    color:#0aa;
+}
+
+.sequencerMain .dialog.presetDialog button.clickable:hover
+{
+    background-color:#055;
+}
+
+.sequencerMain .dialog.presetDialog li {
+    display:flex;
+    align-items: center;
+}
+
+.sequencerMain .dialog.presetDialog li.presetItem {
+    background-color:#044;
+    display:block;
+    margin-bottom: 6px;
+}
+
+.sequencerMain .dialog.presetDialog li.presetItem:hover {
+    background-color:#055;
+}
+
+
+.sequencerMain .dialog.presetDialog li.presetItem .presetName {
+    color:#bbb;
+    font-size:16px;
+    display:block;
+}
+
+
+.sequencerMain .dialog.presetDialog li.presetItem .description {
+    font-style: italic;
+    display:block;
+}
+
+.sequencerMain .dialog.presetDialog li.presetItem .authorAndDateBox {
+    color:#888;
+    font-size:x-small;
+    font-style: italic;
+    display:block;
+}
+
+
+
+
+.sequencerMain .dialog.presetDialog .confirmationBox
+{
+    color: #8cc;
+    padding: 10px;
+    border-radius: 0;
+    border: 1px solid #a00;
+    background-color: #200;
+    white-space: normal;
+    border-left: 7px solid #a00;
+}
+
+.sequencerMain .dialog.presetDialog .confirmationBox button
+{
+    background-color: #666;
+    color: #000;
+    padding: 5px;
+    /* width: unset; */
+}
+
+.sequencerMain .dialog.presetDialog .confirmationBox button:hover
+{
+    background-color: #acc;
+}
+
+.sequencerMain .dialog.presetDialog ul.presetsList {
+    max-height:400px;
+    overflow-y:auto;
+}
+
+.sequencerMain .dialog.presetDialog li .buttonContainer {
+    float:right;
+    line-height: 10px;
+    visibility:hidden;
+}
+
+.sequencerMain .dialog.presetDialog li:hover .buttonContainer {
+    visibility:visible;
+}
+
+.sequencerMain .dialog.presetDialog li .buttonContainer button {
+    background-color:#333;
+    color:#0cc;
+}
+
+.sequencerMain .dialog.presetDialog li .buttonContainer button:hover {
+    background-color:#044;
+}
+
+
+.sequencerMain .dialog.presetDialog ul.buttonPatchOps {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: fit-content;
+}
+
+.sequencerMain .dialog.presetDialog .presetItem.selected {
+    border-left: 8px solid #cc0;
+}

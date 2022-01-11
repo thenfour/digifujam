@@ -1566,6 +1566,7 @@ class RoomServer {
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPatchInit, {
         instrumentID: foundInstrument.instrument.instrumentID,
+        presetID: foundInstrument.instrument.sequencerDevice.livePatch.presetID,
       });
 
       this.sequencerPlayer.onChanged_General();
@@ -1580,7 +1581,122 @@ class RoomServer {
     }
   }
 
-  
+  // to save as NEW, make sure presetID is null or a newly generated ID.
+  SeqPreset_Save(user, instrument, data) {
+    const presetID = data.presetID ?? DFU.generateID();
+    data.presetID = presetID;
+    data.author = user.name;
+    data.savedDate = new Date();
+    const bank = this.roomState.GetSeqPresetBankForInstrument(instrument);
+    bank.Save(presetID, data.author, data.savedDate, instrument.sequencerDevice.livePatch);
+    return true;
+  }
+
+  SeqPreset_Load(user, instrument, data) {
+    const presetID = data.presetID;
+    const bank = this.roomState.GetSeqPresetBankForInstrument(instrument);
+    const preset = bank.GetPresetById(presetID);
+    if (!preset)
+      return false;
+    instrument.sequencerDevice.LoadPatch(preset);
+    return true;
+  }
+
+  SeqPreset_Delete(user, instrument, data) {
+    const presetID = data.presetID;
+    const bank = this.roomState.GetSeqPresetBankForInstrument(instrument);
+    return bank.DeletePresetById(presetID);
+  }
+
+  // user pasting some external patch.
+  // { patch: }
+  SeqPreset_PastePatch(user, instrument, data) {
+    return instrument.sequencerDevice.LoadPatch(data.patch);
+  }
+
+  // user pasting some external patch.
+  // { bank: }
+  SeqPreset_PasteBank(user, instrument, data) {
+    if (!user.IsAdmin())
+      return false;
+    return this.roomState.GetSeqPresetBankForInstrument(instrument).ReplaceBank(data.bank);
+  }
+
+  SeqPresetOp(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqPresetOp => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+
+      // perform the operation; if it succeeds then forward to clients to perform themselves.
+      switch (data.op) {
+        case "load":
+          if (!this.SeqPreset_Load(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "save":
+          if (!this.SeqPreset_Save(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "delete":
+          if (!this.SeqPreset_Delete(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "pastePatch":
+          if (!this.SeqPreset_PastePatch(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "pasteBank":
+          if (!this.SeqPreset_PasteBank(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        default:
+          console.log(`client sent us a bad seq preset op`);
+          return;
+      }
+
+      // broadcast to room.
+      data.instrumentID = foundInstrument.instrument.instrumentID;
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, data);
+
+      this.sequencerPlayer.onChanged_General();
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
+    } catch (e) {
+      console.log(`SeqPresetOp exception occurred`);
+      console.log(e);
+    }
+  }
+
+
+
+  SeqMetadata(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqMetadata => unknown user`);
+      const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
+
+      if (!foundInstrument.instrument.sequencerDevice.livePatch.SetMetadata(data)) {
+        console(`rejected metadata change for inst ${foundInstrument.instrument.instrumentID}`);
+        return false;
+      }
+
+      data.instrumentID = foundInstrument.instrument.instrumentID;
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqMetadata, data);
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
+    } catch (e) {
+      console.log(`SeqMetadata exception occurred`);
+      console.log(e);
+    }
+  }
+
+
 
 
   
@@ -2218,6 +2334,8 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.SeqSetLength, data => ForwardToRoom(ws, room => room.SeqSetLength(ws, data)));
       ws.on(DF.ClientMessages.SeqPatternOps, data => ForwardToRoom(ws, room => room.SeqPatternOps(ws, data)));
       ws.on(DF.ClientMessages.SeqPatchInit, data => ForwardToRoom(ws, room => room.SeqPatchInit(ws, data)));
+      ws.on(DF.ClientMessages.SeqPresetOp, data => ForwardToRoom(ws, room => room.SeqPresetOp(ws, data)));
+      ws.on(DF.ClientMessages.SeqMetadata, data => ForwardToRoom(ws, room => room.SeqMetadata(ws, data)));
       // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));

@@ -318,6 +318,16 @@ class SequencerMain extends React.Component {
                 this.setState({zoom:this.state.zoom + 2});
         }
 
+        onClickSavePreset = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            this.props.app.SeqPresetOp({
+               op: "save",
+               presetID: patch.presetID,
+            });
+        };
+
         timerProc() {
             this.timer = null;
             // const seq = this.props.instrument.sequencerDevice;
@@ -343,6 +353,10 @@ class SequencerMain extends React.Component {
 
          const isReadOnly = this.props.observerMode;
          const clickableIfEditable = isReadOnly ? "" : " clickable";
+
+         const bank = this.props.app.roomState.GetSeqPresetBankForInstrument(this.props.instrument);
+         const bankRef = bank.GetPresetById(patch.presetID);
+         const presetSaveEnabled = !!bankRef; // if this patch has been saved to the preset bank, it can be 1-click saved.
 
          const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
 
@@ -520,17 +534,22 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Preset</div>
                             <div className='paramBlock'>
-                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Funker2</div>
+                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>{patch.presetName}</div>
                             { this.state.isPresetsExpanded &&
                                     <ClickAwayListener onClickAway={() => { this.setState({isPresetsExpanded:false});}}>
-                                      <div className='dialog'>
-                                        <SequencerPresetDialog app={this.props.app} onClose={() => { this.setState({isPresetsExpanded:false});}}></SequencerPresetDialog>
+                                      <div className='dialog presetDialog'>
+                                        <SequencerPresetDialog
+                                            onClose={() => { this.setState({isPresetsExpanded:false});}}
+                                            app={this.props.app}
+                                            instrument={this.props.instrument}
+                                            observerMode={this.props.observerMode}
+                                            ></SequencerPresetDialog>
                                         </div>
                                     </ClickAwayListener>
                             }
                                 <div className="buttonArray">
                                     {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
-                                    <button className={'altui disabled' + clickableIfEditable}><i className="material-icons">save</i></button>
+                                    <button className={'altui' + (presetSaveEnabled || isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
                                     <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
                                 </div>
                             </div>
@@ -681,6 +700,7 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>View</div>
                             <div className='paramBlock'>
+                            <div className='paramValue'>{this.state.zoom}</div>
                             <div className="buttonArray">
                                 <button className='clickable' onClick={() => this.onClickZoomIn()}><i className="material-icons">zoom_in</i></button>
                                 <button className='clickable' onClick={() => this.onClickZoomOut()}><i className="material-icons">zoom_out</i></button>

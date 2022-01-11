@@ -999,10 +999,31 @@ class DigifuApp {
             return;
         }
         
-        foundInstrument.instrument.sequencerDevice.InitPatch();
+        foundInstrument.instrument.sequencerDevice.InitPatch(data.presetID);
         this.stateChangeHandler();
     }
 
+    NET_SeqPresetOp(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+        const bank = this.roomState.GetSeqPresetBankForInstrument(foundInstrument.instrument);
+        foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank);
+        this.stateChangeHandler();
+    }
+
+    NET_SeqMetadata(params) {// { instrumentID, title, description, tags }
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(params.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+        
+        foundInstrument.instrument.sequencerDevice.livePatch.SetMetadata(params);
+        this.stateChangeHandler();
+    }
 
 
     // ----------------------
@@ -1515,6 +1536,12 @@ class DigifuApp {
     }
     SeqPatchInit() {
         this.net.SeqPatchInit();
+    }
+    SeqPresetOp(data) {
+        this.net.SeqPresetOp(data);
+    }
+    SeqMetadata(params) {
+        this.net.SeqMetadata(params);
     }
 
     // --------------

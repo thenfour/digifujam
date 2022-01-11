@@ -253,6 +253,8 @@ class SequencerPatch {
     this.presetTags ??= '';
     this.presetAuthor ??= '';
     this.presetSavedDate ??= Date.now();
+    this.presetSavedDate = new Date(this.presetSavedDate); // ensure date type
+    this.presetID ??= DFUtil.generateID();
 
     this.selectedPatternIdx ??= 0;
 
@@ -490,8 +492,6 @@ class SequencerPatch {
 
   // given abs quarter (absolute room beat), calculate some pattern times.
   GetAbsQuarterInfo(absQuarter) {
-    //const speedAdjustedQuarter = absQuarter * this.speed;
-
     const patternLengthQuarters = this.GetPatternLengthQuarters();
     const absPatternFloat = absQuarter / patternLengthQuarters;
     const patternFrac = DFUtil.getDecimalPart(absPatternFloat);
@@ -501,6 +501,22 @@ class SequencerPatch {
       patternFrac,
       patternQuarter : patternFrac * patternLengthQuarters,
     };
+  }
+
+  // // { title, description, tags }
+  SetMetadata(data) {
+    // TODO: validation (server)
+    this.presetName = data.title;
+    this.presetDescription = data.description;
+    this.presetTags = data.tags;
+    return true;
+  }
+  GetMetadata() {
+    return {
+      title: this.presetName,
+      description: this.presetDescription,
+      tags: this.presetTags,
+    }
   }
 }
 
@@ -515,14 +531,11 @@ class SequencerDevice {
 
     this.livePatch = new SequencerPatch(this.livePatch);
     //console.assert(!!this.legendRef); <-- you may not have a legendref if this seq device is inactive/inaccessible/allowed.
-
-    if (!Array.isArray(this.presetList))
-      this.presetList = [];
-    this.presetList = this.presetList.map(p => new SequencerPatch(p));
   }
 
-  InitPatch() {
-    this.livePatch = new SequencerPatch({});
+  InitPatch(presetID) {
+    this.livePatch = new SequencerPatch({presetID});
+    console.log(`initpatch; livepatch now ID ${this.livePatch.presetID}`);
   }
 
   SerializePattern() {
@@ -560,6 +573,47 @@ class SequencerDevice {
   GetNoteLegend() {
     this.legendRef ??= "GeneralNotes";
     return globalSequencerConfig.legends[this.legendRef];
+  }
+
+  LoadPatch(patchObj) {
+    this.livePatch = new SequencerPatch(patchObj);
+    return true;
+  }
+
+  SeqPresetOp(data, bank) {
+    switch (data.op) {
+      case "load":
+        {
+          let preset = bank.GetPresetById(data.presetID);
+          if (!preset) {
+            console.log(`unknown seq preset ID ${presetID}`);
+            return false;
+          }
+          this.LoadPatch(preset);
+          return true;
+        }
+      case "save":
+        {
+          // save the live patch to a presetID specified.
+          this.livePatch.presetID = data.presetID; // when you save as, link live patch to the new one
+          return bank.Save(data.presetID, data.author, data.savedDate, this.livePatch);
+        }
+      case "delete":
+        {
+          return bank.DeletePresetById(data.presetID);
+        }
+      case "pastePatch":
+        {
+          this.LoadPatch(data.patch);
+          return true;
+        }
+      case "pasteBank":
+        {
+          bank.ReplaceBank(data.bank);
+          return true;
+        }
+    }
+    return false;
   }
 }
 
@@ -793,14 +847,60 @@ class SequencerPatternView {
   }
 }
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// this is little more than an array of SequencerPatch objects
 class SeqPresetBank {
   constructor(params) {
     Object.assign(this, params);
+    this.id ??= DFUtil.generateID();
+    this.presets ??= [];
+    this.presets = this.presets.map(o => new SequencerPatch(o));
+  }
+
+  Save(presetID, author, savedDate, patchObj) {
+    const n = new SequencerPatch(patchObj);
+    patchObj.presetID = presetID;
+    n.presetID = presetID;
+    if (author) n.presetAuthor = author; // client side doesn't need to set author/date info
+    if (savedDate) n.presetSavedDate = new Date(savedDate);
+    const existingIndex = this.presets.findIndex(p => p.presetID === presetID);
+    if (existingIndex === -1) {
+      this.presets.push(n);
+      return true;
+    }
+    this.presets[existingIndex] = n;
+    return true;
+  }
+
+  GetPresetById(presetID) {
+    const obj = this.presets.find(p => p.presetID === presetID);
+    if (!obj) return null;
+    return new SequencerPatch(obj);
+  }
+
+  ReplaceBank(presetsArrayObj) {
+    this.presets = presetsArrayObj.map(p => new SequencerPatch(p));
+    return true;
+  }
+
+  ExportBankAsJSON() {
+    return JSON.stringify(this.presets); // destructure/deref everything
+  }
+
+  DeletePresetById(presetID) {
+    const existingIndex = this.presets.findIndex(p => p.presetID === presetID);
+    if (existingIndex === -1)
+      return true;
+    this.presets.splice(existingIndex, 1);
+    return true;
   }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = {
   SequencerSettings,
+  SequencerPatch,
   SequencerDevice,
   IsValidSequencerPatternIndex,
   IsValidSequencerSpeed,

@@ -62,9 +62,13 @@ const ClientMessages = {
     SeqSetLength: "SeqSetLength", // { lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { ops:[{type:clear|addNote|deleteNote, note:{}}]}
     SeqPatchInit: "SeqPatchInit",
-    // save preset as
-    // load preset
-    // delete preset?
+    // { op:"load", presetID:<>}
+    // { op:"save", presetID:<> }
+    // { op:"delete", presetID:<>}
+    // { op:"pastePatch", patch:{...} }
+    // { op:"pasteBank", bank:{...} }
+    SeqPresetOp: "SeqPresetOp",
+    SeqMetadata: "SeqMetadata", // { title, description, tags }
 };
 
 const ServerMessages = {
@@ -112,7 +116,14 @@ const ServerMessages = {
     SeqSetOct: "SeqSetOct", // { instrumentID, oct }
     SeqSetLength: "SeqSetLength", // { instrumentID, lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { instrumentID, ops:[{type:clear|addNote|deleteNote, note:{}}]}
-    SeqPatchInit: "SeqPatchInit", // {instrumentID}
+    SeqPatchInit: "SeqPatchInit", // {instrumentID, presetID }
+    // { instrumentID, op:"load", presetID:<>}
+    // { instrumentID, op:"save", presetID:<> }
+    // { instrumentID, op:"delete", presetID:<>}
+    // { instrumentID, op:"pastePatch", patch:{...} }
+    // { instrumentID, op:"pasteBank", bank:{...} }
+    SeqPresetOp: "SeqPresetOp",
+    SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
 };
 
 const ServerSettings = {
@@ -1590,6 +1601,10 @@ class DigifuRoomState {
             n.thaw();
             return n;
         });
+
+        this.seqPresetBanks = this.seqPresetBanks?.map(o => new Seq.SeqPresetBank(o));
+        this.seqPresetBanks ??= [];
+        
         this.chatLog = this.chatLog.map(o => {
             let n = Object.assign(new DigifuChatMessage(), o);
             n.thaw();
@@ -1646,7 +1661,7 @@ class DigifuRoomState {
             });
         }
 
-        data.seqPresetBanks?.map(o => new Seq.SeqPresetBank(o));
+        this.seqPresetBanks = data.seqPresetBanks?.map(o => new Seq.SeqPresetBank(o));
         this.seqPresetBanks ??= [];
 
         this.stats = data.stats;
@@ -1847,6 +1862,19 @@ class DigifuRoomState {
         });
 
         ret.metronome.setBPM(ret.bpm);
+        return ret;
+    }
+
+    GetSeqPresetBankForInstrument(inst) {
+        if (!inst.seqPresetBankID) {
+            // if you don't specify a bank ID, then give the instrument its own unique bank.
+            inst.seqPresetBankID = inst.instrumentID;
+        }
+        let ret = this.seqPresetBanks.find(b => b.id === inst.seqPresetBankID);
+        if (!ret) {
+            ret = new Seq.SeqPresetBank({id : inst.seqPresetBankID});
+            this.seqPresetBanks.push(ret);
+        }
         return ret;
     }
 

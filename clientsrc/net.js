@@ -249,6 +249,12 @@ class DigifuNet {
     SeqPatchInit() {
         this.socket.emit(DF.ClientMessages.SeqPatchInit, {});
     }
+    SeqPresetOp(data) {
+        this.socket.emit(DF.ClientMessages.SeqPresetOp, data);
+    }
+    SeqMetadata(params) {// { title, description, tags }
+        this.socket.emit(DF.ClientMessages.SeqMetadata, params);
+    }
 
     // --------------
 
@@ -315,7 +321,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data));
         this.socket.on(DF.ServerMessages.RoomBPMUpdate, (data) => this.handler.NET_OnRoomBPMUpdate(data))
 
-        // SEQ
+        // SEQ ----
         this.socket.on(DF.ServerMessages.SeqPlayStop, (data) => this.handler.NET_SeqPlayStop(data));
         this.socket.on(DF.ServerMessages.SeqSetTimeSig, (data) => this.handler.NET_SeqSetTimeSig(data));
 
@@ -328,6 +334,9 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.SeqSetLength, (data) => this.handler.NET_SeqSetLength(data));
         this.socket.on(DF.ServerMessages.SeqPatternOps, (data) => this.handler.NET_SeqPatternOps(data));
         this.socket.on(DF.ServerMessages.SeqPatchInit, (data) => this.handler.NET_SeqPatchInit(data));
+        this.socket.on(DF.ServerMessages.SeqPresetOp, (data) => this.handler.NET_SeqPresetOp(data));
+        this.socket.on(DF.ServerMessages.SeqMetadata, (data) => this.handler.NET_SeqMetadata(data));
+        // ---- SEQ
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };
