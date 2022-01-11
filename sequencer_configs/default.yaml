@@ -6,83 +6,120 @@ velocitySets:
     - vel: 30
       cssClass: "genvel1"
 
+# YAML.stringify(DFMusic.MidiNoteInfo.filter(m => m.midiNoteValue >= 36 && m.midiNoteValue <= 84).reverse().map(x => { x.legendCssClass = x.cssClass; return x; }));
+# YAML.stringify(DFMusic.MidiNoteInfo.filter(m => m.midiNoteValue >= 33 && m.midiNoteValue <= 60).reverse().map(x => { x.legendCssClass = x.cssClass; return x; }));
+# YAML.stringify(DFMusic.MidiNoteInfo.filter(m => m.midiNoteValue >= 45 && m.midiNoteValue <= 72).reverse().map(x => { x.legendCssClass = x.cssClass; return x; }));
 legends:
   GeneralNotes:
-
-  - name: "C5"
-    midiNoteValue: 72
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "B4"
-    midiNoteValue: 71
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "A#4"
-    midiNoteValue: 70
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "A4"
-    midiNoteValue: 69
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "G#4"
-    midiNoteValue: 68
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "G4"
-    midiNoteValue: 67
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "F#4"
-    midiNoteValue: 66
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "F4"
-    midiNoteValue: 65
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "E4"
-    midiNoteValue: 64
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "D#4"
-    midiNoteValue: 63
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "D4"
-    midiNoteValue: 62
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "C#4"
-    midiNoteValue: 61
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
-
-  - name: "C4"
-    midiNoteValue: 60
-    legendCssClass: ""
-    cssClass: ""
-    velocitySetRef: "general2"
+  - midiNoteValue: 72
+    name: C5
+    cssClass: white c
+    legendCssClass: white c
+  - midiNoteValue: 71
+    name: B4
+    cssClass: white b
+    legendCssClass: white b
+  - midiNoteValue: 70
+    name: A#4
+    cssClass: black as
+    legendCssClass: black as
+  - midiNoteValue: 69
+    name: A4
+    cssClass: white a
+    legendCssClass: white a
+  - midiNoteValue: 68
+    name: G#4
+    cssClass: black gs
+    legendCssClass: black gs
+  - midiNoteValue: 67
+    name: G4
+    cssClass: white g
+    legendCssClass: white g
+  - midiNoteValue: 66
+    name: F#4
+    cssClass: black fs
+    legendCssClass: black fs
+  - midiNoteValue: 65
+    name: F4
+    cssClass: white f
+    legendCssClass: white f
+  - midiNoteValue: 64
+    name: E4
+    cssClass: white e
+    legendCssClass: white e
+  - midiNoteValue: 63
+    name: D#4
+    cssClass: black ds
+    legendCssClass: black ds
+  - midiNoteValue: 62
+    name: D4
+    cssClass: white d
+    legendCssClass: white d
+  - midiNoteValue: 61
+    name: C#4
+    cssClass: black cs
+    legendCssClass: black cs
+  - midiNoteValue: 60
+    name: C4
+    cssClass: white c
+    legendCssClass: white c
+  - midiNoteValue: 59
+    name: B3
+    cssClass: white b
+    legendCssClass: white b
+  - midiNoteValue: 58
+    name: A#3
+    cssClass: black as
+    legendCssClass: black as
+  - midiNoteValue: 57
+    name: A3
+    cssClass: white a
+    legendCssClass: white a
+  - midiNoteValue: 56
+    name: G#3
+    cssClass: black gs
+    legendCssClass: black gs
+  - midiNoteValue: 55
+    name: G3
+    cssClass: white g
+    legendCssClass: white g
+  - midiNoteValue: 54
+    name: F#3
+    cssClass: black fs
+    legendCssClass: black fs
+  - midiNoteValue: 53
+    name: F3
+    cssClass: white f
+    legendCssClass: white f
+  - midiNoteValue: 52
+    name: E3
+    cssClass: white e
+    legendCssClass: white e
+  - midiNoteValue: 51
+    name: D#3
+    cssClass: black ds
+    legendCssClass: black ds
+  - midiNoteValue: 50
+    name: D3
+    cssClass: white d
+    legendCssClass: white d
+  - midiNoteValue: 49
+    name: C#3
+    cssClass: black cs
+    legendCssClass: black cs
+  - midiNoteValue: 48
+    name: C3
+    cssClass: white c
+    legendCssClass: white c
+  - midiNoteValue: 47
+    name: B2
+    cssClass: white b
+    legendCssClass: white b
+  - midiNoteValue: 46
+    name: A#2
+    cssClass: black as
+    legendCssClass: black as
+  - midiNoteValue: 45
+    name: A2
+    cssClass: white a
+    legendCssClass: white a

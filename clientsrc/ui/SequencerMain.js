@@ -7,7 +7,7 @@ const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 
-const gPlayingUpdateInterval = 50;
+const gPlayingUpdateInterval = 150;
 
 
 const gTempoBPMStep = 5;
@@ -98,6 +98,7 @@ class SequencerMain extends React.Component {
             isPresetsExpanded: false,
             isSpeedExpanded: false,
             isDivExpanded :  false,
+            zoom: 10,
          };
 
          this.swingSliderID = "seqSwingSlider";
@@ -231,13 +232,32 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetSpeed(newSpeed);
         }
 
+        onClickOctaveAdj = (delta) => {
+            if (this.props.observerMode) return;
+            const patch = this.props.instrument.sequencerDevice.livePatch;
+            const newOct = patch.GetOctave() + delta;
+            if (!Seq.IsValidSequencerOctave(newOct)) return;
+            this.props.app.SeqSetOct(newOct);
+        }
+
         onCellClick = (patternView, divInfo, note) => {
             if (this.props.observerMode) return;
             // toggle a 1-div-length 
-            //console.log(`clicked note ${note.midiNoteValue} @ pattern major beat ${divInfo.beginPatternMajorBeat}, div major beat length = ${divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat}`);
             // convert this click to an ops struct
-            //const seq = this.props.instrument.sequencerDevice;
-            const ops = patternView.GetPatternOpsForCellCycle(divInfo, note);
+            let ops = null;
+            if (window.DFModifierKeyTracker.ShiftKey) {
+                if (window.DFModifierKeyTracker.CtrlKey) {
+                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 1);
+                } else {
+                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note);
+                }
+            } else {
+                if (window.DFModifierKeyTracker.CtrlKey) {
+                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0);
+                } else {
+                    ops = patternView.GetPatternOpsForCellCycle(divInfo, note, 1);
+                }
+            }
             this.props.app.SeqPatternOps(ops);
         }
 
@@ -278,20 +298,33 @@ class SequencerMain extends React.Component {
             if (!e.target.dataset.allowPreview) return;
             let vel = legend.find(l => l.midiNoteValue === note.midiNoteValue)?.velocitySet[0]?.vel;
             vel ??= 99;
-            this.props.app.PreviewNoteOn(note.midiNoteValue, vel);
+            let midiNoteValue = this.props.instrument.sequencerDevice.livePatch.AdjustMidiNoteValue(note.midiNoteValue);
+            if (midiNoteValue) {
+                this.props.app.PreviewNoteOn(midiNoteValue, vel);
+            }
         }
 
         onClickNotePreviewOff = (note) => {
-            this.props.app.PreviewNoteOff(note.midiNoteValue);
+            this.props.app.PreviewNoteOff();
+        }
+
+        onClickZoomOut = () => {
+            if (this.state.zoom > 4)
+                this.setState({zoom:this.state.zoom - 2});
+        }
+
+        onClickZoomIn = () => {
+            if (this.state.zoom < 20)
+                this.setState({zoom:this.state.zoom + 2});
         }
 
         timerProc() {
             this.timer = null;
-            const seq = this.props.instrument.sequencerDevice;
-            if (seq.isPlaying) {
-                this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
-            }
-            this.setState({});
+            // const seq = this.props.instrument.sequencerDevice;
+            // if (seq.isPlaying) {
+            //     this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
+            // }
+            // this.setState({});
         }
 
       render() {
@@ -314,9 +347,9 @@ class SequencerMain extends React.Component {
          const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
 
          
-        const widthpx = Math.min(75, 20 + (400 / patternViewData.divs.length));
+        const widthpx = Math.min(75, 20 + ((50 * this.state.zoom) / patternViewData.divs.length));
         const columnStyle = {width:`${widthpx}px`};
-        const heightpx = 50;
+        const heightpx = 5 * this.state.zoom;
         const rowStyle = {height:`${heightpx}px`};
 
          if (seq.isPlaying && !this.timer) {
@@ -360,7 +393,7 @@ class SequencerMain extends React.Component {
                     >
                     <div className='rowName' data-allow-preview="1">{note.name}</div>
                     <div
-                        className={(isMuted ? 'muteRow muted' : 'muteRow') + clickableIfEditable}
+                        className={(isMuted ? 'muteRow muted ' : 'muteRow') + clickableIfEditable}
                         onClick={()=>this.onClickMuteNote(note, !isMuted)}
                     >M</div>
                 </li>
@@ -379,7 +412,7 @@ class SequencerMain extends React.Component {
         const pianoRollColumn = (divInfo) => noteLegend.map(note => {
             let cssClass = note.cssClass ?? "";
             if (patch.IsNoteMuted(note.midiNoteValue))
-                cssClass += ' muted';
+                cssClass += ' muted ';
             
             if ((note.midiNoteValue in divInfo.noteMap) && divInfo.noteMap[note.midiNoteValue].hasNote) {
                 cssClass += divInfo.noteMap[note.midiNoteValue].cssClass + " note";
@@ -523,6 +556,7 @@ class SequencerMain extends React.Component {
                         </fieldset>
 
                         <fieldset>
+
                         <div className='paramGroup'>
                             <div className='legend'>Speed</div>
                             <div className='paramBlock'>
@@ -543,6 +577,8 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </div>
+
+
                         <div className='paramGroup'>
                             <div className='legend'>Div</div>
                             <div className='paramBlock'>
@@ -565,6 +601,20 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </div>
+
+
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Oct</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>{patch.GetOctave()}</div>
+                            <div className="buttonArray vertical">
+                                <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                            </div>
+                            </div>
+                        </div>
+
 
 
                         {/* <div className='paramGroup'>
@@ -627,10 +677,29 @@ class SequencerMain extends React.Component {
                         </fieldset>
 
                     <fieldset>
+
+                        <div className='paramGroup'>
+                            <div className='legend'>View</div>
+                            <div className='paramBlock'>
+                            <div className="buttonArray">
+                                <button className='clickable' onClick={() => this.onClickZoomIn()}><i className="material-icons">zoom_in</i></button>
+                                <button className='clickable' onClick={() => this.onClickZoomOut()}><i className="material-icons">zoom_out</i></button>
+                            </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </fieldset>
+
+
+                    <fieldset>
                         <div className='paramGroup'>
                             <RoomBeat app={this.props.app} timeSig={patch.timeSig}></RoomBeat>
                         </div>
                     </fieldset>
+
 
 
                     </div>

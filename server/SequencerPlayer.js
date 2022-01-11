@@ -140,7 +140,7 @@ class RoomSequencerPlayer {
       }
 
       Object.entries(div.noteMap).forEach(e => {
-        const midiNoteValue = e[0];
+        const midiNoteValue = patch.AdjustMidiNoteValue(parseInt(e[0]));
         const note = e[1]; // of PatternViewNote
         if (!note.hasNote || note.isMuted)
           return;

@@ -1,69 +1,76 @@
 legends:
   DrumsA:
 
+  - name: "Aux 3"
+    midiNoteValue: 58
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+  - name: "Aux 2"
+    midiNoteValue: 56
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+  - name: "Aux 1"
+    midiNoteValue: 54
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+
+
+
   - name: "Tom 4"
     midiNoteValue: 47
     legendCssClass: "tom"
     cssClass: "tom"
-    velocitySetRef: "general2"
 
   - name: "Tom 3"
     midiNoteValue: 45
     legendCssClass: "tom"
     cssClass: "tom"
-    velocitySetRef: "general2"
 
   - name: "Tom 2"
     midiNoteValue: 43
     legendCssClass: "tom"
     cssClass: "tom"
-    velocitySetRef: "general2"
 
   - name: "Tom 1"
     midiNoteValue: 41
     legendCssClass: "tom"
     cssClass: "tom"
-    velocitySetRef: "general2"
 
 
   - name: "Ride"
     midiNoteValue: 51
     legendCssClass: "cymbal"
     cssClass: "cymbal"
-    velocitySetRef: "general2"
 
   - name: "Crash"
     midiNoteValue: 49
     legendCssClass: "cymbal"
     cssClass: "cymbal"
-    velocitySetRef: "general2"
 
   - name: "Hihat Op"
     midiNoteValue: 46
     legendCssClass: "cymbal"
     cssClass: "cymbal"
-    velocitySetRef: "general2"
 
   - name: "Hihat Cl"
     midiNoteValue: 42
     legendCssClass: "cymbal"
     cssClass: "cymbal"
-    velocitySetRef: "general2"
 
   - name: "Snare"
     midiNoteValue: 38
     legendCssClass: "snare"
     cssClass: "snare"
-    velocitySetRef: "general2"
 
   - name: "Rim"
     midiNoteValue: 37
     legendCssClass: "snare"
     cssClass: "snare"
-    velocitySetRef: "general2"
 
   - name: "Kick"
     midiNoteValue: 36
     legendCssClass: "kick"
     cssClass: "kick"
-    velocitySetRef: "general2"

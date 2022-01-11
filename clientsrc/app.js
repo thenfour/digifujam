@@ -415,12 +415,16 @@ class DigifuApp {
 
     PreviewNoteOn(midiNoteValue, vel) {
         if (this.myInstrument == null) return;
+        this.PreviewNoteOff();
         this.synth.NoteOn(this.myUser, this.myInstrument, midiNoteValue, vel);
+        this.previewingNote = midiNoteValue;
     }    
 
-    PreviewNoteOff(midiNoteValue, vel) {
+    PreviewNoteOff() {
         if (this.myInstrument == null) return;
-        this.synth.NoteOff(this.myUser, this.myInstrument, midiNoteValue);
+        if (!this.previewingNote) return;
+        this.synth.NoteOff(this.myUser, this.myInstrument, this.previewingNote);
+        this.previewingNote = 0;
     }    
 
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
@@ -567,6 +571,10 @@ class DigifuApp {
             //log(`  instrument not found...`);
             return;
         }
+
+        // when a sequencer is playing without a user controlling, it emits note ons / offs.
+        // when ownership changes, remove its playing note refs.
+        this.handleUserAllNotesOff(null, foundInstrument.instrument);
 
         let foundOldUser = null;
         foundOldUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
@@ -951,6 +959,17 @@ class DigifuApp {
         this.stateChangeHandler();
     }
 
+    NET_SeqSetOct(data) {
+        if (!this.roomState) return;
+        let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+        if (foundInstrument == null) {
+            return;
+        }
+
+        foundInstrument.instrument.sequencerDevice.livePatch.SetOctave(data.oct);
+        this.stateChangeHandler();
+    }
+
     NET_SeqSetLength(data) {
         if (!this.roomState) return;
         let foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
@@ -969,9 +988,7 @@ class DigifuApp {
             return;
         }
         
-        if (!foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops)) {
-            throw new Error(`NET_SeqPatternOps failed to apply received ops. Bork`);
-        }
+        foundInstrument.instrument.sequencerDevice.livePatch.GetSelectedPattern().ProcessOps(data.ops);
         this.stateChangeHandler();
     }
 
@@ -1486,6 +1503,9 @@ class DigifuApp {
     }
     SeqSetDiv(divisions) {
         this.net.SeqSetDiv(divisions);
+    }
+    SeqSetOct(oct) {
+        this.net.SeqSetOct(oct);
     }
     SeqSetLength(lengthMajorBeats) {
         this.net.SeqSetLength(lengthMajorBeats);

@@ -235,10 +235,15 @@ class DigifuNet {
     SeqSetDiv(divisionType) {
         this.socket.emit(DF.ClientMessages.SeqSetDiv, {divisionType});
     }
+    SeqSetOct(oct) {
+        this.socket.emit(DF.ClientMessages.SeqSetOct, {oct});
+    }
     SeqSetLength(lengthMajorBeats) {
         this.socket.emit(DF.ClientMessages.SeqSetLength, {lengthMajorBeats});
     }
     SeqPatternOps(ops) {
+        if (!ops) return;
+        if (!ops.length) return;
         this.socket.emit(DF.ClientMessages.SeqPatternOps, {ops});
     }
     SeqPatchInit() {
@@ -319,6 +324,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.SeqSetSpeed, (data) => this.handler.NET_SeqSetSpeed(data));
         this.socket.on(DF.ServerMessages.SeqSetSwing, (data) => this.handler.NET_SeqSetSwing(data));
         this.socket.on(DF.ServerMessages.SeqSetDiv, (data) => this.handler.NET_SeqSetDiv(data));
+        this.socket.on(DF.ServerMessages.SeqSetOct, (data) => this.handler.NET_SeqSetOct(data));
         this.socket.on(DF.ServerMessages.SeqSetLength, (data) => this.handler.NET_SeqSetLength(data));
         this.socket.on(DF.ServerMessages.SeqPatternOps, (data) => this.handler.NET_SeqPatternOps(data));
         this.socket.on(DF.ServerMessages.SeqPatchInit, (data) => this.handler.NET_SeqPatchInit(data));

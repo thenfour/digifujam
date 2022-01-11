@@ -58,6 +58,7 @@ const ClientMessages = {
     SeqSetSpeed: "SeqSetSpeed", // { speed }
     SeqSetSwing: "SeqSetSwing", // { swing }
     SeqSetDiv: "SeqSetDiv", // { divisions }
+    SeqSetOct: "SeqSetOct", // { oct }
     SeqSetLength: "SeqSetLength", // { lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { ops:[{type:clear|addNote|deleteNote, note:{}}]}
     SeqPatchInit: "SeqPatchInit",
@@ -108,6 +109,7 @@ const ServerMessages = {
     SeqSetSpeed: "SeqSetSpeed", // { instrumentID, speed }
     SeqSetSwing: "SeqSetSwing", // { instrumentID, swing }
     SeqSetDiv: "SeqSetDiv", // { instrumentID, divisions }
+    SeqSetOct: "SeqSetOct", // { instrumentID, oct }
     SeqSetLength: "SeqSetLength", // { instrumentID, lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { instrumentID, ops:[{type:clear|addNote|deleteNote, note:{}}]}
     SeqPatchInit: "SeqPatchInit", // {instrumentID}

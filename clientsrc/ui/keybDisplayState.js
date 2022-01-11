@@ -1,7 +1,4 @@
 
-const gDefaultColor = "#888";
-const gDefaultUserID = "seq";
-
 class KeybDisplayState {
     constructor(generateDOMIDProc) {
         this.generateDOMIDProc = generateDOMIDProc; // (midiNote) => { ... }
@@ -13,10 +10,11 @@ class KeybDisplayState {
         }
     }
 
-    PushNoteOn(user, midiNote) {
-        const userID = (user?.userID) ?? gDefaultUserID;
-        const color = (user?.color) ?? gDefaultColor;
-        this.notesOn[midiNote].push({ userID, color });
+    PushNoteOn(id, color, midiNote) {
+        //const userID = (user?.userID) ?? gDefaultUserID;
+        //const color = (user?.color) ?? gDefaultColor;
+        if (!(midiNote in this.notesOn)) return;
+        this.notesOn[midiNote].push({ id, color });
         let k = $(this.generateDOMIDProc(midiNote));
         if (!k.hasClass('active')) {
             k.addClass("active");
@@ -24,11 +22,12 @@ class KeybDisplayState {
         k.css("background-color", color);
     }
 
-    RemoveUserNoteRef(userID, midiNote) {
-        userID ??= gDefaultUserID;
+    RemoveUserNoteRef(id, midiNote) {
+        //userID ??= gDefaultUserID;
+        if (!(midiNote in this.notesOn)) return;
         let refs = this.notesOn[midiNote];
         if (refs.length < 1) return; // 
-        refs.removeIf(r => (r.userID == userID));
+        refs.removeIf(r => (r.id == id));
 
         let k = $(this.generateDOMIDProc(midiNote));
         if (refs.length < 1) {
@@ -55,10 +54,10 @@ class KeybDisplayState {
         }
     }
 
-    AllUserNotesOff(userID) {
-        userID ??= gDefaultUserID;
+    AllUserNotesOff(id) {
+        //userID ??= gDefaultUserID;
         for (let midiNote = 0; midiNote < 128; ++midiNote) {
-            this.RemoveUserNoteRef(userID, midiNote);
+            this.RemoveUserNoteRef(id, midiNote);
         }
     }
 };

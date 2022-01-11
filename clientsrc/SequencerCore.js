@@ -11,7 +11,8 @@ const DFMusic = require("./DFMusic");
 
 const SequencerSettings = {
   PatternCount : 4,
-  MaxDivs : 32,
+  MaxDivs : 65,
+  MaxNotesPerColumn : 6,
 };
 
 const eDivisionType = {
@@ -50,7 +51,10 @@ function ResolveSequencerConfig() {
     // each legends[legendID] = array of { name, midiNoteValue, legendCssClass, velocitySetRef }
     globalSequencerConfig.legends[legendID].forEach(note => {
       // transform the velocitySetRef into a velocitySet. NB: they will be refs, not copies.
-      const velSet = globalSequencerConfig.velocitySets[note.velocitySetRef];
+      let velSet = Object.values(globalSequencerConfig.velocitySets)[0];
+      if (note.velocitySetRef in globalSequencerConfig.velocitySets) {
+        velSet = globalSequencerConfig.velocitySets[note.velocitySetRef];
+      }
       note.velocitySet = velSet;
       delete note.velocitySetRef;
     });
@@ -68,6 +72,7 @@ const eSeqPatternOp = {
   ClearPattern : "ClearPattern",
   AddNote : "AddNote",
   DeleteNote : "DeleteNote",
+  Nop : "Nop", // needed when clients send server some invalid op, and the server converts it to a Nop.
 };
 
 function IsValidSequencerPatternIndex(i) {
@@ -90,6 +95,10 @@ function IsValidSequencerDivisionType(n) {
   return n in eDivisionType;
 }
 
+function IsValidSequencerOctave(oct) {
+  return Number.isInteger(oct) && oct >= -3 && oct <= 3;
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SequencerNote {
   constructor(params) {
@@ -101,6 +110,7 @@ class SequencerNote {
     this.velocityIndex ??= 0; // velocities are defined in the note legend, and they are midi-style velocity values.
     this.patternMajorBeat ??= 0;
     this.lengthMajorBeats ??= 1;
+    this.timestamp ??= Date.now();
   }
 }
 
@@ -129,10 +139,12 @@ class SequencerPattern {
 
   AddNoteOp(op) {
     if (DFUtil.IsServer()) {
-      op.id ??= DFUtil.generateID();
+      op.id ??= DFUtil.generateID(); // hm why ??=? shouldn't the id always be generated?
+      op.timestamp = Date.now();
     }
     console.assert(op.id);
     // TODO: ensure no conflicts / overlaps. if so, arrange notes so things aren't broken.
+    // todo: enforce SequencerSettings.MaxNotesPerColumn; currently only enforecd on client
     this.notes.push(new SequencerNote({
       midiNoteValue : op.midiNoteValue,
       id : op.id,
@@ -146,15 +158,17 @@ class SequencerPattern {
   DeleteNoteOp(op) {
     console.assert(op.id);
     const i = this.notes.findIndex(n => n.id === op.id);
-    if (i === -1)
+    if (i === -1) {
+      op.type = eSeqPatternOp.Nop;
       return false;
+    }
     this.notes.splice(i, 1);
     return true;
   }
 
-  // this not only processes, but ADDS ids where necessary (server)
+  // this not only processes, but ADDS ids and timestamps where necessary (server)
   ProcessOps(ops) {
-    return ops.every(op => {
+    ops.forEach(op => {
       switch (op.type) {
       case eSeqPatternOp.ClearPattern:
         return this.Clear();
@@ -202,6 +216,26 @@ class SeqDivInfo {
       return false;
     return true;
   }
+
+  // for pattern view div info
+  GetNoteCount() {
+    return Object.values(this.noteMap).reduce((a, b) => a + ((b.underlyingNotes?.length) ?? 0), 0);
+  }
+  GetSomeUnderlyingNoteIDsExcept(idsToExclude, count) {
+    if (count < 1) return [];
+    // create list of underlying notes, sorted by date created
+    let un = [];
+    Object.values(this.noteMap).forEach(pvn => {
+      const matchingUNs = pvn.underlyingNotes.filter(un => !idsToExclude.some(ex => ex === un.id));
+      un = un.concat(matchingUNs);
+    });
+
+    un.sort((a,b) => a.timestamp < b.timestamp ? -1 : 1);
+
+    const y = un.slice(0, count);
+    const ret = y.map(x => x.id);
+    return ret;
+  }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,11 +264,24 @@ class SequencerPatch {
 
     this.speed ??= 1;
     this.swing ??= 0; // -1 to +1
+    this.octave ??= 0;
 
     // this could be a Set(), but it doesn't automatically serialize via JSON.serialize, and there should rarely be many entries.
     // since there are only 128 midi notes, an option is also to just create a fixed-size array of bools
     if (!Array.isArray(this.mutedNotes))
       this.mutedNotes = [];
+  }
+
+  // can return nullish if out of range / should not be played.
+  AdjustMidiNoteValue(midiNoteValue) {
+    let ret = midiNoteValue;
+    midiNoteValue += this.octave * 12;
+    // todo: other transposition?
+    if (midiNoteValue < 1)
+      return 0;
+    if (midiNoteValue > 127)
+      return 0;
+    return midiNoteValue;
   }
 
   IsNoteMuted(midiNoteValue) {
@@ -295,12 +342,12 @@ class SequencerPatch {
     let newMeas = Math.round(this.GetLengthMeasures());
     this.SetLengthMajorBeats(newMeas * this.timeSig.majorBeatsPerMeasure);
     while (this.GetHiddenNoteCount() > origNotesHidden) {
-      newMeas ++;
+      newMeas++;
       this.SetLengthMajorBeats(newMeas * this.timeSig.majorBeatsPerMeasure);
     }
     // subtract until we're within max length.
     while ((this.GetPatternDivisionCount() > SequencerSettings.MaxDivs) && (newMeas > 1)) {
-      newMeas --;
+      newMeas--;
       this.SetLengthMajorBeats(newMeas * this.timeSig.majorBeatsPerMeasure);
     }
   }
@@ -321,6 +368,13 @@ class SequencerPatch {
 
   GetDivisionType() {
     return this.GetSelectedPattern().divisionType;
+  }
+
+  SetOctave(oct) {
+    this.octave = oct;
+  }
+  GetOctave() {
+    return this.octave;
   }
 
   #SubdivideMeasureMinorBeats(mbiArray, n) {
@@ -609,8 +663,107 @@ class SequencerPatternView {
   }
 
   // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
-  GetPatternOpsForCellCycle(divInfo, note) {
-    // determine what needs to happen.
+  GetPatternOpsForCellCycle(divInfo, note, velIndexDelta) {
+    const patternViewNote = divInfo.noteMap[note.midiNoteValue];
+    let newNoteCount = divInfo.GetNoteCount();
+    let idsDeleted = [];
+    if (patternViewNote?.hasNote) {
+      // remove note & add new with cycled vel
+      const ret = [];
+      // we don't modify notes, we remove & add them. it's simpler this way, and resolves some ambiguities regarding underlying note data.
+      newNoteCount--;
+      patternViewNote.underlyingNotes.forEach(n => {
+        idsDeleted.push(n.id);
+        ret.push({
+          type : eSeqPatternOp.DeleteNote,
+          id : n.id,
+        });
+      });
+
+      const newVelIndex = patternViewNote.velocityIndex + velIndexDelta;
+      if (newVelIndex < note.velocitySet.length) { // if there are velocity indices left to cycle through, add it. otherwise just remove.
+        newNoteCount++;
+        ret.push({
+          type : eSeqPatternOp.AddNote,
+          midiNoteValue : note.midiNoteValue,
+          velocityIndex : newVelIndex,
+          patternMajorBeat : divInfo.beginPatternMajorBeat,
+          lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
+        });
+      }
+
+      const overflowIDs = divInfo.GetSomeUnderlyingNoteIDsExcept(idsDeleted, newNoteCount - SequencerSettings.MaxNotesPerColumn);
+      overflowIDs.forEach(noteID => {
+        ret.push({
+          type : eSeqPatternOp.DeleteNote,
+          id : noteID,
+        });
+      });
+
+      return ret;
+    }
+
+    // add note.
+    const ret = [ {
+      type : eSeqPatternOp.AddNote,
+      midiNoteValue : note.midiNoteValue,
+      velocityIndex : DFUtil.modulo(velIndexDelta - 1, note.velocitySet.length),
+      patternMajorBeat : divInfo.beginPatternMajorBeat,
+      lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
+    } ];
+    newNoteCount++;
+
+    const overflowIDs = divInfo.GetSomeUnderlyingNoteIDsExcept(idsDeleted, newNoteCount - SequencerSettings.MaxNotesPerColumn);
+    overflowIDs.forEach(noteID => {
+      ret.push({
+        type : eSeqPatternOp.DeleteNote,
+        id : noteID,
+      });
+    });
+
+    return ret;
+  }
+
+  // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
+  GetPatternOpsForCellToggle(divInfo, note, velIndex) {
+    const patternViewNote = divInfo.noteMap[note.midiNoteValue];
+    let newNoteCount = divInfo.GetNoteCount();
+    let idsDeleted = [];
+    if (patternViewNote?.hasNote) {
+      // remove note & add new with cycled vel
+      const ret = [];
+      patternViewNote.underlyingNotes.forEach(n => {
+        idsDeleted.push(n.id);
+        ret.push({
+          type : eSeqPatternOp.DeleteNote,
+          id : n.id,
+        });
+      });
+      return ret;
+    }
+
+    // add note.
+    const ret = [ {
+      type : eSeqPatternOp.AddNote,
+      midiNoteValue : note.midiNoteValue,
+      velocityIndex : DFUtil.modulo(velIndex, note.velocitySet.length),
+      patternMajorBeat : divInfo.beginPatternMajorBeat,
+      lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
+    } ];
+    newNoteCount++;
+
+    const overflowIDs = divInfo.GetSomeUnderlyingNoteIDsExcept(idsDeleted, newNoteCount - SequencerSettings.MaxNotesPerColumn);
+    overflowIDs.forEach(noteID => {
+      ret.push({
+        type : eSeqPatternOp.DeleteNote,
+        id : noteID,
+      });
+    });
+
+    return ret;
+  }
+
+  GetPatternOpsForCellRemove(divInfo, note) {
     const patternViewNote = divInfo.noteMap[note.midiNoteValue];
     if (patternViewNote?.hasNote) {
       // remove note & add new with cycled vel
@@ -622,27 +775,9 @@ class SequencerPatternView {
           id : n.id,
         });
       });
-      const oldVelIndex = patternViewNote.velocityIndex;
-      if (oldVelIndex < note.velocitySet.length - 1) { // if there are velocity indices left to cycle through, add it. otherwise just remove.
-        ret.push({
-          type : eSeqPatternOp.AddNote,
-          midiNoteValue : note.midiNoteValue,
-          velocityIndex : oldVelIndex + 1,
-          patternMajorBeat : divInfo.beginPatternMajorBeat,
-          lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-        });
-      }
       return ret;
     }
-
-    // add note.
-    return [ {
-      type : eSeqPatternOp.AddNote,
-      midiNoteValue : note.midiNoteValue,
-      velocityIndex : 0,
-      patternMajorBeat : divInfo.beginPatternMajorBeat,
-      lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-    } ];
+    return null;
   }
 
   #bringNoteIntoView(patch, note, legend) {
@@ -672,6 +807,7 @@ module.exports = {
   IsValidSequencerSwing,
   IsValidSequencerDivisionType,
   IsValidSequencerLengthMajorBeats,
+  IsValidSequencerOctave,
   eDivisionType,
   eSeqPatternOp,
   SequencerPatternView,

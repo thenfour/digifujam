@@ -49,8 +49,6 @@ var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options
  
 
 
-const gModifierKeyTracker = new DFUtils.ModifierKeyTracker();
-
 let gStateChangeHandler = null;
 
 let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
@@ -467,7 +465,8 @@ class InstFloatParam extends React.Component {
     onClickSlider = (e) => {
         if (this.props.observerMode) return;
         let a = 0;
-        if (gModifierKeyTracker.CtrlKey) {
+        if (window.DFModifierKeyTracker.CtrlKey) {
+            console.log(`ctrl key slider click`);
             let realVal = this.props.app.roomState.GetDefaultValueForParam(this.props.instrument, this.props.param);
 
             this.setState(this.state);
@@ -2315,10 +2314,13 @@ class RootArea extends React.Component {
 
         this.activityCount++;
 
+        const id = (user?.userID) ?? instrument.instrumentID;
+        const color = (user?.color) ?? instrument.color;
+
         if (instrument.activityDisplay === "keyboard") {
-            this.keyboardActivityDisplayState.PushNoteOn(user, midiNote);
+            this.keyboardActivityDisplayState.PushNoteOn(id, color, midiNote);
         } else if (instrument.activityDisplay === "drums") {
-            this.drumsActivityDisplayState.PushNoteOn(user, midiNote);
+            this.drumsActivityDisplayState.PushNoteOn(id, color, midiNote);
         } else {
             return;
         }
@@ -2335,12 +2337,14 @@ class RootArea extends React.Component {
     }
 
     handleNoteOff = (user, instrument, midiNote) => {
-        this.removeUserNoteRef(user?.userID, midiNote, instrument);
+        const id = (user?.userID) ?? instrument.instrumentID;
+        this.removeUserNoteRef(id, midiNote, instrument);
     }
 
-    handleUserAllNotesOff = (user) => {
-        this.drumsActivityDisplayState.AllUserNotesOff(user.userID);
-        this.keyboardActivityDisplayState.AllUserNotesOff(user.userID);
+    handleUserAllNotesOff = (user, instrument) => {
+        const id = (user?.userID) ?? instrument.instrumentID;
+        this.drumsActivityDisplayState.AllUserNotesOff(id);
+        this.keyboardActivityDisplayState.AllUserNotesOff(id);
     };
 
     handleAllNotesOff = () => {

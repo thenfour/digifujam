@@ -4,10 +4,10 @@ const EventEmitter = require('events');
 class ModifierKeyTracker {
     constructor() {
 
-        this.gShiftKey = false;
-        this.gCtrlKey = false;
+        this.ShiftKey = false;
+        this.CtrlKey = false;
     
-        $(document).on('keydown', function (e) {
+        $(document).on('keydown', (e) => {
             if (e.shiftKey) {
                 this.ShiftKey = true;
             }
@@ -15,7 +15,7 @@ class ModifierKeyTracker {
                 this.CtrlKey = true;
             }
         });
-        $(document).on('keyup', function (e) {
+        $(document).on('keyup', (e) => {
             if (e.shiftKey == false) {
                 this.ShiftKey = false;
             }

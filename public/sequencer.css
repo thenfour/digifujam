@@ -476,14 +476,14 @@
 }
 
 .sequencerMain ul.pianoRollColumn li .noteBase {
-    background-color: #666;
-    box-shadow: inset 0px 0px 36px #000b;
+    background-color: #333;
+    /* box-shadow: inset 0px 0px 36px #000b;  <-- this is VERY heavy for big grids */
 }
 
 .sequencerMain ul.pianoRollColumn li:hover .noteBase {
     /* background-color: #0883; */
     /* border: 2px solid #4f44; */
-    border: 2px solid #666;
+    border: 2px solid #777;
 }
 
 .sequencerMain ul.pianoRollColumn li.muted .muteOL {
@@ -512,6 +512,19 @@
 }
 
 
+.sequencerMain ul.pianoRollColumn li.note.muted .noteOL {
+    background-color: #575;
+    box-shadow:none;
+}
+
+.sequencerMain ul.pianoRollColumn li.note.muted.vel1 .noteOL {
+    background-color: #757;
+    box-shadow:none;
+}
+
+
+
+
 
 
 
@@ -529,5 +542,4 @@
 .sequencerMain ul.pianoRollLegend li.snare {
     background-color: #bbe;
 }
-
 
