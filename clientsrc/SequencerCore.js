@@ -11,7 +11,19 @@ const DFMusic = require("./DFMusic");
 
 const SequencerSettings = {
   PatternCount : 4,
+  MaxDivs : 32,
 };
+
+const eDivisionType = {
+  MajorBeat : "MajorBeat",
+  MinorBeat : "MinorBeat",
+  MinorBeat_x2 : "MinorBeat_x2",
+  MinorBeat_x3 : "MinorBeat_x3",
+  MinorBeat_x4 : "MinorBeat_x4",
+};
+
+const gDefaultPatternLengthMajorBeats = 4;
+const gDefaultPatternDivisionType = eDivisionType.MajorBeat;
 
 let globalSequencerConfig = {
   velocitySets : {},
@@ -20,12 +32,16 @@ let globalSequencerConfig = {
 
 function IntegrateSequencerConfig(config) {
   // integrate the config to global state. each config is basically {velocitySets:{}, legends:{}}
-  Object.keys(config.velocitySets).forEach(k => {
-    globalSequencerConfig.velocitySets[k] = config.velocitySets[k];
-  });
-  Object.keys(config.legends).forEach(k => {
-    globalSequencerConfig.legends[k] = config.legends[k];
-  });
+  if (config.velocitySets) {
+    Object.keys(config.velocitySets).forEach(k => {
+      globalSequencerConfig.velocitySets[k] = config.velocitySets[k];
+    });
+  }
+  if (config.legends) {
+    Object.keys(config.legends).forEach(k => {
+      globalSequencerConfig.legends[k] = config.legends[k];
+    });
+  }
 }
 
 function ResolveSequencerConfig() {
@@ -69,20 +85,6 @@ function IsValidSequencerSwing(n) {
 function IsValidSequencerLengthMajorBeats(n) {
   return Number.isInteger(n) && n > 0 && n < 64;
 }
-
-const eDivisionType = {
-  MajorBeat : "MajorBeat",
-  MinorBeat : "MinorBeat",
-  MinorBeat_x2 : "MinorBeat_x2",
-  MinorBeat_x3 : "MinorBeat_x3",
-  MinorBeat_x4 : "MinorBeat_x4",
-};
-
-
-const gDefaultPatternLengthMajorBeats = 4;
-const gDefaultPatternDivisionType = eDivisionType.MajorBeat;
-
-
 
 function IsValidSequencerDivisionType(n) {
   return n in eDivisionType;
@@ -264,14 +266,53 @@ class SequencerPatch {
     this.swing = swing;
   }
   SetDivisionType(divisionType) {
+    // if setting div type results in a pattern that's too long, don't allow.
+    const oldVal = this.patterns[this.selectedPatternIdx].divisionType;
     this.patterns[this.selectedPatternIdx].divisionType = divisionType;
+    if (this.GetPatternDivisionCount() > SequencerSettings.MaxDivs) {
+      this.patterns[this.selectedPatternIdx].divisionType = oldVal;
+    }
   }
   SetLengthMajorBeats(lengthMajorBeats) {
+    const oldVal = this.patterns[this.selectedPatternIdx].lengthMajorBeats;
     this.patterns[this.selectedPatternIdx].lengthMajorBeats = lengthMajorBeats;
+    if (this.GetPatternDivisionCount() > SequencerSettings.MaxDivs) {
+      this.patterns[this.selectedPatternIdx].lengthMajorBeats = oldVal;
+    }
   }
 
   SetTimeSig(ts) {
     this.timeSig = ts;
+    if (this.GetLengthMeasures() < 1) {
+      // easy case; try to always keep at least 1 measure.
+      this.SetLengthMajorBeats(this.timeSig.majorBeatsPerMeasure);
+      return;
+    }
+    // otherwise, round to nearest new measure.
+    // if notes become hidden, expand.
+    const pattern = this.patterns[this.selectedPatternIdx];
+    const origNotesHidden = this.GetHiddenNoteCount();
+    let newMeas = Math.round(this.GetLengthMeasures());
+    this.SetLengthMajorBeats(newMeas * this.timeSig.majorBeatsPerMeasure);
+    while (this.GetHiddenNoteCount() > origNotesHidden) {
+      newMeas ++;
+      this.SetLengthMajorBeats(newMeas * this.timeSig.majorBeatsPerMeasure);
+    }
+    // subtract until we're within max length.
+    while ((this.GetPatternDivisionCount() > SequencerSettings.MaxDivs) && (newMeas > 1)) {
+      newMeas --;
+      this.SetLengthMajorBeats(newMeas * this.timeSig.majorBeatsPerMeasure);
+    }
+  }
+
+  GetHiddenNoteCount() {
+    // count notes which begin past the visible pattern.
+    const pattern = this.patterns[this.selectedPatternIdx];
+    return pattern.notes.filter(note => note.patternMajorBeat >= pattern.lengthMajorBeats).length;
+  }
+
+  GetLengthMeasures() {
+    return this.GetLengthMajorBeats() / this.timeSig.majorBeatsPerMeasure;
   }
 
   GetSelectedPattern() {
@@ -378,7 +419,7 @@ class SequencerPatch {
   }
 
   GetPatternDivisionCount() {
-    return this.GetMeasureDivisionInfo().length;
+    return this.GetPatternDivisionInfo().length;
   }
 
   // must account for speed!
@@ -404,7 +445,7 @@ class SequencerPatch {
       absPatternFloat,
       patternLengthQuarters,
       patternFrac,
-      patternQuarter: patternFrac * patternLengthQuarters,
+      patternQuarter : patternFrac * patternLengthQuarters,
     };
   }
 }
@@ -435,12 +476,12 @@ class SequencerDevice {
   }
 
   GetPatternOpsForClearPattern() {
-    return [{type: eSeqPatternOp.ClearPattern}];
+    return [ {type : eSeqPatternOp.ClearPattern} ];
   }
 
   GetPatternOpsForPastePattern(json) {
     try {
-      const ret = [{type: eSeqPatternOp.ClearPattern}]; // start by clearing pattern.
+      const ret = [ {type : eSeqPatternOp.ClearPattern} ]; // start by clearing pattern.
       const pat = new SequencerPattern(JSON.parse(json));
       pat.notes.forEach(note => {
         ret.push({
@@ -463,6 +504,7 @@ class SequencerDevice {
   }
 
   GetNoteLegend() {
+    this.legendRef ??= "GeneralNotes";
     return globalSequencerConfig.legends[this.legendRef];
   }
 }
@@ -510,7 +552,7 @@ class PatternViewNote {
     // 2. any notes which were still playing will either:
     //    a. get their noteoff rescheduled if they still exist on the patternview
     //    b. or, get noteoff immediately if it's been deleted (not found in the current patternview)
-    // 
+    //
     // if we use uniqueIDs, it means there's no way to know if a note existing previously. all notes playing at the time
     // of the timerproc will be killed because we assume they've been deleted.
     //

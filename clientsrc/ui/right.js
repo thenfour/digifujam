@@ -2204,9 +2204,13 @@ class RootArea extends React.Component {
         app.Connect(userName, color, roomKey, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
             this.handleUserAllNotesOff, this.handleAllNotesOff,
             this.handleUserLeave, this.HandlePleaseReconnect,
-            this.HandleCheer, this.handleRoomWelcome, google_access_token, this.onInstrumentLoadProgress);
+            this.HandleCheer, this.handleRoomWelcome, google_access_token, this.onInstrumentLoadProgress, this.onMyInstrumentChange);
         this.setState({ app });
     }
+
+    onMyInstrumentChange = (inst) => {
+        this.setState({ sequencerShown: false });
+    };
 
     onInstrumentLoadProgress = (instSpec, prog) => {
         this.stateChangeThrottler.InvokeThrottled();

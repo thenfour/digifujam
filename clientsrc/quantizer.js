@@ -332,7 +332,7 @@ class ServerRoomQuantizer {
           .map(n => n.absQuarter);
         if (sameIncNotesAbsQuarter.length) {
           const earliestAbsQuarter = Math.min(sameIncNotesAbsQuarter);
-          quantizedFrame = beatToFrame(earliestAbsQuarter, this.metronome.getBPM());
+          quantizedFrame = Math.min(quantizedFrame, beatToFrame(earliestAbsQuarter, this.metronome.getBPM()) - 1);
           //console.log(`Preventing overlapping notes; shifting noteoff frame back to ${quantizedFrame}`);
         }
 

@@ -81,7 +81,6 @@
       "instrumentID": "fm4a",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",
-      "allowSequencer": "1",
       "presetBankID": "fm4",
       "name": "Mini FM A"
     },
@@ -970,6 +969,10 @@
       "activityDisplay": "drums",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
+      "allowSequencer": "1",
+      "sequencerDevice": {
+        "legendRef": "DrumsA"
+      },
       "name": "Drum kits",
       "sfzArray": [
         {

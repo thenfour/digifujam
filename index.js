@@ -1304,7 +1304,7 @@ class RoomServer {
       const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
 
-      foundInstrument.instrument.sequencerDevice.livePatch.timeSig = DFMusic.GetTimeSigById(data.timeSigID);
+      foundInstrument.instrument.sequencerDevice.livePatch.SetTimeSig(DFMusic.GetTimeSigById(data.timeSigID));
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetTimeSig, {
@@ -1448,14 +1448,15 @@ class RoomServer {
       if (!Seq.IsValidSequencerDivisionType(data.divisionType)) throw new Error(`invalid sequencer divisionType.`);
 
       foundInstrument.instrument.sequencerDevice.livePatch.SetDivisionType(data.divisionType);
+      const newDivType = foundInstrument.instrument.sequencerDevice.livePatch.GetDivisionType();
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetDiv, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        divisionType: data.divisionType,
+        divisionType: newDivType,
       });
 
-      this.sequencerPlayer.onChanged_SetDiv(foundInstrument.instrument, data);
+      this.sequencerPlayer.onChanged_General();
 
       if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
         this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
@@ -1476,14 +1477,15 @@ class RoomServer {
       if (!Seq.IsValidSequencerLengthMajorBeats(data.lengthMajorBeats)) throw new Error(`invalid sequencer lengthMajorBeats.`);
 
       foundInstrument.instrument.sequencerDevice.livePatch.SetLengthMajorBeats(data.lengthMajorBeats);
+      const newLen = foundInstrument.instrument.sequencerDevice.livePatch.GetLengthMajorBeats();
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetLength, {
         instrumentID: foundInstrument.instrument.instrumentID,
-        lengthMajorBeats: data.lengthMajorBeats,
+        lengthMajorBeats: newLen,
       });
 
-      this.sequencerPlayer.onChanged_SetLength(foundInstrument.instrument, data);
+      this.sequencerPlayer.onChanged_General();
 
       if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
         this.UnidleInstrument(foundUser.user, foundInstrument.instrument);

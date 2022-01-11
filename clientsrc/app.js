@@ -412,6 +412,17 @@ class DigifuApp {
         }
     }
 
+
+    PreviewNoteOn(midiNoteValue, vel) {
+        if (this.myInstrument == null) return;
+        this.synth.NoteOn(this.myUser, this.myInstrument, midiNoteValue, vel);
+    }    
+
+    PreviewNoteOff(midiNoteValue, vel) {
+        if (this.myInstrument == null) return;
+        this.synth.NoteOff(this.myUser, this.myInstrument, midiNoteValue);
+    }    
+
     // NETWORK HANDLERS --------------------------------------------------------------------------------------
     NET_OnPleaseIdentify() {
         this.net.SendIdentify({
@@ -580,10 +591,12 @@ class DigifuApp {
             if (userID == this.myUser.userID) {
                 this.resetBeatPhaseOnNextNote = false;
                 this.myInstrument = foundInstrument.instrument;
+                this.onMyInstrumentChange(this.myInstrument);
             } else {
                 // or if your instrument is being given to someone else, then you no longer have an instrument
                 if (foundInstrument.instrument.controlledByUserID == this.myUser.userID) {
                     this.myInstrument = null;
+                    this.onMyInstrumentChange(this.myInstrument);
                 }
             }
             foundInstrument.instrument.controlledByUserID = userID;
@@ -605,10 +618,10 @@ class DigifuApp {
 
     NET_OnNoteEvents(noteOns, noteOffs) {
         noteOns.forEach(e => {
-            this.NET_OnNoteOn(e.userID, e.note, e.velocity, e.seqInstrumentID);
+            this.NET_OnNoteOn(e.userID, parseInt(e.note), parseInt(e.velocity), e.seqInstrumentID);
         });
         noteOffs.forEach(e => {
-            this.NET_OnNoteOff(e.userID, e.note, e.seqInstrumentID);
+            this.NET_OnNoteOff(e.userID, parseInt(e.note), e.seqInstrumentID);
         });
     }
 
@@ -1490,7 +1503,7 @@ class DigifuApp {
     }
 
 
-    Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress) {
+    Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress, onMyInstrumentChange) {
         this.myUser = new DF.DigifuUser();
         this.myUser.name = userName;
         this.myUser.color = userColor;
@@ -1504,6 +1517,8 @@ class DigifuApp {
         this.pleaseReconnectHandler = pleaseReconnectHandler;
         this.handleCheer = handleCheer; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.handleRoomWelcome = handleRoomWelcome;
+        this.onMyInstrumentChange = onMyInstrumentChange;
+
         this.resetBeatPhaseOnNextNote = false;
 
         if (_hasSelectiveDisconnect()) {

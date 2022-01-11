@@ -93,6 +93,7 @@
       "namePrefix": "FM4: ",
       "gain": 0.05,
       "color": "rgb(138, 224, 153)",
+      "allowSequencer": "1",
       "engine": "minifm",
       "supportsObservation": true,
       "sequencerDevice": {
@@ -1605,6 +1606,7 @@
     {
       "instrumentID": "sfzMulti",
       "engine": "sfz",
+      "allowSequencer": "1",
       "supportsPresets": true,
       "maxPolyphony": 12,
       "activityDisplay": "keyboard",

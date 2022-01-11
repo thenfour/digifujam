@@ -202,15 +202,15 @@ class SequencerMain extends React.Component {
             this.props.app.SetSetNoteMuted(noteInfo.midiNoteValue, isMuted);
         }
 
-        onClickLength = (deltaMeasures) => {
+        onClickLength = (delta) => {
             if (this.props.observerMode) return;
             const patch = this.props.instrument.sequencerDevice.livePatch;
-            let len = patch.GetLengthMajorBeats();
+            let len = patch.GetLengthMajorBeats() + delta;
             let meas = len / patch.timeSig.majorBeatsPerMeasure;
-            if (deltaMeasures > 0) {
+            if (delta > 0) {
                 meas = Math.ceil(meas+0.1);
             }
-            if (deltaMeasures < 0) {
+            if (delta < 0) {
                 meas = Math.floor(meas - .1);
             }
             len = meas * patch.timeSig.majorBeatsPerMeasure;
@@ -272,6 +272,17 @@ class SequencerMain extends React.Component {
             const seq = this.props.instrument.sequencerDevice;
             const ops = seq.GetPatternOpsForClearPattern();
             this.props.app.SeqPatternOps(ops);
+        }
+
+        onClickNotePreviewOn = (note, legend, e) => {
+            if (!e.target.dataset.allowPreview) return;
+            let vel = legend.find(l => l.midiNoteValue === note.midiNoteValue)?.velocitySet[0]?.vel;
+            vel ??= 99;
+            this.props.app.PreviewNoteOn(note.midiNoteValue, vel);
+        }
+
+        onClickNotePreviewOff = (note) => {
+            this.props.app.PreviewNoteOff(note.midiNoteValue);
         }
 
         timerProc() {
@@ -337,8 +348,17 @@ class SequencerMain extends React.Component {
         const keys = noteLegend.map(note => {
             const isMuted = patch.IsNoteMuted(note.midiNoteValue);
             return (
-                <li key={note.midiNoteValue} id={"key_" + note.midiNoteValue} style={rowStyle} className={note.cssClass}>
-                    <div className='rowName'>{note.name}</div>
+                <li key={note.midiNoteValue}
+                    id={"key_" + note.midiNoteValue}
+                    style={rowStyle}
+                    title='Click to hear preview. Only you will hear it.'
+                    className={"clickable " + note.cssClass}
+                    onMouseDown={(e) => this.onClickNotePreviewOn(note, noteLegend, e)}
+                    onMouseUp={(e) => this.onClickNotePreviewOff(note, e)}
+                    onMouseLeave={(e) => this.onClickNotePreviewOff(note, e)}
+                    data-allow-preview="1"
+                    >
+                    <div className='rowName' data-allow-preview="1">{note.name}</div>
                     <div
                         className={(isMuted ? 'muteRow muted' : 'muteRow') + clickableIfEditable}
                         onClick={()=>this.onClickMuteNote(note, !isMuted)}
@@ -595,9 +615,9 @@ class SequencerMain extends React.Component {
                             </div>
 
                         <div className='paramGroup'>
-                            <div className='legend'>Length</div>
+                            <div className='legend'>Measures</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetLengthMajorBeats()}</div>
+                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
                                 <div className="buttonArray vertical">
                                     <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
                                     <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>

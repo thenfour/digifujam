@@ -339,7 +339,7 @@
 	list-style: none;
     font-weight: bold;
 
-    width: 100px;
+    width: 110px;
     background-color: #ffe;
     height: 44px;
     box-shadow:0 0 9px #0003 inset, 0 0 1px #000;
@@ -361,15 +361,17 @@
 }
 
 .sequencerMain ul.pianoRollLegend li .rowName {
-    color:#888;
+    font-family: 'Overpass', sans-serif;
+    font-size: 14px;
+    color:#555;
 }
 
 .sequencerMain ul.pianoRollLegend li .muteRow {
     width: 18px;
     height: 18px;
     background-color: #8885;
-    margin-left: 10px;
-    margin-right: 10px;    
+    margin-left: 5px;
+    margin-right: 8px;    
     text-align: center;
     color: #8888;
 }
@@ -508,3 +510,24 @@
     box-shadow: inset 0px 0px 18px #444, 0px 0px 18px #7e0d9b;
     
 }
+
+
+
+
+
+
+/*  ----- specific configs ----- */
+
+.sequencerMain ul.pianoRollLegend li.tom {
+    background-color: #dda;
+}
+
+.sequencerMain ul.pianoRollLegend li.cymbal {
+    background-color: #add;
+}
+
+.sequencerMain ul.pianoRollLegend li.snare {
+    background-color: #bbe;
+}
+
+
