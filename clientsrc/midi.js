@@ -10,6 +10,7 @@
 // expression
 // mod
 let gMidiAccess = null; // yea global...
+let gMidiDevicesAvailable = false;
 
 class DigifuMidi {
   constructor() {
@@ -131,8 +132,7 @@ class DigifuMidi {
   };
 
   AnyMidiDevicesAvailable() {
-    if (!gMidiAccess) return false;
-    return gMidiAccess.inputs.size > 0;
+    return gMidiDevicesAvailable;
   };
 
   Init(handler) {
@@ -167,6 +167,7 @@ let GetMidiInputDeviceList = function () {
     navigator.requestMIDIAccess()
       .then(midiAccess => {
         gMidiAccess = midiAccess;
+        gMidiDevicesAvailable = gMidiAccess.inputs.size > 0;
         resolve(formResult());
       }, () => {
         console.log('Could not access your MIDI devices.');

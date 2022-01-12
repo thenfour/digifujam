@@ -39,9 +39,11 @@
     "webpack-cli": "^4.9.1"
   },
   "scripts": {
-    "build": "npx webpack --mode=development && node index.js",
-    "start": "node index.js",
-    "watch": "npx webpack --watch --mode=development"
+    "build-dev": "npx webpack --mode=development",
+    "build-prod": "npx webpack --mode=production",
+    "serve": "node index.js",
+    "watch-dev": "npx webpack --watch --mode=development",
+    "watch-prod": "npx webpack --watch --mode=production"
   },
   "author": "",
   "license": "ISC"
