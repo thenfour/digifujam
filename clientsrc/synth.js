@@ -90,19 +90,19 @@ class DigifuSynth {
 		this._isMuted = !!val;
 	}
 
-	NoteOn(user, instrumentSpec, note, velocity) {
+	NoteOn(user, instrumentSpec, note, velocity, isFromSequencer) {
 		if (this._isMuted || instrumentSpec.isMuted) {
-			this.fallbackNoteOnTracker.NoteOn(user, instrumentSpec, note);
+			this.fallbackNoteOnTracker.NoteOn(user, instrumentSpec, note, isFromSequencer);
 			return;
 		}
-		this.instruments[instrumentSpec.instrumentID].NoteOn(user, note, velocity);
+		this.instruments[instrumentSpec.instrumentID].NoteOn(user, note, velocity, isFromSequencer);
 	};
 
-	NoteOff(user, instrumentSpec, note) {
+	NoteOff(user, instrumentSpec, note, isFromSequencer) {
 		if (this._isMuted || instrumentSpec.isMuted) {
-			this.fallbackNoteOnTracker.NoteOff(user, instrumentSpec, note);
+			this.fallbackNoteOnTracker.NoteOff(user, instrumentSpec, note, isFromSequencer);
 		}
-		this.instruments[instrumentSpec.instrumentID].NoteOff(user, note);
+		this.instruments[instrumentSpec.instrumentID].NoteOff(user, note, isFromSequencer);
 	};
 
 	AllNotesOff(instrumentSpec) {

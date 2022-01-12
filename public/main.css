@@ -1148,32 +1148,6 @@ ul.instParamList li.inlineLabel
 
 
 
-.component.instrumentCloset li .seqCtrlContainer {
-    display:flex;
-    align-items: center;
-}
-.component.instrumentCloset li .seqCtrlContainer .seqIndicator { /* empty */
-    width: 12px;
-    height: 12px;
-
-    /* background-color: #222; */
-
-    margin-right: 3px;
-    margin-left: 3px;
-    border-radius: 50%;
-}
-.component.instrumentCloset li:hover .seqCtrlContainer .seqIndicator { /* empty */
-    border: 1px solid #444;
-}
-.component.instrumentCloset li .seqCtrlContainer.on .seqIndicator {
-    background-color: #3c3;
-    box-shadow: 0 0 12px #4f4;
-}
-.component.instrumentCloset li .seqCtrlContainer.off .seqIndicator {
-    background-color: #444;
-}
-
-
 .component.instrumentCloset li .instrument.bigClick {
     cursor: pointer;
 }
@@ -1843,3 +1817,55 @@ https://www.w3schools.com/icons/google_icons_intro.asp
 .material-icons { font-size: 18px; }
 .material-icons.highlight { color: #cc0;}
 
+
+
+
+
+
+
+
+
+
+
+
+
+.component.instrumentCloset li .seqCtrlContainer {
+    display:flex;
+    align-items: center;
+}
+.component.instrumentCloset li .seqCtrlContainer:hover {
+    background-color:#044;
+}
+.component.instrumentCloset li .seqCtrlContainer .seqIndicator { /* empty */
+    width: 10px;
+    height: 10px;
+    margin-right: 3px;
+    margin-left: 3px;
+    border-radius: 50%;
+}
+.component.instrumentCloset li:hover .seqCtrlContainer .seqIndicator { /* empty */
+    border: 1px solid #444;
+}
+
+.component.instrumentCloset li .seqCtrlContainer.on .seqIndicator {
+    background-color: #060;
+}
+.component.instrumentCloset li .seqCtrlContainer.off .seqIndicator {
+    background-color: #444;
+}
+ 
+
+@keyframes seqNoteIndicator1 {
+    0% { background-color: #4f4; }
+    100% {background-color: #060; }
+}
+@keyframes seqNoteIndicator2 {
+    0% { background-color: #4f4; }
+    100% {background-color: #060; }
+}
+.component.instrumentCloset li .seqCtrlContainer.on.seqIndicatorAnimation1 .seqIndicator {
+    animation: seqNoteIndicator1 .2s 1;
+}
+.component.instrumentCloset li .seqCtrlContainer.on.seqIndicatorAnimation2 .seqIndicator {
+    animation: seqNoteIndicator2 .2s 1;
+}

@@ -247,7 +247,7 @@ class FMPolySynth {
 
 
     // sent when there's a MIDI note on event.
-    NoteOn(user, midiNote, velocity) {
+    NoteOn(user, midiNote, velocity, isFromSequencer) {
         if (!this.isConnected) this.connect();
 
         if (this.instrumentSpec.GetParamByID("lfo1_trigMode").currentValue == 1) {
@@ -282,26 +282,26 @@ class FMPolySynth {
                 }
             }
             if (this.voices[suitableVoiceIndex].IsPlaying) {
-                this.noteOffHandler(user, this.instrumentSpec, this.voices[suitableVoiceIndex].midiNote);
+                this.noteOffHandler(user, this.instrumentSpec, this.voices[suitableVoiceIndex].midiNote, isFromSequencer);
             }
             this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
             this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, false);
-            this.noteOnHandler(user, this.instrumentSpec, midiNote);
+            this.noteOnHandler(user, this.instrumentSpec, midiNote, isFromSequencer);
         } else {
             // monophonic always just uses the 1st voice.
             suitableVoiceIndex = 0;
 
             let isLegato = this.physicallyHeldNotes.length > 0;
             if (this.voices[0].midiNote) {
-                this.noteOffHandler(user, this.instrumentSpec, this.voices[0].midiNote);
+                this.noteOffHandler(user, this.instrumentSpec, this.voices[0].midiNote, isFromSequencer);
             }
             this.physicallyHeldNotes.push([midiNote, velocity, suitableVoiceIndex]);
             this.voices[suitableVoiceIndex].physicalAndMusicalNoteOn(midiNote, velocity, isLegato);
-            this.noteOnHandler(user, this.instrumentSpec, midiNote);
+            this.noteOnHandler(user, this.instrumentSpec, midiNote, isFromSequencer);
         }
     }
 
-    NoteOff(user, midiNote) {
+    NoteOff(user, midiNote, isFromSequencer) {
         if (!this.isConnected) this.connect();
 
         this.physicallyHeldNotes.removeIf(n => n[0] == midiNote);
@@ -312,13 +312,13 @@ class FMPolySynth {
             let v = this.voices.filter(v => v.midiNote == midiNote && v.IsPlaying);
             if (!v.length) return;
             v.forEach(x => x.musicallyRelease(midiNote));
-            this.noteOffHandler(user, this.instrumentSpec, midiNote);
+            this.noteOffHandler(user, this.instrumentSpec, midiNote, isFromSequencer);
             return;
         }
 
         // mono...
 
-        this.noteOffHandler(user, this.instrumentSpec, midiNote);
+        this.noteOffHandler(user, this.instrumentSpec, midiNote, isFromSequencer);
 
         // monophonic doesn't need a search.
         if (this.physicallyHeldNotes.length == 0) {
@@ -335,7 +335,7 @@ class FMPolySynth {
         // and decide whether to trigger envelopes based on trigger behavior.
         let n = this.physicallyHeldNotes[this.physicallyHeldNotes.length - 1];
         this.voices[0].physicalAndMusicalNoteOn(n[0], n[1], true);
-        this.noteOnHandler(user, this.instrumentSpec, n[0]);
+        this.noteOnHandler(user, this.instrumentSpec, n[0], isFromSequencer);
     }
 
     PedalDown() {

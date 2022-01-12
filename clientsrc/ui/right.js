@@ -11,7 +11,7 @@ const DFU = require('../dfutil');
 const DFOptionsDialog = require('./optionsDialog');
 const KeybDisplayState = require("./keybDisplayState");
 const CreditsButton = require("./CreditsButton");
-const SequencerMain = require("./SequencerMain");
+const {SequencerMain} = require("./SequencerMain");
 const {InlinePitchBendCtrl, InlineMasterGainCtrl} = require('./InlinePitchBendCtrl');
 const {UserSettingsButton} = require("./userSettings");
 const {GoogleOAuthModule} = require('../googleSignIn');
@@ -52,6 +52,41 @@ var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options
 let gStateChangeHandler = null;
 
 let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
+
+
+
+// ------- sequencer activity note indicators -----------
+function GenerateSeqNoteActivityIndicatorID(instrumentID) {
+    return `seq_note_act_${instrumentID}`
+}
+
+class SeqActivityIndicator
+{
+    constructor() {
+        this.activityThrottlers = {};
+        gInstActivityHandlers["seqNoteActivity"] = this.mainHandler;
+    }
+
+    mainHandler = (instrument, note, fromSeq) => {
+        if (!fromSeq) return;
+        if (!(instrument.instrumentID in this.activityThrottlers)) {
+            const th = new DFU.Throttler();
+            th.interval = 1000.0 / 30;
+            th.proc = () => this.throttleProc(instrument.instrumentID);
+            this.activityThrottlers[instrument.instrumentID] = th;
+        }
+        this.activityThrottlers[instrument.instrumentID].InvokeThrottled();
+    }
+
+    throttleProc(instrumentID) {
+        $('#' + GenerateSeqNoteActivityIndicatorID(instrumentID)).toggleClass('seqIndicatorAnimation1').toggleClass('seqIndicatorAnimation2');
+    }
+}
+
+const gSeqActivity = new SeqActivityIndicator();
+
+// ------- sequencer activity note indicators -----------
+
 
 class InstTextParam extends React.Component {
     constructor(props) {
@@ -549,11 +584,11 @@ class InstFloatParam extends React.Component {
                 let sourceInst = this.props.app.roomState.FindInstrumentById(this.props.param.sourceInstrumentID).instrument;
                 let inUse = !!sourceInst.controlledByUserID;
                 //let idle = false;
+                instLiveActivity = (<span className="instActivity alt1" id={"mixerActivity_" + sourceInst.instrumentID}></span>);
                 if (inUse) {
                     let foundUser = this.props.app.roomState.FindUserByID(sourceInst.controlledByUserID);
                     if (foundUser) {
                         instActivity = (<span className="instControlledBy"><span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span></span>);
-                        instLiveActivity = (<span className="instActivity alt1" id={"mixerActivity_" + sourceInst.instrumentID}></span>);
                     }
                 }
             }
@@ -1460,7 +1495,9 @@ class Instrument extends  React.Component {
         const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices);
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
-            <div className={"seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
+            <div
+                className={"seqIndicatorAnimation1 seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
+                id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
                 title={"Sequencer activity"}
                 onClick={() => this.clickSequencerIndicator()}
                 >
@@ -2301,11 +2338,11 @@ class RootArea extends React.Component {
         this.setState({ app: null });
     }
 
-    handleNoteOn = (user, instrument, midiNote) => {
+    handleNoteOn = (user, instrument, midiNote, fromSequencer) => {
 
         // mixer activity indicator
         Object.keys(gInstActivityHandlers).forEach(id => {
-            gInstActivityHandlers[id](instrument, midiNote);
+            gInstActivityHandlers[id](instrument, midiNote, fromSequencer);
         });
 
         if (user) {
@@ -2318,9 +2355,9 @@ class RootArea extends React.Component {
         const color = (user?.color) ?? instrument.color;
 
         if (instrument.activityDisplay === "keyboard") {
-            this.keyboardActivityDisplayState.PushNoteOn(id, color, midiNote);
+            this.keyboardActivityDisplayState.PushNoteOn(id, color, midiNote, fromSequencer);
         } else if (instrument.activityDisplay === "drums") {
-            this.drumsActivityDisplayState.PushNoteOn(id, color, midiNote);
+            this.drumsActivityDisplayState.PushNoteOn(id, color, midiNote, fromSequencer);
         } else {
             return;
         }
@@ -2336,7 +2373,7 @@ class RootArea extends React.Component {
         }
     }
 
-    handleNoteOff = (user, instrument, midiNote) => {
+    handleNoteOff = (user, instrument, midiNote, fromSequencer) => {
         const id = (user?.userID) ?? instrument.instrumentID;
         this.removeUserNoteRef(id, midiNote, instrument);
     }

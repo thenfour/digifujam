@@ -332,7 +332,7 @@ class DigifuApp {
             this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
             this.resetBeatPhaseOnNextNote = false;
             if (this.monitoringType == eMonitoringType.Local) {
-                this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity);
+                this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity, false);
             }
         } else if (this.tapTempoState === TapTempoState.Waiting) {
             this.tappingNote = note;
@@ -352,7 +352,7 @@ class DigifuApp {
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendNoteOff(note);
         if (this.monitoringType == eMonitoringType.Local) {
-            this.synth.NoteOff(this.myUser, this.myInstrument, note);
+            this.synth.NoteOff(this.myUser, this.myInstrument, note, false);
         }
     };
 
@@ -416,14 +416,14 @@ class DigifuApp {
     PreviewNoteOn(midiNoteValue, vel) {
         if (this.myInstrument == null) return;
         this.PreviewNoteOff();
-        this.synth.NoteOn(this.myUser, this.myInstrument, midiNoteValue, vel);
+        this.synth.NoteOn(this.myUser, this.myInstrument, midiNoteValue, vel, false);
         this.previewingNote = midiNoteValue;
     }    
 
     PreviewNoteOff() {
         if (this.myInstrument == null) return;
         if (!this.previewingNote) return;
-        this.synth.NoteOff(this.myUser, this.myInstrument, this.previewingNote);
+        this.synth.NoteOff(this.myUser, this.myInstrument, this.previewingNote, false);
         this.previewingNote = 0;
     }    
 
@@ -663,7 +663,7 @@ class DigifuApp {
             }
         }
 
-        this.synth.NoteOn(user, instrument, note, velocity);
+        this.synth.NoteOn(user, instrument, note, velocity, !!seqInstrumentID);
     };
 
     NET_OnNoteOff(userID, note, seqInstrumentID) {
@@ -695,7 +695,7 @@ class DigifuApp {
                 return;
             }
         }
-        this.synth.NoteOff(user, instrument, note);
+        this.synth.NoteOff(user, instrument, note, !!seqInstrumentID);
     };
 
     NET_OnUserAllNotesOff(userID) {

@@ -151,13 +151,17 @@
 .sequencerMain button.playButton > * {
     font-size: 72px;
 }
-
 .sequencerMain .pianoRollScrollCont {
     /* width: calc(100% - 20px); */
     background-color: black;
     flex-grow: 1;
     overflow: scroll;
     display: flex;
+}
+
+.sequencerMain .pianoRollScrollCont .pianoRollLegendCont {
+    position: sticky;
+    left: 0;
 }
 
 .sequencerMain button {
@@ -396,6 +400,7 @@
 
 .sequencerMain .pianoRollContainer {
     /* display:flex; tempting but this causes the sticky header to not work. */
+    white-space: nowrap;
 }
 
 .sequencerMain ul.pianoRollColumn {

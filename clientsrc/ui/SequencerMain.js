@@ -7,7 +7,7 @@ const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 
-const gPlayingUpdateInterval = 150;
+const gMinTimerInterval = 35;
 
 
 const gTempoBPMStep = 5;
@@ -56,32 +56,152 @@ const gSwingSnapValues = new DFUtils.FuzzySelector([
 ], (val, obj) => Math.abs(val - obj));
 
 
+
+function GenerateRoomBeatID(minorBeatOfMeasure) {
+    return `seq_roomBeat_${minorBeatOfMeasure}`;
+}
+function GeneratePlayheadID(div) {
+    return `seq_playhead_${div}`;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// a timer which is optimized for sequencer usage.
+// every impulse we:
+// - set CSS class of correct room beat to "complete"
+// - set CSS class of correct playhead row to "playing"
+// - invoke animation of instrument seq note indicator
+// - set the next interval on the next div position.
+class SeqTimer
+{
+    constructor(app) {
+        this.app = app;
+        this.instrument = null; // while instrument is null we don't do any processing.
+        this.timer = null;
+        this.#cueTimer();
+    }
+
+    SetInstrument(instrument) {
+        this.instrument = instrument;
+        this.#cueTimer();
+    }
+    Stop() {
+        this.SetInstrument(null);
+    }
+
+    #cueTimer() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+        if (!this.instrument)
+            return;
+
+        const nextDivInfo = this.#GetNextDivInfo();
+        this.timer = setTimeout(() => this.#timerProc(nextDivInfo), nextDivInfo.delayMS);
+    }
+
+    // return {divInfo of next div, delayMS}
+    #GetNextDivInfo() {
+        const seq = this.instrument.sequencerDevice;
+        const patch = seq.livePatch;
+        const noteLegend = seq.GetNoteLegend();
+        const patternViewData = Seq.GetPatternView(patch, noteLegend);
+        const ts = patch.timeSig;
+        const playheadAbsQuarter = this.app.getAbsoluteBeatFloat();
+        const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsQuarter);
+        const patternLengthQuarters = patch.GetPatternLengthQuarters();
+        const bpm = this.app.roomState.bpm;
+
+        const currentDiv = patternViewData.divs.find(divInfo => divInfo.IncludesPatternFrac(playheadPatternFrac));
+
+        // calc divlength MS
+        const divRemainingPatterns = currentDiv.endPatternFrac - playheadPatternFrac;
+        const divRemainingQuarters = divRemainingPatterns * patternLengthQuarters;
+        let delayMS = DFU.BeatsToMS(divRemainingQuarters, bpm);
+
+        let destDivIndex = currentDiv.patternDivIndex + 1;
+        let destDiv = patternViewData.divs[destDivIndex % patternViewData.divs.length];
+        console.assert((destDivIndex % patternViewData.divs.length) === destDiv.patternDivIndex);
+        while (delayMS < gMinTimerInterval) {
+            const divLenPatterns = destDiv.endPatternFrac - destDiv.beginPatternFrac;
+            const divLenQuarters = divLenPatterns * patternLengthQuarters;
+            const divLenMS = DFU.BeatsToMS(divLenQuarters, bpm);
+            delayMS += divLenMS;
+            destDivIndex ++;
+            destDiv = patternViewData.divs[destDivIndex % patternViewData.divs.length];
+            console.assert((destDivIndex % patternViewData.divs.length) === destDiv.patternDivIndex);
+        }
+
+        return {
+            delayMS,
+            currentDiv,
+            destDiv,
+            patternViewData, // send this as well for coherence with other properties.
+        };
+    }
+
+    #timerProc(nextDivInfo) {
+        const seq = this.instrument.sequencerDevice;
+        const patch = seq.livePatch;
+        const ts = patch.timeSig;
+        const playheadAbsQuarter = this.app.getAbsoluteBeatFloat();
+        this.#cueTimer();
+
+        // we don't need to recalc live playhead position stuff for sequencer. this timer *represents* what's given in nextDivInfo.destDiv; just use it.
+        const thisDiv = nextDivInfo.destDiv;
+
+        //const playheadMeasureFrac = thisDiv.beginMeasureFrac;
+        let playheadMeasureFrac = ts.getMeasureFracForAbsQuarter(playheadAbsQuarter);
+
+        // ROOM BEAT should use live data (not the cached sequencer calcs) because it doesn't use seq speed settings.
+        // and i want it to show original tempo. this means they can get slightly out of sync though.
+        // and that means becasue of random jitter in timer firing, it's random whether we will set "complete"
+        // - just after the beat
+        // - or just before the beat.
+        // but it's always going to be really close, and we're dealing with pretty big margins. so just nudge it into the right slot.
+        // there's probably a more technically correct way (something like divs per measure / 2 or so), but this is practical and simple.
+        playheadMeasureFrac += 0.01;
+
+        ts.minorBeatInfo.forEach(mbi => {
+            const isComplete = playheadMeasureFrac >= mbi.beginMeasureFrac && playheadMeasureFrac < mbi.endMeasureFrac;
+            const id = "#" + GenerateRoomBeatID(mbi.minorBeatOfMeasure);
+            if (isComplete) {
+                $(id).addClass("complete");
+            } else {
+                $(id).removeClass("complete");
+            }
+        });
+
+        nextDivInfo.patternViewData.divs.forEach(div => {
+            const isPlaying = div.patternDivIndex === thisDiv.patternDivIndex;
+            const id = "#" + GeneratePlayheadID(div.patternDivIndex);
+            if (isPlaying) {
+                $(id).addClass("playing");
+            } else {
+                $(id).removeClass("playing");
+            }
+        });
+    }
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomBeat extends React.Component {
    constructor(props) {
       super(props);
       this.state = {};
    }
-   onTimer() {
-      this.setState({});
-   }
-   componentDidMount() {
-      this.timer = setInterval(() => { this.onTimer(); }, 50);
-   }
-   componentWillUnmount() {
-      if (this.timer)
-         clearTimeout(this.timer);
-      this.timer = null;
-   }
 
    render() {
     const ts = this.props.timeSig;
-    const playheadQuarter = this.props.app.getAbsoluteBeatFloat();
-    const playheadMeasureFrac = ts.getMeasureFracForAbsQuarter(playheadQuarter);
 
       const beats = ts.minorBeatInfo.map(mbi => {
-        const isComplete = playheadMeasureFrac >= mbi.beginMeasureFrac && playheadMeasureFrac < mbi.endMeasureFrac;  // does mbi contain the playhead cursor
-        return (<div key={mbi.minorBeatOfMeasure} className={"beat " + (isComplete ? " complete" : "") + (mbi.isMajorBeatBoundary ? " majorBeat" : " minorBeat")}>{mbi.minorBeatOfMeasure + 1}</div>);
+        return (<div
+            key={mbi.minorBeatOfMeasure}
+            className={"beat " + (mbi.isMajorBeatBoundary ? " majorBeat" : " minorBeat")}
+            id={GenerateRoomBeatID(mbi.minorBeatOfMeasure)}
+            >{mbi.minorBeatOfMeasure + 1}</div>);
       });
 
         return <div className="liveRoomBeat">
@@ -109,6 +229,9 @@ class SequencerMain extends React.Component {
 
       
     componentDidMount() {
+        this.timer = new SeqTimer(this.props.app);
+        this.timer.SetInstrument(this.props.instrument);
+
         DFUtils.stylizeRangeInput(this.swingSliderID, {
                 bgNegColorSpec: "#444",
                 negColorSpec: "#666",
@@ -118,8 +241,7 @@ class SequencerMain extends React.Component {
             });
     }
     componentWillUnmount() {
-        if (this.timer)
-           clearTimeout(this.timer);
+        this.timer.Stop();
         this.timer = null;
      }
   
@@ -344,24 +466,19 @@ class SequencerMain extends React.Component {
             });
         };
 
-        timerProc() {
-            this.timer = null;
-            // const seq = this.props.instrument.sequencerDevice;
-            // if (seq.isPlaying) {
-            //     this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
-            // }
-            // this.setState({});
-        }
-
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
+        if (this.timer) {
+            this.timer.SetInstrument(this.props.instrument);
+        }
+
          const seq = this.props.instrument.sequencerDevice;
          const patch = seq.livePatch;
          const noteLegend = seq.GetNoteLegend();
          const patternViewData = Seq.GetPatternView(patch, noteLegend);
-         const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
-         const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsBeat);
+         //const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
+         //const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsBeat);
          //console.log(`playhead pattern div = ${playheadInfo.patternDiv.toFixed(2)}, absLoop=${playheadInfo.absLoop.toFixed(2)} patternBeat=${playheadInfo.patternBeat.toFixed(2)} patternLengthBeats=${playheadInfo.patternLengthBeats}`);
          //console.log(`division count = ${patch.GetPatternDivisionCount()}`);
          //console.log(`playheadPatternFrac = ${playheadPatternFrac.toFixed(2)}`);
@@ -381,14 +498,6 @@ class SequencerMain extends React.Component {
         const columnStyle = {width:`${widthpx}px`};
         const heightpx = 5 * this.state.zoom;
         const rowStyle = {height:`${heightpx}px`};
-
-         if (seq.isPlaying && !this.timer) {
-             this.timer = setTimeout(() => this.timerProc(), gPlayingUpdateInterval);
-         }
-         if (!seq.isPlaying && this.timer) {
-             clearTimeout(this.timer);
-             this.timer = null;
-         }
 
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
@@ -418,7 +527,6 @@ class SequencerMain extends React.Component {
             const isMuted = patch.IsNoteMuted(note.midiNoteValue);
             return (
                 <li key={note.midiNoteValue}
-                    id={"key_" + note.midiNoteValue}
                     style={rowStyle}
                     title='Click to hear preview. Only you will hear it.'
                     className={"clickable " + note.cssClass}
@@ -468,16 +576,14 @@ class SequencerMain extends React.Component {
         });
 
         const pianoRoll = patternViewData.divs.map(divInfo => {
-            const isPlaying = seq.isPlaying && (playheadPatternFrac >= divInfo.beginPatternFrac) && (playheadPatternFrac < divInfo.endPatternFrac);
 
             const className = `${gDivisionInfo[patch.GetDivisionType()].cssClass} pianoRollColumn` +
                 (divInfo.isMeasureBoundary ? " beginMeasure" : "") +
                 (divInfo.isMajorBeatBoundary ? " majorBeat" : "") +
-                (divInfo.isMinorBeatBoundary ? " minorBeat" : "") +
-                (isPlaying ? " playing" : "");
+                (divInfo.isMinorBeatBoundary ? " minorBeat" : "");
             
             return (
-                <ul key={divInfo.patternDivIndex} style={columnStyle} className={className}>
+                <ul key={divInfo.patternDivIndex} style={columnStyle} id={GeneratePlayheadID(divInfo.patternDivIndex)} className={className}>
                     <li className={className + ' playhead'}>{divInfo.patternDivIndex + 1}</li>
                     {pianoRollColumn(divInfo)}
                 </ul>
@@ -795,5 +901,7 @@ class SequencerMain extends React.Component {
     }
 };
 
-module.exports = SequencerMain;
+module.exports = {
+    SequencerMain,
+}
 

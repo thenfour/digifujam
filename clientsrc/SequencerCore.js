@@ -226,6 +226,9 @@ class SeqDivInfo {
       return false;
     return true;
   }
+  IncludesPatternFrac(playheadPatternFrac) {
+    return (playheadPatternFrac >= this.beginPatternFrac) && (playheadPatternFrac < this.endPatternFrac);
+  }
 
   // for pattern view div info
   GetNoteCount() {
