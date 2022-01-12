@@ -953,7 +953,7 @@ class sfzInstrument {
         }
     };
 
-    NoteOff(user, midiNote, offBecauseGroup, isFromSequencer) {
+    NoteOff(user, midiNote, isFromSequencer) {
         if (!this.connect()) return;
         midiNote += this.instrumentSpec.transpose || 0;
         this.physicallyHeldNotes.removeIf(n => n.note === midiNote);
@@ -961,7 +961,7 @@ class sfzInstrument {
 
         let v = this.voices.filter(v => v.midiNote == midiNote && v.IsPlaying);
         if (v.length) {
-            v.forEach(x => x.musicallyRelease(offBecauseGroup));
+            v.forEach(x => x.musicallyRelease(false));
             this.noteOffHandler(user, this.instrumentSpec, midiNote, isFromSequencer);
         }
     };
@@ -978,7 +978,7 @@ class sfzInstrument {
         this.voices.forEach((v, vindex) => {
             if (v.IsPlaying && !this.VoiceIsPhysicalyHeld(vindex)) {
                 this.noteOffHandler(user, this.instrumentSpec, v.midiNote, false);
-                v.musicallyRelease();
+                v.musicallyRelease(false);
             }
         });
     };
