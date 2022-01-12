@@ -145,7 +145,7 @@ class DigifuMidi {
 
 
 // returns a promise(array of names)
-let GetMidiInputDeviceList = function () {
+let GetMidiInputDeviceList = () => {
   if (!navigator.requestMIDIAccess) return new Promise((resolve) => {
     resolve([]);
   });
@@ -178,7 +178,7 @@ let GetMidiInputDeviceList = function () {
 };
 
 // simulate no devices
-// function GetMidiInputDeviceList() {
+// GetMidiInputDeviceList = () => {
 //   return new Promise((resolve) => {
 //     resolve([]);
 //   });

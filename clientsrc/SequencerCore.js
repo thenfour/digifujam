@@ -667,7 +667,7 @@ class SequencerDevice {
   InitPatch(presetID) {
     this.CancelCue();
     this.livePatch = new SequencerPatch({presetID});
-    console.log(`initpatch; livepatch now ID ${this.livePatch.presetID}`);
+    //console.log(`initpatch; livepatch now ID ${this.livePatch.presetID}`);
   }
 
   SerializePattern() {

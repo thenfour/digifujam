@@ -429,7 +429,9 @@ class JamStatusNotification {
       substitutions['%jamUniqueUsers%'] = jamInfo ? jamInfo.uniqueUsers.toLocaleString() : "";
       substitutions['%jamMaxUserCount%'] = jamInfo ? jamInfo.maxUserCount.toLocaleString() : "";
       substitutions['%jamMinUserCount%'] = jamInfo ? jamInfo.minUserCount.toLocaleString() : "";
-      substitutions['%jamInstrumentChanges%'] = jamInfo ? jamInfo.instrumentChanges.toLocaleString() : "";
+      
+      // NOTE: this is currently not working. always 0.
+      //substitutions['%jamInstrumentChanges%'] = jamInfo ? jamInfo.instrumentChanges.toLocaleString() : "";
 
       const messageText = DFU.PerformSubstitutions(messageContent, substitutions);
 

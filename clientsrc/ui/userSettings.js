@@ -56,7 +56,7 @@ class UserState extends React.Component {
                inputList = (
                     <div className='noMidiDevices'>
                         <div className='title'>No midi devices found</div>
-                        <p>It means you will not be able to play any instruments, however it doesn't mean you can't spectate.</p>
+                        <p>But you can still play music via the sequencer!</p>
                     </div>
                 );
            } else {

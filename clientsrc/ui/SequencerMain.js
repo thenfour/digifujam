@@ -397,6 +397,9 @@ class SequencerMain extends React.Component {
                 }
             }
 
+            if (!ops)
+                return;
+
             const op = ops.find(o => o.type === Seq.eSeqPatternOp.AddNote);
             if (op) {
                 let midiNoteValue = this.props.instrument.sequencerDevice.livePatch.AdjustMidiNoteValue(op.midiNoteValue);

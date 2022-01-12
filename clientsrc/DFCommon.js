@@ -1403,15 +1403,13 @@ class DigifuInstrumentSpec {
         return false;
     } 
 
-    IsTakeable(roomState, userHasMIDIInstruments) {
-        userHasMIDIInstruments ??= true; // assume the best when this info is not specified.
-        return userHasMIDIInstruments && (!this.IsInUse() || this.IsIdle(roomState));
+    IsTakeable(roomState) {
+        return (!this.IsInUse() || this.IsIdle(roomState));
     } 
     
-    CanSequencerBeStartStoppedByUser(roomState, user, userHasMIDIInstruments) {
-        userHasMIDIInstruments ??= true; // assume the best when this info is not specified.
+    CanSequencerBeStartStoppedByUser(roomState, user) {
         if (user.userID === this.controlledByUserID) return true;
-        return this.IsTakeable(roomState, userHasMIDIInstruments) && this.sequencerDevice.HasData();
+        return this.IsTakeable(roomState) && this.sequencerDevice.HasData();
     }
 
 }; // InstrumentSpec

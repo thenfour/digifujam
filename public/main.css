@@ -1496,7 +1496,7 @@ button.stayLoggedIn:hover {
 
 
 .userSettings .noMidiDevices .title {
-    color:red;
+    color:#c90;
     font-weight: bold;
 }
 

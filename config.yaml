@@ -124,7 +124,7 @@ discord_integrations:
     jamStart:
       delay: 2m
       noteTrigger: "sum [>=200] during [10min]"
-      userCountTrigger: "maintains [>=2] during [5min]"
+      userCountTrigger: "maintains [>2] during [5min]"
       userCountType: global
       messageContent: "A jam session is warming up in %roomName%."
       messageFields:
@@ -147,9 +147,7 @@ discord_integrations:
         Jam notes: "%jamNotes%"
         NPS: "%jamNotesPerSecond%"
         Unique users: "%jamUniqueUsers%"
-        Min user count: "%jamMinUserCount%"
         Max user count: "%jamMaxUserCount%"
-        Instrument changes: "%jamInstrumentChanges%"
 
   #---------- jam status DEBUG notifications ------------------------------------------------------
   DbgJamTracker:

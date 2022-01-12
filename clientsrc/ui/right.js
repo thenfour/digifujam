@@ -1452,8 +1452,7 @@ class Instrument extends  React.Component {
     clickSequencerIndicator() {
         const app = this.props.app;
         const i = this.props.instrument;
-        const hasMIDIDevices = app.midi.AnyMidiDevicesAvailable();
-        if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices))
+        if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser))
             return;
         if (window.DFModifierKeyTracker.ShiftKey) {
             this.props.app.SeqCue(i.instrumentID, false);
@@ -1468,8 +1467,7 @@ class Instrument extends  React.Component {
 
         const inUse = i.IsInUse();
         const isYours = (i.controlledByUserID == app.myUser.userID);
-        const hasMIDIDevices = app.midi.AnyMidiDevicesAvailable();
-        const takeable = i.IsTakeable(app.roomState, hasMIDIDevices);
+        const takeable = i.IsTakeable(app.roomState);
 
         let ownedBy = null;
         if (inUse) {
@@ -1496,7 +1494,7 @@ class Instrument extends  React.Component {
         const isYourObserving = gStateChangeHandler.observingInstrument && gStateChangeHandler.observingInstrument.instrumentID == i.instrumentID;
 
         const isSequencerOn = i.sequencerDevice.isPlaying;
-        const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices);
+        const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser);
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
             <div
@@ -1965,7 +1963,7 @@ class RoomAlertArea extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
-        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice() && this.props.app.myInstrument.wantsMIDIInput) {
+        if (this.props.app.myInstrument && !this.props.app.midi.IsListeningOnAnyDevice() && this.props.app.myInstrument.wantsMIDIInput && this.props.app.midi.AnyMidiDevicesAvailable()) {
             return (
                 <div id="roomAlertArea">
                     <div>Select a MIDI input device to start playing</div>

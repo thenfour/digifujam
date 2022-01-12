@@ -9,7 +9,8 @@ Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest
 ## Features
 
 - Multiple music rooms, each with different instrument sets
-- Many sample-based instruments are available, each with multiple variations
+- Over 55 sample-based instruments are available, each with multiple variations
+- Step sequencer for synchronized playing with or without a MIDI device.
 - Two different synthesizer engines available
   - 4-oscilltors, each with pulse width modulation capability
   - Monophonic or polyphonic mode, with portamento
@@ -33,14 +34,14 @@ Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest
 
 ### The site doesn't work, what's up?
 
-- Firefox does not support midi. It will work as a spectator, but not as a performer.
+- Firefox does not support midi (yet). It will work as a spectator, but it won't detect your MIDI devices.
 - I test on Chrome, and a bit on Edge.
 
-This is a labor of love and cobbled together, so please expect problems unless you're on Chrome.
+This is a labor of love and cobbled together, so please expect some bugs. I would love to hear about them though! Feel free to submit a github issue.
 
 ### How do you start jamming?
 
-You must be using a MIDI-compatible browser (Chrome or Edge on Windows / Mac), and have a midi device connected. Just click an instrument to start playing. If this doesn't work, please tell someone on our [Discord](https://discord.gg/kkf9gQfKAd).
+Just click an instrument to start playing. The step sequencer can be used by anyone, but to use a MIDI keyboard you'll need to be on Chrome or Edge. If this doesn't work, please tell someone on our [Discord](https://discord.gg/kkf9gQfKAd) or submit a github issue.
 
 ### Where is the server located?
 
@@ -48,13 +49,14 @@ The server is hosted in Germany by Uberspace.
 
 ### How to deal with latency?
 
-Latency causes funny things. It's actually not a deal-breaker if you learn how to cope with it. For example fast, rhythmic funk music will probably never be a great hit on Digifujam. But if you go for ambient synth styles, then I doubt latency will ever cause an issue.
+Latency causes funny things. It's actually not a deal-breaker if you learn how to cope with it. Fast, rhythmic funk music will probably never be a great hit on 7jam. But if you go for ambient synth styles, then I doubt you'll even notice latency.
 
-- Tip #1: Try not to expect DAW-like latency. try and find creative ways to accept latency.
-- Tip #2: Your system settings can hugely affect latency. For example in Windows, sound devices are often configured in surround configuration by default, which adds ~50ms latency (unbearable). Switch this to Stereo configuration to solve. Ask in our [Discord](https://discord.gg/kkf9gQfKAd) for the latest ideas.
-- Tip #3: Use headphones. If you hear your fingers on the keyboard, it's harder to adjust your ears to the latent signal. Using headphones lets you focus more on the sound and less on the key noise.
-- Tip #4: Use local monitoring in 7jam. By default, you hear yourself after a roundtrip to the server ("remote monitoring"). If you have a high ping this can be too much delay to be bearable.
-- Tip #5: Play music that doesn't require tight rhythms. If everyone else is playing a tight funky groove, and you have too much latency to mix in, try playing a soft pad or other long-attack sfx.
+- Tip #1: Use the step sequencer or quantizer. They ensure you'll be in sync with the room.
+- Tip #2: Try not to expect DAW-like latency. try and find creative ways to accept latency, just as in a real-world jam session we have to deal with whatever limitations or constraints (insert story about the time they promised there would be a bass guitar but it only had 2 strings).
+- Tip #3: Your system settings can hugely affect latency. For example in Windows, sound devices are often configured in surround configuration by default, which adds ~50ms latency (unbearable). Switch this to Stereo configuration to solve. Ask in our [Discord](https://discord.gg/kkf9gQfKAd) for the latest ideas.
+- Tip #4: Use headphones. If you hear your fingers on the keyboard, it's harder to adjust your ears to the latent signal. Using headphones lets you focus more on the sound and less on the key noise.
+- Tip #5: Use local monitoring in 7jam. By default, you hear yourself after a roundtrip to the server ("remote monitoring"). If you have a high ping this can be too much delay to be bearable.
+- Tip #6: Play music that doesn't require tight rhythms. If everyone else is playing a tight funky groove, and you have too much latency to mix in, try playing a soft pad or other long-attack sfx.
 
 
 # Browser Compatibility
@@ -75,9 +77,9 @@ Please report compatibility in our [Discord](https://discord.gg/kkf9gQfKAd).
 
 ## dev process
 
-- npm run build // build & start local server (for dev) @ http://localhost:8081/
-- npm run start // to start local server without build
-- npm run watch // simultaneously call this to monitor & build changes live
+- npm run build-dev // or build-prod. @ http://localhost:8081/
+- npm run watch-dev // or watch-prod to monitor & build changes live
+- npm run start // to start local server (or just node index.js)
 - node --inspect index.js // for chrome inspector debugging the server
 - node --inspect-brk index.js // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
 
