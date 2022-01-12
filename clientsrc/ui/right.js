@@ -1455,7 +1455,11 @@ class Instrument extends  React.Component {
         const hasMIDIDevices = app.midi.AnyMidiDevicesAvailable();
         if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser, hasMIDIDevices))
             return;
-        this.props.app.SeqPlayStop(!i.sequencerDevice.isPlaying, i.instrumentID);
+        if (window.DFModifierKeyTracker.ShiftKey) {
+            this.props.app.SeqCue(i.instrumentID, false);
+        } else {
+            this.props.app.SeqPlayStop(!i.sequencerDevice.isPlaying, i.instrumentID);
+        }
     }
 
     render() {
@@ -1498,7 +1502,7 @@ class Instrument extends  React.Component {
             <div
                 className={"seqIndicatorAnimation1 seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
-                title={"Sequencer activity"}
+                title={"Sequencer activity (click to start/stop seq. Shift+Click to cue.)"}
                 onClick={() => this.clickSequencerIndicator()}
                 >
                 <div className='seqIndicator'></div>

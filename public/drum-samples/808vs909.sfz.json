@@ -37,23 +37,28 @@
   },
   {
     "sample": "909/21-909_Hh.m4a",
-    "key": 102
+    "key": 102,
+    "volume": -4
   },
   {
     "sample": "909/20-909_Hh.m4a",
-    "key": 90
+    "key": 90,
+    "volume": -4
   },
   {
     "sample": "909/19-909_Oh.m4a",
-    "key": 100
+    "key": 100,
+    "volume": -4
   },
   {
     "sample": "909/18-909_Oh.m4a",
-    "key": 94
+    "key": 94,
+    "volume": -4
   },
   {
     "sample": "909/17-909_Oh.m4a",
-    "key": 92
+    "key": 92,
+    "volume": -4
   },
   {
     "sample": "909/16-909_Rim.m4a",
@@ -198,27 +203,32 @@
   {
     "sample": "808/20-808_Hh.m4a",
     "key": 42,
-    "group": 1
+    "group": 1,
+    "volume": -4
   },
   {
     "sample": "808/21-808_Oh.m4a",
     "key": 69,
-    "group": 1
+    "group": 1,
+    "volume": -4
   },
   {
     "sample": "808/22-808_Hh.m4a",
     "key": 44,
-    "group": 1
+    "group": 1,
+    "volume": -4
   },
   {
     "sample": "808/23-808_Hh.m4a",
     "key": 71,
-    "group": 1
+    "group": 1,
+    "volume": -4
   },
   {
     "sample": "808/24-808_Oh.m4a",
     "key": 46,
-    "off_by": 1
+    "off_by": 1,
+    "volume": -4
   },
   {
     "sample": "808/25-808_Sh.m4a",

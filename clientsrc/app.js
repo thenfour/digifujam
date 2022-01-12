@@ -1560,6 +1560,10 @@ class DigifuApp {
             transpose,
         });
     }
+    // cancel is boolean
+    SeqCue(instrumentID, cancel) {
+        this.net.SeqCue(instrumentID, cancel);
+    }
 
     // --------------
     IsConnected() {

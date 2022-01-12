@@ -1,0 +1,176 @@
+legends:
+  PercA:
+
+
+
+
+
+
+  - name: "Tri op"
+    midiNoteValue: 72
+    legendCssClass: "triangle"
+    cssClass: "triangle"
+
+  - name: "Tri cl"
+    midiNoteValue: 73
+    legendCssClass: "triangle"
+    cssClass: "triangle"
+
+
+
+  - name: "Agogo Hi"
+    midiNoteValue: 66
+    legendCssClass: "agogo"
+    cssClass: "agogo"
+
+  - name: "Agogo Lo"
+    midiNoteValue: 65
+    legendCssClass: "agogo"
+    cssClass: "agogo"
+
+
+
+  - name: "Shaker 1"
+    midiNoteValue: 67
+    legendCssClass: "shaker"
+    cssClass: "shaker"
+
+
+  - name: "Shaker 2"
+    midiNoteValue: 68
+    legendCssClass: "shaker"
+    cssClass: "shaker"
+
+
+
+
+  - name: "Guiro Long"
+    midiNoteValue: 60
+    legendCssClass: "guiro"
+    cssClass: "guiro"
+
+  - name: "Guiro Short"
+    midiNoteValue: 61
+    legendCssClass: "guiro"
+    cssClass: "guiro"
+
+
+
+
+  - name: "Vibraslap"
+    midiNoteValue: 59
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+  - name: "808 Cowbell"
+    midiNoteValue: 64
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+  - name: "Clave"
+    midiNoteValue: 62
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+  - name: "Block"
+    midiNoteValue: 56
+    legendCssClass: "aux"
+    cssClass: "aux"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  - name: "Timbale Rim"
+    midiNoteValue: 54
+    legendCssClass: "timbale"
+    cssClass: "timbale"
+
+  - name: "Timbale Roll"
+    midiNoteValue: 51
+    legendCssClass: "timbale"
+    cssClass: "timbale"
+
+  - name: "Timbale Hi"
+    midiNoteValue: 52
+    legendCssClass: "timbale"
+    cssClass: "timbale"
+
+  - name: "Timbale Med"
+    midiNoteValue: 50
+    legendCssClass: "timbale"
+    cssClass: "timbale"
+
+  - name: "Timbale Lo"
+    midiNoteValue: 48
+    legendCssClass: "timbale"
+    cssClass: "timbale"
+
+
+
+
+
+
+  - name: "BongoTom 3"
+    midiNoteValue: 45
+    legendCssClass: "bongotom"
+    cssClass: "bongotom"
+
+  - name: "BongoTom 2"
+    midiNoteValue: 43
+    legendCssClass: "bongotom"
+    cssClass: "bongotom"
+
+  - name: "BongoTom 1"
+    midiNoteValue: 40
+    legendCssClass: "bongotom"
+    cssClass: "bongotom"
+
+
+
+
+
+
+
+  - name: "Bongo Roll"
+    midiNoteValue: 46
+    legendCssClass: "conga"
+    cssClass: "conga"
+
+  - name: "Bongo Tap"
+    midiNoteValue: 42
+    legendCssClass: "conga"
+    cssClass: "conga"
+
+  - name: "Conga Mid"
+    midiNoteValue: 38
+    legendCssClass: "conga"
+    cssClass: "conga"
+
+  - name: "Conga Slap"
+    midiNoteValue: 37
+    legendCssClass: "conga"
+    cssClass: "conga"
+
+  - name: "Conga Low"
+    midiNoteValue: 36
+    legendCssClass: "conga"
+    cssClass: "conga"

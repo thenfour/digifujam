@@ -18,12 +18,14 @@
             {
               "sample": "SM64_Closed_Hat.m4a",
               "key": 42,
-              "group":1
+              "group":1,
+              "volume": -8
             },
             {
               "sample": "openhat.m4a",
               "key": 46,
-              "off_by":1
+              "off_by":1,
+              "volume": -8
             },
             {
               "sample": "CRASH_1.m4a",

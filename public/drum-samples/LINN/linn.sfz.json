@@ -7,7 +7,8 @@
             },
             {
               "sample": "Closed_Hi_Hat.m4a",
-              "key": 42
+              "key": 42,
+              "volume": -2
             },
             {
               "sample": "Acoustic_Snare.m4a",

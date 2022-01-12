@@ -378,7 +378,7 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetTranspose(n);
         }
 
-        onCellClick = (patternView, divInfo, note) => {
+        onCellClick = (patternView, divInfo, note, legend, patch) => {
             if (this.props.observerMode) return;
             // toggle a 1-div-length 
             // convert this click to an ops struct
@@ -396,6 +396,28 @@ class SequencerMain extends React.Component {
                     ops = patternView.GetPatternOpsForCellCycle(divInfo, note, 1);
                 }
             }
+
+            const op = ops.find(o => o.type === Seq.eSeqPatternOp.AddNote);
+            if (op) {
+                let midiNoteValue = this.props.instrument.sequencerDevice.livePatch.AdjustMidiNoteValue(op.midiNoteValue);
+                if (midiNoteValue) {
+                    const legendNote = legend.find(n => n.midiNoteValue === op.midiNoteValue);
+                    const velocityEntry = legendNote?.velocitySet[op.velocityIndex];
+                    const velocity = velocityEntry?.vel ?? 99;
+
+                    const patternLengthQuarters = patch.GetPatternLengthQuarters();
+                    const bpm = this.props.app.roomState.bpm;
+                    const lengthPatternFrac = divInfo.endPatternFrac - divInfo.beginPatternFrac;
+                    const lengthQuarters = lengthPatternFrac * patternLengthQuarters;
+                    const lengthMS = DFU.BeatsToMS(lengthQuarters, bpm);
+
+                    this.props.app.PreviewNoteOn(midiNoteValue, velocity);
+                    setTimeout(() => {
+                        this.props.app.PreviewNoteOff();
+                    }, lengthMS);
+                }
+            }
+
             this.props.app.SeqPatternOps(ops);
         }
 
@@ -470,9 +492,7 @@ class SequencerMain extends React.Component {
             const isReadOnly = this.props.observerMode;
             if (isReadOnly) return;
 
-            this.props.app.SeqPresetOp({
-                op: this.props.instrument.sequencerDevice.IsCueued() ? "cancelCue" : "cue",
-            });
+            this.props.app.SeqCue(this.props.instrument.instrumentID, this.props.instrument.sequencerDevice.IsCueued());
         }
 
         onClickBigCue = () => {
@@ -571,7 +591,7 @@ class SequencerMain extends React.Component {
 
             return (
                 <li key={divInfo.patternDivIndex + "_" + note.midiNoteValue} style={rowStyle} className={cssClass}>
-                    <div className='noteBase' onClick={()=>this.onCellClick(patternViewData, divInfo, note)}>
+                    <div className='noteBase' onClick={()=>this.onCellClick(patternViewData, divInfo, note, noteLegend, patch)}>
                     <div className='noteOL'>
                         <div className='muteOL'>
                         {/* <div className='hoverOL'></div> */}

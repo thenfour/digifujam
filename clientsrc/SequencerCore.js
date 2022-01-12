@@ -23,8 +23,8 @@ const eDivisionType = {
   MinorBeat_x4 : "MinorBeat_x4",
 };
 
-const gDefaultPatternLengthMajorBeats = 8;
-const gDefaultPatternDivisionType = eDivisionType.MinorBeat;
+const gDefaultPatternLengthMajorBeats = 4;
+const gDefaultPatternDivisionType = eDivisionType.MajorBeat;
 
 let globalSequencerConfig = {
   velocitySets : {},
@@ -713,6 +713,7 @@ class SequencerDevice {
     return true;
   }
 
+  // client-side; handles incoming server msgs
   SeqPresetOp(data, bank) {
     switch (data.op) {
       case "load":

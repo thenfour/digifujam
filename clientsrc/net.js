@@ -255,6 +255,9 @@ class DigifuNet {
     SeqMetadata(params) {// { title, description, tags }
         this.socket.emit(DF.ClientMessages.SeqMetadata, params);
     }
+    SeqCue(instrumentID, cancel) {
+        this.socket.emit(DF.ClientMessages.SeqCue, {instrumentID, cancel});
+    }
 
     // --------------
 

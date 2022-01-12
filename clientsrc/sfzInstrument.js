@@ -39,6 +39,8 @@ amplitude ADSR https://sfzformat.com/opcodes/ampeg_attack
 - ampeg_start
 - ampeg_sustain
 
+- volume (in db)
+
 todo:
 - pitcheg_* pitch modulations etc.
 - fileg_* filter modulation

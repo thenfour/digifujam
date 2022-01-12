@@ -346,7 +346,7 @@
 	list-style: none;
     font-weight: bold;
 
-    width: 110px;
+    width: 120px;
     background-color: #ffe;
     height: 44px;
     box-shadow:0 0 9px #0003 inset, 0 0 1px #000;
@@ -506,22 +506,6 @@
 
 
 
-
-
-
-/*  ----- specific configs ----- */
-
-.sequencerMain ul.pianoRollLegend li.tom {
-    background-color: #dda;
-}
-
-.sequencerMain ul.pianoRollLegend li.cymbal {
-    background-color: #add;
-}
-
-.sequencerMain ul.pianoRollLegend li.snare {
-    background-color: #bbe;
-}
 
 
 
@@ -711,7 +695,7 @@
     background-color:black;
     box-shadow:none;
     text-shadow:none;
-    justify-content: flex-start;
+    /* justify-content: flex-start; */
 }
 
 .sequencerMain ul.pianoRollColumn.playing li.playhead {
@@ -748,3 +732,47 @@
 
 
 
+
+
+/*  ----- specific configs ----- */
+
+.sequencerMain ul.pianoRollLegend li.tom {
+    background-color: #dda;
+}
+
+.sequencerMain ul.pianoRollLegend li.cymbal {
+    background-color: #add;
+}
+
+.sequencerMain ul.pianoRollLegend li.snare {
+    background-color: #bbe;
+}
+
+
+
+
+.sequencerMain ul.pianoRollLegend li.triangle {
+    background-color: #add;
+  }
+  .sequencerMain ul.pianoRollLegend li.agogo {
+    background-color: #add;
+  }
+  .sequencerMain ul.pianoRollLegend li.shaker {
+    background-color: #add;
+  }
+  .sequencerMain ul.pianoRollLegend li.aux {
+    background-color: #daa;
+  }
+  .sequencerMain ul.pianoRollLegend li.guiro {
+    background-color: #ada;
+  }
+  .sequencerMain ul.pianoRollLegend li.timbale {
+    background-color: #add;
+  }
+  .sequencerMain ul.pianoRollLegend li.bongotom {
+    background-color: #dad;
+  }
+  .sequencerMain ul.pianoRollLegend li.conga {
+    background-color: #dda;
+  }
+  

@@ -17,7 +17,8 @@
     "pitch_keycenter": 38,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.43041666666666667
+    "loop_end": 0.43041666666666667,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283100372_20669.m4a",
@@ -217,7 +218,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.43041666666666667
+    "loop_end": 0.43041666666666667,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283100372_20669.m4a",
@@ -257,7 +259,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.468125
+    "loop_end": 0.468125,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283143566_22479.m4a",
@@ -277,7 +280,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.468125
+    "loop_end": 0.468125,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283166068_27812.m4a",
@@ -297,7 +301,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.5792291666666667
+    "loop_end": 0.5792291666666667,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283193903_27812.m4a",
@@ -317,7 +322,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.5792291666666667
+    "loop_end": 0.5792291666666667,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283221738_38902.m4a",
@@ -337,7 +343,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.8102708333333334
+    "loop_end": 0.8102708333333334,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283260663_38902.m4a",
@@ -357,7 +364,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.8102708333333334
+    "loop_end": 0.8102708333333334,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283299588_53152.m4a",
@@ -377,7 +385,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 1.1071458333333333
+    "loop_end": 1.1071458333333333,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_283352763_53152.m4a",
@@ -397,7 +406,8 @@
     "pitch_keycenter": 34,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 1.1071458333333333
+    "loop_end": 1.1071458333333333,
+    "volume": -4.5
   },
   {
     "sample": "sf2_smpl_756790901_57258.m4a",

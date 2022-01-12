@@ -268,6 +268,7 @@ class TimeSig {
 
 const FourFour = new TimeSig(FourFourSpec);
 const CommonTimeSignatures = [
+    new TimeSig({ id: "2_4", name: "2/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1] }),
     new TimeSig({ id: "3_4", name: "3/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1] }),
     FourFour,
     new TimeSig({ id: "5_4", name: "5/4", minorBeatsPerQuarter: 1, minorBeatGroups: [1,1,1,1,1] }),

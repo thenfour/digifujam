@@ -915,6 +915,10 @@
       "activityDisplay": "drums",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
+      "seqPresetBankID": "seqdrums",
+      "sequencerDevice": {
+        "legendRef": "PercA"
+      },
       "name": "Percussion",
       "sfzArray": [
         {
@@ -974,6 +978,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
       "allowSequencer": "1",
+      "seqPresetBankID": "seqdrums",
       "sequencerDevice": {
         "legendRef": "DrumsA"
       },
@@ -995,7 +1000,7 @@
           }
         },
         {
-          "gain": 2,
+          "gain": 1.6,
           "transpose": 0,
           "sfzURL": "/drum-samples/jazzy/jazz.sfz.json",
           "name": "Jazzy",
@@ -1025,7 +1030,7 @@
           }
         },
         {
-          "gain": 1.3,
+          "gain": 1.6,
           "transpose": 0,
           "sfzURL": "/drum-samples/SC88/sc88.sfz.json",
           "name": "SC88",
@@ -1040,7 +1045,7 @@
           }
         },
         {
-          "gain": 1,
+          "gain": 1.3,
           "transpose": 0,
           "sfzURL": "/drum-samples/SecretOfManaExt/SecretOfManaExt.sfz.json",
           "name": "SecretOfManaExt",
@@ -1055,7 +1060,7 @@
           }
         },
         {
-          "gain": 2,
+          "gain": 1.6,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,
@@ -1072,7 +1077,7 @@
           }
         },
         {
-          "gain": 2.5,
+          "gain": 3.5,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,
@@ -1089,7 +1094,7 @@
           }
         },
         {
-          "gain": 2,
+          "gain": 4.2,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,

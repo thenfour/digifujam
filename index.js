@@ -640,7 +640,7 @@ class RoomServer {
           const foundInstrument = this.roomState.FindInstrumentById(note.seqInstrumentID);
           if (note.op === "startPlaying") {
             foundInstrument.instrument.sequencerDevice.StartPlaying();
-            console.log(`start playing due to cue`);
+            //console.log(`start playing due to cue`);
           }
         }
       });
@@ -1308,6 +1308,7 @@ class RoomServer {
     }
   }
 
+
   OnSeqSetTimeSig(ws, data) {
     try {
       const foundUser = this.FindUserFromSocket(ws);
@@ -1637,13 +1638,6 @@ class RoomServer {
     return instrument.sequencerDevice.livePatch.SetTranspose(data.transpose);
   }
 
-  SeqPreset_Cue(user, instrument, data) {
-    const cursor = this.roomState.metronome.getAbsoluteBeat();
-    const params = instrument.sequencerDevice.Cue(cursor);
-    Object.assign(data, params);
-    return true;
-  }
-
   SeqPreset_CancelCue(user, instrument, data) {
     const cursor = this.roomState.metronome.getAbsoluteBeat();
     instrument.sequencerDevice.CancelCue();
@@ -1678,9 +1672,6 @@ class RoomServer {
         case "SeqSetTranspose":
           if (!this.SeqPreset_Transpose(foundUser.user, foundInstrument.instrument, data)) return;
           break;
-        case "cue":
-          if (!this.SeqPreset_Cue(foundUser.user, foundInstrument.instrument, data)) return;
-          break;
         case "cancelCue":
           if (!this.SeqPreset_CancelCue(foundUser.user, foundInstrument.instrument, data)) return;
           break;
@@ -1705,6 +1696,51 @@ class RoomServer {
     }
   }
 
+
+  SeqCue(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser)
+        throw new Error(`SeqCue => unknown user`);
+
+      const foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+      if (foundInstrument === null)
+        throw new Error(`SeqCue => unknown instrument ${data.instrumentID}`);
+
+      if (!foundInstrument.instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user))
+        throw new Error(`SeqCue => Instrument's sequencer cannot be controlled by this user. ${data.instrumentID}, userid ${foundUser.user.userID}`);
+
+      let outdata = null;
+
+      if (data.cancel) {
+        foundInstrument.instrument.sequencerDevice.CancelCue();
+        outdata = {
+          op: "cancelCue",
+          instrumentID: data.instrumentID,
+        };
+      } else {
+        const cursor = this.roomState.metronome.getAbsoluteBeat();
+        outdata = foundInstrument.instrument.sequencerDevice.Cue(cursor);
+        outdata = Object.assign({
+          op: "cue",
+          instrumentID: data.instrumentID,
+        }, outdata);
+      }
+
+      // broadcast to room.
+      io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, outdata);
+
+      this.sequencerPlayer.onChanged_General();
+
+      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+      }
+
+    } catch (e) {
+      console.log(`SeqCue exception occurred`);
+      console.log(e);
+    }
+  }
 
 
   SeqMetadata(ws, data) {
@@ -2374,6 +2410,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.SeqPatchInit, data => ForwardToRoom(ws, room => room.SeqPatchInit(ws, data)));
       ws.on(DF.ClientMessages.SeqPresetOp, data => ForwardToRoom(ws, room => room.SeqPresetOp(ws, data)));
       ws.on(DF.ClientMessages.SeqMetadata, data => ForwardToRoom(ws, room => room.SeqMetadata(ws, data)));
+      ws.on(DF.ClientMessages.SeqCue, data => ForwardToRoom(ws, room => room.SeqCue(ws, data)));
       // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => OnClientDownloadServerState(ws, data));
