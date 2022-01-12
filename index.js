@@ -622,7 +622,7 @@ class RoomServer {
 
       // for sequencer events, give stats to the user who controls the instrument
       noteOns.forEach(note => {
-        if (note.seqInstrumentID) {
+        if (note.seqInstrumentID && note.midiNoteValue) { // check midinotevalue because there are other commands (op: "startPlaying",) which should not count.
           const foundInstrument = this.roomState.FindInstrumentById(note.seqInstrumentID);
           console.assert(foundInstrument);
           const foundUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
@@ -630,6 +630,17 @@ class RoomServer {
             foundUser.user.persistentInfo.stats.noteOns++;
             gServerStats.OnNoteOn(this.roomState, foundUser.user);
             this.roomState.stats.noteOns++; // <-- correct. don't add sequencer notes to the room stats if nobody's controlling it. would just sorta blow out of control.
+          }
+        }
+      });
+
+      // process scheduled sequencer ops,which are buried in noteOns
+      noteOns.forEach(note => {
+        if (note.seqInstrumentID) {
+          const foundInstrument = this.roomState.FindInstrumentById(note.seqInstrumentID);
+          if (note.op === "startPlaying") {
+            foundInstrument.instrument.sequencerDevice.StartPlaying();
+            console.log(`start playing due to cue`);
           }
         }
       });
@@ -1277,7 +1288,7 @@ class RoomServer {
       if (!foundInstrument.instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user))
         throw new Error(`OnSeqPlayStop => Instrument's sequencer cannot be controlled by this user. ${data.instrumentID}, userid ${foundUser.user.userID}`);
 
-      foundInstrument.instrument.sequencerDevice.isPlaying = data.isPlaying;
+      foundInstrument.instrument.sequencerDevice.SetPlaying(data.isPlaying);
 
       // broadcast to room.
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPlayStop, {
@@ -1626,6 +1637,19 @@ class RoomServer {
     return instrument.sequencerDevice.livePatch.SetTranspose(data.transpose);
   }
 
+  SeqPreset_Cue(user, instrument, data) {
+    const cursor = this.roomState.metronome.getAbsoluteBeat();
+    const params = instrument.sequencerDevice.Cue(cursor);
+    Object.assign(data, params);
+    return true;
+  }
+
+  SeqPreset_CancelCue(user, instrument, data) {
+    const cursor = this.roomState.metronome.getAbsoluteBeat();
+    instrument.sequencerDevice.CancelCue();
+    return true;
+  }
+
 
   SeqPresetOp(ws, data) {
     try {
@@ -1654,12 +1678,18 @@ class RoomServer {
         case "SeqSetTranspose":
           if (!this.SeqPreset_Transpose(foundUser.user, foundInstrument.instrument, data)) return;
           break;
+        case "cue":
+          if (!this.SeqPreset_Cue(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "cancelCue":
+          if (!this.SeqPreset_CancelCue(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
         default:
-          console.log(`client sent us a bad seq preset op`);
+          console.log(`client sent us a bad seq preset op ${data.op}`);
           return;
       }
 
-      // broadcast to room.
+      // forward to room.
       data.instrumentID = foundInstrument.instrument.instrumentID;
       io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, data);
 

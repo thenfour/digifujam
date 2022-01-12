@@ -62,12 +62,16 @@ const ClientMessages = {
     SeqSetLength: "SeqSetLength", // { lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { ops:[{type:clear|addNote|deleteNote, note:{}}]}
     SeqPatchInit: "SeqPatchInit",
+
+    // OK admittedly i got lazy creating individual server/client messages and just start throwing them into this ops
     // { op:"load", presetID:<>}
     // { op:"save", presetID:<> }
     // { op:"delete", presetID:<>}
     // { op:"pastePatch", patch:{...} }
     // { op:"pasteBank", bank:{...} }
     // { op:"SeqSetTranspose", transpose: }
+    // { op:"cue" }
+    // { op:"cancelCue" }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { title, description, tags }
 };
@@ -124,6 +128,8 @@ const ServerMessages = {
     // { instrumentID, op:"pastePatch", patch:{...} }
     // { instrumentID, op:"pasteBank", bank:{...} }
     // { instrumentID, op:"SeqSetTranspose", transpose: }
+    // { instrumentID, op:"cue", startFromAbsQuarter }
+    // { instrumentID, op:"cancelCue" }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
 };

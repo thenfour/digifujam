@@ -106,9 +106,9 @@ class SeqTimer
         const patch = seq.livePatch;
         const noteLegend = seq.GetNoteLegend();
         const patternViewData = Seq.GetPatternView(patch, noteLegend);
-        const ts = patch.timeSig;
+        //const ts = patch.timeSig;
         const playheadAbsQuarter = this.app.getAbsoluteBeatFloat();
-        const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsQuarter);
+        const playheadPatternFrac = seq.GetPatternFracAtAbsQuarter(playheadAbsQuarter);
         const patternLengthQuarters = patch.GetPatternLengthQuarters();
         const bpm = this.app.roomState.bpm;
 
@@ -466,6 +466,19 @@ class SequencerMain extends React.Component {
             });
         };
 
+        onClickCueDiv = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+
+            this.props.app.SeqPresetOp({
+                op: this.props.instrument.sequencerDevice.IsCueued() ? "cancelCue" : "cue",
+            });
+        }
+
+        onClickBigCue = () => {
+            this.onClickCueDiv();
+        }
+
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -477,12 +490,6 @@ class SequencerMain extends React.Component {
          const patch = seq.livePatch;
          const noteLegend = seq.GetNoteLegend();
          const patternViewData = Seq.GetPatternView(patch, noteLegend);
-         //const playheadAbsBeat = this.props.app.getAbsoluteBeatFloat();
-         //const playheadPatternFrac = patch.GetPatternFracAtAbsQuarter(playheadAbsBeat);
-         //console.log(`playhead pattern div = ${playheadInfo.patternDiv.toFixed(2)}, absLoop=${playheadInfo.absLoop.toFixed(2)} patternBeat=${playheadInfo.patternBeat.toFixed(2)} patternLengthBeats=${playheadInfo.patternLengthBeats}`);
-         //console.log(`division count = ${patch.GetPatternDivisionCount()}`);
-         //console.log(`playheadPatternFrac = ${playheadPatternFrac.toFixed(2)}`);
-         //console.log(patternViewData.divInfo);
 
          const isReadOnly = this.props.observerMode;
          const clickableIfEditable = isReadOnly ? "" : " clickable";
@@ -582,9 +589,14 @@ class SequencerMain extends React.Component {
                 (divInfo.isMajorBeatBoundary ? " majorBeat" : "") +
                 (divInfo.isMinorBeatBoundary ? " minorBeat" : "");
             
+            //const playheadClick = divInfo.isMeasureBoundary ? () => this.onClickCueDiv(divInfo.patternDivIndex) : () => {};
+            
             return (
                 <ul key={divInfo.patternDivIndex} style={columnStyle} id={GeneratePlayheadID(divInfo.patternDivIndex)} className={className}>
-                    <li className={className + ' playhead'}>{divInfo.patternDivIndex + 1}</li>
+                    <li className={className + ' playhead'}>
+                        {divInfo.patternDivIndex + 1}
+                        {/* {divInfo.isMeasureBoundary && <div className='divControls'>click to cue this measure</div>} */}
+                    </li>
                     {pianoRollColumn(divInfo)}
                 </ul>
                 );
@@ -606,8 +618,15 @@ class SequencerMain extends React.Component {
                             <fieldset>
                                 <div className='paramGroup'>
                                     <div className='paramBlock'>
-                                            <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
+                                    <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
                                                 <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
+                                            </button>
+                                            <button
+                                                className={'cueButton' + (seq.IsCueued() ? ' active' : "") + clickableIfEditable}
+                                                title="Begin playing this pattern on next measure"
+                                                onClick={isReadOnly ? ()=>{} : this.onClickBigCue}
+                                            >
+                                                Cue
                                             </button>
                                     </div>
                                 </div>
@@ -662,7 +681,7 @@ class SequencerMain extends React.Component {
                             }
                                 <div className="buttonArray">
                                     {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
-                                    <button className={'altui' + (presetSaveEnabled || isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
+                                    <button className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
                                     <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
                                 </div>
                             </div>

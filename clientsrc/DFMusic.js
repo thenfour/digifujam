@@ -146,6 +146,14 @@ const FourFourSpec = { id: "4_4", name: "4/4", minorBeatsPerQuarter: 1, minorBea
 // in 5/8, what is a "beat"? In 7jam, a "BEAT" is a quarter note, the way timesigs are spec'd out.
 // typically the metronome pulses in quarter notes
 class TimeSig {
+    toJSON() {
+        return {
+            id: this.id,
+            name: this.name,
+            minorBeatsPerQuarter: this.minorBeatsPerQuarter,
+            minorBeatGroups: this.minorBeatGroups,
+        };
+    }
     constructor(params) {
         Object.assign(this, params);
         if (!this.id) {

@@ -101,16 +101,17 @@ class RoomSequencerPlayer {
     const patch = instrument.sequencerDevice.livePatch;
     const patternView = Seq.GetPatternView(patch, instrument.sequencerDevice.GetNoteLegend());
 
-    if (!instrument.sequencerDevice.isPlaying) {
+    if (!instrument.sequencerDevice.isPlaying && !instrument.sequencerDevice.IsCueued()) {
       //console.log(`not playing; clearing data.`);
-      this.quantizer.setSequencerEvents(instrument.instrumentID, [], patternView, false);
+      this.quantizer.setSequencerEvents(instrument.instrumentID, [], patternView, false, null);
       return;
     }
 
-    const patternPlayheadInfo = patch.GetAbsQuarterInfo(playheadAbsBeat);
+    const patternPlayheadInfo = instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat);
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM());
-    const windowEndAbsQuarters = playheadAbsBeat + windowLengthQuarters;
+    const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;
+    const shiftQuarters = instrument.sequencerDevice.baseAbsQuarter;
 
     // scheduling time must be in abs beats.
     // calc chunk, enforcing pattern end loops. accumulate a list of events.
@@ -145,19 +146,23 @@ class RoomSequencerPlayer {
         if (!note.hasNote || note.isMuted)
           return;
 
-        for (let cursorAbsQuarter = divFirstFutureAbsQuarter; cursorAbsQuarter < windowEndAbsQuarters; cursorAbsQuarter += patternPlayheadInfo.patternLengthQuarters) {
+        for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter < windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
+          if (cursorShiftedQuarter < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
+            continue;
           events.push({
             velocity : note.velocity,
             midiNoteValue,
             lengthQuarters : divLengthQuarters,
             noteID: note.id,
-            absQuarter: cursorAbsQuarter,
+            absQuarter: cursorShiftedQuarter + shiftQuarters,
           });
         }
       });
     });
 
-    this.quantizer.setSequencerEvents(instrument.instrumentID, events, patternView, true);
+    //console.log(`scheduling ${events.length} seq events`);
+
+    this.quantizer.setSequencerEvents(instrument.instrumentID, events, patternView, true, instrument.sequencerDevice.startFromAbsQuarter);
   }
 }
 

@@ -23,8 +23,8 @@ const eDivisionType = {
   MinorBeat_x4 : "MinorBeat_x4",
 };
 
-const gDefaultPatternLengthMajorBeats = 4;
-const gDefaultPatternDivisionType = eDivisionType.MajorBeat;
+const gDefaultPatternLengthMajorBeats = 8;
+const gDefaultPatternDivisionType = eDivisionType.MinorBeat;
 
 let globalSequencerConfig = {
   velocitySets : {},
@@ -314,7 +314,6 @@ class SequencerPatch {
     let ret = midiNoteValue;
     midiNoteValue += this.octave * 12;
     midiNoteValue += this.transpose;
-    // todo: other transposition?
     if (midiNoteValue < 1)
       return 0;
     if (midiNoteValue > 127)
@@ -437,7 +436,12 @@ class SequencerPatch {
   #SubdivideMeasureMinorBeats(mbiArray, n) {
     n = Math.ceil(n); // if non-integral subdivisions, subdivide further. handles cases like 6/8.
     const ret = [];
-    //let measureDivIndex = 0;
+
+    // here is where we would support swing.
+    // the mbiArray should be pre-processed, so every other minor beat gets shifted.
+    // there are a lot of properties to adjust though and it may be better to do this in the timeSig class where
+    // it originates from.
+
     mbiArray.forEach(minbi => {
       // subdivide minbi.
       const minorBeatsInThisMajorBeat = this.timeSig.majorBeatInfo[minbi.majorBeatIndex].minorBeats.length;
@@ -540,24 +544,6 @@ class SequencerPatch {
     return patternLengthMeasures * this.timeSig.quartersPerMeasure / this.speed;
   }
 
-  GetPatternFracAtAbsQuarter(absQuarter) {
-    const i = this.GetAbsQuarterInfo(absQuarter);
-    return i.patternFrac;
-  }
-
-  // given abs quarter (absolute room beat), calculate some pattern times.
-  GetAbsQuarterInfo(absQuarter) {
-    const patternLengthQuarters = this.GetPatternLengthQuarters();
-    const absPatternFloat = absQuarter / patternLengthQuarters;
-    const patternFrac = DFUtil.getDecimalPart(absPatternFloat);
-    return {
-      absPatternFloat,
-      patternLengthQuarters,
-      patternFrac,
-      patternQuarter : patternFrac * patternLengthQuarters,
-    };
-  }
-
   // // { title, description, tags }
   SetMetadata(data) {
     // TODO: validation (server)
@@ -582,13 +568,104 @@ class SequencerDevice {
     if (params)
       Object.assign(this, params);
 
-    this.isPlaying ??= false;
+    this.isPlaying ??= false; // false while cueued
+    this.startFromAbsQuarter ??= null; // if set, then we are cueued to begin playing at this abs room beat.
+
+    // shifts playback
+    this.baseAbsQuarter ??= 0;
+
+    this.wasPlayingBeforeCue ??= false;
+    this.baseAbsQuarterBeforeCue ??= 0;
 
     this.livePatch = new SequencerPatch(this.livePatch);
-    //console.assert(!!this.legendRef); <-- you may not have a legendref if this seq device is inactive/inaccessible/allowed.
   }
 
+  IsCueued() { return !!this.startFromAbsQuarter; }
+
+  // called on the server; returns info about the cue status to pass to clients.
+  Cue(currentAbsQuarter) {
+    this.wasPlayingBeforeCue = this.isPlaying;
+    this.baseAbsQuarterBeforeCue = this.baseAbsQuarter;
+
+    this.isPlaying = false;
+
+    const info = this.GetAbsQuarterInfo(currentAbsQuarter);
+    const patternMeasure = info.patternQuarter / this.livePatch.timeSig.quartersPerMeasure;
+    const patternMeasureFrac = DFUtil.getDecimalPart(patternMeasure);
+    let measuresLeft = 1.0 - patternMeasureFrac;
+    if (measuresLeft < 0.2) { // don't surprise users with insta-cue
+      measuresLeft += 1;
+    }
+    const quartersLeft = measuresLeft * this.livePatch.timeSig.quartersPerMeasure;
+    this.startFromAbsQuarter = currentAbsQuarter + quartersLeft;
+    // for simplicity, do NOT allow base time to be in the future. it creates negative value scenarios we can easily avoid.
+    this.baseAbsQuarter = this.startFromAbsQuarter - (this.livePatch.timeSig.quartersPerMeasure * 2); // guaranteed always in the past.
+
+    return {
+      startFromAbsQuarter: this.startFromAbsQuarter,
+      baseAbsQuarter: this.baseAbsQuarter,
+    };
+  }
+
+  CancelCue() {
+    if (!this.IsCueued()) return true;
+    this.isPlaying = this.wasPlayingBeforeCue;
+    this.startFromAbsQuarter = null; // cancel cue
+    this.baseAbsQuarter = this.baseAbsQuarterBeforeCue; // cancel your new offset
+    return true;
+  }
+
+  // called on client with server-given params. no need to do much really, just set state.
+  SetCueInfo(data) {
+    this.wasPlayingBeforeCue = this.isPlaying;
+    this.isPlaying = false;
+    this.startFromAbsQuarter = data.startFromAbsQuarter;
+    console.assert(!!data.baseAbsQuarter);
+    this.baseAbsQuarter = data.baseAbsQuarter;
+    return true;
+  }
+
+  SetPlaying(b) {
+    if (this.isPlaying === !!b) return;
+    if (!b) {
+      // stop.
+      this.isPlaying = false;
+      return;
+    }
+    this.StartPlaying();
+  }
+
+  StartPlaying() {
+    this.isPlaying = true;
+    this.startFromAbsQuarter = null;
+  }
+
+  GetPatternFracAtAbsQuarter(absQuarter) {
+    const i = this.GetAbsQuarterInfo(absQuarter);
+    return i.patternFrac;
+  }
+
+  // given abs quarter (absolute room beat), calculate some pattern times.
+  // this is the one original place where absolute playhead is converted to a pattern position.
+  GetAbsQuarterInfo(absQuarter) {
+    const patternLengthQuarters = this.livePatch.GetPatternLengthQuarters();
+
+    absQuarter -= this.baseAbsQuarter;
+
+    const absPatternFloat = absQuarter / patternLengthQuarters;
+    const patternFrac = Math.abs(DFUtil.getDecimalPart(absPatternFloat));
+    return {
+      shiftedAbsQuarter: absQuarter, // so callers can now compare an abs playhead with the returned info
+      absPatternFloat,
+      patternLengthQuarters,
+      patternFrac,
+      patternQuarter : patternFrac * patternLengthQuarters,
+    };
+  }
+
+
   InitPatch(presetID) {
+    this.CancelCue();
     this.livePatch = new SequencerPatch({presetID});
     console.log(`initpatch; livepatch now ID ${this.livePatch.presetID}`);
   }
@@ -631,6 +708,7 @@ class SequencerDevice {
   }
 
   LoadPatch(patchObj) {
+    this.CancelCue();
     this.livePatch = new SequencerPatch(patchObj);
     return true;
   }
@@ -672,6 +750,12 @@ class SequencerDevice {
           this.livePatch.SetTranspose(data.transpose);
           return true;
         }
+      case "cue":
+        {
+          return this.SetCueInfo(data);
+        }
+      case "cancelCue":
+        return this.CancelCue();
     }
     return false;
   }

@@ -241,7 +241,7 @@ class ServerRoomQuantizer {
   //
   // so we need to know basically if the note has been deleted or not.
   // in order to do this, we save the seq note ID, and can look it up.
-  setSequencerEvents(instrumentID, notes, seqPatternView, isSeqPlaying) {
+  setSequencerEvents(instrumentID, notes, seqPatternView, isSeqPlaying, emitStartPlayingAbsQuarter) {
     const noteEarliestEventRemoved = {}; // key=note, value={frame,isNoteOff}
     // remove existing events for this instrument, save what was removed.
 
@@ -374,7 +374,16 @@ class ServerRoomQuantizer {
         seqInstrumentID : instrumentID,
         seqNoteID : n.noteID,
       });
-    });
+    }); // foreach notes
+
+    // schedule seq start playing if necessary.
+    if (emitStartPlayingAbsQuarter) {
+      const qf = beatToFrame(emitStartPlayingAbsQuarter, this.metronome.getBPM());
+      this.scheduleEvent(qf, {
+        seqInstrumentID : instrumentID,
+        op: "startPlaying",
+      }, null);
+    }
   }
 };
 

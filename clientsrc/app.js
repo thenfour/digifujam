@@ -626,11 +626,22 @@ class DigifuApp {
 
     NET_OnNoteEvents(noteOns, noteOffs) {
         noteOns.forEach(e => {
-            this.NET_OnNoteOn(e.userID, parseInt(e.note), parseInt(e.velocity), e.seqInstrumentID);
+            if (e.seqInstrumentID && e.op === "startPlaying") {
+                this.NET_SeqStartPlaying(e);
+            } else {
+                this.NET_OnNoteOn(e.userID, parseInt(e.note), parseInt(e.velocity), e.seqInstrumentID);
+            }
         });
         noteOffs.forEach(e => {
             this.NET_OnNoteOff(e.userID, parseInt(e.note), e.seqInstrumentID);
         });
+    }
+
+    NET_SeqStartPlaying(e) {
+        let instrument = null;
+        instrument = this.roomState.FindInstrumentById(e.seqInstrumentID).instrument;
+        instrument.sequencerDevice.StartPlaying();
+        this.stateChangeHandler();
     }
 
     NET_OnNoteOn(userID, note, velocity, seqInstrumentID) {

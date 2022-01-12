@@ -137,8 +137,8 @@
     height: unset; /* need to undo the fixed row right */
 }
 
-.sequencerMain button.playButton  {
-    height: 90px;
+.sequencerMain button.playButton, .sequencerMain button.cueButton  {
+    height: 70px;
     width:90px;
 }
 
@@ -185,7 +185,7 @@
 }
 
 .sequencerMain button.active,
-.sequencerMain button.active.disabled { 
+.sequencerMain button.active.disabled {
     background-color: #fc0;
     box-shadow: inset 0px 0px 18px #fff;
 }
@@ -311,7 +311,7 @@
 
 .sequencerMain ul.dropDownMenu {
     padding:0;
-    max-height: 250px;
+    max-height: 450px; /* super long menus will get hidden; this allows scrolling */
     overflow: auto;    
 }
 .sequencerMain ul.dropDownMenu li {
@@ -337,6 +337,7 @@
 	display:flex;
 	margin:0;
 	padding:0;
+    padding-bottom: 100px; /* extra scroll margin */
     flex-direction: column;
 }
 .sequencerMain ul.pianoRollLegend  li {
@@ -455,9 +456,11 @@
 }
 
 .sequencerMain ul.pianoRollColumn li:hover .noteBase {
-    /* background-color: #0883; */
-    /* border: 2px solid #4f44; */
-    border: 2px solid #777;
+    /* background-color: #777; */
+    /* padding: 12px; */
+    /* border: 8px solid #777; */
+    /* border-left: 3px solid #777; */
+    /* border-right: 3px solid #777; */
 }
 
 .sequencerMain ul.pianoRollColumn li.muted .muteOL {
@@ -471,8 +474,11 @@
             <div class="noteOL">
                 <div class="muteOL">
 */
-.sequencerMain ul.pianoRollColumn li .noteBase {
+
+.sequencerMain ul.pianoRollColumn li:hover .muteOL {
+    border:2px solid #777; /* don't put this indicator in noteBase or other; it creates layout problems*/
 }
+
 
 .sequencerMain ul.pianoRollColumn li.note .noteOL {
     background-color: #4f4;
@@ -705,6 +711,7 @@
     background-color:black;
     box-shadow:none;
     text-shadow:none;
+    justify-content: flex-start;
 }
 
 .sequencerMain ul.pianoRollColumn.playing li.playhead {
@@ -713,5 +720,31 @@
 .sequencerMain ul.pianoRollColumn.playing.majorBeat li.playhead {
     background-color:#f44;
 }
+
+.sequencerMain ul.pianoRollColumn li.playhead .divControls {
+    display:none;
+}
+
+.sequencerMain ul.pianoRollColumn li.playhead:hover .divControls {
+    display:block;
+}
+
+
+.sequencerMain button.cueButton {
+    height: 25px;
+    text-transform:uppercase;
+    font-family:monospace;
+    font-size:18px;
+    color:#055;
+}
+
+.sequencerMain button.cueButton.active {
+    background-color:#f00;
+}
+
+.sequencerMain .seqTopColumn.playButton .paramBlock {
+    flex-direction:column;
+}
+
 
 
