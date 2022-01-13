@@ -63,23 +63,24 @@ function GenerateSeqNoteActivityIndicatorID(instrumentID) {
 class SeqActivityIndicator
 {
     constructor() {
-        this.activityThrottlers = {};
+        this.activityThrottler = new DFU.Throttler();
+        this.activityThrottler.interval = 1000.0 / 30;
+        this.activityThrottler.proc = () => this.throttleProc();
+        this.queuedInstrumentsWithActivity = new Set();
         gInstActivityHandlers["seqNoteActivity"] = this.mainHandler;
     }
 
     mainHandler = (instrument, note, fromSeq) => {
         if (!fromSeq) return;
-        if (!(instrument.instrumentID in this.activityThrottlers)) {
-            const th = new DFU.Throttler();
-            th.interval = 1000.0 / 30;
-            th.proc = () => this.throttleProc(instrument.instrumentID);
-            this.activityThrottlers[instrument.instrumentID] = th;
-        }
-        this.activityThrottlers[instrument.instrumentID].InvokeThrottled();
+        this.queuedInstrumentsWithActivity.add(instrument.instrumentID);
+        this.activityThrottler.InvokeThrottled();
     }
 
-    throttleProc(instrumentID) {
-        $('#' + GenerateSeqNoteActivityIndicatorID(instrumentID)).toggleClass('seqIndicatorAnimation1').toggleClass('seqIndicatorAnimation2');
+    throttleProc() {
+        this.queuedInstrumentsWithActivity.forEach(instrumentID => {
+            $('#' + GenerateSeqNoteActivityIndicatorID(instrumentID)).toggleClass('seqIndicatorAnimation1').toggleClass('seqIndicatorAnimation2');
+        });
+        this.queuedInstrumentsWithActivity.clear();
     }
 }
 
@@ -390,19 +391,16 @@ class InstFloatParam extends React.Component {
         this.sliderID = "slider_" + this.props.instrument.instrumentID + "_" + this.props.param.paramID;
         this.renderedValue = -420.69;
 
-        // create throttlers for toggling class
-        this.activityThrottlers = {};
-        this.props.app.roomState.instrumentCloset.forEach(i => {
-            const th = new DFU.Throttler();
-            th.interval = 1000.0 / 30; // fps
-            const instrumentID = i.instrumentID;
-            th.proc = () => {
+        this.queuedInstrumentsWithActivity = new Set();
+
+        this.activityThrottler = new DFU.Throttler();
+        this.activityThrottler.interval = 1000.0 / 30;
+        this.activityThrottler.proc = () => {
+            this.queuedInstrumentsWithActivity.forEach(instrumentID => {
                 $('#mixerActivity_' + instrumentID).toggleClass('alt1').toggleClass('alt2');
-            };
-            this.activityThrottlers[i.instrumentID] = th;
-        });
-
-
+            });
+            this.queuedInstrumentsWithActivity.clear();
+        }
     }
     onChange = (e) => {
         let realVal = this.props.param.foreignToNativeValue(e.target.value, 0, DF.ClientSettings.InstrumentFloatParamDiscreteValues);
@@ -416,7 +414,8 @@ class InstFloatParam extends React.Component {
     }
 
     OnInstrumentActivity = (instrumentSpec, note) => {
-        this.activityThrottlers[instrumentSpec.instrumentID].InvokeThrottled();
+        this.queuedInstrumentsWithActivity.add(instrumentSpec.instrumentID);
+        this.activityThrottler.InvokeThrottled();
     };
 
     componentDidMount() {
