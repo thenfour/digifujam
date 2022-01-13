@@ -17,6 +17,7 @@ const {UserSettingsButton} = require("./userSettings");
 const {GoogleOAuthModule} = require('../googleSignIn');
 const {GestureSplash} = require('./splash');
 const {SequencerParamGroup} = require('./SequencerParamGroup');
+const {DFAlert} = require('./DFAlert');
 
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
@@ -2522,6 +2523,7 @@ class RootArea extends React.Component {
         return (
             <div id="allContentContainer">
             <GestureSplash app={this.state.app}></GestureSplash>
+            <DFAlert></DFAlert>
             <div id="grid-container" style={gridContainerStyle}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>

@@ -99,6 +99,15 @@ function IsValidSequencerOctave(oct) {
   return Number.isInteger(oct) && oct >= -3 && oct <= 3;
 }
 
+function IsValidDivCount(divsPerMeasure, divCount) {
+  if (!Number.isInteger(divCount)) return false;
+  if (divCount < 1) return false;
+  if (divCount > SequencerSettings.MaxDivs) return false;
+  // for the moment you must also have patterns be an even measure length.
+  if (!Number.isInteger(divCount / divsPerMeasure)) return false;
+  return true;
+}
+
 function IsValidSequencerTranspose(transpose) {
   transpose = parseInt(transpose);
   if (transpose < -12) return false;
@@ -188,6 +197,124 @@ class SequencerPattern {
         return this.#DeleteNoteOp(op);
       }
     });
+  }
+
+  GetDivsPerMeasure(ts) {
+    switch (this.divisionType) {
+      default:
+      case eDivisionType.MajorBeat: // so 4/4 returns 4, 7/8 returns 2 (unequal beats)
+        return ts.majorBeatInfo.length;
+      case eDivisionType.MinorBeat: // 8ths
+        return ts.minorBeatInfo.length * Math.ceil(2 / ts.minorBeatsPerQuarter);
+      case eDivisionType.MinorBeat_x2:
+        return ts.minorBeatInfo.length * Math.ceil(4 / ts.minorBeatsPerQuarter);
+      case eDivisionType.MinorBeat_x3:
+        return ts.minorBeatInfo.length * Math.ceil(6 / ts.minorBeatsPerQuarter);
+      case eDivisionType.MinorBeat_x4:
+        return ts.minorBeatInfo.length * Math.ceil(8 / ts.minorBeatsPerQuarter);
+    }
+  }
+
+  GetDivCountForTimesig(ts) {
+    const divsPerMeasure = this.GetDivsPerMeasure(ts);
+    const measures = this.lengthMajorBeats / ts.majorBeatsPerMeasure;
+    const divsFloat = measures * divsPerMeasure;
+    return Math.ceil(divsFloat);
+  }
+
+  CanDouble(ts) {
+    return IsValidDivCount(this.GetDivsPerMeasure(ts), this.GetDivCountForTimesig(ts) * 2);
+  }
+  CanHalf(ts) {
+    return IsValidDivCount(this.GetDivsPerMeasure(ts), this.GetDivCountForTimesig(ts) / 2);
+  }
+  CanExpand(ts) {
+    return this.CanDouble(ts);
+  }
+  CanContract(ts) {
+    return this.CanHalf(ts);
+  }
+
+  // expands this pattern and returns the resulting pattern.
+  // pass in the time signature so we can verify div counts
+  GetExpandedPattern(ts) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
+    if (!this.CanExpand(ts)) return ret;
+    ret.lengthMajorBeats *= 2;
+    ret.notes.forEach(n => {
+      n.patternMajorBeat *= 2;
+    });
+    return ret;
+  }
+  GetContractedPattern(ts) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
+    if (!this.CanContract(ts)) return ret;
+    ret.lengthMajorBeats /= 2;
+    ret.notes.forEach(n => {
+      n.patternMajorBeat /= 2;
+    });
+    return ret;
+  }
+  GetDoubledPattern(ts) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
+    if (!this.CanExpand(ts)) return ret;
+    const oldlen = ret.lengthMajorBeats;
+    ret.lengthMajorBeats *= 2;
+    ret.notes = ret.notes.concat(ret.notes.map(n =>
+      new SequencerNote(Object.assign(JSON.parse(JSON.stringify(n)), {
+        id: DFUtil.generateID(),
+        patternMajorBeat: n.patternMajorBeat + oldlen
+      }))
+    ));
+    return ret;
+  }
+  GetHalvedPattern(ts) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
+    if (!this.CanContract(ts)) return ret;
+    ret.lengthMajorBeats /= 2;
+    ret.notes = ret.notes.filter(n => n.patternMajorBeat < ret.lengthMajorBeats - 0.01); // crop
+    return ret;
+  }
+  
+  GetShiftedPatternVert(ts, n, legend) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
+
+    ret.notes = ret.notes.filter(n => n.patternMajorBeat < ret.lengthMajorBeats - 0.01); // crop
+
+    ret.notes.forEach(note => {
+      // figure out which legend index
+      let index = legend.findIndex(l => l.midiNoteValue === note.midiNoteValue);//legend.findIndex(div => div.IncludesPatternMajorBeat(note.patternMajorBeat));
+      if (index === -1) {
+        // not in legend; drop it.
+        note.midiNoteValue = 0;
+        return;
+      }
+
+      index += n;
+      if (index < 0) index = legend.length - 1;
+      if (index >= legend.length) index = 0;
+      note.midiNoteValue = legend[index].midiNoteValue;
+    });
+
+    // delete bad notes
+    ret.notes = ret.notes.filter(n => n.midiNoteValue > 0);
+
+    return ret;
+  }
+
+  GetShiftedPatternHoriz(ts, n, patternView) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
+    ret.notes.forEach(note => {
+      // figure out which div index
+      let divIndex = patternView.divs.findIndex(div => div.IncludesPatternMajorBeat(note.patternMajorBeat));
+      console.assert(divIndex !== -1);
+      divIndex += n;
+      if (divIndex < 0) divIndex = patternView.divs.length - 1;
+      if (divIndex >= patternView.divs.length) divIndex = 0;
+      // convert back to major beat.
+      note.patternMajorBeat = patternView.divs[divIndex].beginPatternMajorBeat;
+    });
+    return ret;
   }
 }
 
@@ -307,6 +434,11 @@ class SequencerPatch {
   MarkCachedViewDirty() {
     this.#cachedView = null;
     this.#cachedViewDirty = true;
+  }
+
+  PasteSelectedPattern(pattern) {
+    this.#cachedViewDirty = true;
+    this.patterns[this.selectedPatternIdx] = new SequencerPattern(pattern);
   }
 
   // can return nullish if out of range / should not be played.
@@ -533,8 +665,9 @@ class SequencerPatch {
     return this.GetSelectedPattern().lengthMajorBeats;
   }
 
+  // this should always match this.GetPatternDivisionInfo().length
   GetPatternDivisionCount() {
-    return this.GetPatternDivisionInfo().length;
+    return this.GetSelectedPattern().GetDivCountForTimesig(this.timeSig);
   }
 
   // must account for speed!
@@ -678,24 +811,20 @@ class SequencerDevice {
     return [ {type : eSeqPatternOp.ClearPattern} ];
   }
 
-  GetPatternOpsForPastePattern(json) {
+  GetPatchOpsForPastePatternJSON(json) {
     try {
-      const ret = [ {type : eSeqPatternOp.ClearPattern} ]; // start by clearing pattern.
       const pat = new SequencerPattern(JSON.parse(json));
-      pat.notes.forEach(note => {
-        ret.push({
-          type : eSeqPatternOp.AddNote,
-          midiNoteValue : note.midiNoteValue,
-          velocityIndex : note.velocityIndex,
-          patternMajorBeat : note.patternMajorBeat,
-          lengthMajorBeats : note.lengthMajorBeats,
-        });
-      });
-
-      return ret;
+      return this.GetPatchOpsForPastePattern(pat);
     } catch (e) {
       return null;
     }
+  }
+
+  GetPatchOpsForPastePattern(pattern) {
+    return {
+      op: "pastePattern",
+      pattern: JSON.parse(JSON.stringify(pattern)),
+    };
   }
 
   HasData() {
@@ -710,6 +839,11 @@ class SequencerDevice {
   LoadPatch(patchObj) {
     this.CancelCue();
     this.livePatch = new SequencerPatch(patchObj);
+    return true;
+  }
+
+  LoadPattern(pattern) {
+    this.livePatch.PasteSelectedPattern(pattern);
     return true;
   }
 
@@ -735,6 +869,11 @@ class SequencerDevice {
       case "delete":
         {
           return bank.DeletePresetById(data.presetID);
+        }
+      case "pastePattern":
+        {
+          this.LoadPattern(data.pattern);
+          return true;
         }
       case "pastePatch":
         {

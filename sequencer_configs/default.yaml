@@ -42,18 +42,11 @@ legends:
     name: C#6
     cssClass: black cs oct4
     legendCssClass: black cs oct4
-
-
-
-
-
-
-
-
   - midiNoteValue: 72
     name: C5
-    cssClass: white c oct3
-    legendCssClass: white c oct3
+    cssClass: white c oct4
+    legendCssClass: white c oct4
+  
   - midiNoteValue: 71
     name: B4
     cssClass: white b oct3
@@ -102,6 +95,7 @@ legends:
     name: C4
     cssClass: white c oct3
     legendCssClass: white c oct3
+
   - midiNoteValue: 59
     name: B3
     cssClass: white b oct2
@@ -150,6 +144,7 @@ legends:
     name: C3
     cssClass: white c oct2
     legendCssClass: white c oct2
+    
   - midiNoteValue: 47
     name: B2
     cssClass: white b oct1

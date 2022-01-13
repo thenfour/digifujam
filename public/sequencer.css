@@ -803,3 +803,50 @@
  .sequencerMain ul.pianoRollColumn li.c .muteOL {
      border-bottom: 3px solid #666;
  }
+
+
+
+
+ /* --- edit menu stuff --- */
+
+ .sequencerMain .editButton {
+    width: auto;
+    border-radius: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+ 
+ .sequencerMain .editPatternDialog fieldset {
+    padding: 10px;
+    margin: 10px;
+    background-color: #044;
+    border: 0;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+ }
+ 
+ .sequencerMain .editPatternDialog fieldset legend {
+    text-align:center;
+ }
+ 
+ .sequencerMain .editPatternDialog  button {
+   padding-left:15px;
+   padding-right:15px;
+   width:auto;
+ }
+ 
+ .sequencerMain .editPatternDialog .wasdContainer {
+   display:flex;
+   flex-direction: column;
+   align-items: center;
+ }
+ .sequencerMain .editPatternDialog .wasdContainer > div {
+   display:flex;
+ }
+ 
+ .sequencerMain .editPatternDialog .wasdContainer > div button i {
+   font-size:32px;
+ }
+ 
+ 

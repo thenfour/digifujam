@@ -67,6 +67,7 @@ const ClientMessages = {
     // { op:"load", presetID:<>}
     // { op:"save", presetID:<> }
     // { op:"delete", presetID:<>}
+    // { op:"pastePattern", pattern:{...} }
     // { op:"pastePatch", patch:{...} }
     // { op:"pasteBank", bank:{...} }
     // { op:"SeqSetTranspose", transpose: }
@@ -124,6 +125,7 @@ const ServerMessages = {
     // { instrumentID, op:"load", presetID:<>}
     // { instrumentID, op:"save", presetID:<> }
     // { instrumentID, op:"delete", presetID:<>}
+    // { instrumentID, op:"pastePattern", pattern:{...} }
     // { instrumentID, op:"pastePatch", patch:{...} }
     // { instrumentID, op:"pasteBank", bank:{...} }
     // { instrumentID, op:"SeqSetTranspose", transpose: }

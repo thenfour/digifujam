@@ -247,6 +247,7 @@ class SequencerMain extends React.Component {
             isSpeedExpanded: false,
             isDivExpanded :  false,
             isTransposeExpanded: false,
+            isEditExpanded: false,
             zoom: 10,
          };
 
@@ -469,11 +470,11 @@ class SequencerMain extends React.Component {
             if (this.props.observerMode) return;
             navigator.clipboard.readText().then(text => {
                 const seq = this.props.instrument.sequencerDevice;
-                const ops = seq.GetPatternOpsForPastePattern(text);
+                const ops = seq.GetPatchOpsForPastePatternJSON(text);
                 if (!ops) {
                     alert('There was some problem importing the pattern.')
                 } else {
-                    this.props.app.SeqPatternOps(ops);
+                    this.props.app.SeqPresetOp(ops);
                 }
             });
         }
@@ -529,6 +530,117 @@ class SequencerMain extends React.Component {
             this.onClickCueDiv();
         }
 
+        onClickEditShiftUp = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const pattern = patch.GetSelectedPattern();
+            const noteLegend = seq.GetNoteLegend();
+            const timeSig = patch.timeSig;
+            const newPattern = pattern.GetShiftedPatternVert(timeSig, -1, noteLegend);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+
+        }
+
+        onClickEditShiftDown = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const pattern = patch.GetSelectedPattern();
+            const noteLegend = seq.GetNoteLegend();
+            const timeSig = patch.timeSig;
+            const newPattern = pattern.GetShiftedPatternVert(timeSig, 1, noteLegend);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditShiftLeft = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const pattern = patch.GetSelectedPattern();
+            const noteLegend = seq.GetNoteLegend();
+            const patternViewData = Seq.GetPatternView(patch, noteLegend);
+            const timeSig = patch.timeSig;
+            const newPattern = pattern.GetShiftedPatternHoriz(timeSig, -1, patternViewData);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditShiftRight = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const pattern = patch.GetSelectedPattern();
+            const noteLegend = seq.GetNoteLegend();
+            const patternViewData = Seq.GetPatternView(patch, noteLegend);
+            const timeSig = patch.timeSig;
+            const newPattern = pattern.GetShiftedPatternHoriz(timeSig, 1, patternViewData);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditExpand = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const pattern = this.props.instrument.sequencerDevice.livePatch.GetSelectedPattern();
+            const timeSig = this.props.instrument.sequencerDevice.livePatch.timeSig;
+            const newPattern = pattern.GetExpandedPattern(timeSig);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditContract = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const pattern = this.props.instrument.sequencerDevice.livePatch.GetSelectedPattern();
+            const timeSig = this.props.instrument.sequencerDevice.livePatch.timeSig;
+            const newPattern = pattern.GetContractedPattern(timeSig);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditDouble = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const pattern = this.props.instrument.sequencerDevice.livePatch.GetSelectedPattern();
+            const timeSig = this.props.instrument.sequencerDevice.livePatch.timeSig;
+            const newPattern = pattern.GetDoubledPattern(timeSig);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditHalf = () => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const pattern = this.props.instrument.sequencerDevice.livePatch.GetSelectedPattern();
+            const timeSig = this.props.instrument.sequencerDevice.livePatch.timeSig;
+            const newPattern = pattern.GetHalvedPattern(timeSig);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -538,6 +650,7 @@ class SequencerMain extends React.Component {
 
          const seq = this.props.instrument.sequencerDevice;
          const patch = seq.livePatch;
+         const pattern = patch.GetSelectedPattern();
          const noteLegend = seq.GetNoteLegend();
          const patternViewData = Seq.GetPatternView(patch, noteLegend);
 
@@ -845,48 +958,6 @@ class SequencerMain extends React.Component {
                     </fieldset>
 
 
-                    <fieldset>
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Measures</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
-                                <div className="buttonArray vertical">
-                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Div</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
-                                {gDivisionInfo[patch.GetDivisionType()].caption}
-                            </div>
-                                { this.state.isDivExpanded &&
-                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
-                                            <ul className='dropDownMenu'>
-                                                {divisionsList}
-                                            </ul>
-                                        </div>
-                                    </ClickAwayListener>
-                                }
-                                <div className="buttonArray vertical">
-                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                    </fieldset>
-
 
                     <fieldset>
 
@@ -926,12 +997,126 @@ class SequencerMain extends React.Component {
                             </div>
                         </div>
 
+                    </fieldset>
 
 
+
+
+
+                    <fieldset>
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Measures</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
+                                <div className="buttonArray vertical">
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Div</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
+                                {gDivisionInfo[patch.GetDivisionType()].caption}
+                            </div>
+                                { this.state.isDivExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
+                                            <ul className='dropDownMenu'>
+                                                {divisionsList}
+                                            </ul>
+                                        </div>
+                                    </ClickAwayListener>
+                                }
+                                <div className="buttonArray vertical">
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className='paramGroup'>
+                            <div className='paramBlock'>
+                                { this.state.isEditExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isEditExpanded:false});}}>
+                                        <div className='dialog editPatternDialog'>
+                                            <legend onClick={() => { this.setState({isEditExpanded:false});}}>
+                                                Edit pattern
+                                            </legend>
+                                            <fieldset>
+                                                <legend>Shift (wrapping)</legend>
+                                                <div className='wasdContainer'>
+                                                    <div className='row'>
+                                                        <button className={clickableIfEditable}
+                                                            onClick={this.onClickEditShiftUp}>
+                                                                <i className="material-icons">arrow_drop_up</i></button>
+                                                    </div>
+                                                    <div className='row'>
+                                                        <button className={clickableIfEditable}
+                                                            onClick={this.onClickEditShiftLeft}>
+                                                                <i className="material-icons">arrow_left</i></button>
+                                                        <button className={clickableIfEditable}
+                                                            onClick={this.onClickEditShiftRight}>
+                                                                <i className="material-icons">arrow_right</i></button>
+                                                    </div>
+                                                    <div className='row'>
+                                                        <button className={clickableIfEditable}
+                                                            onClick={this.onClickEditShiftDown}>
+                                                                <i className="material-icons">arrow_drop_down</i></button>
+                                                    </div>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Rhythms</legend>
+                                                <div className='description'>Keep # of notes while changing pattern length</div>
+                                                <button className={pattern.CanExpand(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                                    onClick={this.onClickEditExpand}>
+                                                        Expand notes (×2) &gt;&gt;</button>
+                                                <button className={pattern.CanContract(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                                    onClick={this.onClickEditContract}>
+                                                        Contract (×.5) &lt;&lt;</button>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Pattern Length</legend>
+                                                <div className='description'>Change pattern length, duplicating notes</div>
+                                                <button className={pattern.CanDouble(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                                    onClick={this.onClickEditDouble}>
+                                                        Double length (×2) &gt;&gt;</button>
+                                                <button className={pattern.CanHalf(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                                    onClick={this.onClickEditHalf}>
+                                                        Half length (×.5) &lt;&lt;</button>
+                                            </fieldset>
+                                        </div>
+                                    </ClickAwayListener>
+                                }
+
+
+                                <div className="buttonArray">
+                                    <button
+                                        className={"editButton " + clickableIfEditable}
+                                        onClick={() => { this.setState({isEditExpanded:!this.state.isEditExpanded});}}
+                                        >
+                                            EDIT
+                                            <i className="material-icons">edit</i>
+                                        </button>
+                                </div>
+                            </div>
+                        </div>
 
 
 
                     </fieldset>
+
+
+
+
 
                     <fieldset>
 

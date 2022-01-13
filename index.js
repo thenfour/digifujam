@@ -1620,6 +1620,12 @@ class RoomServer {
     return bank.DeletePresetById(presetID);
   }
 
+  // user pasting some external pattern.
+  // { pattern: }
+  SeqPreset_PastePattern(user, instrument, data) {
+    return instrument.sequencerDevice.LoadPattern(data.pattern);
+  }
+
   // user pasting some external patch.
   // { patch: }
   SeqPreset_PastePatch(user, instrument, data) {
@@ -1662,6 +1668,9 @@ class RoomServer {
           break;
         case "delete":
           if (!this.SeqPreset_Delete(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "pastePattern":
+          if (!this.SeqPreset_PastePattern(foundUser.user, foundInstrument.instrument, data)) return;
           break;
         case "pastePatch":
           if (!this.SeqPreset_PastePatch(foundUser.user, foundInstrument.instrument, data)) return;
