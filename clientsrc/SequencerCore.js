@@ -827,11 +827,16 @@ class PatternViewNote {
       this.cssClass = legendNote.cssClass;
     }
 
-    const velocityEntry = legendNote.velocitySet[note.velocityIndex];
-    this.velocity = velocityEntry.vel;
-    this.cssClass += ` vel${note.velocityIndex}`;
-    if (velocityEntry.cssClass)
-      this.cssClass += " " + velocityEntry.cssClass;
+    this.velocity = 90;
+    this.cssClass = " ";
+    if (legendNote) {
+      const velocityEntry = legendNote?.velocitySet.at(note.velocityIndex);
+      this.velocity = velocityEntry?.vel ?? 90;
+      this.cssClass += ` vel${note.velocityIndex}`;
+      if (velocityEntry?.cssClass)
+        this.cssClass += " " + velocityEntry.cssClass;
+    }
+
   }
 }
 
