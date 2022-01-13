@@ -1654,6 +1654,15 @@ class DigifuRoomState {
             seqPresetBanks: this.seqPresetBanks,
             chatLog: [],//this.chatLog,
             stats: this.stats,
+            instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
+                return [
+                    i.instrumentID,
+                    {
+                        patch: i.exportPatchObj(),
+                        seqPatch: i.sequencerDevice.livePatch,
+                    }
+                ];
+            })),
         };
     }
 
@@ -1688,6 +1697,25 @@ class DigifuRoomState {
             });
         }
 
+        // import live patch data
+        if (data.instrumentLivePatches) {
+            Object.entries(data.instrumentLivePatches).forEach(e => {
+                const instrumentID = e[0];
+                const {patch, seqPatch} = e[1];
+                const f = this.FindInstrumentById(instrumentID);
+                if (!f) {
+                    console.log(`instrument ${instrumentID} was not found; couldn't import its live patch data. Make sure instruments all have constant IDs set. Or maybe instrument sets changed since export?`);
+                    return;
+                }
+                const instrument = f.instrument;
+                if (patch) {
+                    const ret = instrument.integrateInstRawParamChanges(patch, true);
+                }
+                if (seqPatch) {
+                    instrument.sequencerDevice.LoadPatch(seqPatch);
+                }
+            });
+        }
     }
 
     // returns { user, index } or null.
