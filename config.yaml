@@ -117,14 +117,14 @@ discord_integrations:
   JamTracker:
     engine: JamStatusNotification
     noteDataSourceID: RoomNoteCount
-    userCountDataSourceID: UserCounts
+    userCountDataSourceID: NonAdminUserCounts
     noteCountBacktrack: 30minutes # when notifying new jam, how far back to include note count
     verboseDebugLogging: 0
 
     jamStart:
       delay: 2m
       noteTrigger: "sum [>=200] during [10min]"
-      userCountTrigger: "maintains [>2] during [5min]"
+      userCountTrigger: "maintains [>=2] during [5min]"
       userCountType: global
       messageContent: "A jam session is warming up in %roomName%."
       messageFields:
