@@ -25,7 +25,34 @@ const gSpeeds = new DFUtils.FuzzySelector([
     { caption: "8x", speed: 8 },
 ], (val, obj) => Math.abs(val - obj.speed));
 
-const gTransposeValues = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5,6, 7, 8, 9, 10, 11, 12];
+const gTransposeValues = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5,6, 7, 8, 9, 10, 11, 12].reverse();
+const gTransposeCaptions = [
+    "-12 (down octave)",
+    "-11 (down ♮ 7th)",
+    "-10 (down ♭ 7th)",
+    "-9 (down ♮ 6th)",
+    "-8 (down ♭ 6th)",
+    "-7 (down 5th)",
+    "-6 (down ♯ 4th)",
+    "-5 (down 4th)",
+    "-4 (down maj 3rd)",
+    "-3 (down ♭ 3rd)",
+    "-2 (down ♮ 2nd)",
+    "-1",
+    "0",
+    "1",
+    "2 (up ♮ 2nd)",
+    "3 (up ♭ 3rd)",
+    "4 (up maj 3rd)",
+    "5 (up 4th)",
+    "6 (up ♯ 4th)",
+    "7 (up 5th)",
+    "8 (up ♭ 6th)",
+    "9 (up ♮ 6th)",
+    "10 (up ♭ 7th)",
+    "11 (up ♮ 7th)",
+    "12 (up octave)",
+].reverse();
 
 // ok not really logical to use fuzzyselector here because we only accept exact matches but whatev
 const gDivisionInfo = {
@@ -521,35 +548,52 @@ class SequencerMain extends React.Component {
          const bankRef = bank.GetPresetById(patch.presetID);
          const presetSaveEnabled = !!bankRef; // if this patch has been saved to the preset bank, it can be 1-click saved.
 
-         const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
-
-         
         const widthpx = Math.min(75, 20 + ((50 * this.state.zoom) / patternViewData.divs.length));
         const columnStyle = {width:`${widthpx}px`};
-        const heightpx = 5 * this.state.zoom;
+        const heightpx = 15 + 2.5 * this.state.zoom;
         const rowStyle = {height:`${heightpx}px`};
 
+        const selectedTS = patch.timeSig;
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
-                 <li key={ts.id} onClick={() => this.onClickTimeSig(ts)}>{ts.toString()}</li>
+                 <li
+                    key={ts.id}
+                    onClick={() => this.onClickTimeSig(ts)}
+                    className={selectedTS.id == ts.id ? " selected" : ""}
+                    >{ts.toString()}</li>
              );
          });
 
+         const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
          const speedList = this.state.isSpeedExpanded && gSpeeds.sortedValues.map(s => {
             return (
-               <li key={s.caption} onClick={() => this.onClickSpeed(s)}>{s.caption}</li>
+               <li
+                key={s.caption}
+                onClick={() => this.onClickSpeed(s)}
+                className={s.speed == speedObj.speed ? " selected" : ""}
+                >{s.caption}</li>
            );
         });
 
+        const divisionsVal = patch.GetDivisionType();
         const divisionsList = this.state.isDivExpanded && gDivisions.sortedValues.map(s => {
             return (
-               <li key={s.val} onClick={() => this.onClickDivision(s.val)}>{s.caption}</li>
+               <li
+                key={s.val}
+                onClick={() => this.onClickDivision(s.val)}
+                className={divisionsVal == s.val ? " selected" : ""}
+               >{s.caption}</li>
            );
         });
 
-        const transposeList = this.state.isTransposeExpanded && gTransposeValues.map(s => {
+        const transposeVal = patch.GetTranspose();
+        const transposeList = this.state.isTransposeExpanded && gTransposeValues.map((s,i) => {
             return (
-               <li key={s} onClick={() => this.onClickTranspose(s)}>{s}</li>
+               <li
+                key={s}
+                onClick={() => this.onClickTranspose(s)}
+                className={transposeVal == s ? " selected" : ""}
+                >{gTransposeCaptions[i]}</li>
            );
         });
 
@@ -892,12 +936,12 @@ class SequencerMain extends React.Component {
                     <fieldset>
 
                         <div className='paramGroup'>
-                            <div className='legend'>View</div>
+                            <div className='legend'>Zoom</div>
                             <div className='paramBlock'>
                             <div className='paramValue'>{this.state.zoom}</div>
                             <div className="buttonArray">
-                                <button className='clickable' onClick={() => this.onClickZoomIn()}><i className="material-icons">zoom_in</i></button>
                                 <button className='clickable' onClick={() => this.onClickZoomOut()}><i className="material-icons">zoom_out</i></button>
+                                <button className='clickable' onClick={() => this.onClickZoomIn()}><i className="material-icons">zoom_in</i></button>
                             </div>
                             </div>
                         </div>

@@ -299,7 +299,7 @@
     background-color: #022;
     border:2px solid #055;
     color:#0cc;
-    font-family: 'Overpass', sans-serif; /*font-family: 'Courier New', Courier, monospace;*/
+    font-family: monospace;
     font-size: 16px;
     z-index: 10000;
 }
@@ -315,8 +315,11 @@
     overflow: auto;    
 }
 .sequencerMain ul.dropDownMenu li {
-    padding:6px;
+    padding:2px;
 }
+.sequencerMain ul.dropDownMenu li.selected {
+    background-color: #550;
+  }
 .sequencerMain ul.dropDownMenu li:hover {
     background-color: #066;
 }
@@ -776,3 +779,27 @@
     background-color: #dda;
   }
   
+
+
+  .sequencerMain ul.pianoRollLegend li.oct4.white {
+    background-color: #fff;
+ }
+ 
+ .sequencerMain ul.pianoRollLegend li.oct3.white {
+    background-color: #ffc;
+ }
+ 
+ .sequencerMain ul.pianoRollLegend li.oct2.white {
+    background-color: #fcc;
+ }
+ 
+ .sequencerMain ul.pianoRollLegend li.oct1.white {
+    background-color: #ccf;
+ }
+ .sequencerMain ul.pianoRollLegend li.c {
+     border-bottom: 3px solid #666;
+ }
+
+ .sequencerMain ul.pianoRollColumn li.c .muteOL {
+     border-bottom: 3px solid #666;
+ }

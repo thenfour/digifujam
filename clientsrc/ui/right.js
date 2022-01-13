@@ -2342,7 +2342,7 @@ class RootArea extends React.Component {
 
     handleNoteOn = (user, instrument, midiNote, fromSequencer) => {
 
-        // mixer activity indicator
+        // mixer & sequencer activity indicator
         Object.keys(gInstActivityHandlers).forEach(id => {
             gInstActivityHandlers[id](instrument, midiNote, fromSequencer);
         });
