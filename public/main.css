@@ -1922,14 +1922,22 @@ https://www.w3schools.com/icons/google_icons_intro.asp
 
 
 ul.instParamList li.floatParam
-{display: flex;align-items: center;margin-bottom: 1px;}
+{display: flex;align-items: stretch;margin-bottom: 1px;align-content: stretch;justify-content: stretch;flex-direction: column;}
 
-ul.instParamList li.floatParam > *
+ul.instParamList li.floatParam > div > *
 {
     flex-grow:1;
 }
 
 
-ul.instParamList li.floatParam > label
+ul.instParamList li.floatParam > div > label
 {flex-grow: 0;width: 130px;}
 
+
+ul.instParamList li.floatParam .floatParamMainControls {
+    display: flex;
+    margin-bottom: 1px;
+    align-items: center;
+    align-content: stretch;
+    justify-content: space-evenly;
+}

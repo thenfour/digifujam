@@ -603,6 +603,7 @@ class InstFloatParam extends React.Component {
 
         return (
             <li className={cssclass + this.props.param.cssClassName}>
+                <div className='floatParamMainControls'>
                 <input id={this.sliderID} disabled={isReadOnly} className="floatParam" type="range" onClick={this.onClickSlider}
                     onDoubleClick={this.onDoubleClickSlider} min={0} max={DF.ClientSettings.InstrumentFloatParamDiscreteValues}
                     onChange={this.onChange}
@@ -622,7 +623,9 @@ class InstFloatParam extends React.Component {
                         {instActivity}
                     </div>
                 </label>
+                </div>
 
+                <div className='floatParamAuxControls'>
                 {macroMappingList}
                 { this.state.isExpanded && <div id={this.valueTextDivID}>
                     <input type="text" id={this.valueTextInputID} readOnly={isReadOnly} value={this.state.inputTextValue} onChange={this.onChangeValInput} onKeyDown={this.handleTextInputKeyDown} />
@@ -638,6 +641,7 @@ class InstFloatParam extends React.Component {
                     }
                 </div>
                 }
+                </div>
             </li>
         );
     }
