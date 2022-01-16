@@ -9,6 +9,11 @@
   "announcementHTML": "",
   "roomItems": [
     {
+      "itemID": "announcement",
+      "itemType": "graffitiText",
+      "rect": {"x":720,"y":330,"w":400,"h":150}
+    },
+    {
       "itemID": "roomItem1",
       "name": "TO #MAJ7",
       "itemType": "door",

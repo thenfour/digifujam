@@ -40,13 +40,13 @@ class TimeSpan {
       this.__shortString = `${this.__secondsPart}s`;
     }
 
-    this.__longString = `${this.__totalDays} days ${this.__hoursPart} hours ${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
+    this.__longString = `${this.__totalDays} days ${this.__hoursPart} hours ${this.__minutesPart} min ${this.__secondsPart} sec`;
     if (!this.__totalDays) {
-      this.__longString = `${this.__hoursPart} hours ${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
+      this.__longString = `${this.__hoursPart} hours ${this.__minutesPart} min ${this.__secondsPart} sec`;
       if (!this.__hoursPart) {
-        this.__longString = `${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
+        this.__longString = `${this.__minutesPart} min ${this.__secondsPart} sec`;
         if (!this.__minutesPart) {
-          this.__longString = `${this.__secondsPart} seconds`;
+          this.__longString = `${this.__secondsPart} sec`;
         }
       }
     }

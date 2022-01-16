@@ -90,6 +90,41 @@ const gSeqActivity = new SeqActivityIndicator();
 // ------- sequencer activity note indicators -----------
 
 
+
+
+
+
+// returns { text, needsRefreshTimer }
+function getAnnouncementHTML(app) {
+    let html = app.roomState.announcementHTML ?? "";
+    let needsRefreshTimer = false;
+    const countdownPrefix = "{{countdown:";
+    const countdownSuffix = "}}";
+    let begin = html.indexOf(countdownPrefix);
+    if (begin != -1) {
+        let end = html.indexOf(countdownSuffix, begin);
+        if (end != -1) {
+            try {
+                // countdown timer
+                let dt = html.substring(begin + countdownPrefix.length, end);
+                needsRefreshTimer = true;
+                let remainingMS = (new Date(dt)) - (new Date());
+                const info = new DFU.TimeSpan(remainingMS);
+                html = html.substring(0, begin) + info.longString + html.substring(end + countdownSuffix.length);
+            } catch (e) {
+                // whatever.
+            }
+        }
+    }
+    return { html, needsRefreshTimer };
+}
+
+
+
+
+
+
+
 class InstTextParam extends React.Component {
     constructor(props) {
         super(props);
@@ -124,6 +159,9 @@ class InstTextParam extends React.Component {
         );
     }
 }
+
+
+
 
 
 // int parameter, but rendered as buttons using enum titles
@@ -1722,10 +1760,18 @@ class UIRoomItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.timer = null;
+        this.timerRefs = 0;
     }
     onClickSign = () => {
         this.props.item.params.isShown = !this.props.item.params.isShown;
         this.setState({});
+    }
+    componentWillUnmount() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
     }
     render() {
         const pos = this.props.displayHelper().roomToScreenPosition(this.props.item.rect);
@@ -1750,6 +1796,23 @@ class UIRoomItem extends React.Component {
             );
         } else if (this.props.item.itemType == DF.DFRoomItemType.audioVisualization) {
             return (<UIAudioVisualizationRoomItem item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
+        } else if (this.props.item.itemType == DF.DFRoomItemType.graffitiText) {
+            const { html, needsRefreshTimer } = getAnnouncementHTML(this.props.app);
+            if (needsRefreshTimer) {
+                if (!this.timer) {
+                    this.timerRefs ++;
+                    this.timer = setTimeout(() => {
+                        this.timer = null;
+                        this.timerRefs --;
+                        this.setState({});
+                    }, 1000);
+                }
+            }
+    
+            return (
+                <div>
+                    <div className="roomItem graffitiText" style={style} dangerouslySetInnerHTML={{ __html: html }}></div>
+                </div>);
         }
 
         return (
@@ -1909,9 +1972,6 @@ class FullChatLog extends React.Component {
 
 
 
-
-
-
 class AnnouncementArea extends React.Component {
     constructor(props) {
         super(props);
@@ -1922,38 +1982,22 @@ class AnnouncementArea extends React.Component {
     }
     componentWillUnmount() {
         if (this.timer) {
-            clearTimerout(this.timer);
+            clearTimeout(this.timer);
             this.timer = null;
         }
     }
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
-        let html = this.props.app.roomState.announcementHTML || "";
-        const countdownPrefix = "{{countdown:";
-        const countdownSuffix = "}}";
-        let begin = html.indexOf(countdownPrefix);
-        if (begin != -1) {
-            let end = html.indexOf(countdownSuffix, begin);
-            if (end != -1) {
-                try {
-                    // countdown timer
-                    let dt = html.substring(begin + countdownPrefix.length, end);
-                    let remainingMS = (new Date(dt)) - (new Date());
-                    const info = new DFU.TimeSpan(remainingMS);
-                    html = html.substring(0, begin) + info.longString + html.substring(end + countdownSuffix.length);
-                    if (!this.timer) {
-                        this.timerRefs ++;
-                        console.log(this.timerRefs);
-                        this.timer = setTimeout(() => {
-                            this.timer = null;
-                            this.timerRefs --;
-                            this.setState({});
-                        }, 1000);
-                    }
-                } catch (e) {
-                    // whatever.
-                }
+        const { html, needsRefreshTimer } = getAnnouncementHTML(this.props.app);
+        if (needsRefreshTimer) {
+            if (!this.timer) {
+                this.timerRefs ++;
+                this.timer = setTimeout(() => {
+                    this.timer = null;
+                    this.timerRefs --;
+                    this.setState({});
+                }, 1000);
             }
         }
 
@@ -2141,11 +2185,10 @@ class RoomArea extends React.Component {
 
                     ></SequencerMain>}
 
-                {userAvatars}
                 {roomItems}
+                {userAvatars}
                 { !this.state.showFullChat && <ShortChatLog app={this.props.app} />}
                 { this.state.showFullChat && <FullChatLog app={this.props.app} />}
-                <AnnouncementArea app={this.props.app} />
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={this}></CheerControls>
                 <div className='roomOverlayControlsRight'>

@@ -483,7 +483,7 @@ class DigifuApp {
         if (stylesheet) {
             stylesheet.parentNode.removeChild(stylesheet);
         }
-        // $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomID + ".css' type='text/css' />");
+        $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomID + ".css' type='text/css' />");
 
         this.accessLevel = data.accessLevel;
 
@@ -651,7 +651,8 @@ class DigifuApp {
         let instrument = null;
         if (seqInstrumentID) {
             // there won't be a user specified here.
-            instrument = this.roomState.FindInstrumentById(seqInstrumentID).instrument;
+            instrument = this.roomState.FindInstrumentById(seqInstrumentID)?.instrument;
+            if (!instrument) return;
             let foundUser = this.roomState.FindUserByID(instrument.controlledByUserID);
             if (foundUser) {
                 user = foundUser.user;

@@ -1531,6 +1531,7 @@ const DFRoomItemType = {
     door: "door",
     sign: "sign",
     audioVisualization: "audioVisualization",
+    graffitiText: "graffitiText",
 };
 
 // a function that can be invoked by room items.
@@ -1656,6 +1657,7 @@ class DigifuRoomState {
             seqPresetBanks: this.seqPresetBanks,
             chatLog: [],//this.chatLog,
             stats: this.stats,
+            announcementHTML: this.announcementHTML,
             instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
                 return [
                     i.instrumentID,
@@ -1681,6 +1683,7 @@ class DigifuRoomState {
         this.seqPresetBanks ??= [];
 
         this.stats = data.stats;
+        this.announcementHTML = data.announcementHTML;
 
         // remove "live" references to users.
         this.users = [];

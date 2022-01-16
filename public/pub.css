@@ -6,3 +6,18 @@
 #roomArea {
     background-color: rgb(36, 0, 56);
 }
+
+
+
+
+
+.roomItem.graffitiText {
+    transform:skewY(30deg) scaleY(140%);
+    border:0;
+    color:#4f4a;
+    background: none;
+    font-size: 24px;
+/*      background: #0c09; */
+    text-shadow: 4px -4px 8px black, 0 0 15px #0aa;
+}
+

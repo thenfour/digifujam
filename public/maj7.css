@@ -2,7 +2,18 @@
 #thisIsPrettyMuchJustAPlaceHolder {
     margin: 0;
 }
-/* 
-body {
-    background-color: white;;
-} */
+
+
+
+
+.roomItem.graffitiText {
+    transform:skewY(-27deg) scaleY(120%);
+    border:0;
+    color:#aa0;
+    background: none;
+    font-size: 24px;
+    text-shadow: 4px -4px 8px black, 0 0 15px #0aa;
+    text-align: right;
+}
+
+
