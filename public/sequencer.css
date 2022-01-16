@@ -824,8 +824,11 @@
                 <div class="muteOL">
 */
 
+.sequencerMain ul.pianoRollColumn li .muteOL {
+    border: 2px solid transparent;
+}
 .sequencerMain ul.pianoRollColumn li:hover .muteOL {
-    border:2px solid #777; /* don't put this indicator in noteBase or other; it creates layout problems*/
+    border:2px solid #777;
 }
 
 
@@ -857,7 +860,7 @@
 
 .sequencerMain ul.pianoRollColumn li .noteOnHandle,
 .sequencerMain ul.pianoRollColumn li .noteOffHandle {
-  width: 8px;
+  width: max(20%, 5px);
   background-color: #fff3;
 }
 .sequencerMain ul.pianoRollColumn li.endcontinue div {
@@ -881,7 +884,7 @@
   .sequencerMain ul.pianoRollColumn li .lengthHandle {
     background-color:transparent;
     flex-grow:0;
-    width:25%;
+    width: max(20%, 5px);
     border-radius:0;
  }
    .sequencerMain ul.pianoRollColumn li .lengthHandle:hover {

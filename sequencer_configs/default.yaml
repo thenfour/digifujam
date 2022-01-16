@@ -10,6 +10,10 @@ velocitySets:
 # YAML.stringify(DFMusic.MidiNoteInfo.filter(m => m.midiNoteValue >= 33 && m.midiNoteValue <= 60).reverse().map(x => { x.legendCssClass = x.cssClass; return x; }));
 # YAML.stringify(DFMusic.MidiNoteInfo.filter(m => m.midiNoteValue >= 45 && m.midiNoteValue <= 72).reverse().map(x => { x.legendCssClass = x.cssClass; return x; }));
 legends:
+  Debug36:
+  - midiNoteValue: 36
+    name: xx
+
   GeneralNotes:
 
 

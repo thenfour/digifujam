@@ -32,7 +32,8 @@ seqConfigs.forEach(leaf => {
 });
 Seq.ResolveSequencerConfig();
 //const legend = Seq.GetGlobalSequencerConfig().legends["GeneralNotes"];//"DrumsA"];
-const legend = Seq.GetGlobalSequencerConfig().legends["DrumsA"];
+//const legend = Seq.GetGlobalSequencerConfig().legends["DrumsA"];
+const legend = Seq.GetGlobalSequencerConfig().legends["Debug36"];
 
 const dev = new Seq.SequencerDevice();
 // dev.LoadPattern({
@@ -123,8 +124,9 @@ const addNote = (midiNoteValue, patternMajorBeat, lengthMajorBeats) => {
 // addNote(37, 3.5, .5);
 // addNote(37, 4, 1);
 
-// addNote(36, 0, 8);
-// addNote(36, 2, 2);
+//addNote(36, 0, 8);
+addNote(36, 2, 2);
+//addNote(36, 5, 2);
 
 const dumpPattern = (p) => {
   console.log(`{ Pattern`);
@@ -146,6 +148,7 @@ for (let i = 0; i < iter; ++ i) {
 }
 console.log(`${iter} iterations took ${(Date.now() - start).toLocaleString()} ms`);
 
-let a = 0;
 
 v.dump();
+let a = 0;
+

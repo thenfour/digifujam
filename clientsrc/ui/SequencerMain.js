@@ -406,7 +406,7 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetTranspose(n);
         }
 
-        onCellClick = (patternView, divInfo, note, legend, patch) => {
+        onCellClick = (patternView, divInfo, note, legend, patch, setLengthProc) => {
             if (this.props.observerMode) return;
             // toggle a 1-div-length 
             // convert this click to an ops struct
@@ -415,11 +415,12 @@ class SequencerMain extends React.Component {
                 if (window.DFModifierKeyTracker.CtrlKey) {
                     ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 1); // CTRL+SHIFT = toggle vel1
                 } else {
-                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note); // SHIFT = delete
+                    return setLengthProc(); // SHIFT = set length
                 }
             } else {
                 if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0); // CTRL = toggle vel0
+                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note); // CTRL = delete
+                    //ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0); // CTRL = toggle vel0
                 } else {
                     ops = patternView.GetPatternOpsForCellCycle(divInfo, note); // none = cycle
                 }
@@ -802,20 +803,23 @@ class SequencerMain extends React.Component {
             let lengthHandle = null;
             let noteOnHandle = null;
             let noteOffHandle = null;
-            let cellClickHandler = ()=>this.onCellClick(patternViewData, divInfo, note, noteLegend, patch);
+            let setLengthProc = ()=>{};
+            let cellClickHandler = ()=>this.onCellClick(patternViewData, divInfo, note, noteLegend, patch, setLengthProc);
             if ((note.midiNoteValue in divInfo.rows)) {
                 const cell = divInfo.rows[note.midiNoteValue];
                 cssClass += " " + cell.cssClass;
                 if (!cell.thisNote && cell.previousNote) {
+                    setLengthProc = () => this.clickLengthHandlePrevious(cell);
                     lengthHandle = (<div
                         className='lengthHandle'
-                        onClick={() => this.clickLengthHandlePrevious(cell)}
+                        onClick={setLengthProc}
                         ></div>);
                 }
-                if (cell.thisNote && cell.beginBorderType === Seq.eBorderType.Continue && cell.endBorderType === Seq.eBorderType.Continue) {
+                if (cell.thisNote) {
+                    setLengthProc = () => this.clickLengthHandleCurrent(cell)
                     lengthHandle = (<div
                         className='lengthHandle'
-                        onClick={() => this.clickLengthHandleCurrent(cell)}
+                        onClick={setLengthProc}
                         ></div>);
                 }
                 if (cell.beginBorderType === Seq.eBorderType.NoteOn) {

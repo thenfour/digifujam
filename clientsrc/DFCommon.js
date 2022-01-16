@@ -974,7 +974,7 @@ class DigifuInstrumentSpec {
     // returns an array of midi CC values (yes just numbers). then call getMappingSpecsForMidiCC to get more info.
     getMappedMidiCCs() {
         let f = this.params.filter(p => p.isMappingSrc && p.currentValue <= 31/* bad */);
-        return f.map(p => p.currentValue);
+        return [...new Set(f.map(p => p.currentValue))];// unique; if you have a CC mapped to multiple params this is required.
     }
 
     // exports LIVE params as a patch
