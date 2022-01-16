@@ -584,6 +584,7 @@ ul.instParamList label {
 
 ul.instParamList input[type="range" i] {
     margin:0;
+    /* width: 100%; */
 }
 
 ul.instParamList li.buttonsParam {
@@ -1918,4 +1919,17 @@ https://www.w3schools.com/icons/google_icons_intro.asp
     font-weight: bold;
     margin-top: 25px;
 }
+
+
+ul.instParamList li.floatParam
+{display: flex;align-items: center;margin-bottom: 1px;}
+
+ul.instParamList li.floatParam > *
+{
+    flex-grow:1;
+}
+
+
+ul.instParamList li.floatParam > label
+{flex-grow: 0;width: 130px;}
 

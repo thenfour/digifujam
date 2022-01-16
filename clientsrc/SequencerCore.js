@@ -827,6 +827,8 @@ class SequencerDevice {
     this.startFromAbsQuarter = null;
   }
 
+  IsPlaying() { return this.isPlaying; }
+
   GetPatternFracAtAbsQuarter(absQuarter) {
     const i = this.GetAbsQuarterInfo(absQuarter);
     return i.patternFrac;

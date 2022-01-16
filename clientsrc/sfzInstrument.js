@@ -771,11 +771,17 @@ class sfzInstrument {
         });
 
         // a sfz can specify params to set when its selected too. this goes against convention; typically param changes are done externally. but let's allow it.
-        if (this.instrumentSpec.sfzPatch) {
-            Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
-                const p = this.instrumentSpec.GetParamByID(paramID);
-                p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
-            });
+        //
+        // HACK: if the sequencer is playing, and a user releases the instrument, the instrument will do a connect()
+        // which invokes this. but it means any manual adjustments will then be clobbered and the sequencer will play all defaults
+        // for these params. so when the sequencer is playing and a user isn't controlling, don't change these params..
+        if (!this.instrumentSpec.sequencerDevice.IsPlaying()) {
+            if (this.instrumentSpec.sfzPatch) {
+                Object.keys(this.instrumentSpec.sfzPatch).forEach(paramID => {
+                    const p = this.instrumentSpec.GetParamByID(paramID);
+                    p.currentValue = p.rawValue = this.instrumentSpec.sfzPatch[paramID];
+                });
+            }
         }
     }
 
