@@ -13,16 +13,16 @@ const gMinTimerInterval = 35;
 const gTempoBPMStep = 5;
 
 const gSpeeds = new DFUtils.FuzzySelector([
-    { caption: ".25x", speed: .25 },
-    { caption: ".33x", speed: 1.0/3.0 },
-    { caption: ".5x", speed: .5 },
-    { caption: ".66x", speed: 2.0/3.0 },
-    { caption: ".75x", speed: .75 },
-    { caption: "1x", speed: 1 },
-    { caption: "2x", speed: 2 },
-    { caption: "3x", speed: 3 },
-    { caption: "4x", speed: 4 },
-    { caption: "8x", speed: 8 },
+    { caption: ".25x", speed: .25, cssClass:"altvalue" },
+    { caption: ".33x", speed: 1.0/3.0, cssClass:"altvalue" },
+    { caption: ".5x", speed: .5, cssClass:"altvalue" },
+    { caption: ".66x", speed: 2.0/3.0, cssClass:"altvalue" },
+    { caption: ".75x", speed: .75, cssClass:"altvalue" },
+    { caption: "1x", speed: 1, cssClass:"" },
+    { caption: "2x", speed: 2, cssClass:"altvalue" },
+    { caption: "3x", speed: 3, cssClass:"altvalue" },
+    { caption: "4x", speed: 4, cssClass:"altvalue" },
+    { caption: "8x", speed: 8, cssClass:"altvalue" },
 ], (val, obj) => Math.abs(val - obj.speed));
 
 const gTransposeValues = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5,6, 7, 8, 9, 10, 11, 12].reverse();
@@ -738,7 +738,7 @@ class SequencerMain extends React.Component {
                <li
                 key={s.caption}
                 onClick={() => this.onClickSpeed(s)}
-                className={s.speed == speedObj.speed ? " selected" : ""}
+                className={(s.speed == speedObj.speed ? " selected" : "") + " " + speedObj.cssClass}
                 >{s.caption}</li>
            );
         });
@@ -967,7 +967,7 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Speed</div>
                             <div className='paramBlock'>
-                            <div className='paramValue clickable' onClick={() => { this.setState({isSpeedExpanded:!this.state.isSpeedExpanded});}}>{speedObj.caption}</div>
+                            <div className={'paramValue clickable ' + speedObj.cssClass} onClick={() => { this.setState({isSpeedExpanded:!this.state.isSpeedExpanded});}}>{speedObj.caption}</div>
                                 { this.state.isSpeedExpanded &&
                                     <ClickAwayListener onClickAway={() => { this.setState({isSpeedExpanded:false});}}>
                                         <div className='dialog'>
@@ -1063,7 +1063,7 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Oct</div>
                             <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetOctave()}</div>
+                            <div className={'paramValue ' + (patch.GetOctave() === 0 ? "" : "altvalue") }>{patch.GetOctave()}</div>
                             <div className="buttonArray vertical">
                                 <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(1)}><i className="material-icons">arrow_drop_up</i></button>
                                 <button className={clickableIfEditable} onClick={() => this.onClickOctaveAdj(-1)}><i className="material-icons">arrow_drop_down</i></button>
@@ -1075,7 +1075,7 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Transp</div>
                             <div className='paramBlock'>
-                            <div className='paramValue clickable' onClick={() => { this.setState({isTransposeExpanded:!this.state.isTransposeExpanded});}}>
+                            <div className={'paramValue clickable ' + (patch.GetTranspose() === 0 ? "" : "altvalue")} onClick={() => { this.setState({isTransposeExpanded:!this.state.isTransposeExpanded});}}>
                                 {patch.GetTranspose()}
                             </div>
                             { this.state.isTransposeExpanded &&

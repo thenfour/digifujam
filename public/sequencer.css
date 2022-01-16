@@ -1008,3 +1008,9 @@
 .sequencerMain .editRow .editCloseButton i {
     font-size: 18px;
 }
+
+
+
+.sequencerMain fieldset .paramValue.altvalue {
+    color: #cc0;
+}
