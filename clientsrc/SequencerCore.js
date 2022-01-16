@@ -100,22 +100,27 @@ function IsValidSequencerOctave(oct) {
 }
 
 function IsValidDivCount(divsPerMeasure, divCount) {
-  if (!Number.isInteger(divCount)) return false;
-  if (divCount < 1) return false;
-  if (divCount > SequencerSettings.MaxDivs) return false;
+  if (!Number.isInteger(divCount))
+    return false;
+  if (divCount < 1)
+    return false;
+  if (divCount > SequencerSettings.MaxDivs)
+    return false;
   // for the moment you must also have patterns be an even measure length.
-  if (!Number.isInteger(divCount / divsPerMeasure)) return false;
+  if (!Number.isInteger(divCount / divsPerMeasure))
+    return false;
   return true;
 }
 
 function IsValidSequencerTranspose(transpose) {
   transpose = parseInt(transpose);
-  if (transpose < -12) return false;
-  if (transpose > 12) return false;
+  if (transpose < -12)
+    return false;
+  if (transpose > 12)
+    return false;
   this.transpose = transpose;
   return true;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SequencerNote {
@@ -129,6 +134,10 @@ class SequencerNote {
     this.patternMajorBeat ??= 0;
     this.lengthMajorBeats ??= 1;
     this.timestamp ??= Date.now();
+  }
+
+  GetEndPatternMajorBeat() {
+    return this.patternMajorBeat + this.lengthMajorBeats;
   }
 }
 
@@ -201,17 +210,17 @@ class SequencerPattern {
 
   GetDivsPerMeasure(ts) {
     switch (this.divisionType) {
-      default:
-      case eDivisionType.MajorBeat: // so 4/4 returns 4, 7/8 returns 2 (unequal beats)
-        return ts.majorBeatInfo.length;
-      case eDivisionType.MinorBeat: // 8ths
-        return ts.minorBeatInfo.length * Math.ceil(2 / ts.minorBeatsPerQuarter);
-      case eDivisionType.MinorBeat_x2:
-        return ts.minorBeatInfo.length * Math.ceil(4 / ts.minorBeatsPerQuarter);
-      case eDivisionType.MinorBeat_x3:
-        return ts.minorBeatInfo.length * Math.ceil(6 / ts.minorBeatsPerQuarter);
-      case eDivisionType.MinorBeat_x4:
-        return ts.minorBeatInfo.length * Math.ceil(8 / ts.minorBeatsPerQuarter);
+    default:
+    case eDivisionType.MajorBeat: // so 4/4 returns 4, 7/8 returns 2 (unequal beats)
+      return ts.majorBeatInfo.length;
+    case eDivisionType.MinorBeat: // 8ths
+      return ts.minorBeatInfo.length * Math.ceil(2 / ts.minorBeatsPerQuarter);
+    case eDivisionType.MinorBeat_x2:
+      return ts.minorBeatInfo.length * Math.ceil(4 / ts.minorBeatsPerQuarter);
+    case eDivisionType.MinorBeat_x3:
+      return ts.minorBeatInfo.length * Math.ceil(6 / ts.minorBeatsPerQuarter);
+    case eDivisionType.MinorBeat_x4:
+      return ts.minorBeatInfo.length * Math.ceil(8 / ts.minorBeatsPerQuarter);
     }
   }
 
@@ -239,16 +248,19 @@ class SequencerPattern {
   // pass in the time signature so we can verify div counts
   GetExpandedPattern(ts) {
     const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
-    if (!this.CanExpand(ts)) return ret;
+    if (!this.CanExpand(ts))
+      return ret;
     ret.lengthMajorBeats *= 2;
     ret.notes.forEach(n => {
       n.patternMajorBeat *= 2;
+      // lengths don't change
     });
     return ret;
   }
   GetContractedPattern(ts) {
     const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
-    if (!this.CanContract(ts)) return ret;
+    if (!this.CanContract(ts))
+      return ret;
     ret.lengthMajorBeats /= 2;
     ret.notes.forEach(n => {
       n.patternMajorBeat /= 2;
@@ -257,25 +269,26 @@ class SequencerPattern {
   }
   GetDoubledPattern(ts) {
     const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
-    if (!this.CanExpand(ts)) return ret;
+    if (!this.CanExpand(ts))
+      return ret;
     const oldlen = ret.lengthMajorBeats;
     ret.lengthMajorBeats *= 2;
     ret.notes = ret.notes.concat(ret.notes.map(n =>
-      new SequencerNote(Object.assign(JSON.parse(JSON.stringify(n)), {
-        id: DFUtil.generateID(),
-        patternMajorBeat: n.patternMajorBeat + oldlen
-      }))
-    ));
+                                                   new SequencerNote(Object.assign(JSON.parse(JSON.stringify(n)), {
+                                                     id : DFUtil.generateID(),
+                                                     patternMajorBeat : n.patternMajorBeat + oldlen
+                                                   }))));
     return ret;
   }
   GetHalvedPattern(ts) {
     const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
-    if (!this.CanContract(ts)) return ret;
+    if (!this.CanContract(ts))
+      return ret;
     ret.lengthMajorBeats /= 2;
     ret.notes = ret.notes.filter(n => n.patternMajorBeat < ret.lengthMajorBeats - 0.01); // crop
     return ret;
   }
-  
+
   GetShiftedPatternVert(ts, n, legend) {
     const ret = new SequencerPattern(JSON.parse(JSON.stringify(this)));
 
@@ -283,7 +296,7 @@ class SequencerPattern {
 
     ret.notes.forEach(note => {
       // figure out which legend index
-      let index = legend.findIndex(l => l.midiNoteValue === note.midiNoteValue);//legend.findIndex(div => div.IncludesPatternMajorBeat(note.patternMajorBeat));
+      let index = legend.findIndex(l => l.midiNoteValue === note.midiNoteValue); //legend.findIndex(div => div.IncludesPatternMajorBeat(note.patternMajorBeat));
       if (index === -1) {
         // not in legend; drop it.
         note.midiNoteValue = 0;
@@ -291,8 +304,10 @@ class SequencerPattern {
       }
 
       index += n;
-      if (index < 0) index = legend.length - 1;
-      if (index >= legend.length) index = 0;
+      if (index < 0)
+        index = legend.length - 1;
+      if (index >= legend.length)
+        index = 0;
       note.midiNoteValue = legend[index].midiNoteValue;
     });
 
@@ -309,8 +324,10 @@ class SequencerPattern {
       let divIndex = patternView.divs.findIndex(div => div.IncludesPatternMajorBeat(note.patternMajorBeat));
       console.assert(divIndex !== -1);
       divIndex += n;
-      if (divIndex < 0) divIndex = patternView.divs.length - 1;
-      if (divIndex >= patternView.divs.length) divIndex = 0;
+      if (divIndex < 0)
+        divIndex = patternView.divs.length - 1;
+      if (divIndex >= patternView.divs.length)
+        divIndex = 0;
       // convert back to major beat.
       note.patternMajorBeat = patternView.divs[divIndex].beginPatternMajorBeat;
     });
@@ -334,47 +351,78 @@ isMeasureBoundary:true
 isMinorBeatBoundary:true
 measureDivIndex:0
 minorBeatDivIndex:0
-noteMap:{}
 patternDivIndex:0
 patternMeasure:0
 */
 class SeqDivInfo {
   constructor(params) {
     Object.assign(this, params);
-    this.noteMap = {}; // convenience for pattern view.
+    this.rows = {}; // convenience for pattern view.
+  }
+  get lengthMajorBeats() {
+    return this.endPatternMajorBeat - this.beginPatternMajorBeat;
+  }
+  getLengthQuarters(patternLengthQuarters) {
+    let ret = this.endPatternFrac - this.beginPatternFrac;
+    return ret * patternLengthQuarters;
   }
   IncludesPatternMajorBeat(b) {
     return (b >= this.beginPatternMajorBeat) && (b < this.endPatternMajorBeat);
   }
-  IncludesPatternMajorBeatRange(begin, end) {
-    if (end <= this.beginPatternMajorBeat)
-      return false;
-    if (begin >= this.endPatternMajorBeat)
-      return false;
-    return true;
-  }
+  // IncludesPatternMajorBeatRange(begin, end) {
+  //   if (end <= this.beginPatternMajorBeat)
+  //     return false;
+  //   if (begin >= this.endPatternMajorBeat)
+  //     return false;
+  //   return true;
+  // }
   IncludesPatternFrac(playheadPatternFrac) {
     return (playheadPatternFrac >= this.beginPatternFrac) && (playheadPatternFrac < this.endPatternFrac);
   }
 
-  // for pattern view div info
-  GetNoteCount() {
-    return Object.values(this.noteMap).reduce((a, b) => a + ((b.underlyingNotes?.length) ?? 0), 0);
-  }
-  GetSomeUnderlyingNoteIDsExcept(idsToExclude, count) {
-    if (count < 1) return [];
-    // create list of underlying notes, sorted by date created
-    let un = [];
-    Object.values(this.noteMap).forEach(pvn => {
-      const matchingUNs = pvn.underlyingNotes.filter(un => !idsToExclude.some(ex => ex === un.id));
-      un = un.concat(matchingUNs);
-    });
+  // // for pattern view div info
+  // GetNoteCount() {
+  //   return Object.values(this.noteMap).reduce((a, b) => a + ((b.underlyingNotes?.length) ?? 0), 0);
+  // }
+  // GetSomeUnderlyingNoteIDsExcept(idsToExclude, count) {
+  //   if (count < 1)
+  //     return [];
+  //   // create list of underlying notes, sorted by date created
+  //   let un = [];
+  //   Object.values(this.noteMap).forEach(pvn => {
+  //     const matchingUNs = pvn.underlyingNotes.filter(un => !idsToExclude.some(ex => ex === un.id));
+  //     un = un.concat(matchingUNs);
+  //   });
 
-    un.sort((a,b) => a.timestamp < b.timestamp ? -1 : 1);
+  //   un.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1);
 
-    const y = un.slice(0, count);
-    const ret = y.map(x => x.id);
-    return ret;
+  //   const y = un.slice(0, count);
+  //   const ret = y.map(x => x.id);
+  //   return ret;
+  // }
+
+  // there are 5 cases
+  //           |-----div-----|
+  // |note|                             <- 0%
+  //        |note|                      <- partial, contains note off
+  //               |note|               <- 100%,    contains note on + note off
+  //                      |note|        <- partial, contains note on
+  //                             |note| <- 0%
+  // clamping note bounds div bounds, then just div by length accounts for all cases.
+  //           |-----div-----|
+  //           |               <- 0%
+  //           |e|             <- partial
+  //               |note|      <- 100%
+  //                      |no| <- partial
+  //                         | <- 0%
+  // NB NB NB : does NOT account for wrapping/looping behavior. if the window goes off the pattern, it's ignored,
+  // as if the pattern does not loop.
+  calcCoverageOfWindow(begin, end) {
+    console.assert(this.lengthMajorBeats > 0);
+    let clampedBegin = DFUtil.baseClamp(begin, this.beginPatternMajorBeat, this.endPatternMajorBeat);
+    let clampedEnd = DFUtil.baseClamp(end, this.beginPatternMajorBeat, this.endPatternMajorBeat);
+    console.assert(clampedEnd >= clampedBegin);
+    return (clampedEnd - clampedBegin) / this.lengthMajorBeats;
   }
 }
 
@@ -424,7 +472,8 @@ class SequencerPatch {
   }
 
   GetCachedView() {
-    if (this.#cachedViewDirty) return null;
+    if (this.#cachedViewDirty)
+      return null;
     return this.#cachedView; // may still return null.
   }
   SetCachedView(v) {
@@ -555,7 +604,8 @@ class SequencerPatch {
   }
 
   SetTranspose(transpose) {
-    if (!IsValidSequencerTranspose(transpose)) return false;
+    if (!IsValidSequencerTranspose(transpose))
+      return false;
     this.#cachedViewDirty = true;
     this.transpose = parseInt(transpose);
     return true;
@@ -688,8 +738,8 @@ class SequencerPatch {
   GetMetadata() {
     return {
       title: this.presetName,
-      description: this.presetDescription,
-      tags: this.presetTags,
+          description: this.presetDescription,
+          tags: this.presetTags,
     }
   }
 }
@@ -701,7 +751,7 @@ class SequencerDevice {
     if (params)
       Object.assign(this, params);
 
-    this.isPlaying ??= false; // false while cueued
+    this.isPlaying ??= false;          // false while cueued
     this.startFromAbsQuarter ??= null; // if set, then we are cueued to begin playing at this abs room beat.
 
     // shifts playback
@@ -735,15 +785,16 @@ class SequencerDevice {
     this.baseAbsQuarter = this.startFromAbsQuarter - (this.livePatch.timeSig.quartersPerMeasure * 2); // guaranteed always in the past.
 
     return {
-      startFromAbsQuarter: this.startFromAbsQuarter,
-      baseAbsQuarter: this.baseAbsQuarter,
+      startFromAbsQuarter : this.startFromAbsQuarter,
+      baseAbsQuarter : this.baseAbsQuarter,
     };
   }
 
   CancelCue() {
-    if (!this.IsCueued()) return true;
+    if (!this.IsCueued())
+      return true;
     this.isPlaying = this.wasPlayingBeforeCue;
-    this.startFromAbsQuarter = null; // cancel cue
+    this.startFromAbsQuarter = null;                    // cancel cue
     this.baseAbsQuarter = this.baseAbsQuarterBeforeCue; // cancel your new offset
     return true;
   }
@@ -759,7 +810,8 @@ class SequencerDevice {
   }
 
   SetPlaying(b) {
-    if (this.isPlaying === !!b) return;
+    if (this.isPlaying === !!b)
+      return;
     if (!b) {
       // stop.
       this.isPlaying = false;
@@ -788,14 +840,13 @@ class SequencerDevice {
     const absPatternFloat = absQuarter / patternLengthQuarters;
     const patternFrac = Math.abs(DFUtil.getDecimalPart(absPatternFloat));
     return {
-      shiftedAbsQuarter: absQuarter, // so callers can now compare an abs playhead with the returned info
+      shiftedAbsQuarter : absQuarter, // so callers can now compare an abs playhead with the returned info
       absPatternFloat,
       patternLengthQuarters,
       patternFrac,
       patternQuarter : patternFrac * patternLengthQuarters,
     };
   }
-
 
   InitPatch(presetID) {
     this.CancelCue();
@@ -822,8 +873,8 @@ class SequencerDevice {
 
   GetPatchOpsForPastePattern(pattern) {
     return {
-      op: "pastePattern",
-      pattern: JSON.parse(JSON.stringify(pattern)),
+      op : "pastePattern",
+      pattern : JSON.parse(JSON.stringify(pattern)),
     };
   }
 
@@ -850,132 +901,133 @@ class SequencerDevice {
   // client-side; handles incoming server msgs
   SeqPresetOp(data, bank) {
     switch (data.op) {
-      case "load":
-        {
-          let preset = bank.GetPresetById(data.presetID);
-          if (!preset) {
-            console.log(`unknown seq preset ID ${presetID}`);
-            return false;
-          }
-          this.LoadPatch(preset);
-          return true;
-        }
-      case "save":
-        {
-          // save the live patch to a presetID specified.
-          this.livePatch.presetID = data.presetID; // when you save as, link live patch to the new one
-          return bank.Save(data.presetID, data.author, data.savedDate, this.livePatch);
-        }
-      case "delete":
-        {
-          return bank.DeletePresetById(data.presetID);
-        }
-      case "pastePattern":
-        {
-          this.LoadPattern(data.pattern);
-          return true;
-        }
-      case "pastePatch":
-        {
-          this.LoadPatch(data.patch);
-          return true;
-        }
-      case "pasteBank":
-        {
-          bank.ReplaceBank(data.bank);
-          return true;
-        }
-      case "SeqSetTranspose":
-        {
-          this.livePatch.SetTranspose(data.transpose);
-          return true;
-        }
-      case "cue":
-        {
-          return this.SetCueInfo(data);
-        }
-      case "cancelCue":
-        return this.CancelCue();
+    case "load": {
+      let preset = bank.GetPresetById(data.presetID);
+      if (!preset) {
+        console.log(`unknown seq preset ID ${presetID}`);
+        return false;
+      }
+      this.LoadPatch(preset);
+      return true;
+    }
+    case "save": {
+      // save the live patch to a presetID specified.
+      this.livePatch.presetID = data.presetID; // when you save as, link live patch to the new one
+      return bank.Save(data.presetID, data.author, data.savedDate, this.livePatch);
+    }
+    case "delete": {
+      return bank.DeletePresetById(data.presetID);
+    }
+    case "pastePattern": {
+      this.LoadPattern(data.pattern);
+      return true;
+    }
+    case "pastePatch": {
+      this.LoadPatch(data.patch);
+      return true;
+    }
+    case "pasteBank": {
+      bank.ReplaceBank(data.bank);
+      return true;
+    }
+    case "SeqSetTranspose": {
+      this.livePatch.SetTranspose(data.transpose);
+      return true;
+    }
+    case "cue": {
+      return this.SetCueInfo(data);
+    }
+    case "cancelCue":
+      return this.CancelCue();
     }
     return false;
   }
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-beginNoteContinue:false
-beginNoteOn:true
-cssClass:' vel0 genvel0'
-endNoteContinue:false
-endNoteOff:true
-hasNote:true
-midiNoteValue:69
-underlyingNotes:(1) [SequencerNote]
-velocity:100
-velocityIndex:0
-noteID
-*/
-class PatternViewNote {
-  constructor(midiNoteValue, patch) {
+// represents a link to a PatternNote. begin & end get
+class UnderlyingNote {
+  constructor(patternNote, patternLengthMajorBeats) {
+    console.assert(!!patternLengthMajorBeats);
+    this.patternNote = patternNote;
+    this.midiNoteValue = patternNote.midiNoteValue;
+    // ensure all note lengths are < pattern length to guarantee no overlapping / looping weirdness.
+    // expected when the user temporarily makes their loop very short, then back long again for example.
+    this.begin = patternNote.patternMajorBeat;
+    this.length = Math.min(patternNote.lengthMajorBeats, patternLengthMajorBeats);
+    this.end = this.begin + this.length;
+  }
+}
+
+const eBorderType = {
+  NoteOn : "NoteOn",
+  NoteOff : "NoteOff",
+  Continue : "Continue",
+  Empty : "Empty",
+};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// used:
+// - by the GUI to render the sequencer grid
+// - by the GUI to enable user interaction (regarding clicking velocity, note length etc)
+// - by the sequencerplayer to schedule notes. if this is a note on, it will also contain its calculated note length in major beats.
+class PatternViewCellInfo {
+
+  // "thisNote" is the note which exists in underlyingNotes which is considered currently playing. can be null.
+  // "previousNote" is the note which was considered playing before this one, to allow callers to extend its length
+  constructor(patch, legend, midiNoteValue, underlyingNotes, div, thisNote, previousNote, previousNoteLenQuarters, previousNoteLenMajorBeats, beginBorderType, endBorderType, noteOnNotes) {
     this.midiNoteValue = midiNoteValue;
-
-    this.hasNote = false;
-    this.beginNoteOn = false;       // beginning of cell = note on
-    this.beginNoteContinue = false; // beginning of cell = continuation
-    this.endNoteOff = false;        // end of cell = note off
-    this.endNoteContinue = false;
-    this.id = "pvn_";
+    this.legend = legend;
+    this.underlyingNotes = underlyingNotes; // list of the UnderlyingNotes in this cell.
+    this.div = div;
+    this.beginBorderType = beginBorderType;
+    this.endBorderType = endBorderType;
+    this.thisNote = thisNote;
+    this.thisLengthQuarters = -2;   // not set yet. this is only valid for NOTE ON cells, and is a convenience for the seq player to know the duration of this note.
+    this.thisLengthMajorBeats = -2; // not set yet.
     this.isMuted = patch.IsNoteMuted(midiNoteValue);
+    this.noteOnNotes = noteOnNotes; // a list of UnderlyingNote which are note ons in this cell.
+    this.noteOnCell = null; // link to the cell which represents the note on of this continued note.
 
-    // time & length are assumed to be beginning & end of this cell.
+    this.previousNote = previousNote;                       // major beats
+    this.previousNoteLenQuarters = previousNoteLenQuarters; // if the user were to set prev note to this length, how long would it then be?
+    this.previousNoteLenMajorBeats = previousNoteLenMajorBeats;
 
-    this.underlyingNotes = [];
+    this.#updateThisNoteProperties();
+
+    // just to optimize; this is only necessary for note ons.
+    if (beginBorderType === eBorderType.NoteOn) {
+      this.noteOnCell = this;
+      this.id = "pvci_" + this.underlyingNotes.reduce((rv, un) => rv + un.patternNote.id, "");
+    }
   }
 
-  // note is of SequencerNote
-  Integrate(div, note, legend) {
-    this.hasNote = true;
+  #updateThisNoteProperties() {
+    this.velocityIndex = this.thisNote?.patternNote?.velocityIndex ?? 0;
+    const l = this.legend.find(l => l.midiNoteValue === this.midiNoteValue)?.velocitySet[this.velocityIndex];
+    this.velocity = l?.vel ?? 89;
+    this.cssClass = l?.cssClass ?? "";
+  }
 
-    // TODO: this can be much more sophisticated
+  // call to specify that this cell is actually a note off.
+  MarkNoteOff(noteOnCell, lenQuarters, lenMajorBeats) {
+    console.assert(this.beginBorderType !== eBorderType.Empty); // you can't note-off something that's not playing.
+    noteOnCell.thisLengthQuarters = lenQuarters;
+    noteOnCell.thisLengthMajorBeats = lenMajorBeats;
+    this.thisLengthQuarters = lenQuarters;
+    this.thisLengthMajorBeats = lenMajorBeats;
+    this.endBorderType = eBorderType.NoteOff;
+  }
 
-    // the ID is important, because it's how the scheduler knows whether a note should get noteoff or not.
-    // when the timer hits,
-    // 1. pattern data is cleared
-    // 2. any notes which were still playing will either:
-    //    a. get their noteoff rescheduled if they still exist on the patternview
-    //    b. or, get noteoff immediately if it's been deleted (not found in the current patternview)
-    //
-    // if we use uniqueIDs, it means there's no way to know if a note existing previously. all notes playing at the time
-    // of the timerproc will be killed because we assume they've been deleted.
-    //
-    // that could be mitigated by caching patternviews, but i don't like the complexity of forming that relationship.
-    //
-    // we could use the ID of just 1 note too, but there are scenarios ( think user changing speeds or timesigs) where
-    // notes will get shuffled into other bins and basically, the most "safe" is to hash all underlying notes.
-    // well the MOST safe would be to hash underlying notes AND pattern config like speed and divs bpm, etc, anything that could
-    // potentially change arrangement. but that will be handled in other more musical ways in the server sequencerplayer.
-
-    this.id += note.id; // in order to know if this is a new note, the ID must be a hash of all underlying notes
-    this.beginNoteOn = true;
-    this.endNoteOff = true;
-    this.velocityIndex = note.velocityIndex;
-    this.underlyingNotes.push(note);
-    this.cssClass = "";
-    const legendNote = legend.find(n => n.midiNoteValue === note.midiNoteValue);
-    if (legendNote && legendNote.cssClass) {
-      this.cssClass = legendNote.cssClass;
-    }
-
-    this.velocity = 90;
-    this.cssClass = " ";
-    if (legendNote) {
-      const velocityEntry = legendNote?.velocitySet.at(note.velocityIndex);
-      this.velocity = velocityEntry?.vel ?? 90;
-      this.cssClass += ` vel${note.velocityIndex}`;
-      if (velocityEntry?.cssClass)
-        this.cssClass += " " + velocityEntry.cssClass;
-    }
-
+  // used to set current & prev notes after we've populated stuff here. resolving ambiguity after looping to the beginning of the pattern.
+  SetCurrentAndPrevNotes(currentNote, prevNote, previousNoteLenQuarters, previousNoteLenMajorBeats) {
+    // these are previously set to empty because we didn't know if there would be a continuation or not.
+    this.endBorderType = this.beginBorderType = currentNote ? eBorderType.Continue : eBorderType.Empty;
+    this.thisNote = currentNote;
+    this.previousNote = prevNote;
+    this.previousNoteLenQuarters = previousNoteLenQuarters;
+    this.previousNoteLenMajorBeats = previousNoteLenMajorBeats;
+    this.#updateThisNoteProperties();
   }
 }
 
@@ -983,159 +1035,445 @@ class PatternViewNote {
 // the sequencer pattern data holds all the data. it can have notes beyond the visible pattern bounds
 // for example, or very precise note timings. so shorter lengths, and coarse division means notes should be "quantized" together
 // selectively.
-// let's create a pattern view which reflects current playback settings and optimizes for display
+// let's create a pattern VIEW which reflects current playback settings and optimizes for display and sequencer playback
 class SequencerPatternView {
-  // map divs to note array
+
+  // so we have to do a LOT of processing, to get a lot of different information.
+  // and at the same time we should try to be optimal.
   constructor(patch, legend) {
-    const start = Date.now();
+    //const start = Date.now();
+    //let nodesVisited = 0;
+
+    this.legend = legend;
+    this.divs = patch.GetPatternDivisionInfo(); // COLUMNS. each column holds a noteIndexMap, with a list of indices to this.notes.
 
     const pattern = patch.GetSelectedPattern();
-    this.divs = patch.GetPatternDivisionInfo(); // get COLUMN info.
+    this.pattern = pattern;
+    const patternLen = this.GetLengthMajorBeats();
+    const patternLenQuarters = patch.GetPatternLengthQuarters();
 
-    // place each pattern note in the correct div-note cell
-    pattern.notes.forEach(note => {
-      this.#bringNoteIntoView(patch, note, legend);
+    const t = pattern.notes
+                  .filter(n => n.patternMajorBeat < patternLen) // filter out notes which are not in view.
+                  .map(n => new UnderlyingNote(n, patternLen)); // this will correct note lengths to fit in the pattern
+    const underlyingNotesByMidiVal = DFUtil.groupBy(t, un => un.midiNoteValue);
+
+    // for each row,
+    Object.entries(underlyingNotesByMidiVal).forEach(e => {
+      const midiNoteValue = e[0] | 0;
+      const underlyingNotes = e[1];
+
+      // for each underlying note, calculate snapped divs representing note ons & note offs.
+      underlyingNotes.forEach(un => {
+        // populate un.divs with divs which THEORETICALLY represent this note. they will get chopped off later.
+        // NB: the first entry of un.divs is where we determine its NOTE ON is.
+        // and the last = note off.
+        un.divs = [];
+        let i = 0;
+
+        // find best div of note ON. find the div which contains this note, and
+        // choose whether to use the begin or end of the div as its note on.
+        for (; i < this.divs.length; ++i) {
+          //nodesVisited ++;
+          const div = this.divs[i];
+          // calc position of un.begin within the div 0-1.
+          // ------|---------|------
+          //       0         1
+          const pos = ((un.begin + 0.01) - div.beginPatternMajorBeat) / div.lengthMajorBeats; // add tiny bias to ensure it lands securely in the safer (right) div.
+          if (pos < 0 || pos > 1)
+            continue;
+          if (pos < 0.5) {
+            break; // use this div begin.
+          } else {
+            i++; // use div end (i.e. the next div)
+            break;
+          }
+        }
+
+        if (i >= this.divs.length) {
+          // notes can still be out of view but not get filtered by above, if they
+          // begin within view, but get "snapped" out of view. if so, ignore them.
+          return;
+        }
+
+        let noteOnIndex = i;
+        un.divs.push(this.divs[i]);
+
+        i++;
+
+        // now walk divs and find the note off.
+        for (; i < this.divs.length; ++i) {
+          //nodesVisited ++;
+          const div = this.divs[i];
+          // calc portion of div covered by un.
+          let cov = div.calcCoverageOfWindow(un.begin, un.end);
+          if (cov < 0.5) {
+            break; // note off
+          }
+          un.divs.push(div);
+        }
+
+        // if we did not find a note off yet, check if the note loops around the pattern.
+        if (i === this.divs.length) {
+          for (i = 0; i < noteOnIndex; ++i) {
+            //nodesVisited ++;
+            const div = this.divs[i];
+            // calc portion of div covered by un.
+            let cov = div.calcCoverageOfWindow(0, un.end - patternLen);
+            if (cov < 0.5) {
+              break; // note off
+            }
+            un.divs.push(div);
+          }
+        }
+      }); // for each underlying note, calc div coverage
+
+      // now we have a list of snapped underlying notes and the divs they cover.
+      // we need to now walk through and group notes together so cells are represented by 1 note,
+      // and calculate note ons / note offs to interrupt long notes which get interrupted.
+      let currentNote = null;
+      let currentNoteOnCell = null;
+      let previousNote = null;      // for empty divs, keep track of the last playing note, so the user has the option to extend the length of that note.
+      let noteLengthQuarters = 0;   // keep track of how long we've held the previous note, in QUARTERS, so if the user were to extend that length, how long would it be?
+      let noteLengthMajorBeats = 0; // same in major beats. some things need this instead.
+      let firstNoteOnIndex = null;
+      for (let idiv = 0; idiv < this.divs.length; ++idiv) {
+        const div = this.divs[idiv];
+        const uns = [];
+        let currentNoteAppearsAs = null;
+        let noteOns = [];
+        underlyingNotes.forEach(un => {
+          if (!un.divs.some(d => {
+                //            nodesVisited ++;
+                return d.patternDivIndex === div.patternDivIndex;
+              })) {
+            return;
+          }
+          uns.push(un);                                             // found a note which appears.
+          if (un.divs[0].patternDivIndex === div.patternDivIndex) { // is it a note-on?
+            noteOns.push(un);
+          }
+          if (un.patternNote.id === currentNote?.patternNote?.id) {
+            currentNoteAppearsAs = un;
+          }
+        });
+
+        const anyNotesAppear = !!uns.length;
+        const anyNoteOns = !!noteOns.length;
+        const hasCurrentNote = !!currentNote;
+        const currentNoteAppears = !!currentNoteAppearsAs;
+
+        const noteOffCurrentNote = () => {
+          console.assert(idiv > 0);
+          this.divs[idiv - 1].rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthQuarters, noteLengthMajorBeats);
+        };
+        const createCell = (leftborder, rightborder) => {
+          noteLengthQuarters += div.getLengthQuarters(patternLenQuarters);
+          noteLengthMajorBeats += div.lengthMajorBeats;
+          return div.rows[midiNoteValue] = new PatternViewCellInfo(patch, legend, midiNoteValue, uns, div,
+                                                                   currentNote, previousNote, noteLengthQuarters, noteLengthMajorBeats,
+                                                                   leftborder, rightborder, noteOns, currentNoteOnCell);
+        }
+
+        if (!anyNotesAppear) { // assume anyNoteOns = false & currentNoteAppears = false
+          if (hasCurrentNote) {
+            //       noteoff |---<empty>---|
+            noteOffCurrentNote();
+            previousNote = currentNote;
+            currentNote = null;
+          }
+          createCell(eBorderType.Empty, eBorderType.Empty);
+        }
+        else {              // some notes appear
+          if (anyNoteOns) { // can ignore currentNoteAppears from here
+            // select the best note on. it's important to actually select this deterministically because
+            // the client & server both make this decision indepedently.
+            // so select the one with the higher velocity, or the one with longer length.
+            const noteOn = noteOns.sort((a, b) => {
+              //nodesVisited ++;
+              if (a.velocityIndex < b.velocityIndex)
+                return 1;
+              if (a.velocityIndex > b.velocityIndex)
+                return -1;
+              return (a.lengthMajorBeats < b.lengthMajorBeats) ? 1 : -1;
+            })[0];
+
+            if (hasCurrentNote) {
+              //  ...noteoff | noteon .... |
+              noteOffCurrentNote();
+            }
+            previousNote = null; // don't need to keep prevnote info. there's no point tracking prevnote info there
+            noteLengthQuarters = 0;
+            noteLengthMajorBeats = 0;
+            currentNote = noteOn;
+            firstNoteOnIndex ??= idiv;
+            currentNoteOnCell = createCell(eBorderType.NoteOn, eBorderType.Continue);
+          } else { // notes appear but no note-ons
+            if (hasCurrentNote) {
+              if (currentNoteAppears) {
+                // normal note continuation.
+                //  ...continue|continue......|
+                createCell(eBorderType.Continue, eBorderType.Continue);
+              } else {
+                // notes appear but no note-ons. we have a current note but it doesn't appear.
+                // since we have a current note, ignore those notes
+                //  ...note off|<empty>......|
+                noteOffCurrentNote();
+                previousNote = currentNote;
+                currentNote = null;
+                createCell(eBorderType.Empty, eBorderType.Empty);
+              }
+            } else {
+              // don't have a current note, but notes exist, but no note-ons... it can be either
+              // notes warpped to beginning of pattern, or notes which last longer than having been interrupted.
+              // but then we're not sure which note is actually continuing. we'll have to handle this case after we have scanned the row.
+              // so for now just mark which notes exist there and leave it. we will have to set current & prev notes in a next pass.
+              createCell(eBorderType.Empty, eBorderType.Empty);
+            }
+          } // no note-ons in this div
+        }   // do notes appear in this div
+      };    // for each column
+
+      // now scan from beginning of row to the first noteon, setting current/prev note, and noteoffs for looped note.
+      for (let idiv = 0; idiv < firstNoteOnIndex; ++idiv) {
+        //nodesVisited ++;
+        const hasCurrentNote = !!currentNote;
+        const hasPrevNote = !!previousNote;
+        if (!hasCurrentNote && !hasPrevNote)
+          break;
+        const div = this.divs[idiv];
+        const cell = div.rows[midiNoteValue];
+        console.assert(!!cell);
+
+        const currentNoteAppearsAs = hasCurrentNote && cell.underlyingNotes.find(un => {
+                                                                   //nodesVisited ++;
+                                                                   return un.patternNote.id === currentNote.patternNote.id});
+        const currentNoteAppears = !!currentNoteAppearsAs;
+
+        if (hasCurrentNote) {
+          if (!currentNoteAppears) {
+            // current note doesn't appear. send noteoff to prev cell (may be the end of the pattern!).
+            // and rotate out current note
+            // ---current--|<empty>
+            this.divs.at(idiv - 1).rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthQuarters, noteLengthMajorBeats);
+            previousNote = currentNoteAppearsAs;
+            currentNote = null;
+          }
+        } // else { // we don't have a current note.
+        noteLengthQuarters += div.getLengthQuarters(patternLenQuarters);
+        noteLengthMajorBeats += div.lengthMajorBeats;
+        cell.SetCurrentAndPrevNotes(currentNote, previousNote, noteLengthQuarters, noteLengthMajorBeats);
+      }; // for each column
+
+      // finally, if the current note still doesn't hvae a noteoff, it lasts exactly the entire pattern.
+      // give it its noteoff.
+      if (!!currentNote) {
+        this.divs.at(firstNoteOnIndex - 1).rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthQuarters, noteLengthMajorBeats);
+      }
+    }); // for each row.
+
+    // remove the underlyingnotes.divs, because it's misleading.
+
+    //const duration = (Date.now() - start);
+    //console.log(`generating pattern view took ${duration} ms`);
+    //console.log(`  nodesVisited = ${nodesVisited}`);
+  }
+
+  dump() {
+    let line = "    ";
+    this.divs.forEach(div => {
+      line += (div.patternDivIndex + "--------").substring(0, 7) + " ";
     });
 
-    const duration = (Date.now() - start);
-    //console.log(`generating pattern view took ${duration} ms`);
+    const borderToString = (b) => {
+      if (b === eBorderType.Empty)
+        return " ";
+      if (b === eBorderType.NoteOn)
+        return "[";
+      if (b === eBorderType.NoteOff)
+        return "]";
+      if (b === eBorderType.Continue)
+        return ">";
+      return "??";
+    };
+
+    console.log(line);
+    this.legend.forEach(ln => {
+      line = (ln.midiNoteValue + "   ").substring(0, 3) + " ";
+      this.divs.forEach(div => {
+        const m = div.rows[ln.midiNoteValue];
+        if (!m) {
+          line += "        ";
+          return;
+        }
+
+        let id = (m.thisNote?.patternNote?.id) ?? (m.previousNote?.patternNote?.id) ?? "  ";
+
+        let len = m.previousNoteLenMajorBeats;
+        if (m.beginBorderType === eBorderType.NoteOn)
+          len = m.thisLengthMajorBeats;
+
+        let pl = ("    " + len.toString()).slice(-3);
+        line += borderToString(m.beginBorderType) + id + pl + borderToString(m.endBorderType) + " ";
+      });
+      console.log(line);
+    });
   }
 
-  HasViewNoteID(id) {
-    return this.divs.some(div => Object.entries(div.noteMap).some(e => e[1].id === id));
+  HasViewCellID(id) {
+    return this.divs.some(div => Object.entries(div.rows).some(e => e[1].id === id));
   }
 
-  // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
-  GetPatternOpsForCellCycle(divInfo, note, velIndexDelta) {
-    const patternViewNote = divInfo.noteMap[note.midiNoteValue];
-    let newNoteCount = divInfo.GetNoteCount();
-    let idsDeleted = [];
-    if (patternViewNote?.hasNote) {
-      // remove note & add new with cycled vel
-      const ret = [];
-      // we don't modify notes, we remove & add them. it's simpler this way, and resolves some ambiguities regarding underlying note data.
-      newNoteCount--;
-      patternViewNote.underlyingNotes.forEach(n => {
-        idsDeleted.push(n.id);
-        ret.push({
-          type : eSeqPatternOp.DeleteNote,
-          id : n.id,
-        });
-      });
+  GetLengthMajorBeats() {
+    return this.divs.at(-1).endPatternMajorBeat;
+  }
 
-      const newVelIndex = patternViewNote.velocityIndex + velIndexDelta;
-      if (newVelIndex < note.velocitySet.length) { // if there are velocity indices left to cycle through, add it. otherwise just remove.
-        newNoteCount++;
-        ret.push({
-          type : eSeqPatternOp.AddNote,
-          midiNoteValue : note.midiNoteValue,
-          velocityIndex : newVelIndex,
-          patternMajorBeat : divInfo.beginPatternMajorBeat,
-          lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-        });
-      }
-
-      const overflowIDs = divInfo.GetSomeUnderlyingNoteIDsExcept(idsDeleted, newNoteCount - SequencerSettings.MaxNotesPerColumn);
-      overflowIDs.forEach(noteID => {
-        ret.push({
-          type : eSeqPatternOp.DeleteNote,
-          id : noteID,
-        });
-      });
-
-      return ret;
-    }
-
-    // add note.
-    const ret = [ {
-      type : eSeqPatternOp.AddNote,
-      midiNoteValue : note.midiNoteValue,
-      velocityIndex : DFUtil.modulo(velIndexDelta - 1, note.velocitySet.length),
-      patternMajorBeat : divInfo.beginPatternMajorBeat,
-      lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-    } ];
-    newNoteCount++;
-
-    const overflowIDs = divInfo.GetSomeUnderlyingNoteIDsExcept(idsDeleted, newNoteCount - SequencerSettings.MaxNotesPerColumn);
-    overflowIDs.forEach(noteID => {
+  GetPatternOpsForCellRemove(divInfo, note) {
+    const patternViewCell = divInfo.rows[note.midiNoteValue];
+    if (!patternViewCell.thisNote)
+      return null;
+    // we know this cell has a note.
+    const ret = [];
+    patternViewCell.noteOnCell.noteOnNotes.forEach(un => {
       ret.push({
         type : eSeqPatternOp.DeleteNote,
-        id : noteID,
+        id : un.patternNote.id,
       });
     });
-
     return ret;
   }
 
   // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
   GetPatternOpsForCellToggle(divInfo, note, velIndex) {
-    const patternViewNote = divInfo.noteMap[note.midiNoteValue];
-    let newNoteCount = divInfo.GetNoteCount();
-    let idsDeleted = [];
-    if (patternViewNote?.hasNote) {
-      // remove note & add new with cycled vel
-      const ret = [];
-      patternViewNote.underlyingNotes.forEach(n => {
-        idsDeleted.push(n.id);
-        ret.push({
-          type : eSeqPatternOp.DeleteNote,
-          id : n.id,
-        });
-      });
-      return ret;
-    }
-
-    // add note.
-    const ret = [ {
+    const patternViewCell = divInfo.rows[note.midiNoteValue];
+    const addSpec = {
       type : eSeqPatternOp.AddNote,
       midiNoteValue : note.midiNoteValue,
       velocityIndex : DFUtil.modulo(velIndex, note.velocitySet.length),
       patternMajorBeat : divInfo.beginPatternMajorBeat,
       lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-    } ];
-    newNoteCount++;
-
-    const overflowIDs = divInfo.GetSomeUnderlyingNoteIDsExcept(idsDeleted, newNoteCount - SequencerSettings.MaxNotesPerColumn);
-    overflowIDs.forEach(noteID => {
-      ret.push({
-        type : eSeqPatternOp.DeleteNote,
-        id : noteID,
-      });
-    });
-
+    };
+    if (!patternViewCell.thisNote) {
+      // this cell has no "note on" or "continue" note. so only add.
+      return [ addSpec ];
+    }
+    // we know this cell has a note.
+    const ret = this.GetPatternOpsForCellRemove(divInfo, note);
+    if (patternViewCell.velocityIndex === velIndex) { // is correct; just delete.
+      console.log(`delete vel ${velIndex}`);
+      return ret;
+    }
+    console.log(`delete + add vel ${velIndex} because old vel ${patternViewCell.velocityIndex} doesn't match desired val ${velIndex}`);
+    ret.push(addSpec);
     return ret;
   }
 
-  GetPatternOpsForCellRemove(divInfo, note) {
-    const patternViewNote = divInfo.noteMap[note.midiNoteValue];
-    if (patternViewNote?.hasNote) {
-      // remove note & add new with cycled vel
-      const ret = [];
-      // we don't modify notes, we remove & add them. it's simpler this way, and resolves some ambiguities regarding underlying note data.
-      patternViewNote.underlyingNotes.forEach(n => {
-        ret.push({
-          type : eSeqPatternOp.DeleteNote,
-          id : n.id,
-        });
+  // // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
+  GetPatternOpsForCellCycle(divInfo, note) {
+    const patternViewCell = divInfo.rows[note.midiNoteValue];
+    const velSetLen = note.velocitySet.length;
+    if (patternViewCell?.beginBorderType === eBorderType.NoteOn) {
+      // this is a note on cell; delete notes that start here.
+      const ret = this.GetPatternOpsForCellRemove(divInfo, note);
+      if (patternViewCell.velocityIndex === (velSetLen - 1)) {
+        // just delete the note, it's disappearing
+        return ret;
+      }
+      // cycle vel & add it.
+      ret.push({
+        type : eSeqPatternOp.AddNote,
+        midiNoteValue : note.midiNoteValue,
+        velocityIndex : DFUtil.modulo(patternViewCell.velocityIndex - 1, velSetLen),
+        patternMajorBeat : divInfo.beginPatternMajorBeat,
+        lengthMajorBeats : patternViewCell.thisLengthMajorBeats,// .divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
       });
       return ret;
     }
-    return null;
+    // no note on. add a fresh new one. if it overlaps the other, no worries the pattern view will take care of that.
+    return [ {
+      type : eSeqPatternOp.AddNote,
+      midiNoteValue : note.midiNoteValue,
+      velocityIndex : 0,
+      patternMajorBeat : divInfo.beginPatternMajorBeat,
+      lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
+    } ];
   }
 
-  #bringNoteIntoView(patch, note, legend) {
-    let div = DFUtil.findNearest(this.divs, (div) => Math.abs(div.beginPatternMajorBeat - note.patternMajorBeat));
-    let viewNote = null;
-    if (note.midiNoteValue in div.noteMap) {
-      viewNote = div.noteMap[note.midiNoteValue];
-    } else {
-      viewNote = new PatternViewNote(note.midiNoteValue, patch);
-      div.noteMap[note.midiNoteValue] = viewNote;
-    }
-    viewNote.Integrate(div, note, legend);
+  GetPatternWithDurationsMultiplied(n) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this.pattern))); // create pattern copy
+    const patternLenMajorBeats = this.GetLengthMajorBeats();
+    ret.notes.forEach(note => {
+      // find the div containing this note.
+      const div = this.divs.find(div => {
+        const ul = div.rows[note.midiNoteValue];
+        if (!ul)
+          return false;
+        const ret = ul.noteOnCell.noteOnNotes.some(cell => cell.patternNote.id === note.id);
+        return ret;
+      });
+      if (!div)
+        return; // don't alter invisible notes because we can't reliably clamp lengths, so it's safer.
+      const smallestLength = div.lengthMajorBeats;
+      note.lengthMajorBeats = DFUtil.baseClamp(note.lengthMajorBeats * n, smallestLength, patternLenMajorBeats);
+    });
+    return ret;
+  }
+
+  // n is either -1 or 1. no other value works because i don't loop.
+  GetPatternWithDurationDivsAdded(n) {
+    const ret = new SequencerPattern(JSON.parse(JSON.stringify(this.pattern))); // create pattern copy
+    const patternLenMajorBeats = this.GetLengthMajorBeats();
+    ret.notes.forEach(note => {
+      // find the div containing this note.
+      let idiv = this.divs.findIndex(div => {
+        const ul = div.rows[note.midiNoteValue];
+        if (!ul)
+          return false;
+        const ret = ul.noteOnCell.noteOnNotes.some(cell => cell.patternNote.id === note.id);
+        return ret;
+      });
+      if (idiv === -1)
+        return; // don't alter invisible notes because we can't reliably clamp lengths, so it's safer.
+      const smallestLength = this.divs[idiv].lengthMajorBeats;
+
+      idiv = DFUtil.modulo(idiv + n, this.divs.length);
+      const div = this.divs[idiv];
+      const delta = Math.sign(n) * div.lengthMajorBeats;
+
+      note.lengthMajorBeats = DFUtil.baseClamp(note.lengthMajorBeats + delta, smallestLength, patternLenMajorBeats);
+    });
+    return ret;
+  }
+
+  GetPatternOpsForSetNoteLengthPrevious(cell) {
+    const ret = [ {
+                   type : eSeqPatternOp.DeleteNote,
+                   id : cell.previousNote.patternNote.id,
+                 },
+                  {
+                    type : eSeqPatternOp.AddNote,
+                    midiNoteValue : cell.midiNoteValue,
+                    velocityIndex : cell.previousNote.patternNote.velocityIndex,
+                    patternMajorBeat : cell.previousNote.patternNote.patternMajorBeat,
+                    lengthMajorBeats : cell.previousNoteLenMajorBeats,
+                  } ];
+    return ret;
+  }
+
+  GetPatternOpsForSetNoteLengthCurrent(cell) {
+    const ret = [ {
+                   type : eSeqPatternOp.DeleteNote,
+                   id : cell.thisNote.patternNote.id,
+                 },
+                  {
+                    type : eSeqPatternOp.AddNote,
+                    midiNoteValue : cell.midiNoteValue,
+                    velocityIndex : cell.thisNote.patternNote.velocityIndex,
+                    patternMajorBeat : cell.thisNote.patternNote.patternMajorBeat,
+                    lengthMajorBeats : cell.previousNoteLenMajorBeats,
+                  } ];
+    return ret;
   }
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // this is little more than an array of SequencerPatch objects
@@ -1151,8 +1489,10 @@ class SeqPresetBank {
     const n = new SequencerPatch(patchObj);
     patchObj.presetID = presetID;
     n.presetID = presetID;
-    if (author) n.presetAuthor = author; // client side doesn't need to set author/date info
-    if (savedDate) n.presetSavedDate = new Date(savedDate);
+    if (author)
+      n.presetAuthor = author; // client side doesn't need to set author/date info
+    if (savedDate)
+      n.presetSavedDate = new Date(savedDate);
     const existingIndex = this.presets.findIndex(p => p.presetID === presetID);
     if (existingIndex === -1) {
       this.presets.push(n);
@@ -1164,7 +1504,8 @@ class SeqPresetBank {
 
   GetPresetById(presetID) {
     const obj = this.presets.find(p => p.presetID === presetID);
-    if (!obj) return null;
+    if (!obj)
+      return null;
     return new SequencerPatch(obj);
   }
 
@@ -1188,7 +1529,8 @@ class SeqPresetBank {
 
 function GetPatternView(patch, noteLegend) {
   let ret = patch.GetCachedView();
-  if (ret) return ret;
+  if (ret)
+    return ret;
   ret = new SequencerPatternView(patch, noteLegend);
   patch.SetCachedView(ret);
   return ret;
@@ -1214,4 +1556,5 @@ module.exports = {
   ResolveSequencerConfig,
   SeqPresetBank,
   GetPatternView,
+  eBorderType,
 };

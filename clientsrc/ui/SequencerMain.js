@@ -413,15 +413,15 @@ class SequencerMain extends React.Component {
             let ops = null;
             if (window.DFModifierKeyTracker.ShiftKey) {
                 if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 1);
+                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 1); // CTRL+SHIFT = toggle vel1
                 } else {
-                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note);
+                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note); // SHIFT = delete
                 }
             } else {
                 if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0);
+                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0); // CTRL = toggle vel0
                 } else {
-                    ops = patternView.GetPatternOpsForCellCycle(divInfo, note, 1);
+                    ops = patternView.GetPatternOpsForCellCycle(divInfo, note); // none = cycle
                 }
             }
 
@@ -641,6 +641,60 @@ class SequencerMain extends React.Component {
             });
         }
 
+        onClickEditMultiplyDuration = (factor) => {
+            factor ??= 2;
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const noteLegend = seq.GetNoteLegend();
+            const patternViewData = Seq.GetPatternView(patch, noteLegend);
+            const newPattern = patternViewData.GetPatternWithDurationsMultiplied(factor);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        onClickEditAddDiv = (n) => {
+            n ??= 1;
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const noteLegend = seq.GetNoteLegend();
+            const patternViewData = Seq.GetPatternView(patch, noteLegend);
+            const newPattern = patternViewData.GetPatternWithDurationDivsAdded(n);
+            this.props.app.SeqPresetOp({
+                op: "pastePattern",
+                pattern: newPattern,
+            });
+        }
+
+        clickLengthHandlePrevious = (cell) => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const noteLegend = seq.GetNoteLegend();
+            const patternViewData = Seq.GetPatternView(patch, noteLegend);
+            const ops = patternViewData.GetPatternOpsForSetNoteLengthPrevious(cell);
+            if (!ops) return;
+            this.props.app.SeqPatternOps(ops);
+        }
+
+        clickLengthHandleCurrent = (cell) => {
+            const isReadOnly = this.props.observerMode;
+            if (isReadOnly) return;
+            const seq = this.props.instrument.sequencerDevice;
+            const patch = seq.livePatch;
+            const noteLegend = seq.GetNoteLegend();
+            const patternViewData = Seq.GetPatternView(patch, noteLegend);
+            const ops = patternViewData.GetPatternOpsForSetNoteLengthCurrent(cell);
+            if (!ops) return;
+            this.props.app.SeqPatternOps(ops);
+        }
+
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -744,17 +798,58 @@ class SequencerMain extends React.Component {
             let cssClass = note.cssClass ?? "";
             if (patch.IsNoteMuted(note.midiNoteValue))
                 cssClass += ' muted ';
-            
-            if ((note.midiNoteValue in divInfo.noteMap) && divInfo.noteMap[note.midiNoteValue].hasNote) {
-                cssClass += divInfo.noteMap[note.midiNoteValue].cssClass + " note";
+
+            let lengthHandle = null;
+            let noteOnHandle = null;
+            let noteOffHandle = null;
+            let cellClickHandler = ()=>this.onCellClick(patternViewData, divInfo, note, noteLegend, patch);
+            if ((note.midiNoteValue in divInfo.rows)) {
+                const cell = divInfo.rows[note.midiNoteValue];
+                cssClass += " " + cell.cssClass;
+                if (!cell.thisNote && cell.previousNote) {
+                    lengthHandle = (<div
+                        className='lengthHandle'
+                        onClick={() => this.clickLengthHandlePrevious(cell)}
+                        ></div>);
+                }
+                if (cell.thisNote && cell.beginBorderType === Seq.eBorderType.Continue && cell.endBorderType === Seq.eBorderType.Continue) {
+                    lengthHandle = (<div
+                        className='lengthHandle'
+                        onClick={() => this.clickLengthHandleCurrent(cell)}
+                        ></div>);
+                }
+                if (cell.beginBorderType === Seq.eBorderType.NoteOn) {
+                    cssClass += " beginnoteon note";
+                    noteOnHandle = (<div
+                        className='noteOnHandle'
+                        onClick={cellClickHandler}
+                        ></div>);
+                }
+                else if (cell.beginBorderType === Seq.eBorderType.Continue) {
+                    cssClass += " begincontinue note";
+                }
+                if (cell.endBorderType === Seq.eBorderType.Continue) {
+                    cssClass += " endcontinue";
+                }
+                else if (cell.endBorderType === Seq.eBorderType.NoteOff) {
+                    cssClass += " endnoteoff";
+                    noteOffHandle = (<div
+                        className='noteOffHandle'
+                        onClick={cellClickHandler}
+                        ></div>);
+                }
             }
 
             return (
                 <li key={divInfo.patternDivIndex + "_" + note.midiNoteValue} style={rowStyle} className={cssClass}>
-                    <div className='noteBase' onClick={()=>this.onCellClick(patternViewData, divInfo, note, noteLegend, patch)}>
+                    <div className='noteBase'>
                     <div className='noteOL'>
                         <div className='muteOL'>
-                        {/* <div className='hoverOL'></div> */}
+                            {noteOnHandle}
+                            <div className='cellBody' onClick={cellClickHandler}>
+                            </div>
+                            {lengthHandle}
+                            {noteOffHandle}
                         </div>
                     </div>
                     </div>
@@ -1093,6 +1188,23 @@ class SequencerMain extends React.Component {
                                                     onClick={this.onClickEditHalf}>
                                                         Half length (×.5) &lt;&lt;</button>
                                             </fieldset>
+
+                                            <fieldset>
+                                                <legend>Note lengths</legend>
+                                                <button className={clickableIfEditable}
+                                                    onClick={() => this.onClickEditMultiplyDuration(2)}>
+                                                        Double (×2) &gt;&gt;</button>
+                                                <button className={clickableIfEditable}
+                                                    onClick={() => this.onClickEditMultiplyDuration(.5)}>
+                                                        Half (×.5) &lt;&lt;</button>
+                                                <button className={clickableIfEditable}
+                                                    onClick={() => this.onClickEditAddDiv(1)}>
+                                                        Add 1 cell (+1) &lt;&lt;</button>
+                                                <button className={clickableIfEditable}
+                                                    onClick={() => this.onClickEditAddDiv(-1)}>
+                                                        Remove 1 cell (-1) &lt;&lt;</button>
+                                            </fieldset>
+
                                         </div>
                                     </ClickAwayListener>
                                 }

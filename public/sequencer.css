@@ -453,57 +453,6 @@
     flex-grow: 1;
 }
 
-.sequencerMain ul.pianoRollColumn li .noteBase {
-    background-color: #333;
-    /* box-shadow: inset 0px 0px 36px #000b;  <-- this is VERY heavy for big grids */
-}
-
-.sequencerMain ul.pianoRollColumn li:hover .noteBase {
-    /* background-color: #777; */
-    /* padding: 12px; */
-    /* border: 8px solid #777; */
-    /* border-left: 3px solid #777; */
-    /* border-right: 3px solid #777; */
-}
-
-.sequencerMain ul.pianoRollColumn li.muted .muteOL {
-    background-color: #0008;
-}
-
-
-/* notes cells are like,
-    <li class="white g note var1 hihat"> "white g" are of note legend, "note" means there's a note here, "var1" is a globally-understood variation index, and "hihat" is of note legend.
-        <div class="noteBase">
-            <div class="noteOL">
-                <div class="muteOL">
-*/
-
-.sequencerMain ul.pianoRollColumn li:hover .muteOL {
-    border:2px solid #777; /* don't put this indicator in noteBase or other; it creates layout problems*/
-}
-
-
-.sequencerMain ul.pianoRollColumn li.note .noteOL {
-    background-color: #4f4;
-    box-shadow: inset 0px 0px 18px #888, 0px 0px 18px #4f48;
-}
-
-.sequencerMain ul.pianoRollColumn li.note.vel1 .noteOL {
-    background-color: #7e0d9b;
-    box-shadow: inset 0px 0px 18px #444, 0px 0px 18px #7e0d9b;
-    
-}
-
-
-.sequencerMain ul.pianoRollColumn li.note.muted .noteOL {
-    background-color: #575;
-    box-shadow:none;
-}
-
-.sequencerMain ul.pianoRollColumn li.note.muted.vel1 .noteOL {
-    background-color: #757;
-    box-shadow:none;
-}
 
 
 
@@ -848,5 +797,116 @@
  .sequencerMain .editPatternDialog .wasdContainer > div button i {
    font-size:32px;
  }
+
+
+
+ /* ---- note styling ---- */
+  
+
+
+.sequencerMain ul.pianoRollColumn li .noteBase {
+    background-color: #333;
+    align-items:center;
+}
+
+.sequencerMain ul.pianoRollColumn li:hover .noteBase {
+}
+
+.sequencerMain ul.pianoRollColumn li.muted .muteOL {
+    background-color: #0008;
+}
+
+
+/* notes cells are like,
+    <li class="white g note var1 hihat"> "white g" are of note legend, "note" means there's a note here, "var1" is a globally-understood variation index, and "hihat" is of note legend.
+        <div class="noteBase">
+            <div class="noteOL">
+                <div class="muteOL">
+*/
+
+.sequencerMain ul.pianoRollColumn li:hover .muteOL {
+    border:2px solid #777; /* don't put this indicator in noteBase or other; it creates layout problems*/
+}
+
+
+.sequencerMain ul.pianoRollColumn li.note .noteOL {
+    background-color: #484;
+    /* box-shadow: inset 0px 0px 18px #888, 0px 0px 18px #4f48; */
+}
+
+.sequencerMain ul.pianoRollColumn li.note.genvel1 .noteOL {
+    background-color: #738;
+    /* box-shadow: inset 0px 0px 18px #444, 0px 0px 18px #7e0d9b; */
+}
+
+
+.sequencerMain ul.pianoRollColumn li.note.muted .noteOL {
+    background-color: #575;
+    box-shadow:none;
+}
+
+.sequencerMain ul.pianoRollColumn li.note.muted.genvel1 .noteOL {
+    background-color: #757;
+    box-shadow:none;
+}
+
+
+
+
+
+
+.sequencerMain ul.pianoRollColumn li .noteOnHandle,
+.sequencerMain ul.pianoRollColumn li .noteOffHandle {
+  width: 8px;
+  background-color: #fff3;
+}
+.sequencerMain ul.pianoRollColumn li.endcontinue div {
+  border-top-right-radius:0;
+  border-bottom-right-radius:0;
+}
+
+.sequencerMain ul.pianoRollColumn li.begincontinue div {
+  border-top-left-radius:0;
+  border-bottom-left-radius:0;
+}
+
+ .sequencerMain ul.pianoRollColumn li .muteOL > div {
+     flex-grow: 0;
+ }
+
+ .sequencerMain ul.pianoRollColumn li .muteOL > .cellBody {
+    flex-grow:1;
+ }
  
+  .sequencerMain ul.pianoRollColumn li .lengthHandle {
+    background-color:transparent;
+    flex-grow:0;
+    width:25%;
+    border-radius:0;
+ }
+   .sequencerMain ul.pianoRollColumn li .lengthHandle:hover {
+    background-color:#0cc;
+    box-shadow:0 0 20px #0cc;
+ }
  
+ .sequencerMain ul.pianoRollColumn li.begincontinue {
+    /* border-left:none; */
+    /* border-radius:0; */
+  }
+ 
+ .sequencerMain ul.pianoRollColumn li.begincontinue .noteBase {
+   align-items:center;
+   flex-grow: 0;
+   /* border-top-left-radius: 0; */
+   margin-left: 0;
+   /* background-color: black; */
+ }
+
+ .sequencerMain ul.pianoRollColumn li.endcontinue .noteBase {
+   align-items:center;
+   flex-grow: 0;
+   /* border-top-left-radius: 0; */
+   margin-right: 0;
+   /* background-color: black; */
+ }
+

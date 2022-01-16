@@ -1,13 +1,12 @@
-const { nanoid } = require("nanoid");
-
+const {nanoid} = require("nanoid");
 
 Array.prototype.removeIf = function(callback) {
-   var i = this.length;
-   while (i--) {
-      if (callback(this[i], i)) {
-         this.splice(i, 1);
-      }
-   }
+  var i = this.length;
+  while (i--) {
+    if (callback(this[i], i)) {
+      this.splice(i, 1);
+    }
+  }
 };
 
 let secondsToMS = (x) => x * 1000;
@@ -16,65 +15,65 @@ let hoursToMS = (x) => minutesToMS(x * 60);
 let daysToMS = (x) => hoursToMS(x * 24);
 
 function FormatTimeMS(ms) {
-   return new Date(ms).toISOString().substring(11).substring(0, 8);
+  return new Date(ms).toISOString().substring(11).substring(0, 8);
 }
 
 // another way of getting time duration info
 class TimeSpan {
-   constructor(ms) {
-      //const Sign = Math.sign(ms);
-      //ms = Math.abs(ms);
-      if (ms < 0)
-         ms = 0;
-      this.__totalMilliseconds = ms;
-      this.__totalSeconds = Math.floor(ms / 1000);
-      this.__totalMinutes = Math.floor(ms / 60000);
-      this.__totalHours = Math.floor(ms / (60000 * 60));
-      this.__totalDays = Math.floor(ms / (60000 * 60 * 24));
-      this.__secondsPart = this.__totalSeconds % 60;
-      this.__minutesPart = this.__totalMinutes % 60;
-      this.__hoursPart = this.__totalHours % 24;
-      this.__shortString = `${this.__totalHours}h ${this.__minutesPart}m ${this.__secondsPart}s`;
-      if (!this.__totalHours && !!this.__minutesPart) {
-         this.__shortString = `${this.__minutesPart}m ${this.__secondsPart}s`;
-      } else if (!this.__totalHours && !this.__minutesPart) {
-         this.__shortString = `${this.__secondsPart}s`;
-      }
+  constructor(ms) {
+    //const Sign = Math.sign(ms);
+    //ms = Math.abs(ms);
+    if (ms < 0)
+      ms = 0;
+    this.__totalMilliseconds = ms;
+    this.__totalSeconds = Math.floor(ms / 1000);
+    this.__totalMinutes = Math.floor(ms / 60000);
+    this.__totalHours = Math.floor(ms / (60000 * 60));
+    this.__totalDays = Math.floor(ms / (60000 * 60 * 24));
+    this.__secondsPart = this.__totalSeconds % 60;
+    this.__minutesPart = this.__totalMinutes % 60;
+    this.__hoursPart = this.__totalHours % 24;
+    this.__shortString = `${this.__totalHours}h ${this.__minutesPart}m ${this.__secondsPart}s`;
+    if (!this.__totalHours && !!this.__minutesPart) {
+      this.__shortString = `${this.__minutesPart}m ${this.__secondsPart}s`;
+    } else if (!this.__totalHours && !this.__minutesPart) {
+      this.__shortString = `${this.__secondsPart}s`;
+    }
 
-      this.__longString = `${this.__totalDays} days ${this.__hoursPart} hours ${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
-      if (!this.__totalDays) {
-         this.__longString = `${this.__hoursPart} hours ${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
-         if (!this.__hoursPart) {
-            this.__longString = `${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
-            if (!this.__minutesPart) {
-               this.__longString = `${this.__secondsPart} seconds`;
-            }
-         }
+    this.__longString = `${this.__totalDays} days ${this.__hoursPart} hours ${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
+    if (!this.__totalDays) {
+      this.__longString = `${this.__hoursPart} hours ${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
+      if (!this.__hoursPart) {
+        this.__longString = `${this.__minutesPart} minutes ${this.__secondsPart} seconds`;
+        if (!this.__minutesPart) {
+          this.__longString = `${this.__secondsPart} seconds`;
+        }
       }
-   } // ctor
+    }
+  } // ctor
 
-   get totalMilliseconds() { return this.__totalMilliseconds; }
-   get totalSeconds() { return this.__totalSeconds; }
-   get totalMinutes() { return this.__totalMinutes; }
-   get totalHours() { return this.__totalHours; }
-   get totalDays() { return this.__totalDays; }
-   get secondsPart() { return this.__secondsPart; }
-   get minutesPart() { return this.__minutesPart; }
-   get hoursPart() { return this.__hoursPart; }
-   get shortString() { return this.__shortString; }
-   get longString() { return this.__longString; }
+  get totalMilliseconds() { return this.__totalMilliseconds; }
+  get totalSeconds() { return this.__totalSeconds; }
+  get totalMinutes() { return this.__totalMinutes; }
+  get totalHours() { return this.__totalHours; }
+  get totalDays() { return this.__totalDays; }
+  get secondsPart() { return this.__secondsPart; }
+  get minutesPart() { return this.__minutesPart; }
+  get hoursPart() { return this.__hoursPart; }
+  get shortString() { return this.__shortString; }
+  get longString() { return this.__longString; }
 
 } // TimeSpan
 
 // strip args off args, return them and the remaining unparsed string.
 function GrabArgs(args, count) {
-   let ret = [ args ?? '' ];
-   for (let i = 0; i < count; ++i) {
-      let tmp = ret.at(-1)?.trim().split(/(\s.*)/).map(s => s.trim()); // awkward way of splitting by 1st whitespace
-      tmp ??= [];
-      ret = ret.slice(0, ret.length - 1).concat(tmp.filter(t => t.trim().length));
-   }
-   return ret;
+  let ret = [ args ?? '' ];
+  for (let i = 0; i < count; ++i) {
+    let tmp = ret.at(-1)?.trim().split(/(\s.*)/).map(s => s.trim()); // awkward way of splitting by 1st whitespace
+    tmp ??= [];
+    ret = ret.slice(0, ret.length - 1).concat(tmp.filter(t => t.trim().length));
+  }
+  return ret;
 }
 
 let getArrowText = shown => shown ? '⯆' : '⯈';
@@ -85,252 +84,266 @@ let getArrowText = shown => shown ? '⯆' : '⯈';
 // }
 // i don't like that function... wtf really.
 function getDecimalPart(x) {
-   return x - Math.trunc(x);
+  return x - Math.trunc(x);
 }
 
 // retains repeating pattern into the negative.
 function modulo(x, n) {
-   return ((x % n) + n) % n;
- };
+  return ((x % n) + n) % n;
+};
 
- 
-  // todo: optimize for sorted arrays
-  function findNearest(array, distFn) {
-   let closestDistance = 0x7fffffff;
-   let closestIndex = -1;
-   array.forEach((e,i) => {
-     const dist = distFn(e, i);
-     if (dist < closestDistance) {
-       closestDistance = dist;
-       closestIndex = i;
-     }
-   });
-   return array[closestIndex];
- }
+// todo: optimize for sorted arrays
+function findNearestIndex(array, distFn) {
+  let closestDistance = 0x7fffffff;
+  let closestIndex = -1;
+  array.forEach((e, i) => {
+    const dist = distFn(e, i);
+    if (dist < closestDistance) {
+      closestDistance = dist;
+      closestIndex = i;
+    }
+  });
+  return closestIndex;
+}
+function findNearest(array, distFn) {
+  return array.at(findNearestIndex(array, distFn));
+}
 
 function array_move(arr, old_index, new_index) {
-   if (new_index >= arr.length) {
-      var k = new_index - arr.length + 1;
-      while (k--) {
-         arr.push(undefined);
-      }
-   }
-   arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-   //return arr; // for testing
+  if (new_index >= arr.length) {
+    var k = new_index - arr.length + 1;
+    while (k--) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  //return arr; // for testing
 };
+
+// https://stackoverflow.com/a/34890276/402169
+// console.log(groupBy(['one', 'two', 'three'], 'length'));
+// => {3: ["one", "two"], 5: ["three"]}
+function groupBy(array, keySelectorFn) {
+   return array.reduce((rv, el) => {
+      const k = keySelectorFn(el);
+      (rv[k] ??= []).push(el);
+      return rv;
+   }, {});
+ };
+ 
 
 // https://stackoverflow.com/a/40407914/402169
 function baseClamp(number, lower, upper) {
-   if (number === number) {
-      if (upper !== undefined) {
-         number = number <= upper ? number : upper;
-      }
-      if (lower !== undefined) {
-         number = number >= lower ? number : lower;
-      }
-   }
-   return number;
+  if (number === number) {
+    if (upper !== undefined) {
+      number = number <= upper ? number : upper;
+    }
+    if (lower !== undefined) {
+      number = number >= lower ? number : lower;
+    }
+  }
+  return number;
 }
 
 let MidiNoteToFrequency = function(midiNote) {
-   return 440 * Math.pow(2, (midiNote - 69) / 12);
+  return 440 * Math.pow(2, (midiNote - 69) / 12);
 };
 let FrequencyToMidiNote = (hz) => {
-   return 12.0 * Math.log2(Math.max(8, hz) / 440) + 69;
+  return 12.0 * Math.log2(Math.max(8, hz) / 440) + 69;
 };
 
 // linear mapping
 let remap = function(value, low1, high1, low2, high2) {
-   return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+  return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
 let remapWithPowCurve = (value, inpMin, inpMax, p, outpMin, outpMax) => {
-   // map to 0-1
-   value -= inpMin;
-   value /= inpMax - inpMin;
-   if (value < 0)
-      value = 0;
-   if (value > 1)
-      value = 1;
-   // curve
-   value = Math.pow(value, p);
-   // map to outpMin-outpMax
-   value *= outpMax - outpMin;
-   return value + outpMin;
+  // map to 0-1
+  value -= inpMin;
+  value /= inpMax - inpMin;
+  if (value < 0)
+    value = 0;
+  if (value > 1)
+    value = 1;
+  // curve
+  value = Math.pow(value, p);
+  // map to outpMin-outpMax
+  value *= outpMax - outpMin;
+  return value + outpMin;
 };
 
 // invokes a fn in a throttled way. You set a proc & interval, and call InvokeThrottled() when you want to invoke it.
 class Throttler {
-   constructor(interval, proc) {
-      this.interval = interval || 1000.0 / 15;
-      this.proc = proc || (() => {}); // the work fn to run throttled
+  constructor(interval, proc) {
+    this.interval = interval || 1000.0 / 15;
+    this.proc = proc || (() => {}); // the work fn to run throttled
 
-      this.stats = {
-         timersCreated : 0,
-         invokesSkipped : 0,
-         realtimeInvokes : 0,
-         throttledInvokes : 0,
-         invokes : 0,
-      };
+    this.stats = {
+      timersCreated : 0,
+      invokesSkipped : 0,
+      realtimeInvokes : 0,
+      throttledInvokes : 0,
+      invokes : 0,
+    };
 
+    this.timerCookie = null;
+    this.Reset();
+  }
+
+  Reset() {
+    if (this.timerCookie) {
+      clearTimeout(this.timerCookie);
+    }
+    this.timerCookie = null;
+    this.lastInvoked = new Date();
+    // (reset params)
+  }
+
+  InvokeThrottled() {
+    if (this.timerCookie) {
+      // already have a timer pending
+      // (integrate to queued)
+      this.stats.invokesSkipped++;
+      return;
+    }
+
+    let now = new Date();
+    let delta = now - this.lastInvoked;
+    if (delta >= this.interval) {
+      // we waited long enough between changes; invoke in real time.
+      this.lastInvoked = now;
+      this.stats.invokes++;
+      this.stats.realtimeInvokes++;
+      this.proc();
+      return;
+    }
+
+    // we need to set a timer.
+    this.stats.timersCreated++;
+    this.timerCookie = setTimeout(() => {
       this.timerCookie = null;
+      this.stats.invokes++;
+      this.stats.throttledInvokes++;
+      //console.log(`Throttler invoke; timeout=${this.interval - delta}`);//. timerscreated:${this.timersCreated}, paramsOptimized:${this.invokesSkipped}, paramsSent:${this.invokes}`);
+      //console.log(this.stats);
+      this.proc();
       this.Reset();
-   }
-
-   Reset() {
-      if (this.timerCookie) {
-         clearTimeout(this.timerCookie);
-      }
-      this.timerCookie = null;
-      this.lastInvoked = new Date();
-      // (reset params)
-   }
-
-   InvokeThrottled() {
-      if (this.timerCookie) {
-         // already have a timer pending
-         // (integrate to queued)
-         this.stats.invokesSkipped++;
-         return;
-      }
-
-      let now = new Date();
-      let delta = now - this.lastInvoked;
-      if (delta >= this.interval) {
-         // we waited long enough between changes; invoke in real time.
-         this.lastInvoked = now;
-         this.stats.invokes++;
-         this.stats.realtimeInvokes++;
-         this.proc();
-         return;
-      }
-
-      // we need to set a timer.
-      this.stats.timersCreated++;
-      this.timerCookie = setTimeout(() => {
-         this.timerCookie = null;
-         this.stats.invokes++;
-         this.stats.throttledInvokes++;
-         //console.log(`Throttler invoke; timeout=${this.interval - delta}`);//. timerscreated:${this.timersCreated}, paramsOptimized:${this.invokesSkipped}, paramsSent:${this.invokes}`);
-         //console.log(this.stats);
-         this.proc();
-         this.Reset();
-      }, this.interval - delta);
-   };
+    }, this.interval - delta);
+  };
 };
 
 let BeatsToMS = (beats, bpm) => {
-   return (beats * 60000.0) / bpm;
-   // ms = (b * 60k) / bpm;
-   // ms*bpm = b*60k;
-   // (ms*bpm)/60k = b;
+  return (beats * 60000.0) / bpm;
+  // ms = (b * 60k) / bpm;
+  // ms*bpm = b*60k;
+  // (ms*bpm)/60k = b;
 };
 
 let MSToBeats = (ms, bpm) => {
-   return ms / 60000.0 * bpm;
+  return ms / 60000.0 * bpm;
 };
 
 let steppedCeil = (x, step) => { // so imagine 4.22 with step of 0.33. i want to return 4.33.
-   if (step < 0.00001)
-      return x;
-   return Math.ceil(x / step) * step;
+  if (step < 0.00001)
+    return x;
+  return Math.ceil(x / step) * step;
 };
 
 let steppedFloor = (x, step) => {
-   if (step < 0.00001)
-      return x;
-   return Math.floor(x / step) * step;
+  if (step < 0.00001)
+    return x;
+  return Math.floor(x / step) * step;
 };
 
 let dividedCeil = (x, denom) => { // so imagine 4.22 with denom of 3. i want to return 4.33.
-   if (denom < 0.00001)
-      return x;
-   return Math.ceil(x * denom) / denom;
+  if (denom < 0.00001)
+    return x;
+  return Math.ceil(x * denom) / denom;
 };
 
 let dividedFloor = (x, denom) => {
-   if (denom < 0.00001)
-      return x;
-   return Math.floor(x * denom) / denom;
+  if (denom < 0.00001)
+    return x;
+  return Math.floor(x * denom) / denom;
 };
 
 let lerp = (start, end, amt) => {
-   return (1 - amt) * start + amt * end;
+  return (1 - amt) * start + amt * end;
 };
 
 const DBToLinear = dB => {
-   return Math.pow(10, dB / 20);
+  return Math.pow(10, dB / 20);
 };
 
 function StringReplaceAllCaseInsensitive(str, strReplace, strWith) {
-   // See http://stackoverflow.com/a/3561711/556609
-   // https://stackoverflow.com/a/7313467/402169
-   var esc = strReplace.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-   var reg = new RegExp(esc, 'ig');
-   return str.replace(reg, strWith);
+  // See http://stackoverflow.com/a/3561711/556609
+  // https://stackoverflow.com/a/7313467/402169
+  var esc = strReplace.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  var reg = new RegExp(esc, 'ig');
+  return str.replace(reg, strWith);
 };
 
 function PerformSubstitutions(str, subs) {
-   Object.keys(subs).forEach(k => {
-      str = StringReplaceAllCaseInsensitive(str, k, subs[k]);
-   });
-   return str;
+  Object.keys(subs).forEach(k => {
+    str = StringReplaceAllCaseInsensitive(str, k, subs[k]);
+  });
+  return str;
 }
 
 function ProcessMessageFields(fieldsSpec, subs) {
-   let messageFields = {};
-   if (fieldsSpec) {
-      Object.keys(fieldsSpec).forEach(k => {
-         messageFields[PerformSubstitutions(k, subs)] = PerformSubstitutions(fieldsSpec[k], subs);
-      });
-   }
-   return messageFields;
+  let messageFields = {};
+  if (fieldsSpec) {
+    Object.keys(fieldsSpec).forEach(k => {
+      messageFields[PerformSubstitutions(k, subs)] = PerformSubstitutions(fieldsSpec[k], subs);
+    });
+  }
+  return messageFields;
 }
-
 
 function generateID() {
-   return nanoid(/*8*/); // not really necessary to limit the hash size. it's just not a bottleneck.
+  return nanoid(/*8*/); // not really necessary to limit the hash size. it's just not a bottleneck.
 }
 
-
 function IsServer() {
-   return typeof window === 'undefined';
+  return typeof window === 'undefined';
 }
 
 function IsClient() {
-   return !IsServer();
+  return !IsServer();
 }
 module.exports = {
-   secondsToMS,
-   minutesToMS,
-   hoursToMS,
-   daysToMS,
-   getArrowText,
-   getDecimalPart,
-   array_move,
-   baseClamp,
-   MidiNoteToFrequency,
-   FrequencyToMidiNote,
-   remap,
-   remapWithPowCurve,
-   Throttler,
-   BeatsToMS,
-   MSToBeats,
-   steppedCeil,
-   steppedFloor,
-   dividedCeil,
-   dividedFloor,
-   lerp,
-   DBToLinear,
-   StringReplaceAllCaseInsensitive,
-   PerformSubstitutions,
-   ProcessMessageFields,
-   FormatTimeMS,
-   GrabArgs,
-   TimeSpan,
-   modulo,
-   findNearest,
-   generateID,
-   IsClient,
-   IsServer,
+  secondsToMS,
+  minutesToMS,
+  hoursToMS,
+  daysToMS,
+  getArrowText,
+  getDecimalPart,
+  array_move,
+  baseClamp,
+  MidiNoteToFrequency,
+  FrequencyToMidiNote,
+  remap,
+  remapWithPowCurve,
+  Throttler,
+  BeatsToMS,
+  MSToBeats,
+  steppedCeil,
+  steppedFloor,
+  dividedCeil,
+  dividedFloor,
+  lerp,
+  DBToLinear,
+  StringReplaceAllCaseInsensitive,
+  PerformSubstitutions,
+  ProcessMessageFields,
+  FormatTimeMS,
+  GrabArgs,
+  TimeSpan,
+  modulo,
+  findNearest,
+  findNearestIndex,
+  groupBy,
+  generateID,
+  IsClient,
+  IsServer,
 };

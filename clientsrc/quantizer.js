@@ -317,7 +317,7 @@ class ServerRoomQuantizer {
 
     removedPlayingNoteEntries.forEach(e => {
       console.assert(!!e[1].seqNoteID);
-      if (seqPatternView.HasViewNoteID(e[1].seqNoteID)) {
+      if (seqPatternView.HasViewCellID(e[1].seqNoteID)) {
         // note has not been deleted. reschedule this noteoff event.
         let quantizedFrame = e[1].frame;
         const midiNoteValue = e[0];
@@ -368,7 +368,7 @@ class ServerRoomQuantizer {
       
       // subtract 1 so adjascent notes in the sequencer don't get noteOff and noteOn at exactly the same time causing ambiguity.
       const noteOffQuantizedFrame = beatToFrame(n.absQuarter + n.lengthQuarters, this.metronome.getBPM()) - 1;
-      //console.log(`Scheduling a note on + corresponding note off for ${n.noteID} @onframe:${noteOnQuantizedFrame} @offrame:${noteOffQuantizedFrame}`);
+      //console.log(`Scheduling a note on + corresponding note off for ${n.noteID} @onframe:${noteOnQuantizedFrame} @offrame:${noteOffQuantizedFrame} (len quart:${n.lengthQuarters})`);
       this.scheduleEvent(noteOffQuantizedFrame, null, { // corresponding note off.
         note : n.midiNoteValue,
         seqInstrumentID : instrumentID,

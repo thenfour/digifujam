@@ -118,8 +118,6 @@ class RoomSequencerPlayer {
     // for each note, add its noteon/noteoff for each loop until it's out of window.
     const events = [];
     patternView.divs.forEach(div => {
-      const divLengthQuarters = (div.endPatternFrac - div.beginPatternFrac) * patternPlayheadInfo.patternLengthQuarters;
-
       const divBeginPatternQuarter = div.beginPatternFrac * patternPlayheadInfo.patternLengthQuarters;
 
       let divFirstFutureAbsQuarter = null;
@@ -140,20 +138,22 @@ class RoomSequencerPlayer {
         divFirstFutureAbsQuarter = Math.floor(patternPlayheadInfo.absPatternFloat) * patternPlayheadInfo.patternLengthQuarters + divBeginPatternQuarter
       }
 
-      Object.entries(div.noteMap).forEach(e => {
+      Object.entries(div.rows).forEach(e => {
         const midiNoteValue = patch.AdjustMidiNoteValue(parseInt(e[0]));
-        const note = e[1]; // of PatternViewNote
-        if (!note.hasNote || note.isMuted)
+        const cell = e[1]; // of PatternViewNote
+        if (cell.isMuted)
+          return;
+        if (cell.beginBorderType !== Seq.eBorderType.NoteOn) // only care about note ons. it contains all info
           return;
 
         for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter < windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
           if (cursorShiftedQuarter < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
             continue;
           events.push({
-            velocity : note.velocity,
+            velocity : cell.velocity,
             midiNoteValue,
-            lengthQuarters : divLengthQuarters,
-            noteID: note.id,
+            lengthQuarters : cell.thisLengthQuarters,
+            noteID: cell.id,
             absQuarter: cursorShiftedQuarter + shiftQuarters,
           });
         }
