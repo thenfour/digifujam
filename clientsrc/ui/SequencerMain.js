@@ -940,51 +940,6 @@ class SequencerMain extends React.Component {
                         </fieldset>
 
 
-
-                        <fieldset>
-                        <div className='paramGroup'>
-                            <div className='legend'>Preset</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>{patch.presetName}</div>
-                            { this.state.isPresetsExpanded &&
-                                    <ClickAwayListener onClickAway={() => { this.setState({isPresetsExpanded:false});}}>
-                                      <div className='dialog presetDialog'>
-                                        <SequencerPresetDialog
-                                            onClose={() => { this.setState({isPresetsExpanded:false});}}
-                                            app={this.props.app}
-                                            instrument={this.props.instrument}
-                                            observerMode={this.props.observerMode}
-                                            ></SequencerPresetDialog>
-                                        </div>
-                                    </ClickAwayListener>
-                            }
-                                <div className="buttonArray">
-                                    {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
-                                    <button className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
-                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
-                                </div>
-                            </div>
-                        </div>
-                        </fieldset>
-
-                    <fieldset>
-                            <div className='paramGroup'>
-                                <div className='legend'>Pattern</div>
-                                <div className='paramBlock'>
-                                <div className="buttonArray">
-                                    {patternButtons}
-                                </div>
-                                <div className="buttonArray">
-                                <button title="Copy pattern" className={'altui clickable'} onClick={() => this.onClickCopyPattern()}><i className="material-icons">content_copy</i></button>
-                                <button title="Paste pattern" className={'altui' + clickableIfEditable} onClick={() => this.onClickPastePattern()}><i className="material-icons">content_paste</i></button>
-                                </div>
-                                <div className="buttonArray">
-                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable} onClick={() => this.onClickClearPattern()}><i className="material-icons">playlist_remove</i></button>
-                                </div>
-                            </div>
-                            </div>
-                        </fieldset>
-
                         <fieldset>
 
                         <div className='paramGroup'>
@@ -1056,6 +1011,51 @@ class SequencerMain extends React.Component {
 
                     </fieldset>
 
+
+
+                        <fieldset>
+                        <div className='paramGroup'>
+                            <div className='legend'>Preset</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>{patch.presetName}</div>
+                            { this.state.isPresetsExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isPresetsExpanded:false});}}>
+                                      <div className='dialog presetDialog'>
+                                        <SequencerPresetDialog
+                                            onClose={() => { this.setState({isPresetsExpanded:false});}}
+                                            app={this.props.app}
+                                            instrument={this.props.instrument}
+                                            observerMode={this.props.observerMode}
+                                            ></SequencerPresetDialog>
+                                        </div>
+                                    </ClickAwayListener>
+                            }
+                                <div className="buttonArray">
+                                    {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
+                                    <button className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
+                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
+                                </div>
+                            </div>
+                        </div>
+                        </fieldset>
+
+                    <fieldset>
+                            <div className='paramGroup'>
+                                <div className='legend'>Pattern</div>
+                                <div className='paramBlock'>
+                                <div className="buttonArray">
+                                    {patternButtons}
+                                </div>
+                                <div className="buttonArray">
+                                <button title="Copy pattern" className={'altui clickable'} onClick={() => this.onClickCopyPattern()}><i className="material-icons">content_copy</i></button>
+                                <button title="Paste pattern" className={'altui' + clickableIfEditable} onClick={() => this.onClickPastePattern()}><i className="material-icons">content_paste</i></button>
+                                </div>
+                                <div className="buttonArray">
+                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable} onClick={() => this.onClickClearPattern()}><i className="material-icons">playlist_remove</i></button>
+                                </div>
+                            </div>
+                            </div>
+                        </fieldset>
 
 
                     <fieldset>
@@ -1141,95 +1141,28 @@ class SequencerMain extends React.Component {
                         </div>
 
 
-                        <div className='paramGroup'>
-                            <div className='paramBlock'>
-                                { this.state.isEditExpanded &&
-                                    <ClickAwayListener onClickAway={() => { this.setState({isEditExpanded:false});}}>
-                                        <div className='dialog editPatternDialog'>
-                                            <legend onClick={() => { this.setState({isEditExpanded:false});}}>
-                                                Edit pattern
-                                            </legend>
-                                            <fieldset>
-                                                <legend>Shift (wrapping)</legend>
-                                                <div className='wasdContainer'>
-                                                    <div className='row'>
-                                                        <button className={clickableIfEditable}
-                                                            onClick={this.onClickEditShiftUp}>
-                                                                <i className="material-icons">arrow_drop_up</i></button>
-                                                    </div>
-                                                    <div className='row'>
-                                                        <button className={clickableIfEditable}
-                                                            onClick={this.onClickEditShiftLeft}>
-                                                                <i className="material-icons">arrow_left</i></button>
-                                                        <button className={clickableIfEditable}
-                                                            onClick={this.onClickEditShiftRight}>
-                                                                <i className="material-icons">arrow_right</i></button>
-                                                    </div>
-                                                    <div className='row'>
-                                                        <button className={clickableIfEditable}
-                                                            onClick={this.onClickEditShiftDown}>
-                                                                <i className="material-icons">arrow_drop_down</i></button>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-                                            <fieldset>
-                                                <legend>Rhythms</legend>
-                                                <div className='description'>Keep # of notes while changing pattern length</div>
-                                                <button className={pattern.CanExpand(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
-                                                    onClick={this.onClickEditExpand}>
-                                                        Expand notes (×2) &gt;&gt;</button>
-                                                <button className={pattern.CanContract(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
-                                                    onClick={this.onClickEditContract}>
-                                                        Contract (×.5) &lt;&lt;</button>
-                                            </fieldset>
-                                            <fieldset>
-                                                <legend>Pattern Length</legend>
-                                                <div className='description'>Change pattern length, duplicating notes</div>
-                                                <button className={pattern.CanDouble(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
-                                                    onClick={this.onClickEditDouble}>
-                                                        Double length (×2) &gt;&gt;</button>
-                                                <button className={pattern.CanHalf(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
-                                                    onClick={this.onClickEditHalf}>
-                                                        Half length (×.5) &lt;&lt;</button>
-                                            </fieldset>
-
-                                            <fieldset>
-                                                <legend>Note lengths</legend>
-                                                <button className={clickableIfEditable}
-                                                    onClick={() => this.onClickEditMultiplyDuration(2)}>
-                                                        Double (×2) &gt;&gt;</button>
-                                                <button className={clickableIfEditable}
-                                                    onClick={() => this.onClickEditMultiplyDuration(.5)}>
-                                                        Half (×.5) &lt;&lt;</button>
-                                                <button className={clickableIfEditable}
-                                                    onClick={() => this.onClickEditAddDiv(1)}>
-                                                        Add 1 cell (+1) &lt;&lt;</button>
-                                                <button className={clickableIfEditable}
-                                                    onClick={() => this.onClickEditAddDiv(-1)}>
-                                                        Remove 1 cell (-1) &lt;&lt;</button>
-                                            </fieldset>
-
-                                        </div>
-                                    </ClickAwayListener>
-                                }
+                    </fieldset>
 
 
-                                <div className="buttonArray">
+
+
+
+                    <fieldset className='editButtonFieldset'>
+
+                    <div className='paramGroup'>
+                    <div className="buttonArray">
                                     <button
                                         className={"editButton " + clickableIfEditable}
                                         onClick={() => { this.setState({isEditExpanded:!this.state.isEditExpanded});}}
                                         >
                                             EDIT
-                                            <i className="material-icons">edit</i>
-                                        </button>
-                                </div>
-                            </div>
-                        </div>
-
-
+                                            <i className="material-icons">{this.state.isEditExpanded ? "arrow_drop_down" : "arrow_right"}</i>
+                                            {/* <i className="material-icons">edit</i> */}
+                                    </button>
+                    </div>
+                    </div>
 
                     </fieldset>
-
 
 
 
@@ -1261,10 +1194,105 @@ class SequencerMain extends React.Component {
 
 
 
-                    </div>
-                    </div>
-                    </div>
+                    </div>{/* seqTopRow */}
 
+                    {this.state.isEditExpanded && (
+
+                    <div className="seqTopRow editRow">
+
+                        <fieldset>
+                            <div className='legend left'>Move<br />Notes</div>
+                            <div className='vertbuttons'>
+                                <button className={clickableIfEditable}
+                                    onClick={this.onClickEditShiftUp}>
+                                        <i className="material-icons">arrow_drop_up</i></button>
+                                <button className={clickableIfEditable}
+                                    onClick={this.onClickEditShiftDown}>
+                                        <i className="material-icons">arrow_drop_down</i></button>
+                            </div>
+                            <div className='horizbuttons'>
+                                <button className={clickableIfEditable}
+                                    onClick={this.onClickEditShiftLeft}>
+                                        <i className="material-icons">arrow_left</i></button>
+                                <button className={clickableIfEditable}
+                                    onClick={this.onClickEditShiftRight}>
+                                        <i className="material-icons">arrow_right</i></button>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div className='legend left'>Contract<br />Pattern</div>
+                            {/* <div className='description'>Keep # of notes while changing pattern length</div> */}
+                            <div className='horizbuttons'>
+                            <button className={pattern.CanContract(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                onClick={this.onClickEditContract}>
+                                    <i className="material-icons">arrow_left</i></button>
+                            <button className={pattern.CanExpand(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                onClick={this.onClickEditExpand}>
+                                    <i className="material-icons">arrow_right</i>
+                                    </button>
+                            </div>
+                            <div className='legend'>Stretch<br />Pattern</div>
+                        </fieldset>
+                        <fieldset>
+                            <div className='legend left'>Chop<br />Pattern</div>
+                            <div className='horizbuttons'>
+                            <button className={pattern.CanHalf(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                onClick={this.onClickEditHalf}>
+                                    <i className="material-icons">arrow_left</i>
+                                    </button>
+                            <button className={pattern.CanDouble(selectedTS) && !isReadOnly ? " clickable" : " disabled"}
+                                onClick={this.onClickEditDouble}>
+                                    <i className="material-icons">arrow_right</i>
+                                    </button>
+                            </div>
+                            <div className='legend'>Double<br />Pattern</div>
+                        </fieldset>
+
+                        <fieldset>
+                            <div className='legend left'><span className='noteglyph'>&#9833;</span>×.5</div>
+                            <div className='horizbuttons'>
+                            <button className={clickableIfEditable}
+                                onClick={() => this.onClickEditMultiplyDuration(.5)}>
+                                    <i className="material-icons">arrow_left</i>
+                                    </button>
+                            <button className={clickableIfEditable}
+                                onClick={() => this.onClickEditMultiplyDuration(2)}>
+                                    <i className="material-icons">arrow_right</i>
+                                    </button>
+                            </div>
+                            <div className='legend'>×2</div>
+                        </fieldset>
+
+                        <fieldset>
+                            <div className='legend left'><span className='noteglyph'>&#9833;</span>-1</div>
+
+                            <div className='horizbuttons'>
+                            <button className={clickableIfEditable}
+                                onClick={() => this.onClickEditAddDiv(-1)}>
+                                    <i className="material-icons">arrow_left</i></button>
+                            <button className={clickableIfEditable}
+                                onClick={() => this.onClickEditAddDiv(1)}>
+                                    <i className="material-icons">arrow_right</i></button>
+                            </div>
+                            <div className='legend'>+1</div>
+                        </fieldset>
+
+
+                        <fieldset className='editCloseFieldset'>
+                            <button className={"editCloseButton" + clickableIfEditable}
+                                        onClick={() => { this.setState({isEditExpanded:false});}}>
+                                        <i className="material-icons">close</i></button>
+                        </fieldset>
+
+
+                        
+                    </div>
+                    ) }
+
+
+
+                    </div> {/* topcolumn */}
+                    </div>
 
 
 

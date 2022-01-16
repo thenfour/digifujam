@@ -1,5 +1,3 @@
-
-
 .sequencerFrame {
     user-select: none;
     width: 100%;
@@ -10,7 +8,7 @@
     flex-direction: column;
     position: absolute;
     font-family: monospace;
-    padding: 20px;
+    padding: 10px;
     padding-right: 150px;
     padding-left: 50px;
 }
@@ -21,20 +19,20 @@
     z-index: 8999;
     display: flex;
     flex-direction: column;
-    padding: 8px;
-
+    padding: 6px;
     height: 100%;
-
     box-shadow: 0px 0px 7px #000, inset 0px 0px 4px #000;
-    position:relative; /* allow absolute positioning on the seq */
+    position: relative;
+    /* allow absolute positioning on the seq */
 }
 
 .sequencerMain button {
-    cursor: auto; /* to support observer mode / read-only states, default to no pointer. make it explicit */
+    cursor: auto;
+    /* to support observer mode / read-only states, default to no pointer. make it explicit */
 }
 
 .sequencerMain .overlay {
-    position:absolute;
+    position: absolute;
     right: 20px;
     top: 20px;
 }
@@ -54,6 +52,7 @@
 
 .sequencerMain .seqTopColumn {
     display: flex;
+    flex-direction: column;
 }
 
 .sequencerMain .seqTopRow {
@@ -73,10 +72,12 @@
     border-left: 0;
     border-radius: 6px;
     padding: 0;
-    margin-bottom: 10px; /* for when the flexbox wraps */
+    margin-bottom: 7px;
+    /* for when the flexbox wraps */
 }
 
-.sequencerMain fieldset > *:first-child { /* allows param groups without a legend */
+.sequencerMain fieldset>*:first-child {
+    /* allows param groups without a legend */
     padding-left: 8px;
     padding-right: 8px;
 }
@@ -100,8 +101,7 @@
     padding: 0px;
 }
 
-.sequencerMain .paramGroup
-{
+.sequencerMain .paramGroup {
     display: flex;
     margin-left: 12px;
     background-color: #c554;
@@ -109,8 +109,7 @@
     height: 40px
 }
 
-.sequencerMain .paramGroup:first-child
-{
+.sequencerMain .paramGroup:first-child {
     margin-left: 0px;
 }
 
@@ -134,23 +133,25 @@
 
 
 .sequencerMain .seqTopColumn.playButton .paramGroup {
-    height: unset; /* need to undo the fixed row right */
+    height: unset;
+    /* need to undo the fixed row right */
 }
 
-.sequencerMain button.playButton, .sequencerMain button.cueButton  {
+.sequencerMain button.playButton, .sequencerMain button.cueButton {
     height: 70px;
-    width:90px;
+    width: 90px;
 }
 
-.sequencerMain button.playButton.active  {
+.sequencerMain button.playButton.active {
     background-color: #7f7;
     color: #444;
     box-shadow: 0 0 10px #7F7, inset 0 0 18px #888c;
 }
 
-.sequencerMain button.playButton > * {
+.sequencerMain button.playButton>* {
     font-size: 72px;
 }
+
 .sequencerMain .pianoRollScrollCont {
     /* width: calc(100% - 20px); */
     background-color: black;
@@ -180,6 +181,7 @@
 .sequencerMain button:hover {
     background-color: #ddd;
 }
+
 .sequencerMain button.disabled {
     background-color: #bbb;
 }
@@ -190,7 +192,7 @@
     box-shadow: inset 0px 0px 18px #fff;
 }
 
-.sequencerMain .buttonArray  {
+.sequencerMain .buttonArray {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -215,8 +217,7 @@
 
 
 
-.sequencerMain input[type="text" i]
-{
+.sequencerMain input[type="text"i] {
     border: 0;
     font-size: 18px;
     text-align: center;
@@ -226,8 +227,7 @@
     width: inherit;
 }
 
-.sequencerMain input[type="text" i]:focus
-{
+.sequencerMain input[type="text"i]:focus {
     border: 0;
 }
 
@@ -237,41 +237,37 @@
 }
 
 
-.sequencerMain button.altui
-{
+.sequencerMain button.altui {
     background-color: #548;
     color: #dcf;
     box-shadow: 0 0 6px #5488;
 }
 
-.sequencerMain button.altui:hover
-{
+.sequencerMain button.altui:hover {
     background-color: #dcf;
     color: #fff;
 }
 
-.sequencerMain button.altui.disabled
-{
+.sequencerMain button.altui.disabled {
     background-color: #888;
     color: #ccc;
     box-shadow: 0 0 6px #8888;
 }
 
-.sequencerMain button.clearPattern
-{
+.sequencerMain button.clearPattern {
     background-color: #854;
     color: #dcf;
     box-shadow: 0 0 6px #8548;
 }
 
-.sequencerMain button.clearPattern:hover
-{
+.sequencerMain button.clearPattern:hover {
     background-color: #fcd;
     color: #fff;
 }
 
 .sequencerMain button.initPreset {
-    width:unset; /* allow text */
+    width: unset;
+    /* allow text */
 }
 
 
@@ -281,14 +277,13 @@
     padding-right: 10px;
 }
 
-.sequencerMain button.powerButton
-{
+.sequencerMain button.powerButton {
     height: 40px;
     width: 40px;
     box-shadow: inset 0px 0px 18px #8884, 0 0 12px #8884, 0 0 2px #0008;
 }
 
-.sequencerMain button.powerButton > * {
+.sequencerMain button.powerButton>* {
     font-size: 28px;
 }
 
@@ -297,12 +292,13 @@
 .sequencerMain .dialog {
     position: fixed;
     background-color: #022;
-    border:2px solid #055;
-    color:#0cc;
+    border: 2px solid #055;
+    color: #0cc;
     font-family: monospace;
     font-size: 16px;
     z-index: 10000;
 }
+
 .sequencerMain .dialog legend {
     color: #aa0;
     padding: 7px;
@@ -310,16 +306,20 @@
 }
 
 .sequencerMain ul.dropDownMenu {
-    padding:0;
-    max-height: 450px; /* super long menus will get hidden; this allows scrolling */
-    overflow: auto;    
+    padding: 0;
+    max-height: 450px;
+    /* super long menus will get hidden; this allows scrolling */
+    overflow: auto;
 }
+
 .sequencerMain ul.dropDownMenu li {
-    padding:2px;
+    padding: 2px;
 }
+
 .sequencerMain ul.dropDownMenu li.selected {
     background-color: #550;
-  }
+}
+
 .sequencerMain ul.dropDownMenu li:hover {
     background-color: #066;
 }
@@ -337,43 +337,47 @@
 
 
 .sequencerMain ul.pianoRollLegend {
-	display:flex;
-	margin:0;
-	padding:0;
-    padding-bottom: 100px; /* extra scroll margin */
+    display: flex;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 100px;
+    /* extra scroll margin */
     flex-direction: column;
 }
-.sequencerMain ul.pianoRollLegend  li {
-	margin: 0;
-	padding: 0;
-	list-style: none;
+
+.sequencerMain ul.pianoRollLegend li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     font-weight: bold;
 
     width: 120px;
     background-color: #ffe;
     height: 44px;
-    box-shadow:0 0 9px #0003 inset, 0 0 1px #000;
+    box-shadow: 0 0 9px #0003 inset, 0 0 1px #000;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    margin-right:4px;
+    margin-right: 4px;
 
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
 }
-.sequencerMain ul.pianoRollLegend  li.white {
-    color:#066;
+
+.sequencerMain ul.pianoRollLegend li.white {
+    color: #066;
 }
-.sequencerMain ul.pianoRollLegend  li.black {
+
+.sequencerMain ul.pianoRollLegend li.black {
     background-color: #333;
-    box-shadow:0 0 9px #ffd2 inset;
+    box-shadow: 0 0 9px #ffd2 inset;
 }
 
 .sequencerMain ul.pianoRollLegend li .rowName {
     font-family: 'Overpass', sans-serif;
     font-size: 14px;
-    color:#555;
+    color: #555;
 }
 
 .sequencerMain ul.pianoRollLegend li .muteRow {
@@ -381,7 +385,7 @@
     height: 18px;
     background-color: #8885;
     margin-left: 5px;
-    margin-right: 8px;    
+    margin-right: 8px;
     text-align: center;
     color: #8888;
 }
@@ -410,9 +414,11 @@
 .sequencerMain ul.pianoRollColumn {
     padding: 0;
     margin: 0;
-    /* position:relative; */ /* allow abs position children (beat indicator) */
+    /* position:relative; */
+    /* allow abs position children (beat indicator) */
     /* flex-grow: 1; */
-    display: inline-block; /* required for the sticky header row*/
+    display: inline-block;
+    /* required for the sticky header row*/
 }
 
 .sequencerMain ul.pianoRollColumn li {
@@ -442,13 +448,13 @@
 
 /*  ----- note cells ----- */
 
-.sequencerMain ul.pianoRollColumn li > div {
-    margin:2px;
+.sequencerMain ul.pianoRollColumn li>div {
+    margin: 2px;
 }
 
 .sequencerMain ul.pianoRollColumn li div {
     border-radius: 4px;
-    height:100%;
+    height: 100%;
     display: flex;
     flex-grow: 1;
 }
@@ -467,20 +473,20 @@
 /*  ----- preset dialog ----- */
 
 .sequencerMain .dialog.presetDialog {
-    transform:translate(-50%,25px);
+    transform: translate(-50%, 25px);
     background-color: #222;
     color: #0aa;
     width: 400px;
 }
 
-.sequencerMain .dialog.presetDialog .dialogContainer > legend {
-    text-align:center;
-    background-color:#033;
-    font-weight:bold;
+.sequencerMain .dialog.presetDialog .dialogContainer>legend {
+    text-align: center;
+    background-color: #033;
+    font-weight: bold;
 }
 
 .sequencerMain .dialog.presetDialog fieldset {
-    display:block;
+    display: block;
     margin: 6px;
     padding: 1px;
     min-inline-size: auto;
@@ -490,15 +496,15 @@
     font-size: small;
 }
 
-.sequencerMain .dialog.presetDialog fieldset > .legend {
-    font-weight:bold;
+.sequencerMain .dialog.presetDialog fieldset>.legend {
+    font-weight: bold;
     /* text-align: left; */
     justify-content: left;
     color: #aa0;
 }
 
 
-.sequencerMain .dialog.presetDialog input[type="text" i] {
+.sequencerMain .dialog.presetDialog input[type="text"i] {
     background-color: #444;
     border: 2px solid #055;
     text-align: unset;
@@ -511,9 +517,9 @@
 }
 
 .sequencerMain .dialog.presetDialog button {
-    background-color:#444;
-    color:#888;
-    box-shadow:none;
+    background-color: #444;
+    color: #888;
+    box-shadow: none;
     display: inline-flex;
     justify-content: flex-start;
     padding: 2px;
@@ -522,57 +528,54 @@
     /* flex-grow: 1; */
 }
 
-.sequencerMain .dialog.presetDialog button.clickable
-{
-    background-color:#055;
-    color:#0aa;
+.sequencerMain .dialog.presetDialog button.clickable {
+    background-color: #055;
+    color: #0aa;
 }
 
-.sequencerMain .dialog.presetDialog button.clickable:hover
-{
-    background-color:#055;
+.sequencerMain .dialog.presetDialog button.clickable:hover {
+    background-color: #055;
 }
 
 .sequencerMain .dialog.presetDialog li {
-    display:flex;
+    display: flex;
     align-items: center;
 }
 
 .sequencerMain .dialog.presetDialog li.presetItem {
-    background-color:#044;
-    display:block;
+    background-color: #044;
+    display: block;
     margin-bottom: 6px;
 }
 
 .sequencerMain .dialog.presetDialog li.presetItem:hover {
-    background-color:#055;
+    background-color: #055;
 }
 
 
 .sequencerMain .dialog.presetDialog li.presetItem .presetName {
-    color:#bbb;
-    font-size:16px;
-    display:block;
+    color: #bbb;
+    font-size: 16px;
+    display: block;
 }
 
 
 .sequencerMain .dialog.presetDialog li.presetItem .description {
     font-style: italic;
-    display:block;
+    display: block;
 }
 
 .sequencerMain .dialog.presetDialog li.presetItem .authorAndDateBox {
-    color:#888;
-    font-size:x-small;
+    color: #888;
+    font-size: x-small;
     font-style: italic;
-    display:block;
+    display: block;
 }
 
 
 
 
-.sequencerMain .dialog.presetDialog .confirmationBox
-{
+.sequencerMain .dialog.presetDialog .confirmationBox {
     color: #8cc;
     padding: 10px;
     border-radius: 0;
@@ -582,41 +585,39 @@
     border-left: 7px solid #a00;
 }
 
-.sequencerMain .dialog.presetDialog .confirmationBox button
-{
+.sequencerMain .dialog.presetDialog .confirmationBox button {
     background-color: #666;
     color: #000;
     padding: 5px;
     /* width: unset; */
 }
 
-.sequencerMain .dialog.presetDialog .confirmationBox button:hover
-{
+.sequencerMain .dialog.presetDialog .confirmationBox button:hover {
     background-color: #acc;
 }
 
 .sequencerMain .dialog.presetDialog ul.presetsList {
-    max-height:400px;
-    overflow-y:auto;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
 .sequencerMain .dialog.presetDialog li .buttonContainer {
-    float:right;
+    float: right;
     line-height: 10px;
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .sequencerMain .dialog.presetDialog li:hover .buttonContainer {
-    visibility:visible;
+    visibility: visible;
 }
 
 .sequencerMain .dialog.presetDialog li .buttonContainer button {
-    background-color:#333;
-    color:#0cc;
+    background-color: #333;
+    color: #0cc;
 }
 
 .sequencerMain .dialog.presetDialog li .buttonContainer button:hover {
-    background-color:#044;
+    background-color: #044;
 }
 
 
@@ -636,50 +637,51 @@
 /*  ----- play indicators ----- */
 .sequencerMain ul.pianoRollLegend li.topIndicator,
 .sequencerMain ul.pianoRollColumn li.playhead {
-  height:10px;
-  position:sticky;
-  top:0;
-  border-radius:0;
-  font-size: small;
-  text-align: center;
-  color:#ccc;
-  font-weight:bold;
-    background-color:black;
-    box-shadow:none;
-    text-shadow:none;
+    height: 10px;
+    position: sticky;
+    top: 0;
+    border-radius: 0;
+    font-size: small;
+    text-align: center;
+    color: #ccc;
+    font-weight: bold;
+    background-color: black;
+    box-shadow: none;
+    text-shadow: none;
     /* justify-content: flex-start; */
 }
 
 .sequencerMain ul.pianoRollColumn.playing li.playhead {
-    background-color:#8888;
+    background-color: #8888;
 }
+
 .sequencerMain ul.pianoRollColumn.playing.majorBeat li.playhead {
-    background-color:#f44;
+    background-color: #f44;
 }
 
 .sequencerMain ul.pianoRollColumn li.playhead .divControls {
-    display:none;
+    display: none;
 }
 
 .sequencerMain ul.pianoRollColumn li.playhead:hover .divControls {
-    display:block;
+    display: block;
 }
 
 
 .sequencerMain button.cueButton {
     height: 25px;
-    text-transform:uppercase;
-    font-family:monospace;
-    font-size:18px;
-    color:#055;
+    text-transform: uppercase;
+    font-family: monospace;
+    font-size: 18px;
+    color: #055;
 }
 
 .sequencerMain button.cueButton.active {
-    background-color:#f00;
+    background-color: #f00;
 }
 
 .sequencerMain .seqTopColumn.playButton .paramBlock {
-    flex-direction:column;
+    flex-direction: column;
 }
 
 
@@ -705,112 +707,77 @@
 
 .sequencerMain ul.pianoRollLegend li.triangle {
     background-color: #add;
-  }
-  .sequencerMain ul.pianoRollLegend li.agogo {
-    background-color: #add;
-  }
-  .sequencerMain ul.pianoRollLegend li.shaker {
-    background-color: #add;
-  }
-  .sequencerMain ul.pianoRollLegend li.aux {
-    background-color: #daa;
-  }
-  .sequencerMain ul.pianoRollLegend li.guiro {
-    background-color: #ada;
-  }
-  .sequencerMain ul.pianoRollLegend li.timbale {
-    background-color: #add;
-  }
-  .sequencerMain ul.pianoRollLegend li.bongotom {
-    background-color: #dad;
-  }
-  .sequencerMain ul.pianoRollLegend li.conga {
-    background-color: #dda;
-  }
-  
-
-
-  .sequencerMain ul.pianoRollLegend li.oct4.white {
-    background-color: #fff;
- }
- 
- .sequencerMain ul.pianoRollLegend li.oct3.white {
-    background-color: #ffc;
- }
- 
- .sequencerMain ul.pianoRollLegend li.oct2.white {
-    background-color: #fcc;
- }
- 
- .sequencerMain ul.pianoRollLegend li.oct1.white {
-    background-color: #ccf;
- }
- .sequencerMain ul.pianoRollLegend li.c {
-     border-bottom: 3px solid #666;
- }
-
- .sequencerMain ul.pianoRollColumn li.c .muteOL {
-     border-bottom: 3px solid #666;
- }
-
-
-
-
- /* --- edit menu stuff --- */
-
- .sequencerMain .editButton {
-    width: auto;
-    border-radius: 0;
-    padding-left: 10px;
-    padding-right: 10px;
 }
- 
- .sequencerMain .editPatternDialog fieldset {
-    padding: 10px;
-    margin: 10px;
-    background-color: #044;
-    border: 0;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
- }
- 
- .sequencerMain .editPatternDialog fieldset legend {
-    text-align:center;
- }
- 
- .sequencerMain .editPatternDialog  button {
-   padding-left:15px;
-   padding-right:15px;
-   width:auto;
- }
- 
- .sequencerMain .editPatternDialog .wasdContainer {
-   display:flex;
-   flex-direction: column;
-   align-items: center;
- }
- .sequencerMain .editPatternDialog .wasdContainer > div {
-   display:flex;
- }
- 
- .sequencerMain .editPatternDialog .wasdContainer > div button i {
-   font-size:32px;
- }
+
+.sequencerMain ul.pianoRollLegend li.agogo {
+    background-color: #add;
+}
+
+.sequencerMain ul.pianoRollLegend li.shaker {
+    background-color: #add;
+}
+
+.sequencerMain ul.pianoRollLegend li.aux {
+    background-color: #daa;
+}
+
+.sequencerMain ul.pianoRollLegend li.guiro {
+    background-color: #ada;
+}
+
+.sequencerMain ul.pianoRollLegend li.timbale {
+    background-color: #add;
+}
+
+.sequencerMain ul.pianoRollLegend li.bongotom {
+    background-color: #dad;
+}
+
+.sequencerMain ul.pianoRollLegend li.conga {
+    background-color: #dda;
+}
 
 
 
- /* ---- note styling ---- */
-  
+.sequencerMain ul.pianoRollLegend li.oct4.white {
+    background-color: #fff;
+}
+
+.sequencerMain ul.pianoRollLegend li.oct3.white {
+    background-color: #ffc;
+}
+
+.sequencerMain ul.pianoRollLegend li.oct2.white {
+    background-color: #fcc;
+}
+
+.sequencerMain ul.pianoRollLegend li.oct1.white {
+    background-color: #ccf;
+}
+
+.sequencerMain ul.pianoRollLegend li.c {
+    border-bottom: 3px solid #666;
+}
+
+.sequencerMain ul.pianoRollColumn li.c .muteOL {
+    border-bottom: 3px solid #666;
+}
+
+
+
+
+
+
+/* ---- note styling ---- */
+
 
 
 .sequencerMain ul.pianoRollColumn li .noteBase {
     background-color: #333;
-    align-items:center;
+    align-items: center;
 }
 
-.sequencerMain ul.pianoRollColumn li:hover .noteBase {
-}
+.sequencerMain ul.pianoRollColumn li:hover .noteBase {}
 
 .sequencerMain ul.pianoRollColumn li.muted .muteOL {
     background-color: #0008;
@@ -827,8 +794,9 @@
 .sequencerMain ul.pianoRollColumn li .muteOL {
     border: 2px solid transparent;
 }
+
 .sequencerMain ul.pianoRollColumn li:hover .muteOL {
-    border:2px solid #777;
+    border: 2px solid #777;
 }
 
 
@@ -845,12 +813,12 @@
 
 .sequencerMain ul.pianoRollColumn li.note.muted .noteOL {
     background-color: #575;
-    box-shadow:none;
+    box-shadow: none;
 }
 
 .sequencerMain ul.pianoRollColumn li.note.muted.genvel1 .noteOL {
     background-color: #757;
-    box-shadow:none;
+    box-shadow: none;
 }
 
 
@@ -860,56 +828,183 @@
 
 .sequencerMain ul.pianoRollColumn li .noteOnHandle,
 .sequencerMain ul.pianoRollColumn li .noteOffHandle {
-  width: max(20%, 5px);
-  background-color: #fff3;
+    width: max(20%, 5px);
+    background-color: #fff3;
 }
+
 .sequencerMain ul.pianoRollColumn li.endcontinue div {
-  border-top-right-radius:0;
-  border-bottom-right-radius:0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .sequencerMain ul.pianoRollColumn li.begincontinue div {
-  border-top-left-radius:0;
-  border-bottom-left-radius:0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
- .sequencerMain ul.pianoRollColumn li .muteOL > div {
-     flex-grow: 0;
- }
+.sequencerMain ul.pianoRollColumn li .muteOL>div {
+    flex-grow: 0;
+}
 
- .sequencerMain ul.pianoRollColumn li .muteOL > .cellBody {
-    flex-grow:1;
- }
- 
-  .sequencerMain ul.pianoRollColumn li .lengthHandle {
-    background-color:transparent;
-    flex-grow:0;
+.sequencerMain ul.pianoRollColumn li .muteOL>.cellBody {
+    flex-grow: 1;
+}
+
+.sequencerMain ul.pianoRollColumn li .lengthHandle {
+    background-color: transparent;
+    flex-grow: 0;
     width: max(20%, 5px);
-    border-radius:0;
- }
-   .sequencerMain ul.pianoRollColumn li .lengthHandle:hover {
-    background-color:#0cc;
-    box-shadow:0 0 20px #0cc;
- }
- 
- .sequencerMain ul.pianoRollColumn li.begincontinue {
+    border-radius: 0;
+}
+
+.sequencerMain ul.pianoRollColumn li .lengthHandle:hover {
+    background-color: #0cc;
+    box-shadow: 0 0 20px #0cc;
+}
+
+.sequencerMain ul.pianoRollColumn li.begincontinue {
     /* border-left:none; */
     /* border-radius:0; */
-  }
- 
- .sequencerMain ul.pianoRollColumn li.begincontinue .noteBase {
-   align-items:center;
-   flex-grow: 0;
-   /* border-top-left-radius: 0; */
-   margin-left: 0;
-   /* background-color: black; */
- }
+}
 
- .sequencerMain ul.pianoRollColumn li.endcontinue .noteBase {
-   align-items:center;
-   flex-grow: 0;
-   /* border-top-left-radius: 0; */
-   margin-right: 0;
-   /* background-color: black; */
- }
+.sequencerMain ul.pianoRollColumn li.begincontinue .noteBase {
+    align-items: center;
+    flex-grow: 0;
+    /* border-top-left-radius: 0; */
+    margin-left: 0;
+    /* background-color: black; */
+}
 
+.sequencerMain ul.pianoRollColumn li.endcontinue .noteBase {
+    align-items: center;
+    flex-grow: 0;
+    /* border-top-left-radius: 0; */
+    margin-right: 0;
+    /* background-color: black; */
+}
+
+
+
+
+
+/* --- edit menu stuff --- */
+.sequencerMain .editButton {
+    width: auto;
+    border-radius: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.sequencerMain fieldset.editButtonFieldset {
+
+    background-color: #8cc;
+
+    border-color: #088;
+}
+
+.sequencerMain .editRow {
+    display: flex;
+    align-content: stretch;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+
+.sequencerMain .editRow button {
+    width: auto;
+    /* border-radius: 2px; */
+    box-shadow: inset 0px 0px 10px #8884, 0 0 4px #0004;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.sequencerMain .editRow fieldset {
+    background-color: #8cc;
+    border: 0;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    margin-right: 8px;
+    border-left: 4px solid #088;
+}
+
+.sequencerMain .editRow .legend {
+    /* white-space: normal; */
+}
+
+.sequencerMain .editRow .vertbuttons {}
+
+.sequencerMain .editRow .vertbuttons button {
+    height: 20px;
+    box-shadow: none;
+}
+
+.sequencerMain .editRow .horizbuttons {
+    display: flex;
+    align-items: center;
+}
+
+
+
+.sequencerMain .editRow .vertbuttons button:first-child {
+    margin-bottom: 1px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.sequencerMain .editRow .vertbuttons button:last-child {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.sequencerMain .editRow .horizbuttons button {
+    box-shadow: none;
+}
+
+
+.sequencerMain .editRow .horizbuttons button:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: 1px;
+}
+
+.sequencerMain .editRow .horizbuttons button:last-child {
+    margin-left: 0;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+}
+
+
+.sequencerMain .editRow button i {
+    font-size: 24px;
+}
+
+
+.sequencerMain .editRow .noteglyph {
+    font-size: 24px;
+}
+
+
+.sequencerMain .editRow .editCloseFieldset {
+
+    border: 0;
+
+    /* align-items: flex-start; */
+
+    /* flex-grow: 0; */
+
+    /* flex-shrink: 1; */
+
+    background-color: #bee;
+}
+
+.sequencerMain .editRow .editCloseButton {
+    box-shadow: none;
+    background: none;
+    /* padding: 0; */
+}
+
+.sequencerMain .editRow .editCloseButton i {
+    font-size: 18px;
+}
