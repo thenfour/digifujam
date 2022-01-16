@@ -897,7 +897,7 @@ class DigifuApp {
             return;
         }
 
-        foundInstrument.instrument.sequencerDevice.isPlaying = data.isPlaying;
+        foundInstrument.instrument.sequencerDevice.SetPlaying(data.isPlaying);
 
         this.stateChangeHandler();
     }

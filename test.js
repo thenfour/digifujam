@@ -31,37 +31,43 @@ seqConfigs.forEach(leaf => {
   Seq.IntegrateSequencerConfig(config);
 });
 Seq.ResolveSequencerConfig();
-//const legend = Seq.GetGlobalSequencerConfig().legends["GeneralNotes"];//"DrumsA"];
+const legend = Seq.GetGlobalSequencerConfig().legends["GeneralNotes"];//"DrumsA"];
 //const legend = Seq.GetGlobalSequencerConfig().legends["DrumsA"];
-const legend = Seq.GetGlobalSequencerConfig().legends["Debug36"];
+//const legend = Seq.GetGlobalSequencerConfig().legends["Debug36"];
 
 const dev = new Seq.SequencerDevice();
-// dev.LoadPattern({
-//   "lengthMajorBeats": 8,
-//   "divisionType": "MajorBeat",
-//   "notes": [
-//     {
-//       "midiNoteValue": 78,
-//       "id": "aa",
-//       "velocityIndex": 0,
-//       "patternMajorBeat": 0,
-//       "lengthMajorBeats": 8,
-//       "timestamp": 1642288010460
-//     },
-//     {
-//       "midiNoteValue": 78,
-//       "id": "bb",
-//       "velocityIndex": 0,
-//       "patternMajorBeat": 1,
-//       "lengthMajorBeats": 1,
-//       "timestamp": 1642288016776
-//     }
-//   ]
-// });
+ dev.LoadPattern(
+   
+  {
+    "notes": [
+      {
+        "midiNoteValue": 77,
+        "id": "aa",
+        "velocityIndex": 0,
+        "patternMajorBeat": 3,
+        "lengthMajorBeats": 4,
+        "timestamp": 1642344405797
+      },
+      {
+        "midiNoteValue": 77,
+        "id": "bb",
+        "velocityIndex": 0,
+        "patternMajorBeat": 4.25,
+        "lengthMajorBeats": 4,
+        "timestamp": 1642344413473
+      }
+    ],
+    "lengthMajorBeats": 8,
+    "divisionType": "MinorBeat_x2"
+  }  
+
+
+
+);
 const patch = dev.livePatch;
 const pattern = dev.livePatch.GetSelectedPattern();
 //patch.SetDivisionType(Seq.eDivisionType.MinorBeat);
-patch.SetLengthMajorBeats(8);
+//patch.SetLengthMajorBeats(8);
 
 const addNote = (midiNoteValue, patternMajorBeat, lengthMajorBeats) => {
   pattern.ProcessOps([
@@ -125,7 +131,7 @@ const addNote = (midiNoteValue, patternMajorBeat, lengthMajorBeats) => {
 // addNote(37, 4, 1);
 
 //addNote(36, 0, 8);
-addNote(36, 2, 2);
+//addNote(36, 2, 2);
 //addNote(36, 5, 2);
 
 const dumpPattern = (p) => {

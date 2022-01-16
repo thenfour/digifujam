@@ -810,8 +810,10 @@ class SequencerDevice {
   }
 
   SetPlaying(b) {
+    this.CancelCue();
     if (this.isPlaying === !!b)
       return;
+
     if (!b) {
       // stop.
       this.isPlaying = false;
@@ -1369,7 +1371,7 @@ class SequencerPatternView {
 
   GetPatternOpsForCellRemove(divInfo, note) {
     const patternViewCell = divInfo.rows[note.midiNoteValue];
-    if (!patternViewCell.thisNote)
+    if (!patternViewCell?.thisNote)
       return null;
     // we know this cell has a note.
     const ret = [];
@@ -1407,12 +1409,14 @@ class SequencerPatternView {
     return ret;
   }
 
-  // // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
+  // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
   GetPatternOpsForCellCycle(divInfo, note) {
-    const patternViewCell = divInfo.rows[note.midiNoteValue];
+    let patternViewCell = divInfo.rows[note.midiNoteValue];
     const velSetLen = note.velocitySet.length;
-    if (patternViewCell?.beginBorderType === eBorderType.NoteOn) {
-      // this is a note on cell; delete notes that start here.
+    if (patternViewCell?.thisNote) {
+      // act as if you are cycling the note-on cell.
+      patternViewCell = patternViewCell.noteOnCell;
+      divInfo = patternViewCell.div;
       const ret = this.GetPatternOpsForCellRemove(divInfo, note);
       if (patternViewCell.velocityIndex === (velSetLen - 1)) {
         // just delete the note, it's disappearing
@@ -1430,7 +1434,7 @@ class SequencerPatternView {
       return ret;
     }
 
-    // no note on. add a fresh new one. if it overlaps the other, no worries the pattern view will take care of that.
+    // no note; add a fresh new one. if it overlaps the other, no worries the pattern view will take care of that.
     let ret = [ {
       type : eSeqPatternOp.AddNote,
       midiNoteValue : note.midiNoteValue,
@@ -1451,8 +1455,8 @@ class SequencerPatternView {
         const ul = div.rows[note.midiNoteValue];
         if (!ul)
           return false;
-        const ret = ul.noteOnCell.noteOnNotes.some(cell => cell.patternNote.id === note.id);
-        return ret;
+        const ret = ul.noteOnCell?.noteOnNotes?.some(cell => cell.patternNote.id === note.id);
+        return !!ret;
       });
       if (!div)
         return; // don't alter invisible notes because we can't reliably clamp lengths, so it's safer.
@@ -1472,8 +1476,8 @@ class SequencerPatternView {
         const ul = div.rows[note.midiNoteValue];
         if (!ul)
           return false;
-        const ret = ul.noteOnCell.noteOnNotes.some(cell => cell.patternNote.id === note.id);
-        return ret;
+        const ret = ul.noteOnCell?.noteOnNotes?.some(cell => cell.patternNote.id === note.id);
+        return !!ret;
       });
       if (idiv === -1)
         return; // don't alter invisible notes because we can't reliably clamp lengths, so it's safer.
