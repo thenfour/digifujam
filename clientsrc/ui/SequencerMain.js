@@ -56,7 +56,7 @@ const gTransposeCaptions = [
 
 // ok not really logical to use fuzzyselector here because we only accept exact matches but whatev
 const gDivisionInfo = {
-    /*Seq.eDivisionType.MajorBeat*/MajorBeat: { caption: "Major beat", cssClass:"div1"},
+    /*Seq.eDivisionType.MajorBeat*/MajorBeat: { caption: "Beat", cssClass:"div1"},
     /*Seq.eDivisionType.MinorBeat*/MinorBeat: { caption: "8th" , cssClass:"div2"},
 
     /*Seq.eDivisionType.MinorBeat_x2*/MinorBeat_x2: { caption: "16th" , cssClass:"div3"},
@@ -78,8 +78,13 @@ const gDivisions = new DFUtils.FuzzySelector(gDivisionSortedInfo, (val, obj) => 
 
 
 const gSwingSnapValues = new DFUtils.FuzzySelector([
-    -90, -85,-80,-75,-66,-63,-60,-55,-50,-45,-40,-36,-33,-30,-25,-20,-15,-10,-5,
-    0,5,10,15,20,25,30,33,36,40,45,50,55,60,63,66,70,75,80,85,90
+    //-90, -85,-80,
+    -75,-66,-63,-60,-55,
+    -50,-45,-40,-35,-30,-25,-20,-15,-10,-5,
+    0,5,10,15,20,25,30,35,40,45,50,
+    55,60,63,66,70,75,
+    //80,85,90
+
 ], (val, obj) => Math.abs(val - obj));
 
 
@@ -133,25 +138,25 @@ class SeqTimer
         const patch = seq.livePatch;
         const noteLegend = seq.GetNoteLegend();
         const patternViewData = Seq.GetPatternView(patch, noteLegend);
-        //const ts = patch.timeSig;
         const playheadAbsQuarter = this.app.getAbsoluteBeatFloat();
-        const playheadPatternFrac = seq.GetPatternFracAtAbsQuarter(playheadAbsQuarter);
-        const patternLengthQuarters = patch.GetPatternLengthQuarters();
+        //const playheadPatternFrac = seq.GetPatternFracAtAbsQuarter(playheadAbsQuarter);
+        const playhead = seq.GetAbsQuarterInfo(playheadAbsQuarter);
+        //const patternLengthQuarters = patch.GetPatternLengthQuarters();
         const bpm = this.app.roomState.bpm;
 
-        const currentDiv = patternViewData.divs.find(divInfo => divInfo.IncludesPatternFrac(playheadPatternFrac));
+        //const playheadPatternQuarter = playheadPatternFrac * patternLengthQuarters;
+
+        const currentDiv = patternViewData.divs.find(divInfo => divInfo.IncludesPatternFracWithSwing(playhead.patternQuarter));
 
         // calc divlength MS
-        const divRemainingPatterns = currentDiv.endPatternFrac - playheadPatternFrac;
-        const divRemainingQuarters = divRemainingPatterns * patternLengthQuarters;
+        const divRemainingQuarters = currentDiv.swingEndPatternQuarter - playhead.patternQuarter;//divRemainingPatterns * patternLengthQuarters;
         let delayMS = DFU.BeatsToMS(divRemainingQuarters, bpm);
 
         let destDivIndex = currentDiv.patternDivIndex + 1;
         let destDiv = patternViewData.divs[destDivIndex % patternViewData.divs.length];
         console.assert((destDivIndex % patternViewData.divs.length) === destDiv.patternDivIndex);
         while (delayMS < gMinTimerInterval) {
-            const divLenPatterns = destDiv.endPatternFrac - destDiv.beginPatternFrac;
-            const divLenQuarters = divLenPatterns * patternLengthQuarters;
+            const divLenQuarters = destDiv.swingEndPatternQuarter - destDiv.swingBeginPatternQuarter;
             const divLenMS = DFU.BeatsToMS(divLenQuarters, bpm);
             delayMS += divLenMS;
             destDivIndex ++;
@@ -919,7 +924,7 @@ class SequencerMain extends React.Component {
 
                     <fieldset>
                             <div className='paramGroup'>
-                                <div className='legend'>Room BPM</div>
+                                <div className='legend'>BPM</div>
                                 <div className='paramBlock'>
                                 <div className='paramValue'>
                                     {this.props.app.roomState.bpm}
@@ -938,6 +943,52 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
                         </fieldset>
+
+
+                        <fieldset>
+                        <div className='paramGroup'>
+                            <div className='legend'>Preset</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>{patch.presetName}</div>
+                            { this.state.isPresetsExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isPresetsExpanded:false});}}>
+                                      <div className='dialog presetDialog'>
+                                        <SequencerPresetDialog
+                                            onClose={() => { this.setState({isPresetsExpanded:false});}}
+                                            app={this.props.app}
+                                            instrument={this.props.instrument}
+                                            observerMode={this.props.observerMode}
+                                            ></SequencerPresetDialog>
+                                        </div>
+                                    </ClickAwayListener>
+                            }
+                                <div className="buttonArray">
+                                    {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
+                                    <button className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
+                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
+                                </div>
+                            </div>
+                        </div>
+                        </fieldset>
+
+                    <fieldset>
+                            <div className='paramGroup'>
+                                <div className='legend'>Pattern</div>
+                                <div className='paramBlock'>
+                                <div className="buttonArray">
+                                    {patternButtons}
+                                </div>
+                                <div className="buttonArray">
+                                <button title="Copy pattern" className={'altui clickable'} onClick={() => this.onClickCopyPattern()}><i className="material-icons">content_copy</i></button>
+                                <button title="Paste pattern" className={'altui' + clickableIfEditable} onClick={() => this.onClickPastePattern()}><i className="material-icons">content_paste</i></button>
+                                </div>
+                                <div className="buttonArray">
+                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable} onClick={() => this.onClickClearPattern()}><i className="material-icons">playlist_remove</i></button>
+                                </div>
+                            </div>
+                            </div>
+                        </fieldset>
+
 
 
                         <fieldset>
@@ -986,10 +1037,55 @@ class SequencerMain extends React.Component {
                         </div>
 
 
-                        {/* <div className='paramGroup'>
+
+                    </fieldset>
+
+
+
+
+                    <fieldset>
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Len</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
+                                <div className="buttonArray vertical">
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div className='paramGroup'>
+                            <div className='legend'>Div</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
+                                {gDivisionInfo[patch.GetDivisionType()].caption}
+                            </div>
+                                { this.state.isDivExpanded &&
+                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
+                                            <ul className='dropDownMenu'>
+                                                {divisionsList}
+                                            </ul>
+                                        </div>
+                                    </ClickAwayListener>
+                                }
+                                <div className="buttonArray vertical">
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className='paramGroup'>
                             <div className='legend'>Swing</div>
                             <div className='paramBlock'>
-                                <div className='paramValue'>{Math.floor(patch.swing * 100)}%</div>
+                                <div className={'paramValue ' + (patch.swing === 0 ? "" : "altvalue")}>{Math.floor(patch.swing * 100)}%</div>
                                 <div className="buttonArray vertical">
                                     <button onClick={() =>{this.onClickSwingAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
                                     <button onClick={() =>{this.onClickSwingAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
@@ -1005,57 +1101,11 @@ class SequencerMain extends React.Component {
                                 />
                                 </div>
                             </div>
-                        </div> */}
-
+                        </div>
 
 
                     </fieldset>
 
-
-
-                        <fieldset>
-                        <div className='paramGroup'>
-                            <div className='legend'>Preset</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue presetName clickable' onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>{patch.presetName}</div>
-                            { this.state.isPresetsExpanded &&
-                                    <ClickAwayListener onClickAway={() => { this.setState({isPresetsExpanded:false});}}>
-                                      <div className='dialog presetDialog'>
-                                        <SequencerPresetDialog
-                                            onClose={() => { this.setState({isPresetsExpanded:false});}}
-                                            app={this.props.app}
-                                            instrument={this.props.instrument}
-                                            observerMode={this.props.observerMode}
-                                            ></SequencerPresetDialog>
-                                        </div>
-                                    </ClickAwayListener>
-                            }
-                                <div className="buttonArray">
-                                    {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
-                                    <button className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
-                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
-                                </div>
-                            </div>
-                        </div>
-                        </fieldset>
-
-                    <fieldset>
-                            <div className='paramGroup'>
-                                <div className='legend'>Pattern</div>
-                                <div className='paramBlock'>
-                                <div className="buttonArray">
-                                    {patternButtons}
-                                </div>
-                                <div className="buttonArray">
-                                <button title="Copy pattern" className={'altui clickable'} onClick={() => this.onClickCopyPattern()}><i className="material-icons">content_copy</i></button>
-                                <button title="Paste pattern" className={'altui' + clickableIfEditable} onClick={() => this.onClickPastePattern()}><i className="material-icons">content_paste</i></button>
-                                </div>
-                                <div className="buttonArray">
-                                <button title="Clear pattern" className={'clearPattern' + clickableIfEditable} onClick={() => this.onClickClearPattern()}><i className="material-icons">playlist_remove</i></button>
-                                </div>
-                            </div>
-                            </div>
-                        </fieldset>
 
 
                     <fieldset>
@@ -1102,60 +1152,15 @@ class SequencerMain extends React.Component {
 
 
 
-                    <fieldset>
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Measures</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
-                                <div className="buttonArray vertical">
-                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Div</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue clickable' onClick={() => { this.setState({isDivExpanded:!this.state.isDivExpanded});}}>
-                                {gDivisionInfo[patch.GetDivisionType()].caption}
-                            </div>
-                                { this.state.isDivExpanded &&
-                                    <ClickAwayListener onClickAway={() => { this.setState({isDivExpanded:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({isDivExpanded:false});}}>Select a subdivision count</legend>
-                                            <ul className='dropDownMenu'>
-                                                {divisionsList}
-                                            </ul>
-                                        </div>
-                                    </ClickAwayListener>
-                                }
-                                <div className="buttonArray vertical">
-                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button className={clickableIfEditable} onClick={() =>{this.onClickDivAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </fieldset>
-
-
-
-
-
                     <fieldset className='editButtonFieldset'>
 
-                    <div className='paramGroup'>
+                    <div className='paramGroup' title="Edit menu">
                     <div className="buttonArray">
                                     <button
                                         className={"editButton " + clickableIfEditable}
                                         onClick={() => { this.setState({isEditExpanded:!this.state.isEditExpanded});}}
                                         >
-                                            EDIT
+                                            <i className="material-icons">edit</i>
                                             <i className="material-icons">{this.state.isEditExpanded ? "arrow_drop_down" : "arrow_right"}</i>
                                             {/* <i className="material-icons">edit</i> */}
                                     </button>
@@ -1169,14 +1174,14 @@ class SequencerMain extends React.Component {
 
                     <fieldset>
 
-                        <div className='paramGroup'>
-                            <div className='legend'>Zoom</div>
+                        <div className='paramGroup' title="Zoom">
+                            {/* <div className='legend'>Zoom</div> */}
                             <div className='paramBlock'>
-                            <div className='paramValue'>{this.state.zoom}</div>
                             <div className="buttonArray">
                                 <button className='clickable' onClick={() => this.onClickZoomOut()}><i className="material-icons">zoom_out</i></button>
                                 <button className='clickable' onClick={() => this.onClickZoomIn()}><i className="material-icons">zoom_in</i></button>
                             </div>
+                            <div className='paramValue'>{this.state.zoom}</div>
                             </div>
                         </div>
 

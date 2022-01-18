@@ -118,7 +118,7 @@ class RoomSequencerPlayer {
     // for each note, add its noteon/noteoff for each loop until it's out of window.
     const events = [];
     patternView.divs.forEach(div => {
-      const divBeginPatternQuarter = div.beginPatternFrac * patternPlayheadInfo.patternLengthQuarters;
+      const divBeginPatternQuarter = div.swingBeginPatternQuarter;// * patternPlayheadInfo.patternLengthQuarters;
 
       let divFirstFutureAbsQuarter = null;
       if (divBeginPatternQuarter < patternPlayheadInfo.patternQuarter) {

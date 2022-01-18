@@ -59,7 +59,7 @@ class DiscordBot {
             //console.log(`-------------------------------------`);
             //console.log(`user added ${member.displayName}`);
             try {
-                const channels = GetChannelsForMember(member);
+                const channels = this.GetChannelsForMember(member);
 
                 // add to our channel user map and emit join events
                 const emits = [];

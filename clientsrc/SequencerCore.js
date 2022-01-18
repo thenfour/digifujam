@@ -1,10 +1,10 @@
 // here's how divisions work in the sequencer:
 // "loop" is the # of times a pattern has played; an absolute concept
 // "pattern" is a looping range
-// measure -> subdiv group -> subdiv -> div
-//   ^ a pattern concept
-//                ^-------------^ a timesig concept
-//                                        ^ a pattern concept
+// measure -> majorbeat -> minorbeat -> div
+//   ^ a pattern concept, equal divisions
+//                ^-------------^ a timesig concept, unequal divisions
+//                                        ^ a pattern concept, unequal divisions per minorbeat due to swing
 
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
@@ -369,15 +369,9 @@ class SeqDivInfo {
   IncludesPatternMajorBeat(b) {
     return (b >= this.beginPatternMajorBeat) && (b < this.endPatternMajorBeat);
   }
-  // IncludesPatternMajorBeatRange(begin, end) {
-  //   if (end <= this.beginPatternMajorBeat)
-  //     return false;
-  //   if (begin >= this.endPatternMajorBeat)
-  //     return false;
-  //   return true;
-  // }
-  IncludesPatternFrac(playheadPatternFrac) {
-    return (playheadPatternFrac >= this.beginPatternFrac) && (playheadPatternFrac < this.endPatternFrac);
+
+  IncludesPatternFracWithSwing(playheadPatternQuarter) {
+    return (playheadPatternQuarter >= this.swingBeginPatternQuarter) && (playheadPatternQuarter < this.swingEndPatternQuarter);
   }
 
   // // for pattern view div info
@@ -615,22 +609,21 @@ class SequencerPatch {
     return this.transpose;
   }
 
-  #SubdivideMeasureMinorBeats(mbiArray, n) {
-    n = Math.ceil(n); // if non-integral subdivisions, subdivide further. handles cases like 6/8.
+  #SubdivideMeasureMinorBeats(elementsPerQuarter) {
     const ret = [];
 
-    // here is where we would support swing.
-    // the mbiArray should be pre-processed, so every other minor beat gets shifted.
-    // there are a lot of properties to adjust though and it may be better to do this in the timeSig class where
-    // it originates from.
+    const minorBeats = this.timeSig.minorBeatInfo;
 
-    mbiArray.forEach(minbi => {
+    elementsPerQuarter /= this.timeSig.minorBeatsPerQuarter;
+    elementsPerQuarter = Math.ceil(elementsPerQuarter); // if non-integral subdivisions, subdivide further. handles cases like 6/8.
+
+    minorBeats.forEach(minbi => {
       // subdivide minbi.
       const minorBeatsInThisMajorBeat = this.timeSig.majorBeatInfo[minbi.majorBeatIndex].minorBeats.length;
       const minorBeatDurationInMeasures = minbi.endMeasureFrac - minbi.beginMeasureFrac;
-      const divDurationInMeasures = minorBeatDurationInMeasures / n;
-      for (let minorBeatDivIndex = 0; minorBeatDivIndex < n; ++minorBeatDivIndex) {
-        ret.push({
+      const divDurationInMeasures = minorBeatDurationInMeasures / elementsPerQuarter;
+      for (let minorBeatDivIndex = 0; minorBeatDivIndex < elementsPerQuarter; ++minorBeatDivIndex) {
+        const n = {
           __minbi : minbi,
           beginMeasureFrac : minbi.beginMeasureFrac + (divDurationInMeasures * minorBeatDivIndex),
           endMeasureFrac : minbi.beginMeasureFrac + (divDurationInMeasures * (1 + minorBeatDivIndex)),
@@ -639,9 +632,10 @@ class SequencerPatch {
           isMeasureBoundary : ret.length === 0,
           isMajorBeatBoundary : minbi.isMajorBeatBoundary && minorBeatDivIndex === 0 && minbi.minorBeatOfMajorBeat === 0, //    minbi.minorBeatOfMajorBeat == 0 && ,
           isMinorBeatBoundary : minorBeatDivIndex === 0,
-          beginMeasureMajorBeat : minbi.beginMeasureMajorBeat + (minorBeatDivIndex / n) / minorBeatsInThisMajorBeat,
-          endMeasureMajorBeat : minbi.beginMeasureMajorBeat + ((minorBeatDivIndex + 1) / n) / minorBeatsInThisMajorBeat,
-        });
+          beginMeasureMajorBeat : minbi.beginMeasureMajorBeat + (minorBeatDivIndex / elementsPerQuarter) / minorBeatsInThisMajorBeat,
+          endMeasureMajorBeat : minbi.beginMeasureMajorBeat + ((minorBeatDivIndex + 1) / elementsPerQuarter) / minorBeatsInThisMajorBeat,
+        };
+        ret.push(n);
       }
     });
     return ret;
@@ -649,9 +643,9 @@ class SequencerPatch {
 
   GetMeasureDivisionInfo() {
     switch (this.GetSelectedPattern().divisionType) {
-    case eDivisionType.MajorBeat: // so 4/4 returns 4, 7/8 returns 2 (unequal beats)
+    case eDivisionType.MajorBeat: // so 4/4 returns 4, 7/8 returns 2 (unequal beats). no swing is supported at this level.
       return this.timeSig.majorBeatInfo.map(majbi => {
-        return {
+        const n = {
           beginMeasureFrac : majbi.beginMeasureFrac,
           endMeasureFrac : majbi.endMeasureFrac,
           measureDivIndex : majbi.index,
@@ -662,15 +656,16 @@ class SequencerPatch {
           beginMeasureMajorBeat : majbi.index,
           endMeasureMajorBeat : majbi.index + 1,
         };
+        return n;
       });
     case eDivisionType.MinorBeat: // 8ths
-      return this.#SubdivideMeasureMinorBeats(this.timeSig.minorBeatInfo, 2 / this.timeSig.minorBeatsPerQuarter);
-    case eDivisionType.MinorBeat_x2:
-      return this.#SubdivideMeasureMinorBeats(this.timeSig.minorBeatInfo, 4 / this.timeSig.minorBeatsPerQuarter);
-    case eDivisionType.MinorBeat_x3:
-      return this.#SubdivideMeasureMinorBeats(this.timeSig.minorBeatInfo, 6 / this.timeSig.minorBeatsPerQuarter);
-    case eDivisionType.MinorBeat_x4:
-      return this.#SubdivideMeasureMinorBeats(this.timeSig.minorBeatInfo, 8 / this.timeSig.minorBeatsPerQuarter);
+      return this.#SubdivideMeasureMinorBeats(2);
+    case eDivisionType.MinorBeat_x2: // 16ths
+      return this.#SubdivideMeasureMinorBeats(4);
+    case eDivisionType.MinorBeat_x3: // 24ths
+      return this.#SubdivideMeasureMinorBeats(6);
+    case eDivisionType.MinorBeat_x4: // 32nd
+      return this.#SubdivideMeasureMinorBeats(8);
     }
   }
 
@@ -708,6 +703,17 @@ class SequencerPatch {
         endPatternMajorBeat : (wholeMeasures * this.timeSig.majorBeatsPerMeasure) + div.endMeasureMajorBeat,
       });
     }));
+
+    // calculate swing pattern frac positions
+    //const swingBasisQuarters = 0.5; // swing 8ths always
+    const patternLengthQuarters = patternLengthMeasures * this.timeSig.quartersPerMeasure;
+    ret.forEach(div => {
+      div.beginPatternQuarter = div.beginPatternFrac * patternLengthQuarters;
+      div.swingBeginPatternQuarter = DFMusic.ApplySwingToValueFrac(div.beginPatternQuarter, this.swing);
+      div.endPatternQuarter = div.endPatternFrac * patternLengthQuarters;
+      div.swingEndPatternQuarter = DFMusic.ApplySwingToValueFrac(div.endPatternQuarter, this.swing);
+    });
+
     return ret.map(r => new SeqDivInfo(r));
   }
 
@@ -720,11 +726,10 @@ class SequencerPatch {
     return this.GetSelectedPattern().GetDivCountForTimesig(this.timeSig);
   }
 
-  // must account for speed!
   GetPatternLengthQuarters() {
     const pattern = this.GetSelectedPattern();
     const patternLengthMeasures = pattern.lengthMajorBeats / this.timeSig.majorBeatsPerMeasure;
-    return patternLengthMeasures * this.timeSig.quartersPerMeasure / this.speed;
+    return patternLengthMeasures * this.timeSig.quartersPerMeasure;
   }
 
   // // { title, description, tags }
@@ -1360,7 +1365,7 @@ class SequencerPatternView {
     });
     if (candidates.length <= (SequencerSettings.MaxNoteOnsPerColumn - 1))
       return [];
-    candidates.sort((a,b) => a.patternNote.timestamp < b.patternNote.timestamp ? -1 : 1); // oldest to newest notes
+    candidates.sort((a, b) => a.patternNote.timestamp < b.patternNote.timestamp ? -1 : 1); // oldest to newest notes
     const overflowCount = (candidates.length + 1) - SequencerSettings.MaxNoteOnsPerColumn; // +1 for the noteon that's coming for midiNoteValue
     const removals = candidates.slice(0, overflowCount);
     return removals.map(un => {
@@ -1585,6 +1590,7 @@ function GetPatternView(patch, noteLegend) {
   patch.SetCachedView(ret);
   return ret;
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = {
