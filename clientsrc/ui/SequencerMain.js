@@ -1013,7 +1013,19 @@ class SequencerMain extends React.Component {
                                 </div>
                             </div>
 
+                    </fieldset>
+                    <fieldset>
 
+                        <div className='paramGroup'>
+                            <div className='legend'>Len</div>
+                            <div className='paramBlock'>
+                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
+                                <div className="buttonArray vertical">
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
+                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className='paramGroup'>
                             <div className='legend'>Speed</div>
@@ -1038,25 +1050,8 @@ class SequencerMain extends React.Component {
 
 
 
-                    </fieldset>
-
-
-
-
+                        </fieldset>
                     <fieldset>
-
-                        <div className='paramGroup'>
-                            <div className='legend'>Len</div>
-                            <div className='paramBlock'>
-                            <div className='paramValue'>{patch.GetLengthMajorBeats() / patch.timeSig.majorBeatsPerMeasure}</div>
-                                <div className="buttonArray vertical">
-                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(1)}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button className={clickableIfEditable} onClick={()=>this.onClickLength(-1)}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                            </div>
-                        </div>
-
-
 
                         <div className='paramGroup'>
                             <div className='legend'>Div</div>

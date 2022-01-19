@@ -1222,15 +1222,19 @@ class RoomServer {
     if (data.phaseRelativeMS) {
       this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
     }
+    this.sequencerPlayer.onChanged_General();
+
     io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM() }); //update bpm for ALL clients
   }
 
   OnClientAdjustBeatPhase(ws, data) {
     this.roomState.metronome.AdjustPhase(data.relativeMS);
+    this.sequencerPlayer.onChanged_General();
   }
 
   OnClientAdjustBeatOffset(ws, data) {
     this.roomState.OffsetBeats(data.relativeBeats);
+    this.sequencerPlayer.onChanged_General();
   }
 
   // called per every beat, BPM is defined in roomState
