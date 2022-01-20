@@ -726,6 +726,8 @@ class SequencerPatch {
     return this.GetSelectedPattern().GetDivCountForTimesig(this.timeSig);
   }
 
+  // these are PATTERN quarters, not speed-adjusted quarters.
+  // so if you need to account for pattern speed, caller needs to do it.
   GetPatternLengthQuarters() {
     const pattern = this.GetSelectedPattern();
     const patternLengthMeasures = pattern.lengthMajorBeats / this.timeSig.majorBeatsPerMeasure;
@@ -760,7 +762,7 @@ class SequencerDevice {
     this.startFromAbsQuarter ??= null; // if set, then we are cueued to begin playing at this abs room beat.
 
     // shifts playback
-    this.baseAbsQuarter ??= 0;
+    this.baseAbsQuarter ??= 0; // NOT SPEED adjusted. this is an offset of the incoming global abs playhead
 
     this.wasPlayingBeforeCue ??= false;
     this.baseAbsQuarterBeforeCue ??= 0;
@@ -834,24 +836,25 @@ class SequencerDevice {
 
   IsPlaying() { return this.isPlaying; }
 
-  GetPatternFracAtAbsQuarter(absQuarter) {
-    const i = this.GetAbsQuarterInfo(absQuarter);
-    return i.patternFrac;
-  }
 
-  // given abs quarter (absolute room beat), calculate some pattern times.
-  // this is the one original place where absolute playhead is converted to a pattern position.
+  // NOTE: return is SPEED-ADJUSTED
+  // given abs quarter (absolute room beat, NOT speed-adjusted), calculate some pattern times.
+  // this is where absolute playhead is converted to a pattern position.
   GetAbsQuarterInfo(absQuarter) {
     const patternLengthQuarters = this.livePatch.GetPatternLengthQuarters();
 
     absQuarter -= this.baseAbsQuarter;
+    //const nonSpeedAdjustedAbsQuarter = absQuarter;
+    // adjust the playhead to speed-adjusted.
+    absQuarter *= this.livePatch.speed;
 
     const absPatternFloat = absQuarter / patternLengthQuarters;
     const patternFrac = Math.abs(DFUtil.getDecimalPart(absPatternFloat));
     return {
       shiftedAbsQuarter : absQuarter, // so callers can now compare an abs playhead with the returned info
+      //nonSpeedAdjustedAbsQuarter,
       absPatternFloat,
-      patternLengthQuarters,
+      patternLengthQuarters, // speed-adjusted; means you cannot just compare this to normal abs quarters.
       patternFrac,
       patternQuarter : patternFrac * patternLengthQuarters,
     };
@@ -860,7 +863,6 @@ class SequencerDevice {
   InitPatch(presetID) {
     this.CancelCue();
     this.livePatch = new SequencerPatch({presetID});
-    //console.log(`initpatch; livepatch now ID ${this.livePatch.presetID}`);
   }
 
   SerializePattern() {

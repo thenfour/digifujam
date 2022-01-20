@@ -43,7 +43,7 @@ class RoomSequencerPlayer {
   onChanged_PlayStop(instrument, data) {
     //console.log(`onChanged_PlayStop(${JSON.stringify(data)})`);
     this.#invokeTimer();
-   }
+  }
   onChanged_TimeSig(instrument, data) {
     //console.log(`onChanged_TimeSig(${JSON.stringify(data)})`);
     this.#invokeTimer();
@@ -107,34 +107,36 @@ class RoomSequencerPlayer {
       return;
     }
 
-    const patternPlayheadInfo = instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat);
+    const patternPlayheadInfo = instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
-    const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM());
-    const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;
-    const shiftQuarters = instrument.sequencerDevice.baseAbsQuarter;
+    const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
+    const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
+    const shiftQuarters = instrument.sequencerDevice.baseAbsQuarter;                                   // NOT speed-adjusted.
 
-    // scheduling time must be in abs beats.
-    // calc chunk, enforcing pattern end loops. accumulate a list of events.
-    // for each note, add its noteon/noteoff for each loop until it's out of window.
+    // let minAbsQuarter = null;
+    // let maxAbsQuarter = null;
+
+    // scheduling time must be in abs quarters.
+    // this walks through all pattern divs, and for all notes in each div, schedules note on/off event pairs.
+    // for each note, this adds multiple if the pattern is less than the window len.
     const events = [];
     patternView.divs.forEach(div => {
-      const divBeginPatternQuarter = div.swingBeginPatternQuarter;// * patternPlayheadInfo.patternLengthQuarters;
+      const divBeginPatternQuarter = div.swingBeginPatternQuarter; // these are pattern quarters. which means they're speed-adjusted.
 
-      let divFirstFutureAbsQuarter = null;
+      // figure out which abs pattern to start from. if the "current" is passed, then advance a whole pattern forward in abs time.
+      let divFirstFutureAbsQuarter = null; // speed-adjusted quarters.
       if (divBeginPatternQuarter < patternPlayheadInfo.patternQuarter) {
-        // div occurs before the playhead within pattern
-        //    ----D---------|-----------------D------------|----------------D----
-        //        ^div                        ^div                          ^div
-        //                  [-----------------] = divBeginPatternQuarter
-        //                                         ^ playhead
-        //                                                                  ^RETURN THIS
+        // this div's begin occurs before the playhead within pattern; the first time this note on would appear is in the NEXT loop.
+        //    -pattern------------][-pattern------------------][-pattern---------------------   <-- abs timeline
+        //        ^div                     [-thisdiv---]               [-thisdiv---]
+        //                                        ^abs playhead pattern frac
+        //                                 ^this is too old            ^so use this.
         divFirstFutureAbsQuarter = Math.ceil(patternPlayheadInfo.absPatternFloat) * patternPlayheadInfo.patternLengthQuarters + divBeginPatternQuarter;
       } else {
-        //    ----D---------|-----------------D------------|----------------D----
-        //        ^div                        ^div                          ^div
-        //                  [-----------------] = divBeginPatternQuarter
-        //                           ^ playhead
-        //                                    ^RETURN THIS
+        //    -pattern------------][-pattern------------------][-pattern---------------------   <-- abs timeline
+        //        ^div                     [-thisdiv---]               [-thisdiv---]
+        //                              ^abs playhead pattern frac
+        //                                 ^use this
         divFirstFutureAbsQuarter = Math.floor(patternPlayheadInfo.absPatternFloat) * patternPlayheadInfo.patternLengthQuarters + divBeginPatternQuarter
       }
 
@@ -146,21 +148,27 @@ class RoomSequencerPlayer {
         if (cell.beginBorderType !== Seq.eBorderType.NoteOn) // only care about note ons. it contains all info
           return;
 
+        // now "loop" this pattern for this note until out of window.
         for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter < windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
-          if (cursorShiftedQuarter < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
+          // minAbsQuarter = (minAbsQuarter == null) ? cursorShiftedQuarter : Math.min(minAbsQuarter, cursorShiftedQuarter);
+          // maxAbsQuarter = (maxAbsQuarter == null) ? cursorShiftedQuarter : Math.max(maxAbsQuarter, cursorShiftedQuarter);
+
+          const nonSpeedAdjustedCursor = cursorShiftedQuarter / patch.speed;
+          if (nonSpeedAdjustedCursor < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
             continue;
+          const absQ = nonSpeedAdjustedCursor + shiftQuarters;
           events.push({
             velocity : cell.velocity,
             midiNoteValue,
-            lengthQuarters : cell.thisLengthQuarters,
-            noteID: cell.id,
-            absQuarter: cursorShiftedQuarter + shiftQuarters,
+            lengthQuarters : cell.thisLengthQuarters / patch.speed,
+            noteID : cell.id,
+            absQuarter : absQ,
           });
         }
       });
-    });
+    }); // for each div
 
-    //console.log(`scheduling ${events.length} seq events`);
+    //console.log(`scheduling ${events.length} seq events in SA window [${patternPlayheadInfo.shiftedAbsQuarter} - ${windowEndShiftedQuarters}] and SA minmax [${minAbsQuarter}, ${maxAbsQuarter}]`);
 
     this.quantizer.setSequencerEvents(instrument.instrumentID, events, patternView, true, instrument.sequencerDevice.startFromAbsQuarter);
   }

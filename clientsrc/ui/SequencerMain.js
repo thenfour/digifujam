@@ -13,16 +13,17 @@ const gMinTimerInterval = 35;
 const gTempoBPMStep = 5;
 
 const gSpeeds = new DFUtils.FuzzySelector([
-    { caption: ".25x", speed: .25, cssClass:"altvalue" },
-    { caption: ".33x", speed: 1.0/3.0, cssClass:"altvalue" },
-    { caption: ".5x", speed: .5, cssClass:"altvalue" },
-    { caption: ".66x", speed: 2.0/3.0, cssClass:"altvalue" },
-    { caption: ".75x", speed: .75, cssClass:"altvalue" },
+    { caption: ".25x", speed: .25, cssClass:"altvalue" }, // quarter => whole
+    { caption: ".33x", speed: 1.0/3.0, cssClass:"altvalue" }, // quarter => dotted half
+    { caption: ".5x", speed: .5, cssClass:"altvalue" }, // quarter => half
+    { caption: ".66x", speed: 2.0/3.0, cssClass:"altvalue" }, // quarter => dotted quarter
+    { caption: ".75x", speed: .75, cssClass:"altvalue" }, // quarter => triplet half
     { caption: "1x", speed: 1, cssClass:"" },
-    { caption: "2x", speed: 2, cssClass:"altvalue" },
-    { caption: "3x", speed: 3, cssClass:"altvalue" },
-    { caption: "4x", speed: 4, cssClass:"altvalue" },
-    { caption: "8x", speed: 8, cssClass:"altvalue" },
+    { caption: "1.33x", speed: 4.0/3, cssClass:"altvalue" }, // quarter => dotted 8th
+    { caption: "1.5x", speed: 1.5, cssClass:"altvalue" }, // quarter => triplet quarter
+    { caption: "2x", speed: 2, cssClass:"altvalue" }, // quarter => 8th
+    { caption: "3x", speed: 3, cssClass:"altvalue" }, // quarter => triplet 8th
+    { caption: "4x", speed: 4, cssClass:"altvalue" }, // quarter => 16th
 ], (val, obj) => Math.abs(val - obj.speed));
 
 const gTransposeValues = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5,6, 7, 8, 9, 10, 11, 12].reverse();
@@ -139,9 +140,7 @@ class SeqTimer
         const noteLegend = seq.GetNoteLegend();
         const patternViewData = Seq.GetPatternView(patch, noteLegend);
         const playheadAbsQuarter = this.app.getAbsoluteBeatFloat();
-        //const playheadPatternFrac = seq.GetPatternFracAtAbsQuarter(playheadAbsQuarter);
         const playhead = seq.GetAbsQuarterInfo(playheadAbsQuarter);
-        //const patternLengthQuarters = patch.GetPatternLengthQuarters();
         const bpm = this.app.roomState.bpm;
 
         //const playheadPatternQuarter = playheadPatternFrac * patternLengthQuarters;
@@ -150,7 +149,7 @@ class SeqTimer
 
         // calc divlength MS
         const divRemainingQuarters = currentDiv.swingEndPatternQuarter - playhead.patternQuarter;//divRemainingPatterns * patternLengthQuarters;
-        let delayMS = DFU.BeatsToMS(divRemainingQuarters, bpm);
+        let delayMS = DFU.BeatsToMS(divRemainingQuarters, bpm) / patch.speed;
 
         let destDivIndex = currentDiv.patternDivIndex + 1;
         let destDiv = patternViewData.divs[destDivIndex % patternViewData.divs.length];
@@ -158,7 +157,7 @@ class SeqTimer
         while (delayMS < gMinTimerInterval) {
             const divLenQuarters = destDiv.swingEndPatternQuarter - destDiv.swingBeginPatternQuarter;
             const divLenMS = DFU.BeatsToMS(divLenQuarters, bpm);
-            delayMS += divLenMS;
+            delayMS += divLenMS / patch.speed;
             destDivIndex ++;
             destDiv = patternViewData.divs[destDivIndex % patternViewData.divs.length];
             console.assert((destDivIndex % patternViewData.divs.length) === destDiv.patternDivIndex);
