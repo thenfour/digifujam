@@ -101,7 +101,7 @@ class RoomSequencerPlayer {
     const patch = instrument.sequencerDevice.livePatch;
     const patternView = Seq.GetPatternView(patch, instrument.sequencerDevice.GetNoteLegend());
 
-    if (!instrument.sequencerDevice.isPlaying && !instrument.sequencerDevice.IsCueued()) {
+    if (!instrument.sequencerDevice.isPlaying) {
       //console.log(`not playing; clearing data.`);
       this.quantizer.setSequencerEvents(instrument.instrumentID, [], patternView, false, null);
       return;
@@ -111,7 +111,7 @@ class RoomSequencerPlayer {
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
     const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
-    const shiftQuarters = instrument.sequencerDevice.baseAbsQuarter;                                   // NOT speed-adjusted.
+    //const shiftQuarters = instrument.sequencerDevice.baseAbsQuarter;                                   // NOT speed-adjusted.
 
     // let minAbsQuarter = null;
     // let maxAbsQuarter = null;
@@ -154,9 +154,9 @@ class RoomSequencerPlayer {
           // maxAbsQuarter = (maxAbsQuarter == null) ? cursorShiftedQuarter : Math.max(maxAbsQuarter, cursorShiftedQuarter);
 
           const nonSpeedAdjustedCursor = cursorShiftedQuarter / patch.speed;
-          if (nonSpeedAdjustedCursor < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
-            continue;
-          const absQ = nonSpeedAdjustedCursor + shiftQuarters;
+          // if (nonSpeedAdjustedCursor < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
+          //   continue;
+          const absQ = nonSpeedAdjustedCursor;// + shiftQuarters;
           events.push({
             velocity : cell.velocity,
             midiNoteValue,

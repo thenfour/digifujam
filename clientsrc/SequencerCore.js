@@ -759,65 +759,65 @@ class SequencerDevice {
       Object.assign(this, params);
 
     this.isPlaying ??= false;          // false while cueued
-    this.startFromAbsQuarter ??= null; // if set, then we are cueued to begin playing at this abs room beat.
+    //this.startFromAbsQuarter ??= null; // if set, then we are cueued to begin playing at this abs room beat.
 
     // shifts playback
-    this.baseAbsQuarter ??= 0; // NOT SPEED adjusted. this is an offset of the incoming global abs playhead
+    //this.baseAbsQuarter ??= 0; // NOT SPEED adjusted. this is an offset of the incoming global abs playhead
 
-    this.wasPlayingBeforeCue ??= false;
-    this.baseAbsQuarterBeforeCue ??= 0;
+    //this.wasPlayingBeforeCue ??= false;
+    //this.baseAbsQuarterBeforeCue ??= 0;
 
     this.livePatch = new SequencerPatch(this.livePatch);
   }
 
-  IsCueued() { return !!this.startFromAbsQuarter; }
+  //IsCueued() { return !!this.startFromAbsQuarter; }
 
-  // called on the server; returns info about the cue status to pass to clients.
-  Cue(currentAbsQuarter) {
-    this.wasPlayingBeforeCue = this.isPlaying;
-    this.baseAbsQuarterBeforeCue = this.baseAbsQuarter;
+  // // called on the server; returns info about the cue status to pass to clients.
+  // Cue(currentAbsQuarter) {
+  //   this.wasPlayingBeforeCue = this.isPlaying;
+  //   this.baseAbsQuarterBeforeCue = this.baseAbsQuarter;
 
-    this.isPlaying = false;
+  //   this.isPlaying = false;
 
-    const info = this.GetAbsQuarterInfo(currentAbsQuarter);
-    const patternMeasure = info.patternQuarter / this.livePatch.timeSig.quartersPerMeasure;
-    const patternMeasureFrac = DFUtil.getDecimalPart(patternMeasure);
-    let measuresLeft = 1.0 - patternMeasureFrac;
-    if (measuresLeft < 0.2) { // don't surprise users with insta-cue
-      measuresLeft += 1;
-    }
-    const quartersLeft = measuresLeft * this.livePatch.timeSig.quartersPerMeasure;
-    this.startFromAbsQuarter = currentAbsQuarter + quartersLeft;
-    // for simplicity, do NOT allow base time to be in the future. it creates negative value scenarios we can easily avoid.
-    this.baseAbsQuarter = this.startFromAbsQuarter - (this.livePatch.timeSig.quartersPerMeasure * 2); // guaranteed always in the past.
+  //   const info = this.GetAbsQuarterInfo(currentAbsQuarter);
+  //   const patternMeasure = info.patternQuarter / this.livePatch.timeSig.quartersPerMeasure;
+  //   const patternMeasureFrac = DFUtil.getDecimalPart(patternMeasure);
+  //   let measuresLeft = 1.0 - patternMeasureFrac;
+  //   if (measuresLeft < 0.2) { // don't surprise users with insta-cue
+  //     measuresLeft += 1;
+  //   }
+  //   const quartersLeft = measuresLeft * this.livePatch.timeSig.quartersPerMeasure;
+  //   this.startFromAbsQuarter = currentAbsQuarter + quartersLeft;
+  //   // for simplicity, do NOT allow base time to be in the future. it creates negative value scenarios we can easily avoid.
+  //   this.baseAbsQuarter = this.startFromAbsQuarter - (this.livePatch.timeSig.quartersPerMeasure * 2); // guaranteed always in the past.
 
-    return {
-      startFromAbsQuarter : this.startFromAbsQuarter,
-      baseAbsQuarter : this.baseAbsQuarter,
-    };
-  }
+  //   return {
+  //     startFromAbsQuarter : this.startFromAbsQuarter,
+  //     baseAbsQuarter : this.baseAbsQuarter,
+  //   };
+  // }
 
-  CancelCue() {
-    if (!this.IsCueued())
-      return true;
-    this.isPlaying = this.wasPlayingBeforeCue;
-    this.startFromAbsQuarter = null;                    // cancel cue
-    this.baseAbsQuarter = this.baseAbsQuarterBeforeCue; // cancel your new offset
-    return true;
-  }
+  // CancelCue() {
+  //   if (!this.IsCueued())
+  //     return true;
+  //   this.isPlaying = this.wasPlayingBeforeCue;
+  //   this.startFromAbsQuarter = null;                    // cancel cue
+  //   this.baseAbsQuarter = this.baseAbsQuarterBeforeCue; // cancel your new offset
+  //   return true;
+  // }
 
-  // called on client with server-given params. no need to do much really, just set state.
-  SetCueInfo(data) {
-    this.wasPlayingBeforeCue = this.isPlaying;
-    this.isPlaying = false;
-    this.startFromAbsQuarter = data.startFromAbsQuarter;
-    console.assert(!!data.baseAbsQuarter);
-    this.baseAbsQuarter = data.baseAbsQuarter;
-    return true;
-  }
+  // // called on client with server-given params. no need to do much really, just set state.
+  // SetCueInfo(data) {
+  //   this.wasPlayingBeforeCue = this.isPlaying;
+  //   this.isPlaying = false;
+  //   this.startFromAbsQuarter = data.startFromAbsQuarter;
+  //   console.assert(!!data.baseAbsQuarter);
+  //   this.baseAbsQuarter = data.baseAbsQuarter;
+  //   return true;
+  // }
 
   SetPlaying(b) {
-    this.CancelCue();
+    //this.CancelCue();
     if (this.isPlaying === !!b)
       return;
 
@@ -831,7 +831,7 @@ class SequencerDevice {
 
   StartPlaying() {
     this.isPlaying = true;
-    this.startFromAbsQuarter = null;
+    //this.startFromAbsQuarter = null;
   }
 
   IsPlaying() { return this.isPlaying; }
@@ -843,7 +843,7 @@ class SequencerDevice {
   GetAbsQuarterInfo(absQuarter) {
     const patternLengthQuarters = this.livePatch.GetPatternLengthQuarters();
 
-    absQuarter -= this.baseAbsQuarter;
+    //absQuarter -= this.baseAbsQuarter;
     //const nonSpeedAdjustedAbsQuarter = absQuarter;
     // adjust the playhead to speed-adjusted.
     absQuarter *= this.livePatch.speed;
@@ -861,7 +861,7 @@ class SequencerDevice {
   }
 
   InitPatch(presetID) {
-    this.CancelCue();
+    //this.CancelCue();
     this.livePatch = new SequencerPatch({presetID});
   }
 
@@ -899,7 +899,7 @@ class SequencerDevice {
   }
 
   LoadPatch(patchObj) {
-    this.CancelCue();
+    //this.CancelCue();
     this.livePatch = new SequencerPatch(patchObj);
     return true;
   }
@@ -949,7 +949,9 @@ class SequencerDevice {
       return this.SetCueInfo(data);
     }
     case "cancelCue":
-      return this.CancelCue();
+      //return this.CancelCue();
+      console.assert(false);
+      return false;
     }
     return false;
   }

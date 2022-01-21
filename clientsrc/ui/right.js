@@ -1496,11 +1496,11 @@ class Instrument extends  React.Component {
         const i = this.props.instrument;
         if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser))
             return;
-        if (window.DFModifierKeyTracker.ShiftKey) {
-            this.props.app.SeqCue(i.instrumentID, false);
-        } else {
+        // if (window.DFModifierKeyTracker.ShiftKey) {
+        //     this.props.app.SeqCue(i.instrumentID, false);
+        // } else {
             this.props.app.SeqPlayStop(!i.sequencerDevice.isPlaying, i.instrumentID);
-        }
+        //}
     }
 
     render() {
@@ -1542,7 +1542,7 @@ class Instrument extends  React.Component {
             <div
                 className={"seqIndicatorAnimation1 seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
-                title={"Sequencer activity (click to start/stop seq. Shift+Click to cue.)"}
+                title={"Sequencer activity (click to start/stop)"}
                 onClick={() => this.clickSequencerIndicator()}
                 >
                 <div className='seqIndicator'></div>

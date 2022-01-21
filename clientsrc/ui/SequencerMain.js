@@ -524,16 +524,16 @@ class SequencerMain extends React.Component {
             });
         };
 
-        onClickCueDiv = () => {
-            const isReadOnly = this.props.observerMode;
-            if (isReadOnly) return;
+        // onClickCueDiv = () => {
+        //     const isReadOnly = this.props.observerMode;
+        //     if (isReadOnly) return;
 
-            this.props.app.SeqCue(this.props.instrument.instrumentID, this.props.instrument.sequencerDevice.IsCueued());
-        }
+        //     this.props.app.SeqCue(this.props.instrument.instrumentID, this.props.instrument.sequencerDevice.IsCueued());
+        // }
 
-        onClickBigCue = () => {
-            this.onClickCueDiv();
-        }
+        // onClickBigCue = () => {
+        //     this.onClickCueDiv();
+        // }
 
         onClickEditShiftUp = () => {
             const isReadOnly = this.props.observerMode;
@@ -904,13 +904,13 @@ class SequencerMain extends React.Component {
                                     <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
                                                 <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
                                             </button>
-                                            <button
+                                            {/* <button
                                                 className={'cueButton' + (seq.IsCueued() ? ' active' : "") + clickableIfEditable}
                                                 title="Begin playing this pattern on next measure"
                                                 onClick={isReadOnly ? ()=>{} : this.onClickBigCue}
                                             >
                                                 Cue
-                                            </button>
+                                            </button> */}
                                     </div>
                                 </div>
                             </fieldset>
