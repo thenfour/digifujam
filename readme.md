@@ -43,6 +43,15 @@ This is a labor of love and cobbled together, so please expect some bugs. I woul
 
 Just click an instrument to start playing. The step sequencer can be used by anyone, but to use a MIDI keyboard you'll need to be on Chrome or Edge. If this doesn't work, please tell someone on our [Discord](https://discord.gg/kkf9gQfKAd) or submit a github issue.
 
+### Random tips on using the sequencer
+
+- Click a cell to cycle through loud, soft, off states.
+- Ctrl-click a cell to delete
+- Ctrl+Shift click a cell to toggle between soft, off states.
+- To change the length of a note, shift-click a cell where you want the new length.
+- Do any of the above operations **while playing** to affect the notes you're playing.
+
+
 ### Where is the server located?
 
 The server is hosted in Germany by Uberspace.
