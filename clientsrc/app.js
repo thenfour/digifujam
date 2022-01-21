@@ -200,6 +200,60 @@ const eMonitoringType = {
     Remote: "Remote"
 };
 
+
+
+// this tracks which notes are currently held.
+// does not ref count notes, so if you press C twice, then release once, it will be considered OFF.
+class HeldNoteTracker {
+	constructor() {
+        this.AllNotesOff();
+	}
+
+	AllNotesOff() {
+        this.pedalDown = false;
+		this.notesOn = new Set();
+        this.physicallyHeld = new Set();
+        //console.log(this.toString(`AllNotesOff `));
+	}
+
+	NoteOn(note) {
+        console.assert(Number.isInteger(note));
+        this.notesOn.add(note);
+        this.physicallyHeld.add(note);
+        //console.log(this.toString(`NoteOn(${note}) `));
+	}
+
+	NoteOff(note) {
+        console.assert(Number.isInteger(note));
+        this.physicallyHeld.delete(note);
+        if (!this.pedalDown) {
+            this.notesOn.delete(note);
+        }
+        //console.log(this.toString(`NoteOff(${note}) `));
+	}
+
+	PedalUp() {
+        this.pedalDown = false;
+        // note off all notes which are playing but not physically held down
+        this.notesOn = new Set([...this.notesOn].filter(playingNote => this.physicallyHeld.has(playingNote)));
+        //console.log(this.toString(`PedalUp() `));
+	}
+
+	PedalDown() {
+        this.pedalDown = true;
+        //console.log(this.toString(`PedalDown() `));
+	}
+
+    toString(prefix) {
+        return `${prefix ?? ""} playing:[${[...this.notesOn].join(",")}], physicallyheld:[[${[...this.physicallyHeld].join(",")}]] ${this.pedalDown ? "pedal down" : ""}`;
+    }
+};
+
+
+
+
+
+
 class DigifuApp {
     constructor() {
         window.gDFApp = this; // for debugging, so i can access this class in the JS console.
@@ -229,6 +283,7 @@ class DigifuApp {
         this.midi = new DFMidi.DigifuMidi();
         this.metronome = new DFMetronome.DigifuMetronome();
         this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
+        this.heldNotes = new HeldNoteTracker();
 
         // monitoring your own playback
         this.monitoringType = eMonitoringType.Remote;
@@ -330,6 +385,7 @@ class DigifuApp {
             if (this.myInstrument == null) return;
             if (!this.myInstrument.wantsMIDIInput) return;
             this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
+            this.heldNotes.NoteOn(note);
             this.resetBeatPhaseOnNextNote = false;
             if (this.monitoringType == eMonitoringType.Local) {
                 this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity, false);
@@ -351,16 +407,27 @@ class DigifuApp {
         if (this.myInstrument == null) return;
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendNoteOff(note);
+        this.heldNotes.NoteOff(note);
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.NoteOff(this.myUser, this.myInstrument, note, false);
         }
     };
+
+    GetMyCurrentlyPlayingNotes() {
+        // synths track which notes are playing, but this is not the best place to
+        // get this info. Synths do this as a matter of handling polyphony / monophonic,
+        // and will also include notes which are being played from the sequencer.
+        // here we just want to report notes the player has pressed without regards
+        // to what the synth is rendering.
+        return [...this.heldNotes.notesOn];
+    }
 
     // sent when midi devices change
     MIDI_AllNotesOff() {
         if (this.myInstrument == null) return;
         this.net.SendAllNotesOff();
         this.synth.AllNotesOff(this.myInstrument);
+        this.heldNotes.AllNotesOff();
         this.handleUserAllNotesOff(this.myUser, this.myInstrument);
     };
 
@@ -368,6 +435,7 @@ class DigifuApp {
         if (this.myInstrument == null) return;
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendPedalDown();
+        this.heldNotes.PedalDown();
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.PedalDown(this.myUser, this.myInstrument);
         }
@@ -377,6 +445,7 @@ class DigifuApp {
         if (this.myInstrument == null) return;
         if (!this.myInstrument.wantsMIDIInput) return;
         this.net.SendPedalUp();
+        this.heldNotes.PedalUp();
         if (this.monitoringType == eMonitoringType.Local) {
             this.synth.PedalUp(this.myUser, this.myInstrument);
         }
@@ -515,6 +584,7 @@ class DigifuApp {
         ch.forEach(msg => { this._addChatMessage(msg); });
 
         this.synth.AllNotesOff();
+        this.heldNotes.AllNotesOff();
         this.handleAllNotesOff();
 
         this.handleRoomWelcome();

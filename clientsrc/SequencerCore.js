@@ -1360,18 +1360,20 @@ class SequencerPatternView {
 
   // looks at rows other than midiNoteValue, where a note on is assumed to be adding a new note on,
   // and finds the oldest notes which breach MaxNoteOnsPerColumn.
-  GetPatternOpsToEnforceMaxNotesPerColumn(div, midiNoteValue) {
+  // if midiNoteValues has more than SequencerSettings.MaxNoteOnsPerColumn elements, then everything will be cleared,
+  // and it's up to the caller to reduce the # of note ons.
+  GetPatternOpsToEnforceMaxNotesPerColumn(div, midiNoteValues) {
     let candidates = [];
     Object.values(div.rows).forEach(cell => {
-      if (cell.midiNoteValue === midiNoteValue)
+      if (midiNoteValues.some(n => n === cell.midiNoteValue))
         return;
       candidates = candidates.concat(cell.noteOnNotes);
     });
     if (candidates.length <= (SequencerSettings.MaxNoteOnsPerColumn - 1))
       return [];
     candidates.sort((a, b) => a.patternNote.timestamp < b.patternNote.timestamp ? -1 : 1); // oldest to newest notes
-    const overflowCount = (candidates.length + 1) - SequencerSettings.MaxNoteOnsPerColumn; // +1 for the noteon that's coming for midiNoteValue
-    const removals = candidates.slice(0, overflowCount);
+    let overflowCount = (candidates.length + midiNoteValues.length) - SequencerSettings.MaxNoteOnsPerColumn;
+    const removals = (overflowCount >= candidates.length) ? candidates : candidates.slice(0, overflowCount);
     return removals.map(un => {
       return {
         type : eSeqPatternOp.DeleteNote,
@@ -1395,65 +1397,81 @@ class SequencerPatternView {
     return ret;
   }
 
+  GetPatternOpsForCellRemoveMulti(divInfo, notes) {
+    let ret = [];
+    notes.forEach(note => {
+      const x = this.GetPatternOpsForCellRemove(divInfo, {midiNoteValue:note});
+      if (x) {
+        ret = ret.concat(x);
+      }
+    });
+    return ret;
+  }
+
+
   // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
-  GetPatternOpsForCellToggle(divInfo, note, velIndex) {
+  GetPatternOpsForCellToggle(divInfo, note, multiNotes, velIndex) {
     const patternViewCell = divInfo.rows[note.midiNoteValue];
-    const addSpec = {
+    const addNotes = multiNotes.slice(0, SequencerSettings.MaxNoteOnsPerColumn); // if you're holding too many notes, choppaa
+    const addSpec = addNotes.map(n => ({
       type : eSeqPatternOp.AddNote,
-      midiNoteValue : note.midiNoteValue,
+      midiNoteValue : n,
       velocityIndex : DFUtil.modulo(velIndex, note.velocitySet.length),
       patternMajorBeat : divInfo.beginPatternMajorBeat,
       lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-    };
+    }));
     if (!patternViewCell?.thisNote) {
-      // this cell has no "note on" or "continue" note. so only add.
-      return [ addSpec ].concat(this.GetPatternOpsToEnforceMaxNotesPerColumn(divInfo, note.midiNoteValue));
+      // this cell has no "note on" or "continue" note. so just add
+      return [ ...addSpec ].concat(this.GetPatternOpsToEnforceMaxNotesPerColumn(divInfo, addNotes));
     }
-    // we know this cell has a note.
-    const ret = this.GetPatternOpsForCellRemove(divInfo, note);
+    // we know this cell has a note. we could either remove the note + add it at the correct velocity level, or delete.
+    const ret = this.GetPatternOpsForCellRemoveMulti(divInfo, multiNotes);
     if (patternViewCell.velocityIndex === velIndex) { // is correct; just delete.
       //console.log(`delete vel ${velIndex}`);
       return ret;
     }
     //console.log(`delete + add vel ${velIndex} because old vel ${patternViewCell.velocityIndex} doesn't match desired val ${velIndex}`);
-    ret.push(addSpec);
+    ret = ret.concat(addSpec);
     return ret;
   }
 
   // when a user clicks a cell, cycle through velocity indices as defined in the note legend.
-  GetPatternOpsForCellCycle(divInfo, note) {
+  // that operation will be applied for all notes in multiNotes
+  GetPatternOpsForCellCycle(divInfo, note, multiNotes) {
     let patternViewCell = divInfo.rows[note.midiNoteValue];
     const velSetLen = note.velocitySet.length;
+    const addNotes = multiNotes.slice(0, SequencerSettings.MaxNoteOnsPerColumn); // if you're holding too many notes, choppaa
     if (patternViewCell?.thisNote) {
-      // act as if you are cycling the note-on cell.
+      // note exists; cycle to next vel
       patternViewCell = patternViewCell.noteOnCell;
       divInfo = patternViewCell.div;
-      const ret = this.GetPatternOpsForCellRemove(divInfo, note);
+      let ret = this.GetPatternOpsForCellRemoveMulti(divInfo, multiNotes);
       if (patternViewCell.velocityIndex === (velSetLen - 1)) {
         // just delete the note, it's disappearing
         return ret;
       }
       // cycle vel & add it.
 
-      ret.push({
+      ret = ret.concat(addNotes.map(n => ({
         type : eSeqPatternOp.AddNote,
-        midiNoteValue : note.midiNoteValue,
+        midiNoteValue : n,
         velocityIndex : DFUtil.modulo(patternViewCell.velocityIndex - 1, velSetLen),
         patternMajorBeat : divInfo.beginPatternMajorBeat,
         lengthMajorBeats : patternViewCell.thisLengthMajorBeats, // .divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-      });
+      })));
       return ret;
     }
 
     // no note; add a fresh new one. if it overlaps the other, no worries the pattern view will take care of that.
-    let ret = [ {
+    let ret = addNotes.map(n => ({
       type : eSeqPatternOp.AddNote,
-      midiNoteValue : note.midiNoteValue,
+      midiNoteValue : n,
       velocityIndex : 0,
       patternMajorBeat : divInfo.beginPatternMajorBeat,
-      lengthMajorBeats : divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
-    } ];
-    ret = ret.concat(this.GetPatternOpsToEnforceMaxNotesPerColumn(divInfo, note.midiNoteValue));
+      lengthMajorBeats : divInfo.lengthMajorBeats, // .divInfo.endPatternMajorBeat - divInfo.beginPatternMajorBeat,
+    }));
+
+    ret = ret.concat(this.GetPatternOpsToEnforceMaxNotesPerColumn(divInfo, addNotes));
     return ret;
   }
 

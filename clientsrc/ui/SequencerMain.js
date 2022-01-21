@@ -12,18 +12,19 @@ const gMinTimerInterval = 35;
 
 const gTempoBPMStep = 5;
 
+// 𝅝𝅗𝅥𝅘𝅥𝅘𝅥𝅮𝅘𝅥𝅯→.
 const gSpeeds = new DFUtils.FuzzySelector([
-    { caption: ".25x", speed: .25, cssClass:"altvalue" }, // quarter => whole
-    { caption: ".33x", speed: 1.0/3.0, cssClass:"altvalue" }, // quarter => dotted half
-    { caption: ".5x", speed: .5, cssClass:"altvalue" }, // quarter => half
-    { caption: ".66x", speed: 2.0/3.0, cssClass:"altvalue" }, // quarter => dotted quarter
-    { caption: ".75x", speed: .75, cssClass:"altvalue" }, // quarter => triplet half
-    { caption: "1x", speed: 1, cssClass:"" },
-    { caption: "1.33x", speed: 4.0/3, cssClass:"altvalue" }, // quarter => dotted 8th
-    { caption: "1.5x", speed: 1.5, cssClass:"altvalue" }, // quarter => triplet quarter
-    { caption: "2x", speed: 2, cssClass:"altvalue" }, // quarter => 8th
-    { caption: "3x", speed: 3, cssClass:"altvalue" }, // quarter => triplet 8th
-    { caption: "4x", speed: 4, cssClass:"altvalue" }, // quarter => 16th
+    { captionShort: "25%", captionLong: "25% (𝅘𝅥→𝅝)", speed: .25, cssClass:"altvalue" }, // quarter => whole
+    { captionShort: "33%", captionLong: "33% (𝅘𝅥→𝅗𝅥.)", speed: 1.0/3.0, cssClass:"altvalue" }, // quarter => dotted half
+    { captionShort: "50%", captionLong: "50% (𝅘𝅥→𝅗𝅥)", speed: .5, cssClass:"altvalue" }, // quarter => half
+    { captionShort: "66%", captionLong: "66% (𝅘𝅥→𝅘𝅥.)", speed: 2.0/3.0, cssClass:"altvalue" }, // quarter => dotted quarter
+    { captionShort: "75%", captionLong: "75% (𝅘𝅥→𝅗𝅥3)", speed: .75, cssClass:"altvalue" }, // quarter => triplet half
+    { captionShort: "100%", captionLong: "100% (𝅘𝅥)", speed: 1, cssClass:"" },
+    { captionShort: "133%", captionLong: "133% (𝅘𝅥→𝅘𝅥𝅮.)", speed: 4.0/3, cssClass:"altvalue" }, // quarter => dotted 8th
+    { captionShort: "150%", captionLong: "150% (𝅘𝅥→𝅘𝅥3)", speed: 1.5, cssClass:"altvalue" }, // quarter => triplet quarter
+    { captionShort: "200%", captionLong: "200% (𝅘𝅥→𝅘𝅥𝅮.)", speed: 2, cssClass:"altvalue" }, // quarter => 8th
+    { captionShort: "300%", captionLong: "300% (𝅘𝅥→𝅘𝅥𝅮3)", speed: 3, cssClass:"altvalue" }, // quarter => triplet 8th
+    { captionShort: "400%", captionLong: "400% (𝅘𝅥→𝅘𝅥𝅯)", speed: 4, cssClass:"altvalue" }, // quarter => 16th
 ], (val, obj) => Math.abs(val - obj.speed));
 
 const gTransposeValues = [-12, -11, -10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5,6, 7, 8, 9, 10, 11, 12].reverse();
@@ -79,12 +80,12 @@ const gDivisions = new DFUtils.FuzzySelector(gDivisionSortedInfo, (val, obj) => 
 
 
 const gSwingSnapValues = new DFUtils.FuzzySelector([
-    //-90, -85,-80,
+    -99, -91,-83,
     -75,-66,-63,-60,-55,
     -50,-45,-40,-35,-30,-25,-20,-15,-10,-5,
     0,5,10,15,20,25,30,35,40,45,50,
     55,60,63,66,70,75,
-    //80,85,90
+    83,91,99
 
 ], (val, obj) => Math.abs(val - obj));
 
@@ -415,18 +416,30 @@ class SequencerMain extends React.Component {
             // toggle a 1-div-length 
             // convert this click to an ops struct
             let ops = null;
+            let playingNotes = this.props.app.GetMyCurrentlyPlayingNotes();
+
+            // sanitize playing notes. if you're playing notes which are out of range, then drop them.
+            // we could be "smart" and basically if you try to play out of range, then attempt to bring them into frame using octave transp
+            // but there are a lot of considerations so i'm going to avoid this.
+            if (playingNotes.length) {
+                playingNotes = playingNotes.filter(n => {
+                    return legend.some(l => l.midiNoteValue === n);
+                });
+            } else {
+                playingNotes = [note.midiNoteValue];
+            }
             if (window.DFModifierKeyTracker.ShiftKey) {
                 if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 1); // CTRL+SHIFT = toggle vel1
+                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, playingNotes, 1); // CTRL+SHIFT = toggle vel1
                 } else {
                     return setLengthProc(); // SHIFT = set length
                 }
             } else {
                 if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note); // CTRL = delete
+                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note, playingNotes); // CTRL = delete
                     //ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0); // CTRL = toggle vel0
                 } else {
-                    ops = patternView.GetPatternOpsForCellCycle(divInfo, note); // none = cycle
+                    ops = patternView.GetPatternOpsForCellCycle(divInfo, note, playingNotes); // none = cycle
                 }
             }
 
@@ -740,10 +753,10 @@ class SequencerMain extends React.Component {
          const speedList = this.state.isSpeedExpanded && gSpeeds.sortedValues.map(s => {
             return (
                <li
-                key={s.caption}
+                key={s.speed}
                 onClick={() => this.onClickSpeed(s)}
                 className={(s.speed == speedObj.speed ? " selected" : "") + " " + speedObj.cssClass}
-                >{s.caption}</li>
+                >{s.captionLong}</li>
            );
         });
 
@@ -1029,7 +1042,7 @@ class SequencerMain extends React.Component {
                         <div className='paramGroup'>
                             <div className='legend'>Speed</div>
                             <div className='paramBlock'>
-                            <div className={'paramValue clickable ' + speedObj.cssClass} onClick={() => { this.setState({isSpeedExpanded:!this.state.isSpeedExpanded});}}>{speedObj.caption}</div>
+                            <div className={'paramValue clickable ' + speedObj.cssClass} onClick={() => { this.setState({isSpeedExpanded:!this.state.isSpeedExpanded});}}>{speedObj.captionShort}</div>
                                 { this.state.isSpeedExpanded &&
                                     <ClickAwayListener onClickAway={() => { this.setState({isSpeedExpanded:false});}}>
                                         <div className='dialog'>
