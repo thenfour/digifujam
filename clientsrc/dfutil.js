@@ -312,6 +312,18 @@ function IsClient() {
   return !IsServer();
 }
 
+const imageExtensions = [
+    ".png",
+    ".gif",
+    ".jpeg",
+    ".jpg",
+    ".svg"
+];
+function IsImageFilename(f) {
+  f = f.toLowerCase();
+  return imageExtensions.some(ext => f.endsWith(ext));
+}
+
 // point-in-polygon stuff
 // https://github.com/substack/point-in-polygon
 // some example code:
@@ -396,4 +408,5 @@ module.exports = {
   IsServer,
   polyToPathDesc,
   pointInPolygon,
+  IsImageFilename,
 };

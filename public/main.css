@@ -2016,10 +2016,24 @@ ul.instParamList li.floatParam .floatParamMainControls {
 }
 
 
+#graffitiContainer .graffiti {
+    max-width: 200px;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -.5px;
+}
+
+
+#graffitiContainer .graffiti .graffitiContent.text {
+    text-shadow: 0 0 8px #000, 0 0 3px black, 0 0 2px black;
+}
+
 #graffitiContainer .graffiti .graffitiContent.image{
     width:100px;
     height:100px;
     background-repeat:no-repeat;
     background-position:center;
-    background-size:contain;
+    background-size:cover;
+    filter: drop-shadow(3px -3px 5px black) grayscale(50%);
 }
+

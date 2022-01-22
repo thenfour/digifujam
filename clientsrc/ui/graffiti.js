@@ -1,6 +1,6 @@
 const DF = require("../DFCommon");
 const React = require('react');
-const { polyToPathDesc, remap } = require("../dfutil");
+const { polyToPathDesc, remap, IsImageFilename } = require("../dfutil");
 
 
 class GraffitiArea extends React.Component {
@@ -13,7 +13,7 @@ class GraffitiArea extends React.Component {
   render() {
     if (this.props.area.polyPoints.length < 1) return null;
     const rgn = this.props.context.app.MyRoomRegion;
-    console.log(`rendering ${this.props.area.id}; myrgn = ${rgn?.id}`);
+    //console.log(`rendering ${this.props.area.id}; myrgn = ${rgn?.id}`);
     return (<path d={polyToPathDesc(this.props.area.polyPoints)} className={this.props.area.cssClass + (rgn?.id === this.props.area.id ? " active" : "")} />);
   }
 
@@ -26,6 +26,13 @@ class GraffitiScreen extends React.Component {
       };
   }
 
+  onClick = (e) => {
+    if (!e.target || e.target.id != "graffitiScreen") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
+    const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+    console.log(`room pos ${JSON.stringify(roomPos)}`);
+    //this.props.app.SetUserPosition(roomPos);
+  }
+
   render() {
     if (!this.props.context || !this.props.context.app) return null;
     const app = this.props.context.app;
@@ -34,7 +41,7 @@ class GraffitiScreen extends React.Component {
     const areas = app.roomState.roomRegions.map(a => (<GraffitiArea key={a.id} context={this.props.context} area={a} />));
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:0,y:0});
 
-    return (<div id="graffitiScreen">
+    return (<div id="graffitiScreen" onClick={this.onClick}>
       <svg style={{left:pos.x,top:pos.y, height:app.roomState.height, width:app.roomState.width}}>
         {areas}
       </svg>
@@ -47,12 +54,7 @@ class GraffitiScreen extends React.Component {
 function isImageUrl(url) {
   try {
     url = new URL(url);
-    const path = url.pathname.toLowerCase();
-    if (path.endsWith(".png")) return true;
-    if (path.endsWith(".svg")) return true;
-    if (path.endsWith(".jpg")) return true;
-    if (path.endsWith(".gif")) return true;
-    if (path.endsWith(".jpeg")) return true;
+    return IsImageFilename(url.pathname);
   } catch (e) {
   }
   return false;
@@ -76,13 +78,13 @@ class GraffitiItem extends React.Component {
     const g = this.props.graffiti;
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:g.position.x,y:g.position.y});
 
-    const rot = remap(g.seed, 0, 1, -15, 15);
+    let rot = remap(g.seed, 0, 1, 7, 13) * Math.sign(((g.seed * 1337) % 2) - 1);
 
     const style = {
       left:pos.x,
       top:pos.y,
       color:g.color,
-      transformOrigin: "center",
+      transformOrigin: "0 0",
       transform: `rotateZ(${rot}deg) translate(-50%,-50%)`,
     };
 
@@ -93,6 +95,7 @@ class GraffitiItem extends React.Component {
     if (isImage) {
       const imgStyle = {
         backgroundImage: `url(${g.content})`,
+        //border: `3px solid ${g.color}`, <-- no, because want to support transparency
       };
       contentEl = (<div className="graffitiContent image" style={imgStyle}></div>);
     } else {

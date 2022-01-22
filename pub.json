@@ -10,8 +10,43 @@
   "roomRegions": [
     {
       "id":"left",
-      "polyPoints":[[0,0],[600,0],[600,256],[370,385],[370,385],[370,550],[0,775]],
-      "cssClass": "left"
+      "polyPoints":[[598,118],[598,254],[377,388],[381,554],[0,767],[0,443]],
+      "cssClass": "wall left"
+    },
+    {
+      "id":"right",
+      "polyPoints":[[598,118],[1200,455],[1200,774],[762,521],[762,355],[598,254]],
+      "cssClass": "wall right"
+    },
+    {
+      "id":"oobTop",
+      "polyPoints":[[0,0],[1200,0],[1200,455],[598,118],[0,443]],
+      "cssClass": "oob oobTop"
+    },
+    {
+      "id":"oobBottom",
+      "polyPoints":[[0,767],[604,1084],[1200,774],[1200,1200],[0,1200]],
+      "cssClass": "oob oobBottom"
+    },
+    {
+      "id":"cubeTop",
+      "polyPoints":[[598,254],[762,355],[540,481],[377,388]],
+      "cssClass": "cube cubeTop"
+    },
+    {
+      "id":"cubeLeft",
+      "polyPoints":[[377,388],[540,481],[536,640],[381,554]],
+      "cssClass": "cube cubeLeft"
+    },
+    {
+      "id":"cubeRight",
+      "polyPoints":[[540,481],[762,355],[762,521],[536,640]],
+      "cssClass": "cube cubeRight"
+    },
+    {
+      "id":"floor",
+      "polyPoints":[[0,767],[381,554],[536,640],[762,521],[1200,774],[604,1084]],
+      "cssClass": "floor"
     }
   ],
   "roomItems": [

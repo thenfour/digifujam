@@ -1,4 +1,5 @@
 const express = require('express')
+const fileUpload = require('express-fileupload');
 const YAML = require('yaml')
 const app = express();
 const http = require('http').Server(app);
@@ -116,6 +117,8 @@ let gDBInitProc = () => {
   });
 
 };
+
+
 
 // ----------------------------------------------------------------------------------------------------------------
 class _7jamAPI
@@ -253,14 +256,21 @@ class _7jamAPI
   }
 
   FindUserByID(userID) {
-    let u = null;
-    Object.values(gRooms).find(room => {
-      u = room.roomState.FindUserByID(userID);
-      if (!u) return false;
-      u = u.user;
+    return this.GetRoomAndUserByUserID(userID)?.user ?? null;
+  }
+
+  // return { room, user }
+  GetRoomAndUserByUserID(userID) {
+    let user = null;
+    let room = null;
+    Object.values(gRooms).find(r => {
+      user = r.roomState.FindUserByID(userID);
+      if (!user) return false;
+      user = user.user;
+      room = r;
       return true;
     });
-    return u;
+    return { room, user };
   }
 
   SocketFromUserID(userID) {
@@ -1215,6 +1225,43 @@ class RoomServer {
     }
   }
 
+  DoGraffitiOpsForUser(user, data) {
+    if (!Array.isArray(data)) throw new Error(`OnGraffitiOps: data is not valid; should be array`);
+    data.forEach(op => {
+      switch (op.op) {
+        case "place": // { op:"place", content, lifetimeMS }
+          {
+            const removalOps = this.roomState.removeGraffitiForUser(user.userID, user.persistentID).map(id => ({
+              op: "remove",
+              id,
+            }));
+            const graffiti = this.roomState.placeGraffiti(user.userID, op.content, op.lifetimeMS);
+            //console.log(`created graffiti @ ${JSON.stringify(graffiti.position)} - ID ${graffiti.id}`);
+            if (!graffiti) return; // no need to throw; assume validation failed.
+            io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps.concat([{
+              op:"place",
+              graffiti,
+            }]));
+            break;
+          }
+        case "remove": // { op:"remove", id } // id only used for admin.
+          {
+            if (user.IsAdmin() && op.id) {
+              if (!this.roomState.removeGraffiti(op.id)) return;// client out of sync; throw new Error(`Failed to remove graffiti`);
+              io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"remove", id: op.id }]);
+            } else {
+              const removalOps = this.roomState.removeGraffitiForUser(user.userID, user.persistentID).map(id => ({
+                op: "remove",
+                id,
+              }));
+              io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps);
+            }
+            break;
+          }
+      }
+    });
+  }
+
   OnGraffitiOps(ws, data) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
@@ -1222,42 +1269,7 @@ class RoomServer {
         log(`OnGraffitiOps => unknown user`);
         return;
       }
-
-      if (!Array.isArray(data)) throw new Error(`OnGraffitiOps: data is not valid; should be array`);
-      data.forEach(op => {
-        switch (op.op) {
-          case "place": // { op:"place", content, lifetimeMS }
-            {
-              const removalOps = this.roomState.removeGraffitiForUser(foundUser.user.userID, foundUser.user.persistentID).map(id => ({
-                op: "remove",
-                id,
-              }));
-              const graffiti = this.roomState.placeGraffiti(foundUser.user.userID, op.content, op.lifetimeMS);
-              //console.log(`created graffiti @ ${JSON.stringify(graffiti.position)} - ID ${graffiti.id}`);
-              if (!graffiti) return; // no need to throw; assume validation failed.
-              io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps.concat([{
-                op:"place",
-                graffiti,
-              }]));
-              break;
-            }
-          case "remove": // { op:"remove", id } // id only used for admin.
-            {
-              if (foundUser.user.IsAdmin() && op.id) {
-                if (!this.roomState.removeGraffiti(op.id)) return;// client out of sync; throw new Error(`Failed to remove graffiti`);
-                io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"remove", id: op.id }]);
-              } else {
-                const removalOps = this.roomState.removeGraffitiForUser(foundUser.user.userID, foundUser.user.persistentID).map(id => ({
-                  op: "remove",
-                  id,
-                }));
-                io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps);
-              }
-              break;
-            }
-        }
-      });
-
+      this.DoGraffitiOpsForUser(foundUser.user, data);
     } catch (e) {
       log(`OnGraffitiOps exception occurred`);
       log(e);
@@ -2581,6 +2593,52 @@ Seq.ResolveSequencerConfig();
 
 
 
+
+
+app.use("/uploads", express.static(gConfig.UploadsDirectory), serveIndex(gConfig.UploadsDirectory, { 'icons': true }));
+
+app.use(fileUpload({
+  limits: {
+    fileSize: 10 /* MB */ * 1024 * 1024,
+  },
+}));
+
+app.post('/uploadGraffiti', function(req, res) {
+  const userID = req.body.userID;
+  if (!userID) return;
+  if (!req.files) return;
+  const es = Object.entries(req.files);
+  if (!es.length) return;
+  const file = es[0][1];
+
+  // validate extensions
+  if (!DFU.IsImageFilename(file.name)) {
+    console.log(`Rejecting ${file.name} / ${file.size} due to not being an image.`);
+    return;
+  }
+
+  // generate a filename and move 
+  const ext = file.name.substring(file.name.lastIndexOf("."));
+  const filename = DFU.generateID() + ext;
+  const destPath = gConfig.UploadsDirectory + "/" + filename;
+  const url = gConfig.host_prefix + "/uploads/" + filename;
+
+  file.mv(destPath, (e) => {
+    try {
+      console.log(`uploaded: ${file.name} to ${destPath}`); // the uploaded file object
+      // get room & user objects
+      const { room, user } = g7jamAPI.GetRoomAndUserByUserID(userID);
+      if (!user) return;
+      room.DoGraffitiOpsForUser(user, [{
+        op: "place",
+        content: url,
+      }]);
+    } catch (e) {
+      log(`Exception while processing uploaded file ${file.name}`);
+      log(e)
+    }
+  });
+});
 
 
 

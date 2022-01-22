@@ -2122,6 +2122,32 @@ class RoomArea extends React.Component {
         }
     }
 
+    onDrop = (ev) => {
+        console.log(`onDrop`);
+        ev.preventDefault();
+        if (!this.props.app.MyRoomRegion) return;
+        if (!ev.dataTransfer?.files?.length) return;
+        const file = ev.dataTransfer.files[0];
+        console.log(`dropped file ${file.name}, size ${file.size}`);
+
+        const data = new FormData();
+        data.append('file', file);
+        data.append('userID', this.props.app.myUser.userID);
+    
+        fetch('/uploadGraffiti', {
+            method: 'POST',
+            body: data
+        })
+        .then(() => console.log("file uploaded"))
+        .catch(reason => console.error(reason));
+    }
+    
+    onDragOver = (e) => {
+        console.log(`onDragOver`);
+        e.preventDefault();
+        e.dataTransfer.dropEffect = this.props.app.MyRoomRegion ? "copy" : "none";
+    }
+
     render() {
         let style = {};
         let userAvatars = null;
@@ -2178,7 +2204,12 @@ class RoomArea extends React.Component {
         };
 
         return (
-            <div id="roomArea" className={"roomArea" + (isDisconnected ? " disconnectedGrayscale" : "")} onClick={e => this.onClick(e)} style={style}>
+            <div id="roomArea" className={"roomArea" + (isDisconnected ? " disconnectedGrayscale" : "")}
+                onClick={e => this.onClick(e)}
+                style={style}
+                onDrop={this.onDrop}
+                onDragOver={this.onDragOver}
+                >
                 {connection}
                 {seqViewVisible && <SequencerMain
                     app={this.props.app}

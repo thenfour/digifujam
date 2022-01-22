@@ -17,3 +17,25 @@
 }
 
 
+
+
+#graffitiContainer .graffiti .graffitiContent.image {
+    filter: drop-shadow(-7px 3px 5px black) grayscale(50%);
+}
+
+
+#graffitiContainer .graffiti.leftWall
+{
+    transform:skewY(-30deg) scaleY(140%);
+}
+
+
+#graffitiContainer .graffiti.rightWall
+{
+    transform:skewY(30deg) scaleY(140%);
+}
+
+#graffitiContainer .graffiti.floor
+{
+    transform: perspective(600px) rotateX(30deg); 
+}

@@ -7,6 +7,33 @@
   "height": 1280,
   "bpm": 100,
   "announcementHTML": "",
+  "roomRegions": [
+    {
+      "id":"oobTop",
+      "polyPoints":[[0,0],[1750,0],[1750,448],[875,25],[0,448]],
+      "cssClass": "oob oobTop"
+    },
+    {
+      "id":"leftWall",
+      "polyPoints":[[0,448],[875,25],[875,456],[0,872]],
+      "cssClass": "wall leftWall"
+    },
+    {
+      "id":"rightWall",
+      "polyPoints":[[875,25],[1750,448],[1750,872],[875,456]],
+      "cssClass": "wall rightWall"
+    },
+    {
+      "id":"floor",
+      "polyPoints":[[0,872],[875,456],[1750,872],[877,1280]],
+      "cssClass": "floor"
+    },
+    {
+      "id":"oobBottom",
+      "polyPoints":[[0,872],[877,1280],[1750,872],[1750,1313],[0,1313]],
+      "cssClass": "oob oobBottom"
+    }
+  ],
   "roomItems": [
     {
       "itemID": "announcement",

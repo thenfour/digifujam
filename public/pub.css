@@ -22,30 +22,25 @@
 }
 
 
-#graffitiContainer .graffiti {
-    max-width: 200px;
-    font-size: 20px;
-    font-weight: bold;
-    letter-spacing: -.5px;
-    text-shadow:0 0 5px #000;
-}
-
-
-#graffitiContainer .graffiti.left {
+#graffitiContainer .graffiti.left,
+#graffitiContainer .graffiti.cubeRight
+{
     transform:skewY(-30deg) scaleY(140%);
 }
 
 
-#graffitiContainer .graffiti.right {
+#graffitiContainer .graffiti.right,
+#graffitiContainer .graffiti.cubeLeft
+{
     transform:skewY(30deg) scaleY(140%);
+}
+
+#graffitiContainer .graffiti.floor
+{
+    transform: perspective(600px) rotateX(30deg); 
 }
 
 
 #graffitiContainer .graffiti .graffitiContent.image{
-    width:100px;
-    height:100px;
-    background-repeat:no-repeat;
-    background-position:center;
-    background-size:contain;
     filter: drop-shadow(3px -3px 5px black) grayscale(50%);
 }

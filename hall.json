@@ -5,6 +5,33 @@
   "img": "./roomart/DigifuJam_Hallway2_1920x1080.jpg",
   "width": 1920,
   "height": 1080,
+  "roomRegions": [
+    {
+      "id":"oobTop",
+      "polyPoints":[[0,0],[1502,0],[1502,18],[0,554]],
+      "cssClass": "oob oobTop"
+    },
+    {
+      "id":"backWall",
+      "polyPoints":[[0,554],[1502,18],[1502,356],[0,891]],
+      "cssClass": "wall backWall"
+    },
+    {
+      "id":"floor",
+      "polyPoints":[[0,891],[1502,356],[1724,568],[233,1080],[0,1080]],
+      "cssClass": "floor"
+    },
+    {
+      "id":"rightWall",
+      "polyPoints":[[1502,0],[1724,0],[1724,568],[1502,356]],
+      "cssClass": "wall rightWall"
+    },
+    {
+      "id":"oobBottom",
+      "polyPoints":[[1724,0],[1920,0],[1920,1080],[233,1080],[1724,568]],
+      "cssClass": "oob oobBottom"
+    }
+  ],
   "roomItems": [
     {
       "itemID": "doorToPub",
