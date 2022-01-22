@@ -1,5 +1,3 @@
-'use strict';
-
 const DF = require("./DFCommon");
 const DFU = require("./util");
 const DFMidi = require("./midi");
@@ -9,6 +7,7 @@ const DFNet = require("./net");
 const DFMusic = require("./DFMusic");
 const {eSoundEffects, SoundFxManager} = require('./soundFx');
 const Seq = require('./SequencerCore');
+const { pointInPolygon } = require("./dfutil");
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -272,6 +271,8 @@ class DigifuApp {
         this.handleCheer = null; // ({ user:u.user, text:data.text, x:data.x, y:data.y });
         this.lastCheerSentDate = new Date();
 
+        this.myRoomRegionIndex = null; // the region of the room your avatar is currently in.
+
         this.resetBeatPhaseOnNextNote = false;
 
         this.myUser = null;// new DigifuUser(); // filled in when we identify to a server and fill users
@@ -366,6 +367,16 @@ class DigifuApp {
 
     IsWaitingForAutoMIDIDeviceSelect() {
         return this.autoMIDIDeviceSelection && !this.hasAutoSelectedMIDIDevice;
+    }
+
+    // can return null
+    get MyRoomRegion() {
+        if (!this.roomState?.roomRegions || !this.myUser) return null;
+        if (!this.myRoomRegionIndex && this.roomState?.roomRegions && this.myUser) {
+            this.myRoomRegionIndex = this.roomState.roomRegions.findIndex(r => pointInPolygon([this.myUser.position.x, this.myUser.position.y], r.polyPoints));
+        }
+        console.assert(this.myRoomRegionIndex < this.roomState.roomRegions.length);
+        return this.roomState.roomRegions[this.myRoomRegionIndex];
     }
 
     // MIDI HANDLERS --------------------------------------------------------------------------------------
@@ -509,6 +520,7 @@ class DigifuApp {
         this.tapTempoState = TapTempoState.NA;
 
         this.resetBeatPhaseOnNextNote = false;
+        this.myRoomRegionIndex = null; // mark dirty.
 
         Seq.IntegrateSequencerConfig(data.globalSequencerConfig);
 
@@ -1247,6 +1259,7 @@ class DigifuApp {
         u.user.position = data.state.position;
 
         if (u.user.userID == this.myUser.userID) {
+            this.myRoomRegionIndex = null; // mark dirty.
             window.localStorage.setItem("userName", this.myUser.name);
             window.localStorage.setItem("userColor", this.myUser.color);
             // room interaction based on intersection.
@@ -1255,6 +1268,8 @@ class DigifuApp {
                     this._DoUserItemInteraction(item, "onAvatarEnter");
                 }
             });
+
+            //
         }
 
         if (data.chatMessageEntry) {
@@ -1291,6 +1306,20 @@ class DigifuApp {
 
     NET_OnRoomBPMUpdate(data) {
         this.roomState.bpm = data.bpm;
+        this.stateChangeHandler();
+    }
+
+    NET_OnGraffitiOps(data) {
+        data.forEach(op => {
+            switch (op.op) {
+                case "place":
+                    this.roomState.importGraffiti(op.graffiti);
+                    break;
+                case "remove":
+                    this.roomState.removeGraffiti(op.id);
+                    break;
+            }
+        });
         this.stateChangeHandler();
     }
 

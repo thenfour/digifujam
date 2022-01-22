@@ -311,6 +311,54 @@ function IsServer() {
 function IsClient() {
   return !IsServer();
 }
+
+// point-in-polygon stuff
+// https://github.com/substack/point-in-polygon
+// some example code:
+
+// var polygon = [[0, 30], [150, 330], [140, 800]];
+
+// function handleClick(e) {
+//     console.log(Date.now() + `  >>> [${e.offsetX}, ${e.offsetY}] => ` + pointInPolygon([e.offsetX, e.offsetY], polygon));
+// }
+
+// const svg = document.querySelector("#cont");
+// const p = polyToPathEl(polygon);
+// p.style["fill"] = `rgb(${(Math.random() * 255) | 0},${(Math.random() * 255) | 0},${(Math.random() * 255) | 0}, 0.5)`;
+// svg.appendChild(p);
+
+function pointInPolygon(point, vs, start, end) {
+  var x = point[0], y = point[1];
+  var inside = false;
+  start ??= 0;
+  end ??= vs.length;
+  var len = end - start;
+  for (var i = 0, j = len - 1; i < len; j = i++) {
+    var xi = vs[i + start][0], yi = vs[i + start][1];
+    var xj = vs[j + start][0], yj = vs[j + start][1];
+    var intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+    if (intersect)
+      inside = !inside;
+  }
+  return inside;
+};
+
+function pointToStr(p) {
+  return `${p[0]},${p[1]}`;
+}
+
+function polyToPathDesc(poly) {
+  let ret = "M " + pointToStr(poly[0]);
+  for (let i = 1; i < poly.length; ++i) {
+    ret += " L " + pointToStr(poly[i]);
+  }
+  ret += " z";
+  return ret;
+}
+
+
+
+
 module.exports = {
   secondsToMS,
   minutesToMS,
@@ -346,4 +394,6 @@ module.exports = {
   generateID,
   IsClient,
   IsServer,
+  polyToPathDesc,
+  pointInPolygon,
 };

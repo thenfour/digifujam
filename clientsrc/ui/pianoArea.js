@@ -3,7 +3,7 @@ const DFMusic = require("../DFMusic");
 
 class PianoArea extends React.Component {
     render() {
-        const showNoteValues = window.DFShowNoteValuesOnPianoArea;
+        const showNoteValues = window.DFShowDebugInfo;
         if (!this.props.app) return null;
         const keys = DFMusic.MidiNoteInfo.map(k => (
             <li key={k.midiNoteValue} id={"key_" + k.midiNoteValue} className={k.cssClass}>

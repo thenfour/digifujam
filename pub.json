@@ -7,6 +7,13 @@
   "height": 1200,
   "bpm": 100,
   "announcementHTML": "",
+  "roomRegions": [
+    {
+      "id":"left",
+      "polyPoints":[[0,0],[600,0],[600,256],[370,385],[370,385],[370,550],[0,775]],
+      "cssClass": "left"
+    }
+  ],
   "roomItems": [
     {
       "itemID": "announcement",

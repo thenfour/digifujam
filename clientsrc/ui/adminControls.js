@@ -61,7 +61,7 @@ class AdminControls extends React.Component {
                         <button onClick={this.copyServerState}>Copy server state</button><br />
                         <button onClick={this.pasteServerState}>Paste server state</button><br />
                         <button onClick={this._handleBackupServerState}>Manually backup server state</button><br />
-                        <button onClick={() => window.DFShowNoteValuesOnPianoArea = !window.DFShowNoteValuesOnPianoArea}>Show/hide note values on keyb</button>
+                        <button onClick={() => {window.DFShowDebugInfo = !window.DFShowDebugInfo; window.DFStateChangeHandler.OnStateChange();}}>Show/hide debug stuff</button>
                         <div>
                             announcement HTML (live update):<br />
                             <textarea style={{width:"100%", height:"250px"}} value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChangeAnnouncementHTML(e.target.value)} />

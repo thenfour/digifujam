@@ -49,6 +49,7 @@ const ClientMessages = {
     JoinRoom: "JoinRoom", // roomID
     PersistentSignOut: "PersistentSignOut",
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
+    GraffitiOps: "GraffitiOps", // [{ op:[place,remove], content, id, lifetimeMS }] // id only used for admin, lifetime & content only for placement
 
     // SEQ
     SeqPlayStop: "SeqPlayStop", // { isPlaying, instrumentID }
@@ -110,6 +111,10 @@ const ServerMessages = {
     UserState: "UserState", // { state: { user, name, color, img, position : { x, y } }, chatMessageEntry }
     Cheer: "Cheer", // userID, text, x, y
 
+    // [{ op:"place", graffiti:{} }]
+    // [{ op:"remove", id }]
+    GraffitiOps: "GraffitiOps",
+
     // sequencer control
     SetSetNoteMuted: "SetSetNoteMuted", // { instrumentID, midiNoteValue, isMuted }
     SeqPlayStop: "SeqPlayStop", // { instrumentID, isPlaying }
@@ -161,7 +166,13 @@ const ServerSettings = {
 
     MinBPM: 30,
     MaxBPM: 200,
+
+    GraffitiDefaultLifetimeMS: DFUtil.minutesToMS(15),
+    GraffitiRenewMarginMS: DFUtil.secondsToMS(45),
+    GraffitiContentLengthMax: 1800, // max allowed content
+    GraffitiContentTruncate: 50, // for display, content gets truncated to this.
 };
+
 
 const ClientSettings = {
     ChatHistoryMaxMS: (1000 * 60 * 60),
@@ -301,6 +312,10 @@ class DigifuUser {
         this.persistentID = null;
         // prevent signout/signin from artificially inflating stats. when you connect to persistent state, we reset the stats. and vice-vesa.
         this.persistentInfo = EmptyDFUserToPersistentInfo();
+    }
+
+    get mostPersistentID() { 
+        return this.persistentID ?? this.userID;
     }
 
 }; // DigifuUser
@@ -1580,6 +1595,7 @@ class DigifuRoomState {
         this.users = [];
         this.chatLog = []; // ordered by time asc
         this.roomItems = [];
+        this.graffiti = [];
         //this.internalMasterGain = 1.0;
         //this.img = null;
         this.bpm = 55;
@@ -1629,6 +1645,8 @@ class DigifuRoomState {
             return n;
         });
 
+        this.graffiti ??= [];
+
         this.metronome = new ServerRoomMetronome();
         this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
     }
@@ -1637,6 +1655,86 @@ class DigifuRoomState {
         this.bpm = bpm;
         this.metronome.setBPM(bpm);
     }
+
+    // ----graffiti
+
+    // returns the new obj
+    placeGraffiti(userID, content, lifetimeMS) {
+        const u = this.FindUserByID(userID);
+        if (!u) return null;
+
+        // validate content.
+        if (!content || (typeof(content) !== 'string')) {
+            console.log(`graffiti content not valid: ${content}`);
+            return null;
+        }
+        if (content.length < 1 || content.length > ServerSettings.GraffitiContentLengthMax) {
+            console.log(`graffiti content length not valid: ${content.length}`);
+            return null;
+        }
+
+        // validate lifetime.
+        // if the user is not an admin, it's ignored and default is used.
+        // if unspecified, default used.
+        lifetimeMS ??= null;
+        if (!u.user.IsAdmin()) {
+            lifetimeMS = null;
+        }
+
+        if (lifetimeMS === null) {
+            // default to 10 minutes
+            lifetimeMS = ServerSettings.GraffitiDefaultLifetimeMS;
+        }
+
+        if (lifetimeMS < 100) { // will expire too soon
+            //console.log(`graffiti lifetime not valid: ${lifetimeMS}`);
+            return null;
+        }
+
+        const expires = Date.now() + lifetimeMS;
+
+        // only allow in a room region.
+        const rgn = this.roomRegions.find(r => DFUtil.pointInPolygon([u.user.position.x, u.user.position.y], r.polyPoints));
+        if (!rgn) {
+            console.log(`no region matched the user's position; cannot place graffiti.`);
+            return null;
+        }
+
+        const n = {
+            id: DFUtil.generateID(),
+            color: u.user.color,
+            userID: u.user.userID,
+            persistentID: u.user.persistentID,
+            position: Object.assign({}, u.user.position), // careful about refs!
+            cssClass: rgn.cssClass ?? "",
+            content,
+            expires,
+        };
+
+        this.graffiti.push(n);
+        return n;
+    }
+
+    // called by client to integrate what the server passed
+    importGraffiti(graffiti) {
+        this.graffiti.push(graffiti);
+    }
+
+    // returns an array of graffiti IDs that were removed.
+    removeGraffitiForUser(userID, persistentID) {
+        const ret = this.graffiti.filter(g => g.userID === userID || g.persistentID === persistentID).map(g => g.id);
+        ret.forEach(id => this.removeGraffiti(id));
+        return ret;
+    }
+
+    removeGraffiti(id) {
+        const i = this.graffiti.findIndex(g => g.id === id);
+        if (i === -1) return false;
+        this.graffiti.splice(i, 1);
+        return true;
+    }
+
+    // ----graffiti
 
     asFilteredJSON() {
         const replacer = (k, v) => {
@@ -1658,6 +1756,7 @@ class DigifuRoomState {
             chatLog: [],//this.chatLog,
             stats: this.stats,
             announcementHTML: this.announcementHTML,
+            graffiti: this.graffiti,
             instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
                 return [
                     i.instrumentID,
@@ -1684,6 +1783,7 @@ class DigifuRoomState {
 
         this.stats = data.stats;
         this.announcementHTML = data.announcementHTML;
+        this.graffiti = data.graffiti ?? [];
 
         // remove "live" references to users.
         this.users = [];

@@ -210,6 +210,12 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.GoogleSignIn, {google_access_token});
     }
 
+    // GRAFFITI
+    SendGraffitiOps(ops) {
+        this.socket.emit(DF.ClientMessages.GraffitiOps, ops);
+    }
+    // --------------
+
     // SEQUENCER
 
     SeqSetTimeSig(timeSig) {
@@ -323,6 +329,7 @@ class DigifuNet {
 
         this.socket.on(DF.ServerMessages.RoomBeat, (data) => this.handler.NET_OnRoomBeat(data));
         this.socket.on(DF.ServerMessages.RoomBPMUpdate, (data) => this.handler.NET_OnRoomBPMUpdate(data))
+        this.socket.on(DF.ServerMessages.GraffitiOps, (data) => this.handler.NET_OnGraffitiOps(data))
 
         // SEQ ----
         this.socket.on(DF.ServerMessages.SeqPlayStop, (data) => this.handler.NET_SeqPlayStop(data));

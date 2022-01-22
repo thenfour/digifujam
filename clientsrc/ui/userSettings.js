@@ -4,7 +4,7 @@ const {GoogleUserSettings} = require('../googleSignIn');
 const {GenerateUserName} = require('../NameGenerator');
 const {UIUserName} = require("./UIUser");
 const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
-
+const {GraffitiCtrl} = require("./graffiti");
 
 class UserState extends React.Component {
    constructor(props) {
@@ -128,6 +128,10 @@ class UserState extends React.Component {
                         {this.props.app?.IsWaitingForAutoMIDIDeviceSelect() && <p className='autoMIDIDeviceSelectExplanation'>Play a note to automatically select the best MIDI device.</p>}
                        {inputList}
                     </ul>
+                </fieldset>
+                <fieldset>
+                    <div className="legend">Graffiti</div>
+                    <GraffitiCtrl app={this.props.app} />
                 </fieldset>
                 <fieldset>
                     <div className="legend">System</div>

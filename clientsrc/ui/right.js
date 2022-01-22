@@ -18,6 +18,7 @@ const {GoogleOAuthModule} = require('../googleSignIn');
 const {GestureSplash} = require('./splash');
 const {SequencerParamGroup} = require('./SequencerParamGroup');
 const {DFAlert} = require('./DFAlert');
+const {GraffitiScreen, GraffitiContainer} = require("./graffiti");
 
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
@@ -53,8 +54,6 @@ var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options
 let gStateChangeHandler = null;
 
 let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
-
-
 
 // ------- sequencer activity note indicators -----------
 function GenerateSeqNoteActivityIndicatorID(instrumentID) {
@@ -1788,7 +1787,7 @@ class UIRoomItem extends React.Component {
             let signStyle = Object.assign({
                 left: pos.x,
                 top: pos.y,
-                opacity: this.props.item.params.isShown ? "100%" : "0",
+                visibility: this.props.item.params.isShown ? "visible" : "hidden",
             }, this.props.item.params.style);
 
             signMarkup = (<div className="roomSign" onClick={this.onClickSign} style={signStyle}
@@ -2084,7 +2083,6 @@ class RoomArea extends React.Component {
         if ((!this.props.app) || (!this.props.app.roomState)) return false;
         if (!e.target || e.target.id != "roomArea") return false; // don't care abotu clicking anywhere except ON THIS DIV itself
         const roomPos = this.screenToRoomPosition({ x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
-
         this.props.app.SetUserPosition(roomPos);
     }
 
@@ -2173,6 +2171,12 @@ class RoomArea extends React.Component {
 
         const isDisconnected = !this.props.app?.IsConnected();
 
+        const context = {
+            app: this.props.app,
+            displayHelper: this,
+            md, // markdown renderer
+        };
+
         return (
             <div id="roomArea" className={"roomArea" + (isDisconnected ? " disconnectedGrayscale" : "")} onClick={e => this.onClick(e)} style={style}>
                 {connection}
@@ -2184,7 +2188,8 @@ class RoomArea extends React.Component {
                     observerMode={!!this.props.app.observingInstrument}
 
                     ></SequencerMain>}
-
+                {window.DFShowDebugInfo && <GraffitiScreen context={context} />}
+                <GraffitiContainer context={context} />
                 {roomItems}
                 {userAvatars}
                 { !this.state.showFullChat && <ShortChatLog app={this.props.app} />}
@@ -2580,6 +2585,9 @@ class RootArea extends React.Component {
                         {this.state.app?.synth && <InlineMasterGainCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlineMasterGainCtrl>}
                         {this.state.app?.synth && <InlinePitchBendCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlinePitchBendCtrl>}
                         {/*this.state.app && this.state.app.roomState && <DFOptionsDialog.RoomBeat app={this.state.app}></DFOptionsDialog.RoomBeat>*/}
+                        {window.DFShowDebugInfo && (
+                            <div>pos: {Math.round(this.state.app?.myUser?.position?.x)}, {Math.round(this.state.app?.myUser?.position?.y)}]</div>
+                        )}
                     </span>
                     <span>
                         {connectionIndicator}

@@ -21,3 +21,22 @@
     text-shadow: 4px -4px 8px black, 0 0 15px #0aa;
 }
 
+
+#graffitiContainer .graffiti {
+    max-width: 200px;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -.5px;
+}
+
+
+#graffitiContainer .graffiti.left {
+    transform:skewY(-30deg) scaleY(140%) translate(-50%,-50%);
+    text-shadow:0 0 5px #000;
+}
+
+
+#graffitiContainer .graffiti.right {
+    transform:skewY(30deg) scaleY(140%) translate(-50%,-50%);
+    text-shadow:0 0 5px #000;
+}

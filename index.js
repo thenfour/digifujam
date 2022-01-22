@@ -1215,6 +1215,55 @@ class RoomServer {
     }
   }
 
+  OnGraffitiOps(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnGraffitiOps => unknown user`);
+        return;
+      }
+
+      if (!Array.isArray(data)) throw new Error(`OnGraffitiOps: data is not valid; should be array`);
+      data.forEach(op => {
+        switch (op.op) {
+          case "place": // { op:"place", content, lifetimeMS }
+            {
+              const removalOps = this.roomState.removeGraffitiForUser(foundUser.user.userID, foundUser.user.persistentID).map(id => ({
+                op: "remove",
+                id,
+              }));
+              const graffiti = this.roomState.placeGraffiti(foundUser.user.userID, op.content, op.lifetimeMS);
+              //console.log(`created graffiti @ ${JSON.stringify(graffiti.position)} - ID ${graffiti.id}`);
+              if (!graffiti) return; // no need to throw; assume validation failed.
+              io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps.concat([{
+                op:"place",
+                graffiti,
+              }]));
+              break;
+            }
+          case "remove": // { op:"remove", id } // id only used for admin.
+            {
+              if (foundUser.user.IsAdmin() && op.id) {
+                if (!this.roomState.removeGraffiti(op.id)) return;// client out of sync; throw new Error(`Failed to remove graffiti`);
+                io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"remove", id: op.id }]);
+              } else {
+                const removalOps = this.roomState.removeGraffitiForUser(foundUser.user.userID, foundUser.user.persistentID).map(id => ({
+                  op: "remove",
+                  id,
+                }));
+                io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps);
+              }
+              break;
+            }
+        }
+      });
+
+    } catch (e) {
+      log(`OnGraffitiOps exception occurred`);
+      log(e);
+    }
+  }
+
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
     data.bpm = DFU.baseClamp(data.bpm, DF.ServerSettings.MinBPM, DF.ServerSettings.MaxBPM);
@@ -1794,6 +1843,7 @@ class RoomServer {
   // to return a pong. for now used for timing, and reporting user ping.
   OnPingInterval() {
     try {
+      const startMS = Date.now();
       setTimeout(() => {
         this.OnPingInterval();
       }, DF.ServerSettings.PingIntervalMS);
@@ -1831,6 +1881,47 @@ class RoomServer {
       });
 
       this.Idle_CheckIdlenessAndEmit();
+
+      const userExistsInWorld = (userID, persistentID) => {
+        return Object.values(gRooms).some(room => room.roomState.FindUserByID(userID) || room.roomState.FindUserByPersistentID(persistentID));
+      };
+
+      // remove graffiti which are 1) expired, and 2) reduce expiration time if not associated with a connected user
+      let expiredGraffitiIDs = [];
+      const now = Date.now();
+      this.roomState.graffiti.forEach(g => {
+        if (g.expires <= now) {
+          // should it be renewed?
+          if (g.isCleanup) {
+            if (userExistsInWorld(g.userID, g.persistentID)) {
+              //console.log(`renewing graffiti ${g.id} due to user ${g.userID}, persistent ${g.persistentID}`);
+              delete g.isCleanup;
+              g.expires = g.oldExpiration;
+              delete g.oldExpiration;
+              return;
+            }
+          }
+          expiredGraffitiIDs.push(g.id);
+          return;
+        }
+        if (userExistsInWorld(g.userID, g.persistentID))
+          return;
+        //console.log(`No rooms contain a user with persistent ID ${g.persistentID}; setting expiration of graffiti ${g.id}.`);
+        g.oldExpiration = g.expires; // allow it to be renewed.
+        g.isCleanup = true;
+        g.expires = now + DF.ServerSettings.GraffitiRenewMarginMS;
+      });
+
+      if (expiredGraffitiIDs.length) {
+        setTimeout(() => {
+          //console.log(`Removing expired graffitis: ${JSON.stringify(expiredGraffitiIDs)}`);
+          expiredGraffitiIDs.forEach(id => this.roomState.removeGraffiti(id));
+          io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, expiredGraffitiIDs.map(id => ({
+            op: "remove",
+            id,
+          })));
+        }, 100);
+      }
 
       // world population is not the sum of room population, because some users may represent identities which are in multiple rooms
       // e.g. sync'd discord users.
@@ -1906,6 +1997,7 @@ class RoomServer {
 
       // ping ALL clients on the room
       io.to(this.roomState.roomID).emit(DF.ServerMessages.Ping, payload);
+      //log(`ping processed in ${Date.now() - startMS} ms`);
     } catch (e) {
       log(`OnPingInterval exception occurred`);
       log(e);
@@ -2406,6 +2498,7 @@ let roomsAreLoaded = function () {
       ws.on(DF.ClientMessages.RoomBPMUpdate, data => ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));
       ws.on(DF.ClientMessages.AdjustBeatPhase, data => ForwardToRoom(ws, room => room.OnClientAdjustBeatPhase(ws, data)));
       ws.on(DF.ClientMessages.AdjustBeatOffset, data => ForwardToRoom(ws, room => room.OnClientAdjustBeatOffset(ws, data)));
+      ws.on(DF.ClientMessages.GraffitiOps, data => ForwardToRoom(ws, room => room.OnGraffitiOps(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 
