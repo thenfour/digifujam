@@ -27,6 +27,17 @@ class ModifierKeyTracker {
   }
 };
 
+
+function getSelectionText() {
+  var text = "";
+  if (window.getSelection) {
+      text = window.getSelection().toString();
+  } else if (document.selection && document.selection.type != "Control") {
+      text = document.selection.createRange().text;
+  }
+  return text;
+}
+
 class GestureTracker {
   get hasUserGestured() {
     return this.__hasUserGestured;
@@ -39,6 +50,18 @@ class GestureTracker {
       if (!this.__hasUserGestured) {
         this.__hasUserGestured = true;
         this.events.emit('gesture');
+      }
+
+      // who wants some ugly!
+      if (window.DFChatinput) {
+        if (e.target.tagName == 'BODY' && e.key.length === 1) {
+          //console.log(`  charcode=${e.charCode}, keycode=${e.keyCode} key=${e.key} code=${e.code} which=${e.which} tag=${e.target.tagName}`);
+          if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
+            if ("/abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()=\\'\",<>.`~;:".indexOf(e.key) != -1) {
+              window.DFChatinput.focus();
+            }
+          }
+        }
       }
     });
     $(document).on('keyup', (e) => {

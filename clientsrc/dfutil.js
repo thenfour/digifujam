@@ -124,13 +124,12 @@ function array_move(arr, old_index, new_index) {
 // console.log(groupBy(['one', 'two', 'three'], 'length'));
 // => {3: ["one", "two"], 5: ["three"]}
 function groupBy(array, keySelectorFn) {
-   return array.reduce((rv, el) => {
-      const k = keySelectorFn(el);
-      (rv[k] ??= []).push(el);
-      return rv;
-   }, {});
- };
- 
+  return array.reduce((rv, el) => {
+    const k = keySelectorFn(el);
+    (rv[k] ??= []).push(el);
+    return rv;
+  }, {});
+};
 
 // https://stackoverflow.com/a/40407914/402169
 function baseClamp(number, lower, upper) {
@@ -313,11 +312,11 @@ function IsClient() {
 }
 
 const imageExtensions = [
-    ".png",
-    ".gif",
-    ".jpeg",
-    ".jpg",
-    ".svg"
+  ".png",
+  ".gif",
+  ".jpeg",
+  ".jpg",
+  ".svg"
 ];
 function IsImageFilename(f) {
   f = f.toLowerCase();
@@ -368,8 +367,36 @@ function polyToPathDesc(poly) {
   return ret;
 }
 
+class CommandHistory {
+  constructor() {
+    this.historyCursor = 0; // 0 = new; 1 = previous etc.
+    this.history = [ "" ];
+  }
 
+  // registers a new item
+  onEnter(cmdLine) {
+    this.history[0] = cmdLine;
+    if (!this.historyCursor) {
+      this.history.unshift(""); // only add a new blank commandline when you're at the top of the stack
+    }
+    this.historyCursor = 0;
+  }
 
+  // returns the new item
+  onUp() {
+    return this.#SetHistoryCursor(this.historyCursor + 1);
+  }
+
+  onDown() {
+    return this.#SetHistoryCursor(this.historyCursor - 1);
+  }
+
+  #SetHistoryCursor(newCursor) {
+    newCursor = Math.max(0, Math.min(this.history.length - 1, newCursor));
+    this.historyCursor = newCursor;
+    return this.history[newCursor];
+  }
+}
 
 module.exports = {
   secondsToMS,
@@ -409,4 +436,5 @@ module.exports = {
   polyToPathDesc,
   pointInPolygon,
   IsImageFilename,
+  CommandHistory,
 };

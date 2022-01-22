@@ -1,9 +1,7 @@
 
-
-/* @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Catamaran:wght@300;400;500;700&display=swap'); */
 @import url('https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barriecito&family=Gochi+Hand&family=Patrick+Hand+SC&display=swap');
+
 
 body {
     background-color: black;
@@ -2052,4 +2050,12 @@ ul.instParamList li.floatParam .floatParamMainControls {
     font-size: 64px;
     user-select: none;
     pointer-events: none;
+}
+
+
+#graffitiContainer .graffiti .graffitiContent.text {
+    line-height:24px;
+    font-weight:normal;
+    letter-spacing:normal;
+    font-size:36px;
 }

@@ -49,8 +49,6 @@ var defaultRender = md.renderer.rules.link_open || function(tokens, idx, options
     return defaultRender(tokens, idx, options, env, self);
   };
  
-
-
 let gStateChangeHandler = null;
 
 let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
@@ -86,12 +84,8 @@ class SeqActivityIndicator
 
 const gSeqActivity = new SeqActivityIndicator();
 
-// ------- sequencer activity note indicators -----------
 
-
-
-
-
+// -------
 
 // returns { text, needsRefreshTimer }
 function getAnnouncementHTML(app) {
@@ -2115,17 +2109,56 @@ class RoomArea extends React.Component {
         else {
             setInterval(() => this.updateScrollSize(), 3000);
         }
+
+        document.addEventListener("paste", this.documentOnPaste);
     }
 
     componentWillUnmount() {
         if (this.resizeObserver) {
             this.resizeObserver.disconnect();
         }
+        document.removeEventListener("paste", this.documentOnPaste);
     }
+
+    documentOnPaste = (event) => {
+        // use event.originalEvent.clipboard for newer chrome versions
+        var items = (event.clipboardData  || event.originalEvent.clipboardData).items;
+        console.log(JSON.stringify(items)); // will give you the mime types
+        // find pasted image among pasted items
+        var blob = null;
+        for (var i = 0; i < items.length; i++) {
+          if (items[i].type.indexOf("image") === 0) {
+            blob = items[i].getAsFile();
+            break;
+          }
+        }
+        // load image if there is a pasted image
+        if (blob !== null) {
+        //   var reader = new FileReader();
+        //   reader.onload = function(event) {
+        //     console.log(`  result: ${event.target.result}`); // data url!
+        //   };
+        //   reader.readAsDataURL(blob);
+            const data = new FormData();
+            data.append('file', blob);
+            data.append('userID', this.props.app.myUser.userID);
+        
+            fetch('/uploadGraffiti', {
+                method: 'POST',
+                body: data
+            })
+            .then(() => {
+                //console.log("file uploaded");
+            })
+            .catch(reason => console.error(reason));
+        }
+    }
+    
 
     onDrop = (ev) => {
         //console.log(`onDrop`);
         ev.preventDefault();
+        this.setState({isDraggingGraffiti:false});
         if (!this.props.app.MyRoomRegion) return;
         if (!ev.dataTransfer?.files?.length) return;
         const file = ev.dataTransfer.files[0];
@@ -2139,20 +2172,25 @@ class RoomArea extends React.Component {
             method: 'POST',
             body: data
         })
-        .then(() => console.log("file uploaded"))
+        .then(() => {
+            //console.log("file uploaded");
+        })
         .catch(reason => console.error(reason));
-        this.setState({isDraggingGraffiti:false});
     }
     
     onDragOver = (e) => {
-        //console.log(`onDragOver`);
+        console.log(`onDragOver; len = ${e.dataTransfer?.files?.length}`);
+        const isdrag = e.dataTransfer?.files?.length > 0;
+        if (this.state.isDraggingGraffiti != isdrag) {
+            this.setState({isDraggingGraffiti:isdrag});
+        }
         e.preventDefault();
         e.dataTransfer.dropEffect = this.props.app.MyRoomRegion ? "copy" : "none";
     }
 
     onDragEnter = (e) => {
         console.log(`onDragEnter`);
-        this.setState({isDraggingGraffiti:true});
+        //this.setState({isDraggingGraffiti:true});
     }
 
     onDragLeave = (e) => {
@@ -2256,6 +2294,7 @@ class ChatArea extends React.Component {
         super(props);
         this.state = { value: '' };
         this.handleChange = this.handleChange.bind(this);
+        this.history = new DFU.CommandHistory();
     }
 
     handleClick() {
@@ -2273,7 +2312,20 @@ class ChatArea extends React.Component {
 
     handleKeyDown = (e) => {
         if (e.key === 'Enter') {
+            this.history.onEnter(this.state.value);
             return this.handleClick();
+        }
+        else if (e.key === 'ArrowUp') {
+            this.setState({value: this.history.onUp()});
+            setTimeout(()=> {
+                this.inputRef.selectionStart = this.inputRef.selectionEnd = this.state.value.length;
+            }, 10);
+        }
+        else if (e.key === 'ArrowDown') {
+            this.setState({value: this.history.onDown()});
+            setTimeout(()=> {
+                this.inputRef.selectionStart = this.inputRef.selectionEnd = this.state.value.length;
+            }, 10);
         }
     }
 
@@ -2281,7 +2333,13 @@ class ChatArea extends React.Component {
         if (!this.props.app) return null;
         return (
             <div id="chatArea" style={{ gridArea: "chatArea" }}>
-                chat <input type="text" value={this.state.value} onChange={this.handleChange} onKeyDown={this.handleKeyDown} />
+                chat <input
+                    type="text"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    onKeyDown={this.handleKeyDown}
+                    ref={(input) => { this.inputRef = window.DFChatinput = input; }} 
+                    />
                 <button onClick={this.handleClick.bind(this)}>send</button>
             </div>
         );
@@ -2518,6 +2576,9 @@ class RootArea extends React.Component {
         return ret;
     }
 
+    onKeyDown = (e) => {
+    }
+
     setSequencerShown = (sequencerShown) => {
         this.setState({sequencerShown});
     }
@@ -2619,7 +2680,7 @@ class RootArea extends React.Component {
         );
 
         return (
-            <div id="allContentContainer">
+            <div id="allContentContainer" onKeyDown={this.onKeyDown}>
             <GestureSplash app={this.state.app}></GestureSplash>
             <DFAlert></DFAlert>
             <div id="grid-container" style={gridContainerStyle}>

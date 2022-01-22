@@ -1348,6 +1348,36 @@ class DigifuApp {
     }
 
     SendChatMessage(msgText, toUserID) {
+
+        // parse commands.
+        const l = msgText.toLowerCase();
+        if (l.startsWith("/g ")) {
+            this.net.SendGraffitiOps([{
+                op: "place",
+                content: msgText.substring(3),
+            }]);
+            return;
+        }
+
+        let cmd = "/nick ";
+        if (l.startsWith(cmd)) {
+            return this.SetUserNameColor(msgText.substring(cmd.length), this.myUser.color);
+        }
+
+        cmd = "/n ";
+        if (l.startsWith(cmd)) {
+            return this.SetUserNameColor(msgText.substring(cmd.length), this.myUser.color);
+        }
+
+        cmd = "/color ";
+        if (l.startsWith(cmd)) {
+            return this.SetUserNameColor(this.myUser.name, msgText.substring(cmd.length));
+        }
+        cmd = "/c ";
+        if (l.startsWith(cmd)) {
+            return this.SetUserNameColor(this.myUser.name, msgText.substring(cmd.length));
+        }
+
         let msg = new DF.DigifuChatMessage();
         msg.message = msgText;
         msg.fromUserID = this.myUser.userID;

@@ -1,6 +1,6 @@
 const DF = require("../DFCommon");
 const React = require('react');
-const { polyToPathDesc, remap, IsImageFilename } = require("../dfutil");
+const { polyToPathDesc, remap, IsImageFilename, modulo } = require("../dfutil");
 
 
 class GraffitiArea extends React.Component {
@@ -79,6 +79,12 @@ class GraffitiItem extends React.Component {
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:g.position.x,y:g.position.y});
 
     let rot = remap(g.seed, 0, 1, 7, 13) * Math.sign(((g.seed * 1337) % 2) - 1);
+    const fonts = [
+      'Barriecito',
+      'Gochi Hand',
+      'Patrick Hand SC',            
+    ];
+    let fontFamily = fonts.at(modulo(Math.trunc(g.seed * 10899), fonts.length));
 
     const style = {
       left:pos.x,
@@ -86,6 +92,7 @@ class GraffitiItem extends React.Component {
       color:g.color,
       transformOrigin: "0 0",
       transform: `rotateZ(${rot}deg) translate(-50%,-50%)`,
+      fontFamily,
     };
 
     let isImage = isImageUrl(g.content);
