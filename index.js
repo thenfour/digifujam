@@ -333,9 +333,9 @@ class RoomServer {
     }
 
     // do factory resets
-    this.roomState.instrumentCloset.forEach(i => {
-      this.roomState.integrateRawParamChanges(i, this.roomState.GetInitPreset(i));
-    });
+    // this.roomState.instrumentCloset.forEach(i => {
+    //   this.roomState.integrateRawParamChanges(i, this.roomState.GetInitPreset(i));
+    // });
 
     // remember this stuff for our "reset to factory defaults" function.
     this.factorySettings = this.roomState.instrumentCloset.map(i => {
