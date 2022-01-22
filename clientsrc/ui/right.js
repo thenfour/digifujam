@@ -2030,6 +2030,7 @@ class RoomArea extends React.Component {
         this.state = {
             scrollSize: { x: 0, y: 0 },// track DOM scrollHeight / scrollWidth
             showFullChat: false,
+            isDraggingGraffiti: false,
         };
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
         this.roomToScreenPosition = this.roomToScreenPosition.bind(this);
@@ -2123,12 +2124,12 @@ class RoomArea extends React.Component {
     }
 
     onDrop = (ev) => {
-        console.log(`onDrop`);
+        //console.log(`onDrop`);
         ev.preventDefault();
         if (!this.props.app.MyRoomRegion) return;
         if (!ev.dataTransfer?.files?.length) return;
         const file = ev.dataTransfer.files[0];
-        console.log(`dropped file ${file.name}, size ${file.size}`);
+        //console.log(`dropped file ${file.name}, size ${file.size}`);
 
         const data = new FormData();
         data.append('file', file);
@@ -2140,12 +2141,23 @@ class RoomArea extends React.Component {
         })
         .then(() => console.log("file uploaded"))
         .catch(reason => console.error(reason));
+        this.setState({isDraggingGraffiti:false});
     }
     
     onDragOver = (e) => {
-        console.log(`onDragOver`);
+        //console.log(`onDragOver`);
         e.preventDefault();
         e.dataTransfer.dropEffect = this.props.app.MyRoomRegion ? "copy" : "none";
+    }
+
+    onDragEnter = (e) => {
+        console.log(`onDragEnter`);
+        this.setState({isDraggingGraffiti:true});
+    }
+
+    onDragLeave = (e) => {
+        console.log(`onDragLeave`);
+        this.setState({isDraggingGraffiti:false});
     }
 
     render() {
@@ -2209,6 +2221,8 @@ class RoomArea extends React.Component {
                 style={style}
                 onDrop={this.onDrop}
                 onDragOver={this.onDragOver}
+                onDragEnter={this.onDragEnter}
+                onDragLeave={this.onDragLeave}
                 >
                 {connection}
                 {seqViewVisible && <SequencerMain
@@ -2221,6 +2235,7 @@ class RoomArea extends React.Component {
                     ></SequencerMain>}
                 {window.DFShowDebugInfo && <GraffitiScreen context={context} />}
                 <GraffitiContainer context={context} />
+                { (this.state.isDraggingGraffiti || false) && <div className='dragGraffitiScreen'><div>Place graffiti</div></div> }
                 {roomItems}
                 {userAvatars}
                 { !this.state.showFullChat && <ShortChatLog app={this.props.app} />}

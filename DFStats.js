@@ -503,7 +503,7 @@ class DiscordIntegrationManager {
 
    // gDiscordBot.EventHook
    OnDiscordMemberUpdate(oldMember, newMember) {
-      this.Get7JamRoomsIDsForDiscordMemberSync(channel.id).forEach(roomID => {
+      this.Get7JamRoomsIDsForDiscordMemberSync(oldMember.channelId).forEach(roomID => {
          this._7jamAPI.UpdateDiscordUserInRoom(roomID, newMember.displayName, member.displayHexColor, newMember.id);
       });
    }

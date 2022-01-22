@@ -1916,9 +1916,15 @@ class RoomServer {
           expiredGraffitiIDs.push(g.id);
           return;
         }
-        if (userExistsInWorld(g.userID, g.persistentID))
+        if (userExistsInWorld(g.userID, g.persistentID)) {
+          //console.log(`User exists in world; and not expired.  user ${g.userID}, persistent ${g.persistentID}`);
           return;
-        //console.log(`No rooms contain a user with persistent ID ${g.persistentID}; setting expiration of graffiti ${g.id}.`);
+        }
+        if (g.isCleanup) {
+          //console.log(`Waiting on cleanup of graffiti ${g.id} user ${g.userID}, persistent ${g.persistentID}`);
+          return;          
+        }
+        //console.log(`No rooms contain a user with user ${g.userID}, persistent ${g.persistentID}; setting expiration of graffiti ${g.id}.`);
         g.oldExpiration = g.expires; // allow it to be renewed.
         g.isCleanup = true;
         g.expires = now + DF.ServerSettings.GraffitiRenewMarginMS;

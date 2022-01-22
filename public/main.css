@@ -2033,7 +2033,23 @@ ul.instParamList li.floatParam .floatParamMainControls {
     height:100px;
     background-repeat:no-repeat;
     background-position:center;
-    background-size:cover;
+    background-size:contain;
     filter: drop-shadow(3px -3px 5px black) grayscale(50%);
 }
 
+.dragGraffitiScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: #0008;
+    color:#0cc;
+    font-weight:bold;
+    font-size: 64px;
+    user-select: none;
+    pointer-events: none;
+}
