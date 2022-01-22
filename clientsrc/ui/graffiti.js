@@ -1,6 +1,6 @@
 const DF = require("../DFCommon");
 const React = require('react');
-const { polyToPathDesc } = require("../dfutil");
+const { polyToPathDesc, remap } = require("../dfutil");
 
 
 class GraffitiArea extends React.Component {
@@ -75,10 +75,15 @@ class GraffitiItem extends React.Component {
     const app = this.props.context.app;
     const g = this.props.graffiti;
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:g.position.x,y:g.position.y});
+
+    const rot = remap(g.seed, 0, 1, -15, 15);
+
     const style = {
       left:pos.x,
       top:pos.y,
       color:g.color,
+      transformOrigin: "center",
+      transform: `rotateZ(${rot}deg) translate(-50%,-50%)`,
     };
 
     let isImage = isImageUrl(g.content);
@@ -96,13 +101,14 @@ class GraffitiItem extends React.Component {
       contentEl = (<div className="graffitiContent text" dangerouslySetInnerHTML={{__html: content}}></div>);
     }
 
-    // context.md
-    // is it an image?
-
+    // graffitiItemContainer > graffiti > graffitiContent
+    // container because we apply our own transformations & positioning.
     return (
-      <div style={style} className={"graffiti " + g.cssClass}>
+      <div className={"graffitiItemContainer " + (isImage ? " image" : " text")} style={style}>
+      <div className={"graffiti " + g.cssClass}>
         {contentEl}
         {window.DFShowDebugInfo && <div className="graffitiRemove" onClick={this.onClickRemove}>X</div>}
+      </div>
       </div>
     );
   }

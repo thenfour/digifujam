@@ -1703,6 +1703,7 @@ class DigifuRoomState {
         const n = {
             id: DFUtil.generateID(),
             color: u.user.color,
+            seed: Math.random(),
             userID: u.user.userID,
             persistentID: u.user.persistentID,
             position: Object.assign({}, u.user.position), // careful about refs!

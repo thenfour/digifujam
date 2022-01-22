@@ -1974,12 +1974,12 @@ ul.instParamList li.floatParam .floatParamMainControls {
 }
 
 
-#graffitiContainer .graffiti {
+#graffitiContainer .graffitiItemContainer {
     position: absolute;
     transition: left 1s, top 1s;
     user-select: none;
 }
-#graffitiContainer .graffiti .graffitiRemove {
+#graffitiContainer .graffitiItemContainer .graffitiRemove {
     display:none;
     background-color: #0006;
 }
