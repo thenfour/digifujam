@@ -1020,3 +1020,43 @@
 .sequencerMain fieldset .paramValue.altvalue {
     color: #ff0;
 }
+
+
+
+
+.sequencerMain .tapTempo {
+    display: flex;
+    background-color:#0883;
+}
+
+.sequencerMain .tapTempo .helpText {
+    display:none;
+}
+
+.sequencerMain .tapTempo button {
+    width:auto;
+    border-radius:0;
+}
+.sequencerMain .tapTempo button.save,
+.sequencerMain .tapTempo button.cancel
+ {
+    background-color:#ccf;
+}
+
+.sequencerMain .tapTempo .bpmValue {
+    font-size:24px;
+}
+.sequencerMain .tapTempo .bpmLegend {
+    font-size:16px;
+    color:#088;
+}
+
+
+
+
+
+
+
+
+
+

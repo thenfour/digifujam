@@ -7,6 +7,38 @@ const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
 const DF = require("../DFCommon");
 
 
+class TapTempoButton extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        switch (this.props.app.tapTempoState) {
+            case DFApp.TapTempoState.NA:
+                return (<div className={this.props.className}>
+                    <button title="Tap tempo by playing notes or clicking the button. Then commit the tempo or cancel." className='tap inactive'  onClick={() => { this.props.app.beginTapTempo(); }}>TAP</button>
+                </div>);
+            case DFApp.TapTempoState.Waiting:
+                return (<div className={this.props.className}>
+                    <button className='tap active'  onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
+                    <button className='cancel'  onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
+                    <div className="helpText">Play a note or hit the button to start setting the tempo.</div>
+                </div>);
+            case DFApp.TapTempoState.Tapping:
+                return (<div className={this.props.className}>
+                    <button className='tap active' onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
+                    <button className='save' onClick={() => { this.props.app.commitTappedTempo(); }}>Save</button>
+                    <button className='cancel' onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
+                    <span className='bpmValue'>{this.props.app.tappedTempoBPM}</span><span className='bpmLegend'> BPM</span>
+                    <div className="helpText">Keep playing this note to refine the tempo. Play a different note to accept the new tempo.</div>
+                </div>);
+        };        
+        console.assert(false);
+        return null;
+    }
+}
+
+
 class DFOptionsDialog extends React.Component {
     constructor(props) {
         super(props);
@@ -182,10 +214,6 @@ class DFOptionsDialog extends React.Component {
         this.setState({});//gStateChangeHandler.OnStateChange();
     }
 
-    beginTapTempo = () => {
-        //
-    };
-
     render() {
 
         let _groups = [...new Set(this.quantizationOptions.map(p => p.group))];
@@ -214,30 +242,30 @@ class DFOptionsDialog extends React.Component {
             monitoringCaption = "Remote";
         }
 
-        let tapTempoStuff = null;
-        switch (this.props.app.tapTempoState) {
-            case DFApp.TapTempoState.NA:
-                tapTempoStuff = (<div>
-                    <button onClick={() => { this.props.app.beginTapTempo(); }}>Tap tempo</button>
-                </div>);
-                break;
-            case DFApp.TapTempoState.Waiting:
-                tapTempoStuff = (<div>
-                    <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
-                    <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
-                    <div className="helpText">Play a note or hit the button to start setting the tempo.</div>
-                </div>);
-                break;
-            case DFApp.TapTempoState.Tapping:
-                tapTempoStuff = (<div>
-                    <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
-                    <button onClick={() => { this.props.app.commitTappedTempo(); }}>Save</button>
-                    <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
-                    {this.props.app.tappedTempoBPM} BPM
-                    <div className="helpText">Keep playing this note to refine the tempo. Play a different note to accept the new tempo.</div>
-                </div>);
-                break;
-        };
+        // let tapTempoStuff = null;
+        // switch (this.props.app.tapTempoState) {
+        //     case DFApp.TapTempoState.NA:
+        //         tapTempoStuff = (<div>
+        //             <button onClick={() => { this.props.app.beginTapTempo(); }}>Tap tempo</button>
+        //         </div>);
+        //         break;
+        //     case DFApp.TapTempoState.Waiting:
+        //         tapTempoStuff = (<div>
+        //             <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
+        //             <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
+        //             <div className="helpText">Play a note or hit the button to start setting the tempo.</div>
+        //         </div>);
+        //         break;
+        //     case DFApp.TapTempoState.Tapping:
+        //         tapTempoStuff = (<div>
+        //             <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
+        //             <button onClick={() => { this.props.app.commitTappedTempo(); }}>Save</button>
+        //             <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
+        //             {this.props.app.tappedTempoBPM} BPM
+        //             <div className="helpText">Keep playing this note to refine the tempo. Play a different note to accept the new tempo.</div>
+        //         </div>);
+        //         break;
+        // };
 
         return (
             <div>
@@ -307,7 +335,7 @@ class DFOptionsDialog extends React.Component {
                                 {this.props.app.roomState.bpm} BPM
                             </div>
 
-                            {tapTempoStuff}
+                            <TapTempoButton className="tapTempo" app={this.props.app} tapTempStyle="options" />
 
                             {this.props.app.myInstrument && <div>
                                 <button className={"buttonParam " + (this.props.app.GetResetBeatPhaseOnNextNote() ? "active" : "")}
@@ -350,6 +378,6 @@ class DFOptionsDialog extends React.Component {
 
 module.exports = {
     DFOptionsDialog,
-    //RoomBeat,
+    TapTempoButton,
 }
 

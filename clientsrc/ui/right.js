@@ -53,6 +53,8 @@ let gStateChangeHandler = null;
 
 let gInstActivityHandlers = {}; // key=some ID, value=a handler (instrument, note) => {}
 
+window.DFShowChatSlashCommandHelp = false;
+
 // ------- sequencer activity note indicators -----------
 function GenerateSeqNoteActivityIndicatorID(instrumentID) {
     return `seq_note_act_${instrumentID}`
@@ -2018,6 +2020,33 @@ class RoomAlertArea extends React.Component {
     }
 };
 
+
+
+
+class ChatSlashCommandHelp extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+        <div id="chatSlashCommandHelp">
+            <div className="legend">Chat command help</div>
+            <dl>
+                <dt>/nick &lt;new nickname&gt; (shortcut: /n)</dt>
+                <dd>Change your nickname</dd>
+                <dt>/color &lt;new color&gt; (shortcut: /c)</dt>
+                <dd>Change your color</dd>
+                <dt>/graffiti &lt;text or image url&gt; (shortcut: /g)</dt>
+                <dd>Place graffiti</dd>
+            </dl>
+        </div>
+        );
+    }
+}
+
+
+
+
 class RoomArea extends React.Component {
     constructor(props) {
         super(props);
@@ -2179,7 +2208,7 @@ class RoomArea extends React.Component {
     }
     
     onDragOver = (e) => {
-        console.log(`onDragOver; len = ${e.dataTransfer?.files?.length}`);
+        //console.log(`onDragOver; len = ${e.dataTransfer?.files?.length}`);
         const isdrag = e.dataTransfer?.files?.length > 0;
         if (this.state.isDraggingGraffiti != isdrag) {
             this.setState({isDraggingGraffiti:isdrag});
@@ -2189,12 +2218,12 @@ class RoomArea extends React.Component {
     }
 
     onDragEnter = (e) => {
-        console.log(`onDragEnter`);
+        //console.log(`onDragEnter`);
         //this.setState({isDraggingGraffiti:true});
     }
 
     onDragLeave = (e) => {
-        console.log(`onDragLeave`);
+        //console.log(`onDragLeave`);
         this.setState({isDraggingGraffiti:false});
     }
 
@@ -2262,6 +2291,7 @@ class RoomArea extends React.Component {
                 onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave}
                 >
+                {window.DFShowChatSlashCommandHelp && <ChatSlashCommandHelp context={context} />}
                 {connection}
                 {seqViewVisible && <SequencerMain
                     app={this.props.app}
@@ -2303,11 +2333,21 @@ class ChatArea extends React.Component {
         if (sanitized.length < 1) return;
         sanitized = sanitized.substr(0, DF.ServerSettings.ChatMessageLengthMax);
         this.props.app.SendChatMessage(sanitized, null);
+        this.#updateHelp('');
         this.state.value = '';
+    }
+
+    #updateHelp(str) {
+        const b = str.startsWith('/');
+        if (b != window.DFShowChatSlashCommandHelp) {
+            window.DFShowChatSlashCommandHelp = b;
+            gStateChangeHandler.OnStateChange();
+        }
     }
 
     handleChange(event) {
         this.setState({ value: event.target.value });
+        this.#updateHelp(event.target.value);
     }
 
     handleKeyDown = (e) => {

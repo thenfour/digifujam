@@ -167,8 +167,8 @@ const ServerSettings = {
     MinBPM: 30,
     MaxBPM: 200,
 
-    GraffitiDefaultLifetimeMS: DFUtil.minutesToMS(15),
-    GraffitiRenewMarginMS: DFUtil.secondsToMS(45),
+    GraffitiDefaultLifetimeMS: DFUtil.hoursToMS(24),
+    GraffitiRenewMarginMS: DFUtil.minutesToMS(2),
     GraffitiContentLengthMax: 1800, // max allowed content
     GraffitiContentTruncate: 50, // for display, content gets truncated to this.
 };
@@ -296,8 +296,8 @@ class DigifuUser {
         if (u.pingMS) {
             this.pingMS = u.pingMS;
         }
-        if (u.pi) {
-            this.persistentInfo = u.pi;
+        if (u.persistentInfo) {
+            this.persistentInfo = u.persistentInfo;
         }
     }
 

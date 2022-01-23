@@ -1359,7 +1359,16 @@ class DigifuApp {
             return;
         }
 
-        let cmd = "/nick ";
+        let cmd = "/graffiti ";
+        if (l.startsWith(cmd)) {
+            this.net.SendGraffitiOps([{
+                op: "place",
+                content: msgText.substring(cmd.length),
+            }]);
+            return;
+        }
+
+        cmd = "/nick ";
         if (l.startsWith(cmd)) {
             return this.SetUserNameColor(msgText.substring(cmd.length), this.myUser.color);
         }

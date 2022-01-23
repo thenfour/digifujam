@@ -78,7 +78,7 @@ class GraffitiItem extends React.Component {
     const g = this.props.graffiti;
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:g.position.x,y:g.position.y});
 
-    let rot = remap(g.seed, 0, 1, 7, 13) * Math.sign(((g.seed * 1337) % 2) - 1);
+    let rot = remap(g.seed, 0, 1, 4, 10) * Math.sign(((g.seed * 1337) % 2) - 1);
     const fonts = [
       'Barriecito',
       'Gochi Hand',

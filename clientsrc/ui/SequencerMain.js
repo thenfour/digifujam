@@ -6,6 +6,7 @@ const DF = require("../DFCommon");
 const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
+const { TapTempoButton } = require('./optionsDialog');
 
 const gMinTimerInterval = 35;
 
@@ -946,11 +947,14 @@ class SequencerMain extends React.Component {
                                     <button onClick={this.onClickLowerTempo} className={clickableIfEditable}><i className="material-icons">arrow_drop_down</i></button>
                                 </div>
                                 <div className='buttonArray'>
-                                    <button className={"clickable metronome" + (this.props.app.metronome.isMuted ? '' : ' active')} onClick={this.onClickToggleMetronome}>
+                                    <TapTempoButton className="tapTempo" app={this.props.app} tapTempStyle="seq"/>
+
+                                    <button title="Metronome" className={"clickable metronome" + (this.props.app.metronome.isMuted ? '' : ' active')} onClick={this.onClickToggleMetronome}>
                                     {(this.props.app.metronome.isMuted || this.props.app.IsMuted()) ? 
                                         (<i className="material-icons">volume_off</i>)
                                         : (<i className="material-icons">volume_up</i>)}
                                     </button>
+
                                 </div>
                                 </div>
                             </div>

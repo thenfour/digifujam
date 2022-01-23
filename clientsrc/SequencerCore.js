@@ -1425,7 +1425,7 @@ class SequencerPatternView {
       return [ ...addSpec ].concat(this.GetPatternOpsToEnforceMaxNotesPerColumn(divInfo, addNotes));
     }
     // we know this cell has a note. we could either remove the note + add it at the correct velocity level, or delete.
-    const ret = this.GetPatternOpsForCellRemoveMulti(divInfo, multiNotes);
+    let ret = this.GetPatternOpsForCellRemoveMulti(divInfo, multiNotes);
     if (patternViewCell.velocityIndex === velIndex) { // is correct; just delete.
       //console.log(`delete vel ${velIndex}`);
       return ret;
