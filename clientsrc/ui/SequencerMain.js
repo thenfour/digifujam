@@ -419,6 +419,8 @@ class SequencerMain extends React.Component {
             let ops = null;
             let playingNotes = this.props.app.GetMyCurrentlyPlayingNotes();
 
+            playingNotes = playingNotes.map(n => patch.PhysicalToPatternMidiNoteValue(n));
+
             // sanitize playing notes. if you're playing notes which are out of range, then drop them.
             // we could be "smart" and basically if you try to play out of range, then attempt to bring them into frame using octave transp
             // but there are a lot of considerations so i'm going to avoid this.

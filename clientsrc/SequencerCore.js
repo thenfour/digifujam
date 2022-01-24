@@ -12,7 +12,7 @@ const DFMusic = require("./DFMusic");
 const SequencerSettings = {
   PatternCount : 4,
   MaxDivs : 65,
-  MaxNoteOnsPerColumn : 6,
+  MaxNoteOnsPerColumn : 8,
 };
 
 const eDivisionType = {
@@ -24,7 +24,7 @@ const eDivisionType = {
 };
 
 const gDefaultPatternLengthMajorBeats = 4;
-const gDefaultPatternDivisionType = eDivisionType.MajorBeat;
+const gDefaultPatternDivisionType = eDivisionType.MinorBeat;
 
 let globalSequencerConfig = {
   velocitySets : {},
@@ -486,9 +486,19 @@ class SequencerPatch {
 
   // can return nullish if out of range / should not be played.
   AdjustMidiNoteValue(midiNoteValue) {
-    let ret = midiNoteValue;
     midiNoteValue += this.octave * 12;
     midiNoteValue += this.transpose;
+    if (midiNoteValue < 1)
+      return 0;
+    if (midiNoteValue > 127)
+      return 0;
+    return midiNoteValue;
+  }
+
+  // converts the PLAYING note to the pattern note (opposite of AdjustMidiNoteValue)
+  PhysicalToPatternMidiNoteValue(midiNoteValue) {
+    midiNoteValue -= this.transpose;
+    midiNoteValue -= this.octave * 12;
     if (midiNoteValue < 1)
       return 0;
     if (midiNoteValue > 127)

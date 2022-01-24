@@ -1894,40 +1894,23 @@ class RoomServer {
 
       this.Idle_CheckIdlenessAndEmit();
 
-      const userExistsInWorld = (userID, persistentID) => {
-        return Object.values(gRooms).some(room => room.roomState.FindUserByID(userID) || room.roomState.FindUserByPersistentID(persistentID));
+      const userExistsInWorld = (userID/*, persistentID*/) => {
+        // persistentID can be null
+        return Object.values(gRooms).some(room => {
+          if (room.roomState.FindUserByID(userID)) return true;
+          //if (persistentID && room.roomState.FindUserByPersistentID(persistentID)) return true;
+          return false;
+        });
       };
 
-      // remove graffiti which are 1) expired, and 2) reduce expiration time if not associated with a connected user
       let expiredGraffitiIDs = [];
       const now = Date.now();
       this.roomState.graffiti.forEach(g => {
-        if (g.expires <= now) {
-          // should it be renewed?
-          if (g.isCleanup) {
-            if (userExistsInWorld(g.userID, g.persistentID)) {
-              //console.log(`renewing graffiti ${g.id} due to user ${g.userID}, persistent ${g.persistentID}`);
-              delete g.isCleanup;
-              g.expires = g.oldExpiration;
-              delete g.oldExpiration;
-              return;
-            }
-          }
+        const expired = g.expires <= now;
+        const userLeft = !g.persistentID && !userExistsInWorld(g.userID);
+        if (expired || userLeft) {
           expiredGraffitiIDs.push(g.id);
-          return;
         }
-        if (userExistsInWorld(g.userID, g.persistentID)) {
-          //console.log(`User exists in world; and not expired.  user ${g.userID}, persistent ${g.persistentID}`);
-          return;
-        }
-        if (g.isCleanup) {
-          //console.log(`Waiting on cleanup of graffiti ${g.id} user ${g.userID}, persistent ${g.persistentID}`);
-          return;          
-        }
-        //console.log(`No rooms contain a user with user ${g.userID}, persistent ${g.persistentID}; setting expiration of graffiti ${g.id}.`);
-        g.oldExpiration = g.expires; // allow it to be renewed.
-        g.isCleanup = true;
-        g.expires = now + DF.ServerSettings.GraffitiRenewMarginMS;
       });
 
       if (expiredGraffitiIDs.length) {
