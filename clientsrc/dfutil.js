@@ -92,6 +92,23 @@ function modulo(x, n) {
   return ((x % n) + n) % n;
 };
 
+// given a period length,
+// and a begin/length in the period (NOTE: if length is longer than 1 period, returns always true)
+// does X lie in the begin-end segment.
+//   |-----------|-----------|-----------|-----------|-----------|-----------
+//         [=======]   [=======]   [=======]   [=======]   [=======]   
+//         ^begin      ^begin
+//    <----------> period
+function IsInPeriodicSegment(x, period, begin, length) {
+  x = modulo(x, period); // bring x into window 0
+  const end = begin + length; // note: this may lie outside window 0.
+  if (x >= begin && x < end) return true;
+  // check if window 1 satisfies.
+  x += period;
+  if (x >= begin && x < end) return true;
+  return false;
+}
+
 // todo: optimize for sorted arrays
 function findNearestIndex(array, distFn) {
   let closestDistance = 0x7fffffff;
@@ -427,6 +444,7 @@ module.exports = {
   GrabArgs,
   TimeSpan,
   modulo,
+  IsInPeriodicSegment,
   findNearest,
   findNearestIndex,
   groupBy,

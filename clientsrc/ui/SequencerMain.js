@@ -7,6 +7,7 @@ const DFUtils = require("../util");
 const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 const { TapTempoButton } = require('./optionsDialog');
+const { SequencerCell } = require('./SequencerCell');
 
 const gMinTimerInterval = 35;
 
@@ -412,66 +413,6 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetTranspose(n);
         }
 
-        onCellClick = (patternView, divInfo, note, legend, patch, setLengthProc) => {
-            if (this.props.observerMode) return;
-            // toggle a 1-div-length 
-            // convert this click to an ops struct
-            let ops = null;
-            let playingNotes = this.props.app.GetMyCurrentlyPlayingNotes();
-
-            playingNotes = playingNotes.map(n => patch.PhysicalToPatternMidiNoteValue(n));
-
-            // sanitize playing notes. if you're playing notes which are out of range, then drop them.
-            // we could be "smart" and basically if you try to play out of range, then attempt to bring them into frame using octave transp
-            // but there are a lot of considerations so i'm going to avoid this.
-            if (playingNotes.length) {
-                playingNotes = playingNotes.filter(n => {
-                    return legend.some(l => l.midiNoteValue === n);
-                });
-            } else {
-                playingNotes = [note.midiNoteValue];
-            }
-            if (window.DFModifierKeyTracker.ShiftKey) {
-                if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellToggle(divInfo, note, playingNotes, 1); // CTRL+SHIFT = toggle vel1
-                } else {
-                    return setLengthProc(); // SHIFT = set length
-                }
-            } else {
-                if (window.DFModifierKeyTracker.CtrlKey) {
-                    ops = patternView.GetPatternOpsForCellRemove(divInfo, note, playingNotes); // CTRL = delete
-                    //ops = patternView.GetPatternOpsForCellToggle(divInfo, note, 0); // CTRL = toggle vel0
-                } else {
-                    ops = patternView.GetPatternOpsForCellCycle(divInfo, note, playingNotes); // none = cycle
-                }
-            }
-
-            if (!ops)
-                return;
-
-            const op = ops.find(o => o.type === Seq.eSeqPatternOp.AddNote);
-            if (op) {
-                let midiNoteValue = this.props.instrument.sequencerDevice.livePatch.AdjustMidiNoteValue(op.midiNoteValue);
-                if (midiNoteValue) {
-                    const legendNote = legend.find(n => n.midiNoteValue === op.midiNoteValue);
-                    const velocityEntry = legendNote?.velocitySet[op.velocityIndex];
-                    const velocity = velocityEntry?.vel ?? 99;
-
-                    const patternLengthQuarters = patch.GetPatternLengthQuarters();
-                    const bpm = this.props.app.roomState.bpm;
-                    const lengthPatternFrac = divInfo.endPatternFrac - divInfo.beginPatternFrac;
-                    const lengthQuarters = lengthPatternFrac * patternLengthQuarters;
-                    const lengthMS = DFU.BeatsToMS(lengthQuarters, bpm);
-
-                    this.props.app.PreviewNoteOn(midiNoteValue, velocity);
-                    setTimeout(() => {
-                        this.props.app.PreviewNoteOff();
-                    }, lengthMS);
-                }
-            }
-
-            this.props.app.SeqPatternOps(ops);
-        }
 
         onClickInitPatch = () => {
             if (this.props.observerMode) return;
@@ -692,30 +633,6 @@ class SequencerMain extends React.Component {
             });
         }
 
-        clickLengthHandlePrevious = (cell) => {
-            const isReadOnly = this.props.observerMode;
-            if (isReadOnly) return;
-            const seq = this.props.instrument.sequencerDevice;
-            const patch = seq.livePatch;
-            const noteLegend = seq.GetNoteLegend();
-            const patternViewData = Seq.GetPatternView(patch, noteLegend);
-            const ops = patternViewData.GetPatternOpsForSetNoteLengthPrevious(cell);
-            if (!ops) return;
-            this.props.app.SeqPatternOps(ops);
-        }
-
-        clickLengthHandleCurrent = (cell) => {
-            const isReadOnly = this.props.observerMode;
-            if (isReadOnly) return;
-            const seq = this.props.instrument.sequencerDevice;
-            const patch = seq.livePatch;
-            const noteLegend = seq.GetNoteLegend();
-            const patternViewData = Seq.GetPatternView(patch, noteLegend);
-            const ops = patternViewData.GetPatternOpsForSetNoteLengthCurrent(cell);
-            if (!ops) return;
-            this.props.app.SeqPatternOps(ops);
-        }
-
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -742,6 +659,22 @@ class SequencerMain extends React.Component {
         const rowStyle = {height:`${heightpx}px`};
 
         const selectedTS = patch.timeSig;
+
+        const context = {
+            app: this.props.app,
+            instrument: this.props.instrument,
+            seq,
+            patch,
+            pattern,
+            noteLegend,
+            patternViewData,
+            isReadOnly,
+            widthpx,
+            heightpx,
+            rowStyle,
+            timeSig: selectedTS,
+        };
+
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
                  <li
@@ -815,71 +748,13 @@ class SequencerMain extends React.Component {
                 </button>);
         });
 
-        const pianoRollColumn = (divInfo) => noteLegend.map(note => {
-            let cssClass = note.cssClass ?? "";
-            if (patch.IsNoteMuted(note.midiNoteValue))
-                cssClass += ' muted ';
-
-            let lengthHandle = null;
-            let noteOnHandle = null;
-            let noteOffHandle = null;
-            let setLengthProc = ()=>{};
-            let cellClickHandler = ()=>this.onCellClick(patternViewData, divInfo, note, noteLegend, patch, setLengthProc);
-            if ((note.midiNoteValue in divInfo.rows)) {
-                const cell = divInfo.rows[note.midiNoteValue];
-                cssClass += " " + cell.cssClass;
-                if (!cell.thisNote && cell.previousNote) {
-                    setLengthProc = () => this.clickLengthHandlePrevious(cell);
-                    lengthHandle = (<div
-                        className='lengthHandle'
-                        onClick={setLengthProc}
-                        ></div>);
-                }
-                if (cell.thisNote) {
-                    setLengthProc = () => this.clickLengthHandleCurrent(cell)
-                    lengthHandle = (<div
-                        className='lengthHandle'
-                        onClick={setLengthProc}
-                        ></div>);
-                }
-                if (cell.beginBorderType === Seq.eBorderType.NoteOn) {
-                    cssClass += " beginnoteon note";
-                    noteOnHandle = (<div
-                        className='noteOnHandle'
-                        onClick={cellClickHandler}
-                        ></div>);
-                }
-                else if (cell.beginBorderType === Seq.eBorderType.Continue) {
-                    cssClass += " begincontinue note";
-                }
-                if (cell.endBorderType === Seq.eBorderType.Continue) {
-                    cssClass += " endcontinue";
-                }
-                else if (cell.endBorderType === Seq.eBorderType.NoteOff) {
-                    cssClass += " endnoteoff";
-                    noteOffHandle = (<div
-                        className='noteOffHandle'
-                        onClick={cellClickHandler}
-                        ></div>);
-                }
-            }
-
-            return (
-                <li key={divInfo.patternDivIndex + "_" + note.midiNoteValue} style={rowStyle} className={cssClass}>
-                    <div className='noteBase'>
-                    <div className='noteOL'>
-                        <div className='muteOL'>
-                            {noteOnHandle}
-                            <div className='cellBody' onClick={cellClickHandler}>
-                            </div>
-                            {lengthHandle}
-                            {noteOffHandle}
-                        </div>
-                    </div>
-                    </div>
-                </li>
-            )
-        });
+        const pianoRollColumn = (divInfo) => noteLegend.map(note => (
+            <SequencerCell
+                key={`${divInfo.patternDivIndex}_${note.midiNoteValue}`}
+                context={context}
+                div={divInfo}
+                note={note}
+                />));
 
         const pianoRoll = patternViewData.divs.map(divInfo => {
 

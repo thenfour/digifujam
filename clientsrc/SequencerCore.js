@@ -1532,7 +1532,7 @@ class SequencerPatternView {
   }
 
   GetPatternOpsForSetNoteLengthPrevious(cell) {
-    const ret = [ {
+    const ret = [ { // TODO: does this need to remove multiple?
                    type : eSeqPatternOp.DeleteNote,
                    id : cell.previousNote.patternNote.id,
                  },
@@ -1547,7 +1547,7 @@ class SequencerPatternView {
   }
 
   GetPatternOpsForSetNoteLengthCurrent(cell) {
-    const ret = [ {
+    const ret = [ { // TODO: does this need to remove multiple?
                    type : eSeqPatternOp.DeleteNote,
                    id : cell.thisNote.patternNote.id,
                  },
@@ -1560,7 +1560,34 @@ class SequencerPatternView {
                   } ];
     return ret;
   }
-}
+
+  CalcLengthMajorBeats(beginDivIndex, lengthDivs) {
+    let ret = 0;
+    for (let i = 0; i < lengthDivs; ++ i) {
+      let idiv = (beginDivIndex + i) % this.divs.length;
+      ret += this.divs[idiv].lengthMajorBeats;
+    }
+    return ret;
+  }
+
+  GetPatternOpsForNoteDrag(keepSrc, srcMidiNoteValue, srcDivIndex, destMidiNoteValue, destDivIndex, destDivLength) {
+    let ret = [];
+
+    let patternViewCell = this.divs[srcDivIndex].rows[srcMidiNoteValue];
+    let destVelIndex = patternViewCell?.velocityIndex ?? 0;
+
+    if (!keepSrc && patternViewCell?.thisNote) {
+      ret = ret.concat(this.GetPatternOpsForCellRemove(this.divs[srcDivIndex], {midiNoteValue: srcMidiNoteValue}));
+    }
+    ret.push({
+                    type : eSeqPatternOp.AddNote,
+                    midiNoteValue : destMidiNoteValue,
+                    velocityIndex : destVelIndex,
+                    patternMajorBeat : this.divs[destDivIndex].beginPatternMajorBeat,
+                    lengthMajorBeats : this.CalcLengthMajorBeats(destDivIndex, destDivLength),
+                  });
+    return ret;
+  }}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // this is little more than an array of SequencerPatch objects
