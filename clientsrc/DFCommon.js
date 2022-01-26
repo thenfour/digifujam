@@ -73,6 +73,7 @@ const ClientMessages = {
     // { op:"pasteBank", bank:{...} }
     // { op:"SeqSetTranspose", transpose: }
     // { op:"SeqAdjustNoteLenDivs", divs: } // -1 to +1 divs
+    // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
     SeqPresetOp: "SeqPresetOp",
     SeqCue: "SeqCue", // { instrumentID, cancel }
     SeqMetadata: "SeqMetadata", // { title, description, tags }

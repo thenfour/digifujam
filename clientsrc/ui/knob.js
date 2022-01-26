@@ -54,58 +54,12 @@ function renderKnob(el, value01, formatSpec, valueSpec, propGetter) {
   }
 }
 
-
-// <Knob initialValue={patch.noteLenAdjustDivs} valueSpec={gValueSpec} formatSpec={gFormatSpec} />
-class Knob extends React.Component {
-  constructor(props) {
-    super(props);
-    this.formatSpec = this.props.formatSpec;
-    this.valueSpec = this.props.valueSpec;
-  }
-
-  get value() {
-    return this.valueSpec.value01ToValue(this.value01);
-  }
-
-  componentDidMount() {
-    this.formatSpec.width = this.formatSpec.height =
-        Math.max(this.formatSpec.valHighlightRadius, this.formatSpec.radius) * 2 + Math.max(this.formatSpec.lineWidth, this.formatSpec.valHighlightWidth) + (this.formatSpec.padding ?? 2);
-
-    this.knobSlider = new ValueSliderElement({
-      valueSpec : this.valueSpec,
-      element : this.canvasRef,
-      initialValue : this.props.initialValue,
-      onChange : (v) => {
-        this.value01 = v;
-        this.nonReactUpdate();
-        if (this.props.onChange) {
-          this.props.onChange(this.valueSpec.value01ToValue(this.value01));
-        }
-      },
-    });
-
-    this.nonReactUpdate();
-  }
-
-  nonReactUpdate() {
-    renderKnob(this.canvasRef, this.value01, this.formatSpec, this.valueSpec, (p) => typeof (p) === 'function' ? p(this) : p);
-  }
-
-  render() {
-    return (<canvas className={this.props.className} ref={(r) => {
-      this.canvasRef = r; }}></canvas>);
-  }
-}
-
-
-
-
-
 class SeqLegendKnob extends React.Component {
   constructor(props) {
     super(props);
     this.formatSpec = this.props.formatSpec;
     this.valueSpec = this.props.valueSpec;
+    this.isDragging = false;
   }
 
   get value() {
@@ -116,18 +70,19 @@ class SeqLegendKnob extends React.Component {
     this.formatSpec.width = this.formatSpec.height =
         Math.max(this.formatSpec.valHighlightRadius, this.formatSpec.radius) * 2 + Math.max(this.formatSpec.lineWidth, this.formatSpec.valHighlightWidth) + (this.formatSpec.padding ?? 2);
 
-    this.knobSlider = new ValueSliderElement({
-      valueSpec : this.valueSpec,
-      element : this.containerRef,
-      initialValue : this.props.initialValue,
-      onChange : (v) => {
-        this.value01 = v;
-        this.nonReactUpdate();
-        if (this.props.onChange) {
-          this.props.onChange(this.valueSpec.value01ToValue(this.value01));
-        }
-      },
-    });
+        this.slider = new ValueSliderElement({
+          valueSpec : this.valueSpec,
+          elements : [this.canvasRef, this.legendRef],
+          initialValue : this.props.initialValue,
+          onChange : (v, s) => {
+            this.value01 = v;
+            this.isDragging = s.isDragging;
+            this.nonReactUpdate();
+            if (this.props.onChange) {
+              this.props.onChange(this.valueSpec.value01ToValue(this.value01));
+            }
+          },
+        });
 
     this.nonReactUpdate();
   }
@@ -138,18 +93,16 @@ class SeqLegendKnob extends React.Component {
 
   render() {
     return (
-      <div className='paramGroup' ref={(r) => { this.containerRef = r; }}>
-        <div className='legend'>{this.props.caption}</div>
+      <div className='paramGroup'>
+        <div className='legend' ref={(r) => { this.legendRef = r; }}>{this.props.caption}</div>
         <div className='paramBlock'>
           <canvas className={this.props.className} ref={(r) => { this.canvasRef = r; }}></canvas>
         </div>
+        {this.props.children}
       </div>
     );
   }
 }
-
-
-
 
 module.exports = {
   Knob,

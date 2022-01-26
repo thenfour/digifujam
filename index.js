@@ -1709,6 +1709,12 @@ class RoomServer {
     return instrument.sequencerDevice.livePatch.SetTranspose(data.transpose);
   }
 
+  //case "SeqSetSwingBasisQuarters": // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
+  SeqPreset_SeqSetSwingBasisQuarters(user, instrument, data) {
+    return instrument.sequencerDevice.livePatch.SetSwingBasisQuarters(data.swingBasisQuarters);
+  }
+
+
   SeqPreset_AdjustNoteLenDivs(user, instrument, data) {
     return instrument.sequencerDevice.livePatch.SetNoteLenAdjustDivs(data.divs);
   }
@@ -1755,6 +1761,9 @@ class RoomServer {
           break;
         case "cancelCue":
           if (!this.SeqPreset_CancelCue(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "SeqSetSwingBasisQuarters": // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
+          if (!this.SeqPreset_SeqSetSwingBasisQuarters(foundUser.user, foundInstrument.instrument, data)) return;
           break;
         default:
           console.log(`client sent us a bad seq preset op ${data.op}`);

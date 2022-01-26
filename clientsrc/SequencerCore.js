@@ -458,6 +458,7 @@ class SequencerPatch {
     this.swing ??= 0; // -1 to +1
     this.octave ??= 0;
     this.transpose ??= 0;
+    this.swingBasisQuarters ??= .5;
     this.noteLenAdjustDivs ??= 0;
 
     // this could be a Set(), but it doesn't automatically serialize via JSON.serialize, and there should rarely be many entries.
@@ -632,6 +633,19 @@ class SequencerPatch {
     return this.transpose;
   }
 
+  
+  GetSwingBasisQuarters() {
+    return this.swingBasisQuarters;
+  }
+
+  SetSwingBasisQuarters(swingBasisQuarters) {
+    this.#cachedViewDirty = true;
+    let n = parseFloat(swingBasisQuarters);
+    if (n !== .5 && n !== .25) return false;
+    this.swingBasisQuarters = n;
+    return true;
+  }
+
   #SubdivideMeasureMinorBeats(elementsPerQuarter) {
     const ret = [];
 
@@ -731,12 +745,13 @@ class SequencerPatch {
 
     //const swingBasisQuarters = 0.5; // swing 8ths always
     const patternLengthQuarters = patternLengthMeasures * this.timeSig.quartersPerMeasure;
+    const swingFactor = 2 * this.swingBasisQuarters;
     ret.forEach((div, idiv) => {
       // calculate swing pattern frac positions
       div.beginPatternQuarter = div.beginPatternFrac * patternLengthQuarters;
-      div.swingBeginPatternQuarter = DFMusic.ApplySwingToValueFrac(div.beginPatternQuarter, this.swing);
+      div.swingBeginPatternQuarter = DFMusic.ApplySwingToValueFrac(div.beginPatternQuarter / swingFactor, this.swing) * swingFactor;
       div.endPatternQuarter = div.endPatternFrac * patternLengthQuarters;
-      div.swingEndPatternQuarter = DFMusic.ApplySwingToValueFrac(div.endPatternQuarter, this.swing);
+      div.swingEndPatternQuarter = DFMusic.ApplySwingToValueFrac(div.endPatternQuarter / swingFactor, this.swing) * swingFactor;
 
       // add links
       div.next = ret[DFUtil.modulo(idiv + 1, ret.length)];
@@ -972,6 +987,10 @@ class SequencerDevice {
     }
     case "SeqSetTranspose": {
       this.livePatch.SetTranspose(data.transpose);
+      return true;
+    }
+    case "SeqSetSwingBasisQuarters": {
+      this.livePatch.SetSwingBasisQuarters(data.swingBasisQuarters);
       return true;
     }
     case "SeqAdjustNoteLenDivs": {

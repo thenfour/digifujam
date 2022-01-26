@@ -213,20 +213,22 @@ class ValueSliderElement {
     this.value01 = this.initialValue01 ?? this.valueSpec.valueToValue01(this.initialValue);
     //console.log(`ValueSliderElement setting initial value ${this.value01}; this.initialValue01=${this.initialValue01}; this.initialValue=${this.initialValue}; valueto01=${this.valueSpec.valueToValue01(this.initialValue)}`);
     this.isDragging = false;
-    const el = this.element; //document.getElementById(this.elementID);
-    el.style.cursor = "pointer";
-    el.onpointerdown = (e) => this.onPointerDown(e);
-    el.onpointerup = (e) => this.onPointerUp(e);
-    el.ondblclick = (e) => this.onDoubleClick(e);
-    this.onChange(this.value01);
+    this.elements.forEach(el => {
+      el.style.cursor = "pointer";
+      el.onpointerdown = (e) => this.onPointerDown(e);
+      el.onpointerup = (e) => this.onPointerUp(e);
+      el.ondblclick = (e) => this.onDoubleClick(e);
+    });
+    this.onChange(this.value01, this);
   }
 
   onPointerDown(e) {
-    const el = this.element; //document.getElementById(this.elementID);
+    //const el = this.element; //document.getElementById(this.elementID);
+    const el = e.target;
 
     if (e.ctrlKey) {
       this.value01 = this.valueSpec.valueToValue01(this.valueSpec.resetValue);
-      this.onChange(this.value01);
+      this.onChange(this.value01, this);
       return;
     }
 
@@ -239,7 +241,7 @@ class ValueSliderElement {
     el.onpointermove = (e) => this.onPointerMove(e);
     this.isDragging = true;
     el.setPointerCapture(e.pointerId);
-    this.onChange(this.value01); // send a change event to allow caller to react to state change.
+    this.onChange(this.value01, this); // send a change event to allow caller to react to state change.
 
     this.cancelProc = () => {
       this.isDragging = false;
@@ -247,7 +249,7 @@ class ValueSliderElement {
       el.releasePointerCapture(e.pointerId);
       el.onpointermove = null;
       window.DFKeyTracker.events.removeListener("keydown", this.onKeyDownWhileDragging);
-      this.onChange(this.value01); // send a change event to allow caller to react to state change.
+      this.onChange(this.value01, this); // send a change event to allow caller to react to state change.
     };
   }
 
@@ -259,7 +261,7 @@ class ValueSliderElement {
     if (e.key === 'Escape') {
       this.cancelProc();
       this.value01 = this.beginValue01;
-      this.onChange(this.value01);
+      this.onChange(this.value01, this);
     }
   }
 
@@ -271,7 +273,7 @@ class ValueSliderElement {
       this.fine = e.shiftKey;
     }
 
-    const el = this.element; //document.getElementById(this.elementID);
+    const el = e.target;//this.element; //document.getElementById(this.elementID);
     let delta = this.beginCoordY - e.clientY;
     if (delta) {
       el.style.cursor = "ns-resize";
@@ -282,13 +284,13 @@ class ValueSliderElement {
       this.value01 = 0;
     if (this.value01 > 1)
       this.value01 = 1;
-    this.onChange(this.value01);
+    this.onChange(this.value01, this);
   }
 
   onDoubleClick(e) {
-    const el = this.element; //document.getElementById(this.elementID);
+    const el = e.target;//this.element; //document.getElementById(this.elementID);
     this.value01 = this.valueSpec.valueToValue01(this.valueSpec.resetValue);
-    this.onChange(this.value01);
+    this.onChange(this.value01, this);
   }
 }
 

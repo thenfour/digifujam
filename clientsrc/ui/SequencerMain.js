@@ -129,7 +129,7 @@ const gSwingValueSpec = new ValueListValueSpec([
 ]);
 
 const gKnobFormatSpec = {
-    fontSpec: (knob) => { return knob.knobSlider?.isDragging ? "16px monospace" : null; },
+    fontSpec: (knob) => { return knob.isDragging ? "16px monospace" : null; },
     textColor: "#000",
     padding: 1,
     lineWidth: 10,
@@ -406,12 +406,6 @@ class SequencerMain extends React.Component {
             this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
         }
 
-        // onDoubleClickSwingSlider = (e) => {
-        //     if (this.props.observerMode) return;
-        //     this.props.app.SeqSetSwing(0);
-        //     $("#" + this.swingSliderID).val(0);
-        //     $("#" + this.swingSliderID).trigger("change");
-        // }
         onChangeSwing = (value) => {
             if (this.props.observerMode) return;
             //let v = gSwingSnapValues.GetClosestMatch(e.target.value, 0);
@@ -419,14 +413,6 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetSwing(v);
         }
 
-        // onClickSwingAdj = (delta) => {
-        //     if (this.props.observerMode) return;
-        //     const patch = this.props.instrument.sequencerDevice.livePatch;
-        //     let v = gSwingSnapValues.GetClosestMatch(patch.swing * 100, delta);
-        //     v /= 100;
-        //     this.props.app.SeqSetSwing(v);
-        // }
-        
 
         onDoubleClickStaccSlider = (e) => {
             if (this.props.observerMode) return;
@@ -434,12 +420,7 @@ class SequencerMain extends React.Component {
             $("#" + this.staccSliderID).val(0);
             $("#" + this.staccSliderID).trigger("change");
         }
-        // onChangeStacc = (e) => {
-        //     if (this.props.observerMode) return;
-        //     let v = gStaccSnapValues.GetClosestMatch(e.target.value, 0);
-        //     v /= 100;
-        //     this.props.app.SeqSetStacc(v);
-        // }
+
         onChangeStacc = (val) => {
             if (this.props.observerMode) return;
             //let v = gStaccSnapValues.GetClosestMatch(val, 0);
@@ -447,15 +428,7 @@ class SequencerMain extends React.Component {
             this.props.app.SeqSetStacc(val);
         }
 
-        // onClickStaccAdj = (delta) => {
-        //     if (this.props.observerMode) return;
-        //     const patch = this.props.instrument.sequencerDevice.livePatch;
-        //     let v = gStaccSnapValues.GetClosestMatch(patch.noteLenAdjustDivs * 100, delta);
-        //     v /= 100;
-        //     this.props.app.SeqSetStacc(v);
-        // }
-      
-
+        
         onClickPattern = (pattern, index) => {
             if (this.props.observerMode) return;
             this.props.app.SeqSelectPattern(index);
@@ -510,7 +483,6 @@ class SequencerMain extends React.Component {
             if (!Seq.IsValidSequencerTranspose(n)) return;
             this.props.app.SeqSetTranspose(n);
         }
-
 
         onClickInitPatch = () => {
             if (this.props.observerMode) return;
@@ -578,17 +550,6 @@ class SequencerMain extends React.Component {
                presetID: patch.presetID,
             });
         };
-
-        // onClickCueDiv = () => {
-        //     const isReadOnly = this.props.observerMode;
-        //     if (isReadOnly) return;
-
-        //     this.props.app.SeqCue(this.props.instrument.instrumentID, this.props.instrument.sequencerDevice.IsCueued());
-        // }
-
-        // onClickBigCue = () => {
-        //     this.onClickCueDiv();
-        // }
 
         onClickEditShiftUp = () => {
             const isReadOnly = this.props.observerMode;
@@ -728,6 +689,15 @@ class SequencerMain extends React.Component {
             this.props.app.SeqPresetOp({
                 op: "pastePattern",
                 pattern: newPattern,
+            });
+        }
+
+
+        onClickSwingBasisQuarters = (n) => {
+            if (this.props.observerMode) return;
+            this.props.app.SeqPresetOp({
+                op: "SeqSetSwingBasisQuarters",// { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
+                swingBasisQuarters: n,
             });
         }
 
@@ -1076,7 +1046,15 @@ class SequencerMain extends React.Component {
                             valueSpec={gSwingValueSpec}
                             formatSpec={gKnobFormatSpec}
                             onChange={this.onChangeSwing}
-                            />
+                            >
+                                <div className="buttonArray">
+                                    <button title="Swing 8th notes" className={"unicodeNote " + clickableIfEditable + ((patch.GetSwingBasisQuarters() === .5) ? " active" : "")} onClick={() =>{this.onClickSwingBasisQuarters(.5)}}>𝅘𝅥𝅮</button>
+                                    <button title="Swing 16th notes" className={"unicodeNote " + clickableIfEditable + ((patch.GetSwingBasisQuarters() === .25) ? " active" : "")} onClick={() =>{this.onClickSwingBasisQuarters(.25)}}>𝅘𝅥𝅯</button>
+                                </div>
+
+                            </SeqLegendKnob>
+
+
 
                         <SeqLegendKnob
                                     caption="Stacc"
@@ -1085,7 +1063,8 @@ class SequencerMain extends React.Component {
                                     valueSpec={gStaccValueSpec}
                                     formatSpec={gKnobFormatSpec}
                                     onChange={this.onChangeStacc}
-                                    />
+                                    >
+                                    </SeqLegendKnob>
 
                     </fieldset>
 
