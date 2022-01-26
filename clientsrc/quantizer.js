@@ -7,7 +7,7 @@ const DF = require('./dfutil');
 // i think there's no point in going below 5ms or so, because:
 // - below that it's pretty imperceptible considering network jitter
 // - it's pretty much as low as you can go and still avoid jamming up the scheduler. basically allows each time slice to run between intervals.
-const FrameDurationMS = 5;
+const FrameDurationMS = 6;
 let MSToFrame = (ms) => {
   return Math.floor(ms / FrameDurationMS);
 };
@@ -367,8 +367,9 @@ class ServerRoomQuantizer {
       }, null);
       
       // subtract 1 so adjascent notes in the sequencer don't get noteOff and noteOn at exactly the same time causing ambiguity.
-      const noteOffQuantizedFrame = beatToFrame(n.absQuarter + n.lengthQuarters, this.metronome.getBPM()) - 1;
+      let noteOffQuantizedFrame = beatToFrame(n.absQuarter + n.lengthQuarters, this.metronome.getBPM()) - 1;
       //console.log(`Scheduling a note on + corresponding note off for ${n.noteID} @onframe:${noteOnQuantizedFrame} @offrame:${noteOffQuantizedFrame} (len quart:${n.lengthQuarters})`);
+      noteOffQuantizedFrame = Math.max(noteOffQuantizedFrame, noteOnQuantizedFrame + 1); // do not allow 0-length notes. randomly the note off could occur before note on and stick.
       this.scheduleEvent(noteOffQuantizedFrame, null, { // corresponding note off.
         note : n.midiNoteValue,
         seqInstrumentID : instrumentID,

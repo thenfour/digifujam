@@ -160,7 +160,7 @@ class RoomSequencerPlayer {
           events.push({
             velocity : cell.velocity,
             midiNoteValue,
-            lengthQuarters : cell.thisLengthQuarters / patch.speed,
+            lengthQuarters : cell.thisLengthSwingQuarters / patch.speed,
             noteID : cell.id,
             absQuarter : absQ,
           });

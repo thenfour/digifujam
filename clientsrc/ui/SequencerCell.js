@@ -259,11 +259,20 @@ class SequencerCell extends React.Component {
     const notePatternDivIndex = noteOnCell?.div?.patternDivIndex ?? clickedPatternDivIndex;
     const notePatternDivLength = noteOnCell?.thisNote?.divs?.length ?? 1;
 
+    window.DFKeyTracker.events.on("keydown", this.onKeyDownWhileDragging);
     e.target.setPointerCapture(e.pointerId);
     e.target.onpointermove = (e) => this.onPointerMove(e);
 
     // could consider using e.dataTransfer.setData("7jamDragData", ); for this but why?
     // limiting the scope of this data limits our ability to do browser-level optimization of styling.
+
+    const cancelProc = () => {
+      e.target.releasePointerCapture(e.pointerId);
+      window.DFKeyTracker.events.removeListener("keydown", this.onKeyDownWhileDragging);
+      e.target.onpointermove = null;
+      this.ClearDragTargetStyles();
+      this.dragData = null;
+    };
 
     this.dragData = {
         dragType,
@@ -272,6 +281,7 @@ class SequencerCell extends React.Component {
         ctrl: e.ctrlKey,
         shift: e.shiftKey,
         adventure: false,
+        cancelProc,
         source: {
             clickedPatternDivIndex,
             notePatternDivIndex,
@@ -284,6 +294,12 @@ class SequencerCell extends React.Component {
             patternDivLength : notePatternDivLength,
         }
     };
+  }
+
+  onKeyDownWhileDragging = (e) => {
+    if (e.key === 'Escape') {
+      this.dragData.cancelProc();
+    }
   }
 
   onPointerMove(e) {
@@ -369,8 +385,12 @@ class SequencerCell extends React.Component {
   }
 
   onPointerUp(e, hasNote, clickHandler) {
+    if (!this.dragData) {
+      return;
+    }
     //console.log(`onpointerup ${e.target.id}`);
     e.target.releasePointerCapture(e.pointerId);
+    window.DFKeyTracker.events.removeListener("keydown", this.onKeyDownWhileDragging);
     e.target.onpointermove = null;
     this.ClearDragTargetStyles();
 

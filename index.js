@@ -1709,6 +1709,10 @@ class RoomServer {
     return instrument.sequencerDevice.livePatch.SetTranspose(data.transpose);
   }
 
+  SeqPreset_AdjustNoteLenDivs(user, instrument, data) {
+    return instrument.sequencerDevice.livePatch.SetNoteLenAdjustDivs(data.divs);
+  }
+
   SeqPreset_CancelCue(user, instrument, data) {
     const cursor = this.roomState.metronome.getAbsoluteBeat();
     instrument.sequencerDevice.CancelCue();
@@ -1745,6 +1749,9 @@ class RoomServer {
           break;
         case "SeqSetTranspose":
           if (!this.SeqPreset_Transpose(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "SeqAdjustNoteLenDivs":
+          if (!this.SeqPreset_AdjustNoteLenDivs(foundUser.user, foundInstrument.instrument, data)) return;
           break;
         case "cancelCue":
           if (!this.SeqPreset_CancelCue(foundUser.user, foundInstrument.instrument, data)) return;

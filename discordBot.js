@@ -138,7 +138,13 @@ class DiscordBot {
             }
         });
 
-        this.client.login(gConfig.discord_bot_token);
+        try {
+            this.client.login(gConfig.discord_bot_token);
+        }
+        catch (e) {
+            console.log(`Couldn't connect to discord ...`);
+            console.log(e);
+        }
     }; // ctor
 
     GetDebugData() {

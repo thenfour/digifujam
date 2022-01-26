@@ -362,9 +362,12 @@ class SeqDivInfo {
   get lengthMajorBeats() {
     return this.endPatternMajorBeat - this.beginPatternMajorBeat;
   }
-  getLengthQuarters(patternLengthQuarters) {
-    let ret = this.endPatternFrac - this.beginPatternFrac;
-    return ret * patternLengthQuarters;
+  // getLengthQuarters(patternLengthQuarters) {
+  //   let ret = this.endPatternFrac - this.beginPatternFrac;
+  //   return ret * patternLengthQuarters;
+  // }
+  getLengthSwingQuarters() {
+    return this.swingEndPatternQuarter - this.swingBeginPatternQuarter;
   }
   IncludesPatternMajorBeat(b) {
     return (b >= this.beginPatternMajorBeat) && (b < this.endPatternMajorBeat);
@@ -455,6 +458,7 @@ class SequencerPatch {
     this.swing ??= 0; // -1 to +1
     this.octave ??= 0;
     this.transpose ??= 0;
+    this.noteLenAdjustDivs ??= 0;
 
     // this could be a Set(), but it doesn't automatically serialize via JSON.serialize, and there should rarely be many entries.
     // since there are only 128 midi notes, an option is also to just create a fixed-size array of bools
@@ -615,6 +619,15 @@ class SequencerPatch {
     return true;
   }
 
+  SetNoteLenAdjustDivs(divs) {
+    divs = parseFloat(divs);
+    if (divs < -0.999) return false;
+    if (divs > 0.999) return false;
+    this.#cachedViewDirty = true;
+    this.noteLenAdjustDivs = divs;
+    return true;
+  }
+
   GetTranspose() {
     return this.transpose;
   }
@@ -714,17 +727,23 @@ class SequencerPatch {
       });
     }));
 
-    // calculate swing pattern frac positions
+    ret = ret.map(r => new SeqDivInfo(r));
+
     //const swingBasisQuarters = 0.5; // swing 8ths always
     const patternLengthQuarters = patternLengthMeasures * this.timeSig.quartersPerMeasure;
-    ret.forEach(div => {
+    ret.forEach((div, idiv) => {
+      // calculate swing pattern frac positions
       div.beginPatternQuarter = div.beginPatternFrac * patternLengthQuarters;
       div.swingBeginPatternQuarter = DFMusic.ApplySwingToValueFrac(div.beginPatternQuarter, this.swing);
       div.endPatternQuarter = div.endPatternFrac * patternLengthQuarters;
       div.swingEndPatternQuarter = DFMusic.ApplySwingToValueFrac(div.endPatternQuarter, this.swing);
+
+      // add links
+      div.next = ret[DFUtil.modulo(idiv + 1, ret.length)];
+      div.prev = ret[DFUtil.modulo(idiv - 1, ret.length)];
     });
 
-    return ret.map(r => new SeqDivInfo(r));
+    return ret;
   }
 
   GetLengthMajorBeats() {
@@ -955,6 +974,10 @@ class SequencerDevice {
       this.livePatch.SetTranspose(data.transpose);
       return true;
     }
+    case "SeqAdjustNoteLenDivs": {
+      this.livePatch.SetNoteLenAdjustDivs(data.divs);
+      return true;
+    }
     case "cue": {
       return this.SetCueInfo(data);
     }
@@ -1000,13 +1023,14 @@ class PatternViewCellInfo {
   // "previousNote" is the note which was considered playing before this one, to allow callers to extend its length
   constructor(patch, legend, midiNoteValue, underlyingNotes, div, thisNote, previousNote, previousNoteLenQuarters, previousNoteLenMajorBeats, beginBorderType, endBorderType, noteOnNotes, noteOnCell) {
     this.midiNoteValue = midiNoteValue;
+    this.patch = patch;
     this.legend = legend;
     this.underlyingNotes = underlyingNotes; // list of the UnderlyingNotes in this cell.
     this.div = div;
     this.beginBorderType = beginBorderType;
     this.endBorderType = endBorderType;
     this.thisNote = thisNote;
-    this.thisLengthQuarters = -2;   // not set yet. this is only valid for NOTE ON cells, and is a convenience for the seq player to know the duration of this note.
+    this.thisLengthSwingQuarters = -2;   // not set yet. this is only valid for NOTE ON cells, and is a convenience for the seq player to know the duration of this note.
     this.thisLengthMajorBeats = -2; // not set yet.
     this.isMuted = patch.IsNoteMuted(midiNoteValue);
     this.noteOnNotes = noteOnNotes; // a list of UnderlyingNote which are note ons in this cell.
@@ -1032,12 +1056,25 @@ class PatternViewCellInfo {
     this.cssClass = l?.cssClass ?? "";
   }
 
+  #adjustNoteLenDivs(lenQuarters, div, noteLenAdjustDivs)
+  {
+    if (noteLenAdjustDivs === 0) return lenQuarters;
+    // if (noteLenAdjustDivs < 0) { // if you want "-.9", it means subtracting 10% of the current div length.
+    //   return lenQuarters * (1+noteLenAdjustDivs);
+    // }
+    // but if you want "+50%" it means looking at the next div.
+    const adjDiv = (noteLenAdjustDivs < 0) ? div : div.next;
+    const divLen = adjDiv.getLengthSwingQuarters();
+    lenQuarters += divLen * noteLenAdjustDivs;
+    return lenQuarters;
+}
+
   // call to specify that this cell is actually a note off.
   MarkNoteOff(noteOnCell, lenQuarters, lenMajorBeats) {
     console.assert(this.beginBorderType !== eBorderType.Empty); // you can't note-off something that's not playing.
-    noteOnCell.thisLengthQuarters = lenQuarters;
+    noteOnCell.thisLengthSwingQuarters = this.#adjustNoteLenDivs(lenQuarters, this.div, this.patch.noteLenAdjustDivs); // only used by player; adjust for swing.
     noteOnCell.thisLengthMajorBeats = lenMajorBeats;
-    this.thisLengthQuarters = lenQuarters;
+    this.thisLengthSwingQuarters = noteOnCell.thisLengthSwingQuarters;
     this.thisLengthMajorBeats = lenMajorBeats;
     this.endBorderType = eBorderType.NoteOff;
   }
@@ -1157,7 +1194,7 @@ class SequencerPatternView {
       let currentNote = null;
       let currentNoteOnCell = null;
       let previousNote = null;      // for empty divs, keep track of the last playing note, so the user has the option to extend the length of that note.
-      let noteLengthQuarters = 0;   // keep track of how long we've held the previous note, in QUARTERS, so if the user were to extend that length, how long would it be?
+      let noteLengthSwingQuarters = 0;   // keep track of how long we've held the previous note, in SWING-adjusted QUARTERS, so if the user were to extend that length, how long would it be?
       let noteLengthMajorBeats = 0; // same in major beats. some things need this instead.
       let firstNoteOnIndex = null;
       for (let idiv = 0; idiv < this.divs.length; ++idiv) {
@@ -1188,13 +1225,13 @@ class SequencerPatternView {
 
         const noteOffCurrentNote = () => {
           console.assert(idiv > 0);
-          this.divs[idiv - 1].rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthQuarters, noteLengthMajorBeats);
+          this.divs[idiv - 1].rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthSwingQuarters, noteLengthMajorBeats);
         };
         const createCell = (leftborder, rightborder) => {
-          noteLengthQuarters += div.getLengthQuarters(patternLenQuarters);
+          noteLengthSwingQuarters += div.getLengthSwingQuarters();
           noteLengthMajorBeats += div.lengthMajorBeats;
           return div.rows[midiNoteValue] = new PatternViewCellInfo(patch, legend, midiNoteValue, uns, div,
-                                                                   currentNote, previousNote, noteLengthQuarters, noteLengthMajorBeats,
+                                                                   currentNote, previousNote, noteLengthSwingQuarters, noteLengthMajorBeats,
                                                                    leftborder, rightborder, noteOns, currentNoteOnCell);
         }
 
@@ -1226,7 +1263,7 @@ class SequencerPatternView {
               noteOffCurrentNote();
             }
             previousNote = null; // don't need to keep prevnote info. there's no point tracking prevnote info there
-            noteLengthQuarters = 0;
+            noteLengthSwingQuarters = 0;
             noteLengthMajorBeats = 0;
             currentNote = noteOn;
             firstNoteOnIndex ??= idiv;
@@ -1278,20 +1315,20 @@ class SequencerPatternView {
             // current note doesn't appear. send noteoff to prev cell (may be the end of the pattern!).
             // and rotate out current note
             // ---current--|<empty>
-            this.divs.at(idiv - 1).rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthQuarters, noteLengthMajorBeats);
+            this.divs.at(idiv - 1).rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthSwingQuarters, noteLengthMajorBeats);
             previousNote = currentNoteAppearsAs;
             currentNote = null;
           }
         } // else { // we don't have a current note.
-        noteLengthQuarters += div.getLengthQuarters(patternLenQuarters);
+        noteLengthSwingQuarters += div.getLengthSwingQuarters();
         noteLengthMajorBeats += div.lengthMajorBeats;
-        cell.SetCurrentAndPrevNotes(currentNote, previousNote, noteLengthQuarters, noteLengthMajorBeats, currentNoteOnCell);
+        cell.SetCurrentAndPrevNotes(currentNote, previousNote, noteLengthSwingQuarters, noteLengthMajorBeats, currentNoteOnCell);
       }; // for each column
 
       // finally, if the current note still doesn't hvae a noteoff, it lasts exactly the entire pattern.
       // give it its noteoff.
       if (!!currentNote) {
-        this.divs.at(firstNoteOnIndex - 1).rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthQuarters, noteLengthMajorBeats);
+        this.divs.at(firstNoteOnIndex - 1).rows[midiNoteValue].MarkNoteOff(currentNoteOnCell, noteLengthSwingQuarters, noteLengthMajorBeats);
       }
     }); // for each row.
 

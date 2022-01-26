@@ -1699,6 +1699,12 @@ class DigifuApp {
             transpose,
         });
     }
+    SeqSetStacc(divs) {
+        this.net.SeqPresetOp({
+            op: "SeqAdjustNoteLenDivs",
+            divs,
+        });
+    }
     // cancel is boolean
     SeqCue(instrumentID, cancel) {
         this.net.SeqCue(instrumentID, cancel);

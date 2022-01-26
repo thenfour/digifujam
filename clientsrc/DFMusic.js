@@ -270,7 +270,7 @@ function GetTimeSigById(timeSigID) {
   return FourFour;
 }
 
-// https://www.desmos.com/calculator/a6kwlea3uj
+// https://www.desmos.com/calculator/qqoyyvutsj
 // x is a value from 0-1
 // swing amt is 0 to 1, representing the new location of the halfway mark. .5 means no swing is applied.
 function ApplySwingToValue01(x, s) {
@@ -278,12 +278,24 @@ function ApplySwingToValue01(x, s) {
     return ((x - 1) / (2 - 2 * s)) + 1;
 }
 
+function RemoveSwingFromValue01(x, s) {
+  if (x < .5) return x * 2 * s;
+  return (1-s)*(2*x-2)+1;
+}
+
+// https://www.desmos.com/calculator/jh2voouisu
+// takes a straight beat value (x), and a swing value -1 to 1,
+// and returns the location of the beat in straight time.
+// it's effectively the inverse of the above function (.5)
 // for convenience of callers S is -1 to 1
 function ApplySwingToValueFrac(x, sN11) {
-    const s = (1 - sN11) / 2;
-    const integral = Math.floor(x);
-    const fractional = x - integral;
-    return integral + ApplySwingToValue01(fractional, s);
+  // scale s into 0-1 range to be compatible
+  let s = sN11 + 1; // 0-2
+  s /= 2; // 0-1
+  //s = 1 - s; // this inverts the range.
+  const integral = Math.floor(x);
+  const fractional = x - integral;
+  return integral + RemoveSwingFromValue01(fractional, s);
 }
 
 module.exports = {

@@ -27,30 +27,34 @@ class ModifierKeyTracker {
   }
 };
 
-
 function getSelectionText() {
   var text = "";
   if (window.getSelection) {
-      text = window.getSelection().toString();
+    text = window.getSelection().toString();
   } else if (document.selection && document.selection.type != "Control") {
-      text = document.selection.createRange().text;
+    text = document.selection.createRange().text;
   }
   return text;
 }
 
 class GestureTracker {
+
   get hasUserGestured() {
     return this.__hasUserGestured;
   }
+
   constructor() {
     this.events = new EventEmitter();
     this.__hasUserGestured = false;
-    $(document).on('keydown', (e) => {
+
+    document.onkeydown = (e) => {
       //console.log(`GestureTracker -> keydown`);
       if (!this.__hasUserGestured) {
         this.__hasUserGestured = true;
         this.events.emit('gesture');
       }
+
+      this.events.emit('keydown', e);
 
       // who wants some ugly!
       if (window.DFChatinput) {
@@ -63,28 +67,31 @@ class GestureTracker {
           }
         }
       }
-    });
-    $(document).on('keyup', (e) => {
+    };
+
+    document.onkeyup = (e) => {
       //console.log(`GestureTracker -> keyup`);
       if (!this.__hasUserGestured) {
         this.__hasUserGestured = true;
         this.events.emit('gesture');
       }
-    });
-    $(document).on('touchstart', (e) => {
+    };
+
+    document.ontouchstart = (e) => {
       //console.log(`GestureTracker -> touchstart`);
       if (!this.__hasUserGestured) {
         this.__hasUserGestured = true;
         this.events.emit('gesture');
       }
-    });
-    $(document).on('click', (e) => {
+    };
+
+    document.onclick = (e) => {
       //console.log(`GestureTracker -> click`);
       if (!this.__hasUserGestured) {
         this.__hasUserGestured = true;
         this.events.emit('gesture');
       }
-    });
+    };
   }
 };
 
@@ -198,12 +205,92 @@ class FuzzySelector {
   get max() { return this.sortedValues.at(-1); }
 }
 
+// abstraction of the mouse capture + fine behavior
+// only operates on 0-1 values.
+class ValueSliderElement {
+  constructor(params) {
+    Object.assign(this, params ?? {});
+    this.value01 = this.initialValue01 ?? this.valueSpec.valueToValue01(this.initialValue);
+    //console.log(`ValueSliderElement setting initial value ${this.value01}; this.initialValue01=${this.initialValue01}; this.initialValue=${this.initialValue}; valueto01=${this.valueSpec.valueToValue01(this.initialValue)}`);
+    this.isDragging = false;
+    const el = this.element; //document.getElementById(this.elementID);
+    el.style.cursor = "pointer";
+    el.onpointerdown = (e) => this.onPointerDown(e);
+    el.onpointerup = (e) => this.onPointerUp(e);
+    el.ondblclick = (e) => this.onDoubleClick(e);
+    this.onChange(this.value01);
+  }
 
-// function polyToPathEl(poly) {
-//   var p = document.createElementNS("http://www.w3.org/2000/svg", 'path');
-//   p.setAttribute("d", polyToPathDesc(poly));
-//   return p;
-// }
+  onPointerDown(e) {
+    const el = this.element; //document.getElementById(this.elementID);
+
+    if (e.ctrlKey) {
+      this.value01 = this.valueSpec.valueToValue01(this.valueSpec.resetValue);
+      this.onChange(this.value01);
+      return;
+    }
+
+    this.beginCoordY = e.clientY;
+    this.beginValue01 = this.value01;        // backup of original value to support canceling.
+    this.trackingBaseValue01 = this.value01; // intermediate value to use during drag
+    this.fine = e.shiftKey;
+
+    window.DFKeyTracker.events.on("keydown", this.onKeyDownWhileDragging);
+    el.onpointermove = (e) => this.onPointerMove(e);
+    this.isDragging = true;
+    el.setPointerCapture(e.pointerId);
+    this.onChange(this.value01); // send a change event to allow caller to react to state change.
+
+    this.cancelProc = () => {
+      this.isDragging = false;
+      el.style.cursor = "pointer";
+      el.releasePointerCapture(e.pointerId);
+      el.onpointermove = null;
+      window.DFKeyTracker.events.removeListener("keydown", this.onKeyDownWhileDragging);
+      this.onChange(this.value01); // send a change event to allow caller to react to state change.
+    };
+  }
+
+  onPointerUp(e) {
+    this.cancelProc();
+  }
+
+  onKeyDownWhileDragging = (e) => {
+    if (e.key === 'Escape') {
+      this.cancelProc();
+      this.value01 = this.beginValue01;
+      this.onChange(this.value01);
+    }
+  }
+
+  onPointerMove(e) {
+    if (e.shiftKey != this.fine) {
+      // enter or exit fine control.
+      this.trackingBaseValue01 = this.value01;
+      this.beginCoordY = e.clientY;
+      this.fine = e.shiftKey;
+    }
+
+    const el = this.element; //document.getElementById(this.elementID);
+    let delta = this.beginCoordY - e.clientY;
+    if (delta) {
+      el.style.cursor = "ns-resize";
+    }
+    this.value01 = this.trackingBaseValue01 + delta * (e.shiftKey ? this.valueSpec.fineMouseSpeed : this.valueSpec.mouseSpeed);
+
+    if (this.value01 < 0)
+      this.value01 = 0;
+    if (this.value01 > 1)
+      this.value01 = 1;
+    this.onChange(this.value01);
+  }
+
+  onDoubleClick(e) {
+    const el = this.element; //document.getElementById(this.elementID);
+    this.value01 = this.valueSpec.valueToValue01(this.valueSpec.resetValue);
+    this.onChange(this.value01);
+  }
+}
 
 module.exports = {
   stylizeRangeInput,
@@ -211,4 +298,5 @@ module.exports = {
   ModifierKeyTracker,
   GestureTracker,
   FuzzySelector,
+  ValueSliderElement,
 };

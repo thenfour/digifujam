@@ -5,6 +5,7 @@ const React = require('react');
 const {GestureTracker} = require("../util");
 
 const gTracker = new GestureTracker();
+window.DFKeyTracker = gTracker;
 
 class GestureSplash extends React.Component {
    constructor(props) {

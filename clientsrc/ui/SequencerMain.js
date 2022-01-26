@@ -8,6 +8,7 @@ const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 const { TapTempoButton } = require('./optionsDialog');
 const { SequencerCell } = require('./SequencerCell');
+const { Knob, SeqLegendKnob } = require('./knob');
 
 const gMinTimerInterval = 35;
 
@@ -78,18 +79,75 @@ const gDivisionSortedInfo = Object.keys(gDivisionInfo).map(divisionTypeKey => {
 
 const gDivisions = new DFUtils.FuzzySelector(gDivisionSortedInfo, (val, obj) => val === obj.val ? 0 : 1);
 
+// plain list of numbers, evenly represented on the knob.
+// value spec requires:
+// - centerValue,
+// - resetValue,
+// - fineMouseSpeed,
+// - mouseSpeed,
+class ValueListValueSpec {
+    constructor(list, centerValue, options) {
+        Object.assign(this, options ?? {});
+        this.mouseSpeed ??= 0.004;
+        this.fineMouseSpeed ??= 0.0008;
+        this.valueList = list;
+        this.centerValue = this.resetValue = centerValue ?? 0;
+        this.list = list;
+    }
+    value01ToValue = (v01) => {
+        // 0-------------------1
+        // |-0-|-1-|-2-|-3-|-4-| <-- 5 values in list
+        // 0% 20% 40% 60% 80% 100% <-- sanity check that the values are equally represented.
+        const ret = this.list[Math.floor(Math.min(this.list.length - 1, v01 * this.list.length))];
+        return ret;
+    }
+    valueToValue01 = (v) => {
+        const i = DFU.findNearestIndex(this.list, (e, i) => Math.abs(v - e));
+        const ret = i / (this.list.length - 1);
+        return ret;
+    }
+    value01ToString = (v01) => {
+        return this.value01ToValue(v01).toString();
+    }
+};
+
+// from -90 to 90, increments of 5.
+const gStaccValueSpec = new ValueListValueSpec((() => {
+    const ret = [];
+    for (let i = -90; i <= 90; i += 5) {
+        ret.push(i);
+    }
+    return ret;
+})());
+
+
+const gSwingValueSpec = new ValueListValueSpec([
+    -85,-75,-66,-58,
+    -50,-42,-33,-20,-10,
+    0,
+    10, 20, 33, 42, 50, 58, 66, 75, 85
+]);
+
+const gKnobFormatSpec = {
+    fontSpec: (knob) => { return knob.knobSlider?.isDragging ? "16px monospace" : null; },
+    textColor: "#000",
+    padding: 1,
+    lineWidth: 10,
+    valHighlightWidth: 10,
+    offsetY: 2,
+    trackColor: "#777",
+    fgColor: (knob) => { return knob.value < 0 ? "#fa4" : "#fa4"; },
+    valHighlightColor: (knob) => { return knob.value === knob.valueSpec.centerValue ? "#0cc" : "#0aa"; },
+    radius: 15,
+    valHighlightRadius: 15,
+    valueRangeRadians: .75 * 2 * Math.PI,
+    valueOffsetRadians: Math.PI * 1.5,
+    valHighlightRangeRad: 0,
+    valHighlightLineCap: 'round', // butt round
+};
 
 
 
-const gSwingSnapValues = new DFUtils.FuzzySelector([
-    -99, -91,-83,
-    -75,-66,-63,-60,-55,
-    -50,-45,-40,-35,-30,-25,-20,-15,-10,-5,
-    0,5,10,15,20,25,30,35,40,45,50,
-    55,60,63,66,70,75,
-    83,91,99
-
-], (val, obj) => Math.abs(val - obj));
 
 
 
@@ -99,6 +157,8 @@ function GenerateRoomBeatID(minorBeatOfMeasure) {
 function GeneratePlayheadID(div) {
     return `seq_playhead_${div}`;
 }
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // a timer which is optimized for sequencer usage.
@@ -148,7 +208,10 @@ class SeqTimer
 
         //const playheadPatternQuarter = playheadPatternFrac * patternLengthQuarters;
 
-        const currentDiv = patternViewData.divs.find(divInfo => divInfo.IncludesPatternFracWithSwing(playhead.patternQuarter));
+        const currentDiv = patternViewData.divs.find(divInfo => {
+            // find the first one where end > this
+            return divInfo.IncludesPatternFracWithSwing(playhead.patternQuarter);
+        });
 
         // calc divlength MS
         const divRemainingQuarters = currentDiv.swingEndPatternQuarter - playhead.patternQuarter;//divRemainingPatterns * patternLengthQuarters;
@@ -259,6 +322,8 @@ class SequencerMain extends React.Component {
          };
 
          this.swingSliderID = "seqSwingSlider";
+         this.staccSliderID = "seqStaccSlider";
+
          this.timer = null;
       }
 
@@ -274,6 +339,14 @@ class SequencerMain extends React.Component {
                 bgPosColorSpec: "#444",
                 zeroVal: 0,
             });
+
+        DFUtils.stylizeRangeInput(this.staccSliderID, {
+            bgNegColorSpec: "#444",
+            negColorSpec: "#666",
+            posColorSpec: "#666",
+            bgPosColorSpec: "#444",
+            zeroVal: 0,
+        });
     }
     componentWillUnmount() {
         this.timer.Stop();
@@ -333,31 +406,56 @@ class SequencerMain extends React.Component {
             this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
         }
 
-
-        onClickSwingSlider = (e) => {
-            //
-        }
-        onDoubleClickSwingSlider = (e) => {
+        // onDoubleClickSwingSlider = (e) => {
+        //     if (this.props.observerMode) return;
+        //     this.props.app.SeqSetSwing(0);
+        //     $("#" + this.swingSliderID).val(0);
+        //     $("#" + this.swingSliderID).trigger("change");
+        // }
+        onChangeSwing = (value) => {
             if (this.props.observerMode) return;
-            this.props.app.SeqSetSwing(0);
-            $("#" + this.swingSliderID).val(0);
-            $("#" + this.swingSliderID).trigger("change");
-        }
-        onChangeSwing = (e) => {
-            if (this.props.observerMode) return;
-            let v = gSwingSnapValues.GetClosestMatch(e.target.value, 0);
-            v /= 100;
+            //let v = gSwingSnapValues.GetClosestMatch(e.target.value, 0);
+            let v = value / 100;
             this.props.app.SeqSetSwing(v);
         }
 
-        onClickSwingAdj = (delta) => {
-            if (this.props.observerMode) return;
-            const patch = this.props.instrument.sequencerDevice.livePatch;
-            let v = gSwingSnapValues.GetClosestMatch(patch.swing * 100, delta);
-            v /= 100;
-            this.props.app.SeqSetSwing(v);
-        }
+        // onClickSwingAdj = (delta) => {
+        //     if (this.props.observerMode) return;
+        //     const patch = this.props.instrument.sequencerDevice.livePatch;
+        //     let v = gSwingSnapValues.GetClosestMatch(patch.swing * 100, delta);
+        //     v /= 100;
+        //     this.props.app.SeqSetSwing(v);
+        // }
         
+
+        onDoubleClickStaccSlider = (e) => {
+            if (this.props.observerMode) return;
+            this.props.app.SeqSetStacc(0);
+            $("#" + this.staccSliderID).val(0);
+            $("#" + this.staccSliderID).trigger("change");
+        }
+        // onChangeStacc = (e) => {
+        //     if (this.props.observerMode) return;
+        //     let v = gStaccSnapValues.GetClosestMatch(e.target.value, 0);
+        //     v /= 100;
+        //     this.props.app.SeqSetStacc(v);
+        // }
+        onChangeStacc = (val) => {
+            if (this.props.observerMode) return;
+            //let v = gStaccSnapValues.GetClosestMatch(val, 0);
+            val /= 100;
+            this.props.app.SeqSetStacc(val);
+        }
+
+        // onClickStaccAdj = (delta) => {
+        //     if (this.props.observerMode) return;
+        //     const patch = this.props.instrument.sequencerDevice.livePatch;
+        //     let v = gStaccSnapValues.GetClosestMatch(patch.noteLenAdjustDivs * 100, delta);
+        //     v /= 100;
+        //     this.props.app.SeqSetStacc(v);
+        // }
+      
+
         onClickPattern = (pattern, index) => {
             if (this.props.observerMode) return;
             this.props.app.SeqSelectPattern(index);
@@ -943,6 +1041,7 @@ class SequencerMain extends React.Component {
 
 
 
+
                         </fieldset>
                     <fieldset>
 
@@ -970,27 +1069,23 @@ class SequencerMain extends React.Component {
                         </div>
 
 
-                        <div className='paramGroup'>
-                            <div className='legend'>Swing</div>
-                            <div className='paramBlock'>
-                                <div className={'paramValue ' + (patch.swing === 0 ? "" : "altvalue")}>{Math.floor(patch.swing * 100)}%</div>
-                                <div className="buttonArray vertical">
-                                    <button onClick={() =>{this.onClickSwingAdj(1)}}><i className="material-icons">arrow_drop_up</i></button>
-                                    <button onClick={() =>{this.onClickSwingAdj(-1)}}><i className="material-icons">arrow_drop_down</i></button>
-                                </div>
-                                <div className="buttonArray">
-                                <input id={this.swingSliderID} disabled={isReadOnly} style={{width:"60px"}} type="range"
-                                    className='stylizedRange'
-                                    min={gSwingSnapValues.min} max={gSwingSnapValues.max}
-                                    onClick={this.onClickSwingSlider}
-                                    onDoubleClick={this.onDoubleClickSwingSlider}
-                                    onChange={this.onChangeSwing}
-                                    value={patch.swing * 100}
-                                />
-                                </div>
-                            </div>
-                        </div>
+                        <SeqLegendKnob
+                            caption="Swing"
+                            className="knob"
+                            initialValue={patch.swing * 100}
+                            valueSpec={gSwingValueSpec}
+                            formatSpec={gKnobFormatSpec}
+                            onChange={this.onChangeSwing}
+                            />
 
+                        <SeqLegendKnob
+                                    caption="Stacc"
+                                    className="knob"
+                                    initialValue={patch.noteLenAdjustDivs * 100}
+                                    valueSpec={gStaccValueSpec}
+                                    formatSpec={gKnobFormatSpec}
+                                    onChange={this.onChangeStacc}
+                                    />
 
                     </fieldset>
 

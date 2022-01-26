@@ -120,6 +120,11 @@
     background-color: #c558;
 }
 
+.sequencerMain .paramGroup canvas.knob {
+    padding: 0;
+    /* background-color: #044; */
+}
+
 .sequencerMain fieldset .paramValue {
     display: flex;
     background-color: #044;
