@@ -8,7 +8,7 @@ const SequencerPresetDialog = require("./SequencerPresetDialog");
 const Seq = require('../SequencerCore');
 const { TapTempoButton } = require('./optionsDialog');
 const { SequencerCell } = require('./SequencerCell');
-const { Knob, SeqLegendKnob } = require('./knob');
+const { SeqLegendKnob } = require('./knob');
 
 const gMinTimerInterval = 35;
 

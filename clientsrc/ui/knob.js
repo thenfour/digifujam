@@ -105,7 +105,6 @@ class SeqLegendKnob extends React.Component {
 }
 
 module.exports = {
-  Knob,
   SeqLegendKnob,
 };
 
