@@ -169,7 +169,7 @@ const ServerSettings = {
     MinBPM: 30,
     MaxBPM: 200,
 
-    GraffitiDefaultLifetimeMS: DFUtil.hoursToMS(48),
+    GraffitiDefaultLifetimeMS: DFUtil.daysToMS(26),
     GraffitiContentLengthMax: 1800, // max allowed content
     GraffitiContentTruncate: 50, // for display, content gets truncated to this.
 };

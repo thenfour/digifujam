@@ -333,7 +333,10 @@ const imageExtensions = [
   ".gif",
   ".jpeg",
   ".jpg",
-  ".svg"
+  ".svg",
+  ".webp",
+  //".mp4", does not work.
+  //".webm",does not work.
 ];
 function IsImageFilename(f) {
   f = f.toLowerCase();
