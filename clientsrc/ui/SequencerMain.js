@@ -122,11 +122,17 @@ const gStaccValueSpec = new ValueListValueSpec((() => {
 
 
 const gSwingValueSpec = new ValueListValueSpec([
-    -85,-75,-66,-58,
-    -50,-42,-33,-20,-10,
-    0,
-    10, 20, 33, 42, 50, 58, 66, 75, 85
-]);
+    // -85,-75,-66,-58, -50,-42,-33,-20,-10,
+    // 0,
+    // 10, 20, 33, 42, 50, 58, 66, 75, 85
+
+    66,55,44,33,22,11,0,
+    -11,-22,-33,-44,-55,-66
+].reverse());
+
+// 20 to 33 is too big a gap.
+// past 75 it's really not necessary.
+// maybe between 0-66, and hit 33 along the way.
 
 const gKnobFormatSpec = {
     fontSpec: (knob) => { return knob.isDragging ? "16px monospace" : null; },
@@ -406,8 +412,9 @@ class SequencerMain extends React.Component {
             this.props.app.SeqPlayStop(!this.props.instrument.sequencerDevice.isPlaying, this.props.instrument.instrumentID);
         }
 
-        onChangeSwing = (value) => {
+        onChangeSwing = (value, isUserAction) => {
             if (this.props.observerMode) return;
+            if (!isUserAction) return; // changes not incurred by user actions don't send.
             //let v = gSwingSnapValues.GetClosestMatch(e.target.value, 0);
             let v = value / 100;
             this.props.app.SeqSetSwing(v);
@@ -421,8 +428,9 @@ class SequencerMain extends React.Component {
             $("#" + this.staccSliderID).trigger("change");
         }
 
-        onChangeStacc = (val) => {
+        onChangeStacc = (val, isUserAction) => {
             if (this.props.observerMode) return;
+            if (!isUserAction) return; // changes not incurred by user actions don't send.
             //let v = gStaccSnapValues.GetClosestMatch(val, 0);
             val /= 100;
             this.props.app.SeqSetStacc(val);

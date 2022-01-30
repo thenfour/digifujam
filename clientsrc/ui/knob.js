@@ -74,12 +74,12 @@ class SeqLegendKnob extends React.Component {
           valueSpec : this.valueSpec,
           elements : [this.canvasRef, this.legendRef],
           initialValue : this.props.initialValue,
-          onChange : (v, s) => {
+          onChange : (v, s, isUserAction) => {
             this.value01 = v;
             this.isDragging = s.isDragging;
             this.nonReactUpdate();
             if (this.props.onChange) {
-              this.props.onChange(this.valueSpec.value01ToValue(this.value01));
+              this.props.onChange(this.valueSpec.value01ToValue(this.value01), isUserAction);
             }
           },
         });
@@ -92,11 +92,12 @@ class SeqLegendKnob extends React.Component {
   }
 
   render() {
+    const valueStr = !this.value01 ? "" : this.valueSpec.value01ToString(this.value01);
     return (
       <div className='paramGroup'>
-        <div className='legend' ref={(r) => { this.legendRef = r; }}>{this.props.caption}</div>
+        <div title={valueStr} className='legend' ref={(r) => { this.legendRef = r; }}>{this.props.caption}</div>
         <div className='paramBlock'>
-          <canvas className={this.props.className} ref={(r) => { this.canvasRef = r; }}></canvas>
+          <canvas title={valueStr} className={this.props.className} ref={(r) => { this.canvasRef = r; }}></canvas>
         </div>
         {this.props.children}
       </div>

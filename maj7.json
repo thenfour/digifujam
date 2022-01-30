@@ -937,7 +937,7 @@
       "activityDisplay": "drums",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
-      "seqPresetBankID": "seqdrums",
+      "seqPresetBankID": "seqperc",
       "sequencerDevice": {
         "legendRef": "PercA"
       },

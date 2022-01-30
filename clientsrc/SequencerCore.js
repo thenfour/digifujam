@@ -543,6 +543,9 @@ class SequencerPatch {
     this.#cachedViewDirty = true;
     this.swing = swing;
   }
+  GetSwing() {
+    return this.swing;
+  }
   SetDivisionType(divisionType) {
     this.#cachedViewDirty = true;
     // if setting div type results in a pattern that's too long, don't allow.
@@ -627,6 +630,10 @@ class SequencerPatch {
     this.#cachedViewDirty = true;
     this.noteLenAdjustDivs = divs;
     return true;
+  }
+
+  GetNoteLenAdjustDivs() {
+    return this.noteLenAdjustDivs;
   }
 
   GetTranspose() {

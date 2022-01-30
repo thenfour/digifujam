@@ -96,16 +96,18 @@ function modulo(x, n) {
 // and a begin/length in the period (NOTE: if length is longer than 1 period, returns always true)
 // does X lie in the begin-end segment.
 //   |-----------|-----------|-----------|-----------|-----------|-----------
-//         [=======]   [=======]   [=======]   [=======]   [=======]   
+//         [=======]   [=======]   [=======]   [=======]   [=======]
 //         ^begin      ^begin
 //    <----------> period
 function IsInPeriodicSegment(x, period, begin, length) {
-  x = modulo(x, period); // bring x into window 0
+  x = modulo(x, period);      // bring x into window 0
   const end = begin + length; // note: this may lie outside window 0.
-  if (x >= begin && x < end) return true;
+  if (x >= begin && x < end)
+    return true;
   // check if window 1 satisfies.
   x += period;
-  if (x >= begin && x < end) return true;
+  if (x >= begin && x < end)
+    return true;
   return false;
 }
 
@@ -418,6 +420,52 @@ class CommandHistory {
   }
 }
 
+// similar to Throttler but with parameter key/val
+class ParamThrottler {
+  constructor(periodMS, handler) {
+    this.timer = null;
+    this.periodMS = periodMS;
+    this.handler = handler;
+    this.queuedParamChangeData = new Map();
+    this.paramChangeLastSent = 0;
+  }
+
+  // based on net.SendInstrumentParams
+  InvokeChange(key, val, isWholePatch) {
+    // - if we have a timer set, modify its value
+    // - if we're slow enough, and no timer set, then send live.
+    // - if we're too fast, then set timer with this packet.
+
+    if (isWholePatch) { // if you're changing "the whole patch", then wipe out any previous patch changes.
+      this.queuedParamChangeData.clear();
+    }
+    this.queuedParamChangeData.set(key, val);
+
+    // already have a timer pending; integrate this patch obj.
+    if (this.timer) {
+      return false;
+    }
+
+    let now = Date.now();
+    let delta = now - this.paramChangeLastSent;
+    if (delta >= this.periodMS) {
+      // we waited long enough between changes; send in real time.
+      this.paramChangeLastSent = now;
+      this.handler(this.queuedParamChangeData);
+      return true;
+    }
+
+    this.timer = setTimeout(this.timerProc, this.periodMS - delta);
+    return false;
+  };
+
+  timerProc = () => { // avoid allocation in potentially hot path
+    this.handler(this.queuedParamChangeData);
+    this.timer = null;
+    this.queuedParamChangeData.clear();
+  }
+}
+
 module.exports = {
   secondsToMS,
   minutesToMS,
@@ -458,4 +506,5 @@ module.exports = {
   pointInPolygon,
   IsImageFilename,
   CommandHistory,
+  ParamThrottler,
 };

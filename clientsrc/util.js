@@ -207,6 +207,7 @@ class FuzzySelector {
 
 // abstraction of the mouse capture + fine behavior
 // only operates on 0-1 values.
+// onChange(value01, this, is_because_of_user_action)
 class ValueSliderElement {
   constructor(params) {
     Object.assign(this, params ?? {});
@@ -219,7 +220,7 @@ class ValueSliderElement {
       el.onpointerup = (e) => this.onPointerUp(e);
       el.ondblclick = (e) => this.onDoubleClick(e);
     });
-    this.onChange(this.value01, this);
+    this.onChange(this.value01, this, false); // give callers a chance to handle this.
   }
 
   onPointerDown(e) {
@@ -228,7 +229,7 @@ class ValueSliderElement {
 
     if (e.ctrlKey) {
       this.value01 = this.valueSpec.valueToValue01(this.valueSpec.resetValue);
-      this.onChange(this.value01, this);
+      this.onChange(this.value01, this, true);
       return;
     }
 
@@ -241,7 +242,7 @@ class ValueSliderElement {
     el.onpointermove = (e) => this.onPointerMove(e);
     this.isDragging = true;
     el.setPointerCapture(e.pointerId);
-    this.onChange(this.value01, this); // send a change event to allow caller to react to state change.
+    this.onChange(this.value01, this, true); // send a change event to allow caller to react to state change.
 
     this.cancelProc = () => {
       this.isDragging = false;
@@ -249,7 +250,7 @@ class ValueSliderElement {
       el.releasePointerCapture(e.pointerId);
       el.onpointermove = null;
       window.DFKeyTracker.events.removeListener("keydown", this.onKeyDownWhileDragging);
-      this.onChange(this.value01, this); // send a change event to allow caller to react to state change.
+      this.onChange(this.value01, this, true); // send a change event to allow caller to react to state change.
     };
   }
 
@@ -261,7 +262,7 @@ class ValueSliderElement {
     if (e.key === 'Escape') {
       this.cancelProc();
       this.value01 = this.beginValue01;
-      this.onChange(this.value01, this);
+      this.onChange(this.value01, this, true);
     }
   }
 
@@ -284,13 +285,13 @@ class ValueSliderElement {
       this.value01 = 0;
     if (this.value01 > 1)
       this.value01 = 1;
-    this.onChange(this.value01, this);
+    this.onChange(this.value01, this, true);
   }
 
   onDoubleClick(e) {
     const el = e.target;//this.element; //document.getElementById(this.elementID);
     this.value01 = this.valueSpec.valueToValue01(this.valueSpec.resetValue);
-    this.onChange(this.value01, this);
+    this.onChange(this.value01, this, true);
   }
 }
 

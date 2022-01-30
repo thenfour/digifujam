@@ -1494,7 +1494,7 @@ class RoomServer {
       if (!foundUser) throw new Error(`SeqSetSwing => unknown user`);
       const foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (!foundInstrument) throw new Error(`user not controlling an instrument.`);
-      if (!Seq.IsValidSequencerSwing(data.swing)) throw new Error(`invalid sequencer swing.`);
+      if (!Seq.IsValidSequencerSwing(data.swing)) throw new Error(`invalid sequencer swing ${data.swing}.`);
 
       foundInstrument.instrument.sequencerDevice.livePatch.SetSwing(data.swing);
 

@@ -91,7 +91,6 @@ class DigifuNet {
 
         // already have a timer pending; integrate this patch obj.
         if (this.timerCookie) {
-            this.stats.paramsOptimized++;
             if (isWholePatch) { // if you're changing "the whole patch", then wipe out any previous patch changes.
                 this.queuedParamChangeData.patchObj = patchObj;
                 this.queuedParamChangeData.isWholePatch = true;
