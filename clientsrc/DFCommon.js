@@ -155,7 +155,8 @@ const ServerSettings = {
 
     WorldUserCountMaximum: 100,
 
-    StatsFlushMS: DFUtil.minutesToMS(5), // 5 minutes -- also used for saving DB file.
+    StatsFlushMS: DFUtil.minutesToMS(5),
+    DBFlushMS: DFUtil.minutesToMS(1),
     StatsPruneIntervalMS: DFUtil.hoursToMS(24), // once a day prune stats
     StatsMaxAgeMS: DFUtil.daysToMS(365),
 

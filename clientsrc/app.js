@@ -739,16 +739,18 @@ class DigifuApp {
   };
 
   NET_OnNoteEvents(noteOns, noteOffs) {
-    noteOns.forEach(e => {
+    for (let i = 0; i < noteOns.length; ++ i) {
+      const e = noteOns[i];
       if (e.seqInstrumentID && e.op === "startPlaying") {
         this.NET_SeqStartPlaying(e);
       } else {
         this.NET_OnNoteOn(e.userID, parseInt(e.note), parseInt(e.velocity), e.seqInstrumentID);
       }
-    });
-    noteOffs.forEach(e => {
+    }
+    for (let i = 0; i < noteOffs.length; ++ i) {
+      const e = noteOffs[i];
       this.NET_OnNoteOff(e.userID, parseInt(e.note), e.seqInstrumentID);
-    });
+    }
   }
 
   NET_SeqStartPlaying(e) {

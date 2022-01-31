@@ -17,10 +17,20 @@ class DFAlert extends React.Component {
       console.log(`alert message: ${message}`);
       this.setState({message});
     };
+
+    window.DFKeyTracker.events.on("keydown", this.documentOnKeyDown);
   }
 
   componentWillUnmount() {
     window.alert = window.DFOldAlert;
+    window.DFKeyTracker.events.removeListener("keydown", this.documentOnKeyDown);
+  }
+
+  documentOnKeyDown = (e) => {
+    if (!this.state.message) return;
+    e.stopPropagation();
+    e.preventDefault();
+    this.setState({message: null});
   }
 
   render() {

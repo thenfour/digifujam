@@ -21,14 +21,14 @@ class DFDB {
       };
     }
 
-    setTimeout(this.OnFlushTimer, DF.ServerSettings.StatsFlushMS);
+    setTimeout(this.OnFlushTimer, DF.ServerSettings.DBFlushMS);
 
     onSuccess(this);
   }
 
   OnFlushTimer = () => {
     try {
-      setTimeout(this.OnFlushTimer, DF.ServerSettings.StatsFlushMS);
+      setTimeout(this.OnFlushTimer, DF.ServerSettings.DBFlushMS);
       fsp.writeFile(
           this.path, JSON.stringify(this.data, null, 2), 'utf8');
     } catch (e) {

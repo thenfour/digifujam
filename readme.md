@@ -118,4 +118,21 @@ Discord users should have some properties that normal 7jam users do not:
 * statistics are not collected for these users, and are not included in certain population counts
 
 
+## Internal features
+
+* activity hooks
+* stats (old)
+* db
+* admin console
+* integrations
+* authentication
+* server state backups, import, export
+* server configuration files
+* sequencer configuration files
+* graffiti uploads
+* ...
+
+
+
+
 

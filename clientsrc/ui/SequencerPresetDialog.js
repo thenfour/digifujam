@@ -76,6 +76,7 @@ class SequencerPresetItem extends React.Component {
          op: "save",
          presetID: this.props.preset.presetID,
       });
+      alert(`Saved preset '${this.props.preset.presetName}'`);
       this.setState({overwriteConfirmShowing:false});
    }
 
@@ -87,6 +88,7 @@ class SequencerPresetItem extends React.Component {
          presetID: this.props.preset.presetID,
       });
       this.setState({deleteConfirmShowing:false});
+      alert(`Deleted patch '${this.props.preset.presetName}'`);
    }
 
    render() {
@@ -160,6 +162,7 @@ class SequencerPresetDialog extends React.Component {
                op: "pasteBank",
                bank: newBankInp,
             });
+            alert("Import bank successful");
          } catch (e) 
          {
             console.log(e);
@@ -186,6 +189,7 @@ class SequencerPresetDialog extends React.Component {
                op: "pastePatch",
                patch: newPatch,
             });
+            alert("Import patch successful");
          } catch (e) 
          {
             console.log(e);
@@ -200,6 +204,7 @@ class SequencerPresetDialog extends React.Component {
          op: "save",
          presetID: null,
       });
+      alert("Saved");
    }
    onClickSaveExisting = (e) => {
       const isReadOnly = this.props.observerMode;
@@ -209,6 +214,7 @@ class SequencerPresetDialog extends React.Component {
          op: "save",
          presetID: patch.presetID,
       });
+      alert("Saved");
    }
    onFilterChange = (txt) => {
       this.setState({ filterTxt: txt });
