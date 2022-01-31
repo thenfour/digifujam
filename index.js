@@ -18,6 +18,7 @@ const Seq = require('./clientsrc/SequencerCore');
 const {ServerAdminApp} = require('./server/serverAdminApp');
 const {ServerGoogleOAuthSupport} = require('./server/serverGoogleOAuth');
 const {RoomSequencerPlayer} = require('./server/SequencerPlayer.js');
+const { EmptyPersistentInfo } = require('./clientsrc/DFUser');
 
 let oldConsoleLog = console.log;
 let log = (msg) => {
@@ -436,12 +437,12 @@ class RoomServer {
       // the data is actually a DigifuUser object. but for security it should be copied.
       let u = new DF.DigifuUser();
 
-      u.name = DF.EnsureValidUsername(clientUserSpec.name);
-      u.color = DF.EnsureValidUserColor(clientUserSpec.color);
+      u.SetName(DF.EnsureValidUsername(clientUserSpec.name));
+      u.SetColor(DF.EnsureValidUserColor(clientUserSpec.color));
 
       // try to reuse existing user ID, so we can track this user through the world instead of considering
       // room changes totally new users.
-      let userID = clientSocket.DFUserID || DF.generateUserID();
+      let userID = clientSocket.DFUserID || DFU.generateUserID();
 
       // handler
       const completeUserEntry = (hasPersistentIdentity, persistentInfo, persistentID) => {
@@ -456,7 +457,6 @@ class RoomServer {
         if (clientSocket.DFPosition) {
           u.position = clientSocket.DFPosition; // if you're transitioning from a previous room, we store your neew position here across the workflow.
         }
-        u.img = null;
 
         if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === gConfig.admin_key) {
           log(`An admin has been identified id=${u.userID} name=${u.name}.`);
@@ -499,7 +499,7 @@ class RoomServer {
       }; // completeUserEntry
 
       if (!await gGoogleOAuth.TryProcessHandshake(u, clientSocket, completeUserEntry, rejectUserEntry, clientUserSpec.google_refresh_token)) {
-        completeUserEntry(false, DF.EmptyDFUserToPersistentInfo(), null);
+        completeUserEntry(false, EmptyPersistentInfo(), null);
       }
 
     } catch (e) {
@@ -612,7 +612,7 @@ class RoomServer {
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
-      foundUser.user.persistentInfo.stats.noteOns++;
+      foundUser.user.IncNoteOns();
       gServerStats.OnNoteOn(this.roomState, foundUser.user);
       this.roomState.stats.noteOns++;
 
@@ -632,12 +632,12 @@ class RoomServer {
 
       // for sequencer events, give stats to the user who controls the instrument
       noteOns.forEach(note => {
-        if (note.seqInstrumentID && note.midiNoteValue) { // check midinotevalue because there are other commands (op: "startPlaying",) which should not count.
+        if (note.seqInstrumentID && note.note) { // check midinotevalue because there are other commands (op: "startPlaying",) which should not count.
           const foundInstrument = this.roomState.FindInstrumentById(note.seqInstrumentID);
           console.assert(foundInstrument);
           const foundUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
           if (foundUser) {
-            foundUser.user.persistentInfo.stats.noteOns++;
+            foundUser.user.IncNoteOns();
             gServerStats.OnNoteOn(this.roomState, foundUser.user);
             this.roomState.stats.noteOns++; // <-- correct. don't add sequencer notes to the room stats if nobody's controlling it. would just sorta blow out of control.
           }
@@ -1150,10 +1150,9 @@ class RoomServer {
         //log(`chatLog.push => nick`);
       }
 
-      foundUser.user.name = data.name;
-      foundUser.user.color = data.color;
+      foundUser.user.SetName(data.name);
+      foundUser.user.SetColor(data.color);
 
-      foundUser.user.img = data.img;
       foundUser.user.position.x = data.position.x;
       foundUser.user.position.y = data.position.y;
 
@@ -1215,7 +1214,6 @@ class RoomServer {
       }
 
       gServerStats.OnCheer(this.roomState, foundUser.user);
-      foundUser.user.persistentInfo.stats.cheers++;
       this.roomState.stats.cheers++;
 
       io.to(this.roomState.roomID).emit(DF.ServerMessages.Cheer, { userID: foundUser.user.userID, text: txt, x: data.x, y: data.y });
@@ -1885,14 +1883,14 @@ class RoomServer {
       // clients should do the same kind of cleanup: remove any users not appearing in the returned list, as if they've been disconnected.
       let deletedUsers = [];
 
-      let knownConnectedUserIDs = [];
+      let knownConnectedUserIDs = new Set();
       io.of('/').sockets.forEach(s => {
         if (!s.DFUserID) return;
-        knownConnectedUserIDs.push(s.DFUserID);
+        knownConnectedUserIDs.add(s.DFUserID);
       });
 
       this.roomState.users.removeIf(u => {
-        let socketExists = knownConnectedUserIDs.some(id => id == u.userID);
+        let socketExists = knownConnectedUserIDs.has(u.userID);
 
         // ONLY sevenjam native users are expected to have a websocket.
         let shouldDelete = !socketExists && u.source === DF.eUserSource.SevenJam;
@@ -1951,63 +1949,13 @@ class RoomServer {
         rooms: [],
       };
 
-      // todo: make persistentinfo and stats structured; this is a mess
-      const TransformPersistentInfo = (tp) => {
-        const ret = {};
-        if (tp?.global_roles?.length) {
-          ret.gr = tp.global_roles;
-        }
-        if (tp?.room_roles?.length) {
-          ret.rr = tp.room_roles;
-        }
-        if (tp?.stats?.cheers) {
-          ret.ch = tp.stats.cheers;
-        }
-        if (tp?.stats?.connectionTimeSec) {
-          ret.cts = tp.stats.connectionTimeSec;
-        }
-        if (tp?.stats?.joins) {
-          ret.j = tp.stats.joins;
-        }
-        if (tp?.stats?.messages) {
-          ret.m = tp.stats.messages;
-        }
-        if (tp?.stats?.noteOns) {
-          ret.n = tp.stats.noteOns;
-        }
-        if (tp?.stats?.paramChanges) {
-          ret.pc = tp.stats.paramChanges;
-        }
-        if (tp?.stats?.presetsSaved) {
-          ret.ps = tp.stats.presetsSaved;
-        }
-        
-        return ret;
-      };
-
-      const transformUser = (u, includePersistentInfo) => {
-        // pings are significant size so important to minimize field name bloat
-        const ret = {
-          id: u.userID,
-          n: u.name,
-          c: u.color,
-          s: u.source,
-          p: u.presence,
-        };
-
-        if (u.pingMS) ret.pingMS = u.pingMS;
-        if (includePersistentInfo) ret.pi = TransformPersistentInfo(u.persistentInfo);
-
-        return ret;
-      };
-
       payload.rooms = Object.keys(gRooms).map(k => {
         let room = gRooms[k];
         return {
           roomID: room.roomState.roomID,
           isPrivate: !!room.roomState.isPrivate,
           roomName: room.roomState.roomTitle,
-          users: room.roomState.users.map(u => transformUser(u, k === this.roomState.roomID)),
+          users: room.roomState.users.map(u => u.ExportPing(k === this.roomState.roomID)),
           stats: room.roomState.stats
         };
       });
@@ -2100,15 +2048,14 @@ class RoomServer {
         return;
       }
 
-      userObj.name = userName;
-      userObj.color = color;
-      userObj.presence = presence;
+      userObj.SetName(userName);
+      userObj.SetColor(color);
+      userObj.SetPresence(presence);
 
       const data = {
         userID: userObj.userID,
         name: userObj.name,
         color: userObj.color,
-        img: userObj.img,
         position: userObj.position,
         presence,
       };
@@ -2138,15 +2085,14 @@ class RoomServer {
       return null;
     }
 
-    u.userID = DF.generateUserID();
+    u.userID = DFU.generateUserID();
     u.persistentID = persistentID?.toString();
     u.source = source;
     u.presence = presence;
     u.hasPersistentIdentity = false;
-    u.persistentInfo = DF.EmptyDFUserToPersistentInfo();
+    u.persistentInfo = EmptyPersistentInfo();
     u.lastActivity = new Date();
     u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
-    u.img = null;
 
     this.roomState.users.push(u);
 
@@ -2667,7 +2613,8 @@ gConfig.room_json.forEach(path => {
   loadRoom(fs.readFileSync(path), serverRestoreState);
 });
 
-gDB = new DFDB.DFDB(gConfig, () => {
+new DFDB.DFDB(gConfig, (db) => {
+  gDB = db; // because this completes synchronously the assignment hasn't happened yet.
   gDBInitProc();
   roomsAreLoaded();
 }, () => {

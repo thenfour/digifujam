@@ -64,7 +64,7 @@ class SeqActivityIndicator
 {
     constructor() {
         this.activityThrottler = new DFU.Throttler();
-        this.activityThrottler.interval = 1000.0 / 30;
+        this.activityThrottler.interval = 1000.0 / 15;
         this.activityThrottler.proc = () => this.throttleProc();
         this.queuedInstrumentsWithActivity = new Set();
         gInstActivityHandlers["seqNoteActivity"] = this.mainHandler;
@@ -430,14 +430,15 @@ class InstFloatParam extends React.Component {
         this.queuedInstrumentsWithActivity = new Set();
 
         this.activityThrottler = new DFU.Throttler();
-        this.activityThrottler.interval = 1000.0 / 30;
+        this.activityThrottler.interval = 1000.0 / 15;
         this.activityThrottler.proc = () => {
-            for (let i = 0; i < this.queuedInstrumentsWithActivity.length; ++ i) {
-                const instrumentID = this.queuedInstrumentsWithActivity[i];
+            this.queuedInstrumentsWithActivity.forEach(instrumentID => {
+                //const instrumentID = this.queuedInstrumentsWithActivity[i];
                 const el = document.getElementById(`mixerActivity_${instrumentID}`);
+                if (!el) return;
                 el.classList.toggle('alt1');
                 el.classList.toggle('alt2');
-            }
+            });
             this.queuedInstrumentsWithActivity.clear();
         }
     }
@@ -1370,6 +1371,19 @@ class UserList extends React.Component {
             showingAllOfflineUsers: false,
         };
     }
+
+    refresh = () => {
+        this.setState({});
+    }
+
+    componentDidMount() {
+        this.props.app.events.on("ping", this.refresh);
+    }
+    componentWillUnmount() 
+    {
+        this.props.app.events.removeListener("ping", this.refresh);
+    }
+
     render() {
         if (!this.props.app || !this.props.app.roomState) {
             return null;
@@ -1432,12 +1446,14 @@ class UserList extends React.Component {
 
 class WorldStatus extends React.Component {
 
+    refresh = () => { this.setState({}); }
+
     componentDidMount() {
-        window.DFOnWorldStatusChange = () => { this.setState({}); };
+        this.props.app.events.on("ping", this.refresh);
     }
     componentWillUnmount() 
     {
-        window.DFOnWorldStatusChange = () => {};
+        this.props.app.events.removeListener("ping", this.refresh);
     }
 
     render() {
@@ -1664,8 +1680,8 @@ class LeftArea extends React.Component {
         return (
             <div id="leftArea" style={{ gridArea: "leftArea" }} className={isDisconnected ? "disconnectedGrayscale" : ""}>
                 <InstrumentList app={this.props.app} />
-                <UserList app={this.props.app} />
-                <WorldStatus app={this.props.app} />
+                {this.props.app && <UserList app={this.props.app} />}
+                {this.props.app && <WorldStatus app={this.props.app} />}
             </div>
         );
     }

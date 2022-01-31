@@ -21,12 +21,12 @@ class FallbackNoteOnTracker {
 		//
 	}
 
-	NoteOn(user, instrumentSpec, note) {
-		this.noteOnHandler(user, instrumentSpec, note);
+	NoteOn(user, instrumentSpec, note, isFromSequencer) {
+		this.noteOnHandler(user, instrumentSpec, note, isFromSequencer);
 	}
 
-	NoteOff(user, instrumentSpec, note) {
-		this.noteOffHandler(user, instrumentSpec, note);
+	NoteOff(user, instrumentSpec, note, isFromSequencer) {
+		this.noteOffHandler(user, instrumentSpec, note, isFromSequencer);
 	}
 
 	PedalUp(user, instrumentSpec) {

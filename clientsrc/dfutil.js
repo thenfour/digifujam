@@ -319,8 +319,13 @@ function ProcessMessageFields(fieldsSpec, subs) {
 }
 
 function generateID() {
-  return nanoid(/*8*/); // not really necessary to limit the hash size. it's just not a bottleneck.
+  return nanoid(10);
 }
+
+function generateUserID() {
+  return "u" + generateID();
+}
+
 
 function IsServer() {
   return typeof window === 'undefined';
@@ -501,6 +506,7 @@ module.exports = {
   findNearestIndex,
   groupBy,
   generateID,
+  generateUserID,
   IsClient,
   IsServer,
   polyToPathDesc,

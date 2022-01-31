@@ -137,6 +137,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(73, 137, 255)",
       "name": "Acoustic Pianos",
+      "seqPresetBankID": "sfzACPno",
       "sfzArray": [
         {
           "gain": 1.8,
@@ -176,6 +177,7 @@
       "instrumentID": "sfzEP",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(121, 255, 255)",
+      "seqPresetBankID": "sfzEP",
       "name": "Electric Pianos",
       "sfzArray": [
         {
@@ -233,6 +235,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "orange",
       "name": "Acoustic Guitars",
+      "seqPresetBankID": "sfzAcGt",
       "sfzArray": [
         {
           "gain": 2.5,
@@ -288,6 +291,7 @@
       "instrumentID": "sfzElGt",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#ff5900",
+      "seqPresetBankID": "sfzElGt",
       "name": "Electric Guitars",
       "sfzArray": [
         {
@@ -344,6 +348,7 @@
       "instrumentID": "sfzBrassSolo",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#11ff66",
+      "seqPresetBankID": "sfzBrassSolo",
       "name": "Brass Solo",
       "sfzArray": [
         {
@@ -384,6 +389,7 @@
       "instrumentID": "sfzBrassEns",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#00ff55",
+      "seqPresetBankID": "sfzBrassEns",
       "name": "Brass Ensemble",
       "sfzArray": [
         {
@@ -423,6 +429,7 @@
       "instrumentID": "sfzAccordion",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#12c781",
+      "seqPresetBankID": "sfzAccordion",
       "name": "Accordion",
       "sfzArray": [
         {
@@ -464,6 +471,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "name": "Calliope",
       "color": "green",
+      "seqPresetBankID": "sfz_G83SynCaliope",
       "sfzArray": [
         {
           "sfzURL": "/sfz/G83 SynCaliope/G83 SynCaliope.sfz.json",
@@ -501,6 +509,7 @@
       "instrumentID": "sfzVox",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#8eff40",
+      "seqPresetBankID": "sfzVox",
       "name": "Vox",
       "sfzArray": [
         {
@@ -558,6 +567,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 75, 75)",
       "name": "Pad",
+      "seqPresetBankID": "sfzPad",
       "sfzArray": [
         {
           "gain": 1,
@@ -645,6 +655,7 @@
       "instrumentID": "sfzStr",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 75, 75)",
+      "seqPresetBankID": "sfzStr",
       "name": "Strings",
       "sfzArray": [
         {
@@ -701,6 +712,7 @@
       "instrumentID": "sfzPluck",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 245, 53)",
+      "seqPresetBankID": "sfzPluck",
       "name": "Pluck",
       "sfzArray": [
         {
@@ -758,6 +770,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 245, 53)",
       "name": "Mallet / Bell",
+      "seqPresetBankID": "sfzMallet",
       "sfzArray": [
         {
           "gain": 2,
@@ -845,6 +858,7 @@
     {
       "instrumentID": "sfzBass",
       "copyOfInstrumentID": "sfzMulti",
+      "seqPresetBankID": "sfzBass",
       "color": "rgb(203, 203, 203)",
       "name": "Bass",
       "sfzArray": [

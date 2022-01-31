@@ -8,6 +8,8 @@ const DFMusic = require("./DFMusic");
 const {eSoundEffects, SoundFxManager} = require('./soundFx');
 const Seq = require('./SequencerCore');
 const {pointInPolygon, ParamThrottler} = require("./dfutil");
+const { DigifuUser } = require("./DFUser");
+const EventEmitter = require('events');
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -257,6 +259,8 @@ class DigifuApp {
     this.shortChatLog = [];   // contains aggregated entries instead of the full thing
 
     this.tapTempoState = TapTempoState.NA;
+
+    this.events = new EventEmitter();
 
     this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
     this.handleRoomWelcome = null;  // called when you enter a new room.
@@ -632,8 +636,7 @@ class DigifuApp {
     if (!this.roomState)
       return;
 
-    let nu = Object.assign(new DF.DigifuUser(), data.user);
-    nu.thaw();
+    let nu = new DF.DigifuUser(data.user);
     this.roomState.users.push(nu);
 
     this.soundEffectManager.play(eSoundEffects.UserJoinNotification);
@@ -1187,47 +1190,7 @@ class DigifuApp {
 
   // ----------------------
 
-  TransformPingUserStatsToWorldData(pi) {
-    if (!pi)
-      return null;
-    return {
-      cheers : pi.ch ?? 0,
-      connectionTimeSec : pi.cts ?? 0,
-      joins : pi.j ?? 0,
-      messages : pi.m ?? 0,
-      noteOns : pi.n ?? 0,
-      paramChanges : pi.pc ?? 0,
-      presetsSaved : pi.ps ?? 0,
-    };
-  }
-
-  TransformPingPersistentInfoToWorldData(pi) {
-    if (!pi)
-      return null;
-    const ret = {
-      global_roles : pi.gr ?? [],
-      room_roles : pi.rr ?? [],
-      stats : this.TransformPingUserStatsToWorldData(pi),
-    };
-    return ret;
-  }
-
-  TransformPingUserToWorldData(user) {
-    const ret = {
-      userID : user.id,
-      name : user.n,
-      color : user.c,
-      source : user.s,
-      presence : user.p,
-      persistentInfo : this.TransformPingPersistentInfoToWorldData(user.pi),
-      pingMS : user.pingMS,
-    };
-    return ret;
-  }
-
   TransformPingRoomToWorldData(room) {
-    room.users = room.users.map(user => this.TransformPingUserToWorldData(user));
-    return room;
   }
 
   NET_OnPing(data) {
@@ -1237,7 +1200,10 @@ class DigifuApp {
     if (!this.roomState)
       return; // technically a ping could be sent before we've populated room state.
 
-    this.rooms = data.rooms.map(room => this.TransformPingRoomToWorldData(room));
+    data.rooms.forEach(room => {
+      room.users = room.users.map(user => DigifuUser.FromPing(user));
+    });
+    this.rooms = data.rooms;
 
     // bring user stats to our room's user list
     let room = this.rooms.find(r => r.roomID == this.roomState.roomID);
@@ -1246,7 +1212,6 @@ class DigifuApp {
       let foundUser = this.roomState.FindUserByID(u.userID);
       if (!foundUser)
         return; // this is possible because the server may be latent in sending this user data.
-      //foundUser.user.pingMS = u.pingMS;
       foundUser.user.IntegrateFromPing(u);
     });
     this.serverUptimeSec = data.serverUptimeSec;
@@ -1266,7 +1231,7 @@ class DigifuApp {
       return ((now - new Date(msg.timestampUTC)) < DF.ClientSettings.ChatHistoryMaxMS);
     });
 
-    window.DFOnWorldStatusChange && window.DFOnWorldStatusChange();
+    this.events.emit('ping');
   };
 
   NET_ChangeRoomState(data) {
@@ -1326,7 +1291,6 @@ class DigifuApp {
     }
     u.user.name = data.state.name;
     u.user.color = data.state.color;
-    u.user.img = data.state.img;
     u.user.position = data.state.position;
 
     if (u.user.userID == this.myUser.userID) {
@@ -1495,7 +1459,6 @@ class DigifuApp {
     this.net.SendUserState({
       name : this.myUser.name,
       color : this.myUser.color,
-      img : this.myUser.img,
       position : pos
     });
   };
@@ -1504,7 +1467,6 @@ class DigifuApp {
     this.net.SendUserState({
       name : name,
       color : color,
-      img : this.myUser.img,
       position : this.myUser.position
     });
   };

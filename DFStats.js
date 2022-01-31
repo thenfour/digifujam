@@ -1,8 +1,8 @@
-const https = require('https')
+//const https = require('https')
 const DF = require('./clientsrc/DFCommon');
 const fsp = require('fs').promises;
 const fs = require('fs');
-const DFDB = require('./DFDB');
+//const DFDB = require('./DFDB');
 const RangeWindowQuery = require("./clientsrc/RangeWindowQuery");
 const {UserCountNotification} = require('./clientsrc/UserCountNotification');
 const {ServerUpDiscordNotification} = require('./clientsrc/ServerUpDiscordNotification');
@@ -11,6 +11,7 @@ const {UserListSyncOnly} = require('./clientsrc/UserListSyncOnly');
 const {WelcomeMessageIntegration} = require('./clientsrc/WelcomeMessage');
 const {AllJoinsNotification} = require('./clientsrc/AllJoinsNotification');
 const DFU = require('./clientsrc/dfutil');
+const { EmptyStats } = require('./clientsrc/DFUser');
 
 class UserCountsDataSource {
    constructor(mgr, dataSourceSpec, id, ourBackup) {
@@ -639,18 +640,6 @@ class StatsLogger {
       };
    };
 
-   static emptyStatsObj() {
-      return {
-         joins : 0,
-         notes : 0,
-         cheers : 0,
-         messages : 0,
-         paramChanges : 0,
-         maxUsers : 0,
-         presetsSaved : 0,
-      };
-   }
-
    constructor(path, mongoDB) {
       console.log(`Initializing stats file logger @ ${path}`);
       this.path = path;
@@ -729,10 +718,10 @@ class StatsLogger {
        roomID, user, updateRoomStatsCallback, updateUserStatsCallback) {
       let hourID = StatsLogger.getHourID(roomID);
       this.serverStats.byHour[hourID] = updateRoomStatsCallback(
-          this.serverStats.byHour[hourID] || StatsLogger.emptyStatsObj());
+          this.serverStats.byHour[hourID] || EmptyStats());
       if (user.hasPersistentIdentity) {
          this.queuedUserStats[user.persistentID] = updateUserStatsCallback(
-             this.queuedUserStats[user.persistentID] || DF.DigifuUser.emptyStatsObj());
+             this.queuedUserStats[user.persistentID] || EmptyStats());
       }
    }
 
@@ -740,12 +729,12 @@ class StatsLogger {
       this.updateQueuedStats(
           roomState.roomID, user,
           h => {
-             h.joins++;
-             h.maxUsers = Math.max(roomUserCount, h.maxUsers);
+             h.joins = (!!h.joins) ? (h.joins + 1) : 1;
+             h.maxUsers = (!!h.maxUsers) ? Math.max(roomUserCount, h.maxUsers) : roomUserCount;
              return h;
           },
           us => {
-             us.joins++;
+             us.joins = !!us.joins ? (us.joins + 1) : 1;
              return us;
           });
    }
@@ -754,11 +743,11 @@ class StatsLogger {
       this.updateQueuedStats(
           roomState.roomID, user,
           h => {
-             h.notes++;
+             h.notes = !!h.notes ? (h.notes + 1) : 1;
              return h;
           },
           us => {
-             us.noteOns++;
+             us.noteOns = !!us.noteOns ? (us.noteOns + 1) : 1;
              return us;
           });
    }
@@ -790,16 +779,6 @@ class StatsLogger {
    }
 
    OnPresetSave(roomState, user, instrumentName, presetName) {
-      this.updateQueuedStats(
-          roomState.roomID, user,
-          h => {
-             h.presetsSaved++;
-             return h;
-          },
-          us => {
-             us.presetsSaved++;
-             return us;
-          });
    }
 };
 

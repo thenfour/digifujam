@@ -1680,13 +1680,13 @@ ul.instParamList .instActivity {
 ul.instParamList .instActivity.alt1 {
     opacity: 0.0;
     background-color: orange;
-    animation: mixerActivityBump1 .5s 1;
+    animation: mixerActivityBump1 .15s 1;
 }
 
 ul.instParamList .instActivity.alt2 {
     opacity: 0.0;
     background-color: orange;
-    animation: mixerActivityBump2 .5s 1;
+    animation: mixerActivityBump2 .15s 1;
 }
 
 .instrumentCloset .instrumentLoadingIndicator {

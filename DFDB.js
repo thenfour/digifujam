@@ -1,113 +1,70 @@
-// https://zellwk.com/blog/crud-express-mongodb/
-
+const fs = require('fs');
 const DF = require('./clientsrc/DFCommon');
-const MongoClient = require('mongodb').MongoClient;
-const mongoose = require('mongoose');
-const DFUser = require('./models/DFUser')
-const ObjectId = mongoose.Schema.Types.ObjectId;
+const fsp = fs.promises;
 
 class DFDB {
-    constructor(gConfig, onSuccess, onError) {
-        if (!gConfig.mongo_connection_string) {
-            console.log(`Mongo ignored.`);
-            onSuccess();
-            return;
+  constructor(gConfig, onSuccess, onError) {
+
+    this.path = gConfig.private_storage_path + "/" +
+                "db.json";
+
+    try {
+      this.data = JSON.parse(fs.readFileSync(this.path));
+    } catch (e) {
+      console.log(`!!! * * * * DB could not be read from:`);
+      console.log(`    ${this.path}`);
+      console.log(`Using an empty db.`);
+      this.data = {
+        users : {
+            // key = id, value = "user doc"
         }
-        mongoose.connect(gConfig.mongo_connection_string, { useNewUrlParser: true, useUnifiedTopology: true  });
-        const db = mongoose.connection
-        db.once('open', _ => {
-            console.log(`Mongo connected.`);
-            onSuccess();
-        });
-
-        db.on('error', err => {
-            console.log(`Mongo connect error: ${JSON.stringify(err)}`);
-            onError();
-        });
+      };
     }
 
-    // resolves with the db object
-    GetOrCreateGoogleUser(username, color, google_id) {
-        return new Promise((resolve, rej) => {
-            DFUser.findOne({ google_id }).then(existing => {
-                if (existing) {
-                    existing.nickname = username;
-                    existing.color = color;
-                    existing.stats = existing.stats || DF.DigifuUser.emptyStatsObj();
-                    existing.save().then(_ => {
-                        console.log(`returning an existing user document ${existing._id}`);
-                        resolve(existing);
-                    });
-                    return;
-                }
+    setTimeout(this.OnFlushTimer, DF.ServerSettings.StatsFlushMS);
 
-                // create new.
-                const n = new DFUser({
-                    nickname: username,
-                    color,
-                    google_id,
-                    stats: DF.DigifuUser.emptyStatsObj()
-                });
-                n.save((error, document) => {
-                    if (error) {
-                        console.log(`Error saving a new google-based user. ${JSON.stringify(error)}`);
-                    } else {
-                        console.log(`created a new user document ${document._id}`);
-                        resolve(document);
-                    }
-                });
-            });
-        });
-    } // GetOrCreateGoogleUser
+    onSuccess(this);
+  }
 
-    GetFollowerCount(dbUserID) {
-        return new Promise((resolve, rej) => {
-            // count of users where following_users contains dbUserID
-            DFUser.countDocuments({following_users:dbUserID}, function (err, count) {
-                if (err) {
-                    console.log(`error getting followers of ${dbUserID}... ${JSON.stringify(err)}`);
-                    resolve(0);
-                    return;
-                }
-                resolve(count);
-              });
-        });
+  OnFlushTimer = () => {
+    try {
+      setTimeout(this.OnFlushTimer, DF.ServerSettings.StatsFlushMS);
+      fsp.writeFile(
+          this.path, JSON.stringify(this.data, null, 2), 'utf8');
+    } catch (e) {
+      console.log(`DFDB.OnFlushTimer exception occurred`);
+      console.log(e);
     }
+  }
 
-
-    // userStats is an object with userIDs as keys
-    UpdateUserStats(userStats) {
-        const ops = Object.keys(userStats).map(userID => {
-
-            let incObj = {};
-            Object.keys(userStats[userID]).forEach(k => {
-                incObj["stats." + k] = userStats[userID][k];
-            });
-
-            return {
-                "updateOne": {
-                    "filter": { "_id" : mongoose.Types.ObjectId(userID)},
-                    "update": {
-                        $inc : incObj,
-                    },
-                }
-            };
-        });
-        if (ops.length) {
-            //console.log(`${JSON.stringify(ops)}`);
-            DFUser.bulkWrite(ops).then(ret => {
-                //console.log(`bulkwrite returned`)
-                //console.log(`${JSON.stringify(ret)}`)
-            });
-        }
+  // returns the db model object
+  GetOrCreateGoogleUser(google_id) {
+    if (!this.data.users[google_id]) {
+      this.data.users[google_id] = {
+        _id : google_id,
+        stats : {
+          noteOns : 0,
+        },
+        global_roles : [],
+      };
     }
+    return this.data.users[google_id];
+  } // GetOrCreateGoogleUser
 
-};
-
+  // userStats is an object with userIDs as keys. integrate into our data obj.
+  // values are DELTAS (ya probably not the best choice)
+  UpdateUserStats(userStats) {
+    Object.keys(userStats).forEach(userID => {
+      const props = userStats[userID];
+      const userDoc = this.GetOrCreateGoogleUser(userID);
+      //Object.assign(userDoc.stats, props);
+      Object.keys(props).forEach(k => {
+          userDoc.stats[k] += props[k];
+      })
+    });
+  }
+}
 
 module.exports = {
-    DFDB,
+  DFDB,
 };
-
-
-

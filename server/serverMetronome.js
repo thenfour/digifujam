@@ -21,7 +21,7 @@ class ServerRoomMetronome {
       let now = Date.now();
       let interval = absNextRunTime - now;
       //console.log(`scheduleNextTick interval = ${interval}. currentBeat=${currentBeat} nextRunBeat=${nextRunBeat} nextRunMS=${nextRunMS} rootTime=${this.rootTime} absNextRunTime=${absNextRunTime} now=${now}`);
-      this.intervalCookie = setTimeout(() => { this.timerProc(); }, interval);
+      this.intervalCookie = setTimeout(this.timerProc, interval);
   }
 
   resetTimer() {
@@ -31,7 +31,7 @@ class ServerRoomMetronome {
       this.scheduleNextTick();
   }
 
-  timerProc() {
+  timerProc = () => {
       this.scheduleNextTick();
       this.beatRoutine();
   }

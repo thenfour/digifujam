@@ -1,5 +1,6 @@
 const {google} = require('googleapis');
 const DF = require('../clientsrc/DFCommon');
+const { UserDBRecordToPersistentInfo } = require('../clientsrc/DFUser');
 
 class ServerGoogleOAuthSupport {
    constructor(gConfig, app, gDB) {
@@ -134,12 +135,8 @@ class ServerGoogleOAuthSupport {
                 //     "id": "1234567789345783495",
                 //     "email": "email@something.com",
                 //     "verified_email": true,
-                this.gDB.GetOrCreateGoogleUser(user.name, user.color, res.data.id).then(userDoc => {
-                  this.gDB.GetFollowerCount(userDoc._id).then(followersCount => {
-                      //console.log(`OK i have this user doc: ${JSON.stringify(userDoc, null, 2)}`);
-                      completeUserEntry(true, DF.DFUserToPersistentInfo(userDoc, followersCount), userDoc._id);
-                   });
-                });
+                const userDoc = this.gDB.GetOrCreateGoogleUser(res.data.id);//.then(userDoc => {
+                completeUserEntry(true, UserDBRecordToPersistentInfo(userDoc), userDoc._id);
              }
           });
    }

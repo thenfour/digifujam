@@ -1,15 +1,12 @@
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
-const DFMusic = require("./DFMusic");
+//const DFMusic = require("./DFMusic");
 const {GenerateUserName} = require('./NameGenerator');
 const Seq = require('./SequencerCore');
 const {ServerRoomMetronome} = require('../server/serverMetronome');
+const { DigifuUser, eUserSource, eUserPresence } = require('./DFUser');
 
 let gDigifujamVersion = 7;
-
-function generateUserID() {
-    return "u" + DFUtil.generateID();
-}
 
 let gGlobalInstruments = [];
 
@@ -40,7 +37,7 @@ const ClientMessages = {
     DownloadServerState: "DownloadServerState",
     UploadServerState: "UploadServerState",
     AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj } see OnAdminChangeRoomState
-    UserState: "UserState", // name, color, img, x, y
+    UserState: "UserState", // name, color, x, y
     Quantization: "Quantization", // quantizeSpec:{beatDivision, swallowBoundary, quantizeBoundary}
     Cheer: "Cheer", // text, x, y
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
@@ -158,7 +155,7 @@ const ServerSettings = {
 
     WorldUserCountMaximum: 100,
 
-    StatsFlushMS: DFUtil.minutesToMS(5), // 5 minutes
+    StatsFlushMS: DFUtil.minutesToMS(5), // 5 minutes -- also used for saving DB file.
     StatsPruneIntervalMS: DFUtil.hoursToMS(24), // once a day prune stats
     StatsMaxAgeMS: DFUtil.daysToMS(365),
 
@@ -202,11 +199,6 @@ const eParamMappingSource = {
 };
 
 
-const eUserSource = {
-    SevenJam: 1,
-    Discord: 2,
-};
-
 // used for displaying indicators next to the chat msgs
 const eMessageSource = {
     SevenJam: 1,
@@ -214,112 +206,6 @@ const eMessageSource = {
     Server: 3,
 };
 
-const eUserPresence = {
-    Online: 1, // server expects websocket
-    Offline: 2, // server does not expect websocket
-};
-
-
-class DigifuUser {
-
-    static emptyStatsObj() {
-        return {
-            noteOns: 0,
-            cheers: 0,
-            messages: 0,
-            presetsSaved: 0,
-            paramChanges: 0,
-            joins: 0,
-            connectionTimeSec: 0,
-        };
-    }
-
-    constructor() {
-        this.userID = null;
-        this.pingMS = 0;
-        this.lastActivity = null; // this allows us to display as idle or release instrument
-        this.persistentInfo = null; // if you sign in with google (et al) this gets set to the (public) database info
-        this.hasPersistentIdentity = false; // true if you have an identity living longer than your session. not sure how useful this is.
-        this.persistentID = null; // persistent identity ID (database id). Not the same as your user ID because you can "promote" your guest access to google access by signing into google (..discord, et al)
-
-        this.source = eUserSource.SevenJam;
-        this.presence = eUserPresence.Online;
-
-        this.name = "";
-        this.color = "";
-        this.position = { x: 0, y: 0 }; // this is your TARGET position in the room/world. your position on screen will just be a client-side interpolation
-        //this.img = null;
-        //this.idle = null; // this gets set when a user's instrument ownership becomes idle
-        this.lastCheerSentDate = new Date();
-
-        this.quantizeSpec = {
-            beatDivision: 0,
-            swallowBoundary: 1.00,
-            quantizeBoundary: 0.2,
-            quantizeAmt: 0.98,
-        };
-    }
-
-    thaw() { /* no child objects to thaw. */ }
-
-    IsAdmin() {
-        return this.hasGlobalRole("sysadmin");
-    }
-
-    addGlobalRole(role) {
-        if (!this.persistentInfo) {
-            this.persistentInfo = {
-                global_roles: [role],
-                bands: [],
-                room_roles: [],
-                followingUsersCount: 0,
-                followersCount: 0,
-            };
-            return;
-        }
-        if (!this.persistentInfo.global_roles) {
-            this.persistentInfo.global_roles = [role];
-            return;
-        }
-        if (this.persistentInfo.global_roles.some(r => r === role)) {
-            return; // already exists
-        }
-        this.persistentInfo.global_roles.push(role);
-    }
-
-    hasGlobalRole(role) {
-        if (!this.persistentInfo) return false;
-        if (!this.persistentInfo.global_roles) return false;
-        return this.persistentInfo.global_roles.some(x => x == role);
-    }
-
-    IntegrateFromPing(u) {
-        if (u.pingMS) {
-            this.pingMS = u.pingMS;
-        }
-        if (u.persistentInfo) {
-            this.persistentInfo = u.persistentInfo;
-        }
-    }
-
-    PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo) {
-        this.hasPersistentIdentity = hasPersistentIdentity;
-        this.persistentID = persistentID?.toString();
-        this.persistentInfo = persistentInfo;
-    }
-
-    PersistentSignOut() {
-        this.hasPersistentIdentity = false;
-        this.persistentID = null;
-        // prevent signout/signin from artificially inflating stats. when you connect to persistent state, we reset the stats. and vice-vesa.
-        this.persistentInfo = EmptyDFUserToPersistentInfo();
-    }
-
-    get mostPersistentID() { 
-        return this.persistentID ?? this.userID;
-    }
-
-}; // DigifuUser
 
 const InstrumentParamType = {
     intParam: "intParam",
@@ -509,7 +395,6 @@ class DigifuInstrumentSpec {
     constructor() {
         this.name = "";
         //this.sfinstrumentName = "";
-        //this.img = "";
         this.color = "rgb(138, 224, 153)";
         this.instrumentID = null;
         this.controlledByUserID = null;
@@ -1635,11 +1520,7 @@ class DigifuRoomState {
             n.thaw();
             return n;
         });
-        this.users = this.users.map(o => {
-            let n = Object.assign(new DigifuUser(), o);
-            n.thaw();
-            return n;
-        });
+        this.users = this.users.map(o => new DigifuUser(o));
         this.roomItems = this.roomItems.map(o => {
             let n = Object.assign(new RoomItem(), o);
             n.thaw();
@@ -2194,31 +2075,6 @@ let sanitizeCheerText = function (n) {
     return String.fromCodePoint(n.codePointAt(0));
 }
 
-// convert a db model DFUser to a struct usable in DigifuUser.persistentInfo
-// see models/DFUser.js for the src format
-const DFUserToPersistentInfo = (doc, followersCount) => {
-    return {
-      global_roles: doc.global_roles,
-      bands: doc.bands,
-      room_roles: doc.room_roles,
-      stats: doc.stats,
-      followingUsersCount: doc.following_users.length,
-      followersCount,
-    };
-  };
-  
-  const EmptyDFUserToPersistentInfo = () => {
-    return {
-      global_roles: [],
-      bands: [],
-      room_roles: [],
-      stats: DigifuUser.emptyStatsObj(),
-      followingUsersCount: 0,
-      followersCount: 0,
-    };
-  };
-  
-
 module.exports = {
     ClientMessages,
     ServerMessages,
@@ -2248,7 +2104,4 @@ module.exports = {
     eUserSource,
     eUserPresence,
     eMessageSource,
-    DFUserToPersistentInfo,
-    EmptyDFUserToPersistentInfo,
-    generateUserID,
 };
