@@ -267,21 +267,21 @@ class SeqTimer
 
         ts.minorBeatInfo.forEach(mbi => {
             const isComplete = playheadMeasureFrac >= mbi.beginMeasureFrac && playheadMeasureFrac < mbi.endMeasureFrac;
-            const id = "#" + GenerateRoomBeatID(mbi.minorBeatOfMeasure);
+            const id = GenerateRoomBeatID(mbi.minorBeatOfMeasure);
             if (isComplete) {
-                $(id).addClass("complete");
+                document.getElementById(id).classList.add("complete");
             } else {
-                $(id).removeClass("complete");
+                document.getElementById(id).classList.remove("complete");
             }
         });
 
         nextDivInfo.patternViewData.divs.forEach(div => {
             const isPlaying = div.patternDivIndex === thisDiv.patternDivIndex;
-            const id = "#" + GeneratePlayheadID(div.patternDivIndex);
+            const id = GeneratePlayheadID(div.patternDivIndex);
             if (isPlaying) {
-                $(id).addClass("playing");
+                document.getElementById(id).classList.add("playing");
             } else {
-                $(id).removeClass("playing");
+                document.getElementById(id).classList.remove("playing");
             }
         });
     }

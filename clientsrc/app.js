@@ -1266,7 +1266,7 @@ class DigifuApp {
       return ((now - new Date(msg.timestampUTC)) < DF.ClientSettings.ChatHistoryMaxMS);
     });
 
-    this.stateChangeHandler();
+    window.DFOnWorldStatusChange && window.DFOnWorldStatusChange();
   };
 
   NET_ChangeRoomState(data) {

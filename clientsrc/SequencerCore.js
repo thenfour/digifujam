@@ -1048,7 +1048,7 @@ class PatternViewCellInfo {
   // "thisNote" is the note which exists in underlyingNotes which is considered currently playing. can be null.
   // "previousNote" is the note which was considered playing before this one, to allow callers to extend its length
   constructor(patch, legend, midiNoteValue, underlyingNotes, div, thisNote, previousNote, previousNoteLenQuarters, previousNoteLenMajorBeats, beginBorderType, endBorderType, noteOnNotes, noteOnCell) {
-    this.midiNoteValue = midiNoteValue;
+    this.midiNoteValue = midiNoteValue | 0;
     this.patch = patch;
     this.legend = legend;
     this.underlyingNotes = underlyingNotes; // list of the UnderlyingNotes in this cell.
@@ -1137,7 +1137,7 @@ class SequencerPatternView {
     const pattern = patch.GetSelectedPattern();
     this.pattern = pattern;
     const patternLen = this.GetLengthMajorBeats();
-    const patternLenQuarters = patch.GetPatternLengthQuarters();
+    //const patternLenQuarters = patch.GetPatternLengthQuarters();
 
     const t = pattern.notes
                   .filter(n => n.patternMajorBeat < patternLen) // filter out notes which are not in view.
@@ -1358,7 +1358,28 @@ class SequencerPatternView {
       }
     }); // for each row.
 
-    // here we could remove the underlyingnotes.divs, because it's misleading.
+    // precalc a list of ALL cell IDs present in the patternview
+    this.allViewCellIDs = new Set();
+    this.divs.forEach(div => {
+      Object.values(div.rows).forEach(cell => {
+        if (cell.id) {
+          this.allViewCellIDs.add(cell.id);
+        }
+      });
+    });
+
+    this.divsWithNoteOn = this.divs.filter(div => {
+      return Object.values(div.rows).some(cell => {
+        return cell.beginBorderType === eBorderType.NoteOn;
+      });
+    });
+
+    // for each div, precalc a list of note ons in it.
+    this.divs.forEach(div => {
+      div.noteOns = Object.values(div.rows).filter(cell => {
+        return cell.beginBorderType === eBorderType.NoteOn;
+      });
+    });
 
     const duration = (Date.now() - start);
     //console.log(`generating pattern view took ${duration} ms`);
@@ -1424,7 +1445,7 @@ class SequencerPatternView {
   }
 
   HasViewCellID(id) {
-    return this.divs.some(div => Object.entries(div.rows).some(e => e[1].id === id));
+    return this.allViewCellIDs.has(id);
   }
 
   GetLengthMajorBeats() {

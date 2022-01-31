@@ -135,7 +135,6 @@ class SequencerCell extends React.Component {
     }
   
     this.dragData.styledElements.forEach(el => {
-      //GetSelectorForCell(el.patternDivIndex, el.midiNoteValue).removeClass('dragTarget');
       const cell = GetSelectorForCell(el.patternDivIndex, el.midiNoteValue);
       cell.classList.remove('dragTarget');
       cell.classList.remove('dragTargetbeginnoteon');

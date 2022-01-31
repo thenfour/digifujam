@@ -111,16 +111,14 @@ class RoomSequencerPlayer {
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
     const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
-    //const shiftQuarters = instrument.sequencerDevice.baseAbsQuarter;                                   // NOT speed-adjusted.
-
-    // let minAbsQuarter = null;
-    // let maxAbsQuarter = null;
 
     // scheduling time must be in abs quarters.
     // this walks through all pattern divs, and for all notes in each div, schedules note on/off event pairs.
     // for each note, this adds multiple if the pattern is less than the window len.
     const events = [];
-    patternView.divs.forEach(div => {
+
+    for (let idiv = 0; idiv < patternView.divsWithNoteOn.length; ++ idiv) {
+      const div = patternView.divsWithNoteOn[idiv];
       const divBeginPatternQuarter = div.swingBeginPatternQuarter; // these are pattern quarters. which means they're speed-adjusted.
 
       // figure out which abs pattern to start from. if the "current" is passed, then advance a whole pattern forward in abs time.
@@ -140,22 +138,17 @@ class RoomSequencerPlayer {
         divFirstFutureAbsQuarter = Math.floor(patternPlayheadInfo.absPatternFloat) * patternPlayheadInfo.patternLengthQuarters + divBeginPatternQuarter
       }
 
-      Object.entries(div.rows).forEach(e => {
-        const midiNoteValue = patch.AdjustMidiNoteValue(parseInt(e[0]));
-        const cell = e[1]; // of PatternViewNote
+      for (let irow = 0; irow < div.noteOns.length; ++ irow) {
+        const cell = div.noteOns[irow];
         if (cell.isMuted)
           return;
-        if (cell.beginBorderType !== Seq.eBorderType.NoteOn) // only care about note ons. it contains all info
-          return;
+        
+        const midiNoteValue = patch.AdjustMidiNoteValue(cell.midiNoteValue);
 
         // now "loop" this pattern for this note until out of window.
         for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter < windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
-          // minAbsQuarter = (minAbsQuarter == null) ? cursorShiftedQuarter : Math.min(minAbsQuarter, cursorShiftedQuarter);
-          // maxAbsQuarter = (maxAbsQuarter == null) ? cursorShiftedQuarter : Math.max(maxAbsQuarter, cursorShiftedQuarter);
 
           const nonSpeedAdjustedCursor = cursorShiftedQuarter / patch.speed;
-          // if (nonSpeedAdjustedCursor < (instrument.sequencerDevice.startFromAbsQuarter - shiftQuarters))
-          //   continue;
           const absQ = nonSpeedAdjustedCursor;// + shiftQuarters;
           events.push({
             velocity : cell.velocity,
@@ -165,8 +158,8 @@ class RoomSequencerPlayer {
             absQuarter : absQ,
           });
         }
-      });
-    }); // for each div
+      }
+    } // for each div
 
     //console.log(`scheduling ${events.length} seq events in SA window [${patternPlayheadInfo.shiftedAbsQuarter} - ${windowEndShiftedQuarters}] and SA minmax [${minAbsQuarter}, ${maxAbsQuarter}]`);
 

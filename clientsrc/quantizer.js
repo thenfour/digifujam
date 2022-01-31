@@ -61,7 +61,7 @@ class ServerRoomQuantizer {
     this.noteEventsFlushRoutine = routine;
   }
 
-  onInterval(quantizedFrame) {
+  onInterval = (quantizedFrame) => {
     // if (!(quantizedFrame in this.queuedFrames)) {
     //     console.log(`quantized frame ${quantizedFrame} not in queue`);
     // }
@@ -122,8 +122,8 @@ class ServerRoomQuantizer {
     if (msRemaining < 0)
       msRemaining = 0;
 
-    let timerCookie = setTimeout(() => { this.onInterval(quantizedFrame); },
-                                 msRemaining);
+    let timerCookie = setTimeout(this.onInterval,
+                                 msRemaining, quantizedFrame);
 
     this.queuedFrames[quantizedFrame] = {
       timerCookie,

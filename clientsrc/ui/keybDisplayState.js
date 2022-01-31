@@ -11,40 +11,41 @@ class KeybDisplayState {
     }
 
     PushNoteOn(id, color, midiNote) {
-        //const userID = (user?.userID) ?? gDefaultUserID;
-        //const color = (user?.color) ?? gDefaultColor;
         if (!(midiNote in this.notesOn)) return;
         this.notesOn[midiNote].push({ id, color });
-        let k = $(this.generateDOMIDProc(midiNote));
-        if (!k.hasClass('active')) {
-            k.addClass("active");
+        let k = document.getElementById(this.generateDOMIDProc(midiNote));
+        if (k) {
+            k.classList.add("active");
+            k.style.backgroundColor = color;
         }
-        k.css("background-color", color);
     }
 
     RemoveUserNoteRef(id, midiNote) {
-        //userID ??= gDefaultUserID;
         if (!(midiNote in this.notesOn)) return;
         let refs = this.notesOn[midiNote];
         if (refs.length < 1) return; // 
         refs.removeIf(r => (r.id == id));
 
-        let k = $(this.generateDOMIDProc(midiNote));
+        const el = document.getElementById(this.generateDOMIDProc(midiNote));
         if (refs.length < 1) {
-            k.removeClass("active");
-            k.css("background-color", "");
+            if (el) {
+                el.classList.remove("active");
+                el.style.backgroundColor = "";
+            }
             return;
         }
-        k.css("background-color", refs[refs.length - 1].color);
+        el.style.backgroundColor = refs[refs.length - 1].color;
     }
 
 
     AllNotesOff() {
         // set all notes CSS
         for (let midiNote = 0; midiNote < 128; ++midiNote) {
-            let k = $(this.generateDOMIDProc(midiNote));
-            k.removeClass("active");
-            k.css("background-color", "");
+            const el = document.getElementById(this.generateDOMIDProc(midiNote));
+            if (el) {
+                el.classList.remove("active");
+                el.style.backgroundColor = "";
+            }
         }
 
         this.notesOn = []; // not part of state because it's pure jquery
@@ -55,7 +56,6 @@ class KeybDisplayState {
     }
 
     AllUserNotesOff(id) {
-        //userID ??= gDefaultUserID;
         for (let midiNote = 0; midiNote < 128; ++midiNote) {
             this.RemoveUserNoteRef(id, midiNote);
         }

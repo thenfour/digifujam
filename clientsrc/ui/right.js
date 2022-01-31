@@ -78,7 +78,9 @@ class SeqActivityIndicator
 
     throttleProc() {
         this.queuedInstrumentsWithActivity.forEach(instrumentID => {
-            $('#' + GenerateSeqNoteActivityIndicatorID(instrumentID)).toggleClass('seqIndicatorAnimation1').toggleClass('seqIndicatorAnimation2');
+            const cl = document.getElementById(GenerateSeqNoteActivityIndicatorID(instrumentID))?.classList;
+            cl?.toggle('seqIndicatorAnimation1');
+            cl?.toggle('seqIndicatorAnimation2');
         });
         this.queuedInstrumentsWithActivity.clear();
     }
@@ -430,9 +432,12 @@ class InstFloatParam extends React.Component {
         this.activityThrottler = new DFU.Throttler();
         this.activityThrottler.interval = 1000.0 / 30;
         this.activityThrottler.proc = () => {
-            this.queuedInstrumentsWithActivity.forEach(instrumentID => {
-                $('#mixerActivity_' + instrumentID).toggleClass('alt1').toggleClass('alt2');
-            });
+            for (let i = 0; i < this.queuedInstrumentsWithActivity.length; ++ i) {
+                const instrumentID = this.queuedInstrumentsWithActivity[i];
+                const el = document.getElementById(`mixerActivity_${instrumentID}`);
+                el.classList.toggle('alt1');
+                el.classList.toggle('alt2');
+            }
             this.queuedInstrumentsWithActivity.clear();
         }
     }
@@ -1426,6 +1431,15 @@ class UserList extends React.Component {
 }
 
 class WorldStatus extends React.Component {
+
+    componentDidMount() {
+        window.DFOnWorldStatusChange = () => { this.setState({}); };
+    }
+    componentWillUnmount() 
+    {
+        window.DFOnWorldStatusChange = () => {};
+    }
+
     render() {
         if (!this.props.app || !this.props.app.roomState || !this.props.app.rooms) {
             return null;
@@ -2544,7 +2558,9 @@ class RootArea extends React.Component {
         });
 
         if (user) {
-            $('#userAvatar' + user.userID).toggleClass('userAvatarActivityBump1').toggleClass('userAvatarActivityBump2');
+            const el = document.getElementById('userAvatar' + user.userID);
+            el.classList.toggle('userAvatarActivityBump1');
+            el.classList.toggle('userAvatarActivityBump2');
         }
 
         this.activityCount++;
@@ -2652,10 +2668,10 @@ class RootArea extends React.Component {
         this.instrumentLoadingProgressThrottler = new DFU.Throttler(1000.0 / 15);
 
         this.keyboardActivityDisplayState = new KeybDisplayState(midiNote => {
-            return "#key_" + midiNote;
+            return "key_" + midiNote;
         });
         this.drumsActivityDisplayState = new KeybDisplayState(midiNote => {
-            return "#drum_" + midiNote;
+            return "drum_" + midiNote;
         });
 
         this.activityCount = 0;
