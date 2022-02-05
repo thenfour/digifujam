@@ -8,9 +8,10 @@
     flex-direction: column;
     position: absolute;
     font-family: monospace;
-    padding: 10px;
+    /* padding: 10px; */
     padding-right: 150px;
     padding-left: 50px;
+    padding-bottom: 30px;
 }
 
 .sequencerMain {

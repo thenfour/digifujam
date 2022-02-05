@@ -1983,6 +1983,10 @@ https://www.w3schools.com/icons/google_icons_intro.asp
     cursor: pointer;
 }
 
+#alertScreen.darker {
+    background-color: #000c;
+}
+
 #alertScreen2 {
     background-color: #000d;
     /* flex-grow: 1; */
@@ -2196,4 +2200,111 @@ ul.instParamList li.floatParam .floatParamMainControls {
 
 #chatSlashCommandHelp dl dd:not(:last-child) {
     margin-bottom: 10px;
+}
+
+
+
+
+.ideasDialog #alertScreen2 {
+    max-width: 1000px;
+    padding-top: 0;
+    padding-right: 0;
+    /* for the close button float */
+    cursor: auto;
+}
+
+.ideasDialog h2 {
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.ideasDialog ul {
+
+    padding: 0;
+    padding-right: 20px;
+
+    color: #0aa;
+
+    list-style-type: square;
+}
+
+.ideasDialog li {
+
+    display: flex;
+
+    /* align-content: center; */
+
+    /* justify-content: flex-start; */
+
+    /* display: list-item; */
+}
+
+.ideasDialog a {
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-content: center;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+
+.ideasDialog em {
+    font-style: normal;
+}
+
+.ideasDialog a,
+.ideasDialog a:visited,
+.ideasDialog a:link {
+    color: #0aa;
+}
+
+.ideasDialog li:before {
+    content: "⮞";
+    margin-right: 10px;
+    color: #6669;
+}
+
+.ideasDialog a:hover {
+    background-color: #335;
+}
+
+.ideasDialog .socicon:hover {
+    background-color: transparent;
+    fill: #0cc;
+}
+
+
+
+.ideasDialog li em {
+    color: #0ff;
+    text-shadow: 0 0 12px #ff0;
+}
+
+
+.ideasDialog .closeButton {
+    float: right;
+    color: #777;
+    background-color: #222;
+    border: 0;
+    height: 48px;
+    width: 48px;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    border-radius: 0;
+}
+
+.ideasDialog .closeButton i {
+    font-size: 32px;
+}
+
+
+.ideasDialog .closeButton:hover {
+    color: #099;
 }
