@@ -3,7 +3,7 @@ imports audio & json to a format the server can easily serve up.
 samples are converted to m4a and brought into the same dir as the sfz.
 */
 const fs = require('fs');
-const parseSFZ = require('./clientsrc/sfzParser');
+const parseSFZ = require('./source/DFcommon/sfzParser');
 const wav = require('node-wav');
 const exec = require('child_process').exec
 

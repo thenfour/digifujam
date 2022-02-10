@@ -3,8 +3,8 @@ module.exports = {
    mode : "development",
    context : __dirname,
    entry : {
-      '7jam' : './clientsrc/7jam.js',
-      '7jamAdmin' : './clientsrc/7jamAdminClient.js'
+      '7jam' : './source/DFclient/7jam.js',
+      '7jamAdmin' : './source/DFclient/7jamAdminClient.js'
    },
    output : {
       environment : {
