@@ -14,7 +14,6 @@ class DFAlert extends React.Component {
   componentDidMount() {
     window.DFOldAlert = window.alert;
     window.alert = (message) => {
-      console.log(`alert message: ${message}`);
       this.setState({message});
     };
 

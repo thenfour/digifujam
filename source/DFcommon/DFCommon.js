@@ -7,7 +7,6 @@ const {ServerRoomMetronome} = require('./serverMetronome');
 const { DigifuUser, eUserSource, eUserPresence } = require('./DFUser');
 
 let gGlobalInstruments = [];
-console.log(`DF COMMON INIT ${DFUtil.generateID()}`);
 
 let SetGlobalInstrumentList = function (x) {
     gGlobalInstruments = x;
