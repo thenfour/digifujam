@@ -260,7 +260,7 @@ class RadioMachine {
     this.AnalyserNode = this.audioCtx.createAnalyser();
 
     this.FilterNode = audioCtx.createBiquadFilter();
-    this.FilterNode.type = app.roomState.radio.type;
+    this.FilterNode.type = app.roomState.radio.filterType;
     this.FilterNode.frequency.value = app.roomState.radio.filterFrequency;
     this.FilterNode.Q.value = app.roomState.radio.filterQ;
 

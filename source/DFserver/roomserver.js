@@ -2,7 +2,7 @@ const DF = require('../DFcommon/DFCommon');
 const DFMusic = require("../DFcommon/DFMusic");
 const {RoomSequencerPlayer} = require('./SequencerPlayer');
 const DFU = require('../DFcommon/dfutil');
-const { EmptyPersistentInfo } = require('../DFCommon/DFUser');
+const { EmptyPersistentInfo } = require('../DFcommon/DFUser');
 const Seq = require('../DFcommon/SequencerCore');
 
 const log = (a) => { return console.log(a) };

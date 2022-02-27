@@ -1,11 +1,13 @@
 const DF = require('../DFcommon/DFCommon');
+const DFU = require('../DFcommon/dfutil');
 
 
 
 // ----------------------------------------------------------------------------------------------------------------
 class _7jamAPI
 {
-  constructor(allRooms, gConfig) {
+  constructor(allRooms, gConfig, io) {
+    this.io = io;
     this.gConfig = gConfig;
     this.allRooms = allRooms;
     this.serverStartTime = new Date();
@@ -158,7 +160,7 @@ class _7jamAPI
   }
 
   SocketFromUserID(userID) {
-    for (let ws of io.of('/').sockets.values()) {
+    for (let ws of this.io.of('/').sockets.values()) {
       if (ws.DFUserID === userID)
         return ws;
     }

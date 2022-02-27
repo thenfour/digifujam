@@ -128,7 +128,7 @@ class _7jamServer {
     const hooks = [
       new DFStats.StatsLogger(this.mStatsDBPath, this.mDB),
     ];
-    this.m7jamAPI = new _7jamAPI(this.mRooms, this.mConfig);
+    this.m7jamAPI = new _7jamAPI(this.mRooms, this.mConfig, this.io);
     if (this.mConfig.discord_bot_token) {
       this.mDiscordBot = new DFDiscordBot.DiscordBot(this.mConfig, () => this.onDiscordInitialized());
       this.mDiscordIntegrationManager = new DFStats.DiscordIntegrationManager(this.mConfig, this.mDiscordBot, this.m7jamAPI, this.mActivityDatasetsPath);
