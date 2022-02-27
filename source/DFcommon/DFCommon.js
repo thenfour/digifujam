@@ -1432,6 +1432,8 @@ const DFRoomItemType = {
     sign: "sign",
     audioVisualization: "audioVisualization",
     graffitiText: "graffitiText",
+    radioMetadata: "radioMetadata",
+    radioVis: "radioVis",
 };
 
 // a function that can be invoked by room items.

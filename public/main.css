@@ -308,6 +308,7 @@ button:focus {
     filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
     transform: translate(-50%, -50%);
     /* this puts the "origin" of the element in the center. */
+    z-index: 999;
 }
 
 .userAvatar.me {

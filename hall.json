@@ -80,8 +80,41 @@
           "y": 460
         }
       }
+    },
+    {
+      "itemID": "radioMetadata",
+      "itemType": "radioMetadata",
+      "cssClass": "radioItem backWall radioMetadata",
+      "rect": {
+        "x":105,
+        "y": 270,
+        "w": 1397,
+        "h": 336
+      }
+    },
+    {
+      "itemID": "radioVis",
+      "itemType": "radioVis",
+      "cssClass": "radioItem backWall radioVis",
+      "rect": {
+        "x":105,
+        "y": 270,
+        "w": 1397,
+        "h": 336
+      }
     }
   ],
+  "radio": {
+    "fxEnabled": false,
+    "reverbImpulseURL": "/radio/hallImpulse.m4a",
+    "reverbGain": 0.5,
+    "filterType": "bandpass",
+    "filterFrequency": 200,
+    "filterQ": 1.4,
+    "streamURL":"https://radio.7jam.io/maj7",
+    "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/maj7",
+    "streamInfoRefreshIntervalMS": 2500
+  },
   "users": [],
   "chatLog": [],
   "instrumentCloset": []

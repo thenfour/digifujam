@@ -1,0 +1,160 @@
+
+
+
+
+#radioControls {
+  background-color: #333;
+  padding:7px;
+  /* border:2px solid #0cc; */
+  color:#0cc;
+  display:flex;
+  flex-direction: row;
+  z-index: 999;
+  height: 100%;
+  align-content: stretch;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+#radioControls >  * {
+  flex-grow:1;
+}
+#radioControls .lessImportantControls {
+  flex-grow: 0;
+}
+
+#radioControls .basicControls {
+  display:flex;
+  /* height: 100%; */
+  flex-direction: row;
+  align-content: flex-end;
+  justify-content: flex-end;
+}
+
+#radioControls * > * {
+  margin-left:10px;
+  margin-right:10px;
+}
+
+
+#radioControls .knobs {
+  display:flex;
+}
+
+#radioControls .toggle {
+  border-radius:4px;
+  background-color: #333;
+  margin:6px;
+  cursor:pointer;
+}
+
+#radioControls #radioPlayPause {
+  border-radius:0;
+  height: 86px;
+  width: 86px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  border: 0;
+}
+
+#radioControls #radioPlayPause.play,
+#radioControls #radioPlayPause.pause {
+}
+
+#radioControls #radioPlayPause.virtualPlay,
+#radioControls #radioPlayPause.virtualPause {
+  background-color:#222;
+  color: #444;
+}
+
+
+#radioControls  #radioPlayPause .material-icons {
+  font-size:60px;
+}
+
+#radioControls .material-icons {
+  font-size:30px;
+}
+
+
+#radioControls #radioRefresh {
+  border-radius:0;
+  border: 0;
+  background: none;
+}
+
+#radioControls #radioRefresh .material-icons {
+  color:#444;
+}
+
+#radioControls #radioRefresh:hover .material-icons {
+  color:#666;
+}
+
+#radioControls #radioConnectionStatus {
+  display: flex;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#radioControls #radioConnectionStatus.Offline {
+  color: #888;
+}
+
+#radioControls #radioConnectionStatus.Connected {
+  color: #080;
+}
+
+#radioControls #radioConnectionStatus.Disconnected {
+  color: #c60;
+}
+
+#radioControls .metadata .streamName {
+  font-size: 12px;
+  display: inline-block;
+  color: #088;
+}
+
+#radioControls .metadata .streamDescription {
+  font-size: 12px;
+  display: inline-block;
+  color: #088;
+}
+
+#radioControls .metadata .nowPlayingTitle {
+  color: #e50;
+  font-size: 24px;
+}
+
+#radioControls .metadata .nowPlayingArtist {
+  color: #ee0;
+  font-size: 36px;
+  font-weight:bold;
+}
+
+
+section#radioVis {
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  width: 40%;
+  opacity: 100%;
+  border: 0;
+}
+
+section#radioVis i {
+  flex: 1 1 100%;
+  height: calc(100% * var(--c)/255);
+  background: hsla(calc(var(--c)/255*360), calc(var(--c)/255 * 100%), 50%, 30%);
+  border-top:5px solid hsl(calc(var(--c)/255*360), calc(var(--c)/255 * 100%), 50%);
+  box-shadow: 0 0 12px #022;
+  /* border-right:2px solid hsl(calc(var(--c)/255*360), calc(var(--c)/255 * 90%), 50%); */
+  /* margin-left:3px; */
+}
+

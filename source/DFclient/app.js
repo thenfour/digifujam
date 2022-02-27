@@ -10,6 +10,7 @@ const Seq = require("../DFcommon/SequencerCore");
 const {pointInPolygon, ParamThrottler} = require('../DFcommon/dfutil');
 const { DigifuUser } = require("../DFcommon/DFUser");
 const EventEmitter = require('events');
+const { RadioMachine } = require('./radioMachine');
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -618,6 +619,15 @@ class DigifuApp {
 
     // are any instruments assigned to you?
     this.myInstrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == myUserID);
+
+    // initialize radio.
+    if (!this.roomState.radio) {
+      if (this.radio)
+        this.radio.stop();
+      this.radio = null;
+    } else {
+      this.radio = new RadioMachine(this, this.audioCtx);
+    }
 
     // set up init abbreviated chat log
     let ch = this.roomState.chatLog;
@@ -1367,6 +1377,9 @@ class DigifuApp {
 
   NET_OnDisconnect() {
     this.synth.AllNotesOff(this.myInstrument); // prevent disconnect leaving you in a noisy state. anyway when you reconnect you'll reset all synths anyway.
+    if (this.radio)
+      this.radio.stop();
+    this.radio = null;
     this.stateChangeHandler();
   }
 

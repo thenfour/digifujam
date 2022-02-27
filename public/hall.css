@@ -5,23 +5,89 @@
 
 
 
-#graffitiContainer .graffiti .graffitiContent.image {
+.graffiti .graffitiContent.image {
     filter: drop-shadow(-7px 3px 5px black) grayscale(50%);
 }
 
 
-#graffitiContainer .graffiti.backWall
+.graffiti.backWall
 {
-    transform:skewY(-30deg) scaleY(140%);
+    transform:skewY(-20deg) scaleY(140%);
+}
+
+.radioItem.backWall
+{
+    transform:skewY(-20deg);
+    border: 0;
+    background: none;
 }
 
 
-#graffitiContainer .graffiti.rightWall
+
+.graffiti.rightWall
 {
-    transform:skewY(30deg) scaleY(140%);
+    transform:skewY(20deg) scaleY(140%);
 }
 
-#graffitiContainer .graffiti.floor
+.graffiti.floor
 {
     transform: perspective(600px) rotateX(30deg); 
 }
+
+.roomItem.radioItem.radioVis
+{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+.roomItem.radioItem.radioMetadata
+{
+    font-size: 24px;
+    color: #0cc;
+    text-shadow: 0 0 4px black, 0 0 4px black;
+    z-index: 998; /* in front of vis, but behind radio controls */
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.roomItem.radioItem.radioMetadata .streamName
+{
+    font-size: 20px;
+    color: #aaa;
+}
+
+.roomItem.radioItem.radioMetadata .streamDescription
+{
+    font-size: 12px;
+    color: #aaa;
+}
+.roomItem.radioItem.radioMetadata .nowPlayingArtist
+{
+    font-size: 52px;
+    color: #ee0;
+}
+
+.roomItem.radioItem.radioMetadata .nowPlayingTitle
+{
+    font-size: 40px;
+    color: #e50;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

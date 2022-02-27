@@ -1,4 +1,5 @@
 const { Client, Intents, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+//const { joinVoiceChannel, getVoiceConnection, VoiceConnectionStatus, createAudioPlayer, createAudioResource, StreamType } = require('@discordjs/voice');
 
 // https://discord.com/developers/applications/
 // https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
@@ -35,6 +36,7 @@ class DiscordBot {
             Intents.FLAGS.GUILD_MESSAGES,
             Intents.FLAGS.DIRECT_MESSAGES,
             Intents.FLAGS.GUILD_MEMBERS,
+            Intents.FLAGS.GUILD_VOICE_STATES,
         ] });
 
         // When the client is ready, run this code (only once)
@@ -284,11 +286,11 @@ class DiscordBot {
             const members = await guild.members.fetch();
             const channels = await guild.channels.fetch(); // parallel would be better but meh
             channels.forEach((channel, id) => {
-                if (channel.type !== 'GUILD_TEXT')
+                if (channel.type === 'GUILD_CATEGORY')
                     return;
                 // if (!(channel.id in this.relevantChannelIDs))
                 //     return;
-                console.log(`${guild.name} / ${channel.name} [Guild ${channel.guildId} Channel ${id}]`);
+                console.log(`${guild.name} / ${channel.name} [Guild.id ${channel.guildId} Channel.id ${id} type:${channel.type}]`);
                 let count = 0;
                 let skipped = 0;
                 const maxCount = this.gConfig.discord_log_member_count ?? 5;

@@ -221,6 +221,7 @@ class ValueSliderElement {
       el.ondblclick = (e) => this.onDoubleClick(e);
     });
     this.onChange(this.value01, this, false); // give callers a chance to handle this.
+    this.cancelProc = () => {};
   }
 
   onPointerDown(e) {

@@ -20,6 +20,7 @@ const {SequencerParamGroup} = require('./SequencerParamGroup');
 const {DFAlert} = require('./DFAlert');
 const {GraffitiScreen, GraffitiContainer} = require("./graffiti");
 const EventEmitter = require('events');
+const {RadioControls, RadioMetadataRoomItem, RadioVisRoomItem} = require('./radioControls')
 
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
@@ -1814,7 +1815,7 @@ class UIRoomItem extends React.Component {
         }, this.props.item.style);
 
         let signMarkup = null;
-        if (this.props.item.itemType == DF.DFRoomItemType.sign) {
+        if (this.props.item.itemType === DF.DFRoomItemType.sign) {
             let signStyle = Object.assign({
                 left: pos.x,
                 top: pos.y,
@@ -1824,9 +1825,9 @@ class UIRoomItem extends React.Component {
             signMarkup = (<div className="roomSign" onClick={this.onClickSign} style={signStyle}
                 dangerouslySetInnerHTML={{ __html: this.props.item.params.message }}></div>
             );
-        } else if (this.props.item.itemType == DF.DFRoomItemType.audioVisualization) {
+        } else if (this.props.item.itemType === DF.DFRoomItemType.audioVisualization) {
             return (<UIAudioVisualizationRoomItem item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
-        } else if (this.props.item.itemType == DF.DFRoomItemType.graffitiText) {
+        } else if (this.props.item.itemType === DF.DFRoomItemType.graffitiText) {
             const { html, needsRefreshTimer } = getAnnouncementHTML(this.props.app);
             if (needsRefreshTimer) {
                 if (!this.timer) {
@@ -1843,6 +1844,10 @@ class UIRoomItem extends React.Component {
                 <div>
                     <div className="roomItem graffitiText" style={style} dangerouslySetInnerHTML={{ __html: html }}></div>
                 </div>);
+        } else if (this.props.item.itemType === DF.DFRoomItemType.radioMetadata) {
+            return (this.props.app.radio && <RadioMetadataRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
+        } else if (this.props.item.itemType === DF.DFRoomItemType.radioVis) {
+            return (this.props.app.radio && <RadioVisRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
         }
 
         return (
