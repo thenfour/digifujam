@@ -45,6 +45,7 @@ const ClientMessages = {
     PersistentSignOut: "PersistentSignOut",
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
     GraffitiOps: "GraffitiOps", // [{ op:[place,remove], content, id, lifetimeMS }] // id only used for admin, lifetime & content only for placement
+    UserDance: "UserDance", // { danceID: }
 
     // SEQ
     SeqPlayStop: "SeqPlayStop", // { isPlaying, instrumentID }
@@ -111,6 +112,7 @@ const ServerMessages = {
     // [{ op:"place", graffiti:{} }]
     // [{ op:"remove", id }]
     GraffitiOps: "GraffitiOps",
+    UserDance: "UserDance", // { userID: , danceID: }
 
     // sequencer control
     SetSetNoteMuted: "SetSetNoteMuted", // { instrumentID, midiNoteValue, isMuted }

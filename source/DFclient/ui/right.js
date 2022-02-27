@@ -1702,6 +1702,10 @@ class UserAvatar extends React.Component {
         this.props.app.ReleaseInstrument();
     };
 
+    componentDidMount() {
+        this.props.app.FireUserDance(this.props.user);
+    }
+
     render() {
         if (!this.props.app) return null;
         if (!this.props.app.roomState) return null;
@@ -1736,15 +1740,14 @@ class UserAvatar extends React.Component {
             borderColor: this.props.user.color
         };
 
-        const className = "userAvatar userAvatarActivityBump1" + (isMe ? " me" : "");
+        const className = "userAvatar " + (isMe ? " me" : "");
 
         return (
             <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
-                <div>
-                    {/* <span className="userName">{this.props.user.name}</span> */}
+                <div className='av2'>
                     <UIUser.UIUserName user={this.props.user} />
+                    {instMarkup}
                 </div>
-                {instMarkup}
             </div>
         );
     }
@@ -2078,6 +2081,8 @@ class ChatSlashCommandHelp extends React.Component {
                 <dd>Change your color</dd>
                 <dt>/graffiti &lt;text or image url&gt; (shortcut: /g)</dt>
                 <dd>Place graffiti</dd>
+                <dt>/dance &lt;#&gt; (shortcut: /d)</dt>
+                <dd>Set dance animation (default 0)</dd>
             </dl>
         </div>
         );
@@ -2461,6 +2466,8 @@ class RootArea extends React.Component {
 
         let app = new DFApp.DigifuApp();
 
+        app.events.on("userDance", this.onUserDance);
+
         // copied from ctor
         this.notesOn = []; // not part of state because it's pure jquery
         // notes on keeps a list of references to a note, since multiple people can have the same note playing it's important for tracking the note offs correctly.
@@ -2482,14 +2489,21 @@ class RootArea extends React.Component {
         this.setState({ app });
     }
 
+    onUserDance = (e) => {
+        //console.log(`do user dance for ${e.user.userID} / ${e.danceID}`);
+
+        const el = document.querySelector(`#userAvatar${e.user.userID} .av2`);
+        if (!el) return;
+        el.style.setProperty('--dance-anim', `dance${e.danceID}`);
+        el.style.setProperty('--dance-anim-duration', `var(--dance${e.danceID}-duration)`);
+    }
+
     onMyInstrumentChange = (inst) => {
         this.setState({ sequencerShown: false });
     };
 
     onInstrumentLoadProgress = (instSpec, prog) => {
         this.stateChangeThrottler.InvokeThrottled();
-        //this.instrumentLoadingProgressThrottler.proc = 
-        //this.instrumentLoadingProgressThrottler.InvokeThrottled();
     };
 
     handleRoomRef = (r) => {
@@ -2535,7 +2549,7 @@ class RootArea extends React.Component {
         //console.log(`createCheer(${text}, ${x}, ${y})`);
         var durx = random(2) + 1.5;
         var dury = random(2) + 1.5;
-        var fontSize = random(6) + 24;
+        var fontSize = random(14) + 24;
         var animX = Math.trunc(random(2));
         var animY = Math.trunc(random(2));
         var easeY = Math.trunc(random(2)) ? "ease-in" : "ease-out";
@@ -2579,8 +2593,7 @@ class RootArea extends React.Component {
 
         if (user) {
             const el = document.getElementById('userAvatar' + user.userID);
-            el.classList.toggle('userAvatarActivityBump1');
-            el.classList.toggle('userAvatarActivityBump2');
+            el.style.setProperty('--bounce-anim', el.style.getPropertyValue('--bounce-anim') === 'avatarBump1' ? 'avatarBump2' : 'avatarBump1');
         }
 
         this.activityCount++;

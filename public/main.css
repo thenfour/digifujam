@@ -254,75 +254,6 @@ button:focus {
     color: #088;
 }
 
-@keyframes avatarBump1 {
-    0% {
-        transform: translate(-50%, -50%);
-        animation-timing-function: ease-in-out;
-    }
-
-    10% {
-        transform: translate(-50%, calc(-50% + 4px));
-    }
-
-    100% {
-        transform: translate(-50%, -50%);
-    }
-}
-
-/* exact duplicate of the other, so when i toggle between the classes, it resets the animation. why doesn't CSS let you reset one-shot animations?? */
-@keyframes avatarBump2 {
-    0% {
-        transform: translate(-50%, -50%);
-        animation-timing-function: ease-in-out;
-    }
-
-    10% {
-        transform: translate(-50%, calc(-50% + 4px));
-    }
-
-    100% {
-        transform: translate(-50%, -50%);
-    }
-}
-
-
-.userAvatarActivityBump1 {
-    animation: avatarBump1 .2s 1;
-}
-
-.userAvatarActivityBump2 {
-    animation: avatarBump2 .2s 1;
-}
-
-.userAvatar {
-    pointer-events: none;
-    /* allow clicks to be processed by the room itself, not the item. */
-    position: absolute;
-    transition: top .5s, left .5s;
-    border-radius: 5px;
-    border-width: 1px;
-    border-style: solid;
-    padding: 7px;
-    background-color: rgba(0, 0, 0, .5);
-    text-align: center;
-    filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
-    transform: translate(-50%, -50%);
-    /* this puts the "origin" of the element in the center. */
-    z-index: 999;
-}
-
-.userAvatar.me {
-    border-top-width: 10px;
-}
-
-.userAvatar.roomWelcomeNoTransition {
-    transition: top 0s, left 0s;
-}
-
-.userAvatar .userAvatarInstrument button {
-    pointer-events: all;
-}
-
 #chatArea {
     display: flex;
 }
@@ -535,6 +466,7 @@ button.muteButton:focus {
 .cheer {
     position: absolute;
     pointer-events: none;
+    z-index: 1000;
 }
 
 #cheerControl {
@@ -562,27 +494,32 @@ button.muteButton:focus {
     cursor: pointer;
 }
 
+:root {
+    --cheer-distance: 160px;
+    --neg-cheer-distance: -160px;
+  }
+
 @keyframes floatY0 {
     to {
-        transform: translateY(50px);
+        transform: translateY(var(--cheer-distance));
     }
 }
 
 @keyframes floatX0 {
     to {
-        transform: translate(150px);
+        transform: translate(var(--cheer-distance));
     }
 }
 
 @keyframes floatY1 {
     to {
-        transform: translateY(-150px);
+        transform: translateY(var(--neg-cheer-distance));
     }
 }
 
 @keyframes floatX1 {
     to {
-        transform: translate(-150px);
+        transform: translate(var(--neg-cheer-distance));
     }
 }
 
@@ -2309,3 +2246,6 @@ ul.instParamList li.floatParam .floatParamMainControls {
 .ideasDialog .closeButton:hover {
     color: #099;
 }
+
+
+

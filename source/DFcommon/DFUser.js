@@ -46,6 +46,7 @@ class DigifuUser {
     this.persistentInfo ??= null;         // if you sign in with google (et al) this gets set to the (public) database info
     this.hasPersistentIdentity ??= false; // true if you have an identity living longer than your session. not sure how useful this is.
     this.persistentID ??= null;           // persistent identity ID (database id). Not the same as your user ID because you can "promote" your guest access to google access by signing into google (..discord, et al)
+    this.danceID ??= 0;
 
     this.source ??= eUserSource.SevenJam;
     this.presence ??= eUserPresence.Online;

@@ -1,0 +1,203 @@
+
+
+
+
+@keyframes avatarBump1 {
+  0% {
+      transform: translate(-50%, -50%);
+      animation-timing-function: ease-in-out;
+  }
+
+  10% {
+      transform: translate(-50%, calc(-50% + 4px));
+  }
+
+  100% {
+      transform: translate(-50%, -50%);
+  }
+}
+
+/* exact duplicate of the other, so when i toggle between the classes, it resets the animation. why doesn't CSS let you reset one-shot animations?? */
+@keyframes avatarBump2 {
+  0% {
+      transform: translate(-50%, -50%);
+      animation-timing-function: ease-in-out;
+  }
+
+  10% {
+      transform: translate(-50%, calc(-50% + 4px));
+  }
+
+  100% {
+      transform: translate(-50%, -50%);
+  }
+}
+
+.userAvatar {
+  pointer-events: none;
+  transition: top .5s, left .5s; /* when moving around. */
+  position: absolute;
+  transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
+  transform-origin: center;
+  --bounce-anim: avatarBump1;
+  animation: var(--bounce-anim) .2s 1;/*, var(--dance-anim) 1s infinite;*/
+}
+
+
+:root {
+  --dance1-duration: 1s;
+  --dance2-duration: 1s;
+  --dance3-duration: 1s;
+  --dance4-duration: 1s;
+  --dance5-duration: 3s;
+}
+
+.userAvatar .av2 {
+  border-radius: 5px;
+  border-width: 1px;
+  border-style: solid;
+  padding: 7px;
+  background-color: rgba(0, 0, 0, .5);
+  text-align: center;
+  filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
+  z-index: 999; /* consider cheer, room items, graffiti, ... */
+  --dance-anim: dance0;
+  --dance-anim-duration: var(--dance1-duration);
+  transform-origin: center;
+  animation: var(--dance-anim) var(--dance-anim-duration) infinite;
+}
+
+.userAvatar.me .av2 {
+  border-top-width: 10px;
+}
+
+.userAvatar.roomWelcomeNoTransition {
+  transition: top 0s, left 0s;
+}
+
+.userAvatar .userAvatarInstrument button {
+  pointer-events: all;
+}
+
+
+:root {
+  --dance1-skew: 15deg;
+  --dance1-skewN: calc(var(--dance1-skew) * -1);
+}
+@keyframes dance1 {
+  0% {
+    transform: rotateZ(10deg) skewX(var(--dance1-skew));
+    animation-timing-function: cubic-bezier(1, 0, 1, 1);
+  }
+  25% {
+    transform: rotateZ(-10deg) skewX(var(--dance1-skewN));
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: rotateZ(10deg) skewY(var(--dance1-skewN));
+    animation-timing-function: cubic-bezier(1, 0, 1, 1);
+  }
+  75% {
+    transform: rotateZ(-10deg) skewY(var(--dance1-skew));
+    animation-timing-function: ease-out;
+  }
+  100% {
+    transform: rotateZ(10deg) skewX(var(--dance1-skew));
+  }
+}
+
+
+
+@keyframes dance2 {
+  4% {
+    transform: scale(120%) rotateZ(10deg);
+  }
+  50% {
+    transform: scale(90%) rotateZ(10deg);
+  }
+  54% {
+    transform: scale(120%) rotateZ(-10deg);
+  }
+  100% {
+    transform: scale(90%) rotateZ(-10deg);
+  }
+}
+
+
+
+@keyframes dance3 {
+  0% {
+    filter: hue-rotate(0deg);
+    transform: rotateY(0) rotateZ(10deg);
+  }
+  50% {
+    filter: hue-rotate(180deg);
+    transform: rotateY(180deg) rotateZ(10deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+    transform: rotateY(360deg) rotateZ(10deg);
+  }
+}
+
+
+@keyframes dance4 {
+  0% {
+    transform: rotateZ(360deg);
+    transform-origin: left top;
+  }
+  100% {
+    transform: rotateZ(0deg);
+    transform-origin: right top;
+  }
+}
+
+
+@keyframes dance5 {
+  0% {
+    transform: rotateY(0deg);
+    filter: blur(0px) grayscale(0%);
+    animation-timing-function: linear;
+  }
+  25% {
+    transform: rotateY(90deg);
+    filter: blur(2px) grayscale(100%);
+    animation-timing-function: linear;
+  }
+  50% {
+    transform: rotateY(180deg);
+    filter: blur(0px) grayscale(0%);
+    animation-timing-function: linear;
+  }
+  75% {
+    transform: rotateY(270deg);
+    filter: blur(2px) grayscale(100%);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: rotateY(360deg);
+    filter: blur(0px) grayscale(0%);
+    animation-timing-function: linear;
+  }
+}
+
+
+:root {
+  --dance6-duration: .6s;
+}
+
+@keyframes dance6 {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
+  }
+  50% {
+    transform: translateY(-20px);
+    animation-timing-function: cubic-bezier(0.9, 0, 1, 1);
+ }
+  100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
+  }
+}
+

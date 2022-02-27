@@ -948,7 +948,7 @@ class RoomServer {
   }
 
   DoGraffitiOpsForUser(user, data) {
-    if (!Array.isArray(data)) throw new Error(`OnGraffitiOps: data is not valid; should be array`);
+    if (!Array.isArray(data)) throw new Error(`DoGraffitiOpsForUser: data is not valid; should be array`);
     data.forEach(op => {
       switch (op.op) {
         case "place": // { op:"place", content, lifetimeMS }
@@ -994,6 +994,29 @@ class RoomServer {
       this.DoGraffitiOpsForUser(foundUser.user, data);
     } catch (e) {
       log(`OnGraffitiOps exception occurred`);
+      log(e);
+    }
+  }
+
+  OnUserDance(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnUserDance => unknown user`);
+        return;
+      }
+      if (!Number.isInteger(data.danceID)) {
+        log(`OnUserDance => dance ID ${data.danceID} invalid`);
+        return;
+      }
+
+      foundUser.user.danceID = data.danceID;
+      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.UserDance, {
+        userID: foundUser.user.userID,
+        danceID: data.danceID,
+      });
+    } catch (e) {
+      log(`OnUserDance exception occurred`);
       log(e);
     }
   }

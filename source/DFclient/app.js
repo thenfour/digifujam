@@ -639,6 +639,7 @@ class DigifuApp {
     this.heldNotes.AllNotesOff();
     this.handleAllNotesOff();
 
+    this.FireUserDance(this.myUser);
     this.handleRoomWelcome();
   };
 
@@ -1338,7 +1339,7 @@ class DigifuApp {
     }
 
     this.handleCheer({user : u.user, text : data.text, x : data.x, y : data.y});
-    this.stateChangeHandler();
+    this.stateChangeHandler(); // <-- pretty sure this is not needed.
   }
 
   NET_OnRoomBeat(data) {
@@ -1369,6 +1370,29 @@ class DigifuApp {
       }
     });
     this.stateChangeHandler();
+  }
+
+  NET_OnUserDance(data) {
+    if (!this.roomState)
+      return;
+    let u = this.roomState.FindUserByID(data.userID);
+    if (!u.user) {
+      console.log(`NET_OnUserDance: unknown user ${data.userID}`);
+      return;
+    }
+
+    u.user.danceID = data.danceID;
+    console.log(`user dance: ${u.user.danceID}`);
+    //this.handle({user : u.user, text : data.text, x : data.x, y : data.y});
+    this.FireUserDance(u.user);
+  }
+
+  FireUserDance(user) {
+    this.events.emit('userDance', {
+      app: this,
+      user,
+      danceID: user.danceID,
+    });
   }
 
   NET_pleaseReconnectHandler() {
@@ -1436,6 +1460,22 @@ class DigifuApp {
     if (l.startsWith(cmd)) {
       return this.SetUserNameColor(this.myUser.name, msgText.substring(cmd.length));
     }
+
+    cmd = "/dance"; // intentionally no space. just feels natural i don't know why.
+    if (l.startsWith(cmd)) {
+      const danceID = parseInt(msgText.substring(cmd.length));
+      if (Number.isInteger(danceID)) {
+        return this.net.SendDance(danceID);
+      }
+    }
+    cmd = "/d"; // intentionally no space. just feels natural i don't know why.
+    if (l.startsWith(cmd)) {
+      const danceID = parseInt(msgText.substring(cmd.length));
+      if (Number.isInteger(danceID)) {
+        return this.net.SendDance(danceID);
+      }
+    }
+
 
     let msg = new DF.DigifuChatMessage();
     msg.message = msgText;

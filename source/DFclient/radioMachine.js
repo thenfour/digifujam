@@ -42,6 +42,10 @@ class IcecastClientNode {
     this.audioEl = document.createElement('audio');
     this.audioEl.id = id;
     this.audioEl.crossOrigin = "anonymous";
+    this.audioEl.preload = "none";
+    this.audioEl.loop = false;
+    this.audioEl.autoplay = false;
+    this.audioEl.type = "audio/mpeg";
 
     // to provide comfortable status, we need to compare server status (easy)
     // against whether the client is "connected" to it. it's not so easy to know this though.
@@ -236,7 +240,7 @@ class IcecastClientNode {
 
     // remove audio from doc
     this.audioEl.pause();
-    this.audioEl.src = null;
+    this.audioEl.src = '';
     this.parentEl.removeChild(this.audioEl);
     this.audioEl = null;
 

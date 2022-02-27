@@ -449,6 +449,7 @@ class _7jamServer {
       ws.on(DF.ClientMessages.AdjustBeatPhase, data => this.ForwardToRoom(ws, room => room.OnClientAdjustBeatPhase(ws, data)));
       ws.on(DF.ClientMessages.AdjustBeatOffset, data => this.ForwardToRoom(ws, room => room.OnClientAdjustBeatOffset(ws, data)));
       ws.on(DF.ClientMessages.GraffitiOps, data => this.ForwardToRoom(ws, room => room.OnGraffitiOps(ws, data)));
+      ws.on(DF.ClientMessages.UserDance, data => this.ForwardToRoom(ws, room => room.OnUserDance(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => this.ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
 
