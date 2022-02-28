@@ -40,6 +40,7 @@
   transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
   transform-origin: center;
   --bounce-anim: avatarBump1;
+  z-index: 999; /* consider cheer, room items, graffiti, ... */
   animation: var(--bounce-anim) .2s 1;/*, var(--dance-anim) 1s infinite;*/
 }
 
@@ -51,7 +52,6 @@
   background-color: rgba(0, 0, 0, .5);
   text-align: center;
   filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
-  z-index: 999; /* consider cheer, room items, graffiti, ... */
   /* --dance-anim: dance0;
   --dance-anim-duration: var(--dance1-duration); */
   transform-origin: center;
