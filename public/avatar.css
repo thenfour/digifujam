@@ -35,21 +35,12 @@
 
 .userAvatar {
   pointer-events: none;
-  transition: top .5s, left .5s; /* when moving around. */
+  transition: top var(--move-duration), left var(--move-duration); /* when moving around. */
   position: absolute;
   transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
   transform-origin: center;
   --bounce-anim: avatarBump1;
   animation: var(--bounce-anim) .2s 1;/*, var(--dance-anim) 1s infinite;*/
-}
-
-
-:root {
-  --dance1-duration: 1s;
-  --dance2-duration: 1s;
-  --dance3-duration: 1s;
-  --dance4-duration: 1s;
-  --dance5-duration: 3s;
 }
 
 .userAvatar .av2 {
@@ -61,18 +52,14 @@
   text-align: center;
   filter: drop-shadow(0px 10px 5px rgba(0, 0, 0, .7));
   z-index: 999; /* consider cheer, room items, graffiti, ... */
-  --dance-anim: dance0;
-  --dance-anim-duration: var(--dance1-duration);
+  /* --dance-anim: dance0;
+  --dance-anim-duration: var(--dance1-duration); */
   transform-origin: center;
-  animation: var(--dance-anim) var(--dance-anim-duration) infinite;
+  /* animation: var(--dance-anim) var(--dance-anim-duration) infinite; */
 }
 
 .userAvatar.me .av2 {
   border-top-width: 10px;
-}
-
-.userAvatar.roomWelcomeNoTransition {
-  transition: top 0s, left 0s;
 }
 
 .userAvatar .userAvatarInstrument button {
@@ -80,35 +67,51 @@
 }
 
 
-:root {
-  --dance1-skew: 15deg;
-  --dance1-skewN: calc(var(--dance1-skew) * -1);
-}
-@keyframes dance1 {
+
+@keyframes dance_skewy {
   0% {
-    transform: rotateZ(10deg) skewX(var(--dance1-skew));
+    transform: rotateZ(10deg) skewX(var(--dance-skew));
     animation-timing-function: cubic-bezier(1, 0, 1, 1);
   }
   25% {
-    transform: rotateZ(-10deg) skewX(var(--dance1-skewN));
+    transform: rotateZ(-10deg) skewX(var(--dance-skewN));
     animation-timing-function: ease-out;
   }
   50% {
-    transform: rotateZ(10deg) skewY(var(--dance1-skewN));
+    transform: rotateZ(10deg) skewY(var(--dance-skewN));
     animation-timing-function: cubic-bezier(1, 0, 1, 1);
   }
   75% {
-    transform: rotateZ(-10deg) skewY(var(--dance1-skew));
+    transform: rotateZ(-10deg) skewY(var(--dance-skew));
     animation-timing-function: ease-out;
   }
   100% {
-    transform: rotateZ(10deg) skewX(var(--dance1-skew));
+    transform: rotateZ(10deg) skewX(var(--dance-skew));
   }
 }
 
 
 
-@keyframes dance2 {
+
+@keyframes dance_bouncey {
+  0% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
+  }
+  50% {
+    transform: translateY(-20px);
+    animation-timing-function: cubic-bezier(0.9, 0, 1, 1);
+ }
+  100% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
+  }
+}
+
+
+
+
+@keyframes dance_smack {
   4% {
     transform: scale(120%) rotateZ(10deg);
   }
@@ -125,7 +128,8 @@
 
 
 
-@keyframes dance3 {
+
+@keyframes dance_colorrot {
   0% {
     filter: hue-rotate(0deg);
     transform: rotateY(0) rotateZ(10deg);
@@ -141,7 +145,8 @@
 }
 
 
-@keyframes dance4 {
+
+@keyframes dance_flip {
   0% {
     transform: rotateZ(360deg);
     transform-origin: left top;
@@ -153,7 +158,8 @@
 }
 
 
-@keyframes dance5 {
+
+@keyframes dance_emo {
   0% {
     transform: rotateY(0deg);
     filter: blur(0px) grayscale(0%);
@@ -182,22 +188,32 @@
 }
 
 
-:root {
-  --dance6-duration: .6s;
+
+.userAvatar .av2.dance1 {
+  --dance-skew: 15deg;
+  --dance-skewN: calc(var(--dance-skew) * -1);
+  animation: dance_skewy 1s infinite;
 }
 
-@keyframes dance6 {
-  0% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
-  }
-  50% {
-    transform: translateY(-20px);
-    animation-timing-function: cubic-bezier(0.9, 0, 1, 1);
- }
-  100% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
-  }
+.userAvatar .av2.dance2 {
+  animation: dance_bouncey .5s infinite;
 }
+
+.userAvatar .av2.dance3 {
+  animation: dance_smack 1s infinite;
+}
+
+.userAvatar .av2.dance4 {
+  animation: dance_colorrot 1s infinite;
+}
+
+.userAvatar .av2.dance5 {
+  animation: dance_flip 1s infinite;
+}
+
+.userAvatar .av2.dance6 {
+  animation: dance_emo 3s infinite;
+}
+
+
 

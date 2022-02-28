@@ -1349,12 +1349,23 @@ class CheerControls extends React.Component {
         this.mouseDown = false;
     };
 
+    componentDidMount() {
+        window.DFKeyTracker.events.on("cheer", this.onCheerHotkey);
+    }
+    componentWillUnmount() {
+        window.DFKeyTracker.events.removeListener("cheer", this.onCheerHotkey);
+    }
+
+    onCheerHotkey = () => {
+        this.props.app.SendCheer(this.state.text, this.props.app.myUser.position.x, this.props.app.myUser.position.y);
+    }
+
     render() {
         // onClick={() => this.props.handleCheerClick(this.state.text)}
         if (!this.props.app || !this.props.app.roomState) return null;
         return (
             <div id="cheerControl">
-                <div id="cheerButton" className="cheerButton" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} >cheer</div>
+                <div id="cheerButton" title='Send cheer; keyboard shortcut: \' className="cheerButton" onMouseDown={this.onMouseDown} onMouseUp={this.onMouseUp} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} >cheer</div>
                 <DFReactUtils.TextInputFieldExternalState
                     value={this.state.text}
                     onChange={(val) => {
@@ -2494,8 +2505,9 @@ class RootArea extends React.Component {
 
         const el = document.querySelector(`#userAvatar${e.user.userID} .av2`);
         if (!el) return;
-        el.style.setProperty('--dance-anim', `dance${e.danceID}`);
-        el.style.setProperty('--dance-anim-duration', `var(--dance${e.danceID}-duration)`);
+        el.className = `av2 dance${e.danceID}`;
+        //el.style.setProperty('--dance-anim', `dance${e.danceID}`);
+        //el.style.setProperty('--dance-anim-duration', `var(--dance${e.danceID}-duration)`);
     }
 
     onMyInstrumentChange = (inst) => {
@@ -2524,17 +2536,15 @@ class RootArea extends React.Component {
             screen.parentNode.removeChild(screen);
         }, 1600);
 
-        // elements which animate should be switched to non-animated versions
-        $('.userAvatar').addClass('roomWelcomeNoTransition');
-        $('.roomArea').addClass('roomWelcomeNoTransition');
-        $('.roomItem').addClass('roomWelcomeNoTransition');
+        document.documentElement.style.setProperty('--move-duration', '0s');
 
         this.OnStateChange();
 
+        // i have no idea what the best timing to use here. 1ms absolutely does not work.
+        // requestAnimationFrame also does not work.
         setTimeout(() => {
-            $('.roomWelcomeNoTransition').removeClass('roomWelcomeNoTransition');
-        }, 1);
-
+            document.documentElement.style.setProperty('--move-duration', '1s');
+        }, 100);
     };
 
     HandleCheer = (data/*user, text x, y*/) => {

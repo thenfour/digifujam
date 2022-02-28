@@ -1,6 +1,7 @@
 const React = require('react');
 let DF = require('../../DFcommon/DFCommon');
 DF = Object.assign(DF, require('../../DFcommon/dfutil'));
+const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
 
 
 class AdminControls extends React.Component {
@@ -100,9 +101,12 @@ class AdminControlsButton extends React.Component {
                    </div>
  
                 {this.state.isExpanded &&
-                    <div className="userSettingsDialog popUpDialog">
-                       <AdminControls app={this.props.app}></AdminControls>
-                    </div>}
+                    <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
+                        <div className="userSettingsDialog popUpDialog">
+                        <AdminControls app={this.props.app}></AdminControls>
+                        </div>
+                    </ClickAwayListener>
+                    }
             </div>);
     }
  };

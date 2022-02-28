@@ -1635,13 +1635,14 @@ class DigifuRoomState {
     }
 
     adminExportRoomState() {
-        return {
+        const ret = {
             presetBanks: this.presetBanks,
             seqPresetBanks: this.seqPresetBanks,
             chatLog: [],//this.chatLog,
             stats: this.stats,
             announcementHTML: this.announcementHTML,
             graffiti: this.graffiti,
+            radio: this.radio,
             instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
                 return [
                     i.instrumentID,
@@ -1652,6 +1653,7 @@ class DigifuRoomState {
                 ];
             })),
         };
+        return ret;
     }
 
     adminImportRoomState(data) {
@@ -1669,6 +1671,12 @@ class DigifuRoomState {
         this.stats = data.stats;
         this.announcementHTML = data.announcementHTML;
         this.graffiti = data.graffiti ?? [];
+
+        if (this.radio) {
+            const channels = this.radio.channels;
+            this.radio = Object.assign(this.radio, data.radio ?? {});
+            this.radio.channels = channels;
+        }
 
         // remove "live" references to users.
         this.users = [];

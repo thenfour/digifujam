@@ -1,5 +1,4 @@
 const DFSynthTools = require("./synthTools");
-const EventEmitter = require('events');
 
 // STREAM   CLIENT
 // offline  offline = "stream offline"
@@ -22,10 +21,10 @@ class IcecastClientNode {
     this.eventLog.push(e);
   }
 
-  constructor(audioCtx, id, parentEl, streamURL, metadataURL, refreshIntervalMS) {
+  constructor(app, audioCtx, id, parentEl, streamURL, metadataURL, refreshIntervalMS) {
+    this.app = app;
     this.alive = true;
     this.parentEl = parentEl;
-    this.events = new EventEmitter();
     this.streamURL = streamURL;
     this.metadataURL = metadataURL;
     this.refreshIntervalMS = refreshIntervalMS;
@@ -66,11 +65,11 @@ class IcecastClientNode {
 
     this.audioEl.onplay = () => {
       audioCtx.resume(); // make sure audio doesn't get cockblocked by ctx
-      this.events.emit("streamStateChange");
+      this.app.events.emit("streamStateChange");
     }
 
     this.audioEl.onpause = () => {
-      this.events.emit("streamStateChange");
+      this.app.events.emit("streamStateChange");
     }
 
     this.audioCtx = audioCtx;
@@ -83,7 +82,7 @@ class IcecastClientNode {
   #setClientPlayable(b, reason) {
     const wasPlayable = this.clientPlayable;
     this.clientPlayable = b;
-    this.events.emit("streamStateChange");
+    this.app.events.emit("streamStateChange");
     if (!wasPlayable && b && this.isVirtuallyPlaying) {
       this.#addEvent(`clientPlayable=true due to [${reason}] => and virtually playing; auto-play. `);
       this.audioEl.play();
@@ -99,14 +98,14 @@ class IcecastClientNode {
   play() {
     this.#addEvent(`isVirtuallyPlaying = true and calling audioEl.play()`);
     this.isVirtuallyPlaying = true;
-    this.events.emit("streamStateChange");
+    this.app.events.emit("streamStateChange");
     this.audioEl.play();
   }
 
   pause() {
     this.isVirtuallyPlaying = false;
     this.#addEvent(`isVirtuallyPlaying = false and calling audioEl.pause()`);
-    this.events.emit("streamStateChange");
+    this.app.events.emit("streamStateChange");
     this.audioEl.pause();
   }
 
@@ -114,7 +113,7 @@ class IcecastClientNode {
     const a = this.playOrPauseAction;
     if (a === 'virtualPlay') { // don't call play() because it will take the player out of paused state
       this.#addEvent(`isVirtuallyPlaying = true because playOrPause()`);
-      this.events.emit("streamStateChange");
+      this.app.events.emit("streamStateChange");
       this.isVirtuallyPlaying = true;
       return;
     }
@@ -199,13 +198,13 @@ class IcecastClientNode {
       // interferes with our state tracking, because we think the stream is offline. this forces us to fetch server metadata first,
       // and we have accurate stuff.
       this.audioEl.src = this.streamURL;
-      this.events.emit("streamStateChange");
+      this.app.events.emit("streamStateChange");
       this.refresh();
     } else if (wasStreamOnline && !this.IsStreamOnline) {
       this.#addEvent(`Stream went down`);
-      this.events.emit("streamStateChange");
+      this.app.events.emit("streamStateChange");
     }
-    this.events.emit("streamInfo");
+    this.app.events.emit("streamInfo");
   }
 
   #streamPing = () => {
@@ -219,7 +218,6 @@ class IcecastClientNode {
           }
         })
         .catch(e => {
-          //console.log(`error`);
           this.#integrateNewIcestats(null);
           if (!this.pingTimer) {
             this.pingTimer = setTimeout(this.#streamPing, this.refreshIntervalMS);
@@ -250,15 +248,16 @@ class IcecastClientNode {
 
 class RadioMachine {
   constructor(app, audioCtx) {
+    this.app = app;
     this.destNode = app.synth.masterGainNode;
-    this.events = new EventEmitter();
     this.audioCtx = audioCtx;
     this.IcyNode = new IcecastClientNode(
+        app,
         audioCtx,
         "_7jamRadioAudioSource",
         document.getElementById("body"),
-        app.roomState.radio.streamURL,     // "https://radio.7jam.io/maj7",
-        app.roomState.radio.streamInfoURL, //"https://radio.7jam.io/status-json.xsl?mount=/maj7",
+        app.roomState.radio.channels[app.roomState.radio.channelID % app.roomState.radio.channels.length].streamURL,     // "https://radio.7jam.io/maj7",
+        app.roomState.radio.channels[app.roomState.radio.channelID % app.roomState.radio.channels.length].streamInfoURL, //"https://radio.7jam.io/status-json.xsl?mount=/maj7",
         app.roomState.radio.streamInfoRefreshIntervalMS);
 
     this.AnalyserNode = this.audioCtx.createAnalyser();
@@ -274,7 +273,6 @@ class RadioMachine {
 
     DFSynthTools.gLoadSample(this.audioCtx, app.roomState.radio.reverbImpulseURL,
                              (buffer) => {
-                               //console.log(`Loaded reverb impulse.`);
                                this.Reverb.buffer = buffer;
                                this.ReverbGain.gain.value = app.roomState.radio.reverbGain;
                              },
@@ -285,6 +283,7 @@ class RadioMachine {
 
     this.fxEnabled = app.roomState.radio.fxEnabled;
     this.connect();
+    this.app.events.emit("radioStart");
   }
 
   disconnect() {
@@ -334,7 +333,7 @@ class RadioMachine {
   set FilterType(v) { this.FilterNode.type = v; }
 
   stop() {
-    this.events.emit("stop");
+    this.app.events.emit("radioStop");
     this.disconnect();
     this.IcyNode.destroy();
   }

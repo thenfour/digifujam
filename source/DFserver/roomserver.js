@@ -1072,6 +1072,19 @@ class RoomServer {
           this.roomState.img = data.params;
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
+        case "setRadioChannel":
+          this.roomState.radio.channelID = data.params.channelID;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+          break;
+        case "setRadioFX":
+          // todo: validate?
+          this.roomState.radio.fxEnabled = data.params.fxEnabled;
+          this.roomState.radio.reverbGain = data.params.reverbGain;
+          this.roomState.radio.filterType = data.params.filterType;
+          this.roomState.radio.filterFrequency = data.params.filterFrequency;
+          this.roomState.radio.filterQ = data.params.filterQ;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+          break;
         case "backupServerState":
           OnBackupServerState();
           break;

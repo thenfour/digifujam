@@ -303,7 +303,7 @@ class _7jamServer {
 
       this.mDiscordBot?.ReannounceUserMapTo7jam();
 
-      io.of('/').sockets.forEach(ws => {
+      this.io.of('/').sockets.forEach(ws => {
         ws.emit(DF.ServerMessages.PleaseReconnect);
       });
 

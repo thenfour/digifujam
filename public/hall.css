@@ -54,6 +54,24 @@
     justify-content: flex-end;
 }
 
+.roomItem.radioItem.radioMetadata .radioStationName
+{
+    font-size:20px;
+    color:#999;
+}
+
+.roomItem.radioItem.radioMetadata .connectionState.offline
+{
+    font-size:40px;
+    color: #000;
+}
+
+.roomItem.radioItem.radioMetadata .connectionState.disconnected
+{
+    font-size:40px;
+    color: #aa0;
+}
+
 .roomItem.radioItem.radioMetadata .streamName
 {
     font-size: 20px;
@@ -64,16 +82,17 @@
 {
     font-size: 12px;
     color: #aaa;
+    font-style: italic;
 }
 .roomItem.radioItem.radioMetadata .nowPlayingArtist
 {
-    font-size: 52px;
+    font-size: 60px;
     color: #ee0;
 }
 
 .roomItem.radioItem.radioMetadata .nowPlayingTitle
 {
-    font-size: 40px;
+    font-size: 46px;
     color: #e50;
 }
 

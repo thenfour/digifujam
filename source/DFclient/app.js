@@ -1257,6 +1257,34 @@ class DigifuApp {
       this.roomState.img = data.params;
       this.stateChangeHandler();
       break;
+    case "setRadioChannel":
+      if (this.radio)
+        this.radio.stop();
+      if (!this.roomState.radio) {
+        this.radio = null;
+      } else {
+        this.roomState.radio.channelID = data.params.channelID;
+        this.radio = new RadioMachine(this, this.audioCtx);
+      }
+      this.events.emit("changeRadioChannel");
+      this.stateChangeHandler();
+      break;
+    case "setRadioFX":
+      if (!this.roomState.radio) return;
+      this.roomState.radio.fxEnabled = data.params.fxEnabled;
+      this.roomState.radio.reverbGain = data.params.reverbGain;
+      this.roomState.radio.filterType = data.params.filterType;
+      this.roomState.radio.filterFrequency = data.params.filterFrequency;
+      this.roomState.radio.filterQ = data.params.filterQ;
+      if (this.radio) {
+        this.radio.FXEnabled = this.roomState.radio.fxEnabled;
+        this.radio.ReverbLevel = this.roomState.radio.reverbGain;
+        this.radio.FilterType = this.roomState.radio.filterType;
+        this.radio.FilterFrequency = this.roomState.radio.filterFrequency;
+        this.radio.FilterQ = this.roomState.radio.filterQ;
+      }
+      this.events.emit("changeRadioFX");
+      break;
     }
   }
 

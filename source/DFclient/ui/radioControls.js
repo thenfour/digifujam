@@ -24,7 +24,7 @@ class FloatValueSpec01 {
   constructor() {
       this.mouseSpeed ??= 0.004;
       this.fineMouseSpeed ??= 0.0008;
-      this.centerValue = 0.5;
+      this.centerValue = 0.0;
   }
   value01ToValue = (v01) => {
       return v01;
@@ -41,13 +41,13 @@ class FreqValueSpec {
   constructor() {
       this.mouseSpeed ??= 0.004;
       this.fineMouseSpeed ??= 0.0008;
-      this.centerValue = 0.5;
+      this.centerValue = 0.0;
   }
   value01ToValue = (v01) => {
-      return v01 * 20000;
+      return Math.pow(v01, 3.5) * 20000;
   }
   valueToValue01 = (v) => {
-      return v / 20000;
+      return Math.pow(v / 20000, 1.0/3.5);
   }
   value01ToString = (v01) => {
       return parseInt(this.value01ToValue(v01));
@@ -58,7 +58,7 @@ class QValueSpec {
   constructor() {
       this.mouseSpeed ??= 0.004;
       this.fineMouseSpeed ??= 0.0008;
-      this.centerValue = 0.5;
+      this.centerValue = 0.0;
   }
   value01ToValue = (v01) => {
       return v01 * 10;
@@ -79,28 +79,40 @@ const gQSpec = new QValueSpec();
 class RadioControls extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+    };
     this.running = false;
   }
 
   onChangeVerb = (e) => {
-    this.props.app.radio.ReverbLevel = e;
+    this.sendFXParams({ reverbGain: e });
   }
   onChangeFreq = (e) => {
-    this.props.app.radio.FilterFrequency = e;
+    this.sendFXParams({ filterFrequency: e });
   }
   onChangeQ = (e) => {
-    this.props.app.radio.FilterQ = e;
+    this.sendFXParams({ filterQ: e });
+  }
+  onChangeFilterType = (e) => {
+    this.sendFXParams({ filterType: e });
   }
 
   componentDidMount() {
     this.running = true;
-    this.props.app.radio.IcyNode.events.on("streamStateChange", this.streamStateChange);
-    this.props.app.radio.IcyNode.events.on("streamInfo", this.onStreamInfo);
-    this.props.app.radio.events.on("stop", this.onRadioStop);
+    this.props.app.events.on("streamStateChange", this.streamStateChange);
+    this.props.app.events.on("streamInfo", this.onStreamInfo);
+    this.props.app.events.on("radioStop", this.onRadioStop);
+    this.props.app.events.on("changeRadioChannel", this.generalRefresh);
+    this.props.app.events.on("changeRadioFX", this.generalRefresh);
   }
 
   componentWillUnmount() {
     this.onRadioStop();
+    this.props.app.events.removeListener("streamStateChange", this.streamStateChange);
+    this.props.app.events.removeListener("streamInfo", this.onStreamInfo);
+    this.props.app.events.removeListener("radioStop", this.onRadioStop);
+    this.props.app.events.removeListener("changeRadioChannel", this.generalRefresh);
+    this.props.app.events.removeListener("changeRadioFX", this.generalRefresh);
   }
 
   streamStateChange = (e) => {
@@ -110,9 +122,10 @@ class RadioControls extends React.Component {
 
   onRadioStop = () => {
     this.running = false;
-    this.props.app?.radio?.IcyNode.events.removeListener("streamStateChange", this.streamStateChange);
-    this.props.app?.radio?.IcyNode.events.removeListener("streamInfo", this.onStreamInfo);
-    this.props.app?.radio?.events.removeListener("stop", this.onRadioStop);
+  }
+
+  generalRefresh = () => {
+    this.setState({});
   }
 
   onStreamInfo = () => {
@@ -120,15 +133,34 @@ class RadioControls extends React.Component {
   }
 
   onToggleFXEnabled = () => {
-    this.props.app.radio.FXEnabled = !this.props.app.radio.FXEnabled;
-    this.setState({});
+    this.sendFXParams({ fxEnabled: !this.props.app.radio.FXEnabled });
   }
 
+  onClickChannel = (i) => {
+    this.props.app.net.SendAdminChangeRoomState("setRadioChannel", {
+      channelID: i,
+    });
+  }
+
+  sendFXParams = (params) => {
+    const p = Object.assign({
+      fxEnabled: this.props.app.roomState.radio.fxEnabled,
+      reverbGain: this.props.app.roomState.radio.reverbGain,
+      filterType: this.props.app.roomState.radio.filterType,
+      filterFrequency: this.props.app.roomState.radio.filterFrequency,
+      filterQ: this.props.app.roomState.radio.filterQ,
+    }, params);
+    this.props.app.net.SendAdminChangeRoomState("setRadioFX", p);
+  }
+
+  toggleSettings = () => {
+    this.setState({ showKnobs: !this.state.showKnobs });
+  }
 
   render() {
     const info = this.props.app?.radio?.IcyNode?.StreamInfo;
     if (!info) return null;
-    const showDebugInfo = window.DFShowDebugInfo;
+    const showDebugInfo = !!this.state.showKnobs;// window.DFShowDebugInfo;
     const pp = this.props.app.radio.IcyNode.playOrPauseAction;
 
     let connectionState = null;
@@ -168,8 +200,13 @@ class RadioControls extends React.Component {
           <div className='lessImportantControls'>
             <button title="Reload the stream" id="radioRefresh" onClick={() => this.props.app.radio.IcyNode.refresh()}><i className="material-icons">refresh</i></button>
             <div title={connectionStateDescription} id="radioConnectionStatus" className={info.connectionState}>{connectionState}</div>
+            {this.props.app.myUser.IsAdmin() && <div className='settings' onClick={this.toggleSettings}><i className="material-icons">settings</i></div>}
           </div>
           {showDebugInfo && <div className="knobs">
+            <div className='paramGroup buttons'>
+              <div className={'toggle' + (this.props.app.radio.FXEnabled ? " on" : "")} onClick={() => this.onToggleFXEnabled()}>FX</div>
+            </div>
+
             <SeqLegendKnob
               caption="Verb"
               className="knob"
@@ -200,7 +237,18 @@ class RadioControls extends React.Component {
             >
             </SeqLegendKnob>
 
-            <div className='toggle' onClick={() => this.onToggleFXEnabled()}>FX {this.props.app.radio.FXEnabled ? "enabled" : "disabled" }</div>
+            <div className='paramGroup buttons'>
+              <div className={`toggle ${this.props.app.radio.FilterType === "lowpass" ? "on" : ""}`}  onClick={() => this.onChangeFilterType("lowpass")}>LP</div>
+              <div className={`toggle ${this.props.app.radio.FilterType === "bandpass" ? "on" : ""}`}  onClick={() => this.onChangeFilterType("bandpass")}>BP</div>
+              <div className={`toggle ${this.props.app.radio.FilterType === "highpass" ? "on" : ""}`}  onClick={() => this.onChangeFilterType("highpass")}>HP</div>
+            </div>
+            <div className='paramGroup buttons'>
+            {
+              this.props.app.roomState.radio.channels.map((ch, i) => {
+                return (<div key={i} className={`toggle ${this.props.app.roomState.radio.channelID === i ? "on" : ""}`} onClick={() => this.onClickChannel(i)}>{i}: {ch.name}</div>);
+              })
+            }
+            </div>
 
           </div>}
         </div>
@@ -223,13 +271,16 @@ class RadioMetadataRoomItem extends React.Component {
 
   componentDidMount() {
     this.running = true;
-    this.props.app.radio.events.on("stop", this.onRadioStop);
-    this.props.app.radio.IcyNode.events.on("streamStateChange", this.streamStateChange);
-    this.props.app.radio.IcyNode.events.on("streamInfo", this.onStreamInfo);
+    this.props.app.events.on("streamStateChange", this.streamStateChange);
+    this.props.app.events.on("streamInfo", this.onStreamInfo);
+    this.props.app.events.on("radioStop", this.onRadioStop);
   }
 
   componentWillUnmount() {
     this.onRadioStop();
+    this.props.app.events.removeListener("streamStateChange", this.streamStateChange);
+    this.props.app.events.removeListener("streamInfo", this.onStreamInfo);
+    this.props.app.events.removeListener("radioStop", this.onRadioStop);
   }
 
   streamStateChange = (e) => {
@@ -243,9 +294,6 @@ class RadioMetadataRoomItem extends React.Component {
 
   onRadioStop = () => {
     this.running = false;
-    this.props.app?.radio?.IcyNode.events.removeListener("streamStateChange", this.streamStateChange);
-    this.props.app?.radio?.IcyNode.events.removeListener("streamInfo", this.onStreamInfo);
-    this.props.app?.radio?.events.removeListener("stop", this.onRadioStop);
   }
 
   render() {
@@ -253,6 +301,9 @@ class RadioMetadataRoomItem extends React.Component {
     if (!info) return null;
     return (
     <div className={"roomItem " + (this.props.item.cssClass ?? "")} style={this.props.style}>
+      {this.props.app?.roomState.radio?.channels?.length && <div className='radioStationName'>{this.props.app.roomState.radio.channels[this.props.app.roomState.radio.channelID % this.props.app.roomState.radio.channels.length].name}</div>}
+      {info.connectionState === eConnectionStatus.Disconnected && <div className='connectionState disconnected'>Trying to connect ...</div>}
+      {info.connectionState === eConnectionStatus.Offline && <div className='connectionState offline'>Offline</div>}
       <div className='streamName'>{info.stream.name}</div>
       <div className='streamDescription'>{info.stream.description}</div>
       <div className='nowPlayingArtist'>{info.nowPlaying.artist ?? ""}</div>
@@ -260,7 +311,6 @@ class RadioMetadataRoomItem extends React.Component {
     </div>);
   }
 }
-
 
 
 //-----------------------------------------------------------------
@@ -272,8 +322,19 @@ class RadioVisRoomItem extends React.Component {
   }
 
   componentDidMount() {
-    this.props.app.radio.events.on("stop", this.onRadioStop);
+    this.props.app.events.on("radioStop", this.onRadioStop);
+    this.props.app.events.on("changeRadioChannel", this.onChangeChannel);
 
+    this.connect();
+  }
+
+  componentWillUnmount() {
+    this.props.app.events.removeListener("radioStop", this.onRadioStop);
+    this.props.app.events.removeListener("changeRadioChannel", this.onChangeChannel);
+    this.running = false;
+  }
+
+  connect() {
     this.analyzerNode = this.props.app.radio.AnalyserNode;
     //this.analyzerNode.smoothingTimeConstant = 0.8;
     this.analyzerNode.fftSize = 2 ** 5;
@@ -286,15 +347,22 @@ class RadioVisRoomItem extends React.Component {
     this.running = true;
     requestAnimationFrame(this.animFrame);
   }
-
-  componentWillUnmount() {
-    this.props.app?.radio?.events.removeListener("stop", this.onRadioStop);
+  disconnect() {
     this.running = false;
+    this.analyzerNode = null; // remove ref
+    const section = document.querySelector('section#radioVis');
+    while (section.firstChild) {
+      section.removeChild(section.firstChild);
+    }
+  }
+
+  onChangeChannel = () => {
+    this.disconnect();
+    this.connect();
   }
 
   onRadioStop = () => {
-    this.running = false;
-    this.analyzerNode = null; // remove ref
+    this.disconnect();
   }
 
   animFrame = () => {

@@ -105,15 +105,26 @@
     }
   ],
   "radio": {
-    "fxEnabled": false,
     "reverbImpulseURL": "/radio/hallImpulse.m4a",
+    "fxEnabled": false,
     "reverbGain": 0.5,
     "filterType": "bandpass",
     "filterFrequency": 200,
     "filterQ": 1.4,
-    "streamURL":"https://radio.7jam.io/maj7",
-    "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/maj7",
-    "streamInfoRefreshIntervalMS": 2500
+    "streamInfoRefreshIntervalMS": 2500,
+    "channelID": 0,
+    "channels": [
+      {
+        "name": "Δ7 Radio",
+        "streamURL":"https://radio.7jam.io/maj7",
+        "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/maj7"
+      },
+      {
+        "name": "Nectarine Radio",
+        "streamInfoURL": "https://scenestream.io/status-json.xsl?mount=/necta64.mp3",
+        "streamURL": "https://scenestream.io/necta64.mp3"
+      }
+    ]
   },
   "users": [],
   "chatLog": [],

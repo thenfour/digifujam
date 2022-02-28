@@ -45,6 +45,12 @@ class DiscordBot {
             this.SyncChannelUserMap();
         }); // ready()
 
+        this.client.once('reconnect', async () => {
+            console.log("Discord reconnect event ...");
+            await this.FetchAndDump();
+            this.SyncChannelUserMap();
+        }); // ready()
+
         this.client.on('messageCreate', (message) => {
             try {
                 if (!(message.channelId in this.relevantChannelIDs))

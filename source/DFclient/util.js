@@ -57,12 +57,25 @@ class GestureTracker {
       this.events.emit('keydown', e);
 
       // who wants some ugly!
+      let handled = false;
       if (window.DFChatinput) {
-        if (e.target.tagName == 'BODY' && e.key.length === 1) {
+        if (e.target.tagName == 'BODY' && e.key.length === 1) { // BODY means it's bubbled up to the top of the DOM. nothing else has handled it.
           //console.log(`  charcode=${e.charCode}, keycode=${e.keyCode} key=${e.key} code=${e.code} which=${e.which} tag=${e.target.tagName}`);
           if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
-            if ("/abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()=\\'\",<>.`~;:".indexOf(e.key) != -1) {
+            if ("/abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()='\",<>.`~;:".indexOf(e.key) != -1) { // don't include registered hotkeys here.
               window.DFChatinput.focus();
+              handled = true;
+            }
+          }
+        }
+      }
+      if (!handled) {
+        // check for hotkeys
+        if (e.target.tagName == 'BODY' && e.key.length === 1) {
+          if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
+            if (e.key==='\\') {
+              handled = true;
+              this.events.emit('cheer');
             }
           }
         }
