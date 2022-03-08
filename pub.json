@@ -181,6 +181,22 @@
           }
         },
         {
+          "sfzURL": "/sfz/M1 Piano/M1 Piano.sfz.json",
+          "name": "M1 Piano",
+          "gain": 1.2,
+          "sfzExtendRange": true,
+          "transpose": 12,
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
           "gain": 0.7,
           "transpose": 0,
           "sfzURL": "/sfz/Piano Heaven/Piano Heaven.sfz.json",
@@ -538,6 +554,38 @@
       "seqPresetBankID": "sfzVox",
       "sfzArray": [
         {
+          "name": "M1 Choir",
+          "sfzURL": "/sfz/M1 Choir/M1 Choir.sfz.json",
+          "transpose": 12,
+          "sfzExtendRange": true,
+          "gain": 0.5,
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "gain": 1,
+          "transpose": 0,
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-A-079-Fantasy-Vox/PR-A-079-Fantasy-Vox.sfz.json",
+          "name": "PR-A-079-Fantasy-Vox",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0.7
+          }
+        },
+        {
           "gain": 0.62,
           "transpose": 12,
           "sfzExtendRange": true,
@@ -567,22 +615,6 @@
             "adjustD": 0,
             "adjustS": 0,
             "adjustR": 0
-          }
-        },
-        {
-          "gain": 1,
-          "transpose": 0,
-          "sfzExtendRange": true,
-          "sfzURL": "/sfz/PR-A-079-Fantasy-Vox/PR-A-079-Fantasy-Vox.sfz.json",
-          "name": "PR-A-079-Fantasy-Vox",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0.7
           }
         }
       ]
