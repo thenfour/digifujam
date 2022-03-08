@@ -361,7 +361,7 @@ class SFZRegion {
         };
         ret.midiFrequency = DFU.MidiNoteToFrequency(this.pitch_keycenter + (ret.detuneCents / 100));
         ret.playbackRatio = ret.midiFrequency / this.midiFrequencyCenter;
-        console.log(`calcdetune; ${midiNote} / ${this.pitch_keycenter} = ratio ${ret.playbackRatio}`);
+        //console.log(`calcdetune; ${midiNote} / ${this.pitch_keycenter} = ratio ${ret.playbackRatio}`);
         return ret;
     }
 
@@ -545,7 +545,7 @@ class sfzVoice {
         //const transpose = ('transpose' in this.instrumentSpec) ? this.instrumentSpec.transpose : 0;
         const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis() + (this.instrumentSpec.GetParamByID("adjustFinetune").currentValue / 100));
         this.playbackRatio = detuneSpec.playbackRatio; // needed to calculate the correct duration of the sample
-        console.log(`midinote: ${this.midiNote}, ratio: ${this.playbackRatio}, detune: ${detuneSpec.detuneCents}`);
+        //console.log(`midinote: ${this.midiNote}, ratio: ${this.playbackRatio}, detune: ${detuneSpec.detuneCents}`);
         this.graph.nodes.pan1.pan.value = sfzRegion.pan;
 
         this.perfGraph.nodes.bufferSourceNode1 = this.audioCtx.createBufferSource();

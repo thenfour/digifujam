@@ -2689,6 +2689,12 @@ class RootArea extends React.Component {
 
     componentDidMount() {
         window.addEventListener('resize', () => this.onWindowResize());
+
+        // help catch window-changing events that change layout. actually a more robust solution would be a mediaquerylist change handler but ... it requires more thought.
+        document.addEventListener('visibilitychange', () => {
+            //console.log(`visibility change`);
+            this.onWindowResize();
+        });
         this.googleOAuthModule.OnPageLoaded(true);
     }
 
@@ -2764,7 +2770,9 @@ class RootArea extends React.Component {
             rightSize = 0; // no right area mode
         }
 
-        if (window.outerWidth < 800) { // for mobile
+        // use innerWidth; it's more standard, connected to the document, supported, doesn't include elements like browser chrome.
+        // and moreso, returns correct results when un-minimizing. see #243
+        if (window.innerWidth < 800) { // for mobile
             rightSize = 0;
             leftSize = 0;
         }
