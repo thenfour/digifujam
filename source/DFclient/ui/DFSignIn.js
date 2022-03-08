@@ -12,7 +12,6 @@ class Connection extends React.Component {
         this.state = {
             userName: '',
             userColor: `rgb(${[1, 2, 3].map(x => Math.random() * 256 | 0)})`,
-            roomKey: "",
             showValidationErrors: false, // don't show until you try to connect
         };
 
@@ -27,9 +26,6 @@ class Connection extends React.Component {
         }
         if (window.localStorage.getItem("userColor")) {
             this.state.userColor = window.localStorage.getItem("userColor");
-        }
-        if (window.localStorage.getItem("roomKey")) {
-            this.state.roomKey = window.localStorage.getItem("roomKey");
         }
         if (gAutoJoin) {
             this.goConnect();
@@ -49,7 +45,6 @@ class Connection extends React.Component {
         }
         window.localStorage.setItem("userName", this.state.userName);
         window.localStorage.setItem("userColor", this.state.userColor);
-        window.localStorage.setItem("roomKey", this.state.roomKey);
     }
 
     componentDidMount() {
@@ -72,7 +67,7 @@ class Connection extends React.Component {
             // ensure a valid username.
             userName = DF.EnsureValidUsername(userName);
             userColor = DF.EnsureValidUserColor(userColor);
-            this.props.handleConnect(userName, userColor, this.state.roomKey, google_access_token);
+            this.props.handleConnect(userName, userColor, google_access_token);
             return;
         }
 
@@ -82,7 +77,7 @@ class Connection extends React.Component {
             return;
         }
 
-        this.props.handleConnect(userName, userColor, this.state.roomKey, google_access_token);
+        this.props.handleConnect(userName, userColor, google_access_token);
     }
 
     onClickLoginAnonymous = (e) => {
@@ -122,13 +117,6 @@ class Connection extends React.Component {
                             />
                                 <button style={{ backgroundColor: this.state.userColor }} onClick={() => { this.setState({ userColor: randomColor }) }} >random</button> color
                     </li>}
-                        {window.DFRoomWantsKey && <li><DFReactUtils.PasswordInput
-                            style={{ width: 120 }}
-                            value={this.state.roomKey}
-                            onChange={(val) => this.setState({ roomKey: val })}
-                        />
-                        Room key
-                        </li>}
 
                         {showLoginControls &&
                             <li>

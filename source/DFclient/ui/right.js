@@ -2466,7 +2466,7 @@ class RootArea extends React.Component {
         //this.setState(this.state);
     }
 
-    HandleConnect = (userName, color, roomKey, google_access_token) => {
+    HandleConnect = (userName, color, google_access_token) => {
 
         if (this.state.app) {
             // this happens when you receive google token but are already connected.
@@ -2493,7 +2493,7 @@ class RootArea extends React.Component {
             });
         }
 
-        app.Connect(userName, color, roomKey, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
+        app.Connect(userName, color, () => this.OnStateChange(), this.handleNoteOn, this.handleNoteOff,
             this.handleUserAllNotesOff, this.handleAllNotesOff,
             this.handleUserLeave, this.HandlePleaseReconnect,
             this.HandleCheer, this.handleRoomWelcome, google_access_token, this.onInstrumentLoadProgress, this.onMyInstrumentChange);

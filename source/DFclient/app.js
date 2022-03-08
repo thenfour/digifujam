@@ -1849,7 +1849,7 @@ class DigifuApp {
     return !!(this.net?.IsConnected());
   }
 
-  Connect(userName, userColor, roomKey, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress, onMyInstrumentChange) {
+  Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress, onMyInstrumentChange) {
     this.myUser = new DF.DigifuUser();
     this.myUser.name = userName;
     this.myUser.color = userColor;
@@ -1910,7 +1910,7 @@ class DigifuApp {
       }
     };
 
-    this.net.Connect(this, roomKey, google_access_token);
+    this.net.Connect(this, google_access_token);
   };
 
   Disconnect() {

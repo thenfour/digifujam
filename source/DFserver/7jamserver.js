@@ -117,7 +117,7 @@ class _7jamServer {
       log(`serving room ${roomState.roomID} on route ${roomState.route}`);
 
       this.expressApp.use(roomState.route, express.static('public', {
-        index : ('roomKey' in roomState) ? "index-key.html" : "index.html"
+        index : "index.html"
       }));
     });
 
@@ -409,14 +409,6 @@ class _7jamServer {
         console.log(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
         ws.disconnect();
         return;
-      }
-
-      if ('roomKey' in room.roomState) {
-        if (ws.handshake.query["roomKey"] != room.roomState.roomKey) {
-          console.log(`user is connecting with incorrect roomkey to ${room.roomState.roomID}.`);
-          ws.disconnect();
-          return;
-        }
       }
 
       ws.on('disconnect', data => this.OnDisconnect(ws, data));
