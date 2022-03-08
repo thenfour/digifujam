@@ -40,12 +40,13 @@ class DiscordBot {
         ] });
 
         // When the client is ready, run this code (only once)
-        this.client.once('ready', async () => {
+        this.client.on('ready', async () => {
+            console.log("[][] Discord ready ...");
             await this.FetchAndDump();
             this.SyncChannelUserMap();
         }); // ready()
 
-        this.client.once('reconnect', async () => {
+        this.client.on('reconnect', async () => {
             console.log("Discord reconnect event ...");
             await this.FetchAndDump();
             this.SyncChannelUserMap();
@@ -147,26 +148,35 @@ class DiscordBot {
         });
 
         try {
-            this.client.login(gConfig.discord_bot_token);
+            this.client.login(gConfig.discord_bot_token)
+                .catch(e => {
+                    console.log(`Discord unable to log in ${e}`);
+                });
         }
         catch (e) {
             console.log(`Couldn't connect to discord ...`);
             console.log(e);
         }
+
     }; // ctor
 
     GetDebugData() {
-        return {
-            "guilds": this.client.guilds.cache.map(g => ({
-                name: g.name,
-                id: g.id,
-                channels: g.channels.cache.filter(ch => ch.type === 'GUILD_TEXT').map(ch => ({
-                    name: ch.name,
-                    id: ch.id,
-                    type: ch.type,
+        try {
+            return {
+                "guilds": this.client.guilds.cache.map(g => ({
+                    name: g.name,
+                    id: g.id,
+                    channels: g.channels.cache.filter(ch => ch.type === 'GUILD_TEXT').map(ch => ({
+                        name: ch.name,
+                        id: ch.id,
+                        type: ch.type,
+                    }))
                 }))
-            }))
-        };
+            };
+        } catch (e) {
+            console.log(`GetDebugData : ${e}`);
+            return { guilds: [] };
+        }
      }
 
      GetAdminDumpObject() {
@@ -280,38 +290,43 @@ class DiscordBot {
 
     async FetchAndDump() {
         console.log(`< Dumping discord info`);
-        const newData = {};
-        const startTime = Date.now();
-        const guildIDs = await this.client.guilds.fetch();
-        const myGuildIDs = [];
-        guildIDs.forEach(g => {
-            myGuildIDs.push(g.id);
-        });
-        for (let i = 0; i < myGuildIDs.length; ++ i)  {
-            const guild = await this.client.guilds.fetch(myGuildIDs[i]);
-            const members = await guild.members.fetch();
-            const channels = await guild.channels.fetch(); // parallel would be better but meh
-            channels.forEach((channel, id) => {
-                if (channel.type === 'GUILD_CATEGORY')
-                    return;
-                // if (!(channel.id in this.relevantChannelIDs))
-                //     return;
-                console.log(`${guild.name} / ${channel.name} [Guild.id ${channel.guildId} Channel.id ${id} type:${channel.type}]`);
-                let count = 0;
-                let skipped = 0;
-                const maxCount = this.gConfig.discord_log_member_count ?? 5;
-                channel.members.forEach(m => {
-                    if (count >= maxCount) {
-                        skipped ++;
-                        return;
-                    }
-                    console.log(`  ${m.displayName} [memberid ${m.id}, userTag ${m.user.tag} deleted=${m.deleted} bot=${m.user.bot}`);
-                    count ++;
-                });
-                if (skipped > 0) {
-                    console.log(`  ... (+ ${skipped} members)`);
-                }
+        try {
+            const newData = {};
+            const startTime = Date.now();
+            const guildIDs = await this.client.guilds.fetch();
+            const myGuildIDs = [];
+            guildIDs.forEach(g => {
+                myGuildIDs.push(g.id);
             });
+            for (let i = 0; i < myGuildIDs.length; ++ i)  {
+                const guild = await this.client.guilds.fetch(myGuildIDs[i]);
+                const members = await guild.members.fetch();
+                const channels = await guild.channels.fetch(); // parallel would be better but meh
+                channels.forEach((channel, id) => {
+                    if (channel.type === 'GUILD_CATEGORY')
+                        return;
+                    // if (!(channel.id in this.relevantChannelIDs))
+                    //     return;
+                    console.log(`${guild.name} / ${channel.name} [Guild.id ${channel.guildId} Channel.id ${id} type:${channel.type}]`);
+                    let count = 0;
+                    let skipped = 0;
+                    const maxCount = this.gConfig.discord_log_member_count ?? 5;
+                    channel.members.forEach(m => {
+                        if (count >= maxCount) {
+                            skipped ++;
+                            return;
+                        }
+                        console.log(`  ${m.displayName} [memberid ${m.id}, userTag ${m.user.tag} deleted=${m.deleted} bot=${m.user.bot}`);
+                        count ++;
+                    });
+                    if (skipped > 0) {
+                        console.log(`  ... (+ ${skipped} members)`);
+                    }
+                });
+            }
+        } catch (e) {
+            console.log(`FetchAndDump threw an exception. Who knows what our Discord bot state looks like now.`);
+            console.log(e);
         }
         console.log(`> (${Date.now() - startTime} ms)`);
     }
