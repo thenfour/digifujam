@@ -360,7 +360,8 @@ class SFZRegion {
             detuneCents: ((midiNote - this.pitch_keycenter) * 100) + this.tune,
         };
         ret.midiFrequency = DFU.MidiNoteToFrequency(this.pitch_keycenter + (ret.detuneCents / 100));
-        ret.playbackRatio = this.midiFrequencyCenter / ret.midiFrequency;
+        ret.playbackRatio = ret.midiFrequency / this.midiFrequencyCenter;
+        console.log(`calcdetune; ${midiNote} / ${this.pitch_keycenter} = ratio ${ret.playbackRatio}`);
         return ret;
     }
 
@@ -544,11 +545,12 @@ class sfzVoice {
         //const transpose = ('transpose' in this.instrumentSpec) ? this.instrumentSpec.transpose : 0;
         const detuneSpec = sfzRegion.CalculateDetune(midiNote + this.getPitchBendSemis() + (this.instrumentSpec.GetParamByID("adjustFinetune").currentValue / 100));
         this.playbackRatio = detuneSpec.playbackRatio; // needed to calculate the correct duration of the sample
+        console.log(`midinote: ${this.midiNote}, ratio: ${this.playbackRatio}, detune: ${detuneSpec.detuneCents}`);
         this.graph.nodes.pan1.pan.value = sfzRegion.pan;
 
         this.perfGraph.nodes.bufferSourceNode1 = this.audioCtx.createBufferSource();
         this.perfGraph.nodes.bufferSourceNode1.buffer = sfzRegion.buffer;
-        this.perfGraph.nodes.bufferSourceNode1.detune.value = detuneSpec.detuneCents;
+        this.perfGraph.nodes.bufferSourceNode1.playbackRate.value = detuneSpec.playbackRatio;
         if (sfzRegion.loopSpec) {
             this.perfGraph.nodes.bufferSourceNode1.loop = true;
             this.perfGraph.nodes.bufferSourceNode1.loopStart = sfzRegion.loopSpec.start;
@@ -560,7 +562,7 @@ class sfzVoice {
             this.graph.nodes.pan2.pan.value = sfzRegion.correspondingRegion.pan;
             this.perfGraph.nodes.bufferSourceNode2 = this.audioCtx.createBufferSource();
             this.perfGraph.nodes.bufferSourceNode2.buffer = sfzRegion.correspondingRegion.buffer;
-            this.perfGraph.nodes.bufferSourceNode2.detune.value = detuneSpec.detuneCents;
+            this.perfGraph.nodes.bufferSourceNode2.playbackRate.value = detuneSpec.playbackRatio;
             if (sfzRegion.correspondingRegion.loopSpec) {
                 this.perfGraph.nodes.bufferSourceNode2.loop = true;
                 this.perfGraph.nodes.bufferSourceNode2.loopStart = sfzRegion.correspondingRegion.loopSpec.start;
@@ -702,13 +704,12 @@ class sfzVoice {
             case "adjustFinetune":
             case "pb":
                 if (this.sfzRegion) {
-                    const detuneCents = this.sfzRegion.CalculateDetune(this.midiNote + this.getPitchBendSemis() + (this.instrumentSpec.GetParamByID("adjustFinetune").currentValue / 100)).detuneCents;
-                    // don't bother setting this.playbackRatio; it will not be accurate
+                    const spec = this.sfzRegion.CalculateDetune(this.midiNote + this.getPitchBendSemis() + (this.instrumentSpec.GetParamByID("adjustFinetune").currentValue / 100));
                     if (this.perfGraph.nodes.bufferSourceNode1) {
-                        this.perfGraph.nodes.bufferSourceNode1.detune.value = detuneCents;
+                        this.perfGraph.nodes.bufferSourceNode1.playbackRate.value = spec.playbackRatio;
                     }
                     if (this.perfGraph.nodes.bufferSourceNode2) {
-                        this.perfGraph.nodes.bufferSourceNode2.detune.value = detuneCents;
+                        this.perfGraph.nodes.bufferSourceNode2.playbackRate.value = spec.playbackRatio;
                     }
                 }
                 break;
