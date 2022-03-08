@@ -41,7 +41,7 @@ class DiscordBot {
 
         // When the client is ready, run this code (only once)
         this.client.on('ready', async () => {
-            console.log("[][] Discord ready ...");
+            console.log("Discord ready ...");
             await this.FetchAndDump();
             this.SyncChannelUserMap();
         }); // ready()
@@ -289,10 +289,10 @@ class DiscordBot {
     }
 
     async FetchAndDump() {
+        const newData = {};
+        const startTime = Date.now();
         console.log(`< Dumping discord info`);
         try {
-            const newData = {};
-            const startTime = Date.now();
             const guildIDs = await this.client.guilds.fetch();
             const myGuildIDs = [];
             guildIDs.forEach(g => {
