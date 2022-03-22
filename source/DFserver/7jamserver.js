@@ -55,7 +55,12 @@ class _7jamServer {
     this.mActivityDatasetsPath = `${this.mConfig.storage_path}${this.mConfig.path_separator}ActivityDatasets.json`;
     this.mPathLatestServerState = `${this.mConfig.storage_path}${this.mConfig.path_separator}serverState_latest.json`;
 
+    this.mLogReportsPath = `${this.mConfig.storage_path}${this.mConfig.path_separator}logreports.json`;
+
     // -- Configure HTTP routes ------------------------------------
+    this.expressApp.use(express.json());
+    this.expressApp.use(express.urlencoded({ extended: false }));
+
     this.expressApp.use("/DFStatsDB.json", express.static(this.mStatsDBPath));
     this.expressApp.use("/ActivityDatasets.json", express.static(this.mActivityDatasetsPath));
     this.expressApp.use("/storage", express.static(this.mConfig.storage_path), serveIndex(this.mConfig.storage_path, {'icons' : true}));
@@ -70,6 +75,8 @@ class _7jamServer {
 
     this.expressApp.post('/uploadGraffiti', this.OnGraffiti);
 
+    this.expressApp.post("/reportlog", this.OnReportLog);
+
     this.expressApp.get('/activityHookData.json', (req, res) => {
       res.setHeader('Content-Type', 'application/json');
       const startTime = Date.now();
@@ -79,6 +86,7 @@ class _7jamServer {
     });
 
     this.mRooms = {}; // map roomID to RoomServer
+    this.NODE_ENV = expressApp.get('env');
 
     const globalInstruments = fs.readFileSync("global_instruments.json");
     DF.SetGlobalInstrumentList(JSON.parse(globalInstruments).globalInstruments);
@@ -128,7 +136,7 @@ class _7jamServer {
     const hooks = [
       new DFStats.StatsLogger(this.mStatsDBPath, this.mDB),
     ];
-    this.m7jamAPI = new _7jamAPI(this.mRooms, this.mConfig, this.io);
+    this.m7jamAPI = new _7jamAPI(this, this.mRooms, this.mConfig, this.io);
     if (this.mConfig.discord_bot_token) {
       this.mDiscordBot = new DFDiscordBot.DiscordBot(this.mConfig, () => this.onDiscordInitialized());
       this.mDiscordIntegrationManager = new DFStats.DiscordIntegrationManager(this.mConfig, this.mDiscordBot, this.m7jamAPI, this.mActivityDatasetsPath);
@@ -473,46 +481,108 @@ class _7jamServer {
     }
   } // on connection
 
-  OnGraffiti(req, res) {
-    const userID = req.body.userID;
-    if (!userID)
-      return;
-    if (!req.files)
-      return;
-    const es = Object.entries(req.files);
-    if (!es.length)
-      return;
-    const file = es[0][1];
-
-    // validate extensions
-    if (!DFU.IsImageFilename(file.name)) {
-      console.log(`Rejecting ${file.name} / ${file.size} due to not being an image.`);
-      return;
-    }
-
-    // generate a filename and move
-    const ext = file.name.substring(file.name.lastIndexOf("."));
-    const filename = DFU.generateID() + ext;
-    const destPath = this.mConfig.UploadsDirectory + "/" + filename;
-    const url = this.mConfig.host_prefix + "/uploads/" + filename;
-
-    file.mv(destPath, (e) => {
-      try {
-        console.log(`uploaded: ${file.name} to ${destPath}`); // the uploaded file object
-        // get room & user objects
-        const {room, user} = this.m7jamAPI.GetRoomAndUserByUserID(userID);
-        if (!user)
-          return;
-        room.DoGraffitiOpsForUser(user, [ {
-                                    op : "place",
-                                    content : url,
-                                  } ]);
-      } catch (e) {
-        log(`Exception while processing uploaded file ${file.name}`);
-        log(e)
+  OnGraffiti = (req, res) => {
+    try {
+      const userID = req.body.userID;
+      if (!userID) {
+        res.end("nok");
+        return;
       }
-    });
+      if (!req.files) {
+        res.end("nok");
+        return;
+      }
+      const es = Object.entries(req.files);
+      if (!es.length) {
+        res.end("nok");
+        return;
+      }
+      const file = es[0][1];
+
+      // validate extensions
+      if (!DFU.IsImageFilename(file.name)) {
+        console.log(`Rejecting ${file.name} / ${file.size} due to not being an image.`);
+        res.end("nok");
+        return;
+      }
+
+      // generate a filename and move
+      const ext = file.name.substring(file.name.lastIndexOf("."));
+      const filename = DFU.generateID() + ext;
+      const destPath = this.mConfig.UploadsDirectory + "/" + filename;
+      const url = this.mConfig.host_prefix + "/uploads/" + filename;
+
+      file.mv(destPath, (e) => {
+        try {
+          console.log(`uploaded: ${file.name} to ${destPath}`); // the uploaded file object
+          // get room & user objects
+          const {room, user} = this.m7jamAPI.GetRoomAndUserByUserID(userID);
+          if (!user) {
+            res.end("nok");
+            return;
+          }
+          room.DoGraffitiOpsForUser(user, [ {
+                                      op : "place",
+                                      content : url,
+                                    } ]);
+          res.end("ok");
+        } catch (e) {
+          log(`Exception while processing uploaded file ${file.name}`);
+          log(e)
+        }
+      });
+    } catch (e) {
+      console.log("OnGraffiti exception");
+      console.log(e);
+    }
   } // on graffiti
+
+  GetLogReportsSync() {
+    try {
+      return JSON.parse(fs.readFileSync(this.mLogReportsPath));
+    } catch (e) {
+      console.log(`Exception while parsing log reports file ${this.mLogReportsPath}`);
+      console.log(`Probably just starting a new file...`);
+    }
+    return { reports: [] }; // default empty obj.
+  }
+
+  async WriteLogReports(bigobj) {
+    try {
+      await fsp.writeFile(this.mLogReportsPath, JSON.stringify(bigobj, null, 2), 'utf8');
+      console.log(`Log entries (${bigobj.reports.length}) reported to ${this.mLogReportsPath}`);
+    } catch (e) {
+      console.log("WriteLogReports exception");
+      console.log(e);
+    }
+  }
+
+  OnReportLog = async (req, res) => {
+    try {
+      console.log(`onreportlog entrypoint`);
+      if (!Array.isArray(req.body)) {
+        res.end("nok");
+        return;
+      }
+      if (req.body.length < 1) {
+        res.end("nok");
+        return;
+      }
+      
+      const bigobj = this.GetLogReportsSync();
+
+      bigobj.reports.push({
+        date: Date.now(),
+        payload: Object.assign({}, req.body),
+      });
+
+      this.WriteLogReports(bigobj);
+      res.end("ok");
+    } catch (e) {
+      console.log("OnReportLog exception");
+      console.log(e);
+    }
+  }
 
   onDiscordInitialized() {
     this.mServerStats.OnDiscordInitialized();
@@ -522,3 +592,4 @@ class _7jamServer {
 module.exports = {
   _7jamServer,
 }
+

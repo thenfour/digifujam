@@ -1218,6 +1218,8 @@ class DigifuApp {
     });
     this.rooms = data.rooms;
 
+    this.node_env = data.node_env;
+
     // bring user stats to our room's user list
     let room = this.rooms.find(r => r.roomID == this.roomState.roomID);
     console.assert(!!room, "what, we're in a room, get a ping that doesn't have stats about this room???");

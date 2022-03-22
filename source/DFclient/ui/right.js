@@ -2772,7 +2772,9 @@ class RootArea extends React.Component {
 
         // use innerWidth; it's more standard, connected to the document, supported, doesn't include elements like browser chrome.
         // and moreso, returns correct results when un-minimizing. see #243
-        if (window.innerWidth < 800) { // for mobile
+        //console.log(`width = ${window.innerWidth}`);
+        //const isMobile = localStorage.mobile || window.navigator.maxTouchPoints > 1;
+        if (window.innerWidth < 1100) { // try to be sensitive to iphone, where width is like always 1010 or something.
             rightSize = 0;
             leftSize = 0;
         }

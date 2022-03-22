@@ -55,6 +55,7 @@ class ServerAdminApp {
          `  echo                <str>`,
          `  main                <refresh main info>`,
          '  log',
+         `  reports             [clear]`,
          `  integration-status`,
          `  integration-help    <subscriptionID> <integrationID> <args...>`,
          `  integration-cmd     <subscriptionID> <integrationID> <args...>`,
@@ -144,6 +145,26 @@ class ServerAdminApp {
       si.integration.DoAdminCmd(args[2], (msg) => this.SendLogMessage(ws, msg));
    }
 
+   OnReportsCmd(ws, args) {
+      args = DFU.GrabArgs(args, 1);
+      const obj = this._7jamAPI.server.GetLogReportsSync();
+      if (args && args.at(0) === 'clear') {
+         const count = obj.reports.length;
+         obj.reports = [];
+         this._7jamAPI.server.WriteLogReports(obj);
+         this.SendLogMessages(ws, [`${count} error reports were cleared.`]);
+      } else {
+         const now = new Date();
+         obj.reports.forEach(r => {
+            if (r.date) {
+               r.age = new DFU.TimeSpan(now - (new Date(r.date))).longString;
+            }
+         });
+         this.SendLogMessages(ws, [JSON.stringify(obj, null, 2)]);
+         this.SendLogMessage(ws, `${obj.reports.length} error reports.`);
+      }
+   }
+
    DoConsoleCommand(ws, data) {
       const tokens = DFU.GrabArgs(data.commandLine, 1);
       if (!tokens?.length) {
@@ -174,6 +195,9 @@ class ServerAdminApp {
          return;
       case 'integration-status':
          this.SendIntegrationStatus(ws, args);
+         return;
+      case 'reports':
+         this.OnReportsCmd(ws, args);
          return;
       }
       this.SendLogMessage(ws, `Unknown command ${cmd}`);

@@ -47,7 +47,7 @@ class GestureTracker {
     this.events = new EventEmitter();
     this.__hasUserGestured = false;
 
-    document.onkeydown = (e) => {
+    document.addEventListener('keydown', (e) => {
       //console.log(`GestureTracker -> keydown`);
       if (!this.__hasUserGestured) {
         this.__hasUserGestured = true;
@@ -57,6 +57,10 @@ class GestureTracker {
       this.events.emit('keydown', e);
 
       // who wants some ugly!
+      if (e.key === '1' && e.altKey) {
+        return; // allow debug log hotkey not to interfere
+      }
+
       let handled = false;
       if (window.DFChatinput) {
         if (e.target.tagName == 'BODY' && e.key.length === 1) { // BODY means it's bubbled up to the top of the DOM. nothing else has handled it.
@@ -80,7 +84,7 @@ class GestureTracker {
           }
         }
       }
-    };
+    });
 
     document.onkeyup = (e) => {
       //console.log(`GestureTracker -> keyup`);

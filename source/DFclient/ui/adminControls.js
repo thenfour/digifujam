@@ -3,6 +3,7 @@ let DF = require('../../DFcommon/DFCommon');
 DF = Object.assign(DF, require('../../DFcommon/dfutil'));
 const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
 
+let gErrorNo = 0;
 
 class AdminControls extends React.Component {
 
@@ -56,6 +57,8 @@ class AdminControls extends React.Component {
         return (
                     <div>
                         <div>uptime: {uptime.longString}</div>
+                        <div>node_env: {this.props.app.node_env}</div>
+                        <div><button onClick={() => { throw new Error(`admin error #${gErrorNo++}`)}}>throw an exception (ALT+2)</button></div>
                         <div><a href="/stats.html" target="_blank">Stats</a></div>
                         <div><a href="/activityHookInspector.html" target="_blank">Activity graphs</a></div>
                         <div><a href="/admin.html" target="_blank">Admin page</a></div>

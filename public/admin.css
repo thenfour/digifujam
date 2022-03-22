@@ -22,6 +22,7 @@ pre {
    display:flex;
    font-family: 'Overpass Mono', monospace;
    font-size: larger;
+   justify-content: flex-start;
 }
 
 #appsSidebar {
@@ -57,6 +58,7 @@ pre {
 #appMain {
    flex-grow: 1;
    display:flex;
+   overflow: auto;
 }
 .consoleApp {
    display: flex;

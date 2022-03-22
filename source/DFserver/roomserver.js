@@ -1706,6 +1706,7 @@ class RoomServer {
         token: (new Date()).toISOString(),
         worldPopulation,
         serverUptimeSec: ((new Date()) - this.server.mServerStartedDate) / 1000,
+        node_env: this.server.NODE_ENV,
         rooms: [],
       };
 

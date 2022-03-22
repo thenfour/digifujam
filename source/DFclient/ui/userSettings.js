@@ -101,6 +101,10 @@ class UserState extends React.Component {
                {this.state.cacheLoadProgress.totalFiles} total</div>}
        </div>);
 
+       const errorLogButton = window.DFlog?.length > 0 && (<div className='showErrorLogButtonContainer'>
+           <button onClick={() => window.DFLogToggle()}>Show error log (ALT+1)</button>
+       </div>);
+
        return (
            <div className="userSettings">
                <fieldset>
@@ -137,6 +141,7 @@ class UserState extends React.Component {
                 <fieldset>
                     <div className="legend">System</div>
                    {cacheSamplesButton}
+                   {errorLogButton}
                 </fieldset>
            </div>
        );

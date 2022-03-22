@@ -6,7 +6,8 @@ const DFU = require('../DFcommon/dfutil');
 // ----------------------------------------------------------------------------------------------------------------
 class _7jamAPI
 {
-  constructor(allRooms, gConfig, io) {
+  constructor(server, allRooms, gConfig, io) {
+    this.server = server;
     this.io = io;
     this.gConfig = gConfig;
     this.allRooms = allRooms;

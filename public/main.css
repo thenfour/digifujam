@@ -2241,5 +2241,10 @@ ul.instParamList li.floatParam .floatParamMainControls {
     color: #099;
 }
 
-
+.showErrorLogButtonContainer button {
+    color: #f84;
+    border: 0;
+    background-color: #822;
+    padding: 6px 18px;
+}
 

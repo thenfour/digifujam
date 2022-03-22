@@ -2,6 +2,182 @@
 <html>
 
 <head>
+
+    <style type="text/css">
+
+        #errorlog {
+            display:none;
+            position:absolute;
+            background-color:#444e;
+            color: #0aa;
+            font-family: monospace;
+            font-size: 18px;
+            top: 0;
+            left: 0;
+            padding: 10px;
+            z-index: 9999; /* only thing is that i want alerts to be above.*/
+        }
+
+        #errorlog pre.log_entry {
+            border-left: 5px solid #cc0;
+            padding-left: 10px;
+        }
+
+        #errorlog pre.log_entry.reported {
+            border-left: 5px solid #090;
+        }
+
+        #errorlog.visible {
+            display:block;
+        }
+        
+    </style>
+
+    <script type="text/javascript">
+        let gLogItemsRemaining = 30;
+
+        const gForceLogVisible = !!(new URLSearchParams(window.location.search).get("log"));
+
+        window.DFlog = [];
+        window.DFlogEntryID = 0;
+        window.addEventListener("error", (e) => {
+            if (gLogItemsRemaining < 1) return;
+            gLogItemsRemaining --;
+
+            let logel = document.getElementById("errorlog");
+            if (!logel) {
+                logel = document.createElement("div");
+                logel.id = "errorlog";
+                if (gForceLogVisible) {
+                    logel.classList.add("visible");
+                }
+                document.body.appendChild(logel);
+
+                // close button
+                let close = document.createElement("button");
+                close.innerText = "Close";
+                close.title = "Close (alt+1)";
+                close.addEventListener("click", () => {
+                    if (!gForceLogVisible) {
+                        document.getElementById('errorlog').classList.toggle("visible");
+                    }
+                });
+                logel.appendChild(close);
+
+                // clear button
+                let clear = document.createElement("button");
+                clear.innerText = "Clear";
+                clear.addEventListener("click", () => {
+                    if (!gForceLogVisible) {
+                        document.getElementById('errorlog').classList.toggle("visible");
+                    }
+                    window.DFlog = [];
+                    const nodes = document.querySelectorAll(".log_entry");
+                    nodes.forEach(node => {
+                        node.parentElement.removeChild(node);
+                    });
+                });
+                logel.appendChild(clear);
+
+                // send button
+                let send = document.createElement("button");
+                send.innerText = "Report";
+                send.addEventListener("click", (e) => {
+                    const payload = window.DFlog.filter(entry => !entry.reported);
+                    if (payload.length < 1) {
+                        alert("there are no errors to report hmm 🤔.");
+                        return;
+                    }
+
+                    const request = new Request('/reportlog', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                        });
+
+                    try {
+                        fetch(request)
+                            .then(resp => {
+                                console.log(`status = ${resp.status}`);
+                                payload.forEach(element => {
+                                    element.reported = true;
+                                    const el = document.getElementById(`log_entry_${element.id}`);
+                                    el.classList.add("reported");
+                                });
+                                alert(`${payload.length} Errors have been sent to the server, thanks!`);
+                            })
+                            .catch(err => {
+                                alert(`There were errors sending errors to the server. hmm?`);
+                            });
+                    } catch (err) {
+                        alert(`There were errors sending errors to the server. that's a bummer`);
+                    }
+                });
+                logel.appendChild(send);
+            }
+
+            const msg =
+`@ ${e.filename}:${e.lineno}
+timestamp: ${e.timeStamp}
+message: ${e.message}
+type: ${e.type}
+error.message: ${e.error.message}
+error.stack: ${e.error.stack.toString()}
+`;
+
+            const stackLines = e.error?.stack?.match(/[^\r\n]+/g);
+
+            const entryObj = {
+                id: window.DFlogEntryID,
+                filename: e.filename,
+                username: window.gDFApp?.myUser?.name,
+                line: e.lineno,
+                timestamp: e.timestamp, // this is MS since page load i believe.
+                date: new Date().toISOString(),
+                message: e.message,
+                type: e.type,
+                errorMessage: e.error?.message,
+                errorStack: stackLines,
+            };
+            window.DFlog.push(entryObj);
+            window.DFlogEntryID ++;
+            const entry = document.createElement("pre");
+            entry.classList.add("log_entry");
+            entry.id = `log_entry_${entryObj.id}`;
+            entry.innerText = msg;
+            logel.appendChild(entry);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '1' && e.altKey) {
+                const st = document.getElementById('errorlog')?.classList;
+                if (!st) return;
+                if (!gForceLogVisible) {
+                    st.toggle("visible");
+                }
+                e.preventDefault();
+                return;
+            }
+            if (e.key === '2' && e.altKey) {
+                throw new Error(`test error because you pressed alt+2`);
+                e.preventDefault();
+                return;
+            }
+        });
+
+        window.DFLogToggle = () => {
+            const st = document.getElementById('errorlog')?.classList;
+            if (!st) return;
+            if (!gForceLogVisible) {
+                st.toggle("visible");
+            }
+        }
+
+    </script>
+
+
     <script src="ext/jquery.min.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
