@@ -177,7 +177,7 @@ class UserSettingsButton extends React.Component {
                     style={{borderColor: color, color}}
                     >
                   {/* {userName} */}
-                  <UIUserName user={this.props.app?.myUser}></UIUserName>
+                  <UIUserName user={this.props.app?.myUser} app={this.props.app}></UIUserName>
                   </div>
 
                {this.state.isExpanded &&

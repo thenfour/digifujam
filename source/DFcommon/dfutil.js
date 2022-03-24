@@ -23,8 +23,8 @@ class TimeSpan {
   constructor(ms) {
     //const Sign = Math.sign(ms);
     //ms = Math.abs(ms);
-    if (ms < 0)
-      ms = 0;
+    // if (ms < 0) // why? negative timespans are just fine.
+    //   ms = 0;
     this.__totalMilliseconds = ms;
     this.__totalSeconds = Math.floor(ms / 1000);
     this.__totalMinutes = Math.floor(ms / 60000);

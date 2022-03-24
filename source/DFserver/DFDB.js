@@ -21,14 +21,22 @@ class DFDB {
       };
     }
 
-    setTimeout(this.OnFlushTimer, DF.ServerSettings.DBFlushMS);
+    this.timer = null;
+    this.StartFlushTimer(false);
 
     // onSuccess(this);
   }
 
+  StartFlushTimer(immediate) {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+    this.timer = setTimeout(this.OnFlushTimer, immediate ? 1000 : DF.ServerSettings.DBFlushMS);
+  }
+
   OnFlushTimer = () => {
     try {
-      setTimeout(this.OnFlushTimer, DF.ServerSettings.DBFlushMS);
+      this.timer = setTimeout(this.OnFlushTimer, DF.ServerSettings.DBFlushMS);
       fsp.writeFile(
           this.path, JSON.stringify(this.data, null, 2), 'utf8');
     } catch (e) {
@@ -48,6 +56,7 @@ class DFDB {
         global_roles : [],
       };
     }
+    this.StartFlushTimer(true);
     return this.data.users[google_id];
   } // GetOrCreateGoogleUser
 
@@ -62,6 +71,15 @@ class DFDB {
           userDoc.stats[k] += props[k];
       })
     });
+    this.StartFlushTimer(true);
+  }
+
+  UpdateUserPersistentInfo(dfuser) {
+    //console.log(`UpdateUserPersistentInfo(${dfuser.userID}, ${dfuser.persistentID})`);
+    if (!dfuser.persistentID) return; // not a persistent user; nothing in the db needs to be updated.
+    const persistentUser = this.data.users[dfuser.persistentID];
+    persistentUser.global_roles = [...dfuser.persistentInfo.global_roles];
+    this.StartFlushTimer(true);
   }
 }
 

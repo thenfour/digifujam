@@ -5,10 +5,45 @@ const eUserSource = {
   Discord : 2,
 };
 
+function UserSourceToString(p) {
+  if (p === eUserSource.SevenJam) { return "SevenJam"; }
+  if (p === eUserSource.Discord) { return "Discord"; }
+  return "unknown";
+}
+
 const eUserPresence = {
   Online : 1,  // server expects websocket
   Offline : 2, // server does not expect websocket
 };
+
+function UserPresenceToString(p) {
+  if (p === eUserPresence.Online) { return "online"; }
+  if (p === eUserPresence.Offline) { return "offline"; }
+  return "unknown";
+}
+
+const eUserGlobalRole = {
+  sysadmin: {
+    name:"sysadmin",
+    requiredRoleToManage: "sysadmin",
+  },
+  moderator: {
+    name: "moderator",
+    requiredRoleToManage: "sysadmin",
+  },
+  performer: {
+    name: "performer",
+    requiredRoleToManage: "moderator",
+  },
+  shadow_ban: {// shadow_ban users' chat messages, avatar, played notes, are not 
+    name: "shadow_ban",
+    requiredRoleToManage: "moderator",
+  },
+}
+
+function IsValidUserGlobalRoleName(roleName) {
+  return Object.values(eUserGlobalRole).some(r => r.name === roleName);
+}
 
 // convert a db model DFUser to a struct usable in DigifuUser.persistentInfo
 // see models/DFUser.js for the src format
@@ -70,30 +105,72 @@ class DigifuUser {
   }
 
   IsAdmin() {
-    return this.hasGlobalRole("sysadmin");
+    return this.hasGlobalRole(eUserGlobalRole.sysadmin.name);
   }
 
-  addGlobalRole(role) {
+  IsModerator() {
+    if (!this.persistentInfo)
+      return false;
+    if (!this.persistentInfo.global_roles)
+      return false;
+    return this.persistentInfo.global_roles.some(x => x === eUserGlobalRole.moderator.name || x === eUserGlobalRole.sysadmin.name);
+  }
+
+  // called when integrating ping data on clients
+  clearGlobalRoles() {
     this.#pingDirty = true;
     if (!this.persistentInfo) {
       this.persistentInfo = EmptyPersistentInfo();
     }
     if (!this.persistentInfo.global_roles) {
-      this.persistentInfo.global_roles = [ role ];
-      return;
+      this.persistentInfo.global_roles = [ ];
     }
-    if (this.persistentInfo.global_roles.some(r => r === role)) {
-      return; // already exists
-    }
-    this.persistentInfo.global_roles.push(role);
   }
 
-  hasGlobalRole(role) {
+  removeGlobalRole(roleName) {
+    if (!this.persistentInfo) return;
+    if (!this.persistentInfo.global_roles) return;
+    const i = this.persistentInfo.global_roles.findIndex(r => r === roleName);
+    if (i === -1) return;
+    this.#pingDirty = true;
+    this.persistentInfo.global_roles.splice(i, 1);
+  }
+
+  // this is called when user has explicitly set the admin key.
+  addGlobalRole(roleName) {
+    this.#pingDirty = true;
+    if (!this.persistentInfo) {
+      this.persistentInfo = EmptyPersistentInfo();
+    }
+
+    if (!IsValidUserGlobalRoleName(roleName)) {
+      console.log(`unknown user global role ${roleName}`);
+      return;
+    }
+
+    if (!this.persistentInfo.global_roles) {
+      this.persistentInfo.global_roles = [ roleName ];
+      return;
+    }
+    if (this.persistentInfo.global_roles.some(r => r === roleName)) {
+      return; // already exists
+    }
+    this.persistentInfo.global_roles.push(roleName);
+  }
+
+  hasGlobalRole(roleName) {
     if (!this.persistentInfo)
       return false;
     if (!this.persistentInfo.global_roles)
       return false;
-    return this.persistentInfo.global_roles.some(x => x == role);
+    return this.persistentInfo.global_roles.some(x => x === roleName);
+  }
+
+  HasRequiredRoleToManageRole(roleName) {
+    if (this.IsAdmin()) return true; // override any silliness
+    const roleObj = eUserGlobalRole[roleName];
+    if (!roleObj) return false; // unknown role? just let admins clean that up i guess and everyone else no.
+    return this.hasGlobalRole(roleObj.requiredRoleToManage);
   }
 
   SetColor(c) {
@@ -155,6 +232,7 @@ class DigifuUser {
     // if (u.presence)
     //   this.presence = u.presence;
     if (u.global_roles) {
+      this.clearGlobalRoles();
       u.global_roles.forEach(r => {this.addGlobalRole(r)});
     }
     if (u.noteOns) {
@@ -226,7 +304,10 @@ module.exports = {
   DigifuUser,
   eUserSource,
   eUserPresence,
+  eUserGlobalRole,
   EmptyPersistentInfo,
   EmptyStats,
   UserDBRecordToPersistentInfo,
+  UserPresenceToString,
+  UserSourceToString,
 }

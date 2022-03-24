@@ -211,6 +211,10 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.UserDance, { danceID });
     }
 
+    SendChatMessageOp(ops) {
+        this.socket.emit(DF.ClientMessages.ChatMessageOp, ops);
+    }
+
     // GRAFFITI
     SendGraffitiOps(ops) {
         this.socket.emit(DF.ClientMessages.GraffitiOps, ops);
@@ -264,6 +268,10 @@ class DigifuNet {
     }
     SeqCue(instrumentID, cancel) {
         this.socket.emit(DF.ClientMessages.SeqCue, {instrumentID, cancel});
+    }
+
+    SendUserRoleOp(payload) {
+        this.socket.emit(DF.ClientMessages.UserRoleOp, payload);
     }
 
     // --------------
@@ -331,6 +339,9 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.RoomBPMUpdate, (data) => this.handler.NET_OnRoomBPMUpdate(data))
         this.socket.on(DF.ServerMessages.GraffitiOps, (data) => this.handler.NET_OnGraffitiOps(data))
         this.socket.on(DF.ServerMessages.UserDance, (data) => this.handler.NET_OnUserDance(data))
+
+        this.socket.on(DF.ServerMessages.UserRoleOp, (data) => this.handler.NET_OnUserRoleOp(data))
+        this.socket.on(DF.ServerMessages.ChatMessageOp, (data) => this.handler.NET_OnChatMessageOp(data))
 
         // SEQ ----
         this.socket.on(DF.ServerMessages.SeqPlayStop, (data) => this.handler.NET_SeqPlayStop(data));

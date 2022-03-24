@@ -1,0 +1,226 @@
+.moderationPanel {
+  position: absolute;
+  background-color: #000c;
+  z-index: 9999;
+  --margin: 30px;
+  max-width: calc(100% - 2 * var(--margin));
+  max-height: calc(100% - 2 * var(--margin));
+  top: 50%;
+  /* left: var(--margin); */
+  border: 3px solid #ff6932;
+  /* padding: 20px; */
+  color: #ccc;
+  font-family: monospace;
+  font-size: 18px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+}
+
+
+.moderationPanel .topControls {
+  /* padding:20px; */
+  background-color: #4f2211;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.moderationPanel .topControls span {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 10px;
+  color: #ff6932;
+}
+.moderationPanel .topControls button {
+  border: 0;
+  background-color: #000;
+  margin: 8px;
+  /* float: right; */
+}
+
+.moderationPanel .body {
+  padding: 16px 20px;
+  overflow: auto;
+}
+
+span.userModerationGear {
+  cursor:pointer;
+  pointer-events: all; /* important for avatars */
+}
+
+span.userModerationGear i {
+  color:#f83;
+  padding: 1px 4px;
+  vertical-align: middle;
+}
+
+.moderationPanel dd,
+.moderationPanel dt
+{
+  display:flex;
+  align-items: flex-start;
+  margin: 0;
+}
+.moderationPanel dt {
+  margin-top:14px;
+}
+.moderationPanel dd {
+}
+.moderationPanel dd .field {
+  border-radius:8px;
+  display: flex;
+  background-color: #444;
+  margin: 3px 4px;
+  padding: 2px 7px;
+  color: #0cc;
+  align-items: center;
+}
+.moderationPanel dd.name .txt {
+  font-weight:bold;
+  background:none;
+  font-size:30px;
+  margin: 0;
+  padding: 3px 17px;
+  background-color: #044;
+}
+
+.moderationPanel dt {
+}
+.moderationPanel dl {margin: 0;}
+
+.moderationPanel span.button {
+  cursor:pointer;
+  background-color: #033;
+}
+.moderationPanel span.button:hover {
+  background-color: #077;
+
+}
+
+.moderationPanel ul.comboBox {
+  background-color: #333;
+  border-radius: 0;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin-left: 0;
+}
+
+.moderationPanel ul.comboBox li {
+  background-color: black;
+  margin: 2px;
+  padding: 2px 20px;
+  cursor: pointer;
+}
+
+.moderationPanel ul.comboBox li.disabled {
+  cursor:not-allowed;
+  color:#888;
+}
+
+.moderationPanel ul.comboBox li:hover {
+  background-color: #033;
+}
+
+.moderationPanel .warningConfirm {
+  display: flex;
+  max-width: 296px;
+  flex-direction: column;
+  background-color: #4f2211;
+  color: #cc0;
+  border: 2px solid #ff6932;
+  padding: 4px 9px;
+}
+
+.moderationPanel .expiration .warningConfirm {
+  max-width: 700px;
+}
+
+.moderationPanel .warningConfirm .dynamic {
+  color: white;
+  font-weight: bold;
+}
+
+.moderationPanel span.button.disabled
+{
+  color: #a5a5a5;
+  background-color: #444;
+  cursor: not-allowed;
+}
+
+.moderationPanel.graffiti dd {
+  margin-left:20px;
+}
+
+
+.moderationPanel.graffiti dd.content {
+  /* margin-left:20px; */
+  background-color: #333;
+  padding: 10px 10px;
+  color: #0cc;
+}
+
+.moderationPanel.graffiti dd.expiration {
+  display: flex;
+  flex-direction: column;
+}
+
+.moderationPanel.graffiti dd.expiration .buttons {
+  display: flex;
+  width: 574px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.moderationPanel.graffiti dd button
+{border: 0;background-color: #044;color:  #0cc;padding: 3px 9px;font-size: 16px;font-weight: normal;}
+
+.moderationPanel.graffiti dd.expiration button.delete,
+.moderationPanel.graffiti dd.pinning button.unpin
+{background-color: #840;color: #ccc;}
+
+.moderationPanel.graffiti dd.pinning button.pin
+{background-color: #080;color: #ccc;}
+
+.moderationPanel.graffiti dd.expiration button:hover {
+  background-color:#088;
+}
+
+
+.chatLog .chatLogEntryChat {
+  position:relative;
+}
+.chatLog .chatLogEntryChat .deleteChatMsg {
+  color:#f40;
+  background-color:black;
+  pointer-events: all;
+  /* font-size:14px; */
+  position:absolute;
+  bottom:0; /* this allows the confirmation dialog to be in a visible area */
+  left:0;
+}
+
+.chatLog .chatLogEntryChat .deleteChatMsg .ex {
+  cursor:pointer;
+}
+.chatLog .chatLogEntryChat .deleteChatMsg .confirmation {
+  padding: 8px;
+}
+.chatLog .chatLogEntryChat .deleteChatMsg .confirmation .content {
+  color: #ccc;
+  font-family: monospace;
+  font-size: 18px;
+}
+
+.chatLog .chatLogEntryChat .deleteChatMsg .confirmation .fieldName {
+  color: #888;
+}
+
+
+.chatLog .chatLogEntryChat .deleteChatMsg .confirmation .fieldValue {
+  color: #9cc;
+}
+

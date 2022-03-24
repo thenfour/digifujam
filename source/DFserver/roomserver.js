@@ -2,7 +2,7 @@ const DF = require('../DFcommon/DFCommon');
 const DFMusic = require("../DFcommon/DFMusic");
 const {RoomSequencerPlayer} = require('./SequencerPlayer');
 const DFU = require('../DFcommon/dfutil');
-const { EmptyPersistentInfo } = require('../DFcommon/DFUser');
+const { EmptyPersistentInfo, eUserGlobalRole } = require('../DFcommon/DFUser');
 const Seq = require('../DFcommon/SequencerCore');
 
 const log = (a) => { return console.log(a) };
@@ -184,7 +184,7 @@ class RoomServer {
 
         if (clientSocket.handshake.query.DF_ADMIN_PASSWORD === this.server.config.admin_key) {
           log(`An admin has been identified id=${u.userID} name=${u.name}.`);
-          u.addGlobalRole("sysadmin");
+          u.addGlobalRole(eUserGlobalRole.sysadmin.name);
         } else {
           log(`Welcoming user id=${u.userID} name=${u.name}`);//, persistentInfo:${JSON.stringify(persistentInfo)}`);
         }
@@ -947,18 +947,23 @@ class RoomServer {
     }
   }
 
+  // needs its own function because it's also called from an Express endpoint when a user uploads graffiti.
   DoGraffitiOpsForUser(user, data) {
     if (!Array.isArray(data)) throw new Error(`DoGraffitiOpsForUser: data is not valid; should be array`);
     data.forEach(op => {
       switch (op.op) {
         case "place": // { op:"place", content, lifetimeMS }
           {
-            const removalOps = this.roomState.removeGraffitiForUser(user.userID, user.persistentID).map(id => ({
+            const removalOps = this.roomState.removeGraffitiSoUserCanPlace(user.userID, user.persistentID).map(id => ({
               op: "remove",
               id,
             }));
             const graffiti = this.roomState.placeGraffiti(user.userID, op.content, op.lifetimeMS);
-            //console.log(`created graffiti @ ${JSON.stringify(graffiti.position)} - ID ${graffiti.id}`);
+            if (!graffiti) {
+              // no big deal; probably a validation error.
+              return;
+            }
+            //console.log(`** created graffiti @ ${JSON.stringify(graffiti.position)} - ID ${graffiti.id}, userID ${user.userID}`);
             if (!graffiti) return; // no need to throw; assume validation failed.
             this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps.concat([{
               op:"place",
@@ -966,20 +971,45 @@ class RoomServer {
             }]));
             break;
           }
-        case "remove": // { op:"remove", id } // id only used for admin.
+        case "remove": // { op:"remove", id }
           {
-            if (user.IsAdmin() && op.id) {
-              if (!this.roomState.removeGraffiti(op.id)) return;// client out of sync; throw new Error(`Failed to remove graffiti`);
-              this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"remove", id: op.id }]);
-            } else {
-              const removalOps = this.roomState.removeGraffitiForUser(user.userID, user.persistentID).map(id => ({
-                op: "remove",
-                id,
-              }));
-              this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, removalOps);
+            const g = this.roomState.graffiti.find(g => g.id === op.id);
+            if (!g) return; // something out of sync.
+            if (!this.roomState.UserCanManageGraffiti(user, g)) {
+              console.log(`!! user ${user.name} ${user.userID} has no permission to delete graffiti ${op.id}`);
+              return;
             }
+            if (!this.roomState.removeGraffiti(op.id)) return;// client out of sync; throw new Error(`Failed to remove graffiti`);
+            this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"remove", id: op.id }]);
+            //console.log(`** deleting graffiti ID ${op.id}, userID ${user.userID} because server was told to.`);
             break;
           }
+        case "pin": // { op:"pin", id, pin: true/false }
+          {
+            const g = this.roomState.graffiti.find(g => g.id === op.id);
+            if (!g) return; // something out of sync.
+            if (!this.roomState.UserCanManageGraffiti(user, g)) {
+              console.log(`!! user ${user.name} ${user.userID} has no permission to pin/unpin graffiti ${op.id}`);
+              return;
+            }
+            g.pinned = !!op.pin;
+            this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"pin", id: op.id, pin:g.pinned }]);
+            //console.log(`** ${g.pinned ? "pinned" : "unpinned"} graffiti ID ${op.id}`);
+          }
+          break;
+        case "setExpiration": // { op:"setExpiration", id, expiration }
+          {
+            const g = this.roomState.graffiti.find(g => g.id === op.id);
+            if (!g) return; // something out of sync.
+            if (!this.roomState.UserCanManageGraffiti(user, g)) {
+              console.log(`!! user ${user.name} ${user.userID} has no permission to set expiration on graffiti ${op.id}`);
+              return;
+            }
+            g.expires = parseInt(op.expiration);
+            this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setExpiration", id: op.id, expiration:g.expires }]);
+            //console.log(`** set expiration of graffiti ID ${op.id}`);
+          }
+        break;
       }
     });
   }
@@ -1017,6 +1047,36 @@ class RoomServer {
       });
     } catch (e) {
       log(`OnUserDance exception occurred`);
+      log(e);
+    }
+  }
+
+  OnChatMessageOp(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnChatMessageOp => unknown user`);
+        return;
+      }
+
+      switch (data.op) {
+        case "delete":
+          // find chat message
+          const msg = this.roomState.chatLog.find(m => m.messageID === data.messageID);
+          if (!msg) {
+            console.log(`! delete message: unknown message ID ${data.messageID} <user ${foundUser.user.name} uid ${foundUser.user.userID} upid ${foundUser.user.persistentID}>`);
+            return;
+          }
+          // does user have permissions
+          if (!this.roomState.HasPermissionsToDeleteChatMessage(foundUser.user, msg)) {
+            console.log(`! delete message: no permissions to delete message. message ID ${data.messageID} <user ${foundUser.user.name} uid ${foundUser.user.userID} upid ${foundUser.user.persistentID}>`);
+            return;
+          }
+          this.roomState.DeleteMessage(msg.messageID);
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChatMessageOp, data);
+      }
+    } catch (e) {
+      log(`OnChatMessageOp exception occurred`);
       log(e);
     }
   }
@@ -1096,6 +1156,43 @@ class RoomServer {
     }
   }
 
+
+  OnUserRoleOp(ws, data) {
+    try {
+      let caller = this.FindUserFromSocket(ws);
+      if (caller == null) {
+        log(`OnUserRoleOp => unknown caller`);
+        return;
+      }
+
+      if (!caller.user.HasRequiredRoleToManageRole(data.role)) throw new Error(`caller isn't an admin.`);
+
+      let foundUser = this.roomState.FindUserByID(data.userID);
+      if (!foundUser) {
+        console.log(`user ${data.userID} not found but maybe they just left in the meantime. considering normal.`);
+        return;
+      }
+
+      switch (data.op) {
+        case "addGlobalRole":
+          foundUser.user.addGlobalRole(data.role);
+          break;
+        case "removeGlobalRole":
+          foundUser.user.removeGlobalRole(data.role);
+          break;
+        default:
+          throw new Error(`unknown op '${data.op}'`);
+      }
+
+      this.server.mDB.UpdateUserPersistentInfo(foundUser.user);
+
+      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.UserRoleOp, data);
+
+    } catch (e) {
+      log(`OnUserRoleOp exception occurred`);
+      log(e);
+    }
+  }
 
   // BEGIN: SEQUENCER
   OnSeqPlayStop(ws, data) {
@@ -1680,8 +1777,15 @@ class RoomServer {
       let expiredGraffitiIDs = [];
       const now = Date.now();
       this.roomState.graffiti.forEach(g => {
+        if (g.pinned) return;
         const expired = g.expires <= now;
         const userLeft = !g.persistentID && !userExistsInWorld(g.userID);
+        if (expired) {
+          //console.log(`** delete graffiti ${g.id} because expired.`);
+        }
+        if (expired) {
+          //console.log(`** delete graffiti ${g.id} because user ${g.userID} doesn't exist.`);
+        }
         if (expired || userLeft) {
           expiredGraffitiIDs.push(g.id);
         }

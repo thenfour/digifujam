@@ -63,7 +63,7 @@ class GestureTracker {
 
       let handled = false;
       if (window.DFChatinput) {
-        if (e.target.tagName == 'BODY' && e.key.length === 1) { // BODY means it's bubbled up to the top of the DOM. nothing else has handled it.
+        if (e.target.tagName == 'BODY' && e.key.length === 1 && !e.altKey) { // BODY means it's bubbled up to the top of the DOM. nothing else has handled it.
           //console.log(`  charcode=${e.charCode}, keycode=${e.keyCode} key=${e.key} code=${e.code} which=${e.which} tag=${e.target.tagName}`);
           if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
             if ("/abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()='\",<>.`~;:".indexOf(e.key) != -1) { // don't include registered hotkeys here.
@@ -73,9 +73,14 @@ class GestureTracker {
           }
         }
       }
-      if (!handled) {
+
+      if (!handled && e.target.tagName == 'BODY') {
+        if (e.key === '9' && e.altKey) {
+          handled = true; // allow debug log hotkey not to interfere
+          this.events.emit('toggleModerationControls');
+        }
         // check for hotkeys
-        if (e.target.tagName == 'BODY' && e.key.length === 1) {
+        else if (e.key.length === 1) {
           if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
             if (e.key==='\\') {
               handled = true;

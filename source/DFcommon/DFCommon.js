@@ -44,8 +44,14 @@ const ClientMessages = {
     JoinRoom: "JoinRoom", // roomID
     PersistentSignOut: "PersistentSignOut",
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
-    GraffitiOps: "GraffitiOps", // [{ op:[place,remove], content, id, lifetimeMS }] // id only used for admin, lifetime & content only for placement
+    GraffitiOps: "GraffitiOps", // [{ op:[place,remove,pin,setExpiration], content, id, lifetimeMS }] // id only used for admin, lifetime & content only for placement
     UserDance: "UserDance", // { danceID: }
+
+    // admin
+    // { userID, op:"addGlobalRole", role:"..." }
+    // { userID, op:"removeGlobalRole", role:"..." }
+    UserRoleOp: "UserRoleOp", // { userID, op, ...}
+    ChatMessageOp: "ChatMessageOp", // { messageID, op:"delete" }
 
     // SEQ
     SeqPlayStop: "SeqPlayStop", // { isPlaying, instrumentID }
@@ -111,8 +117,14 @@ const ServerMessages = {
 
     // [{ op:"place", graffiti:{} }]
     // [{ op:"remove", id }]
+    // pin,setExpiration
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { userID: , danceID: }
+
+    // { userID, op:"addGlobalRole", role:"..." }
+    // { userID, op:"removeGlobalRole", role:"..." }
+    UserRoleOp: "UserRoleOp", // { userID, op, ...}
+    ChatMessageOp: "ChatMessageOp", // { messageID, op:"delete" }
 
     // sequencer control
     SetSetNoteMuted: "SetSetNoteMuted", // { instrumentID, midiNoteValue, isMuted }
@@ -156,7 +168,7 @@ const ServerSettings = {
     WorldUserCountMaximum: 100,
 
     StatsFlushMS: DFUtil.minutesToMS(5),
-    DBFlushMS: DFUtil.minutesToMS(1),
+    DBFlushMS: DFUtil.minutesToMS(3),
     StatsPruneIntervalMS: DFUtil.hoursToMS(24), // once a day prune stats
     StatsMaxAgeMS: DFUtil.daysToMS(365),
 
@@ -1605,10 +1617,38 @@ class DigifuRoomState {
         this.graffiti.push(graffiti);
     }
 
+    findUser(userID, persistentID) {
+        // a simple OR works because we assume IDs are globally-unique.
+        // so if persistentID exists &  matches, it's a match
+        // if userID matches, then it's also a match. there's no scenario where userID matches but we consider it not a match.
+        // if userID matches and persistentID does NOT match for example, we still consider it a match.
+        return this.users.find(u => (u.persistentID && (u.persistentID === persistentID)) || u.userID === userID);
+    }
+
+    isUserForGraffiti(g, userID, persistentID) {
+        if (g.userID === userID) return true;
+        if (g.persistentID && (g.persistentID === persistentID)) return true;
+        return false;
+    }
+
+    UserCanManageGraffiti(user, graffiti) {
+        if (this.isUserForGraffiti(graffiti, user.userID, user.persistentID)) return true;
+        return user.IsModerator();
+    }
+
+    getUserForGraffiti(graffiti) {
+        return this.findUser(graffiti.userID, graffiti.persistentID);
+    }
+
     // returns an array of graffiti IDs that were removed.
-    removeGraffitiForUser(userID, persistentID) {
-        const ret = this.graffiti.filter(g => g.userID === userID || g.persistentID === persistentID).map(g => g.id);
-        ret.forEach(id => this.removeGraffiti(id));
+    removeGraffitiSoUserCanPlace(userID, persistentID) {
+        // pinned items shouldn't be auto-removed like this
+        const ret = this.graffiti.filter(g => !g.pinned && this.isUserForGraffiti(g, userID, persistentID)).map(g => g.id);
+        ret.forEach(id => {
+            const g = this.graffiti.find(g => g.id === id);
+            //console.log(`** removing graffiti so can place. gid=${id} / uid:${g.userID} / upid:${g.persistentID} // USER: uid:${userID} / upid:${persistentID}`);
+            this.removeGraffiti(id);
+        });
         return ret;
     }
 
@@ -1620,6 +1660,17 @@ class DigifuRoomState {
     }
 
     // ----graffiti
+
+    HasPermissionsToDeleteChatMessage(user, msg) {
+        // in the future, we could allow users to delete their own messages but ... meh
+        return user.IsModerator() || (msg.userID === user.userID);
+    }
+
+    DeleteMessage(msgID) {
+        const i = this.chatLog.findIndex(m => m.messageID === msgID);
+        if (i === -1) return;
+        this.chatLog.splice(i, 1);
+    }
 
     asFilteredJSON() {
         const replacer = (k, v) => {

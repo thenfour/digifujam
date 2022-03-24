@@ -1,0 +1,159 @@
+
+#graffitiScreen,
+#graffitiContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+
+#graffitiScreen svg {
+    position: absolute;
+    background-color: #8004;
+    transition: left var(--move-duration), top var(--move-duration);
+    pointer-events: none;
+    /*     width:100%;
+    height:100%;     */
+}
+
+#graffitiScreen path {
+    fill: #0cc4;
+}
+
+#graffitiScreen path.active {
+    fill: #0cc9;
+    stroke: #0aa;
+    stroke-width: 6px;
+}
+
+
+#graffitiContainer .graffitiItemContainer {
+    position: absolute;
+    transition: left var(--move-duration), top var(--move-duration);
+    user-select: none;
+}
+
+
+#graffitiContainer .graffiti .graffitiControls {
+    /* visibility: hidden; */
+    background-color: #0006;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #0ff;
+    cursor: pointer;
+    pointer-events: all;
+    display: flex;
+}
+
+#graffitiContainer .graffiti:hover .graffitiControls {
+    visibility: visible;
+}
+
+#graffitiContainer .graffitiItemContainer .graffitiControls i {
+    font-size: 28px;
+}
+
+#graffitiContainer .graffiti .graffitiControls div:hover {
+    color: #f40;
+}
+
+#graffitiContainer .graffitiItemContainer .graffitiRemove {
+    
+}
+
+
+#graffitiContainer.admin .graffiti {
+    pointer-events: all;
+}
+
+
+#graffitiContainer .graffiti:hover {
+    cursor: default;
+}
+
+
+#graffitiContainer .graffiti a,
+#graffitiContainer .graffiti a:visited,
+#graffitiContainer .graffiti a:active,
+#graffitiContainer .graffiti a:link {
+    color: unset;
+    text-decoration: underline;
+}
+
+
+#graffitiContainer .graffiti {
+    max-width: 200px;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: -.5px;
+    position: relative;
+    pointer-events: none;
+}
+
+
+#graffitiContainer .graffiti .graffitiContent.text {
+    text-shadow: 0 0 8px #000, 0 0 3px black, 0 0 2px black;
+}
+
+#graffitiContainer .graffiti .graffitiContent.image {
+    width: 100px;
+    height: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    filter: drop-shadow(3px -3px 5px black) grayscale(50%);
+}
+
+.dragGraffitiScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: #0008;
+    color: #0cc;
+    font-weight: bold;
+    font-size: 64px;
+    user-select: none;
+    pointer-events: none;
+}
+
+
+#graffitiContainer .graffiti .graffitiContent.text {
+    line-height: 24px;
+    font-weight: normal;
+    letter-spacing: normal;
+    font-size: 36px;
+}
+
+.graffitiUserCtrl .mygraffiti {
+    background-color:black;
+    margin-bottom: 10px;
+    border-radius: 9px;
+    padding: 7px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.graffitiUserCtrl .mygraffiti .pinIndicator i {
+    color: #4f4;
+    font-size: 30px;
+}
+
+.graffitiUserCtrl .mygraffiti .content {
+    font-family: monospace;
+    color: #ccc;
+    font-size: larger;
+}
+
+.graffitiUserCtrl .mygraffiti .controls {
+    display: flex;
+    justify-content: space-between;
+}

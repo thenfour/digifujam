@@ -20,7 +20,11 @@ const {SequencerParamGroup} = require('./SequencerParamGroup');
 const {DFAlert} = require('./DFAlert');
 const {GraffitiScreen, GraffitiContainer} = require("./graffiti");
 const EventEmitter = require('events');
-const {RadioControls, RadioMetadataRoomItem, RadioVisRoomItem} = require('./radioControls')
+const {RadioControls, RadioMetadataRoomItem, RadioVisRoomItem} = require('./radioControls');
+const { ModerationControlPanel } = require('./ModerationControl');
+
+// NOTE that this can be true even if you're not a moderator, so for safety check IsModerator
+window.DFModerationControlsVisible = false;
 
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
@@ -112,6 +116,7 @@ function getAnnouncementHTML(app) {
                 let dt = html.substring(begin + countdownPrefix.length, end);
                 needsRefreshTimer = true;
                 let remainingMS = (new Date(dt)) - (new Date());
+                if (remainingMS < 0) remainingMS = 0; // prettier.
                 const info = new DFU.TimeSpan(remainingMS);
                 html = html.substring(0, begin) + info.longString + html.substring(end + countdownSuffix.length);
             } catch (e) {
@@ -1414,7 +1419,7 @@ class UserList extends React.Component {
         const onlineUsersR = onlineUsers?.map(u => (
                 <li className='userRow' key={u.userID}>
                     <span className='presenceIndicator'>•</span>
-                    <UIUser.UIUserName user={u} />
+                    <UIUser.UIUserName user={u} app={this.props.app} />
                     <span className="userPing"> ({u.pingMS}ms ping)</span>
                 </li>
             ));
@@ -1428,7 +1433,7 @@ class UserList extends React.Component {
         offlineUsersR = offlineUsersR?.map(u => (
                 <li className='userRow' key={u.userID}>
                     <span className='presenceIndicator'>•</span>
-                    <UIUser.UIUserName user={u} />
+                    <UIUser.UIUserName user={u} app={this.props.app} />
                 </li>
             ));
         let shownOfflineUserCount = offlineUsersR?.length || 0;
@@ -1756,7 +1761,7 @@ class UserAvatar extends React.Component {
         return (
             <div className={className} id={'userAvatar' + this.props.user.userID} style={style}>
                 <div className='av2'>
-                    <UIUser.UIUserName user={this.props.user} />
+                    <UIUser.UIUserName user={this.props.user} app={this.props.app} />
                     {instMarkup}
                 </div>
             </div>
@@ -1876,6 +1881,50 @@ class UIRoomItem extends React.Component {
 
 
 
+class DeleteChatMessageIndicator extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            confirmation:false,
+        }
+    }
+    onClickCancel = () => {
+        this.setState({
+            confirmation:false,
+        });
+    }
+    onClickOK = () => {
+        this.props.app.net.SendChatMessageOp({
+            op: "delete",
+            messageID: this.props.message.messageID,
+        });
+        this.setState({confirmation:false});
+    }
+    render() {
+        //console.log(this.props.message);
+        //console.log(`state.confirmation = ${this.state.confirmation}`);
+        return (
+            <span className='deleteChatMsg' title="Remove this message">
+                {
+                    this.state.confirmation ?
+                        <div className='confirmation'>
+                            <div className="title">Sure you want to delete this message?</div>
+                            <div className='content'>{this.props.message.message}</div>
+                            <ul className='details'>
+                                <li><span className='fieldName'>uid: </span><span className='fieldValue'>{this.props.message.fromUserID}</span></li>
+                                <li><span className='fieldName'>user: </span><span className='fieldValue'>{this.props.message.fromUserName}</span></li>
+                            </ul>
+                            <button onClick={() => this.onClickOK()}>OK</button>
+                            <button onClick={() => this.onClickCancel()}>Cancel</button>
+                        </div>
+                        :
+                        <div className='ex' onClick={() => this.setState({confirmation:true})}>⮿</div>
+                }
+            </span>
+        );
+    }
+}
+
 
 class ShortChatLog extends React.Component {
     render() {
@@ -1914,6 +1963,7 @@ class ShortChatLog extends React.Component {
                     if (msg.source === DF.eMessageSource.Server) {
                         return (
                             <div className="chatLogEntryChat server" key={msg.messageID}>
+                                { window.DFModerationControlsVisible && this.props.app.myUser.IsModerator() && <DeleteChatMessageIndicator app={this.props.app} message={msg} /> }
                                 <span className="prefix">
                                     <span className='timestamp'>{timestamp}</span>
                                     &lt;<span className='serverTag userName'>7jam</span>&gt;
@@ -1925,6 +1975,7 @@ class ShortChatLog extends React.Component {
                         const sourceIndicator = (msg.source == DF.eMessageSource.Discord) ? (<img className='discordChatMsgIndicator' src='./discord.ico'></img>) : null;
                         return (
                             <div className="chatLogEntryChat" key={msg.messageID}>
+                                { window.DFModerationControlsVisible && this.props.app.myUser.IsModerator() && <DeleteChatMessageIndicator app={this.props.app} message={msg} /> }
                                 <span className="prefix">
                                     <span className='timestamp'>{timestamp}</span>
                                     &lt;{sourceIndicator}<span className="userName" style={{ color: msg.fromUserColor }}>{msg.fromUserName}</span>&gt;
@@ -1939,14 +1990,12 @@ class ShortChatLog extends React.Component {
         });
 
         return (
-            <div className='shortChatLog'>
+            <div className='chatLog shortChatLog'>
                 {lis}
             </div>
         );
     }
 };
-
-
 
 
 
@@ -1982,6 +2031,7 @@ class FullChatLog extends React.Component {
                     if (msg.source === DF.eMessageSource.Server) {
                         return (
                             <div className="chatLogEntryChat server" key={msg.messageID}>
+                                { window.DFModerationControlsVisible && this.props.app.myUser.IsModerator() && <DeleteChatMessageIndicator app={this.props.app} message={msg} /> }
                                 <span className="prefix">
                                     <span className='timestamp'>{timestamp}</span>
                                     &lt;<span className='serverTag userName'>7jam</span>&gt;
@@ -1993,6 +2043,7 @@ class FullChatLog extends React.Component {
                         const sourceIndicator = (msg.source == DF.eMessageSource.Discord) ? (<img className='discordChatMsgIndicator' src='./discord.ico'></img>) : null;
                         return (
                             <div className="chatLogEntryChat" key={msg.messageID}>
+                                { window.DFModerationControlsVisible && this.props.app.myUser.IsModerator() && <DeleteChatMessageIndicator app={this.props.app} message={msg} /> }
                                 <span className="prefix">
                                     <span className='timestamp'>{timestamp}</span>
                                     &lt;{sourceIndicator}<span  className='userName' style={{ color: msg.fromUserColor }}>{msg.fromUserName}</span>&gt;
@@ -2007,7 +2058,7 @@ class FullChatLog extends React.Component {
         });
 
         return (
-            <div className='fullChatLog'>
+            <div className='chatLog fullChatLog'>
                 <ul style={{ height: "100%" }}>
                     {lis}
                 </ul>
@@ -2106,9 +2157,12 @@ class ChatSlashCommandHelp extends React.Component {
 class RoomArea extends React.Component {
     constructor(props) {
         super(props);
+
+        this.viewTypes = ["Hybrid view", "Room view", "Chat view"];
+
         this.state = {
             scrollSize: { x: 0, y: 0 },// track DOM scrollHeight / scrollWidth
-            showFullChat: false,
+            viewType: "Hybrid view",
             isDraggingGraffiti: false,
         };
         this.screenToRoomPosition = this.screenToRoomPosition.bind(this);
@@ -2175,9 +2229,11 @@ class RoomArea extends React.Component {
         }
     }
 
-    toggleChatView = () => {
+    cycleViewType = () => {
+        let id = this.viewTypes.findIndex(t => t === this.state.viewType);
+        id = (id + 1) % this.viewTypes.length;
         this.setState({
-            showFullChat: !this.state.showFullChat
+            viewType: this.viewTypes[id]
         });
     }
 
@@ -2317,7 +2373,7 @@ class RoomArea extends React.Component {
 
         const switchViewButton = this.props.app && this.props.app.roomState && (
             <div className="switchRoomViews">
-                <button className="switchChatView" onClick={this.toggleChatView}>room / chat view</button>
+                <button className="switchChatView" onClick={this.cycleViewType}>{this.state.viewType}</button>
             </div>
         );
 
@@ -2349,6 +2405,7 @@ class RoomArea extends React.Component {
                 >
                 {window.DFShowChatSlashCommandHelp && <ChatSlashCommandHelp context={context} />}
                 {connection}
+                <ModerationControlPanel app={this.props.app} />
                 {seqViewVisible && <SequencerMain
                     app={this.props.app}
                     sequencerShown={this.props.sequencerShown}
@@ -2362,8 +2419,8 @@ class RoomArea extends React.Component {
                 { (this.state.isDraggingGraffiti || false) && <div className='dragGraffitiScreen'><div>Place graffiti</div></div> }
                 {roomItems}
                 {userAvatars}
-                { !this.state.showFullChat && <ShortChatLog app={this.props.app} />}
-                { this.state.showFullChat && <FullChatLog app={this.props.app} />}
+                { (this.state.viewType === "Hybrid view") && <ShortChatLog app={this.props.app} />}
+                { (this.state.viewType === "Chat view") && <FullChatLog app={this.props.app} />}
                 <RoomAlertArea app={this.props.app} />
                 <CheerControls app={this.props.app} displayHelper={this}></CheerControls>
                 <div className='roomOverlayControlsRight'>
@@ -2690,6 +2747,11 @@ class RootArea extends React.Component {
     componentDidMount() {
         window.addEventListener('resize', () => this.onWindowResize());
 
+        window.DFKeyTracker.events.on("toggleModerationControls", () => {
+            window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({});
+        });
+        
+
         // help catch window-changing events that change layout. actually a more robust solution would be a mediaquerylist change handler but ... it requires more thought.
         document.addEventListener('visibilitychange', () => {
             //console.log(`visibility change`);
@@ -2733,6 +2795,7 @@ class RootArea extends React.Component {
     }
 
     render() {
+
         let title = "(not connected)";
         if (this.state.app && this.state.app.roomState) {
             let activityTxt = "";
@@ -2748,6 +2811,8 @@ class RootArea extends React.Component {
             document.title = title;
         }
 
+        window.DFModerationControlsVisible = window.DFModerationControlsVisible && this.state.app?.myUser?.IsModerator();
+
         if (this.state.wideMode && (!this.state.app || !this.state.app.myInstrument)) {
             setTimeout(() => {
                 this.setState({ wideMode: false });
@@ -2758,6 +2823,12 @@ class RootArea extends React.Component {
 
         const adminControls = (this.state.app && this.state.app.myUser.IsAdmin()) && (
             <AdminControlsButton app={this.state.app}></AdminControlsButton>
+        );
+
+        const modControlButton = (this.state.app && this.state.app?.myUser?.IsModerator()) && (
+            <div className='topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
+                Mod ctrl {window.DFModerationControlsVisible ? "👮‍♀️" : "☮"}
+            </div>
         );
 
         // dynamically set the column sizes. media queries don't work because there are a bunch of dynamic states here.
@@ -2798,6 +2869,7 @@ class RootArea extends React.Component {
                     <span>
                         <UserSettingsButton app={this.state.app} googleOAuthModule={this.googleOAuthModule}></UserSettingsButton>
                         {adminControls}
+                        {modControlButton}
                         {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
                         {this.state.app?.synth && <InlineMasterGainCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlineMasterGainCtrl>}
                         {this.state.app?.synth && <InlinePitchBendCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlinePitchBendCtrl>}
@@ -2825,7 +2897,16 @@ class RootArea extends React.Component {
                 </div>
                 <DFPiano.PianoArea app={this.state.app} />
                 <ChatArea app={this.state.app} />
-                <RoomArea app={this.state.app} focusedInstrument={this.focusedInstrument} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} handleConnect={this.HandleConnect} ref={this.roomRef} googleOAuthModule={this.googleOAuthModule} />
+                <RoomArea
+                    app={this.state.app}
+                    focusedInstrument={this.focusedInstrument}
+                    sequencerShown={this.isSequencerShown}
+                    setSequencerShown={this.setSequencerShown}
+                    handleConnect={this.HandleConnect}
+                    ref={this.roomRef}
+                    googleOAuthModule={this.googleOAuthModule}
+                    ModerationControlPanelVisible={this.state.ModerationControlPanelVisible}
+                    />
                 <RightArea app={this.state.app} sequencerShown={this.isSequencerShown} setSequencerShown={this.setSequencerShown} toggleWideMode={this.toggleWideMode} isWideMode={this.state.wideMode} />
                 <LeftArea app={this.state.app} />
 

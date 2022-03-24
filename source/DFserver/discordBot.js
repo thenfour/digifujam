@@ -76,7 +76,7 @@ class DiscordBot {
                     if (!(channel.id in this.relevantChannelIDs))
                         return;
                     //console.log(`  => in channel ${channel.id} ${channel.name}`);
-                    relevantChannelIDs[channel.id].add(member.id);
+                    this.relevantChannelIDs[channel.id].add(member.id);
                     emits.push(channel);
                 });
 

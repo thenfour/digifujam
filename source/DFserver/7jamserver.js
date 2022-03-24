@@ -14,6 +14,7 @@ const {ServerAdminApp} = require('./serverAdminApp');
 const {ServerGoogleOAuthSupport} = require('./serverGoogleOAuth');
 const {RoomServer} = require('./roomserver');
 const {_7jamAPI} = require('./7jamapi');
+const { eUserGlobalRole } = require('../DFcommon/DFUser');
 
 const log = (a) => { return console.log(a) };
 
@@ -118,6 +119,8 @@ class _7jamServer {
       serverRestoreState = null;
     }
 
+    this.mDB = new DFDB.DFDB(this.mConfig);
+
     this.mConfig.room_json.forEach(path => {
       const jsonTxt = fs.readFileSync(path);
       const roomState = JSON.parse(jsonTxt);
@@ -128,8 +131,6 @@ class _7jamServer {
         index : "index.html"
       }));
     });
-
-    this.mDB = new DFDB.DFDB(this.mConfig);
 
     this.mGoogleOAuth = new ServerGoogleOAuthSupport(this.mConfig, this.expressApp, this.mDB);
 
@@ -204,7 +205,7 @@ class _7jamServer {
       // restore admin role if specified in query params
       // todo: synchronize with completeUserEntry processing
       if (ws.handshake.query.DF_ADMIN_PASSWORD === this.mConfig.admin_key) {
-        u.addGlobalRole("sysadmin");
+        u.addGlobalRole(eUserGlobalRole.sysadmin.name);
       }
 
       ws.emit(DF.ServerMessages.PersistentSignOutComplete);
@@ -229,7 +230,7 @@ class _7jamServer {
         foundUser.PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo);
 
         if (ws.handshake.query.DF_ADMIN_PASSWORD === this.mConfig.admin_key) {
-          foundUser.addGlobalRole("sysadmin");
+          foundUser.addGlobalRole(eUserGlobalRole.sysadmin.name);
         }
 
         let adminKey = null;
@@ -450,8 +451,10 @@ class _7jamServer {
       ws.on(DF.ClientMessages.AdjustBeatOffset, data => this.ForwardToRoom(ws, room => room.OnClientAdjustBeatOffset(ws, data)));
       ws.on(DF.ClientMessages.GraffitiOps, data => this.ForwardToRoom(ws, room => room.OnGraffitiOps(ws, data)));
       ws.on(DF.ClientMessages.UserDance, data => this.ForwardToRoom(ws, room => room.OnUserDance(ws, data)));
+      ws.on(DF.ClientMessages.ChatMessageOp, data => this.ForwardToRoom(ws, room => room.OnChatMessageOp(ws, data)));
 
       ws.on(DF.ClientMessages.AdminChangeRoomState, data => this.ForwardToRoom(ws, room => room.OnAdminChangeRoomState(ws, data)));
+      ws.on(DF.ClientMessages.UserRoleOp, data => this.ForwardToRoom(ws, room => room.OnUserRoleOp(ws, data)));
 
       // SEQ
       ws.on(DF.ClientMessages.SeqPlayStop, data => this.ForwardToRoom(ws, room => room.OnSeqPlayStop(ws, data)));

@@ -142,7 +142,7 @@ button:focus {
 #rightArea {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: auto; /* important to let X scroll in case usernames are long */
 }
 
 @keyframes screenFadeOut {
@@ -450,8 +450,7 @@ button.muteButton:focus {
 }
 
 .userName .role {
-    margin-left: 3px;
-    margin-right: 3px;
+    margin-left: 2px;
     font-size: x-small;
     background-color: #555;
     color: #ccc;
@@ -974,18 +973,6 @@ input[type="range"].stylizedRange::-webkit-slider-thumb {
     background-color: #acc;
 }
 
-/* 
-.topRightControls {
-    white-space: nowrap;
-}
-.topRightControls label {
-    display: inline-block;
-    width: 80px;
-}
- */
-
-
-
 
 li.dropdownParam {
     font-size: small;
@@ -1000,10 +987,6 @@ li.dropdownParam .mainButton {
 li.dropdownParam .mainButton:hover {
     background: #066;
 }
-
-li.dropdownParam .mainButton .arrow {}
-
-li.dropdownParam .mainButton .currentValue {}
 
 li.dropdownParam ul.dropdown {
     background-color: #022;
@@ -1377,8 +1360,6 @@ button.stayLoggedIn:hover {
 }
 
 
-.userMgmtGearIcon {}
-
 .dropdownMenu {
     position: relative;
 }
@@ -1402,6 +1383,7 @@ button.stayLoggedIn:hover {
 
 .creditsButton,
 .dropdownMenuButton,
+.topMenuButton,
 .userSettingsButton {
     display: flex;
     background-color: #033;
@@ -1506,6 +1488,7 @@ button.stayLoggedIn:hover {
 }
 
 
+.topMenuButton:hover,
 .dropdownMenuButton:hover {
     background-color: #055;
 }
@@ -1977,126 +1960,6 @@ ul.instParamList li.floatParam .floatParamMainControls {
 
 
 
-
-#graffitiScreen,
-#graffitiContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
-}
-
-
-#graffitiScreen svg {
-    position: absolute;
-    background-color: #8004;
-    transition: left var(--move-duration), top var(--move-duration);
-    pointer-events: none;
-    /*     width:100%;
-    height:100%;     */
-}
-
-#graffitiScreen path {
-    fill: #0cc4;
-}
-
-#graffitiScreen path.active {
-    fill: #0cc9;
-    stroke: #0aa;
-    stroke-width: 6px;
-}
-
-
-#graffitiContainer .graffitiItemContainer {
-    position: absolute;
-    transition: left var(--move-duration), top var(--move-duration);
-    user-select: none;
-}
-
-#graffitiContainer .graffitiItemContainer .graffitiRemove {
-    display: none;
-    background-color: #0006;
-}
-
-#graffitiContainer.admin .graffiti {
-    pointer-events: all;
-}
-
-
-#graffitiContainer .graffiti:hover {
-    cursor: default;
-}
-
-#graffitiContainer .graffiti:hover .graffitiRemove {
-    display: inline-block;
-    background-color: black;
-    border-radius: 50%;
-    color: #088;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-#graffitiContainer .graffiti:hover .graffitiRemove:hover {
-    color: #0ff;
-    font-weight: bold;
-}
-
-#graffitiContainer .graffiti a,
-#graffitiContainer .graffiti a:visited,
-#graffitiContainer .graffiti a:active,
-#graffitiContainer .graffiti a:link {
-    color: unset;
-    text-decoration: underline;
-}
-
-
-#graffitiContainer .graffiti {
-    max-width: 200px;
-    font-size: 20px;
-    font-weight: bold;
-    letter-spacing: -.5px;
-}
-
-
-#graffitiContainer .graffiti .graffitiContent.text {
-    text-shadow: 0 0 8px #000, 0 0 3px black, 0 0 2px black;
-}
-
-#graffitiContainer .graffiti .graffitiContent.image {
-    width: 100px;
-    height: 100px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    filter: drop-shadow(3px -3px 5px black) grayscale(50%);
-}
-
-.dragGraffitiScreen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    background-color: #0008;
-    color: #0cc;
-    font-weight: bold;
-    font-size: 64px;
-    user-select: none;
-    pointer-events: none;
-}
-
-
-#graffitiContainer .graffiti .graffitiContent.text {
-    line-height: 24px;
-    font-weight: normal;
-    letter-spacing: normal;
-    font-size: 36px;
-}
 
 
 #chatSlashCommandHelp {

@@ -1389,6 +1389,8 @@ class DigifuApp {
   }
 
   NET_OnGraffitiOps(data) {
+    if (!this.roomState)
+      return;
     data.forEach(op => {
       switch (op.op) {
       case "place":
@@ -1397,6 +1399,26 @@ class DigifuApp {
       case "remove":
         this.roomState.removeGraffiti(op.id);
         break;
+      case "pin":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`pin: graffiti not found ${g.id}`);
+          return;
+        }
+        g.pinned = !!op.pin;
+        break;
+      }
+      case "setExpiration":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setExpiration: graffiti not found ${g.id}`);
+          return;
+        }
+        g.expires = parseInt(op.expiration);
+        break;
+      }
       }
     });
     this.stateChangeHandler();
@@ -1415,6 +1437,51 @@ class DigifuApp {
     console.log(`user dance: ${u.user.danceID}`);
     //this.handle({user : u.user, text : data.text, x : data.x, y : data.y});
     this.FireUserDance(u.user);
+  }
+
+  NET_OnUserRoleOp(data) {
+    if (!this.roomState)
+      return;
+    let u = this.roomState.FindUserByID(data.userID);
+    if (!u.user) {
+      console.log(`NET_OnUserRoleOp: unknown user ${data.userID}`);
+      return;
+    }
+
+    switch (data.op) {
+      case "addGlobalRole":
+        u.user.addGlobalRole(data.role);
+        //console.log(`adding role ${data.role} to user ${u.user.name}`);
+        break;
+      case "removeGlobalRole":
+        u.user.removeGlobalRole(data.role);
+        //console.log(`removing role ${data.role} from user ${u.user.name}`);
+        break;
+      default:
+        throw new Error(`unknown op '${data.op}'`);
+    }
+
+    this.stateChangeHandler();
+  }
+
+  NET_OnChatMessageOp(data) {
+    if (!this.roomState)
+      return;
+
+    switch (data.op) {
+      case "delete":
+      {
+        this.roomState.DeleteMessage(data.messageID);
+        const i = this.shortChatLog.findIndex(msg => msg.messageID === data.messageID);
+        if (i !== -1) {
+          this.shortChatLog.splice(i, 1);
+        }
+        //console.log(`deleting message ${data.messageID}`);
+        break;
+      }
+    }
+
+    this.stateChangeHandler();
   }
 
   FireUserDance(user) {
