@@ -2,7 +2,7 @@
   "roomID": "hall",
   "roomTitle": "#hall",
   "route": "/hall",
-  "img": "./roomart/DigifuJam_Hallway2_1920x1080.jpg",
+  "img": "/roomart/DigifuJam_Hallway2_1920x1080.jpg",
   "width": 1920,
   "height": 1080,
   "roomRegions": [

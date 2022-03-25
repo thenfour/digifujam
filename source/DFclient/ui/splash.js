@@ -23,7 +23,7 @@ class GestureSplash extends React.Component {
        return (
            <div id="gestureSplash">
               <div id="gestureSplash2">
-               <img id="splashLogo" src="uiimg/splash_logo.png"></img>
+               <img id="splashLogo" src={StaticURL("uiimg/splash_logo.png")}></img>
                <div id="splashTextContainer">
                <div id="splashTitle">Welcome to 7jam!</div>
                <div id="splashClickToContinue">Click or press a key to continue...</div>

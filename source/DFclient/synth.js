@@ -298,7 +298,7 @@ class DigifuSynth {
 		this.delayDryGain.connect(this.masterGainNode);
 		this.masterReverb.connect(this.masterGainNode);
 
-		DFSynthTools.gLoadSample(this.audioCtx, "uisfx/reaper_stems_MidiverbMark2Preset29.m4a",
+		DFSynthTools.gLoadSample(this.audioCtx, StaticURL("uisfx/reaper_stems_MidiverbMark2Preset29.m4a"),
 			(buffer) => {
 				this.masterReverb.buffer = buffer;
 			},

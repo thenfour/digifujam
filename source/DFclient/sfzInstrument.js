@@ -103,6 +103,8 @@ class _SFZAssetLoader {
 
     CacheSFZAssets(sampleLibrarian, jsonURL, progressCallback, existingProgressSpec, onJSONLoadComplete, onJSONLoadError, onSampleLoadComplete, onSampleLoadError) {
 
+        jsonURL = StaticURL(jsonURL);
+
         switch (this.GetLoadStatus(jsonURL)) {
             case eLoadStatus.Unknown:
                 break;

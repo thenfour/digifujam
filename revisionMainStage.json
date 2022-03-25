@@ -2,7 +2,7 @@
   "roomID": "revisionmainstage",
   "roomTitle": "#revisionmainstage",
   "route": "/revisionmainstage",
-  "img": "./roomart/tony01_lightsout_1750.jpg",
+  "img": "/roomart/tony01_lightsout_1750.jpg",
   "isPrivate": true,
   "width": 1750,
   "height": 1280,

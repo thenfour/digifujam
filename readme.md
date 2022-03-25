@@ -86,11 +86,13 @@ Please report compatibility in our [Discord](https://discord.gg/kkf9gQfKAd).
 
 ## dev process
 
-- npm run build-dev // or build-prod. @ http://localhost:8081/
-- npm run watch-dev // or watch-prod to monitor & build changes live
-- npm run start // to start local server (or just node index.js)
-- node --inspect index.js // for chrome inspector debugging the server
-- node --inspect-brk index.js // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
+- `npm run build-dev` // or build-prod. @ http://localhost:8081/
+- `npm run watch-dev` // or watch-prod to monitor & build changes live
+- `npm run start` // to start local server (or just node index.js)
+- `node --inspect index.js` // for chrome inspector debugging the server
+- `node --inspect-brk index.js` // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
+
+- if using a CDN config (where static files have different host prefix than the app), you can use `node cdn.js` to serve.
 
 You will need a `config2.yaml`.
 

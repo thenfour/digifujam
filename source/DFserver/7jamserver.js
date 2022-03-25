@@ -65,7 +65,6 @@ class _7jamServer {
     this.expressApp.use("/DFStatsDB.json", express.static(this.mStatsDBPath));
     this.expressApp.use("/ActivityDatasets.json", express.static(this.mActivityDatasetsPath));
     this.expressApp.use("/storage", express.static(this.mConfig.storage_path), serveIndex(this.mConfig.storage_path, {'icons' : true}));
-    this.expressApp.use("/dist", express.static("./dist"));
     this.expressApp.use("/uploads", express.static(this.mConfig.UploadsDirectory), serveIndex(this.mConfig.UploadsDirectory, {'icons' : true}));
 
     this.expressApp.use(fileUpload({
@@ -121,16 +120,28 @@ class _7jamServer {
 
     this.mDB = new DFDB.DFDB(this.mConfig);
 
+    let indexTemplate = fs.readFileSync("public/indexTemplate.html").toString();
+    indexTemplate = indexTemplate.replaceAll("{StaticHostPrefix}", this.mConfig.StaticHostPrefix);
+    indexTemplate = indexTemplate.replaceAll("{LocalStaticHostPrefix}", this.mConfig.LocalStaticHostPrefix);
+
     this.mConfig.room_json.forEach(path => {
       const jsonTxt = fs.readFileSync(path);
       const roomState = JSON.parse(jsonTxt);
       this.mRooms[roomState.roomID] = new RoomServer(this, roomState, serverRestoreState);
       log(`serving room ${roomState.roomID} on route ${roomState.route}`);
 
-      this.expressApp.use(roomState.route, express.static('public', {
-        index : "index.html"
-      }));
+      this.expressApp.use(roomState.route, (req, res, next) => {
+        if (req.path.endsWith("/")) { // landing pages. yea i know how ugly this is.
+          console.log(`Time: ${Date.now()}`);
+          res.send(indexTemplate);
+          res.end();
+        } else {
+          next(); // fall through to static middleware
+        }
+      })
     });
+
+    this.expressApp.use("/", express.static('public'));
 
     this.mGoogleOAuth = new ServerGoogleOAuthSupport(this.mConfig, this.expressApp, this.mDB);
 
@@ -513,7 +524,7 @@ class _7jamServer {
       const ext = file.name.substring(file.name.lastIndexOf("."));
       const filename = DFU.generateID() + ext;
       const destPath = this.mConfig.UploadsDirectory + "/" + filename;
-      const url = this.mConfig.host_prefix + "/uploads/" + filename;
+      const url = this.mConfig.LocalStaticHostPrefix + "/uploads/" + filename;
 
       file.mv(destPath, (e) => {
         try {

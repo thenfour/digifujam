@@ -595,7 +595,7 @@ class DigifuApp {
     if (stylesheet) {
       stylesheet.parentNode.removeChild(stylesheet);
     }
-    $("head").append("<link rel='stylesheet' id='roomcss' href='" + this.roomState.roomID + ".css' type='text/css' />");
+    $("head").append("<link rel='stylesheet' id='roomcss' href='" + StaticURL(this.roomState.roomID + ".css") + "' type='text/css' />");
 
     this.accessLevel = data.accessLevel;
 

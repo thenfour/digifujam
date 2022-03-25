@@ -51,9 +51,9 @@ const eSoundEffects = {
 
 // key should match val of eSoundEffects
 const SoundEffectSpecs = {
-   'ChatMessageNotification' : 'uisfx/chatMessage.mp3',
-   'UserJoinNotification' : 'uisfx/userJoin.mp3',
-   'UserPartNotification' : 'uisfx/userPart.mp3',
+   'ChatMessageNotification' : StaticURL('uisfx/chatMessage.mp3'),
+   'UserJoinNotification' : StaticURL('uisfx/userJoin.mp3'),
+   'UserPartNotification' : StaticURL('uisfx/userPart.mp3'),
 };
 
 class SoundFxManager {

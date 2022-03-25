@@ -33,7 +33,7 @@ class DigifuMetronome {
 
 		var request = new XMLHttpRequest();
 
-		request.open("GET", "uisfx/Metronome.mp3", true);
+		request.open("GET", StaticURL("uisfx/Metronome.mp3"), true);
 		request.responseType = "arraybuffer";
 
 		request.onload = () => {

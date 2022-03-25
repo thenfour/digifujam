@@ -104,6 +104,7 @@ let LoadCachedJSON = function (url, successHandler, errorHandler) {
 let gLoadSample = function (audioContext, url, successHandler, errorHandler) {
     try {
         var request = new XMLHttpRequest();
+        url = StaticURL(url);
         request.open("GET", url, true);
         request.responseType = "arraybuffer";
         request.onload = () => {

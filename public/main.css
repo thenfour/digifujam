@@ -431,6 +431,7 @@ button.muteButton:focus {
 .userName {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .chatLog .userName,

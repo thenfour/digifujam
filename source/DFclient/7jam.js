@@ -9,9 +9,11 @@ $(() => {
     // safari audiocontext support
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-    $.getJSON('./ui/spinners.json', function (data) {
-        window.gSpinners = data;
-    });
+    fetch(StaticURL('/ui/spinners.json'))
+        .then(resp => resp.json())
+        .then(data => {
+            window.gSpinners = data;
+        });
 
     // a default room name based on the URL you entered. only to be used when you're not connected to a room.
     let roomID = DF.routeToRoomID(window.location.pathname);

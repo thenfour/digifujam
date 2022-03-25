@@ -205,26 +205,52 @@ error.stack: ${e.error.stack.toString()}
     <meta name="description"
         content="7jam is an online jam session for musicians and music lovers. Concerts and monthly jam sessions in a virtual music studio that's free, open, and public 24/7. Open-source and made with love from Brussels, Belgium, in the heart of Europe." />
 
-    <script src="ext/jquery.min.js"></script>
+    <script src="{StaticHostPrefix}/ext/jquery.min.js"></script>
 
+    <!-- i don't honestly get how this works. does it install its own express route?? -->
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <script type="text/javascript">
         // quick n dirty so i can share DFCommon.js with node.js. I could also use Browserify if it gets any more complex
         let module = {};
-        window.DFRoomWantsKey = false;
+
+        let gDFStaticHostPrefix = '{StaticHostPrefix}';
+        let gDFLocalStaticHostPrefix = '{LocalStaticHostPrefix}';
+
+        function IsValidURL(u) {
+            try { new URL(u); }
+            catch (e) { return false;}
+            return true;
+        }
+
+        function StaticURL(suffix) {
+            if (IsValidURL(suffix)) return suffix; // don't mess with already-absolute URLs.
+            if (suffix.startsWith("/")) {
+                return `${gDFStaticHostPrefix}${suffix}`;
+            }
+            return `${gDFStaticHostPrefix}/${suffix}`;
+        }
+
+        function LocalStaticURL(suffix) {
+            if (IsValidURL(suffix)) return suffix; // don't mess with already-absolute URLs.
+            if (suffix.startsWith("/")) {
+                return `${LocalStaticHostPrefix}${suffix}`;
+            }
+            return `${LocalStaticHostPrefix}/${suffix}`;
+        }
+
     </script>
 
-    <script src="/dist/7jam.js"></script>
+    <script src="{StaticHostPrefix}/dist/7jam.js"></script>
 
-    <link rel="stylesheet" href="main.css" />
-    <link rel="stylesheet" href="graffiti.css" />
-    <link rel="stylesheet" href="radio.css" />
-    <link rel="stylesheet" href="keyboard.css" />
-    <link rel="stylesheet" href="sequencer.css" />
-    <link rel="stylesheet" href="avatar.css" />
-    <link rel="stylesheet" href="moderation.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/main.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/graffiti.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/radio.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/keyboard.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/sequencer.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/avatar.css" />
+    <link rel="stylesheet" href="{StaticHostPrefix}/moderation.css" />
 </head>
 
 <body id="body">

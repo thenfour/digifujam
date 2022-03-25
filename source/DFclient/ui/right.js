@@ -1987,7 +1987,7 @@ class ShortChatLog extends React.Component {
                             </div>
                         );
                     } else {
-                        const sourceIndicator = (msg.source == DF.eMessageSource.Discord) ? (<img className='discordChatMsgIndicator' src='./discord.ico'></img>) : null;
+                        const sourceIndicator = (msg.source == DF.eMessageSource.Discord) ? (<img className='discordChatMsgIndicator' src={StaticURL("discord.ico")}></img>) : null;
                         return (
                             <div className="chatLogEntryChat" key={msg.messageID}>
                                 { window.DFModerationControlsVisible && this.props.app.myUser.IsModerator() && <DeleteChatMessageIndicator app={this.props.app} message={msg} /> }
@@ -2376,7 +2376,7 @@ class RoomArea extends React.Component {
 
             style = {
                 gridArea: "roomArea",
-                backgroundImage: `url(${this.props.app.roomState.img})`,
+                backgroundImage: `url(${StaticURL(this.props.app.roomState.img)})`,
                 backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
             };
         }

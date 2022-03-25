@@ -2,7 +2,7 @@
   "roomID": "pub",
   "roomTitle": "#DigiLounge",
   "route": "/",
-  "img": "./roomart/matt01x1200.jpg",
+  "img": "/roomart/matt01x1200.jpg",
   "width": 1200,
   "height": 1200,
   "bpm": 100,

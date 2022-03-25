@@ -7,6 +7,7 @@ module.exports = {
       '7jamAdmin' : './source/DFclient/7jamAdminClient.js'
    },
    output : {
+      path: path.resolve(__dirname, "public/dist"),
       environment : {
          // The environment supports arrow functions ('() => { ... }').
          arrowFunction : true,

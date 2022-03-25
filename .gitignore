@@ -1,6 +1,6 @@
 node_modules
 .openode
 ssl
-dist
+# dist
 config2.yaml
 
