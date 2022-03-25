@@ -179,6 +179,7 @@ button:focus {
     box-sizing: border-box;
     margin-bottom: 20px;
     border-radius: 5px;
+    position: relative;
 }
 
 .component>h2 {
@@ -428,9 +429,8 @@ button.muteButton:focus {
 
 
 .userName {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    white-space: nowrap;
 }
 
 .userName.online {
@@ -449,16 +449,21 @@ button.muteButton:focus {
     background-color: #044;
 }
 
-.userName .role {
-    margin-left: 2px;
-    font-size: x-small;
+.userName .badge {
+    margin-left: 1px;
+    font-size: 9px;
     background-color: #555;
     color: #ccc;
-    padding: 2px;
     border-radius: 6px;
-    padding-left: 3px;
-    padding-right: 3px;
+    display: flex;
+    align-items: center;
+    padding: 2px 3px;
 }
+
+.userName .badge .role {padding: 0px 1px;}
+
+
+
 
 .cheer {
     position: absolute;
@@ -781,9 +786,9 @@ ul.instParamList li.buttonsParam.sfzSelect button {
     color: #47c447;
     /* discord color with differet hue*/
     font-size: 30px;
-    line-height: 0;
-    vertical-align: middle;
     padding-right: 8px;
+    display: flex;
+    align-items: center;
 }
 
 .component.userList ul.offlineUserList .presenceIndicator {
@@ -810,9 +815,7 @@ ul.otherRoomUserList .presenceIndicator {
     padding-right: 8px;
 }
 
-ul.userList li.userRow {
-    white-space: nowrap;
-}
+ul.userList li.userRow {display: flex;align-items: center;}
 
 .worldStatus .room {
     margin: 10px;
@@ -1065,25 +1068,19 @@ ul.instParamList li.inlineLabel {
 /* --- instrument closet --- */
 
 .component.instrumentCloset>ul {
-    overflow-x: hidden;
     padding-right: 0;
     padding-left: 5px;
 }
 
 .component.instrumentCloset li {
     display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-    align-items: stretch;
-    align-content: stretch;
 }
 
 .component.instrumentCloset li .instrument {
     position: relative;
     padding: 2px;
     padding-bottom: 0;
-    flex-grow: 1;
-    border: 2px solid transparent;
+    flex: 1 1;
 }
 
 .component.instrumentCloset li .instrument:hover {

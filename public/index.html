@@ -4,18 +4,18 @@
 <head>
 
     <style type="text/css">
-
         #errorlog {
-            display:none;
-            position:absolute;
-            background-color:#444e;
+            display: none;
+            position: absolute;
+            background-color: #444e;
             color: #0aa;
             font-family: monospace;
             font-size: 18px;
             top: 0;
             left: 0;
             padding: 10px;
-            z-index: 9999; /* only thing is that i want alerts to be above.*/
+            z-index: 9999;
+            /* only thing is that i want alerts to be above.*/
         }
 
         #errorlog pre.log_entry {
@@ -28,9 +28,8 @@
         }
 
         #errorlog.visible {
-            display:block;
+            display: block;
         }
-        
     </style>
 
     <script type="text/javascript">
@@ -42,7 +41,7 @@
         window.DFlogEntryID = 0;
         window.addEventListener("error", (e) => {
             if (gLogItemsRemaining < 1) return;
-            gLogItemsRemaining --;
+            gLogItemsRemaining--;
 
             let logel = document.getElementById("errorlog");
             if (!logel) {
@@ -95,7 +94,7 @@
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(payload)
-                        });
+                    });
 
                     try {
                         fetch(request)
@@ -119,7 +118,7 @@
             }
 
             const msg =
-`@ ${e.filename}:${e.lineno}
+                `@ ${e.filename}:${e.lineno}
 timestamp: ${e.timeStamp}
 message: ${e.message}
 type: ${e.type}
@@ -142,7 +141,7 @@ error.stack: ${e.error.stack.toString()}
                 errorStack: stackLines,
             };
             window.DFlog.push(entryObj);
-            window.DFlogEntryID ++;
+            window.DFlogEntryID++;
             const entry = document.createElement("pre");
             entry.classList.add("log_entry");
             entry.id = `log_entry_${entryObj.id}`;
@@ -175,14 +174,42 @@ error.stack: ${e.error.stack.toString()}
             }
         }
 
+
+        // Safari polyfill for .at
+        // https://stackoverflow.com/a/70557417/402169
+        function at(n) {
+            // ToInteger() abstract op
+            n = Math.trunc(n) || 0;
+            // Allow negative indexing from the end
+            if (n < 0) n += this.length;
+            // OOB access is guaranteed to return undefined
+            if (n < 0 || n >= this.length) return undefined;
+            // Otherwise, this is just normal property access
+            return this[n];
+        }
+
+        const TypedArray = Reflect.getPrototypeOf(Int8Array);
+        for (const C of [Array, String, TypedArray]) {
+            Object.defineProperty(C.prototype, "at",
+                {
+                    value: at,
+                    writable: true,
+                    enumerable: false,
+                    configurable: true
+                });
+        }
+
     </script>
 
+    <title>7jam online jam session & concerts</title>
+    <meta name="description"
+        content="7jam is an online jam session for musicians and music lovers. Concerts and monthly jam sessions in a virtual music studio that's free, open, and public 24/7. Open-source and made with love from Brussels, Belgium, in the heart of Europe." />
 
     <script src="ext/jquery.min.js"></script>
 
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    
+
     <script type="text/javascript">
         // quick n dirty so i can share DFCommon.js with node.js. I could also use Browserify if it gets any more complex
         let module = {};

@@ -697,6 +697,11 @@ class DigifuApp {
       return;
     }
 
+    if (this.observingInstrument && foundInstrument.instrument.instrumentID == this.observingInstrument.instrumentID) {
+      // stop observing when ownership changes
+      this.observingInstrument = null;
+    }
+
     // when a sequencer is playing without a user controlling, it emits note ons / offs.
     // when ownership changes, remove its playing note refs.
     this.handleUserAllNotesOff(null, foundInstrument.instrument);
@@ -1419,6 +1424,36 @@ class DigifuApp {
         g.expires = parseInt(op.expiration);
         break;
       }
+      case "setColor":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setColor: graffiti not found ${g.id}`);
+          return;
+        }
+        g.color = op.color;
+        break;
+      }
+      case "setSize":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setSize: graffiti not found ${g.id}`);
+          return;
+        }
+        g.size = op.size;
+        break;
+      }
+      case "setPosition":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setPosition: graffiti not found ${g.id}`);
+          return;
+        }
+        this.roomState.SetGraffitiPosition(g, op.x, op.y);
+        break;
+      }
       }
     });
     this.stateChangeHandler();
@@ -1455,6 +1490,12 @@ class DigifuApp {
         break;
       case "removeGlobalRole":
         u.user.removeGlobalRole(data.role);
+
+        // stop local things that you can't do without performance rights.
+        if (!this.roomState.UserCanPerform(this.myUser)) {
+          this.metronome.isMuted = true;
+        }
+
         //console.log(`removing role ${data.role} from user ${u.user.name}`);
         break;
       default:
@@ -1516,6 +1557,7 @@ class DigifuApp {
 
   observeInstrument(inst) {
     this.observingInstrument = inst;
+    this.stateChangeHandler();
   }
 
   SendChatMessage(msgText, toUserID) {

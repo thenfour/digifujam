@@ -75,7 +75,7 @@ This project aggressively uses latest tech in order to squeeze out features. I d
 - Chrome Mac I expect full compatibility. I did not manage to get MIDI to work, but everything else looked fine.
 - Edge Windows should work because I smoke-test there occasionally.
 - Edge Mac I have never tested.
-- Firefox does not support MIDI ([yet](https://twitter.com/gabrielesvelto/status/1474097074253803521)), so it only works for spectators.
+- Firefox does not support MIDI ([yet](https://bugzilla.mozilla.org/show_bug.cgi?id=836897)), so it only works for spectators.
 - Safari does not support MIDI or ConstantSourceNode, so it's 100% incompatible.
 - Opera has been reported to work
 - Mobile iOS definitely doesn't work due to Safari incompatibility

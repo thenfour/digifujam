@@ -215,7 +215,7 @@ class UserModerationDialog extends React.Component {
       userID,
       role,
     });
-    console.log(`deleteGlobalRole ${role} to user id ${userID}`);
+    //console.log(`deleteGlobalRole ${role} to user id ${userID}`);
     this.setState({deleteRoleConfirmation:null});
   }
 
@@ -227,7 +227,7 @@ class UserModerationDialog extends React.Component {
       userID,
       role,
     });
-    console.log(`add global role ${role} to user id ${userID}`);
+    //console.log(`add global role ${role} to user id ${userID}`);
     this.setState({
       addVisible:false,
       addRoleConfirmation:null,

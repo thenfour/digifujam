@@ -204,7 +204,13 @@ class DFOptionsDialog extends React.Component {
     }
 
     onClickMetronome = () => {
-        this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
+        // https://github.com/thenfour/digifujam/issues/249
+        // don't allow metronome for non-performers, for UI simplicity
+        if (!this.props.app.roomState.UserCanPerform(this.props.app.myUser)) {
+            this.props.app.metronome.isMuted = true;
+        } else {
+            this.props.app.metronome.isMuted = !this.props.app.metronome.isMuted;
+        }
         this.setState({});//gStateChangeHandler.OnStateChange();
     }
 

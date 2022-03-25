@@ -1,6 +1,5 @@
 const DBQuantizer = require('./quantizer');
 const DFUtil = require('./dfutil');
-//const DFMusic = require("./DFMusic");
 const {GenerateUserName} = require('./NameGenerator');
 const Seq = require('./SequencerCore');
 const {ServerRoomMetronome} = require('./serverMetronome');
@@ -44,7 +43,8 @@ const ClientMessages = {
     JoinRoom: "JoinRoom", // roomID
     PersistentSignOut: "PersistentSignOut",
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
-    GraffitiOps: "GraffitiOps", // [{ op:[place,remove,pin,setExpiration], content, id, lifetimeMS }] // id only used for admin, lifetime & content only for placement
+     // [{ op:[place,remove,pin,setExpiration, setColor, setSize, setPosition], content, id, ... }] // id only used for admin, lifetime & content only for placement
+    GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { danceID: }
 
     // admin
@@ -117,7 +117,7 @@ const ServerMessages = {
 
     // [{ op:"place", graffiti:{} }]
     // [{ op:"remove", id }]
-    // pin,setExpiration
+    // pin,setExpiration, setColor, setSize, setPosition
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { userID: , danceID: }
 
@@ -1325,6 +1325,7 @@ class DigifuInstrumentSpec {
     
     CanSequencerBeStartStoppedByUser(roomState, user) {
         if (user.userID === this.controlledByUserID) return true;
+        if (!roomState.UserCanPerform(user)) return false;
         return this.IsTakeable(roomState) && this.sequencerDevice.HasData();
     }
 
@@ -1542,6 +1543,7 @@ class DigifuRoomState {
         });
 
         this.graffiti ??= [];
+        this.whoCanPerform ??= "anyone";
 
         this.metronome = new ServerRoomMetronome();
         this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
@@ -1606,6 +1608,7 @@ class DigifuRoomState {
             cssClass: rgn.cssClass ?? "",
             content,
             expires,
+            // 'size' is also supported and optional. a default size is always used to begin with, but mods can change size. example: "size":"140px"
         };
 
         this.graffiti.push(n);
@@ -1656,6 +1659,17 @@ class DigifuRoomState {
         const i = this.graffiti.findIndex(g => g.id === id);
         if (i === -1) return false;
         this.graffiti.splice(i, 1);
+        return true;
+    }
+
+    SetGraffitiPosition(g, x, y) {
+        const rgn = this.roomRegions.find(r => DFUtil.pointInPolygon([x, y], r.polyPoints));
+        if (!rgn) {
+            return false;
+        }
+
+        g.position = { x, y };
+        g.cssClass = rgn.cssClass ?? "";
         return true;
     }
 
@@ -2077,6 +2091,11 @@ class DigifuRoomState {
 
     OffsetBeats(relativeBeats) {
         this.metronome.OffsetBeats(relativeBeats);
+    }
+
+    UserCanPerform(user) {
+        if (this.whoCanPerform === "anyone") return true;
+        if (this.whoCanPerform === "performers") return user.IsPerformer();
     }
 
 }; // DigifuRoomState

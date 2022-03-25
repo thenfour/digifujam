@@ -42,7 +42,7 @@ class CreditsButton extends React.Component {
 
 class IdeasButton extends React.Component {
     render() {
-        return (<button className='dropdownMenuButton' onClick={() => window.DFEvents.emit("IdeasButtonClick")}>Ideas?</button>);
+        return (<button className='dropdownMenuButton' onClick={() => window.DFEvents.emit("IdeasButtonClick")}>? ? ?</button>);
     }
 };
 

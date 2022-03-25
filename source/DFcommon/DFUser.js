@@ -104,6 +104,10 @@ class DigifuUser {
     this.#pingDirty = true;
   }
 
+  toString() {
+    return `[uname:${this.name} uid:${this.userID} upid:${this.persistentID}]`;
+  }
+
   IsAdmin() {
     return this.hasGlobalRole(eUserGlobalRole.sysadmin.name);
   }
@@ -114,6 +118,10 @@ class DigifuUser {
     if (!this.persistentInfo.global_roles)
       return false;
     return this.persistentInfo.global_roles.some(x => x === eUserGlobalRole.moderator.name || x === eUserGlobalRole.sysadmin.name);
+  }
+
+  IsPerformer() {
+    return this.hasGlobalRole(eUserGlobalRole.performer.name);
   }
 
   // called when integrating ping data on clients

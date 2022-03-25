@@ -1209,7 +1209,7 @@ class InstrumentParams extends React.Component {
                         <button onClick={this.props.toggleWideMode}>{this.props.isWideMode ? "⯈ Narrow" : "⯇ Wide"}</button>
                         {/* {!this.props.observerMode && <button onClick={this.onPanicClick}>Panic</button>} */}
                         {!this.props.observerMode && <button onClick={this.onReleaseClick}>Release</button>}
-                        {!!this.props.observerMode && <button onClick={() => { gStateChangeHandler.observingInstrument = null; }}>Stop Observing</button>}
+                        {!!this.props.observerMode && <button onClick={() => { this.props.app.observingInstrument = null; }}>Stop Observing</button>}
                     </div>
                 </h2>
                 <div style={shownStyle}>
@@ -1521,11 +1521,13 @@ class Instrument extends  React.Component {
 
     observeInstrument(instrument) {
         this.props.app.ReleaseInstrument();
-        gStateChangeHandler.observingInstrument = instrument;
+        this.props.app.observeInstrument(instrument);
+        //gStateChangeHandler.observingInstrument = instrument;
     }
 
     stopObserving() {
-        gStateChangeHandler.observingInstrument = null;
+        this.props.app.observeInstrument(null);
+        //gStateChangeHandler.observingInstrument = null;
     }
 
     OnBigClickPlay() {
@@ -1572,25 +1574,27 @@ class Instrument extends  React.Component {
             loadIndicator = (<span className="instrumentLoadingIndicator">{Math.trunc(i.loadProgress * 100)}%</span>);
         }
 
-        let playBtn = takeable && (
-            <button onClick={() => this.OnClickInstrument(i)}>play</button>
-        );
+        let playBtn = null;
+        // let playBtn = takeable && (
+        //     <button onClick={() => this.OnClickInstrument(i)}>play</button>
+        // );
 
-        let releaseBtn = isYours && (
-            <button className="release" onClick={() => this.props.app.ReleaseInstrument()}>release</button>
-        );
+        let releaseBtn = null;//isYours && (
+        //    <button className="release" onClick={() => this.props.app.ReleaseInstrument()}>release</button>
+        //);
 
-        const isYourObserving = gStateChangeHandler.observingInstrument && gStateChangeHandler.observingInstrument.instrumentID == i.instrumentID;
+        const isYourObserving = this.props.app.observingInstrument && this.props.app.observingInstrument.instrumentID == i.instrumentID;
 
         const isSequencerOn = i.sequencerDevice.isPlaying;
         const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser);
+        const canPerform = app.roomState.UserCanPerform(app.myUser);
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
             <div
                 className={"seqIndicatorAnimation1 seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
                 title={"Sequencer activity (click to start/stop)"}
-                onClick={() => this.clickSequencerIndicator()}
+                onClick={canPerform ? (() => this.clickSequencerIndicator()) : null}
                 >
                 <div className='seqIndicator'></div>
             </div>
@@ -1612,13 +1616,13 @@ class Instrument extends  React.Component {
         let bigClickHandler = () => {};
         let allowBigClick = false;
 
-        if (playBtn && !releaseBtn && !observeBtn && !stopObservingBtn) {
+        if (canPerform && takeable && !isYours && !observeBtn && !stopObservingBtn) {
             playBtn = (<span>click to play</span>);
             allowBigClick = true;
             bigClickHandler = () => { this.OnBigClickPlay(); };
         }
 
-        if (!playBtn && releaseBtn && !observeBtn && !stopObservingBtn) {
+        if (!takeable && isYours && !observeBtn && !stopObservingBtn) {
             releaseBtn = (<span>click to release</span>);
             allowBigClick = true;
             bigClickHandler = () => { this.OnBigClickRelease(); };
@@ -1682,8 +1686,8 @@ class RightArea extends React.Component {
         if (myInstrument && myInstrument.params.length > 0) {
             instParams = (<InstrumentParams app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} observerMode={false} instrument={myInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
         } else {
-            if (gStateChangeHandler.observingInstrument) {
-                instParams = (<InstrumentParams app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} observerMode={true} instrument={gStateChangeHandler.observingInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
+            if (this.props.app?.observingInstrument) {
+                instParams = (<InstrumentParams app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} observerMode={true} instrument={this.props.app.observingInstrument} toggleWideMode={this.props.toggleWideMode} isWideMode={this.props.isWideMode}></InstrumentParams>);
             }
         }
 
@@ -2713,15 +2717,14 @@ class RootArea extends React.Component {
     };
 
     get observingInstrument() {
-        return this.state.observingInstrument;
+        return this.state.app?.observingInstrument;
     }
     set observingInstrument(inst) {
         this.state.app.observeInstrument(inst); // this will send change notifications on remote param changes.
-        this.setState({ observingInstrument: inst });
     }
 
     get focusedInstrument() {
-        return this.state.app?.myInstrument ?? this.state.observingInstrument;
+        return this.state.app?.myInstrument ?? this.observingInstrument;
     }
 
     get isSequencerShown() {
@@ -2765,7 +2768,6 @@ class RootArea extends React.Component {
         this.state = {
             app: null,
             wideMode: false,
-            observingInstrument: null,
         };
 
         this.googleOAuthModule = new GoogleOAuthModule();
@@ -2807,6 +2809,7 @@ class RootArea extends React.Component {
             const onlineUsers = this.state.app.roomState.users.filter(u => u.presence === DF.eUserPresence.Online);
             title = `${this.state.app.roomState.roomTitle} ${activityTxt} [${onlineUsers.length}/${this.state.app.worldPopulation}]`;
         }
+        title += " | 7jam online jam session & concerts";
         if (document.title != title) {
             document.title = title;
         }
@@ -2859,6 +2862,8 @@ class RootArea extends React.Component {
             <span className='connectionIndicator disconnected' title="Trying to reconnect to 7jam..."><i className="material-icons">power_off</i></span>
         );
 
+        const canPerform = this.state.app?.roomState?.UserCanPerform(this.state.app?.myUser);
+
         return (
             <div id="allContentContainer" onKeyDown={this.onKeyDown}>
             <GestureSplash app={this.state.app}></GestureSplash>
@@ -2870,9 +2875,9 @@ class RootArea extends React.Component {
                         <UserSettingsButton app={this.state.app} googleOAuthModule={this.googleOAuthModule}></UserSettingsButton>
                         {adminControls}
                         {modControlButton}
-                        {this.state.app && this.state.app.synth && <UpperRightControls app={this.state.app}></UpperRightControls>}
+                        {this.state.app && this.state.app.synth && canPerform && <UpperRightControls app={this.state.app}></UpperRightControls>}
                         {this.state.app?.synth && <InlineMasterGainCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlineMasterGainCtrl>}
-                        {this.state.app?.synth && <InlinePitchBendCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlinePitchBendCtrl>}
+                        {this.state.app?.synth && canPerform && <InlinePitchBendCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlinePitchBendCtrl>}
                         {/*this.state.app && this.state.app.roomState && <DFOptionsDialog.RoomBeat app={this.state.app}></DFOptionsDialog.RoomBeat>*/}
                         {window.DFShowDebugInfo && (
                             <div>pos: {Math.round(this.state.app?.myUser?.position?.x)}, {Math.round(this.state.app?.myUser?.position?.y)}]</div>

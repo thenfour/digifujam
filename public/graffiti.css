@@ -100,8 +100,9 @@
 }
 
 #graffitiContainer .graffiti .graffitiContent.image {
-    width: 100px;
-    height: 100px;
+    --size: 100px;
+    width: var(--size);
+    height: var(--size);
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;

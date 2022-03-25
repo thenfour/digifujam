@@ -257,6 +257,11 @@ class RoomServer {
         });
       }
 
+      if (!this.roomState.UserCanPerform(foundUser.user)) {
+        console.log(`user ${foundUser.user.toString()} does not have permission to perform.`);
+        return;
+      }
+
       // find the new instrument.
       let foundInstrument = this.roomState.FindInstrumentById(instrumentID);
       if (foundInstrument === null) {
@@ -1009,7 +1014,51 @@ class RoomServer {
             this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setExpiration", id: op.id, expiration:g.expires }]);
             //console.log(`** set expiration of graffiti ID ${op.id}`);
           }
+          break;
+        case "setColor": // { op:"setColor", id, color }
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to set color on graffiti ${op.id}`);
+            return;
+          }
+          g.color = op.color;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setColor", id: op.id, color:g.color }]);
+        }
         break;
+
+        case "setSize": // { op:"setSize", id, size }
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setSize on graffiti ${op.id}`);
+            return;
+          }
+          g.size = op.size;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setSize", id: op.id, size:g.size }]);
+        }
+        break;
+
+        case "setPosition": // { op:"setPosition", id, x, y }
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setPosition on graffiti ${op.id}`);
+            return;
+          }
+          if (!this.roomState.SetGraffitiPosition(g, parseFloat(op.x), parseFloat(op.y))) {
+            console.log(`!! user ${user.name} ${user.userID} setPosition(${op.x},${op.y}) on graffiti ${op.id}: failed; probably out of region.`);
+            return;
+          }
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setPosition", id: op.id, x:op.x, y:op.y }]);
+        }
+        break;
+
+
+
       }
     });
   }
@@ -1083,24 +1132,62 @@ class RoomServer {
 
   // bpm
   OnClientRoomBPMUpdate(ws, data) {
-    data.bpm = DFU.baseClamp(data.bpm, DF.ServerSettings.MinBPM, DF.ServerSettings.MaxBPM);
-    this.roomState.setBPM(data.bpm);
-    if (data.phaseRelativeMS) {
-      this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
-    }
-    this.sequencerPlayer.onChanged_General();
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientRoomBPMUpdate => unknown user`);
+        return;
+      }
+      if (!this.roomState.UserCanPerform(foundUser.user)) throw new Error(`OnClientRoomBPMUpdate: User does not have permissions.`);
 
-    this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM() }); //update bpm for ALL clients
+      data.bpm = DFU.baseClamp(data.bpm, DF.ServerSettings.MinBPM, DF.ServerSettings.MaxBPM);
+      this.roomState.setBPM(data.bpm);
+      if (data.phaseRelativeMS) {
+        this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
+      }
+      this.sequencerPlayer.onChanged_General();
+
+      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM() }); //update bpm for ALL clients
+    } catch (e) {
+      log(`OnClientRoomBPMUpdate exception occured`);
+      log(e);
+    }
   }
 
   OnClientAdjustBeatPhase(ws, data) {
-    this.roomState.metronome.AdjustPhase(data.relativeMS);
-    this.sequencerPlayer.onChanged_General();
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientAdjustBeatPhase => unknown user`);
+        return;
+      }
+      if (!this.roomState.UserCanPerform(foundUser.user)) throw new Error(`OnClientAdjustBeatPhase: User does not have permissions.`);
+
+      this.roomState.metronome.AdjustPhase(data.relativeMS);
+      this.sequencerPlayer.onChanged_General();
+      // no need to emit this to clients because the metronome is executed by the server.
+    } catch (e) {
+      log(`OnClientAdjustBeatPhase exception occured`);
+      log(e);
+    }
   }
 
   OnClientAdjustBeatOffset(ws, data) {
-    this.roomState.OffsetBeats(data.relativeBeats);
-    this.sequencerPlayer.onChanged_General();
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        console.log(`OnClientAdjustBeatOffset => unknown user`);
+        return;
+      }
+      if (!this.roomState.UserCanPerform(foundUser.user)) throw new Error(`OnClientAdjustBeatOffset: User does not have permissions.`);
+
+      this.roomState.OffsetBeats(data.relativeBeats);
+      this.sequencerPlayer.onChanged_General();
+      // no need to emit this to clients because the metronome is executed by the server.
+    } catch (e) {
+      log(`OnClientAdjustBeatOffset exception occured`);
+      log(e);
+    }
   }
 
   // called per every beat, BPM is defined in roomState
@@ -1179,6 +1266,17 @@ class RoomServer {
           break;
         case "removeGlobalRole":
           foundUser.user.removeGlobalRole(data.role);
+          // when you no longer have permission to perform, release instrument.
+          const inst = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+          if (inst) {
+            if (!this.roomState.UserCanPerform(foundUser.user)) {
+              console.log(`Releasing instrument for user because they lost performance permissions.`);
+              this.roomState.quantizer.clearUser(foundUser.user.userID);
+              this.roomState.quantizer.clearInstrument(inst.instrument.instrumentID);
+              inst.instrument.ReleaseOwnership();
+              this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrument.instrumentID, userID: null, idle: false });
+            }
+          }
           break;
         default:
           throw new Error(`unknown op '${data.op}'`);
