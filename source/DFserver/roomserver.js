@@ -1238,7 +1238,7 @@ class RoomServer {
           break;
         case "backupServerState":
           if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
-          OnBackupServerState();
+          this.server.OnBackupServerState();
           break;
         case "setWhoCanPerform":
           if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
