@@ -4,6 +4,8 @@ const FMVoice = require("./fm4voice");
 const MixingDeskInstrument = require("./MixingDeskInstrument");
 const sfzInstrument = require('./sfzInstrument')
 
+// how many milliseconds must elapse before a note is accepted?
+const gDupeNoteMarginMS = 20;
 
 // when you mute the synth engine, note ons and offs don't flow through synths to drive the keyboard view.
 // so when muted, we use this to drive keyboard view.
@@ -36,6 +38,37 @@ class FallbackNoteOnTracker {
 	}
 };
 
+// https://github.com/thenfour/digifujam/issues/241
+// network hiccups can cause a huge burst of notes. especially in sequencers that can result in
+// playing the same note duplicated many times. this keeps track of last time a note was played
+// so we can swallow them if needed.
+class DupeNoteSwallower {
+	constructor() {
+		this.instruments = new Map(); // map instrumentID => map of notes => date last played
+	}
+
+	// return true if the note should be swallowed.
+	NoteOnShouldBeSwallowed(user, instrumentSpec, note, velocity, isFromSequencer) {
+		const now = Date.now();
+		if (!this.instruments.has(instrumentSpec.instrumentID)) {
+			this.instruments.set(instrumentSpec.instrumentID, new Map());
+		}
+		const instMap = this.instruments.get(instrumentSpec.instrumentID);
+		if (!instMap.has(note)) {
+			instMap.set(note, now); // first time this note has been played on this instrument.
+			return false;
+		}
+		const prevTime = instMap.get(note);
+		if ((now - prevTime) < gDupeNoteMarginMS) {
+			return true; // swallow, and don't register this note. allow time to elapse.
+		}
+
+		// don't swallow. register this note on.
+		instMap.set(note, now);
+		return false;
+	}
+
+}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DigifuSynth {
@@ -44,6 +77,8 @@ class DigifuSynth {
 		this.instruments = {};
 
 		this.instrumentSpecs = null;
+
+		this.dupeNoteSwallower = new DupeNoteSwallower();
 
 		this._isMuted = false;
 		this.sampleLibrarian = null;
@@ -88,6 +123,9 @@ class DigifuSynth {
 	}
 
 	NoteOn(user, instrumentSpec, note, velocity, isFromSequencer) {
+		if (this.dupeNoteSwallower.NoteOnShouldBeSwallowed(user, instrumentSpec, note, velocity, isFromSequencer))
+			return;
+
 		if (this._isMuted || instrumentSpec.isMuted) {
 			this.fallbackNoteOnTracker.NoteOn(user, instrumentSpec, note, isFromSequencer);
 			return;

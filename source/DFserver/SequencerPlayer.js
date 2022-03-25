@@ -49,7 +49,6 @@ class RoomSequencerPlayer {
     this.#invokeTimer();
   }
   onChanged_SetNoteMuted(instrument, data) {
-    //console.log(`onChanged_SetNoteMuted(${JSON.stringify(data)})`);
     this.#invokeTimer();
   }
   onChanged_SelectPattern(instrument, data) {
@@ -141,7 +140,7 @@ class RoomSequencerPlayer {
       for (let irow = 0; irow < div.noteOns.length; ++ irow) {
         const cell = div.noteOns[irow];
         if (cell.isMuted)
-          return;
+          continue;
         
         const midiNoteValue = patch.AdjustMidiNoteValue(cell.midiNoteValue);
 
