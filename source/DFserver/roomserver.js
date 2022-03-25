@@ -170,6 +170,7 @@ class RoomServer {
 
       // handler
       const completeUserEntry = (hasPersistentIdentity, persistentInfo, persistentID) => {
+        clientSocket.DFexistingUserObj = null; // release reference
         u.userID = userID.toString(); // this could be a mongo Objectid
         u.persistentID = persistentID?.toString();
         u.hasPersistentIdentity = hasPersistentIdentity;
@@ -223,7 +224,8 @@ class RoomServer {
       }; // completeUserEntry
 
       if (!await this.server.mGoogleOAuth.TryProcessHandshake(u, clientSocket, completeUserEntry, rejectUserEntry, clientUserSpec.google_refresh_token)) {
-        completeUserEntry(false, EmptyPersistentInfo(), null);
+        const persistentInfo = clientSocket.DFexistingUserObj?.persistentInfo ?? EmptyPersistentInfo();
+        completeUserEntry(false, persistentInfo, null);
       }
 
     } catch (e) {
@@ -801,7 +803,7 @@ class RoomServer {
       x: params.x,
       y: params.y
     };
-    newRoom.ClientJoin(ws, this.roomState.roomTitle);
+    newRoom.ClientJoin(ws, this.roomState, user);
   }
 
   DoUserItemInteraction(ws, user, item, interactionType) {
@@ -1208,23 +1210,25 @@ class RoomServer {
         return;
       }
 
-      if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
-
       switch (data.cmd) {
         case "setAnnouncementHTML":
+          if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
           this.roomState.announcementHTML = data.params;
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
         case "setRoomImg":
+          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
           this.roomState.img = data.params;
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
         case "setRadioChannel":
+          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
           this.roomState.radio.channelID = data.params.channelID;
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
         case "setRadioFX":
           // todo: validate?
+          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
           this.roomState.radio.fxEnabled = data.params.fxEnabled;
           this.roomState.radio.reverbGain = data.params.reverbGain;
           this.roomState.radio.filterType = data.params.filterType;
@@ -1233,7 +1237,13 @@ class RoomServer {
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
         case "backupServerState":
+          if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
           OnBackupServerState();
+          break;
+        case "setWhoCanPerform":
+          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
+          this.roomState.whoCanPerform = data.params.whoCanPerform;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
       }
 
@@ -2090,11 +2100,12 @@ class RoomServer {
 
 
   // call this to join this socket to this room and initiate welcome.
-  ClientJoin(ws, fromRoomName) {
+  // called when new socket connects
+  // called when user changes rooms.
+  ClientJoin(ws, fromRoom, existingUserObj) {
     // NB! Client may already be connected but just joining this room.
     try {
-      //log(`CLIENT JOINING ${this.roomState.roomID}`);
-      ws.DFFromRoomName = fromRoomName; // convenience so you can persist through the room change workflow.
+      ws.DFexistingUserObj = existingUserObj;
       ws.join(this.roomState.roomID);
       ws.emit(DF.ServerMessages.PleaseIdentify); // ask user to identify
     } catch (e) {

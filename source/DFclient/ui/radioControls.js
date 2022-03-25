@@ -200,7 +200,7 @@ class RadioControls extends React.Component {
           <div className='lessImportantControls'>
             <button title="Reload the stream" id="radioRefresh" onClick={() => this.props.app.radio.IcyNode.refresh()}><i className="material-icons">refresh</i></button>
             <div title={connectionStateDescription} id="radioConnectionStatus" className={info.connectionState}>{connectionState}</div>
-            {this.props.app.myUser.IsAdmin() && <div className='settings' onClick={this.toggleSettings}><i className="material-icons">settings</i></div>}
+            {this.props.app.myUser.IsModerator() && <div className='settings' onClick={this.toggleSettings}><i className="material-icons">settings</i></div>}
           </div>
           {showDebugInfo && <div className="knobs">
             <div className='paramGroup buttons'>

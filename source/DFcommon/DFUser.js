@@ -112,6 +112,10 @@ class DigifuUser {
     return this.hasGlobalRole(eUserGlobalRole.sysadmin.name);
   }
 
+  IsBanned() {
+    return this.hasGlobalRole(eUserGlobalRole.shadow_ban.name);
+  }
+
   IsModerator() {
     if (!this.persistentInfo)
       return false;
@@ -206,6 +210,7 @@ class DigifuUser {
         c : this.color,
         s : this.source,
         p : this.presence,
+        b : this.IsBanned(),
       };
       
       this.#pingDetailed = {};
@@ -258,6 +263,7 @@ class DigifuUser {
     data.color = data.c;
     data.source = data.s;
     data.presence = data.p;
+    data.isBanned = data.b;
     if (data.no)
       data.noteOns = data.no;
     if (data.gr)
@@ -270,6 +276,7 @@ class DigifuUser {
     delete data.p;
     delete data.no;
     delete data.gr;
+    delete data.b;
     return data;
   }
 

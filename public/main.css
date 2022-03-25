@@ -433,6 +433,11 @@ button.muteButton:focus {
     align-items: center;
 }
 
+.chatLog .userName,
+.userName.inline {
+    display:inline-flex;
+}
+
 .userName.online {
     font-weight: bold;
 }
@@ -789,6 +794,7 @@ ul.instParamList li.buttonsParam.sfzSelect button {
     padding-right: 8px;
     display: flex;
     align-items: center;
+    line-height: 0; /* important so it doesn't take up too much vertical space*/
 }
 
 .component.userList ul.offlineUserList .presenceIndicator {
@@ -814,12 +820,21 @@ ul.otherRoomUserList .presenceIndicator {
     vertical-align: middle;
     padding-right: 8px;
 }
+.otherRoomUserList li {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
 
-ul.userList li.userRow {display: flex;align-items: center;}
+ul.userList li.userRow {display: flex;align-items: center;white-space: nowrap;}
 
 .worldStatus .room {
     margin: 10px;
     color: #066;
+}
+
+.worldStatus .room dd {
+    margin-left: 11px;
 }
 
 .worldStatus .room .roomName {

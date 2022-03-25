@@ -189,6 +189,14 @@ span.userModerationGear i {
   background-color:#088;
 }
 
+.moderationPanel.room button {
+  border:0;
+}
+
+.moderationPanel.room button.active {
+  background-color:#044;
+}
+
 
 .chatLog .chatLogEntryChat {
   position:relative;

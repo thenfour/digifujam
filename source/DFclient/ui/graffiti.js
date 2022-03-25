@@ -85,7 +85,7 @@ class GraffitiItem extends React.Component {
     const g = this.props.graffiti;
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:g.position.x,y:g.position.y});
 
-    const isYours = (this.props.context.app.myUser.userID === g.userID);
+    //const isYours = app.roomState.isUserForGraffiti(g, app.myUser.userID, app.myUser.persistentID);
 
     let rot = remap(g.seed, 0, 1, 4, 10) * Math.sign(((g.seed * 1337) % 2) - 1);
     const fonts = [
@@ -151,7 +151,9 @@ class GraffitiContainer extends React.Component {
     const app = this.props.context.app;
     if (!app.roomState?.roomRegions) return null;
 
-    const items = app.roomState.graffiti.map(g => (<GraffitiItem key={g.id} context={this.props.context} graffiti={g} />));
+    const items = app.roomState.graffiti
+      .filter(g => app.GraffitiIsVisible(g))
+      .map(g => (<GraffitiItem key={g.id} context={this.props.context} graffiti={g} />));
 
     return (<div id="graffitiContainer" className={window.DFShowDebugInfo ? "admin" : ""}>
         {items}

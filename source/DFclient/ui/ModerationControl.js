@@ -7,8 +7,55 @@ const { TimeSpan, hoursToMS, daysToMS } = require('../../DFcommon/dfutil');
 
 // defines which ctrl panel is visible.
 window.DFModerationControlContext = {
-  op: null, // "user", "chat", "graffiti", etc...
+  op: null, // "user", "chat", "graffiti", "room", etc...
 };
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+class RoomModerationDialog extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+    };
+  }
+
+  onClickWhoCanPerform(o) {
+    this.props.app.net.SendAdminChangeRoomState("setWhoCanPerform", {
+      whoCanPerform: o,
+    });
+  }
+
+  render() {
+    const app = this.props.app;
+
+    return (
+      <div className='moderationPanel room'>
+        <div className='topControls'>
+          <span>{app.roomState.roomTitle}</span>
+          <button className='close' onClick={() => { window.DFModerationControlContext.op = null; window.DFStateChangeHandler.OnStateChange();}}><i className="material-icons">close</i></button>
+        </div>
+        <div className='body'>
+          <dt>who can perform?</dt>
+          <dd>
+            <button className={app.roomState.whoCanPerform === "anyone" ? "active" : ""} onClick={() => this.onClickWhoCanPerform("anyone")}>Anyone</button>
+            <button className={app.roomState.whoCanPerform === "performers" ? "active" : ""} onClick={() => this.onClickWhoCanPerform("performers")}>Only performers</button>
+          </dd>
+        </div>
+      </div>
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -354,6 +401,10 @@ class ModerationControlPanel extends React.Component {
 
     if (window.DFModerationControlContext.op === "graffiti") {
       return <GraffitiModerationDialog app={this.props.app} />
+    }
+
+    if (window.DFModerationControlContext.op === "room") {
+      return <RoomModerationDialog app={this.props.app} />
     }
 
     return null;

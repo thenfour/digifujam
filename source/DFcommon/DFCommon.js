@@ -1706,6 +1706,7 @@ class DigifuRoomState {
             chatLog: [],//this.chatLog,
             stats: this.stats,
             announcementHTML: this.announcementHTML,
+            whoCanPerform: this.whoCanPerform,
             graffiti: this.graffiti,
             radio: this.radio,
             instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
@@ -1735,6 +1736,7 @@ class DigifuRoomState {
 
         this.stats = data.stats;
         this.announcementHTML = data.announcementHTML;
+        this.whoCanPerform = data.whoCanPerform;
         this.graffiti = data.graffiti ?? [];
 
         if (this.radio) {
@@ -2094,8 +2096,40 @@ class DigifuRoomState {
     }
 
     UserCanPerform(user) {
+        if (user.IsAdmin()) return true;
+        if (user.IsBanned()) return false;
         if (this.whoCanPerform === "anyone") return true;
         if (this.whoCanPerform === "performers") return user.IsPerformer();
+    }
+
+    UserIsVisibleTo(observingUser, user, showToModsAndAdmins) {
+        if (observingUser.userID === user.userID) return true;// you can always see yourself
+        if (observingUser.IsModerator() && showToModsAndAdmins) return true;// admins and mods can see shadow-banned users with a flag only.
+        if (user.IsBanned && user.IsBanned()) return false; // user may not be a DFUser object; it can be from a ping too.
+        if (user.isBanned) return false;
+        // future: could have an invisible role?
+        return true;
+    }
+
+    GraffitiIsVisibleTo(observingUser, graffiti, showToModsAndAdmins) {
+        const u = this.getUserForGraffiti(graffiti);
+        if (!u) {
+            // OK, user is not online therefore we cannot know if they're banned / invisible / whatever.
+            // ideally we could look up their info, but let's allow moderators to manually remove graffiti.
+            // considering only 1 per user that's pretty ok.
+            return true;
+        }
+        return this.UserIsVisibleTo(observingUser, u, showToModsAndAdmins);
+    }
+
+    ChatMessageIsVisibleTo(observingUser, msg, showToModsAndAdmins) {
+        const u = this.FindUserByID(msg.fromUserID);
+        if (!u) {
+            // similar to above. ideally we would also hold persistent ID to make this more accurate.
+            // but anyway let mods remove msgs manually if needed.
+            return true;
+        }
+        return this.UserIsVisibleTo(observingUser, u.user, showToModsAndAdmins);
     }
 
 }; // DigifuRoomState

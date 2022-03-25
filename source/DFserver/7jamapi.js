@@ -65,7 +65,10 @@ class _7jamAPI
     }
     userFilter = userFilter ?? ((u) => u.source === DF.eUserSource.SevenJam);
     const room = this.allRooms[roomID];
-    return room.roomState.users.filter(userFilter);
+    return room.roomState.users.filter(u => {
+      if (!userFilter(u)) return false;
+      return !u.IsBanned();
+    });
   }
 
   Get7JamUserCountForRoom(roomID, userFilter) {
@@ -84,6 +87,7 @@ class _7jamAPI
     Object.values(this.allRooms).forEach(rs => {
       rs.roomState.users.forEach(u => {
         if (!userFilter(u)) return;
+        if (u.IsBanned()) return;
         userIdentities.add(u.persistentID ?? u.userID);
       });
     });

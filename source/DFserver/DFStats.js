@@ -806,6 +806,7 @@ class ActivityHook {
    }
 
    OnUserWelcome(roomState, user, roomUserCount, isJustChangingRoom) {
+      if (user.IsBanned()) return;
       setTimeout(() => {
          this.Hooks.forEach(o => {
             o?.OnUserWelcome?.(roomState, user, roomUserCount, isJustChangingRoom);
@@ -814,6 +815,7 @@ class ActivityHook {
    }
 
    OnUserLeave(roomState, user, roomUserCount, isJustChangingRoom) {
+      if (user.IsBanned()) return;
       setTimeout(() => {
          this.Hooks.forEach(o => {
             if (!o.OnUserLeave)
@@ -824,6 +826,7 @@ class ActivityHook {
    }
 
    OnInstrumentAcquire(roomState, user, instrument) {
+      if (user.IsBanned()) return;
       setTimeout(() => {
          this.Hooks.forEach(o => {
             o?.OnInstrumentAcquire?.(roomState, user, instrument);
@@ -832,6 +835,7 @@ class ActivityHook {
    }
 
    OnNoteOn(roomState, user) {
+      if (user.IsBanned()) return;
       setTimeout(() => {
          this.Hooks.forEach(o => {
             if (!o.OnNoteOn)
@@ -842,6 +846,7 @@ class ActivityHook {
    }
 
    OnCheer(roomState, user) {
+      if (user.IsBanned()) return;
       setTimeout(() => {
          this.Hooks.forEach(o => {
             if (!o.OnCheer)
@@ -852,6 +857,7 @@ class ActivityHook {
    }
 
    OnMessage(roomState, user, msg) {
+      if (user.IsBanned()) return;
       setTimeout(() => {
          // if a message did not originate  from 7jam (discord messages which have
          // been forwarded to 7jam e.g.) then ignore.

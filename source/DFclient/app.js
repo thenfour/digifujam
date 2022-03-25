@@ -650,7 +650,9 @@ class DigifuApp {
     let nu = new DF.DigifuUser(data.user);
     this.roomState.users.push(nu);
 
-    this.soundEffectManager.play(eSoundEffects.UserJoinNotification);
+    if (this.UserIsVisible(nu)) {
+      this.soundEffectManager.play(eSoundEffects.UserJoinNotification);
+    }
 
     if (data.chatMessageEntry) {
       let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
@@ -674,7 +676,9 @@ class DigifuApp {
     }
     this.roomState.users.splice(foundUser.index, 1);
 
-    this.soundEffectManager.play(eSoundEffects.UserPartNotification);
+    if (this.UserIsVisible(foundUser.user)) {
+      this.soundEffectManager.play(eSoundEffects.UserPartNotification);
+    }
 
     if (data.chatMessageEntry) {
       let msg = Object.assign(new DF.DigifuChatMessage, data.chatMessageEntry);
@@ -1292,6 +1296,10 @@ class DigifuApp {
       }
       this.events.emit("changeRadioFX");
       break;
+    case "setWhoCanPerform":
+      this.roomState.whoCanPerform = data.params.whoCanPerform;
+      this.stateChangeHandler();
+      break;
     }
   }
 
@@ -1324,7 +1332,11 @@ class DigifuApp {
     }
 
     this._addChatMessage(ncm);
-    this.soundEffectManager.play(eSoundEffects.ChatMessageNotification);
+
+    const fromUser = this.roomState.FindUserByID(ncm.fromUserID);
+    if (!fromUser || (fromUser && this.UserIsVisible(fromUser.user))) {
+      this.soundEffectManager.play(eSoundEffects.ChatMessageNotification);
+    }
 
     this.stateChangeHandler();
   }
@@ -1370,6 +1382,10 @@ class DigifuApp {
     let u = this.roomState.FindUserByID(data.userID);
     if (!u.user) {
       console.log(`NET_OnUserState: unknown user ${data.userID}`);
+      return;
+    }
+
+    if (!this.UserIsVisible(u.user)) {
       return;
     }
 
@@ -1956,6 +1972,19 @@ class DigifuApp {
   }
 
   // --------------
+
+  UserIsVisible(user) {
+    return this.roomState.UserIsVisibleTo(this.myUser, user, window.DFModerationControlsVisible);
+  }
+
+  GraffitiIsVisible(g) {
+    return this.roomState.GraffitiIsVisibleTo(this.myUser, g, window.DFModerationControlsVisible);
+  }
+
+  ChatMessageIsVisible(msg) {
+    return this.roomState.ChatMessageIsVisibleTo(this.myUser, msg, window.DFModerationControlsVisible);
+  }
+
   IsConnected() {
     return !!(this.net?.IsConnected());
   }

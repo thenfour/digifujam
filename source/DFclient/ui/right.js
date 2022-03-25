@@ -1413,7 +1413,7 @@ class UserList extends React.Component {
 
         const room = this.props.app?.rooms?.find(r => r.roomID == this.props.app.roomState.roomID);
 
-        const onlineUsers = room?.users?.filter(u => u.presence === DF.eUserPresence.Online);
+        const onlineUsers = room?.users?.filter(u => u.presence === DF.eUserPresence.Online && this.props.app.UserIsVisible(u));
         const offlineUsers = room?.users?.filter(u => u.presence !== DF.eUserPresence.Online);
 
         const onlineUsersR = onlineUsers?.map(u => (
@@ -1485,22 +1485,31 @@ class WorldStatus extends React.Component {
 
         const rooms = this.props.app.rooms.filter(r => r.roomID != this.props.app.roomState.roomID && !r.isPrivate);
 
-        let userList = (room) => room.users
+        const userList = (visibleUserList) => visibleUserList
             .filter(u => u.source === DF.eUserSource.SevenJam) // there's really not much use in showing external users here.
             .map(u => (
                 <li key={u.userID}><span className='presenceIndicator'>•</span><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
             ));
 
-        const roomsMarkup = rooms.map(room => (
-            <dl className="room" key={room.roomName}>
-                {/* <dt className="roomStats"> */}
-                <dt><span className="roomName">{room.roomName}</span> [<span className="userCount">{room.users.filter(u=>u.presence === DF.eUserPresence.Online).length}</span>/<span className="userCount">{room.users.length}</span>] ♫<span className="noteOns">{room.stats.noteOns}</span></dt>
-                {room.users.length > 0 &&
-                    <dd>
-                        <ul className="otherRoomUserList">{userList(room)}</ul>
-                    </dd>}
-            </dl>
-        ));
+        const roomsMarkup = rooms.map((room, i) => {
+            const visibleUserList = room.users.filter(u => this.props.app.UserIsVisible(u));
+            return (
+                <dl className="room" key={i}>
+                    <dt>
+                        <span className="roomName">{room.roomName}</span>
+                        [<span className="userCount">{
+                        visibleUserList.filter(u=>u.presence === DF.eUserPresence.Online).length
+                        }</span>/
+                        <span className="userCount">{visibleUserList.length}</span>
+                        ]
+                        ♫<span className="noteOns">{room.stats.noteOns}</span></dt>
+                    {visibleUserList.length > 0 &&
+                        <dd>
+                            <ul className="otherRoomUserList">{userList(visibleUserList)}</ul>
+                        </dd>}
+                </dl>
+            );
+        });
 
         return (
             <div className="component worldStatus">
@@ -1934,7 +1943,9 @@ class ShortChatLog extends React.Component {
     render() {
         if (!this.props.app) return null;
 
-        const lis = this.props.app.shortChatLog.map(msg => {
+        const lis = this.props.app.shortChatLog
+            .filter(msg => this.props.app.ChatMessageIsVisible(msg))
+            .map(msg => {
 
             const dt = new Date(msg.timestampUTC);
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
@@ -2008,7 +2019,9 @@ class FullChatLog extends React.Component {
     render() {
         if (!this.props.app || !this.props.app.roomState) return null;
 
-        const lis = this.props.app.roomState.chatLog.map(msg => {
+        const lis = this.props.app.roomState.chatLog
+            .filter(msg => this.props.app.ChatMessageIsVisible(msg))
+            .map(msg => {
 
             const dt = new Date(msg.timestampUTC);
             const timestamp = dt.toLocaleTimeString();// `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
@@ -2352,7 +2365,7 @@ class RoomArea extends React.Component {
             let scrollPos = this.getScreenScrollPosition();
 
             userAvatars = this.props.app.roomState.users
-                .filter(u => u.presence === DF.eUserPresence.Online)
+                .filter(u => u.presence === DF.eUserPresence.Online && this.props.app.UserIsVisible(u))
                 .map(u => (
                     <UserAvatar key={u.userID} app={this.props.app} user={u} displayHelper={() => this} />
                 ));
@@ -2614,10 +2627,8 @@ class RootArea extends React.Component {
             return (Math.random() * num)
         };
 
-        //alert(`user cheer ${JSON.stringify(data)}`);
         if (!this.roomRef || !this.roomRef.current) return;
-        //createCheer(data.user, data.text, data.x, data.y, this.roomRef);
-        //console.log(`createCheer(${text}, ${x}, ${y})`);
+
         var durx = random(2) + 1.5;
         var dury = random(2) + 1.5;
         var fontSize = random(14) + 24;
@@ -2763,6 +2774,11 @@ class RootArea extends React.Component {
         this.googleOAuthModule.OnPageLoaded(true);
     }
 
+    clickModerateRoom = () => {
+        window.DFModerationControlContext.op = "room";
+        window.DFStateChangeHandler.OnStateChange();
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -2806,7 +2822,7 @@ class RootArea extends React.Component {
                 const i = this.activityCount % window.gSpinners[spinnerName].frames.length;
                 activityTxt = window.gSpinners[spinnerName].frames[i];
             }
-            const onlineUsers = this.state.app.roomState.users.filter(u => u.presence === DF.eUserPresence.Online);
+            const onlineUsers = this.state.app.roomState.users.filter(u => this.state.app.UserIsVisible(u) && u.presence === DF.eUserPresence.Online);
             title = `${this.state.app.roomState.roomTitle} ${activityTxt} [${onlineUsers.length}/${this.state.app.worldPopulation}]`;
         }
         title += " | 7jam online jam session & concerts";
@@ -2829,9 +2845,11 @@ class RootArea extends React.Component {
         );
 
         const modControlButton = (this.state.app && this.state.app?.myUser?.IsModerator()) && (
-            <div className='topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
+            [<div key={1} className='topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
                 Mod ctrl {window.DFModerationControlsVisible ? "👮‍♀️" : "☮"}
-            </div>
+            </div>,
+            <div key={2} className='topMenuButton' onClick={() => this.clickModerateRoom()}><i className="material-icons">settings</i> Room</div>
+            ]
         );
 
         // dynamically set the column sizes. media queries don't work because there are a bunch of dynamic states here.

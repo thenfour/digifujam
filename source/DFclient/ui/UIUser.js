@@ -16,6 +16,7 @@ class UIUserName extends React.Component {
                 return "^";
             case eUserGlobalRole.performer.name:
                 return "+";
+            // don't indicate shadow ban
         }
         return null;
     }
