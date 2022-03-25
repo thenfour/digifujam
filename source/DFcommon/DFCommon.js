@@ -2098,8 +2098,9 @@ class DigifuRoomState {
     UserCanPerform(user) {
         if (user.IsAdmin()) return true;
         if (user.IsBanned()) return false;
-        if (this.whoCanPerform === "anyone") return true;
         if (this.whoCanPerform === "performers") return user.IsPerformer();
+        //if (this.whoCanPerform === "anyone") // default in case undefined.
+        return true;
     }
 
     UserIsVisibleTo(observingUser, user, showToModsAndAdmins) {
