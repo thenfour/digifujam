@@ -2,6 +2,7 @@
 const React = require('react');
 const { UserSourceToString, UserPresenceToString, eUserGlobalRole } = require('../../DFcommon/DFUser');
 const { TimeSpan, hoursToMS, daysToMS } = require('../../DFcommon/dfutil');
+const { IntRangeValueSpec, SeqLegendKnob } = require('./knob');
 
 // window.DFModerationControlsVisible
 
@@ -9,7 +10,6 @@ const { TimeSpan, hoursToMS, daysToMS } = require('../../DFcommon/dfutil');
 window.DFModerationControlContext = {
   op: null, // "user", "chat", "graffiti", "room", etc...
 };
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,10 @@ class GraffitiModerationDialog extends React.Component {
       deleteConfirmation: false,
       setExpirationConfirmation: null,
       pinConfirmation: false,
+      shiftAmt: 5,
     };
+    
+    this.sizeValueSpec = new IntRangeValueSpec(10, 400, 100);
   }
 
   clickDelete = (e) => {
@@ -97,7 +100,7 @@ class GraffitiModerationDialog extends React.Component {
   }
 
   clickPin = () => {
-    console.log(`clickPin`);
+    //console.log(`clickPin`);
     const graffitiID = window.DFModerationControlContext.graffitiID;
     let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
     if (!g) {
@@ -111,6 +114,51 @@ class GraffitiModerationDialog extends React.Component {
     }]);
 
     this.setState({pinConfirmation: null});
+  }
+
+  onChangeSize = (v) => {
+    if (isNaN(parseFloat(v))) v = 100;
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+
+    this.props.app.net.SendGraffitiOps([{
+      op: "setSize",
+      id: graffitiID,
+      size: v,
+    }]);
+
+    this.setState({});
+  }
+
+  setPos(dx, dy) {
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+    this.props.app.net.SendGraffitiOps([{
+      op: "setPosition",
+      id: graffitiID,
+      x: g.position.x + dx * this.state.shiftAmt,
+      y: g.position.y + dy * this.state.shiftAmt,
+    }]);
+    this.setState({});
+  }
+
+  onClickShiftUp = () => {
+    this.setPos(0, -1);
+  }
+  onClickShiftDown = () => {
+    this.setPos(0, 1);
+  }
+  onClickShiftLeft = () => {
+    this.setPos(-1, 0);
+  }
+  onClickShiftRight = () => {
+    this.setPos(1, 0);
   }
 
   render() {
@@ -141,6 +189,36 @@ class GraffitiModerationDialog extends React.Component {
             </dd>
             <dt>Content</dt>
             <dd className='content'>{g.content}</dd>
+
+            <dt>Size/Position</dt>
+            <dd className='size'>
+              <div className='field'>{isNaN(parseFloat(g.size)) ? "(undefined)" : g.size.toFixed(2)}</div>
+              <div className='controls'>
+                <SeqLegendKnob
+                  caption="Size"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.size)) ? 100 : g.size}
+                  valueSpec={this.sizeValueSpec}
+                  onChange={this.onChangeSize}
+                />
+                <div className='positionCtrl'>
+                  <div className='vertbuttons'>
+                      <button onClick={this.onClickShiftUp}><i className="material-icons">arrow_drop_up</i></button>
+                      <button onClick={this.onClickShiftDown}><i className="material-icons">arrow_drop_down</i></button>
+                  </div>
+                  <div className='horizbuttons'>
+                      <button onClick={this.onClickShiftLeft}><i className="material-icons">arrow_left</i></button>
+                      <button onClick={this.onClickShiftRight}><i className="material-icons">arrow_right</i></button>
+                  </div>
+                </div>
+                <div className='shiftAmtButtons'>
+                  <button className={this.state.shiftAmt === 1 ? "active" : ""} onClick={() => this.setState({shiftAmt: 1})}>1px</button>
+                  <button className={this.state.shiftAmt === 5 ? "active" : ""} onClick={() => this.setState({shiftAmt: 5})}>5px</button>
+                  <button className={this.state.shiftAmt === 25 ? "active" : ""} onClick={() => this.setState({shiftAmt: 25})}>25px</button>
+                  <button className={this.state.shiftAmt === 125 ? "active" : ""} onClick={() => this.setState({shiftAmt: 125})}>125px</button>
+                </div>
+              </div>
+            </dd>
 
             <dt>User</dt>
             {!!u ? (

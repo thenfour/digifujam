@@ -46,9 +46,12 @@ class _7jamServer {
       this.mConfig = Object.assign(this.mConfig, YAML.parse(f.toString()));
     }
 
-    if (!this.mConfig.admin_key) {
-      console.log(`!! YOU HAVE NOT SET AN ADMIN PASSWORD VIA admin_key. YOU SHOULD.`);
-    }
+    this.mConfig.gitRevision = require('child_process')
+      .execSync('git rev-parse origin') // origin, HEAD, ...
+      .toString().trim();
+
+    this.mConfig.StaticHostPrefix = this.mConfig.StaticHostPrefix.replaceAll("{GitRevision}", this.mConfig.gitRevision);
+    this.mConfig.LocalStaticHostPrefix = this.mConfig.LocalStaticHostPrefix.replaceAll("{GitRevision}", this.mConfig.gitRevision);
 
     // ------------------------------------------
 

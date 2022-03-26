@@ -57,7 +57,23 @@ function renderKnob(el, value01, formatSpec, valueSpec, propGetter) {
 class SeqLegendKnob extends React.Component {
   constructor(props) {
     super(props);
-    this.formatSpec = this.props.formatSpec;
+    this.formatSpec = this.props.formatSpec ?? {
+      fontSpec: (knob) => { return knob.isDragging ? "16px monospace" : null; },
+      textColor: "#0ff",
+      padding: 1,
+      lineWidth: 10,
+      valHighlightWidth: 10,
+      offsetY: 2,
+      trackColor: "#777",
+      fgColor: (knob) => { return knob.value < 0 ? "#fa4" : "#fa4"; },
+      valHighlightColor: (knob) => { return knob.value === knob.valueSpec.centerValue ? "#0cc" : "#0aa"; },
+      radius: 15,
+      valHighlightRadius: 15,
+      valueRangeRadians: .75 * 2 * Math.PI,
+      valueOffsetRadians: Math.PI * 1.5,
+      valHighlightRangeRad: 0,
+      valHighlightLineCap: 'round', // butt round
+    };
     this.valueSpec = this.props.valueSpec;
     this.isDragging = false;
   }
@@ -105,7 +121,32 @@ class SeqLegendKnob extends React.Component {
   }
 }
 
+
+class IntRangeValueSpec {
+  constructor(min, max, centerValue, resetValue) {
+      this.mouseSpeed = 0.004;
+      this.fineMouseSpeed = 0.0008;
+      this.centerValue = centerValue;
+      this.resetValue = resetValue ?? centerValue;
+      this.min = min;
+      this.max = max;
+      this.range = max - min;
+  }
+  value01ToValue = (v01) => {
+      return (v01 * this.range) + this.min;
+  }
+  valueToValue01 = (v) => {
+      return (v - this.min) / this.range;
+  }
+  value01ToString = (v01) => {
+      return parseFloat(this.value01ToValue(v01)).toFixed(0);
+  }
+};
+
+
+
 module.exports = {
   SeqLegendKnob,
+  IntRangeValueSpec,
 };
 

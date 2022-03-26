@@ -111,7 +111,7 @@ class GraffitiItem extends React.Component {
     if (isImage) {
       const imgStyle = {
         backgroundImage: `url(${g.content})`,
-        "--size": g.size ?? "100px",
+        "--size": g.size ? `${g.size}px` : "100px",
       };
       contentEl = (<div className="graffitiContent image" style={imgStyle}></div>);
     } else {

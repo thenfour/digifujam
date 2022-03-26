@@ -162,6 +162,37 @@ span.userModerationGear i {
   color: #0cc;
 }
 
+.moderationPanel.graffiti dd.size {
+  
+}
+
+.moderationPanel.graffiti dd.size .controls {
+  display:flex;
+}
+
+.moderationPanel.graffiti dd.size .controls .positionCtrl {
+  display: flex;
+  align-items: center;
+}
+
+.moderationPanel.graffiti dd.size .controls .vertbuttons {
+  display:flex;
+  flex-direction: column;
+}
+
+.moderationPanel.graffiti dd.size .controls .shiftAmtButtons button {
+  font-size: small;
+  background-color: #444;
+  color: #088;
+}
+
+.moderationPanel.graffiti dd.size .controls .shiftAmtButtons button:hover {color: #0aa;background-color: #055;}
+
+
+
+.moderationPanel.graffiti dd.size .controls .shiftAmtButtons button.active {color: #0cc;background-color: #066;}
+
+
 .moderationPanel.graffiti dd.expiration {
   display: flex;
   flex-direction: column;

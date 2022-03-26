@@ -2848,7 +2848,7 @@ class RootArea extends React.Component {
             [<div key={1} className='topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
                 Mod ctrl {window.DFModerationControlsVisible ? "👮‍♀️" : "☮"}
             </div>,
-            <div key={2} className='topMenuButton' onClick={() => this.clickModerateRoom()}><i className="material-icons">settings</i> Room</div>
+            <div key={2} className='topMenuButton' onClick={() => this.clickModerateRoom()}>Room <i className="material-icons">settings</i></div>
             ]
         );
 
@@ -2891,12 +2891,14 @@ class RootArea extends React.Component {
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>
                         <UserSettingsButton app={this.state.app} googleOAuthModule={this.googleOAuthModule}></UserSettingsButton>
-                        {adminControls}
-                        {modControlButton}
                         {this.state.app && this.state.app.synth && canPerform && <UpperRightControls app={this.state.app}></UpperRightControls>}
                         {this.state.app?.synth && <InlineMasterGainCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlineMasterGainCtrl>}
                         {this.state.app?.synth && canPerform && <InlinePitchBendCtrl app={this.state.app} stateChangeHandler={gStateChangeHandler}></InlinePitchBendCtrl>}
                         {/*this.state.app && this.state.app.roomState && <DFOptionsDialog.RoomBeat app={this.state.app}></DFOptionsDialog.RoomBeat>*/}
+
+                        {modControlButton}
+                        {adminControls}
+
                         {window.DFShowDebugInfo && (
                             <div>pos: {Math.round(this.state.app?.myUser?.position?.x)}, {Math.round(this.state.app?.myUser?.position?.y)}]</div>
                         )}

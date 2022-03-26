@@ -97,20 +97,20 @@ class AdminControlsButton extends React.Component {
  
        if (!this.props.app) return null;
 
-       return (
-            <div className='dropdownMenu left'>
-                <div className={"dropdownMenuButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>
-                   <span>Admin</span>
-                   </div>
- 
-                {this.state.isExpanded &&
-                    <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
-                        <div className="userSettingsDialog popUpDialog">
+       return [
+            <div key="1" className='topMenuButton' onClick={this.onClickExpand}>
+                Server <i className="material-icons">settings</i>
+            </div>,
+            <div key="2" className='popupPositioner'>
+            {this.state.isExpanded &&
+                <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
+                    <div className="userSettingsDialog popUpDialog">
                         <AdminControls app={this.props.app}></AdminControls>
-                        </div>
-                    </ClickAwayListener>
-                    }
-            </div>);
+                    </div>
+                </ClickAwayListener>
+            }
+            </div>
+        ];
     }
  };
  
