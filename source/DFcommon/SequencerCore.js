@@ -18,11 +18,26 @@ const SequencerSettings = {
 // NB: these are also used as CSS classes.
 const SequencerPlayMode = {
   // play is allowed even when nobody holds the instrument
-  Constant : "Constant",
+  Normal : "Normal",
 
   // play is not allowed without holding the instrument
   KeyTrigger : "KeyTrigger",
   Arpeggiator : "Arpeggiator",
+};
+
+const SequencerArpMapping = {
+  //Interpolate : "Interpolate",
+  // FillUp : "FillUp",
+  // FillDown : "FillDown",
+  x_Up : "x_Up", // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
+  // x_Down : "x_Down",
+  // x_UpDown : "x_UpDown",
+  // x_Converge : "x_Converge",
+  // x_Diverge : "x_Diverge",
+  // Random : "Random",
+  AsPlayed : "AsPlayed", // play all notes as they are; only use the rhythm & velocity of the pattern
+  //Transp : "Transp", // play all playing notes, but transpose them. how much to transpose is ((patternNote - patternLowestNote) + playingNote). Would be interesting to be able to set the base note but you think anyone's actually going to do that?
+  None : "None", // no mapping is done; only pattern notes are played.
 };
 
 const eDivisionType = {
@@ -820,13 +835,14 @@ class SequencerDevice {
       Object.assign(this, params);
 
     this.isPlaying ??= false;          // false while cueued
-    this.playMode ??= SequencerPlayMode.Constant;
+    this.playMode ??= SequencerPlayMode.Normal;
     this.baseNote ??= 60; // middle C
+    this.arpMapping ??= SequencerArpMapping.None;
 
     this.livePatch = new SequencerPatch(this.livePatch);
   }
 
-  SetPlaying(b, synth, instrument) {
+  SetPlaying(b) {
     if (this.isPlaying === !!b)
       return;
 
@@ -835,16 +851,13 @@ class SequencerDevice {
       this.isPlaying = false;
       return;
     }
-    this.StartPlaying(synth, instrument);
+    this.StartPlaying();
   }
 
-  StartPlaying(synth, instrument) {
-    if (synth && instrument) {
-      // it's not very intuitive, but starting the sequencer can cause lingering notes.
-      // it happens (e.g.) when you're in key trigger mode, and you're holding notes.
-      // flipping the switch to "ON" will mean your live events get swallowed. think Note Offs.
-      synth.AllNotesOff(instrument);
-    }
+  //   // it's not very intuitive, but starting the sequencer can cause lingering notes.
+  //   // it happens (e.g.) when you're in key trigger mode, and you're holding notes.
+  //   // flipping the switch to "ON" will mean your live events get swallowed. think Note Offs.
+  StartPlaying() {
     this.isPlaying = true;
   }
 
@@ -931,8 +944,15 @@ class SequencerDevice {
     return this.playMode;
   }
 
+  GetArpMapping() {
+    return this.arpMapping;
+  }
+  SetArpMapping(mapping) {
+    this.arpMapping = mapping;
+  }
+
   ShouldLiveNoteOnsAndOffsBeSwallowed() {
-    return this.isPlaying && (this.playMode != SequencerPlayMode.Constant);
+    return this.isPlaying && (this.playMode != SequencerPlayMode.Normal);
   }
 
   // client-side; handles incoming server msgs
@@ -986,6 +1006,10 @@ class SequencerDevice {
     }
     case "SeqSetBaseNote": {
       this.SetBaseNote(data.note);
+      return true;
+    }
+    case "SeqSetArpMapping": {
+      this.SetArpMapping(data.mapping);
       return true;
     }
     }
@@ -1042,6 +1066,12 @@ class PatternViewCellInfo {
     this.previousNote = previousNote;                       // major beats
     this.previousNoteLenQuarters = previousNoteLenQuarters; // if the user were to set prev note to this length, how long would it then be?
     this.previousNoteLenMajorBeats = previousNoteLenMajorBeats;
+
+    // eventually we fill in the following:
+    // this.noteInPattern01; // midiNoteValue 0-1 relative to range in pattern.
+    // this.noteInPatternIndexFromTop;
+    // this.noteInPatternIndexFromBottom;
+    // this.noteIndexInPattern; // 0-based note in the pattern, from bottom to top, left-right.
 
     this.#updateThisNoteProperties();
 
@@ -1358,7 +1388,46 @@ class SequencerPatternView {
       });
     });
 
-    const duration = (Date.now() - start);
+    // make sure divs are sorted by time, and noteOns are sorted bottom to top
+    // this is probably already like this but .. no assumptions!
+    this.divsWithNoteOn.sort((a,b) => a.patternDivIndex - b.patternDivIndex);
+    this.divsWithNoteOn.forEach(div => {
+      div.noteOns.sort((a, b) => a.midiNoteValue - b.midiNoteValue);
+    });
+
+    // for the whole pattern, calculate things to help arpeggiator mode.
+    // this.noteInPattern01;
+    // this.noteInPatternIndexFromTop;
+    // this.noteInPatternIndexFromBottom;
+    this.allNoteValues = new Set();
+    this.minNoteValue = 1e5;
+    this.maxNoteValue = -1;
+    this.divsWithNoteOn.forEach(div => {
+      div.noteOns.forEach(cell => {
+        this.allNoteValues.add(cell.midiNoteValue);
+        this.minNoteValue = Math.min(this.minNoteValue, cell.midiNoteValue);
+        this.maxNoteValue = Math.max(this.maxNoteValue, cell.midiNoteValue);
+      });
+    });
+
+    this.allNoteValues = [...this.allNoteValues].sort(); // convert to sorted array.
+    this.noteValueRange = this.maxNoteValue - this.minNoteValue;
+
+    // fill in noteIndexInPattern also.
+    let patternNoteIndex = 0;
+    this.divsWithNoteOn.forEach(div => {
+      div.noteOns.forEach(cell => {
+        cell.patternNoteIndex = patternNoteIndex ++;
+        cell.noteInPattern01 = (this.noteValueRange < 1) ? 0 : ((cell.midiNoteValue - this.minNoteValue) / this.noteValueRange);
+        cell.noteInPatternIndexFromBottom = this.allNoteValues.findIndex(v => v === cell.midiNoteValue);
+        cell.noteInPatternIndexFromTop = this.allNoteValues.length - cell.noteInPatternIndexFromBottom - 1;
+      });
+    });
+
+    this.patternNoteCount = patternNoteIndex;
+
+
+    //const duration = (Date.now() - start);
     //console.log(`generating pattern view took ${duration} ms`);
     //console.log(`  nodesVisited = ${nodesVisited}`);
   }
@@ -1734,4 +1803,5 @@ module.exports = {
   SeqPresetBank,
   GetPatternView,
   eBorderType,
+  SequencerArpMapping,
 };

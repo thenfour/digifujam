@@ -348,7 +348,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
       // if sequencer is in arp or keytrig modes, don't play the note. rather feed the sequencer player with info.
-      if (this.sequencerPlayer.NoteOn(foundInstrument.instrument, data.note)) {
+      if (this.sequencerPlayer.NoteOn(foundInstrument.instrument, data.note, data.velocity)) {
         return;
       }
 
@@ -1524,7 +1524,7 @@ class RoomServer {
         divisionType: newDivType,
       });
 
-      this.sequencerPlayer.onChanged_General();
+      this.sequencerPlayer.onChanged_Instrument(foundInstrument.instrument);
 
       if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
         this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
@@ -1553,7 +1553,7 @@ class RoomServer {
         oct: newOct,
       });
 
-      this.sequencerPlayer.onChanged_General();
+      this.sequencerPlayer.onChanged_Instrument(foundInstrument.instrument);
 
       if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
         this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
@@ -1582,7 +1582,7 @@ class RoomServer {
         lengthMajorBeats: newLen,
       });
 
-      this.sequencerPlayer.onChanged_General();
+      this.sequencerPlayer.onChanged_Instrument(foundInstrument.instrument);
 
       if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
         this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
@@ -1752,6 +1752,9 @@ class RoomServer {
         case "SeqSetBaseNote":
           foundInstrument.instrument.sequencerDevice.SetBaseNote(data.note);
           break;
+        case "SeqSetArpMapping":
+          foundInstrument.instrument.sequencerDevice.SetArpMapping(data.mapping);
+          break;
         default:
           console.log(`client sent us a bad seq preset op ${data.op}`);
           return;
@@ -1761,7 +1764,7 @@ class RoomServer {
       data.instrumentID = foundInstrument.instrument.instrumentID;
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, data);
 
-      this.sequencerPlayer.onChanged_General();
+      this.sequencerPlayer.onChanged_Instrument(foundInstrument.instrument);
 
       if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
         this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
@@ -1773,51 +1776,6 @@ class RoomServer {
     }
   }
 
-
-  // SeqCue(ws, data) {
-  //   try {
-  //     const foundUser = this.FindUserFromSocket(ws);
-  //     if (!foundUser)
-  //       throw new Error(`SeqCue => unknown user`);
-
-  //     const foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
-  //     if (foundInstrument === null)
-  //       throw new Error(`SeqCue => unknown instrument ${data.instrumentID}`);
-
-  //     if (!foundInstrument.instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user))
-  //       throw new Error(`SeqCue => Instrument's sequencer cannot be controlled by this user. ${data.instrumentID}, userid ${foundUser.user.userID}`);
-
-  //     let outdata = null;
-
-  //     if (data.cancel) {
-  //       foundInstrument.instrument.sequencerDevice.CancelCue();
-  //       outdata = {
-  //         op: "cancelCue",
-  //         instrumentID: data.instrumentID,
-  //       };
-  //     } else {
-  //       const cursor = this.roomState.metronome.getAbsoluteBeat();
-  //       outdata = foundInstrument.instrument.sequencerDevice.Cue(cursor);
-  //       outdata = Object.assign({
-  //         op: "cue",
-  //         instrumentID: data.instrumentID,
-  //       }, outdata);
-  //     }
-
-  //     // broadcast to room.
-  //     this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, outdata);
-
-  //     this.sequencerPlayer.onChanged_General();
-
-  //     if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
-  //       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
-  //     }
-
-  //   } catch (e) {
-  //     console.log(`SeqCue exception occurred`);
-  //     console.log(e);
-  //   }
-  // }
 
 
   SeqMetadata(ws, data) {

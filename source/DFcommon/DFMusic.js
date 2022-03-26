@@ -306,7 +306,7 @@ function ApplySwingToValueFrac(x, sN11) {
 
 
 // this tracks which notes are currently held.
-// does not ref count notes, so if you press C twice, then release once, it will be considered OFF.
+// does not ref count notes, so if you press C4 twice, then release once, it will be considered OFF.
 class HeldNoteTracker {
   constructor() {
     this.AllNotesOff();
@@ -314,45 +314,69 @@ class HeldNoteTracker {
 
   AllNotesOff() {
     this.pedalDown = false;
-    this.notesOn = new Set();
-    this.physicallyHeld = new Set();
-    this.lastNoteOn = null; // used by sequencer key trig mode
-    //console.log(this.toString(`AllNotesOff `));
+    this.notesOn = [];
   }
 
-  NoteOn(note) {
+  NoteOn(note, velocity) {
     console.assert(Number.isInteger(note));
-    this.lastNoteOn = note;
-    this.notesOn.add(note);
-    this.physicallyHeld.add(note);
-    //console.log(this.toString(`NoteOn(${note}) `));
+    const existing = this.notesOn.find(o => o.note === note);
+    if (existing) {
+      existing.velocity = velocity;
+      existing.physicallyHeld = true;
+      existing.timestamp = Date.now();
+      return;
+    }
+    this.notesOn.push({
+      note,
+      velocity,
+      timestamp: Date.now(),
+      physicallyHeld: true,
+    });
   }
 
   NoteOff(note) {
     console.assert(Number.isInteger(note));
-    this.physicallyHeld.delete(note);
-    if (!this.pedalDown) {
-      this.notesOn.delete(note);
+    const existingIndex = this.notesOn.findIndex(o => o.note === note);
+    if (existingIndex === -1) return; // huh?
+    if (this.pedalDown) {
+      this.notesOn[existingIndex].physicallyHeld = false;
+      return;
     }
-    if (this.notesOn.size < 1) this.lastNoteOn = null;
-    //console.log(this.toString(`NoteOff(${note}) `));
+    this.notesOn.splice(existingIndex, 1);
   }
 
   PedalUp() {
     this.pedalDown = false;
     // note off all notes which are playing but not physically held down
-    this.notesOn = new Set([...this.notesOn ].filter(playingNote => this.physicallyHeld.has(playingNote)));
-    if (this.notesOn.size < 1) this.lastNoteOn = null;
-    //console.log(this.toString(`PedalUp() `));
+    //this.notesOn = new Set([...this.notesOn ].filter(playingNote => this.physicallyHeld.has(playingNote)));
+    this.notesOn.removeIf(n => !n.physicallyHeld);
   }
 
   PedalDown() {
     this.pedalDown = true;
-    //console.log(this.toString(`PedalDown() `));
+  }
+
+  get heldNotesByNoteValue() {
+    return this.notesOn.sort((a, b) => a.note - b.note);
+  }
+
+  get lastNoteOn() {
+    if (this.notesOn.length === 0) return null;
+    let maxval = this.notesOn[0].timestamp;
+    let maxobj = this.notesOn[0];
+    for (let i = 1; i < this.notesOn.length; ++ i) {
+      let o = this.notesOn[i];
+      if (o.timestamp > maxval) {
+        maxval = o.timestamp;
+        maxobj = o;
+      }
+    }
+    return maxobj;
   }
 
   toString(prefix) {
-    return `${prefix ?? ""} playing:[${[...this.notesOn].join(",")}], physicallyheld:[[${[...this.physicallyHeld].join(",")}]] ${this.pedalDown ? "pedal down" : ""}`;
+    return `todo HeldNoteTracker toString`;
+    //return `${prefix ?? ""} playing:[${[...this.notesOn].join(",")}], physicallyheld:[[${[...this.physicallyHeld].join(",")}]] ${this.pedalDown ? "pedal down" : ""}`;
   }
 };
 

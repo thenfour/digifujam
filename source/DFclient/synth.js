@@ -58,6 +58,7 @@ class DupeNoteSwallower {
 		}
 		const prevTime = instMap.get(note);
 		if ((now - prevTime) < gDupeNoteMarginMS) {
+			//console.log(`note ${note} swallowed! within ${now - prevTime} ms`);
 			return true; // swallow, and don't register this note. allow time to elapse.
 		}
 

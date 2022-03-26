@@ -17,151 +17,195 @@ const gIntervalMS = 2500;
 // but there should be some margin as well to account for jitter.
 const gChunkSizeFactor = 1.15;
 
-class RoomSequencerPlayer {
-  constructor(roomState) {
+// each arpeggiator mapping mode gets a function which transforms a div with notes on into a list of events.
+// the most basic "none" mapping just looks at noteOns and pushes the events.
+// mapping functions have a lot of power, to do all the various arp transformations, but it means they have a responsibility to:
+// - respect cell.isMuted
+// - respect patch transposition by calling patch.AdjustMidiNoteValue(cell.midiNoteValue)
+// - set length, respecting swing and patch speed.
+// - respect keyTranspose (but i think this is really only done for key trig mode so only required for None mapping)
+function MappingFunction_None(params) {
+  const ret = [];
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    ret.push({
+      velocity : cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(cell.midiNoteValue) + params.keyTranspose,
+      lengthQuarters : cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID : cell.id,
+      // absQuarter is set later
+    });
+  }
+  return ret;
+}
+
+// AsPlayed.
+// do not examine pattern data at all; just repeat what you're playing
+function MappingFunction_AsPlayed(params) {
+  // LENGTH is tricky because we don't know. just pick the first non-muted cell for reference.
+  let cell = null;
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const o = params.div.noteOns[irow];
+    if (o.isMuted)
+      continue;
+    cell = o;
+    break;
+  }
+  if (!cell) return [];
+
+  return params.heldNotes.map(o => ({
+    velocity: o.velocity,
+    midiNoteValue: params.patch.AdjustMidiNoteValue(o.note) + params.keyTranspose,
+    lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+    noteID: cell.id,
+  }));
+}
+
+// ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
+function MappingFunction_XUp(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    const ni = (params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex) % params.heldNotes.length;
+    const heldNote = params.heldNotes.at(ni);
+    console.log(`absPatternFloor ${params.absPatternFloor} * patternNoteCount ${params.patternView.patternNoteCount} + patternNoteIndex ${cell.patternNoteIndex} % heldNotes.length ${params.heldNotes.length} = ${ni} = note ${heldNote.note}`);
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+class InstrumentSequencerPlayer {
+  constructor(roomState, instrument) {
     this.roomState = roomState;
     this.metronome = roomState.metronome;
     this.quantizer = roomState.quantizer;
     this.timer = null;
-    this.instruments = this.roomState.instrumentCloset.filter(i => i.allowSequencer); // precalc a list of relevant instruments
-    this.noteTrackers = new Map(); // map instrumentID to a held note tracker.
-    this.instruments.forEach(inst => {
-      this.noteTrackers.set(inst.instrumentID, new DFMusic.HeldNoteTracker());
-    });
+    this.instrument = instrument;
+    this.noteTracker = new DFMusic.HeldNoteTracker();
+    this.divMappers = {};
+
+    this.divMappers[Seq.SequencerArpMapping.AsPlayed] = MappingFunction_AsPlayed;
+    this.divMappers[Seq.SequencerArpMapping.x_Up] = MappingFunction_XUp;
+    this.divMappers[Seq.SequencerArpMapping.None] = MappingFunction_None;
+
     this.#invokeTimer();
   }
 
-  // calls the time proc immediately and resets timer interval
+  // calls the time proc "soon" and resets timer interval
   #invokeTimer() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
     }
-    if (!this.instruments.length)
-      return;
-    this.timerProc();
+    setTimeout(() => {
+      this.timerProc();
+    }, 16);
   }
 
-  AllNotesOff(instrument) {
-    this.noteTrackers.get(instrument.instrumentID).AllNotesOff();
-  }
-
-  // return true to swallow the event
-  NoteOn(instrument, note) {
-    this.noteTrackers.get(instrument.instrumentID).NoteOn(note);
+  OnChanged() {
     this.#invokeTimer();
-    return instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+  }
+
+  AllNotesOff() {
+    this.noteTracker.AllNotesOff();
+    //this.#invokeTimer();
   }
 
   // return true to swallow the event
-  NoteOff(instrument, note) {
-    this.noteTrackers.get(instrument.instrumentID).NoteOff(note);
-    this.#invokeTimer();
-    return instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+  NoteOn(note, velocity) {
+    this.noteTracker.NoteOn(note, velocity);
+    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
+    return swallow;
   }
 
-  PedalUp(instrument) {
-    this.noteTrackers.get(instrument.instrumentID).PedalUp();
+  // return true to swallow the event
+  NoteOff(note) {
+    this.noteTracker.NoteOff(note);
+    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
+    return swallow;
   }
 
-  PedalDown(instrument) {
-    this.noteTrackers.get(instrument.instrumentID).PedalDown();
+  PedalUp() {
+    this.noteTracker.PedalUp();
+    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
+    return swallow;
   }
 
-  // technically this can be all be optimized depending on the operation the user performed.
-  // but this is all pretty fast so not worth it yet.
-  // what makes it complicated is that all instruments are refreshed on the same timer. so if you
-  // want to just refresh 1 instrument, you either refresh all of them, or ... or what? you refresh
-  // only 1 now and the others later? this should really be split into instrument-specific timers if
-  // that's needed.
-  onChanged_PlayStop(instrument, data) {
-    //console.log(`onChanged_PlayStop(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_TimeSig(instrument, data) {
-    //console.log(`onChanged_TimeSig(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_SetNoteMuted(instrument, data) {
-    this.#invokeTimer();
-  }
-  onChanged_SelectPattern(instrument, data) {
-    //console.log(`onChanged_SelectPattern(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_SetSpeed(instrument, data) {
-    //console.log(`onChanged_SetSpeed(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_SetSwing(instrument, data) {
-    //console.log(`onChanged_SetSwing(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_SetDiv(instrument, data) {
-    //console.log(`onChanged_SetDiv(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_SetLength(instrument, data) {
-    //console.log(`onChanged_SetLength(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_PatternOps(instrument, data) {
-    //console.log(`onChanged_PatternOps(${JSON.stringify(data)})`);
-    this.#invokeTimer();
-  }
-  onChanged_General() {
-    this.#invokeTimer();
+  PedalDown() {
+    this.noteTracker.PedalDown();
+    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
+    return swallow;
   }
 
   timerProc() {
-    //console.log(`{ --- seq timer proc --------------`);
     // if you call this directly, with no timer, then start interval.
     // this allows callers to invoke directly without timer, and it will restart everything.
     if (!this.timer) {
       this.timer = setInterval(() => this.timerProc(), gIntervalMS);
     }
 
-    let beat = this.metronome.getAbsoluteBeat();
-    this.instruments.forEach(i => {
-      this.timerProcForInstrument(i, beat);
-    });
-    //console.log(`} seq timer proc`);
-  }
+    let playheadAbsBeat = this.metronome.getAbsoluteBeat();
 
-  timerProcForInstrument(instrument, playheadAbsBeat) {
-    //console.log(`for instrument ${instrument.instrumentID}`);
+    const seq = this.instrument.sequencerDevice;
+    const patch = this.instrument.sequencerDevice.livePatch;
+    const patternView = Seq.GetPatternView(patch, this.instrument.sequencerDevice.GetNoteLegend());
 
-    const patch = instrument.sequencerDevice.livePatch;
-    const patternView = Seq.GetPatternView(patch, instrument.sequencerDevice.GetNoteLegend());
-
-    if (!instrument.sequencerDevice.isPlaying) {
+    if (!this.instrument.sequencerDevice.isPlaying) {
       //console.log(`not playing; clearing data.`);
-      this.quantizer.setSequencerEvents(instrument.instrumentID, [], patternView, false, null);
+      this.quantizer.setSequencerEvents(this.instrument.instrumentID, [], patternView, false, null);
       return;
     }
 
-    const heldNotes = this.noteTrackers.get(instrument.instrumentID);
+    const heldNotes = this.noteTracker;
 
     let keyTranspose = 0;
-    if (instrument.sequencerDevice.GetPlayMode() === Seq.SequencerPlayMode.KeyTrigger) {
+    if (this.instrument.sequencerDevice.GetPlayMode() === Seq.SequencerPlayMode.KeyTrigger) {
       if ((heldNotes.notesOn.size < 1) || !heldNotes.lastNoteOn) {
-        this.quantizer.setSequencerEvents(instrument.instrumentID, [], patternView, false, null);
+        this.quantizer.setSequencerEvents(this.instrument.instrumentID, [], patternView, false, null);
         return;
       }
-      keyTranspose = heldNotes.lastNoteOn - instrument.sequencerDevice.GetBaseNote();
+      keyTranspose = heldNotes.lastNoteOn.note - this.instrument.sequencerDevice.GetBaseNote();
     }
 
-    const patternPlayheadInfo = instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
+    const patternPlayheadInfo = this.instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
+    const absPatternFloor = Math.floor(patternPlayheadInfo.absPatternFloat);
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
     const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
+
+    const mapStyle = seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator ? seq.GetArpMapping() : Seq.SequencerArpMapping.None;
+    const divMappingFunction = this.divMappers[mapStyle];
+
+    const heldNotesByNoteValue = heldNotes.heldNotesByNoteValue;
 
     // scheduling time must be in abs quarters.
     // this walks through all pattern divs, and for all notes in each div, schedules note on/off event pairs.
     // for each note, this adds multiple if the pattern is less than the window len.
     const events = [];
 
-    for (let idiv = 0; idiv < patternView.divsWithNoteOn.length; ++ idiv) {
+    for (let idiv = 0; idiv < patternView.divsWithNoteOn.length; ++idiv) {
       const div = patternView.divsWithNoteOn[idiv];
       const divBeginPatternQuarter = div.swingBeginPatternQuarter; // these are pattern quarters. which means they're speed-adjusted.
 
@@ -182,34 +226,108 @@ class RoomSequencerPlayer {
         divFirstFutureAbsQuarter = Math.floor(patternPlayheadInfo.absPatternFloat) * patternPlayheadInfo.patternLengthQuarters + divBeginPatternQuarter
       }
 
-      for (let irow = 0; irow < div.noteOns.length; ++ irow) {
-        const cell = div.noteOns[irow];
-        if (cell.isMuted)
-          continue;
-        
-        const midiNoteValue = patch.AdjustMidiNoteValue(cell.midiNoteValue) + keyTranspose;
-
-        // now "loop" this pattern for this note until out of window.
-        for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter < windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
-
-          const nonSpeedAdjustedCursor = cursorShiftedQuarter / patch.speed;
-          const absQ = nonSpeedAdjustedCursor;// + shiftQuarters;
-          events.push({
-            velocity : cell.velocity,
-            midiNoteValue,
-            lengthQuarters : cell.thisLengthSwingQuarters / patch.speed,
-            noteID : cell.id,
-            absQuarter : absQ,
-          });
+      // now "loop" this pattern for this note until out of window.
+      let tempAbsPatternFloor = absPatternFloor;
+      for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter <= windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
+        const divEvents = divMappingFunction({
+          heldNotes: heldNotesByNoteValue,
+          div,
+          patch,
+          keyTranspose,
+          absPatternFloor: tempAbsPatternFloor,
+          patternView
+        });
+        const absQuarter = cursorShiftedQuarter / patch.speed;
+        for (let ievent = 0; ievent < divEvents.length; ++ ievent) {
+          const e = divEvents[ievent];
+          events.push(Object.assign({ absQuarter }, e));
         }
+        tempAbsPatternFloor ++;
       }
+
     } // for each div
 
     //console.log(`scheduling ${events.length} seq events in SA window [${patternPlayheadInfo.shiftedAbsQuarter} - ${windowEndShiftedQuarters}] and SA minmax [${minAbsQuarter}, ${maxAbsQuarter}]`);
+    //console.log(`window length quarters: ${windowLengthQuarters}, scheduling ${events.length} events`);
+    //console.log(JSON.stringify(events));
 
-    this.quantizer.setSequencerEvents(instrument.instrumentID, events, patternView, true, instrument.sequencerDevice.startFromAbsQuarter);
+    this.quantizer.setSequencerEvents(this.instrument.instrumentID, events, patternView, true, this.instrument.sequencerDevice.startFromAbsQuarter);
   }
 }
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+class RoomSequencerPlayer {
+  constructor(roomState) {
+    this.roomState = roomState;
+    this.metronome = roomState.metronome;
+    this.quantizer = roomState.quantizer;
+
+    this.instruments = this.roomState.instrumentCloset.filter(i => i.allowSequencer); // precalc a list of relevant instruments
+    this.instrumentPlayers = new Map();                                               // map instrumentID to a held note tracker.
+    this.instruments.forEach(inst => {
+      this.instrumentPlayers.set(inst.instrumentID, new InstrumentSequencerPlayer(roomState, inst));
+    });
+  }
+
+  AllNotesOff(instrument) {
+    this.instrumentPlayers.get(instrument.instrumentID).AllNotesOff();
+  }
+
+  // return true to swallow the event
+  NoteOn(instrument, note, velocity) {
+    return this.instrumentPlayers.get(instrument.instrumentID).NoteOn(note, velocity);
+  }
+
+  // return true to swallow the event
+  NoteOff(instrument, note) {
+    return this.instrumentPlayers.get(instrument.instrumentID).NoteOff(note);
+  }
+
+  PedalUp(instrument) {
+    this.instrumentPlayers.get(instrument.instrumentID).PedalUp();
+  }
+
+  PedalDown(instrument) {
+    this.instrumentPlayers.get(instrument.instrumentID).PedalDown();
+  }
+
+  onChanged_PlayStop(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_TimeSig(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_SetNoteMuted(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_SelectPattern(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_SetSpeed(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_SetSwing(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_SetDiv(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_SetLength(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_PatternOps(instrument, data) {
+    this.onChanged_Instrument(instrument);
+  }
+  onChanged_General() {
+    this.instrumentPlayers.forEach(player => player.OnChanged());
+  }
+  onChanged_Instrument(instrument) {
+    this.instrumentPlayers.get(instrument.instrumentID).OnChanged();
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 module.exports = {
   RoomSequencerPlayer,

@@ -366,7 +366,7 @@ class DigifuApp {
       if (!this.myInstrument.wantsMIDIInput)
         return;
       this.net.SendNoteOn(note, velocity, this.resetBeatPhaseOnNextNote);
-      this.heldNotes.NoteOn(note);
+      this.heldNotes.NoteOn(note, velocity);
       this.resetBeatPhaseOnNextNote = false;
       if (this.monitoringType == eMonitoringType.Local) {
         this.synth.NoteOn(this.myUser, this.myInstrument, note, velocity, false);
@@ -402,7 +402,7 @@ class DigifuApp {
     // and will also include notes which are being played from the sequencer.
     // here we just want to report notes the player has pressed without regards
     // to what the synth is rendering.
-    return [...this.heldNotes.notesOn ];
+    return this.heldNotes.notesOn.map(n => n.note);
   }
 
   // sent when midi devices change
@@ -727,8 +727,9 @@ class DigifuApp {
   }
 
   NET_SeqStartPlaying(e) {
-    let instrument = null;
-    instrument = this.roomState.FindInstrumentById(e.seqInstrumentID).instrument;
+    let instrument = this.roomState.FindInstrumentById(e.seqInstrumentID).instrument;
+    this.synth.AllNotesOff(instrument);
+    this.handleUserAllNotesOff(null, instrument);
     instrument.sequencerDevice.StartPlaying();
     this.stateChangeHandler();
   }
@@ -1012,7 +1013,11 @@ class DigifuApp {
       return;
     }
 
-    foundInstrument.instrument.sequencerDevice.SetPlaying(data.isPlaying, this.synth, foundInstrument.instrument);
+    let foundUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
+
+    this.synth.AllNotesOff(foundInstrument.instrument);
+    this.handleUserAllNotesOff(foundUser?.user, foundInstrument.instrument);
+    foundInstrument.instrument.sequencerDevice.SetPlaying(data.isPlaying);
 
     this.stateChangeHandler();
   }
@@ -1764,6 +1769,7 @@ class DigifuApp {
     if (this.myInstrument == null)
       return;
     this.synth.AllNotesOff(this.myInstrument);
+    this.heldNotes.AllNotesOff();
     this.handleUserAllNotesOff(this.myUser, this.myInstrument);
   }
 

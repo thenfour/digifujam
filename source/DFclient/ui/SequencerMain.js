@@ -725,7 +725,7 @@ class SequencerMain extends React.Component {
             if (this.props.observerMode) return;
             const seq = this.props.instrument.sequencerDevice;
             switch (seq.GetPlayMode()) {
-                case Seq.SequencerPlayMode.Constant:
+                case Seq.SequencerPlayMode.Normal:
                     this.props.app.SeqPresetOp({
                         op: "SeqSetPlayMode",
                         mode: Seq.SequencerPlayMode.KeyTrigger,
@@ -740,7 +740,7 @@ class SequencerMain extends React.Component {
                 case Seq.SequencerPlayMode.Arpeggiator:
                     this.props.app.SeqPresetOp({
                         op: "SeqSetPlayMode",
-                        mode: Seq.SequencerPlayMode.Constant,
+                        mode: Seq.SequencerPlayMode.Normal,
                     });
                     break;
             }
@@ -790,9 +790,13 @@ class SequencerMain extends React.Component {
             this.setState({ baseNoteListening: true });
         }
 
-        onClickArpMode = () => {
+        onClickArpMapping(mapping) {
             if (this.props.observerMode) return;
-            const seq = this.props.instrument.sequencerDevice;
+            this.props.app.SeqPresetOp({
+                op: "SeqSetArpMapping",
+                mapping,
+            });
+            this.setState({isArpMappingExpanded:false});
         }
 
       render() {
@@ -844,6 +848,16 @@ class SequencerMain extends React.Component {
                     onClick={() => this.onClickTimeSig(ts)}
                     className={selectedTS.id == ts.id ? " selected" : ""}
                     >{ts.toString()}</li>
+             );
+         });
+
+         const arpMappingList = this.state.isArpMappingExpanded && Object.values(Seq.SequencerArpMapping).map(m => {
+             return (
+                 <li
+                    key={m}
+                    onClick={() => this.onClickArpMapping(m)}
+                    className={seq.GetArpMapping() === m ? " selected" : ""}
+                    >{m}</li>
              );
          });
 
@@ -978,12 +992,22 @@ class SequencerMain extends React.Component {
                                             {seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator &&
                                             <button
                                                 className={'cueButton arpMode ' + clickableIfEditable}
-                                                onClick={isReadOnly ? ()=>{} : this.onClickArpMode}
+                                                onClick={isReadOnly ? ()=>{} : () => this.setState({isArpMappingExpanded:true})}
                                             >
-                                                arp mode
+                                                {seq.GetArpMapping()}
                                             </button>
                                             }
 
+                                            {seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator && this.state.isArpMappingExpanded &&
+                                                <ClickAwayListener onClickAway={() => { this.setState({isArpMappingExpanded:false});}}>
+                                                <div className='dialog'>
+                                                    <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>Select an arpeggiator mapping mode.</legend>
+                                                    <ul className='dropDownMenu'>
+                                                        {arpMappingList}
+                                                    </ul>
+                                                </div>
+                                                </ClickAwayListener>
+                                            }
                                     </div>
                                 </div>
                             </fieldset>
