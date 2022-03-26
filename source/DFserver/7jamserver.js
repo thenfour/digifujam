@@ -484,7 +484,7 @@ class _7jamServer {
       ws.on(DF.ClientMessages.SeqPatchInit, data => this.ForwardToRoom(ws, room => room.SeqPatchInit(ws, data)));
       ws.on(DF.ClientMessages.SeqPresetOp, data => this.ForwardToRoom(ws, room => room.SeqPresetOp(ws, data)));
       ws.on(DF.ClientMessages.SeqMetadata, data => this.ForwardToRoom(ws, room => room.SeqMetadata(ws, data)));
-      ws.on(DF.ClientMessages.SeqCue, data => this.ForwardToRoom(ws, room => room.SeqCue(ws, data)));
+      //ws.on(DF.ClientMessages.SeqCue, data => this.ForwardToRoom(ws, room => room.SeqCue(ws, data)));
       // ---
 
       ws.on(DF.ClientMessages.DownloadServerState, data => this.OnClientDownloadServerState(ws, data));

@@ -2,7 +2,8 @@ const DFSynthTools = require("./synthTools");
 const FMPolySynth = require("./fm4instrument");
 const FMVoice = require("./fm4voice");
 const MixingDeskInstrument = require("./MixingDeskInstrument");
-const sfzInstrument = require('./sfzInstrument')
+const sfzInstrument = require('./sfzInstrument');
+const EventEmitter = require('events');
 
 // how many milliseconds must elapse before a note is accepted?
 const gDupeNoteMarginMS = 20;
@@ -18,7 +19,6 @@ class FallbackNoteOnTracker {
 	}
 
 	AllNotesOff() {
-		//
 	}
 
 	NoteOn(user, instrumentSpec, note, isFromSequencer) {
@@ -30,11 +30,9 @@ class FallbackNoteOnTracker {
 	}
 
 	PedalUp(user, instrumentSpec) {
-
 	}
 
 	PedalDown(user, instrumentSpec) {
-
 	}
 };
 
@@ -82,6 +80,8 @@ class DigifuSynth {
 
 		this._isMuted = false;
 		this.sampleLibrarian = null;
+
+		this.events = new EventEmitter();
 	}
 
 	//this.masterGain = 1.0;// 0 = mute, 1.0 = unity, >1=amplify
@@ -125,6 +125,8 @@ class DigifuSynth {
 	NoteOn(user, instrumentSpec, note, velocity, isFromSequencer) {
 		if (this.dupeNoteSwallower.NoteOnShouldBeSwallowed(user, instrumentSpec, note, velocity, isFromSequencer))
 			return;
+
+		this.events.emit("noteOn", {user, instrumentSpec, note, velocity, isFromSequencer});
 
 		if (this._isMuted || instrumentSpec.isMuted) {
 			this.fallbackNoteOnTracker.NoteOn(user, instrumentSpec, note, isFromSequencer);

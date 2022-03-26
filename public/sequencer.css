@@ -150,8 +150,29 @@
 }
 
 .sequencerMain button.playButton, .sequencerMain button.cueButton {
-    height: 70px;
+    height: 61px;
     width: 90px;
+    margin: 3px 3px;
+}
+
+.sequencerMain button.cueButton {
+    margin: 1px 3px;
+}
+
+.sequencerMain button.cueButton.playMode.KeyTrigger,
+.sequencerMain button.cueButton.playMode.Arpeggiator
+{
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 0;
+}
+
+.sequencerMain button.arpMode,
+.sequencerMain button.baseNote {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+    margin-bottom: 4px;
 }
 
 .sequencerMain button.playButton.active {
@@ -161,7 +182,7 @@
 }
 
 .sequencerMain button.playButton>* {
-    font-size: 72px;
+    font-size: 60px;
 }
 
 .sequencerMain .pianoRollScrollCont {
@@ -627,11 +648,12 @@
 
 
 .sequencerMain button.cueButton {
-    height: 25px;
+    height: 23px;
     text-transform: uppercase;
     font-family: monospace;
-    font-size: 18px;
+    font-size: 14px;
     color: #055;
+    /* background-color: #c7ffcb; */
 }
 
 .sequencerMain button.cueButton.active {

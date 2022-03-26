@@ -107,6 +107,7 @@ class RoomServer {
       if (u.user.idle) {
         if ((now - u.user.lastActivity) > DF.ServerSettings.InstrumentAutoReleaseTimeoutMS) {
           //log(`User on instrument is idle: ${u.user.userID} INST ${i.instrumentID} ==> AUTO RELEASE`);
+          this.sequencerPlayer.AllNotesOff(i);
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
             instrumentID: i.instrumentID,
             userID: null,
@@ -250,6 +251,7 @@ class RoomServer {
       let existingInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (existingInstrument != null) {
         existingInstrument.instrument.ReleaseOwnership();
+        this.sequencerPlayer.AllNotesOff(existingInstrument.instrument);
 
         // broadcast instrument change to all clients
         this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
@@ -279,6 +281,7 @@ class RoomServer {
       foundUser.user.lastActivity = new Date();
 
       // broadcast instrument change to all clients
+      this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
         instrumentID: foundInstrument.instrument.instrumentID,
         userID: foundUser.user.userID,
@@ -312,6 +315,7 @@ class RoomServer {
       this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
 
       foundInstrument.instrument.ReleaseOwnership();
+      this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
 
       // broadcast instrument change to all clients
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
@@ -343,15 +347,21 @@ class RoomServer {
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
+      // if sequencer is in arp or keytrig modes, don't play the note. rather feed the sequencer player with info.
+      if (this.sequencerPlayer.NoteOn(foundInstrument.instrument, data.note)) {
+        return;
+      }
+
       foundUser.user.IncNoteOns();
       this.server.mServerStats.OnNoteOn(this.roomState, foundUser.user);
       this.roomState.stats.noteOns++;
 
-      // broadcast to all clients except foundUser
       if (data.resetBeatPhase) {
         this.roomState.metronome.resetBeatPhase();
       }
+
       this.roomState.quantizer.onLiveNoteOn(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, data.note, data.velocity, foundUser.user.quantizeSpec);
+
     } catch (e) {
       log(`OnClientNoteOn exception occurred`);
       log(e);
@@ -413,6 +423,10 @@ class RoomServer {
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
+      if (this.sequencerPlayer.NoteOff(foundInstrument.instrument, note)) {
+        return;
+      }
+
       // broadcast to all clients except foundUser
       this.roomState.quantizer.onLiveNoteOff(foundUser.user.userID, foundUser.user.pingMS, foundInstrument.instrument.instrumentID, note, foundUser.user.quantizeSpec);
     } catch (e) {
@@ -438,6 +452,7 @@ class RoomServer {
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
       this.roomState.quantizer.clearUser(foundUser.user.userID);
       this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
+      this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
 
       // broadcast to all clients except foundUser
       ws.to(this.roomState.roomID).broadcast.emit(DF.ServerMessages.UserAllNotesOff, foundUser.user.userID);
@@ -455,6 +470,12 @@ class RoomServer {
         log(`OnClientPedalUp => unknown user`);
         return;
       }
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        log(`=> not controlling an instrument.`);
+        return;
+      }
+      this.sequencerPlayer.PedalUp(foundInstrument.instrument);
       // broadcast to all clients except foundUser
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.PedalUp, {
         userID: foundUser.user.userID
@@ -473,6 +494,12 @@ class RoomServer {
         log(`OnClientPedalDown => unknown user`);
         return;
       }
+      let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+      if (foundInstrument == null) {
+        log(`=> not controlling an instrument.`);
+        return;
+      }
+      this.sequencerPlayer.PedalDown(foundInstrument.instrument);
       // broadcast to all clients
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.PedalDown, {
         userID: foundUser.user.userID
@@ -1284,6 +1311,7 @@ class RoomServer {
               this.roomState.quantizer.clearUser(foundUser.user.userID);
               this.roomState.quantizer.clearInstrument(inst.instrument.instrumentID);
               inst.instrument.ReleaseOwnership();
+              this.sequencerPlayer.AllNotesOff(inst.instrument);
               this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrument.instrumentID, userID: null, idle: false });
             }
           }
@@ -1682,13 +1710,6 @@ class RoomServer {
     return instrument.sequencerDevice.livePatch.SetNoteLenAdjustDivs(data.divs);
   }
 
-  SeqPreset_CancelCue(user, instrument, data) {
-    const cursor = this.roomState.metronome.getAbsoluteBeat();
-    instrument.sequencerDevice.CancelCue();
-    return true;
-  }
-
-
   SeqPresetOp(ws, data) {
     try {
       const foundUser = this.FindUserFromSocket(ws);
@@ -1722,11 +1743,14 @@ class RoomServer {
         case "SeqAdjustNoteLenDivs":
           if (!this.SeqPreset_AdjustNoteLenDivs(foundUser.user, foundInstrument.instrument, data)) return;
           break;
-        case "cancelCue":
-          if (!this.SeqPreset_CancelCue(foundUser.user, foundInstrument.instrument, data)) return;
-          break;
         case "SeqSetSwingBasisQuarters": // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
           if (!this.SeqPreset_SeqSetSwingBasisQuarters(foundUser.user, foundInstrument.instrument, data)) return;
+          break;
+        case "SeqSetPlayMode":
+          foundInstrument.instrument.sequencerDevice.SetPlayMode(data.mode);
+          break;
+        case "SeqSetBaseNote":
+          foundInstrument.instrument.sequencerDevice.SetBaseNote(data.note);
           break;
         default:
           console.log(`client sent us a bad seq preset op ${data.op}`);
@@ -1750,50 +1774,50 @@ class RoomServer {
   }
 
 
-  SeqCue(ws, data) {
-    try {
-      const foundUser = this.FindUserFromSocket(ws);
-      if (!foundUser)
-        throw new Error(`SeqCue => unknown user`);
+  // SeqCue(ws, data) {
+  //   try {
+  //     const foundUser = this.FindUserFromSocket(ws);
+  //     if (!foundUser)
+  //       throw new Error(`SeqCue => unknown user`);
 
-      const foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
-      if (foundInstrument === null)
-        throw new Error(`SeqCue => unknown instrument ${data.instrumentID}`);
+  //     const foundInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+  //     if (foundInstrument === null)
+  //       throw new Error(`SeqCue => unknown instrument ${data.instrumentID}`);
 
-      if (!foundInstrument.instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user))
-        throw new Error(`SeqCue => Instrument's sequencer cannot be controlled by this user. ${data.instrumentID}, userid ${foundUser.user.userID}`);
+  //     if (!foundInstrument.instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user))
+  //       throw new Error(`SeqCue => Instrument's sequencer cannot be controlled by this user. ${data.instrumentID}, userid ${foundUser.user.userID}`);
 
-      let outdata = null;
+  //     let outdata = null;
 
-      if (data.cancel) {
-        foundInstrument.instrument.sequencerDevice.CancelCue();
-        outdata = {
-          op: "cancelCue",
-          instrumentID: data.instrumentID,
-        };
-      } else {
-        const cursor = this.roomState.metronome.getAbsoluteBeat();
-        outdata = foundInstrument.instrument.sequencerDevice.Cue(cursor);
-        outdata = Object.assign({
-          op: "cue",
-          instrumentID: data.instrumentID,
-        }, outdata);
-      }
+  //     if (data.cancel) {
+  //       foundInstrument.instrument.sequencerDevice.CancelCue();
+  //       outdata = {
+  //         op: "cancelCue",
+  //         instrumentID: data.instrumentID,
+  //       };
+  //     } else {
+  //       const cursor = this.roomState.metronome.getAbsoluteBeat();
+  //       outdata = foundInstrument.instrument.sequencerDevice.Cue(cursor);
+  //       outdata = Object.assign({
+  //         op: "cue",
+  //         instrumentID: data.instrumentID,
+  //       }, outdata);
+  //     }
 
-      // broadcast to room.
-      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, outdata);
+  //     // broadcast to room.
+  //     this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, outdata);
 
-      this.sequencerPlayer.onChanged_General();
+  //     this.sequencerPlayer.onChanged_General();
 
-      if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
-        this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
-      }
+  //     if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+  //       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+  //     }
 
-    } catch (e) {
-      console.log(`SeqCue exception occurred`);
-      console.log(e);
-    }
-  }
+  //   } catch (e) {
+  //     console.log(`SeqCue exception occurred`);
+  //     console.log(e);
+  //   }
+  // }
 
 
   SeqMetadata(ws, data) {
@@ -1978,6 +2002,7 @@ class RoomServer {
       this.roomState.instrumentCloset.forEach(inst => {
         if (inst.controlledByUserID != foundUser.user.userID) return;
         inst.ReleaseOwnership();
+        this.sequencerPlayer.AllNotesOff(inst);
         // broadcast this to clients
         this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
       });
@@ -2088,6 +2113,7 @@ class RoomServer {
     this.roomState.instrumentCloset.forEach(inst => {
       if (inst.controlledByUserID != foundUser.user.userID) return;
       inst.ReleaseOwnership();
+      this.sequencerPlayer.AllNotesOff(inst);
       // broadcast this to clients
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
     });

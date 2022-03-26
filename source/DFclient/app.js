@@ -205,53 +205,6 @@ const eMonitoringType = {
   Remote : "Remote"
 };
 
-// this tracks which notes are currently held.
-// does not ref count notes, so if you press C twice, then release once, it will be considered OFF.
-class HeldNoteTracker {
-  constructor() {
-    this.AllNotesOff();
-  }
-
-  AllNotesOff() {
-    this.pedalDown = false;
-    this.notesOn = new Set();
-    this.physicallyHeld = new Set();
-    //console.log(this.toString(`AllNotesOff `));
-  }
-
-  NoteOn(note) {
-    console.assert(Number.isInteger(note));
-    this.notesOn.add(note);
-    this.physicallyHeld.add(note);
-    //console.log(this.toString(`NoteOn(${note}) `));
-  }
-
-  NoteOff(note) {
-    console.assert(Number.isInteger(note));
-    this.physicallyHeld.delete(note);
-    if (!this.pedalDown) {
-      this.notesOn.delete(note);
-    }
-    //console.log(this.toString(`NoteOff(${note}) `));
-  }
-
-  PedalUp() {
-    this.pedalDown = false;
-    // note off all notes which are playing but not physically held down
-    this.notesOn = new Set([...this.notesOn ].filter(playingNote => this.physicallyHeld.has(playingNote)));
-    //console.log(this.toString(`PedalUp() `));
-  }
-
-  PedalDown() {
-    this.pedalDown = true;
-    //console.log(this.toString(`PedalDown() `));
-  }
-
-  toString(prefix) {
-    return `${prefix ?? ""} playing:[${[...this.notesOn].join(",")}], physicallyheld:[[${[...this.physicallyHeld].join(",")}]] ${this.pedalDown ? "pedal down" : ""}`;
-  }
-};
-
 class DigifuApp {
   constructor() {
     window.gDFApp = this; // for debugging, so i can access this class in the JS console.
@@ -285,7 +238,7 @@ class DigifuApp {
     this.midi = new DFMidi.DigifuMidi();
     this.metronome = new DFMetronome.DigifuMetronome();
     this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
-    this.heldNotes = new HeldNoteTracker();
+    this.heldNotes = new DFMusic.HeldNoteTracker();
 
     // monitoring your own playback
     this.monitoringType = eMonitoringType.Remote;
@@ -1059,7 +1012,7 @@ class DigifuApp {
       return;
     }
 
-    foundInstrument.instrument.sequencerDevice.SetPlaying(data.isPlaying);
+    foundInstrument.instrument.sequencerDevice.SetPlaying(data.isPlaying, this.synth, foundInstrument.instrument);
 
     this.stateChangeHandler();
   }
@@ -1194,7 +1147,7 @@ class DigifuApp {
       return;
     }
     const bank = this.roomState.GetSeqPresetBankForInstrument(foundInstrument.instrument);
-    foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank);
+    foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank, this.synth, foundInstrument.instrument);
     this.stateChangeHandler();
   }
 
@@ -1965,10 +1918,6 @@ class DigifuApp {
     if (this.myInstrument?.sequencerDevice?.livePatch?.GetNoteLenAdjustDivs() === divs)
       return;
     this.seqParamThrottlers.stacc.InvokeChange("divs", divs, false);
-  }
-  // cancel is boolean
-  SeqCue(instrumentID, cancel) {
-    this.net.SeqCue(instrumentID, cancel);
   }
 
   // --------------

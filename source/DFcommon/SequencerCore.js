@@ -15,6 +15,16 @@ const SequencerSettings = {
   MaxNoteOnsPerColumn : 8,
 };
 
+// NB: these are also used as CSS classes.
+const SequencerPlayMode = {
+  // play is allowed even when nobody holds the instrument
+  Constant : "Constant",
+
+  // play is not allowed without holding the instrument
+  KeyTrigger : "KeyTrigger",
+  Arpeggiator : "Arpeggiator",
+};
+
 const eDivisionType = {
   MajorBeat : "MajorBeat",
   MinorBeat : "MinorBeat",
@@ -810,65 +820,13 @@ class SequencerDevice {
       Object.assign(this, params);
 
     this.isPlaying ??= false;          // false while cueued
-    //this.startFromAbsQuarter ??= null; // if set, then we are cueued to begin playing at this abs room beat.
-
-    // shifts playback
-    //this.baseAbsQuarter ??= 0; // NOT SPEED adjusted. this is an offset of the incoming global abs playhead
-
-    //this.wasPlayingBeforeCue ??= false;
-    //this.baseAbsQuarterBeforeCue ??= 0;
+    this.playMode ??= SequencerPlayMode.Constant;
+    this.baseNote ??= 60; // middle C
 
     this.livePatch = new SequencerPatch(this.livePatch);
   }
 
-  //IsCueued() { return !!this.startFromAbsQuarter; }
-
-  // // called on the server; returns info about the cue status to pass to clients.
-  // Cue(currentAbsQuarter) {
-  //   this.wasPlayingBeforeCue = this.isPlaying;
-  //   this.baseAbsQuarterBeforeCue = this.baseAbsQuarter;
-
-  //   this.isPlaying = false;
-
-  //   const info = this.GetAbsQuarterInfo(currentAbsQuarter);
-  //   const patternMeasure = info.patternQuarter / this.livePatch.timeSig.quartersPerMeasure;
-  //   const patternMeasureFrac = DFUtil.getDecimalPart(patternMeasure);
-  //   let measuresLeft = 1.0 - patternMeasureFrac;
-  //   if (measuresLeft < 0.2) { // don't surprise users with insta-cue
-  //     measuresLeft += 1;
-  //   }
-  //   const quartersLeft = measuresLeft * this.livePatch.timeSig.quartersPerMeasure;
-  //   this.startFromAbsQuarter = currentAbsQuarter + quartersLeft;
-  //   // for simplicity, do NOT allow base time to be in the future. it creates negative value scenarios we can easily avoid.
-  //   this.baseAbsQuarter = this.startFromAbsQuarter - (this.livePatch.timeSig.quartersPerMeasure * 2); // guaranteed always in the past.
-
-  //   return {
-  //     startFromAbsQuarter : this.startFromAbsQuarter,
-  //     baseAbsQuarter : this.baseAbsQuarter,
-  //   };
-  // }
-
-  // CancelCue() {
-  //   if (!this.IsCueued())
-  //     return true;
-  //   this.isPlaying = this.wasPlayingBeforeCue;
-  //   this.startFromAbsQuarter = null;                    // cancel cue
-  //   this.baseAbsQuarter = this.baseAbsQuarterBeforeCue; // cancel your new offset
-  //   return true;
-  // }
-
-  // // called on client with server-given params. no need to do much really, just set state.
-  // SetCueInfo(data) {
-  //   this.wasPlayingBeforeCue = this.isPlaying;
-  //   this.isPlaying = false;
-  //   this.startFromAbsQuarter = data.startFromAbsQuarter;
-  //   console.assert(!!data.baseAbsQuarter);
-  //   this.baseAbsQuarter = data.baseAbsQuarter;
-  //   return true;
-  // }
-
-  SetPlaying(b) {
-    //this.CancelCue();
+  SetPlaying(b, synth, instrument) {
     if (this.isPlaying === !!b)
       return;
 
@@ -877,16 +835,20 @@ class SequencerDevice {
       this.isPlaying = false;
       return;
     }
-    this.StartPlaying();
+    this.StartPlaying(synth, instrument);
   }
 
-  StartPlaying() {
+  StartPlaying(synth, instrument) {
+    if (synth && instrument) {
+      // it's not very intuitive, but starting the sequencer can cause lingering notes.
+      // it happens (e.g.) when you're in key trigger mode, and you're holding notes.
+      // flipping the switch to "ON" will mean your live events get swallowed. think Note Offs.
+      synth.AllNotesOff(instrument);
+    }
     this.isPlaying = true;
-    //this.startFromAbsQuarter = null;
   }
 
   IsPlaying() { return this.isPlaying; }
-
 
   // NOTE: return is SPEED-ADJUSTED
   // given abs quarter (absolute room beat, NOT speed-adjusted), calculate some pattern times.
@@ -894,8 +856,6 @@ class SequencerDevice {
   GetAbsQuarterInfo(absQuarter) {
     const patternLengthQuarters = this.livePatch.GetPatternLengthQuarters();
 
-    //absQuarter -= this.baseAbsQuarter;
-    //const nonSpeedAdjustedAbsQuarter = absQuarter;
     // adjust the playhead to speed-adjusted.
     absQuarter *= this.livePatch.speed;
 
@@ -903,7 +863,6 @@ class SequencerDevice {
     const patternFrac = Math.abs(DFUtil.getDecimalPart(absPatternFloat));
     return {
       shiftedAbsQuarter : absQuarter, // so callers can now compare an abs playhead with the returned info
-      //nonSpeedAdjustedAbsQuarter,
       absPatternFloat,
       patternLengthQuarters, // speed-adjusted; means you cannot just compare this to normal abs quarters.
       patternFrac,
@@ -912,7 +871,6 @@ class SequencerDevice {
   }
 
   InitPatch(presetID) {
-    //this.CancelCue();
     this.livePatch = new SequencerPatch({presetID});
   }
 
@@ -950,7 +908,6 @@ class SequencerDevice {
   }
 
   LoadPatch(patchObj) {
-    //this.CancelCue();
     this.livePatch = new SequencerPatch(patchObj);
     return true;
   }
@@ -960,8 +917,26 @@ class SequencerDevice {
     return true;
   }
 
+  SetBaseNote(note) {
+    this.baseNote = note;
+  }
+  SetPlayMode(mode) {
+    this.playMode = mode;
+  }
+
+  GetBaseNote(note) {
+    return this.baseNote;
+  }
+  GetPlayMode(mode) {
+    return this.playMode;
+  }
+
+  ShouldLiveNoteOnsAndOffsBeSwallowed() {
+    return this.isPlaying && (this.playMode != SequencerPlayMode.Constant);
+  }
+
   // client-side; handles incoming server msgs
-  SeqPresetOp(data, bank) {
+  SeqPresetOp(data, bank, synth, instrument) {
     switch (data.op) {
     case "load": {
       let preset = bank.GetPresetById(data.presetID);
@@ -1004,13 +979,15 @@ class SequencerDevice {
       this.livePatch.SetNoteLenAdjustDivs(data.divs);
       return true;
     }
-    case "cue": {
-      return this.SetCueInfo(data);
+    case "SeqSetPlayMode": {
+      this.SetPlayMode(data.mode);
+      synth.AllNotesOff(instrument); // changing play mode means swallowing events (like note off). prevent lingering notes.
+      return true;
     }
-    case "cancelCue":
-      //return this.CancelCue();
-      console.assert(false);
-      return false;
+    case "SeqSetBaseNote": {
+      this.SetBaseNote(data.note);
+      return true;
+    }
     }
     return false;
   }
@@ -1740,6 +1717,7 @@ module.exports = {
   SequencerSettings,
   SequencerPatch,
   SequencerDevice,
+  SequencerPlayMode,
   IsValidSequencerPatternIndex,
   IsValidSequencerSpeed,
   IsValidSequencerSwing,

@@ -1,5 +1,4 @@
-
-//const { resolve } = require("path");
+const EventEmitter = require('events');
 
 // prototype for handler:
 // MIDI_NoteOn(note, velocity)
@@ -14,6 +13,7 @@ let gMidiDevicesAvailable = false;
 class DigifuMidi {
   constructor() {
     this.EventHandler = null;
+    this.events = new EventEmitter(); // weird right? put it on the pile.
     this.currentlyListeningOn = [];// list of device names we're attached to.
     this.learningCompletionHandlers = [];
   }
@@ -44,14 +44,17 @@ class DigifuMidi {
         if (d2 > 0) {
           //console.log (`note on @ ${Date.now()}`);
           this.EventHandler.MIDI_NoteOn(d1, d2, deviceName);
+          this.events.emit("noteOn", { note: d1, velocity: d2 });
         } else {
           //log ("self note off");
           this.EventHandler.MIDI_NoteOff(d1, deviceName);
+          this.events.emit("noteOff", { note: d1 });
         }
         break;
       case 8: // noteOff
         //log ("self note off");
         this.EventHandler.MIDI_NoteOff(d1, deviceName);
+        this.events.emit("noteOff", { note: d1 });
         break;
       // pitch
       // exp
@@ -81,8 +84,10 @@ class DigifuMidi {
           case 64:
             if (d2 > 64) {
               this.EventHandler.MIDI_PedalDown(deviceName);
+              this.events.emit("pedalDown", {  });
             } else {
               this.EventHandler.MIDI_PedalUp(deviceName);
+              this.events.emit("pedalUp", {  });
             }
             break;
           default:

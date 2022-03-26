@@ -11,6 +11,8 @@ Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest
 - Multiple music rooms, each with different instrument sets
 - Over 55 sample-based instruments are available, each with multiple variations
 - Step sequencer for synchronized playing with or without a MIDI device.
+  - Constant playing mode
+  - Key trigger mode
 - Two different synthesizer engines available
   - 4-oscilltors, each with pulse width modulation capability
   - Monophonic or polyphonic mode, with portamento

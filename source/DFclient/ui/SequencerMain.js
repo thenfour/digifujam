@@ -537,6 +537,12 @@ class SequencerMain extends React.Component {
             vel ??= 99;
             let midiNoteValue = this.props.instrument.sequencerDevice.livePatch.AdjustMidiNoteValue(note.midiNoteValue);
             if (midiNoteValue) {
+                if (this.state.baseNoteListening) {
+                    // you're listening for a base note and you click on the legend. that works!
+                    this.BaseNoteNoteOnListener({note: midiNoteValue});
+                    return;
+                }
+    
                 this.props.app.PreviewNoteOn(midiNoteValue, vel);
             }
         }
@@ -715,6 +721,80 @@ class SequencerMain extends React.Component {
             });
         }
 
+        onClickPlayMode = () => {
+            if (this.props.observerMode) return;
+            const seq = this.props.instrument.sequencerDevice;
+            switch (seq.GetPlayMode()) {
+                case Seq.SequencerPlayMode.Constant:
+                    this.props.app.SeqPresetOp({
+                        op: "SeqSetPlayMode",
+                        mode: Seq.SequencerPlayMode.KeyTrigger,
+                    });
+                    break;
+                case Seq.SequencerPlayMode.KeyTrigger:
+                    this.props.app.SeqPresetOp({
+                        op: "SeqSetPlayMode",
+                        mode: Seq.SequencerPlayMode.Arpeggiator,
+                    });
+                    break;
+                case Seq.SequencerPlayMode.Arpeggiator:
+                    this.props.app.SeqPresetOp({
+                        op: "SeqSetPlayMode",
+                        mode: Seq.SequencerPlayMode.Constant,
+                    });
+                    break;
+            }
+        }
+
+        BaseNoteNoteOnListener = (e) => {
+            this.props.app.midi.events.removeListener("noteOn", this.BaseNoteNoteOnListener);
+
+            this.props.app.SeqPresetOp({
+                op: "SeqSetBaseNote",
+                note: e.note,
+            });
+
+            this.setState({ baseNoteListening: false });
+        }
+
+        onClickBaseNote = (e) => {
+            if (this.props.observerMode) return;
+
+            if (e.shiftKey) {
+                const seq = this.props.instrument.sequencerDevice;
+                const patch = seq.livePatch;
+                const noteLegend = seq.GetNoteLegend();
+                const patternViewData = Seq.GetPatternView(patch, noteLegend);
+                if (!patternViewData.divsWithNoteOn.length) {
+                    return; // no notes on in the pattern.
+                }
+                // find the lowest note on in the 1st div with note on.
+                let note = 1e5;
+                patternViewData.divsWithNoteOn[0].noteOns.forEach(cell => {
+                    note = Math.min(note, cell.midiNoteValue);
+                });
+
+                this.props.app.SeqPresetOp({
+                    op: "SeqSetBaseNote",
+                    note,
+                });
+    
+                return;
+            }
+
+            if (this.state.baseNoteListening) {
+                this.setState({ baseNoteListening: false });
+                return;
+            }
+            this.props.app.midi.events.addListener("noteOn", this.BaseNoteNoteOnListener);
+            this.setState({ baseNoteListening: true });
+        }
+
+        onClickArpMode = () => {
+            if (this.props.observerMode) return;
+            const seq = this.props.instrument.sequencerDevice;
+        }
+
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -877,13 +957,33 @@ class SequencerMain extends React.Component {
                                     <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
                                                 <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
                                             </button>
-                                            {/* <button
-                                                className={'cueButton' + (seq.IsCueued() ? ' active' : "") + clickableIfEditable}
-                                                title="Begin playing this pattern on next measure"
-                                                onClick={isReadOnly ? ()=>{} : this.onClickBigCue}
+                                            <button
+                                                className={'cueButton' + clickableIfEditable + " " + seq.GetPlayMode()}
+                                                title={`Play mode: ${seq.GetPlayMode()}. Click to change modes.`}
+                                                onClick={isReadOnly ? ()=>{} : this.onClickPlayMode}
                                             >
-                                                Cue
-                                            </button> */}
+                                                {seq.GetPlayMode()}
+                                            </button>
+
+                                            {seq.GetPlayMode() === Seq.SequencerPlayMode.KeyTrigger &&
+                                            <button
+                                                className={'cueButton baseNote ' + clickableIfEditable + (this.state.baseNoteListening ? " active" : "")}
+                                                title={`Base note: ${DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}. Click to set a new base note. Shift+Click to use the first note of the pattern as the base note.`}
+                                                onClick={isReadOnly ? ()=>{} : this.onClickBaseNote}
+                                            >
+                                                Base:{DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}
+                                            </button>
+                                            }
+
+                                            {seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator &&
+                                            <button
+                                                className={'cueButton arpMode ' + clickableIfEditable}
+                                                onClick={isReadOnly ? ()=>{} : this.onClickArpMode}
+                                            >
+                                                arp mode
+                                            </button>
+                                            }
+
                                     </div>
                                 </div>
                             </fieldset>

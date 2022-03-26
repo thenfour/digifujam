@@ -5,8 +5,9 @@ let keyNote = function(midiNoteValue, name, cssClass) {
 };
 
 // defines the keys shown on the keyboard view
+const firstNoteValue = 21;
 const MidiNoteInfo = [
-  keyNote(21, "A0", "white a"),
+  keyNote(firstNoteValue, "A0", "white a"),
   keyNote(22, "A#0", "black as"),
   keyNote(23, "B0", "white b"),
   keyNote(24, "C1", "white c"),
@@ -122,6 +123,10 @@ const MidiNoteInfo = [
   // keyNote(126, "F#9", "black fs"),
   // keyNote(127, "G9", "white g"),
 ];
+
+function GetMidiNoteInfo(noteValue) {
+  return MidiNoteInfo.at(noteValue - firstNoteValue);
+}
 
 const FourFourSpec = {
   id : "4_4",
@@ -299,6 +304,61 @@ function ApplySwingToValueFrac(x, sN11) {
   return integral + RemoveSwingFromValue01(fractional, s);
 }
 
+
+// this tracks which notes are currently held.
+// does not ref count notes, so if you press C twice, then release once, it will be considered OFF.
+class HeldNoteTracker {
+  constructor() {
+    this.AllNotesOff();
+  }
+
+  AllNotesOff() {
+    this.pedalDown = false;
+    this.notesOn = new Set();
+    this.physicallyHeld = new Set();
+    this.lastNoteOn = null; // used by sequencer key trig mode
+    //console.log(this.toString(`AllNotesOff `));
+  }
+
+  NoteOn(note) {
+    console.assert(Number.isInteger(note));
+    this.lastNoteOn = note;
+    this.notesOn.add(note);
+    this.physicallyHeld.add(note);
+    //console.log(this.toString(`NoteOn(${note}) `));
+  }
+
+  NoteOff(note) {
+    console.assert(Number.isInteger(note));
+    this.physicallyHeld.delete(note);
+    if (!this.pedalDown) {
+      this.notesOn.delete(note);
+    }
+    if (this.notesOn.size < 1) this.lastNoteOn = null;
+    //console.log(this.toString(`NoteOff(${note}) `));
+  }
+
+  PedalUp() {
+    this.pedalDown = false;
+    // note off all notes which are playing but not physically held down
+    this.notesOn = new Set([...this.notesOn ].filter(playingNote => this.physicallyHeld.has(playingNote)));
+    if (this.notesOn.size < 1) this.lastNoteOn = null;
+    //console.log(this.toString(`PedalUp() `));
+  }
+
+  PedalDown() {
+    this.pedalDown = true;
+    //console.log(this.toString(`PedalDown() `));
+  }
+
+  toString(prefix) {
+    return `${prefix ?? ""} playing:[${[...this.notesOn].join(",")}], physicallyheld:[[${[...this.physicallyHeld].join(",")}]] ${this.pedalDown ? "pedal down" : ""}`;
+  }
+};
+
+
+
+
 module.exports = {
   MusicalTimeTracker,
   CommonTimeSignatures,
@@ -309,4 +369,6 @@ module.exports = {
   ApplySwingToValue01,
   ApplySwingToValueFrac,
   GetTimeSigById,
+  GetMidiNoteInfo,
+  HeldNoteTracker,
 };

@@ -76,8 +76,10 @@ const ClientMessages = {
     // { op:"SeqSetTranspose", transpose: }
     // { op:"SeqAdjustNoteLenDivs", divs: } // -1 to +1 divs
     // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
+    // { op:"SeqSetPlayMode", mode: }
+    // { op:"SeqSetBaseNote", note: }
     SeqPresetOp: "SeqPresetOp",
-    SeqCue: "SeqCue", // { instrumentID, cancel }
+    //SeqCue: "SeqCue", // { instrumentID, cancel }
     SeqMetadata: "SeqMetadata", // { title, description, tags }
 };
 
@@ -146,7 +148,8 @@ const ServerMessages = {
     // { instrumentID, op:"pasteBank", bank:{...} }
     // { instrumentID, op:"SeqSetTranspose", transpose: }
     // { instrumentID, op:"cue", startFromAbsQuarter }
-    // { instrumentID, op:"cancelCue" }
+    // { instrumentID, op:"SeqSetPlayMode", mode: }
+    // { instrumentID, op:"SeqSetBaseNote", note: }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
 };

@@ -24,6 +24,10 @@ class RoomSequencerPlayer {
     this.quantizer = roomState.quantizer;
     this.timer = null;
     this.instruments = this.roomState.instrumentCloset.filter(i => i.allowSequencer); // precalc a list of relevant instruments
+    this.noteTrackers = new Map(); // map instrumentID to a held note tracker.
+    this.instruments.forEach(inst => {
+      this.noteTrackers.set(inst.instrumentID, new DFMusic.HeldNoteTracker());
+    });
     this.#invokeTimer();
   }
 
@@ -38,8 +42,38 @@ class RoomSequencerPlayer {
     this.timerProc();
   }
 
+  AllNotesOff(instrument) {
+    this.noteTrackers.get(instrument.instrumentID).AllNotesOff();
+  }
+
+  // return true to swallow the event
+  NoteOn(instrument, note) {
+    this.noteTrackers.get(instrument.instrumentID).NoteOn(note);
+    this.#invokeTimer();
+    return instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+  }
+
+  // return true to swallow the event
+  NoteOff(instrument, note) {
+    this.noteTrackers.get(instrument.instrumentID).NoteOff(note);
+    this.#invokeTimer();
+    return instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+  }
+
+  PedalUp(instrument) {
+    this.noteTrackers.get(instrument.instrumentID).PedalUp();
+  }
+
+  PedalDown(instrument) {
+    this.noteTrackers.get(instrument.instrumentID).PedalDown();
+  }
+
   // technically this can be all be optimized depending on the operation the user performed.
   // but this is all pretty fast so not worth it yet.
+  // what makes it complicated is that all instruments are refreshed on the same timer. so if you
+  // want to just refresh 1 instrument, you either refresh all of them, or ... or what? you refresh
+  // only 1 now and the others later? this should really be split into instrument-specific timers if
+  // that's needed.
   onChanged_PlayStop(instrument, data) {
     //console.log(`onChanged_PlayStop(${JSON.stringify(data)})`);
     this.#invokeTimer();
@@ -106,6 +140,17 @@ class RoomSequencerPlayer {
       return;
     }
 
+    const heldNotes = this.noteTrackers.get(instrument.instrumentID);
+
+    let keyTranspose = 0;
+    if (instrument.sequencerDevice.GetPlayMode() === Seq.SequencerPlayMode.KeyTrigger) {
+      if ((heldNotes.notesOn.size < 1) || !heldNotes.lastNoteOn) {
+        this.quantizer.setSequencerEvents(instrument.instrumentID, [], patternView, false, null);
+        return;
+      }
+      keyTranspose = heldNotes.lastNoteOn - instrument.sequencerDevice.GetBaseNote();
+    }
+
     const patternPlayheadInfo = instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
@@ -142,7 +187,7 @@ class RoomSequencerPlayer {
         if (cell.isMuted)
           continue;
         
-        const midiNoteValue = patch.AdjustMidiNoteValue(cell.midiNoteValue);
+        const midiNoteValue = patch.AdjustMidiNoteValue(cell.midiNoteValue) + keyTranspose;
 
         // now "loop" this pattern for this note until out of window.
         for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter < windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
