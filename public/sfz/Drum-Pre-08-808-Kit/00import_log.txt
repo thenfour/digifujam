@@ -1,0 +1,493 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\Drum-Pre-08-808-Kit.sfz.json
+Region count: 40
+Source samples to read: 40
+Dest samples to create: 40
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 024.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 024.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 025.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 025.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 026.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 026.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 027.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 027.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 028.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 028.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 029.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 029.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 030.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 030.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 031.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 031.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 033.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 033.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 034.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 034.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 035.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 035.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 037.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 037.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 038.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 038.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 039.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 039.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 040.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 040.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 041.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 041.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 044.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 044.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 045.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 045.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 046.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 046.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 047.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 047.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 052.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 052.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 056.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 056.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 059.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 059.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 061.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 061.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-08-808-Kit\808-Kit 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 063.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176252
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 057_0_end.wav from 808-Kit 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 056.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 056_0_end.wav from 808-Kit 056.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 056_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 056_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 055_0_end.wav from 808-Kit 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79232
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 054_0_end.wav from 808-Kit 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158612
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 053_0_end.wav from 808-Kit 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 052.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176252
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 052_0_end.wav from 808-Kit 052.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 052_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 052_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 050_0_end.wav from 808-Kit 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 051_0_end.wav from 808-Kit 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 051_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 049_0_end.wav from 808-Kit 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 048_0_end.wav from 808-Kit 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 047.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 047_0_end.wav from 808-Kit 047.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 047_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 047_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 046.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 046_0_end.wav from 808-Kit 046.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 046_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 046_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 045.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 045_0_end.wav from 808-Kit 045.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 045_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 045_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 044.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79232
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 044_0_end.wav from 808-Kit 044.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 044_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 044_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 043_0_end.wav from 808-Kit 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 70412
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 042_0_end.wav from 808-Kit 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 041.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 041_0_end.wav from 808-Kit 041.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 041_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 041_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 039.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 039_0_end.wav from 808-Kit 039.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 039_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 039_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 040.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 040_0_end.wav from 808-Kit 040.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 040_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 040_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 038.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 038_0_end.wav from 808-Kit 038.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 038_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 038_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 037.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 037_0_end.wav from 808-Kit 037.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 037_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 037_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 036_0_end.wav from 808-Kit 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 035.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 396752
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 035_0_end.wav from 808-Kit 035.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 035_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 035_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 034.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 034_0_end.wav from 808-Kit 034.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 034_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 034_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 033.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105692
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 033_0_end.wav from 808-Kit 033.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 033_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 033_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79232
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 032_0_end.wav from 808-Kit 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 031.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96872
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 031_0_end.wav from 808-Kit 031.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 031_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 031_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 030.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79232
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 030_0_end.wav from 808-Kit 030.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 030_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 030_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 029.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114512
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 029_0_end.wav from 808-Kit 029.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 029_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 029_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 028.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132152
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 028_0_end.wav from 808-Kit 028.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 028_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 028_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 027.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 027_0_end.wav from 808-Kit 027.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 027_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 027_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 026.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132152
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 026_0_end.wav from 808-Kit 026.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 026_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 026_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 025.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 025_0_end.wav from 808-Kit 025.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 025_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 025_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 024.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 61592
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 024_0_end.wav from 808-Kit 024.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 024_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 024_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 059.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149792
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 059_0_end.wav from 808-Kit 059.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 059_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 059_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114512
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 058_0_end.wav from 808-Kit 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79232
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 060_0_end.wav from 808-Kit 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 062_0_end.wav from 808-Kit 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 062_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 033_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 033.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 034_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 034.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 037_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 037.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 038_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 038.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 040_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 040.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 039_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 039.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 041_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 041.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 044_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 044.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 045_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 045.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 046_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 046.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 047_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 047.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 049.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 050.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 052_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 052.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 056_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 056.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 057.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 061.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 061_0_end.wav from 808-Kit 061.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 061_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 061_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88052
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating 808-Kit 063_0_end.wav from 808-Kit 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 063_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 030_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 030.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 028_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 028.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 024_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 024.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 027_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 027.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 031_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 031.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 029_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 029.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 025_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 025.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 026_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 026.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 059_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 059.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 035_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 035.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 062.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 061_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 061.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-08-808-Kit\808-Kit 063.flac.wav
+Completed processing source WAV files with 40 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_DrumPre08808Kit",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Drum-Pre-08-808-Kit/Drum-Pre-08-808-Kit.sfz.json",
+  "name": "Drum-Pre-08-808-Kit"
+}

@@ -1,0 +1,877 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Drum-Pre-01-Rock-Kit.sfz.json
+Region count: 72
+Source samples to read: 72
+Dest samples to create: 72
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 024.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 024.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 025.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 025.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 026.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 026.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 027.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 027.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 028.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 028.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 029.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 029.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 030.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 030.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 031.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 031.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 033.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 033.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 034.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 034.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 035.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 035.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 037.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 037.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 038.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 038.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 039.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 039.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 040.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 040.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 041.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 041.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 044.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 044.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 045.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 045.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 046.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 046.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 047.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 047.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 052.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 052.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 056.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 056.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 059.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 059.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 061.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 061.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 069.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 069.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 070.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 070.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 071.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 071.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 074.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 074.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 076.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 076.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 077.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 077.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 079.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 079.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 080.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 080.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 081.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 081.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 082.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 082.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 083.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 084.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 084.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 085.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 085.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 086.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 086.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 087.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 087.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 088.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 088.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 089.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 089.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 090.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 090.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 091.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 091.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 092.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 092.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 093.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 093.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 094.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 094.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-01-Rock-Kit\Rock-Kit 095.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 095.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 060_0_end.wav from Rock-Kit 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 085.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 085_0_end.wav from Rock-Kit 085.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 085_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 085_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 067_0_end.wav from Rock-Kit 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 086.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 086_0_end.wav from Rock-Kit 086.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 086_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 086_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237986
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 058_0_end.wav from Rock-Kit 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 065_0_end.wav from Rock-Kit 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 037.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 037_0_end.wav from Rock-Kit 037.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 037_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 037_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 064_0_end.wav from Rock-Kit 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202706
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 057_0_end.wav from Rock-Kit 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 046.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114506
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 046_0_end.wav from Rock-Kit 046.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 046_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 046_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 077.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 077_0_end.wav from Rock-Kit 077.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 077_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 077_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 090.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 090_0_end.wav from Rock-Kit 090.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 090_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 090_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 343826
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 072_0_end.wav from Rock-Kit 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 069.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 069_0_end.wav from Rock-Kit 069.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 069_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 069_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 041.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193886
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 041_0_end.wav from Rock-Kit 041.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 041_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 041_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 066_0_end.wav from Rock-Kit 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 066_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 088.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 088_0_end.wav from Rock-Kit 088.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 088_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 088_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 025.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 025_0_end.wav from Rock-Kit 025.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 025_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 025_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 061.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 061_0_end.wav from Rock-Kit 061.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 061_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 061_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 034.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 034_0_end.wav from Rock-Kit 034.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 034_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 034_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 092.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 092_0_end.wav from Rock-Kit 092.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 092_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 092_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 031.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 031_0_end.wav from Rock-Kit 031.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 031_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 031_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149786
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 048_0_end.wav from Rock-Kit 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185066
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 043_0_end.wav from Rock-Kit 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 082.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 082_0_end.wav from Rock-Kit 082.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 082_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 082_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 070.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 70406
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 070_0_end.wav from Rock-Kit 070.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 070_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 070_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 029.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114506
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 029_0_end.wav from Rock-Kit 029.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 029_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 029_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 030.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 030_0_end.wav from Rock-Kit 030.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 030_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 030_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 054_0_end.wav from Rock-Kit 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 089.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 089_0_end.wav from Rock-Kit 089.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 089_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 089_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 081.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167426
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 081_0_end.wav from Rock-Kit 081.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 081_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 081_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 056.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 056_0_end.wav from Rock-Kit 056.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 056_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 056_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 091.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 091_0_end.wav from Rock-Kit 091.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 091_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 091_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 059.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158606
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 059_0_end.wav from Rock-Kit 059.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 059_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 059_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 027.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 027_0_end.wav from Rock-Kit 027.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 027_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 027_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 085_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 085.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 079.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167426
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 079_0_end.wav from Rock-Kit 079.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 079_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 079_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149786
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 051_0_end.wav from Rock-Kit 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 051_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 060.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 083_0_end.wav from Rock-Kit 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 083_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 093.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 093_0_end.wav from Rock-Kit 093.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 093_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 093_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 024.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 024_0_end.wav from Rock-Kit 024.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 024_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 024_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 026.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 026_0_end.wav from Rock-Kit 026.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 026_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 026_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149786
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 053_0_end.wav from Rock-Kit 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 047.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158606
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 047_0_end.wav from Rock-Kit 047.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 047_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 047_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 075_0_end.wav from Rock-Kit 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 075_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 038.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 038_0_end.wav from Rock-Kit 038.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 038_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 038_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 052.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167426
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 052_0_end.wav from Rock-Kit 052.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 052_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 052_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 080.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 080_0_end.wav from Rock-Kit 080.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 080_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 080_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123326
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 050_0_end.wav from Rock-Kit 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 084.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 084_0_end.wav from Rock-Kit 084.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 084_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 084_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176246
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 073_0_end.wav from Rock-Kit 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 033.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 033_0_end.wav from Rock-Kit 033.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 033_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 033_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 055_0_end.wav from Rock-Kit 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 074.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211526
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 074_0_end.wav from Rock-Kit 074.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 074_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 074_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 068_0_end.wav from Rock-Kit 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 045.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140966
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 045_0_end.wav from Rock-Kit 045.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 045_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 045_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 062_0_end.wav from Rock-Kit 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 062_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 094.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 094_0_end.wav from Rock-Kit 094.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 094_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 094_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 028.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 028_0_end.wav from Rock-Kit 028.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 028_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 028_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 071.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 379106
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 071_0_end.wav from Rock-Kit 071.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 071_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 071_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 095.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 095_0_end.wav from Rock-Kit 095.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 095_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 095_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 042_0_end.wav from Rock-Kit 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149786
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 078_0_end.wav from Rock-Kit 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202706
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 049_0_end.wav from Rock-Kit 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 063_0_end.wav from Rock-Kit 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 036_0_end.wav from Rock-Kit 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 087.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 087_0_end.wav from Rock-Kit 087.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 087_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 087_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 032_0_end.wav from Rock-Kit 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 040.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 040_0_end.wav from Rock-Kit 040.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 040_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 040_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 076.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 076_0_end.wav from Rock-Kit 076.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 076_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 076_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 044.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 044_0_end.wav from Rock-Kit 044.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 044_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 044_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 039.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 039_0_end.wav from Rock-Kit 039.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 039_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 039_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 035.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rock-Kit 035_0_end.wav from Rock-Kit 035.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 035_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 035_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 057.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 037_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 037.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 086_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 086.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 056_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 056.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 081_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 081.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 089_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 089.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 030_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 030.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 029_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 029.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 070_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 070.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 082_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 082.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 031_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 031.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 092_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 092.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 034_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 034.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 061_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 061.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 025_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 025.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 088_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 088.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 066.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 041_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 041.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 069_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 069.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 090_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 090.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 077_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 077.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 046_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 046.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 095_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 095.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 028_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 028.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 094_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 094.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 062.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 045_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 045.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 068.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 033_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 033.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 084_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 084.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 050.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 080_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 080.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 052_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 052.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 038_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 038.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 075.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 047_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 047.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 026_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 026.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 024_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 024.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 093_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 093.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 083.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 079_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 079.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 027_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 027.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 059_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 059.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 091_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 091.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 074_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 074.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 040_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 040.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 087_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 087.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 076_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 076.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 071_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 071.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 039_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 039.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 044_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 044.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 035_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 035.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-01-Rock-Kit\Rock-Kit 049.flac.wav
+Completed processing source WAV files with 72 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_DrumPre01RockKit",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Drum-Pre-01-Rock-Kit/Drum-Pre-01-Rock-Kit.sfz.json",
+  "name": "Drum-Pre-01-Rock-Kit"
+}

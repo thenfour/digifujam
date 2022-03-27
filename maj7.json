@@ -254,14 +254,14 @@
       "seqPresetBankID": "sfzAcGt",
       "sfzArray": [
         {
-          "gain": 2.5,
+          "gain": 3.5,
           "transpose": 0,
           "sfzURL": "/sfz/025_Steel_Guitar/025_Steel_Guitar.sfz.json",
           "sfzExtendRange": true,
           "name": "025_Steel_Guitar",
           "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.76,
+            "velCurve": 3.5,
+            "velAmpMod": 0.0,
             "adjustFinetune": 0,
             "adjustA": 0,
             "adjustD": 0,
@@ -1046,40 +1046,17 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
       "seqPresetBankID": "seqdrums",
+      "transpose": 0,
+      "ignoreLoop": true,
+      "sfzForceOneShot": true,
       "sequencerDevice": {
         "legendRef": "DrumsA"
       },
       "name": "Drum kits",
       "sfzArray": [
         {
-          "gain": 1,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/808vs909.sfz.json",
-          "name": "808 vs 909",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
-        },
-        {
-          "gain": 1.6,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/jazzy/jazz.sfz.json",
-          "name": "Jazzy",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
+          "sfzURL": "/sfz/Drum-Pre-08-808-Kit/Drum-Pre-08-808-Kit.sfz.json",
+          "name": "CS6R 808"
         },
         {
           "gain": 0.66,
@@ -1096,11 +1073,26 @@
             "adjustR": 0
           }
         },
+        
+        {
+          "sfzURL": "/sfz/Drum-Pre-02-House-Kit/Drum-Pre-02-House-Kit.sfz.json",
+          "name": "CS6R House",
+          "gain": 0.9
+        },
+        {
+          "sfzURL": "/sfz/Drum-Pre-04-Trance-Kit/Drum-Pre-04-Trance-Kit.sfz.json",
+          "name": "CS6R Trance"
+        },
+        {
+          "sfzURL": "/sfz/Drum-Pre-05-Nasty-Kit/Drum-Pre-05-Nasty-Kit.sfz.json",
+          "name": "CS6R Nasty"
+        },
+
         {
           "gain": 1.6,
           "transpose": 0,
-          "sfzURL": "/drum-samples/SC88/sc88.sfz.json",
-          "name": "SC88",
+          "sfzURL": "/drum-samples/jazzy/jazz.sfz.json",
+          "name": "Jazzy",
           "sfzPatch": {
             "velCurve": 2.0,
             "velAmpMod": 0.85,
@@ -1111,28 +1103,14 @@
             "adjustR": 0
           }
         },
-        {
-          "gain": 1.3,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/SecretOfManaExt/SecretOfManaExt.sfz.json",
-          "name": "SecretOfManaExt",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
-        },
+
         {
           "gain": 1.6,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,
           "sfzURL": "/sfz/User-61-XV-BrushKit/User-61-XV-BrushKit.sfz.json",
-          "name": "User-61-XV-BrushKit",
+          "name": "XV 61-BrushKit",
           "sfzPatch": {
             "velCurve": 2.0,
             "velAmpMod": 0.85,
@@ -1144,7 +1122,12 @@
           }
         },
         {
-          "gain": 3.5,
+          "sfzURL": "/sfz/Drum-Pre-06-Brush-Kit/Drum-Pre-06-Brush-Kit.sfz.json",
+          "name": "CS6R Brush"
+        },
+
+        {
+          "gain": 3.0,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,
@@ -1161,22 +1144,16 @@
           }
         },
         {
-          "gain": 4.2,
-          "transpose": 0,
-          "ignoreLoop": true,
-          "sfzForceOneShot": true,
-          "sfzURL": "/sfz/032_Jazz/032_Jazz.sfz.json",
-          "name": "032_Jazz",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
+          "sfzURL": "/sfz/Drum-Pre-01-Rock-Kit/Drum-Pre-01-Rock-Kit.sfz.json",
+          "name": "CS6R Rock"
+        },
+        {
+          "sfzURL": "/sfz/Drum-Pre-03-Hip-Kit/Drum-Pre-03-Hip-Kit.sfz.json",
+          "name": "CS6R Hip",
+          "gain": 1.5
         }
+
+
       ]
     },
     {

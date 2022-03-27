@@ -132,7 +132,8 @@
     "pitch_keycenter": 42,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.9978333333333333
+    "loop_end": 0.9978333333333333,
+    "group": 1
   },
   {
     "sample": "sf2_smpl_709877469_65008.m4a",
@@ -162,7 +163,8 @@
     "pitch_keycenter": 44,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 0.875625
+    "loop_end": 0.875625,
+    "group": 1
   },
   {
     "sample": "sf2_smpl_709984554_69065.m4a",
@@ -192,7 +194,8 @@
     "pitch_keycenter": 46,
     "tune": -147,
     "loop_start": 0.00016666666666666666,
-    "loop_end": 1.3505
+    "loop_end": 1.3505,
+    "off_by": 1
   },
   {
     "sample": "sf2_smpl_710118490_62285.m4a",

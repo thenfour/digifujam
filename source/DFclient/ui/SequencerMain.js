@@ -806,7 +806,7 @@ class SequencerMain extends React.Component {
 
         const widthpx = Math.min(75, 20 + ((50 * this.state.zoom) / patternViewData.divs.length));
         const columnStyle = {width:`${widthpx}px`};
-        const heightpx = 15 + 2.5 * this.state.zoom;
+        const heightpx = 14 + 2 * this.state.zoom;
         const rowStyle = {height:`${heightpx}px`};
 
         const selectedTS = patch.timeSig;

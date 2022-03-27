@@ -60,7 +60,12 @@ legends:
     legendCssClass: "cymbal"
     cssClass: "cymbal"
 
-  - name: "Snare"
+  - name: "Snare B"
+    midiNoteValue: 40
+    legendCssClass: "snare"
+    cssClass: "snare"
+
+  - name: "Snare A"
     midiNoteValue: 38
     legendCssClass: "snare"
     cssClass: "snare"
@@ -70,7 +75,12 @@ legends:
     legendCssClass: "snare"
     cssClass: "snare"
 
-  - name: "Kick"
+  - name: "Kick A"
     midiNoteValue: 36
+    legendCssClass: "kick"
+    cssClass: "kick"
+
+  - name: "Kick B"
+    midiNoteValue: 35
     legendCssClass: "kick"
     cssClass: "kick"

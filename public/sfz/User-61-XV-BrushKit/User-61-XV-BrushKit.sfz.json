@@ -1,496 +1,499 @@
 [
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 028_0_end.m4a",
     "pitch_keycenter": 28,
     "lokey": 0,
     "hikey": 28
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 029_0_end.m4a",
     "pitch_keycenter": 29,
     "lokey": 29,
     "hikey": 29
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 030_0_end.m4a",
     "pitch_keycenter": 30,
     "lokey": 30,
     "hikey": 30
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 031_0_end.m4a",
     "pitch_keycenter": 31,
     "lokey": 31,
     "hikey": 31
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 032_0_end.m4a",
     "pitch_keycenter": 32,
     "lokey": 32,
     "hikey": 32
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 033_0_end.m4a",
     "pitch_keycenter": 33,
     "lokey": 33,
     "hikey": 33
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 034_0_end.m4a",
     "pitch_keycenter": 34,
     "lokey": 34,
     "hikey": 34
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 035_0_end.m4a",
     "pitch_keycenter": 35,
     "lokey": 35,
     "hikey": 35
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 036_0_end.m4a",
     "pitch_keycenter": 36,
     "lokey": 36,
     "hikey": 36
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 037_0_end.m4a",
     "pitch_keycenter": 37,
     "lokey": 37,
     "hikey": 37
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 038_0_end.m4a",
     "pitch_keycenter": 38,
     "lokey": 38,
     "hikey": 38
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 039_0_end.m4a",
     "pitch_keycenter": 39,
     "lokey": 39,
     "hikey": 39
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 040_0_end.m4a",
     "pitch_keycenter": 40,
     "lokey": 40,
     "hikey": 40
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 041_0_end.m4a",
     "pitch_keycenter": 41,
     "lokey": 41,
     "hikey": 41
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 042_0_end.m4a",
     "pitch_keycenter": 42,
     "lokey": 42,
-    "hikey": 42
+    "hikey": 42,
+    "group": 1
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 043_0_end.m4a",
     "pitch_keycenter": 43,
     "lokey": 43,
     "hikey": 43
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 044_0_end.m4a",
     "pitch_keycenter": 44,
     "lokey": 44,
-    "hikey": 44
+    "hikey": 44,
+    "group": 1
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 045_0_end.m4a",
     "pitch_keycenter": 45,
     "lokey": 45,
     "hikey": 45
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 046_0_end.m4a",
     "pitch_keycenter": 46,
     "lokey": 46,
-    "hikey": 46
+    "hikey": 46,
+    "off_by": 1
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 047_0_end.m4a",
     "pitch_keycenter": 47,
     "lokey": 47,
     "hikey": 47
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 048_0_end.m4a",
     "pitch_keycenter": 48,
     "lokey": 48,
     "hikey": 48
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 049_0_end.m4a",
     "pitch_keycenter": 49,
     "lokey": 49,
     "hikey": 49
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 050_0_end.m4a",
     "pitch_keycenter": 50,
     "lokey": 50,
     "hikey": 50
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 051_0_end.m4a",
     "pitch_keycenter": 51,
     "lokey": 51,
     "hikey": 51
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 052_0_end.m4a",
     "pitch_keycenter": 52,
     "lokey": 52,
     "hikey": 52
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 053_0_end.m4a",
     "pitch_keycenter": 53,
     "lokey": 53,
     "hikey": 53
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 054_0_end.m4a",
     "pitch_keycenter": 54,
     "lokey": 54,
     "hikey": 54
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 055_0_end.m4a",
     "pitch_keycenter": 55,
     "lokey": 55,
     "hikey": 55
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 056_0_end.m4a",
     "pitch_keycenter": 56,
     "lokey": 56,
     "hikey": 56
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 057_0_end.m4a",
     "pitch_keycenter": 57,
     "lokey": 57,
     "hikey": 57
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 058_0_end.m4a",
     "pitch_keycenter": 58,
     "lokey": 58,
     "hikey": 58
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 059_0_end.m4a",
     "pitch_keycenter": 59,
     "lokey": 59,
     "hikey": 59
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 060_0_end.m4a",
     "pitch_keycenter": 60,
     "lokey": 60,
     "hikey": 60
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 061_0_end.m4a",
     "pitch_keycenter": 61,
     "lokey": 61,
     "hikey": 61
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 062_0_end.m4a",
     "pitch_keycenter": 62,
     "lokey": 62,
     "hikey": 62
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 063_0_end.m4a",
     "pitch_keycenter": 63,
     "lokey": 63,
     "hikey": 63
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 064_0_end.m4a",
     "pitch_keycenter": 64,
     "lokey": 64,
     "hikey": 64
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 065_0_end.m4a",
     "pitch_keycenter": 65,
     "lokey": 65,
     "hikey": 65
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 066_0_end.m4a",
     "pitch_keycenter": 66,
     "lokey": 66,
     "hikey": 66
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 067_0_end.m4a",
     "pitch_keycenter": 67,
     "lokey": 67,
     "hikey": 67
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 068_0_end.m4a",
     "pitch_keycenter": 68,
     "lokey": 68,
     "hikey": 68
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 069_0_end.m4a",
     "pitch_keycenter": 69,
     "lokey": 69,
     "hikey": 69
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 070_0_end.m4a",
     "pitch_keycenter": 70,
     "lokey": 70,
     "hikey": 70
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 071_0_end.m4a",
     "pitch_keycenter": 71,
     "lokey": 71,
     "hikey": 71
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 072_0_end.m4a",
     "pitch_keycenter": 72,
     "lokey": 72,
     "hikey": 72
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 073_0_end.m4a",
     "pitch_keycenter": 73,
     "lokey": 73,
     "hikey": 73
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 074_0_end.m4a",
     "pitch_keycenter": 74,
     "lokey": 74,
     "hikey": 74
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 075_0_end.m4a",
     "pitch_keycenter": 75,
     "lokey": 75,
     "hikey": 75
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 076_0_end.m4a",
     "pitch_keycenter": 76,
     "lokey": 76,
     "hikey": 76
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 077_0_end.m4a",
     "pitch_keycenter": 77,
     "lokey": 77,
     "hikey": 77
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 078_0_end.m4a",
     "pitch_keycenter": 78,
     "lokey": 78,
     "hikey": 78
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 079_0_end.m4a",
     "pitch_keycenter": 79,
     "lokey": 79,
     "hikey": 79
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 080_0_end.m4a",
     "pitch_keycenter": 80,
     "lokey": 80,
     "hikey": 80
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 081_0_end.m4a",
     "pitch_keycenter": 81,
     "lokey": 81,
     "hikey": 81
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 082_0_end.m4a",
     "pitch_keycenter": 82,
     "lokey": 82,
     "hikey": 82
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 083_0_end.m4a",
     "pitch_keycenter": 83,
     "lokey": 83,
     "hikey": 83
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 084_0_end.m4a",
     "pitch_keycenter": 84,
     "lokey": 84,
     "hikey": 84
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 085_0_end.m4a",
     "pitch_keycenter": 85,
     "lokey": 85,
     "hikey": 85
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 086_0_end.m4a",
     "pitch_keycenter": 86,
     "lokey": 86,
     "hikey": 86
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 087_0_end.m4a",
     "pitch_keycenter": 87,
     "lokey": 87,
     "hikey": 87
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 088_0_end.m4a",
     "pitch_keycenter": 88,
     "lokey": 88,
     "hikey": 88
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 089_0_end.m4a",
     "pitch_keycenter": 89,
     "lokey": 89,
     "hikey": 89
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 090_0_end.m4a",
     "pitch_keycenter": 90,
     "lokey": 90,
     "hikey": 90
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 091_0_end.m4a",
     "pitch_keycenter": 91,
     "lokey": 91,
     "hikey": 91
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 092_0_end.m4a",
     "pitch_keycenter": 92,
     "lokey": 92,
     "hikey": 92
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 093_0_end.m4a",
     "pitch_keycenter": 93,
     "lokey": 93,
     "hikey": 93
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 094_0_end.m4a",
     "pitch_keycenter": 94,
     "lokey": 94,
     "hikey": 94
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 095_0_end.m4a",
     "pitch_keycenter": 95,
     "lokey": 95,
     "hikey": 95
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 096_0_end.m4a",
     "pitch_keycenter": 96,
     "lokey": 96,
     "hikey": 96
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 097_0_end.m4a",
     "pitch_keycenter": 97,
     "lokey": 97,
     "hikey": 97
   },
   {
-    "ampeg_release": 0.3,
+    
     "sample": "XV-BrushKit 098_0_end.m4a",
     "pitch_keycenter": 98,
     "lokey": 98,

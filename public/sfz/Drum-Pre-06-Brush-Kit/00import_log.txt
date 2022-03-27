@@ -1,0 +1,733 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Drum-Pre-06-Brush-Kit.sfz.json
+Region count: 60
+Source samples to read: 60
+Dest samples to create: 60
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 024.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 024.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 025.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 025.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 026.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 026.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 027.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 027.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 028.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 028.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 029.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 029.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 030.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 030.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 031.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 031.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 032.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 032.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 033.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 033.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 034.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 034.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 035.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 035.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 036.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 036.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 037.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 037.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 038.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 038.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 039.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 039.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 040.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 040.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 041.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 041.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 044.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 044.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 045.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 045.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 046.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 046.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 047.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 047.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 052.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 052.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 056.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 056.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 059.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 059.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 061.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 061.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 069.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 069.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 070.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 070.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 071.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 071.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 074.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 074.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 076.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 076.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 077.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 077.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 079.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 079.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 080.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 080.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 081.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 081.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 082.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 082.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\cs6r-drumkits\Drum-Pre-06-Brush-Kit\Brush-Kit 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 083.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 068_0_end.wav from Brush-Kit 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 067_0_end.wav from Brush-Kit 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 066_0_end.wav from Brush-Kit 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 066_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123326
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 065_0_end.wav from Brush-Kit 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 064_0_end.wav from Brush-Kit 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 063_0_end.wav from Brush-Kit 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 062_0_end.wav from Brush-Kit 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 062_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 061.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 061_0_end.wav from Brush-Kit 061.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 061_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 061_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 060_0_end.wav from Brush-Kit 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 059.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185066
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 059_0_end.wav from Brush-Kit 059.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 059_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 059_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176246
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 058_0_end.wav from Brush-Kit 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 432026
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 057_0_end.wav from Brush-Kit 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 056.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 056_0_end.wav from Brush-Kit 056.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 056_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 056_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193886
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 055_0_end.wav from Brush-Kit 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 054_0_end.wav from Brush-Kit 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167426
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 053_0_end.wav from Brush-Kit 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 052.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167426
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 052_0_end.wav from Brush-Kit 052.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 052_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 052_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149786
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 051_0_end.wav from Brush-Kit 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 051_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123326
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 050_0_end.wav from Brush-Kit 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 308546
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 049_0_end.wav from Brush-Kit 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123326
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 048_0_end.wav from Brush-Kit 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 047.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140966
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 047_0_end.wav from Brush-Kit 047.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 047_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 047_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 045.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132146
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 045_0_end.wav from Brush-Kit 045.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 045_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 045_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 046.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 046_0_end.wav from Brush-Kit 046.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 046_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 046_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 044.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 044_0_end.wav from Brush-Kit 044.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 044_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 044_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132146
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 043_0_end.wav from Brush-Kit 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 70406
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 042_0_end.wav from Brush-Kit 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 041.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167426
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 041_0_end.wav from Brush-Kit 041.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 041_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 041_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 040.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 040_0_end.wav from Brush-Kit 040.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 040_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 040_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 039.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 039_0_end.wav from Brush-Kit 039.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 039_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 039_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 038.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 038_0_end.wav from Brush-Kit 038.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 038_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 038_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 037.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 037_0_end.wav from Brush-Kit 037.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 037_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 037_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 036.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 036_0_end.wav from Brush-Kit 036.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 036_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 036_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 035.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 035_0_end.wav from Brush-Kit 035.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 035_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 035_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 034.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 034_0_end.wav from Brush-Kit 034.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 034_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 034_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 033.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 033_0_end.wav from Brush-Kit 033.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 033_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 033_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 032.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 032_0_end.wav from Brush-Kit 032.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 032_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 032_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 031.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 031_0_end.wav from Brush-Kit 031.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 031_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 031_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 030.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 030_0_end.wav from Brush-Kit 030.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 030_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 030_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 029.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123326
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 029_0_end.wav from Brush-Kit 029.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 029_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 029_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 028.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123326
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 028_0_end.wav from Brush-Kit 028.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 028_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 028_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 027.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 027_0_end.wav from Brush-Kit 027.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 027_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 027_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 026.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114506
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 026_0_end.wav from Brush-Kit 026.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 026_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 026_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 025.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 025_0_end.wav from Brush-Kit 025.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 025_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 025_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 024.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 024_0_end.wav from Brush-Kit 024.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 024_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 024_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 079.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 079_0_end.wav from Brush-Kit 079.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 079_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 079_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105686
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 078_0_end.wav from Brush-Kit 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 077.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 077_0_end.wav from Brush-Kit 077.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 077_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 077_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 076.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 076_0_end.wav from Brush-Kit 076.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 076_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 076_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 075_0_end.wav from Brush-Kit 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 075_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 074.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 96866
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 074_0_end.wav from Brush-Kit 074.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 074_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 074_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 073_0_end.wav from Brush-Kit 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149786
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 072_0_end.wav from Brush-Kit 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 071.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132146
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 071_0_end.wav from Brush-Kit 071.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 071_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 071_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 070.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 70406
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 070_0_end.wav from Brush-Kit 070.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 070_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 070_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 069.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 79226
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 069_0_end.wav from Brush-Kit 069.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 069_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 069_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 080.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 70406
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 080_0_end.wav from Brush-Kit 080.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 080_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 080_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 082.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 70406
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 082_0_end.wav from Brush-Kit 082.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 082_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 082_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 026_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 026.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 027_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 027.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 028_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 028.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 029_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 029.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 030_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 030.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 031_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 031.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 032_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 032.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 033_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 033.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 034_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 034.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 035_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 035.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 036_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 036.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 037_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 037.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 038_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 038.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 039_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 039.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 040_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 040.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 041_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 041.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 044_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 044.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 046_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 046.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 045_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 045.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 047_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 047.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 049.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 050.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 052_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 052.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 056_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 056.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 057.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 059_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 059.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 061_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 061.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 062.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 066.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 068.flac.wav
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 88046
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 083_0_end.wav from Brush-Kit 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 083_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 081.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185066
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Brush-Kit 081_0_end.wav from Brush-Kit 081.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 081_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 081_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 024_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 024.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 025_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 025.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 069_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 069.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 070_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 070.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 071_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 071.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 074_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 074.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 076_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 076.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 079_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 079.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 075.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 077_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 077.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 082_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 082.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 080_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 080.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 083.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 081_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\Drum-Pre-06-Brush-Kit\Brush-Kit 081.flac.wav
+Completed processing source WAV files with 60 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_DrumPre06BrushKit",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/Drum-Pre-06-Brush-Kit/Drum-Pre-06-Brush-Kit.sfz.json",
+  "name": "Drum-Pre-06-Brush-Kit"
+}
