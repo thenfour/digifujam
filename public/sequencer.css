@@ -150,7 +150,7 @@
 }
 
 .sequencerMain button.playButton, .sequencerMain button.cueButton {
-    height: 61px;
+    height: 80px;
     width: 90px;
     margin: 3px 3px;
 }
@@ -181,7 +181,7 @@
 }
 
 .sequencerMain button.playButton>* {
-    font-size: 60px;
+    font-size: 72px;
 }
 
 .sequencerMain .pianoRollScrollCont {
@@ -1170,9 +1170,13 @@
 
 
 .sequencerMain fieldset.seqMode {
-    border-left: 3px solid #484;
-    background-color: #484;
+    border-left: 3px solid #1f201f;
+    background-color: #4e814e;
     color: #eee;
+}
+
+.sequencerMain fieldset.seqMode .legend {
+    color:#bbb;
 }
 
 .sequencerMain fieldset.seqMode .paramValue {
@@ -1182,3 +1186,39 @@
     width: auto;
     padding: 0px 6px;
 }
+
+
+
+@keyframes baseNoteListening {
+    0% {
+        background-color:var(--red);
+    }
+    15% {
+        background-color:#000;
+    }
+    50% {
+        background-color:#000;
+    }
+    85% {
+        background-color:var(--red);
+    }
+}
+
+
+.sequencerMain fieldset.seqMode .baseNote .paramValue.active {
+    --red: #b44;
+    background-color:var(--red);
+    animation: baseNoteListening .6s linear infinite ;
+}
+
+.legend.baseNote.disabled {
+    color:#444;
+}
+
+
+.sequencerMain fieldset.seqMode .baseNote .paramValue.disabled {
+    color:#444;
+    background-color:#0000;
+    box-shadow:none;
+}
+

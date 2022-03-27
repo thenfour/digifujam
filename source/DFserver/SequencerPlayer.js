@@ -27,7 +27,7 @@ const gChunkSizeFactor = 1.15;
 // - respect cell.isMuted
 // - respect patch transposition by calling patch.AdjustMidiNoteValue(cell.midiNoteValue)
 // - set length, respecting swing and patch speed.
-function MappingFunction_None(params) {
+function MappingFunction_Seq(params) {
   const ret = [];
   for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
     const cell = params.div.noteOns[irow];
@@ -188,12 +188,12 @@ class InstrumentSequencerPlayer {
     this.noteTracker = new DFMusic.HeldNoteTracker();
     this.divMappers = {};
 
-    this.divMappers[Seq.SequencerArpMapping.AsPlayed] = MappingFunction_AsPlayed;
-    this.divMappers[Seq.SequencerArpMapping.x_Up] = MappingFunction_XUp;
-    this.divMappers[Seq.SequencerArpMapping.x_Down] = MappingFunction_XDown;
-    this.divMappers[Seq.SequencerArpMapping.x_UpDown] = MappingFunction_XUpDown;
-    this.divMappers[Seq.SequencerArpMapping.Random] = MappingFunction_Random;
-    this.divMappers[Seq.SequencerArpMapping.None] = MappingFunction_None;
+    this.divMappers["ArpMap_AsPlayed"] = MappingFunction_AsPlayed;
+    this.divMappers["ArpMap_ArpUp"] = MappingFunction_XUp;
+    this.divMappers["ArpMap_ArpDown"] = MappingFunction_XDown;
+    this.divMappers["ArpMap_ArpUpDown"] = MappingFunction_XUpDown;
+    this.divMappers["ArpMap_Random"] = MappingFunction_Random;
+    this.divMappers["ArpMap_Seq"] = MappingFunction_Seq;
 
     this.#invokeTimer();
   }
@@ -278,10 +278,9 @@ class InstrumentSequencerPlayer {
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
     const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
 
-    const mapStyle = seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator ? seq.GetArpMapping() : Seq.SequencerArpMapping.None;
-    const divMappingFunction = this.divMappers[mapStyle];
+    const divMappingFunction = this.divMappers[seq.GetArpMapping().id];
     if (!divMappingFunction) {
-      console.log(`!! Unsupported mapping style ${mapStyle}`);
+      console.log(`!! Unsupported mapping style ${seq.GetArpMapping().id}`);
       return;
     }
 

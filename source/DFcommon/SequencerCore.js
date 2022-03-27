@@ -15,28 +15,41 @@ const SequencerSettings = {
   MaxNoteOnsPerColumn : 8,
 };
 
-// NB: these are also used as CSS classes.
-const SequencerPlayMode = {
-  Normal : "Seq",
-  Arpeggiator : "Arp",
-};
+function ArpMapping(id, caption, swallowNotes, useBaseNote) {
+  return {
+    id,
+    caption,
+    swallowNotes,
+    useBaseNote,
+  };
+}
 
-const SequencerArpMapping = {
-  //Spread : "Spread",
-  // FillUp : "FillUp",
-  // FillDown : "FillDown",
-  x_Up : "ArpUp", // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
-  x_Down : "ArpDown",
-  x_UpDown : "ArpUpDown",
-  // ArpInward : "ArpInward",
-  // ArpOutward : "ArpOutward",
-  // ArpInOut : "ArpInOut",
-  Random : "Random", // play a random playing note for every pattern note
-  AsPlayed : "AsPlayed", // play all notes as they are; only use the rhythm & velocity of the pattern
-  TranspSeq : "TranspSeq", // transpose the sequence based on base note
-  TranspHeld : "TranspHeld", // transpose the HELD chord based on seq base note. Q: what about when sequencer playing polyphony?
-  None : "None", // no mapping is done; only pattern notes are played.
-};
+const SequencerArpMapping = [
+  ArpMapping("ArpMap_Seq","Seq", false, false), // no mapping is done; only pattern notes are played.
+  ArpMapping("ArpMap_ArpUp","ArpUp", true, false), // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
+  ArpMapping("ArpMap_ArpDown","ArpDown", true, false),
+  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", true, false),
+  ArpMapping("ArpMap_Random","Random", true, false), // play a random playing note for every pattern note
+  ArpMapping("ArpMap_AsPlayed","AsPlayed", true, false), // play all notes as they are; only use the rhythm & velocity of the pattern
+  ArpMapping("ArpMap_TranspSeq","TranspSeq", true, true), // play the sequence, transposed by playing note relative to base note
+  //ArpMapping("ArpMap_TranspHeld","TranspHeld", true, true), // transpose the HELD chord based on seq base note. Q: what about when sequencer playing polyphony?
+];
+const gDefaultArpMapping = SequencerArpMapping[0];
+
+  //"Spread",
+  // "FillUp",
+  // "FillDown",
+  //ArpMapping(: "ArpInward", true),
+  //ArpMapping(: "ArpOutward", true),
+  //ArpMapping(: "ArpInOut", true),
+
+
+
+function GetArpMappingByID(mappingID) {
+  const ret = SequencerArpMapping.find(m => m.id === mappingID);
+  if (!ret) return gDefaultArpMapping;
+  return ret;
+}
 
 const eDivisionType = {
   MajorBeat : "MajorBeat",
@@ -833,9 +846,8 @@ class SequencerDevice {
       Object.assign(this, params);
 
     this.isPlaying ??= false;          // false while cueued
-    this.playMode ??= SequencerPlayMode.Normal;
     this.baseNote ??= 60; // middle C
-    this.arpMapping ??= SequencerArpMapping.None;
+    this.arpMapping ??= gDefaultArpMapping;
 
     this.livePatch = new SequencerPatch(this.livePatch);
   }
@@ -931,26 +943,20 @@ class SequencerDevice {
   SetBaseNote(note) {
     this.baseNote = note;
   }
-  SetPlayMode(mode) {
-    this.playMode = mode;
-  }
 
-  GetBaseNote(note) {
+  GetBaseNote() {
     return this.baseNote;
   }
-  GetPlayMode(mode) {
-    return this.playMode;
-  }
-
   GetArpMapping() {
     return this.arpMapping;
   }
   SetArpMapping(mapping) {
-    this.arpMapping = mapping;
+    this.arpMapping = GetArpMappingByID(mapping);
   }
 
   ShouldLiveNoteOnsAndOffsBeSwallowed() {
-    return this.isPlaying && (this.playMode != SequencerPlayMode.Normal);
+    if (!this.isPlaying) return false;
+    return this.arpMapping.swallowNotes;
   }
 
   // client-side; handles incoming server msgs
@@ -1784,7 +1790,6 @@ module.exports = {
   SequencerSettings,
   SequencerPatch,
   SequencerDevice,
-  SequencerPlayMode,
   IsValidSequencerPatternIndex,
   IsValidSequencerSpeed,
   IsValidSequencerSwing,

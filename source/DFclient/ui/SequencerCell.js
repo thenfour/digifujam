@@ -157,16 +157,18 @@ class SequencerCell extends React.Component {
     if (this.props.context.isReadOnly) return;
     // toggle a 1-div-length 
     // convert this click to an ops struct
-    let ops = null;
-    let playingNotes = this.props.context.app.GetMyCurrentlyPlayingNotes();
-
-    playingNotes = playingNotes.map(n => patch.PhysicalToPatternMidiNoteValue(n));
-
-    if (!this.dragData) return; // dragging something we are not tracking... bail.
 
     const seq = this.props.context.instrument.sequencerDevice;
     const legend = seq.GetNoteLegend();
     const patternView = Seq.GetPatternView(seq.livePatch, legend);
+
+    let ops = null;
+    // if the mapping mode swallows notes, it means you're playing stuff while editing. don't consider playing notes while editing.
+    let playingNotes = seq.GetArpMapping().swallowNotes ? [] : this.props.context.app.GetMyCurrentlyPlayingNotes();
+
+    playingNotes = playingNotes.map(n => patch.PhysicalToPatternMidiNoteValue(n));
+
+    if (!this.dragData) return; // dragging something we are not tracking... bail.
 
     // sanitize playing notes. if you're playing notes which are out of range, then drop them.
     // we could be "smart" and basically if you try to play out of range, then attempt to bring them into frame using octave transp
