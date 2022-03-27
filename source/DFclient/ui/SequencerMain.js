@@ -1001,7 +1001,7 @@ class SequencerMain extends React.Component {
                                             {seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator && this.state.isArpMappingExpanded &&
                                                 <ClickAwayListener onClickAway={() => { this.setState({isArpMappingExpanded:false});}}>
                                                 <div className='dialog'>
-                                                    <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>Select an arpeggiator mapping mode.</legend>
+                                                    <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>How should the arpeggiator map held notes to pattern notes?</legend>
                                                     <ul className='dropDownMenu'>
                                                         {arpMappingList}
                                                     </ul>

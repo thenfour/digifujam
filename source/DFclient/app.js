@@ -1151,8 +1151,17 @@ class DigifuApp {
     if (foundInstrument == null) {
       return;
     }
+
+    let foundUser = this.roomState.FindUserByID(foundInstrument.instrument.controlledByUserID);
+    if (!foundUser) {
+      // how could a preset op be done if nobody is controlling? but no reason to forbid it atm.
+    }
+
     const bank = this.roomState.GetSeqPresetBankForInstrument(foundInstrument.instrument);
-    foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank, this.synth, foundInstrument.instrument);
+    foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank, () => {
+      this.synth.AllNotesOff(foundInstrument.instrument);
+      this.handleUserAllNotesOff(foundUser?.user, foundInstrument.instrument);
+    });
     this.stateChangeHandler();
   }
 

@@ -3,6 +3,10 @@ const DFMusic = require('../DFcommon/DFMusic');
 const DFU = require('../DFcommon/dfutil');
 const DF = require('../DFcommon/DFCommon');
 
+// when you make changes that require rescheduling sequencer notes, like note ons during arpeggiator mode, or changing
+// any seq params, "throttle" recalcs by delaying a bit.
+const gRecalcLatencyMS = 30;
+
 // timer interval duration should be balanced:
 // * too long and it will incur too much processing (meaning noticeable periodic spikes in processing)
 // * too short and system will be crowded with the overhead of this thing.
@@ -64,6 +68,29 @@ function MappingFunction_AsPlayed(params) {
   }));
 }
 
+// ignore pattern note value, use a random playing note
+function MappingFunction_Random(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    //const ni = (params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex) % params.heldNotes.length;
+    const ni = Math.random() * params.heldNotes.length;
+    const heldNote = params.heldNotes.at(ni);
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
 // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
 function MappingFunction_XUp(params) {
   const ret = [];
@@ -74,9 +101,10 @@ function MappingFunction_XUp(params) {
     if (cell.isMuted)
       continue;
 
-    const ni = (params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex) % params.heldNotes.length;
+    const absNoteIndex = params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex;
+    const ni = absNoteIndex % params.heldNotes.length;
     const heldNote = params.heldNotes.at(ni);
-    console.log(`absPatternFloor ${params.absPatternFloor} * patternNoteCount ${params.patternView.patternNoteCount} + patternNoteIndex ${cell.patternNoteIndex} % heldNotes.length ${params.heldNotes.length} = ${ni} = note ${heldNote.note}`);
+    //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
     ret.push({
       velocity: cell.velocity,
       midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
@@ -86,6 +114,65 @@ function MappingFunction_XUp(params) {
   }
   return ret;
 }
+
+
+// ignore pattern note value, just go DOWN in sequence according to rhythm and polyphony of x_Uprn
+function MappingFunction_XDown(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    const absNoteIndex = params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex;
+    const ni = absNoteIndex % params.heldNotes.length;
+    const heldNote = params.heldNotes.at(params.heldNotes.length - 1 - ni);
+    //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
+
+// ignore pattern note value, just go DOWN in sequence according to rhythm and polyphony of x_Uprn
+function MappingFunction_XUpDown(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    const absNoteIndex = params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex;
+    const period = params.heldNotes.length < 2 ? 1 : ((params.heldNotes.length * 2) - 2); // - 2 to not repeat top or bottom notes.
+    let ni = absNoteIndex % period;
+    if (ni >= params.heldNotes.length) {
+      // after the "up" segment, reverse.
+      ni = period - ni;
+      // len=5. p=8
+      // 0 1 2 3 4 5 6 7
+      // 0 1 2 3 4 3 2 1
+    }
+    const heldNote = params.heldNotes.at(ni);
+    //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
 
 
 
@@ -104,6 +191,9 @@ class InstrumentSequencerPlayer {
 
     this.divMappers[Seq.SequencerArpMapping.AsPlayed] = MappingFunction_AsPlayed;
     this.divMappers[Seq.SequencerArpMapping.x_Up] = MappingFunction_XUp;
+    this.divMappers[Seq.SequencerArpMapping.x_Down] = MappingFunction_XDown;
+    this.divMappers[Seq.SequencerArpMapping.x_UpDown] = MappingFunction_XUpDown;
+    this.divMappers[Seq.SequencerArpMapping.Random] = MappingFunction_Random;
     this.divMappers[Seq.SequencerArpMapping.None] = MappingFunction_None;
 
     this.#invokeTimer();
@@ -115,9 +205,12 @@ class InstrumentSequencerPlayer {
       clearInterval(this.timer);
       this.timer = null;
     }
-    setTimeout(() => {
+    if (this.latentTimer) {
+      clearTimeout(this.latentTimer);
+    }
+    this.latentTimer = setTimeout(() => {
       this.timerProc();
-    }, 16);
+    }, gRecalcLatencyMS);
   }
 
   OnChanged() {
@@ -199,6 +292,7 @@ class InstrumentSequencerPlayer {
     const divMappingFunction = this.divMappers[mapStyle];
 
     const heldNotesByNoteValue = heldNotes.heldNotesByNoteValue;
+    //console.log(`==== scheduling. heldnotes = ${JSON.stringify(heldNotesByNoteValue)}`);
 
     // scheduling time must be in abs quarters.
     // this walks through all pattern divs, and for all notes in each div, schedules note on/off event pairs.
@@ -208,6 +302,7 @@ class InstrumentSequencerPlayer {
     for (let idiv = 0; idiv < patternView.divsWithNoteOn.length; ++idiv) {
       const div = patternView.divsWithNoteOn[idiv];
       const divBeginPatternQuarter = div.swingBeginPatternQuarter; // these are pattern quarters. which means they're speed-adjusted.
+      let tempAbsPatternFloor = absPatternFloor;
 
       // figure out which abs pattern to start from. if the "current" is passed, then advance a whole pattern forward in abs time.
       let divFirstFutureAbsQuarter = null; // speed-adjusted quarters.
@@ -217,6 +312,7 @@ class InstrumentSequencerPlayer {
         //        ^div                     [-thisdiv---]               [-thisdiv---]
         //                                        ^abs playhead pattern frac
         //                                 ^this is too old            ^so use this.
+        tempAbsPatternFloor += 1;
         divFirstFutureAbsQuarter = Math.ceil(patternPlayheadInfo.absPatternFloat) * patternPlayheadInfo.patternLengthQuarters + divBeginPatternQuarter;
       } else {
         //    -pattern------------][-pattern------------------][-pattern---------------------   <-- abs timeline
@@ -227,7 +323,6 @@ class InstrumentSequencerPlayer {
       }
 
       // now "loop" this pattern for this note until out of window.
-      let tempAbsPatternFloor = absPatternFloor;
       for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter <= windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
         const divEvents = divMappingFunction({
           heldNotes: heldNotesByNoteValue,
@@ -237,10 +332,15 @@ class InstrumentSequencerPlayer {
           absPatternFloor: tempAbsPatternFloor,
           patternView
         });
+        //console.log(`Mapping result: ` + JSON.stringify(divEvents));
         const absQuarter = cursorShiftedQuarter / patch.speed;
         for (let ievent = 0; ievent < divEvents.length; ++ ievent) {
           const e = divEvents[ievent];
-          events.push(Object.assign({ absQuarter }, e));
+          events.push(Object.assign({
+            absQuarter,
+            //tempAbsPatternFloor,
+            //eventLen: events.length,
+          }, e));
         }
         tempAbsPatternFloor ++;
       }
@@ -249,7 +349,7 @@ class InstrumentSequencerPlayer {
 
     //console.log(`scheduling ${events.length} seq events in SA window [${patternPlayheadInfo.shiftedAbsQuarter} - ${windowEndShiftedQuarters}] and SA minmax [${minAbsQuarter}, ${maxAbsQuarter}]`);
     //console.log(`window length quarters: ${windowLengthQuarters}, scheduling ${events.length} events`);
-    //console.log(JSON.stringify(events));
+    //console.log(`Events to schedule: ` + JSON.stringify(events));
 
     this.quantizer.setSequencerEvents(this.instrument.instrumentID, events, patternView, true, this.instrument.sequencerDevice.startFromAbsQuarter);
   }

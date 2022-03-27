@@ -26,15 +26,16 @@ const SequencerPlayMode = {
 };
 
 const SequencerArpMapping = {
-  //Interpolate : "Interpolate",
+  //Spread : "Spread",
   // FillUp : "FillUp",
   // FillDown : "FillDown",
-  x_Up : "x_Up", // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
-  // x_Down : "x_Down",
-  // x_UpDown : "x_UpDown",
-  // x_Converge : "x_Converge",
-  // x_Diverge : "x_Diverge",
-  // Random : "Random",
+  x_Up : "ArpUp", // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
+  x_Down : "ArpDown",
+  x_UpDown : "ArpUpDown",
+  // x_Converge : "ArpIn",
+  // x_Diverge : "ArpOut",
+  // x_Converge : "ArpIn",
+  Random : "Random", // play a random playing note for every pattern note
   AsPlayed : "AsPlayed", // play all notes as they are; only use the rhythm & velocity of the pattern
   //Transp : "Transp", // play all playing notes, but transpose them. how much to transpose is ((patternNote - patternLowestNote) + playingNote). Would be interesting to be able to set the base note but you think anyone's actually going to do that?
   None : "None", // no mapping is done; only pattern notes are played.
@@ -956,7 +957,7 @@ class SequencerDevice {
   }
 
   // client-side; handles incoming server msgs
-  SeqPresetOp(data, bank, synth, instrument) {
+  SeqPresetOp(data, bank, allNotesOffRoutine) {
     switch (data.op) {
     case "load": {
       let preset = bank.GetPresetById(data.presetID);
@@ -1001,7 +1002,7 @@ class SequencerDevice {
     }
     case "SeqSetPlayMode": {
       this.SetPlayMode(data.mode);
-      synth.AllNotesOff(instrument); // changing play mode means swallowing events (like note off). prevent lingering notes.
+      allNotesOffRoutine(); // changing play mode means swallowing events (like note off). prevent lingering notes.
       return true;
     }
     case "SeqSetBaseNote": {
