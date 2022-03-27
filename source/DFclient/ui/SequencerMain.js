@@ -721,29 +721,14 @@ class SequencerMain extends React.Component {
             });
         }
 
-        onClickPlayMode = () => {
+        onClickPlayMode = (mode) => {
             if (this.props.observerMode) return;
             const seq = this.props.instrument.sequencerDevice;
-            switch (seq.GetPlayMode()) {
-                case Seq.SequencerPlayMode.Normal:
-                    this.props.app.SeqPresetOp({
-                        op: "SeqSetPlayMode",
-                        mode: Seq.SequencerPlayMode.KeyTrigger,
-                    });
-                    break;
-                case Seq.SequencerPlayMode.KeyTrigger:
-                    this.props.app.SeqPresetOp({
-                        op: "SeqSetPlayMode",
-                        mode: Seq.SequencerPlayMode.Arpeggiator,
-                    });
-                    break;
-                case Seq.SequencerPlayMode.Arpeggiator:
-                    this.props.app.SeqPresetOp({
-                        op: "SeqSetPlayMode",
-                        mode: Seq.SequencerPlayMode.Normal,
-                    });
-                    break;
-            }
+            this.props.app.SeqPresetOp({
+                op: "SeqSetPlayMode",
+                mode,
+            });
+            this.setState({showPlayModeDropdown:false});
         }
 
         BaseNoteNoteOnListener = (e) => {
@@ -861,6 +846,16 @@ class SequencerMain extends React.Component {
              );
          });
 
+         const seqPlayModeList = this.state.showPlayModeDropdown && Object.values(Seq.SequencerPlayMode).map(m => {
+            return (
+                <li
+                   key={m}
+                   onClick={() => this.onClickPlayMode(m)}
+                   className={seq.GetPlayMode() === m ? " selected" : ""}
+                   >{m}</li>
+            );
+        });
+
          const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
          const speedList = this.state.isSpeedExpanded && gSpeeds.sortedValues.map(s => {
             return (
@@ -971,43 +966,7 @@ class SequencerMain extends React.Component {
                                     <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
                                                 <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
                                             </button>
-                                            <button
-                                                className={'cueButton' + clickableIfEditable + " " + seq.GetPlayMode()}
-                                                title={`Play mode: ${seq.GetPlayMode()}. Click to change modes.`}
-                                                onClick={isReadOnly ? ()=>{} : this.onClickPlayMode}
-                                            >
-                                                {seq.GetPlayMode()}
-                                            </button>
 
-                                            {seq.GetPlayMode() === Seq.SequencerPlayMode.KeyTrigger &&
-                                            <button
-                                                className={'cueButton baseNote ' + clickableIfEditable + (this.state.baseNoteListening ? " active" : "")}
-                                                title={`Base note: ${DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}. Click to set a new base note. Shift+Click to use the first note of the pattern as the base note.`}
-                                                onClick={isReadOnly ? ()=>{} : this.onClickBaseNote}
-                                            >
-                                                Base:{DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}
-                                            </button>
-                                            }
-
-                                            {seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator &&
-                                            <button
-                                                className={'cueButton arpMode ' + clickableIfEditable}
-                                                onClick={isReadOnly ? ()=>{} : () => this.setState({isArpMappingExpanded:true})}
-                                            >
-                                                {seq.GetArpMapping()}
-                                            </button>
-                                            }
-
-                                            {seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator && this.state.isArpMappingExpanded &&
-                                                <ClickAwayListener onClickAway={() => { this.setState({isArpMappingExpanded:false});}}>
-                                                <div className='dialog'>
-                                                    <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>How should the arpeggiator map held notes to pattern notes?</legend>
-                                                    <ul className='dropDownMenu'>
-                                                        {arpMappingList}
-                                                    </ul>
-                                                </div>
-                                                </ClickAwayListener>
-                                            }
                                     </div>
                                 </div>
                             </fieldset>
@@ -1015,6 +974,75 @@ class SequencerMain extends React.Component {
                     </div>
                     <div className='seqTopColumn'>
                     <div className="seqTopRow">
+
+
+
+
+
+                    <fieldset className='seqMode'>
+                            <div className='paramGroup'>
+
+                            {/* MODE */}
+                            <div className='legend'>Mode</div>
+                                <div className='paramBlock'>
+                                    <div className={'paramValue seqPlayMode ' + clickableIfEditable + " " + seq.GetPlayMode()} onClick={()=> {this.setState({showPlayModeDropdown:!this.state.showPlayModeDropdown});}}>
+                                        {seq.GetPlayMode()}
+                                    </div>
+                                    {this.state.showPlayModeDropdown && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({showPlayModeDropdown:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({showPlayModeDropdown:false});}}>Select a play mode</legend>
+                                            <ul className='dropDownMenu'>
+                                                {seqPlayModeList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                        }
+                                </div>
+
+                                {/* arpMapping */}
+                                {/* <div className='legend arpMapping'>Mapping</div> */}
+                                <div className='paramBlock arpMapping'>
+                                    <div
+                                        className={'paramValue ' + clickableIfEditable + (this.state.isArpMappingExpanded ? " active" : "")}
+                                        onClick={isReadOnly ? ()=>{} : () => this.setState({isArpMappingExpanded:true})}
+                                        >
+                                        {seq.GetArpMapping()}
+                                    </div>
+                                    {this.state.isArpMappingExpanded && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({isArpMappingExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>Select an arpeggiator mapping style</legend>
+                                            <ul className='dropDownMenu'>
+                                                {arpMappingList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                    }
+                                </div>
+
+
+                                {/* base note */}
+                                <div className='legend baseNote'>@</div>
+                                <div className='paramBlock baseNote'>
+                                    <div
+                                        className={'paramValue ' + clickableIfEditable + (this.state.baseNoteListening ? " active" : "")}
+                                        onClick={(e)=> this.onClickBaseNote(e)}
+                                        title={`Click to set a new base note. Shift+Click to use the first note of the pattern as the base note.`}
+                                        >
+                                        {DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}
+                                    </div>
+                                </div>
+
+
+
+                            </div>{/* paramGroup */}
+                        </fieldset>
+
+
+
 
 
 

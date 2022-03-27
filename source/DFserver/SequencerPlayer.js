@@ -27,7 +27,6 @@ const gChunkSizeFactor = 1.15;
 // - respect cell.isMuted
 // - respect patch transposition by calling patch.AdjustMidiNoteValue(cell.midiNoteValue)
 // - set length, respecting swing and patch speed.
-// - respect keyTranspose (but i think this is really only done for key trig mode so only required for None mapping)
 function MappingFunction_None(params) {
   const ret = [];
   for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
@@ -37,7 +36,7 @@ function MappingFunction_None(params) {
 
     ret.push({
       velocity : cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(cell.midiNoteValue) + params.keyTranspose,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(cell.midiNoteValue),
       lengthQuarters : cell.thisLengthSwingQuarters / params.patch.speed,
       noteID : cell.id,
       // absQuarter is set later
@@ -62,7 +61,7 @@ function MappingFunction_AsPlayed(params) {
 
   return params.heldNotes.map(o => ({
     velocity: o.velocity,
-    midiNoteValue: params.patch.AdjustMidiNoteValue(o.note) + params.keyTranspose,
+    midiNoteValue: params.patch.AdjustMidiNoteValue(o.note),
     lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
     noteID: cell.id,
   }));
@@ -83,7 +82,7 @@ function MappingFunction_Random(params) {
     const heldNote = params.heldNotes.at(ni);
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -107,7 +106,7 @@ function MappingFunction_XUp(params) {
     //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -132,7 +131,7 @@ function MappingFunction_XDown(params) {
     //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -165,7 +164,7 @@ function MappingFunction_XUpDown(params) {
     //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note) + params.keyTranspose,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -273,15 +272,6 @@ class InstrumentSequencerPlayer {
 
     const heldNotes = this.noteTracker;
 
-    let keyTranspose = 0;
-    if (this.instrument.sequencerDevice.GetPlayMode() === Seq.SequencerPlayMode.KeyTrigger) {
-      if ((heldNotes.notesOn.size < 1) || !heldNotes.lastNoteOn) {
-        this.quantizer.setSequencerEvents(this.instrument.instrumentID, [], patternView, false, null);
-        return;
-      }
-      keyTranspose = heldNotes.lastNoteOn.note - this.instrument.sequencerDevice.GetBaseNote();
-    }
-
     const patternPlayheadInfo = this.instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
     const absPatternFloor = Math.floor(patternPlayheadInfo.absPatternFloat);
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
@@ -290,6 +280,10 @@ class InstrumentSequencerPlayer {
 
     const mapStyle = seq.GetPlayMode() === Seq.SequencerPlayMode.Arpeggiator ? seq.GetArpMapping() : Seq.SequencerArpMapping.None;
     const divMappingFunction = this.divMappers[mapStyle];
+    if (!divMappingFunction) {
+      console.log(`!! Unsupported mapping style ${mapStyle}`);
+      return;
+    }
 
     const heldNotesByNoteValue = heldNotes.heldNotesByNoteValue;
     //console.log(`==== scheduling. heldnotes = ${JSON.stringify(heldNotesByNoteValue)}`);
@@ -328,7 +322,6 @@ class InstrumentSequencerPlayer {
           heldNotes: heldNotesByNoteValue,
           div,
           patch,
-          keyTranspose,
           absPatternFloor: tempAbsPatternFloor,
           patternView
         });

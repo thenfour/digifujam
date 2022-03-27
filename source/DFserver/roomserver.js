@@ -347,7 +347,7 @@ class RoomServer {
 
       this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
 
-      // if sequencer is in arp or keytrig modes, don't play the note. rather feed the sequencer player with info.
+      // if sequencer is in arp, don't play the note. rather feed the sequencer player with info.
       if (this.sequencerPlayer.NoteOn(foundInstrument.instrument, data.note, data.velocity)) {
         return;
       }

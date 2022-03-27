@@ -17,12 +17,8 @@ const SequencerSettings = {
 
 // NB: these are also used as CSS classes.
 const SequencerPlayMode = {
-  // play is allowed even when nobody holds the instrument
-  Normal : "Normal",
-
-  // play is not allowed without holding the instrument
-  KeyTrigger : "KeyTrigger",
-  Arpeggiator : "Arpeggiator",
+  Normal : "Seq",
+  Arpeggiator : "Arp",
 };
 
 const SequencerArpMapping = {
@@ -32,12 +28,13 @@ const SequencerArpMapping = {
   x_Up : "ArpUp", // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
   x_Down : "ArpDown",
   x_UpDown : "ArpUpDown",
-  // x_Converge : "ArpIn",
-  // x_Diverge : "ArpOut",
-  // x_Converge : "ArpIn",
+  // ArpInward : "ArpInward",
+  // ArpOutward : "ArpOutward",
+  // ArpInOut : "ArpInOut",
   Random : "Random", // play a random playing note for every pattern note
   AsPlayed : "AsPlayed", // play all notes as they are; only use the rhythm & velocity of the pattern
-  //Transp : "Transp", // play all playing notes, but transpose them. how much to transpose is ((patternNote - patternLowestNote) + playingNote). Would be interesting to be able to set the base note but you think anyone's actually going to do that?
+  TranspSeq : "TranspSeq", // transpose the sequence based on base note
+  TranspHeld : "TranspHeld", // transpose the HELD chord based on seq base note. Q: what about when sequencer playing polyphony?
   None : "None", // no mapping is done; only pattern notes are played.
 };
 
