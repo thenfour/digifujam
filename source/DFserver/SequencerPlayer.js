@@ -90,8 +90,66 @@ function MappingFunction_Random(params) {
   return ret;
 }
 
-// ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
-function MappingFunction_XUp(params) {
+// play the pattern, but transposed via (lastHeldNote - basenote) + cellNote
+// this is the "key trigger" mode.
+function MappingFunction_TranspSeq(params) {
+  const ret = [];
+  if (!params.lastNoteOn) return ret;
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    let note = cell.midiNoteValue + params.lastNoteOn.note - params.seq.GetBaseNote();
+
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
+
+// there are actually plenty of decisions to take here.
+// we won't look at the note value to interpolate, but rather the index.
+// for the sequencer, it's the index of the value over the whole sequence,
+// for held notes obviously it's just 1 chord.
+// then we just spread so 0=0 and 1=1 and everything else linear in between.
+
+// noteIndexInPattern01
+function MappingFunction_Spread(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    let fidx = cell.noteIndexInPattern01 * (params.heldNotes.length - 1);
+    fidx = Math.round(fidx) | 0;
+    if (fidx >= params.heldNotes.length) --fidx;
+    
+    let note = params.heldNotes[fidx].note;
+
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
+
+
+// ignore pattern note value, just go DOWN in sequence according to rhythm and polyphony of x_Uprn
+function MappingFunction_ArpGeneric(params, indexFn) {
   const ret = [];
   if (params.heldNotes.length === 0) return ret;
 
@@ -101,9 +159,8 @@ function MappingFunction_XUp(params) {
       continue;
 
     const absNoteIndex = params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex;
-    const ni = absNoteIndex % params.heldNotes.length;
+    const ni = indexFn(absNoteIndex, params);// % params.heldNotes.length;
     const heldNote = params.heldNotes.at(ni);
-    //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
     ret.push({
       velocity: cell.velocity,
       midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
@@ -112,66 +169,98 @@ function MappingFunction_XUp(params) {
     });
   }
   return ret;
+}
+
+
+
+function IndexMap_Up(absNoteIndex, params) {
+  return absNoteIndex % params.heldNotes.length;
+}
+
+
+
+// ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
+function MappingFunction_XUp(params) {
+  return MappingFunction_ArpGeneric(params, IndexMap_Up);
+}
+
+function IndexMap_Down(absNoteIndex, params) {
+  const ni = absNoteIndex % params.heldNotes.length;
+  return params.heldNotes.length - 1 - ni;
 }
 
 
 // ignore pattern note value, just go DOWN in sequence according to rhythm and polyphony of x_Uprn
 function MappingFunction_XDown(params) {
-  const ret = [];
-  if (params.heldNotes.length === 0) return ret;
+  return MappingFunction_ArpGeneric(params, IndexMap_Down);
+}
 
-  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
-    const cell = params.div.noteOns[irow];
-    if (cell.isMuted)
-      continue;
-
-    const absNoteIndex = params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex;
-    const ni = absNoteIndex % params.heldNotes.length;
-    const heldNote = params.heldNotes.at(params.heldNotes.length - 1 - ni);
-    //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
-    ret.push({
-      velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
-      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
-      noteID: cell.id,
-    });
+function IndexMap_UpDown(absNoteIndex, params) {
+  const period = params.heldNotes.length < 2 ? 1 : ((params.heldNotes.length * 2) - 2); // - 2 to not repeat top or bottom notes.
+  let ni = absNoteIndex % period;
+  if (ni >= params.heldNotes.length) {
+    // after the "up" segment, reverse.
+    ni = period - ni;
+    // len=5. p=8
+    // 0 1 2 3 4 5 6 7
+    // 0 1 2 3 4 3 2 1
   }
-  return ret;
+  return ni;
 }
 
 
 // ignore pattern note value, just go DOWN in sequence according to rhythm and polyphony of x_Uprn
 function MappingFunction_XUpDown(params) {
-  const ret = [];
-  if (params.heldNotes.length === 0) return ret;
-
-  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
-    const cell = params.div.noteOns[irow];
-    if (cell.isMuted)
-      continue;
-
-    const absNoteIndex = params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex;
-    const period = params.heldNotes.length < 2 ? 1 : ((params.heldNotes.length * 2) - 2); // - 2 to not repeat top or bottom notes.
-    let ni = absNoteIndex % period;
-    if (ni >= params.heldNotes.length) {
-      // after the "up" segment, reverse.
-      ni = period - ni;
-      // len=5. p=8
-      // 0 1 2 3 4 5 6 7
-      // 0 1 2 3 4 3 2 1
-    }
-    const heldNote = params.heldNotes.at(ni);
-    //console.log(`iabspat ${params.absPatternFloor} * notecount ${params.patternView.patternNoteCount} + patnoteid ${cell.patternNoteIndex} = ${absNoteIndex} % heldNoteslen ${params.heldNotes.length} = ${ni}  => note ${heldNote.note}`);
-    ret.push({
-      velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
-      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
-      noteID: cell.id,
-    });
-  }
-  return ret;
+  return MappingFunction_ArpGeneric(params, IndexMap_UpDown);
 }
 
+function IndexMap_Inward(absNoteIndex, params) {
+  let ni = absNoteIndex % params.heldNotes.length;
+  // morph ni to our pattern.
+  if (ni & 1) {
+    ni = -1 - (ni - 1) / 2;// odd
+  } else {
+    ni /= 2;// even.
+  }
+  return ni;
+}
+
+
+function MappingFunction_Inward(params) {
+  return MappingFunction_ArpGeneric(params, IndexMap_Inward);
+}
+
+
+function IndexMap_Outward(absNoteIndex, params) {
+  let ni = absNoteIndex % params.heldNotes.length;
+  ni = params.heldNotes.length - 1 - ni;
+  return IndexMap_Inward(ni, params);
+}
+
+function MappingFunction_Outward(params) {
+  return MappingFunction_ArpGeneric(params, IndexMap_Outward);
+}
+
+
+// 0 1 2 3 4 5  |len=6
+// 0         1
+//   2     3
+//     4 5
+//   6     7    |period=8
+
+// 0 1 2 3 4
+// 0       1
+//   2   3
+//     4
+//   5   6
+
+// eh, todo.
+// function IndexMap_InwardOutward(absNoteIndex, params) {
+// }
+
+// function MappingFunction_InwardOutward(params) {
+//   return MappingFunction_ArpGeneric(params, IndexMap_InwardOutward);
+// }
 
 
 
@@ -194,6 +283,12 @@ class InstrumentSequencerPlayer {
     this.divMappers["ArpMap_ArpUpDown"] = MappingFunction_XUpDown;
     this.divMappers["ArpMap_Random"] = MappingFunction_Random;
     this.divMappers["ArpMap_Seq"] = MappingFunction_Seq;
+    this.divMappers["ArpMap_TranspSeq"] = MappingFunction_TranspSeq;
+    this.divMappers["ArpMap_Spread"] = MappingFunction_Spread;
+    this.divMappers["ArpMap_ArpInward"] = MappingFunction_Inward;
+    this.divMappers["ArpMap_ArpOutward"] = MappingFunction_Outward;
+    //this.divMappers["ArpMap_ArpInOut"] = MappingFunction_InwardOutward;
+    
 
     this.#invokeTimer();
   }
@@ -285,6 +380,7 @@ class InstrumentSequencerPlayer {
     }
 
     const heldNotesByNoteValue = heldNotes.heldNotesByNoteValue;
+    const lastNoteOn = heldNotes.lastNoteOn;
     //console.log(`==== scheduling. heldnotes = ${JSON.stringify(heldNotesByNoteValue)}`);
 
     // scheduling time must be in abs quarters.
@@ -319,8 +415,10 @@ class InstrumentSequencerPlayer {
       for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter <= windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
         const divEvents = divMappingFunction({
           heldNotes: heldNotesByNoteValue,
+          lastNoteOn,
           div,
           patch,
+          seq,
           absPatternFloor: tempAbsPatternFloor,
           patternView
         });

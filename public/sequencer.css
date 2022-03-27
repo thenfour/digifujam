@@ -105,6 +105,8 @@
     padding: 0px;
 }
 
+
+
 .sequencerMain .paramGroup {
     display: flex;
     /* margin-left: 12px; */
@@ -335,6 +337,7 @@
     color: #aa0;
     padding: 7px;
     background-color: #220;
+    max-width: 522px;
 }
 
 .sequencerMain ul.dropDownMenu {
@@ -1222,3 +1225,12 @@
     box-shadow:none;
 }
 
+.sequencerMain fieldset.seqMode .arpMapping .caption {
+}
+.sequencerMain fieldset.seqMode .arpMapping .description {
+    /* font-style:italic; */
+    color:#bbb;
+    padding-bottom:4px;
+    font-size:smaller;
+    max-width: 400px;
+}

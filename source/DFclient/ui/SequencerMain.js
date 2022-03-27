@@ -721,16 +721,6 @@ class SequencerMain extends React.Component {
             });
         }
 
-        onClickPlayMode = (mode) => {
-            if (this.props.observerMode) return;
-            const seq = this.props.instrument.sequencerDevice;
-            this.props.app.SeqPresetOp({
-                op: "SeqSetPlayMode",
-                mode,
-            });
-            this.setState({showPlayModeDropdown:false});
-        }
-
         BaseNoteNoteOnListener = (e) => {
             this.props.app.midi.events.removeListener("noteOn", this.BaseNoteNoteOnListener);
 
@@ -851,8 +841,8 @@ class SequencerMain extends React.Component {
                  <li
                     key={m.id}
                     onClick={() => this.onClickArpMapping(m.id)}
-                    className={seq.GetArpMapping().id === m ? " selected" : ""}
-                    >{m.caption}</li>
+                    className={seq.GetArpMapping().id === m.id ? " selected" : ""}
+                    ><div className='caption'>{m.caption}</div><div className='description'>{m.description}</div></li>
              );
          });
 
@@ -979,58 +969,6 @@ class SequencerMain extends React.Component {
 
 
 
-                    <fieldset className='seqMode'>
-                            <div className='paramGroup'>
-
-                                {/* arpMapping */}
-                                <div className='legend arpMapping'>Mode</div>
-                                <div className='paramBlock arpMapping'>
-                                    <div
-                                        className={'paramValue ' + clickableIfEditable + (this.state.isArpMappingExpanded ? " active" : "")}
-                                        onClick={isReadOnly ? ()=>{} : () => this.setState({isArpMappingExpanded:true})}
-                                        >
-                                        {seq.GetArpMapping().caption}
-                                    </div>
-                                    {this.state.isArpMappingExpanded && (
-                                        <ClickAwayListener onClickAway={() => { this.setState({isArpMappingExpanded:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>Select an arpeggiator mapping style</legend>
-                                            <ul className='dropDownMenu'>
-                                                {arpMappingList}
-                                            </ul>
-                                        </div>
-                                        </ClickAwayListener>
-                                        )
-                                    }
-                                </div>
-
-
-                                {/* base note */}
-                                <div className={'legend baseNote' + (seq.GetArpMapping().useBaseNote ? " enabled" : " disabled")}>@</div>
-                                <div className='paramBlock baseNote'>
-                                    <div
-                                        className={'paramValue ' + clickableIfEditable + (this.state.baseNoteListening ? " active" : "") + (seq.GetArpMapping().useBaseNote ? " enabled" : " disabled")}
-                                        onClick={seq.GetArpMapping().useBaseNote ? (e)=> this.onClickBaseNote(e) : ()=> {}}
-                                        title={
-                                            seq.GetArpMapping().useBaseNote ?
-                                            (this.state.baseNoteListening ?
-                                            `Play a note to set the base note. ESC or click here to cancel.`
-                                            : `Click to set a new base note. Shift+Click to use the first note of the pattern as the base note.`)
-                                            : `Base note (not used for ${seq.GetArpMapping().caption})`
-                                        }
-                                        >
-                                        {DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}
-                                    </div>
-                                </div>
-
-
-
-                            </div>{/* paramGroup */}
-                        </fieldset>
-
-
-
-
 
 
                     <fieldset>
@@ -1084,6 +1022,62 @@ class SequencerMain extends React.Component {
                             </div>
                         </div>
                         </fieldset>
+
+
+
+                        <fieldset className='seqMode'>
+                            <div className='paramGroup'>
+
+                                {/* arpMapping */}
+                                <div className='legend arpMapping'>Mode</div>
+                                <div className='paramBlock arpMapping'>
+                                    <div
+                                        className={'paramValue ' + clickableIfEditable + (this.state.isArpMappingExpanded ? " active" : "")}
+                                        onClick={isReadOnly ? ()=>{} : () => this.setState({isArpMappingExpanded:true})}
+                                        >
+                                        {seq.GetArpMapping().caption}
+                                    </div>
+                                    {this.state.isArpMappingExpanded && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({isArpMappingExpanded:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({isArpMappingExpanded:false});}}>Select method of mapping notes, based on sequencer pattern and notes you are physically holding.</legend>
+                                            <ul className='dropDownMenu'>
+                                                {arpMappingList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                    }
+                                </div>
+
+
+                                {/* base note */}
+                                <div className={'legend baseNote' + (seq.GetArpMapping().useBaseNote ? " enabled" : " disabled")}>@</div>
+                                <div className='paramBlock baseNote'>
+                                    <div
+                                        className={'paramValue ' + clickableIfEditable + (this.state.baseNoteListening ? " active" : "") + (seq.GetArpMapping().useBaseNote ? " enabled" : " disabled")}
+                                        onClick={seq.GetArpMapping().useBaseNote ? (e)=> this.onClickBaseNote(e) : ()=> {}}
+                                        title={
+                                            seq.GetArpMapping().useBaseNote ?
+                                            (this.state.baseNoteListening ?
+                                            `Play a note to set the base note. ESC or click here to cancel.`
+                                            : `Click to set a new base note. Shift+Click to use the first note of the pattern as the base note.`)
+                                            : `Base note (not used for ${seq.GetArpMapping().caption})`
+                                        }
+                                        >
+                                        {DFMusic.GetMidiNoteInfo(seq.GetBaseNote()).name}
+                                    </div>
+                                </div>
+
+
+
+                            </div>{/* paramGroup */}
+                        </fieldset>
+
+
+
+
+
 
                     <fieldset>
                             <div className='paramGroup'>

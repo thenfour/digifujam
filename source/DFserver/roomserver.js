@@ -1746,9 +1746,6 @@ class RoomServer {
         case "SeqSetSwingBasisQuarters": // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
           if (!this.SeqPreset_SeqSetSwingBasisQuarters(foundUser.user, foundInstrument.instrument, data)) return;
           break;
-        case "SeqSetPlayMode":
-          foundInstrument.instrument.sequencerDevice.SetPlayMode(data.mode);
-          break;
         case "SeqSetBaseNote":
           foundInstrument.instrument.sequencerDevice.SetBaseNote(data.note);
           break;

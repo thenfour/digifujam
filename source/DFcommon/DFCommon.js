@@ -76,7 +76,6 @@ const ClientMessages = {
     // { op:"SeqSetTranspose", transpose: }
     // { op:"SeqAdjustNoteLenDivs", divs: } // -1 to +1 divs
     // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
-    // { op:"SeqSetPlayMode", mode: }
     // { op:"SeqSetBaseNote", note: }
     // { op:"SeqSetArpMapping", mapping: }
     SeqPresetOp: "SeqPresetOp",
@@ -149,7 +148,6 @@ const ServerMessages = {
     // { instrumentID, op:"pasteBank", bank:{...} }
     // { instrumentID, op:"SeqSetTranspose", transpose: }
     // { instrumentID, op:"cue", startFromAbsQuarter }
-    // { instrumentID, op:"SeqSetPlayMode", mode: }
     // { instrumentID, op:"SeqSetBaseNote", note: }
     // { instrumentID, op:"SeqSetArpMapping", mapping: }
     SeqPresetOp: "SeqPresetOp",

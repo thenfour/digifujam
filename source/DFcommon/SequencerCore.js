@@ -15,33 +15,32 @@ const SequencerSettings = {
   MaxNoteOnsPerColumn : 8,
 };
 
-function ArpMapping(id, caption, swallowNotes, useBaseNote) {
+function ArpMapping(id, caption, swallowNotes, useBaseNote, description) {
   return {
     id,
     caption,
     swallowNotes,
     useBaseNote,
+    description,
   };
 }
 
 const SequencerArpMapping = [
-  ArpMapping("ArpMap_Seq","Seq", false, false), // no mapping is done; only pattern notes are played.
-  ArpMapping("ArpMap_ArpUp","ArpUp", true, false), // ignore pattern note value, just go up in sequence according to rhythm and polyphony of x_Uprn
-  ArpMapping("ArpMap_ArpDown","ArpDown", true, false),
-  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", true, false),
-  ArpMapping("ArpMap_Random","Random", true, false), // play a random playing note for every pattern note
-  ArpMapping("ArpMap_AsPlayed","AsPlayed", true, false), // play all notes as they are; only use the rhythm & velocity of the pattern
-  ArpMapping("ArpMap_TranspSeq","TranspSeq", true, true), // play the sequence, transposed by playing note relative to base note
-  //ArpMapping("ArpMap_TranspHeld","TranspHeld", true, true), // transpose the HELD chord based on seq base note. Q: what about when sequencer playing polyphony?
+  ArpMapping("ArpMap_Seq","Seq", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
+  ArpMapping("ArpMap_TranspSeq","TranspSeq", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
+  ArpMapping("ArpMap_Spread","Spread", true, false, "Spread the held chord over the sequence, interpolating note values."),
+  ArpMapping("ArpMap_ArpUp","ArpUp", true, false, "Play held notes in sequence, ignoring sequenced note value."),
+  ArpMapping("ArpMap_ArpDown","ArpDown", true, false, ""),
+  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", true, false, ""),
+  ArpMapping("ArpMap_ArpInward","ArpInward", true, false, ""),
+  ArpMapping("ArpMap_ArpOutward","ArpOutward", true, false, ""),
+  //ArpMapping("ArpMap_ArpInOut","ArpInOut", true, false, ""),
+  ArpMapping("ArpMap_Random","Random", true, false, "Play held notes at random, ignoring sequenced note value."),
+  ArpMapping("ArpMap_AsPlayed","AsPlayed", true, false, "Play held chord for every sequenced note."),
+  //ArpMapping("ArpMap_TranspHeld","TranspHeld", true, true), // polyphonic "transpseq" mode. but we risk too many notes.
+  // harmonize. repeat your playing chord at the pattern note.
 ];
 const gDefaultArpMapping = SequencerArpMapping[0];
-
-  //"Spread",
-  // "FillUp",
-  // "FillDown",
-  //ArpMapping(: "ArpInward", true),
-  //ArpMapping(: "ArpOutward", true),
-  //ArpMapping(: "ArpInOut", true),
 
 
 
@@ -497,6 +496,9 @@ class SequencerPatch {
     this.swingBasisQuarters ??= .5;
     this.noteLenAdjustDivs ??= 0;
 
+    this.baseNote ??= 60; // middle C
+    this.arpMapping ??= gDefaultArpMapping;
+
     // this could be a Set(), but it doesn't automatically serialize via JSON.serialize, and there should rarely be many entries.
     // since there are only 128 midi notes, an option is also to just create a fixed-size array of bools
     if (!Array.isArray(this.mutedNotes))
@@ -846,8 +848,6 @@ class SequencerDevice {
       Object.assign(this, params);
 
     this.isPlaying ??= false;          // false while cueued
-    this.baseNote ??= 60; // middle C
-    this.arpMapping ??= gDefaultArpMapping;
 
     this.livePatch = new SequencerPatch(this.livePatch);
   }
@@ -941,22 +941,22 @@ class SequencerDevice {
   }
 
   SetBaseNote(note) {
-    this.baseNote = note;
+    this.livePatch.baseNote = note;
   }
 
   GetBaseNote() {
-    return this.baseNote;
+    return this.livePatch.baseNote;
   }
   GetArpMapping() {
-    return this.arpMapping;
+    return this.livePatch.arpMapping;
   }
   SetArpMapping(mapping) {
-    this.arpMapping = GetArpMappingByID(mapping);
+    this.livePatch.arpMapping = GetArpMappingByID(mapping);
   }
 
   ShouldLiveNoteOnsAndOffsBeSwallowed() {
     if (!this.isPlaying) return false;
-    return this.arpMapping.swallowNotes;
+    return this.livePatch.arpMapping.swallowNotes;
   }
 
   // client-side; handles incoming server msgs
@@ -1003,17 +1003,16 @@ class SequencerDevice {
       this.livePatch.SetNoteLenAdjustDivs(data.divs);
       return true;
     }
-    case "SeqSetPlayMode": {
-      this.SetPlayMode(data.mode);
-      allNotesOffRoutine(); // changing play mode means swallowing events (like note off). prevent lingering notes.
-      return true;
-    }
     case "SeqSetBaseNote": {
       this.SetBaseNote(data.note);
       return true;
     }
     case "SeqSetArpMapping": {
+      const oldSwallow = this.GetArpMapping().swallowNotes;
       this.SetArpMapping(data.mapping);
+      if (oldSwallow !== this.GetArpMapping().swallowNotes) {
+        allNotesOffRoutine();
+      }
       return true;
     }
     }
@@ -1072,9 +1071,9 @@ class PatternViewCellInfo {
     this.previousNoteLenMajorBeats = previousNoteLenMajorBeats;
 
     // eventually we fill in the following:
-    // this.noteInPattern01; // midiNoteValue 0-1 relative to range in pattern.
-    // this.noteInPatternIndexFromTop;
-    // this.noteInPatternIndexFromBottom;
+    // this.noteValueInPattern01; // midiNoteValue 0-1 relative to range in pattern.
+    // this.noteValueInPatternIndexFromTop;
+    // this.noteValueInPatternIndexFromBottom;
     // this.noteIndexInPattern; // 0-based note in the pattern, from bottom to top, left-right.
 
     this.#updateThisNoteProperties();
@@ -1400,9 +1399,9 @@ class SequencerPatternView {
     });
 
     // for the whole pattern, calculate things to help arpeggiator mode.
-    // this.noteInPattern01;
-    // this.noteInPatternIndexFromTop;
-    // this.noteInPatternIndexFromBottom;
+    // this.noteValueInPattern01;
+    // this.noteValueInPatternIndexFromTop;
+    // this.noteValueInPatternIndexFromBottom;
     this.allNoteValues = new Set();
     this.minNoteValue = 1e5;
     this.maxNoteValue = -1;
@@ -1422,9 +1421,10 @@ class SequencerPatternView {
     this.divsWithNoteOn.forEach(div => {
       div.noteOns.forEach(cell => {
         cell.patternNoteIndex = patternNoteIndex ++;
-        cell.noteInPattern01 = (this.noteValueRange < 1) ? 0 : ((cell.midiNoteValue - this.minNoteValue) / this.noteValueRange);
-        cell.noteInPatternIndexFromBottom = this.allNoteValues.findIndex(v => v === cell.midiNoteValue);
-        cell.noteInPatternIndexFromTop = this.allNoteValues.length - cell.noteInPatternIndexFromBottom - 1;
+        cell.noteValueInPattern01 = (this.noteValueRange < 1) ? 0 : ((cell.midiNoteValue - this.minNoteValue) / this.noteValueRange);
+        cell.noteValueInPatternIndexFromBottom = this.allNoteValues.findIndex(v => v === cell.midiNoteValue);
+        cell.noteValueInPatternIndexFromTop = this.allNoteValues.length - cell.noteValueInPatternIndexFromBottom - 1;
+        cell.noteIndexInPattern01 = this.allNoteValues.length < 2 ? 0 : cell.noteValueInPatternIndexFromBottom / (this.allNoteValues.length - 1);
       });
     });
 
