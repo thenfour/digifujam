@@ -11,6 +11,7 @@ const {pointInPolygon, ParamThrottler} = require('../DFcommon/dfutil');
 const { DigifuUser } = require("../DFcommon/DFUser");
 const EventEmitter = require('events');
 const { RadioMachine } = require('./radioMachine');
+const { hasUncaughtExceptionCaptureCallback } = require("process");
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -1177,10 +1178,20 @@ class DigifuApp {
     this.stateChangeHandler();
   }
 
-  // ----------------------
+  // { seqInstrumentID, op:"SeqSetListeningInstrumentID", instrumentID: }
+  NET_SeqSetListeningInstrumentID(params) {
+    if (!this.roomState) return;
+    let seqInstrument = this.roomState.FindInstrumentById(params.seqInstrumentID);
+    if (seqInstrument == null) throw new Error(`instrument not found ${params.seqInstrumentID}`);
+    let otherInstrument = this.roomState.FindInstrumentById(params.instrumentID);
+    if (otherInstrument == null) throw new Error(`instrument not found ${params.instrumentID}`);
 
-  TransformPingRoomToWorldData(room) {
+    seqInstrument.instrument.sequencerDevice.listeningToInstrumentID = params.instrumentID;
+
+    this.stateChangeHandler();
   }
+
+  // ----------------------
 
   NET_OnPing(data) {
     if (!this.roomState)

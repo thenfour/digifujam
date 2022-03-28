@@ -1804,7 +1804,32 @@ class RoomServer {
   }
 
 
+  SeqSetListeningInstrumentID(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`SeqSetListeningInstrumentID => unknown user`);
 
+      const seqInstrument = this.roomState.FindInstrumentById(data.seqInstrumentID);
+      if (!seqInstrument) throw new Error(`Sequencer device ${data.seqInstrumentID} not found.`);
+
+      const otherInstrument = this.roomState.FindInstrumentById(data.instrumentID);
+      if (!otherInstrument) throw new Error(`Instrument ${data.instrumentID} not found.`);
+
+      if (!seqInstrument.instrument.CanUserSetSequencerListeningInstrument(this.roomState, foundUser.user)) {
+        throw new Error(`user ${foundUser.user} has no permission to set the listening instrument of ${seqInstrument.instrumentID}`);
+      }
+
+      seqInstrument.instrument.sequencerDevice.listeningToInstrumentID = data.instrumentID;
+
+      this.sequencerPlayer.onChanged_Instrument(seqInstrument.instrument);
+
+      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqSetListeningInstrumentID, data);
+
+    } catch (e) {
+      console.log(`SeqSetListeningInstrumentID exception occurred`);
+      console.log(e);
+    }
+  }
 
   
   

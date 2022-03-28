@@ -28,8 +28,8 @@ function ArpMapping(id, caption, swallowNotes, useBaseNote, description) {
 
 const SequencerArpMapping = [
   ArpMapping("ArpMap_Seq","Seq", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
-  ArpMapping("ArpMap_TranspSeq","TranspSeq", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
   ArpMapping("ArpMap_Spread","Spread", true, false, "Spread the held chord over the sequence, interpolating note values."),
+  ArpMapping("ArpMap_TranspSeq","TranspSeq", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
   ArpMapping("ArpMap_ArpUp","ArpUp", true, false, "Play held notes in sequence, ignoring sequenced note value."),
   ArpMapping("ArpMap_ArpDown","ArpDown", true, false, ""),
   ArpMapping("ArpMap_ArpUpDown","ArpUpDown", true, false, ""),
@@ -874,11 +874,14 @@ class SequencerPatch {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // remember this class is json serialized to clients in roomstate!
 class SequencerDevice {
-  constructor(params) {
+  constructor(params, instrument) {
     if (params)
       Object.assign(this, params);
 
+    this.instrumentID = instrument.instrumentID;
+
     this.isPlaying ??= false;          // false while cueued
+    this.listeningToInstrumentID ??= this.instrumentID; // null = this own instrument.
 
     this.livePatch = new SequencerPatch(this.livePatch);
   }
@@ -983,6 +986,10 @@ class SequencerDevice {
   }
   SetArpMapping(mapping) {
     this.livePatch.SetArpMapping(mapping);
+  }
+
+  IsSidechained() {
+    return this.livePatch.GetArpMapping().swallowNotes && (this.listeningToInstrumentID !== this.instrumentID);
   }
 
   // called by sequencerplayer when the user is doing noteon, noteoff, pedal down or pedal up.

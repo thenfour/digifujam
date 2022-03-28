@@ -784,6 +784,29 @@ class SequencerMain extends React.Component {
             this.setState({isArpMappingExpanded:false});
         }
 
+        onClickListeningToInstrument(e) {
+            if (this.props.observerMode) return;
+
+            if (e.ctrlKey) {
+                this.props.app.net.SeqSetListeningInstrumentID({
+                    seqInstrumentID: this.props.instrument.instrumentID,
+                    instrumentID: this.props.instrument.instrumentID,
+                });
+                return;
+            }
+
+            this.setState({showListenToInstrumentDropdown:true});
+        }
+
+        onClickListenToInstrument(inst) {
+            if (this.props.observerMode) return;
+            this.props.app.net.SeqSetListeningInstrumentID({
+                seqInstrumentID: this.props.instrument.instrumentID,
+                instrumentID: inst.instrumentID,
+            });
+            this.setState({showListenToInstrumentDropdown:false});
+        }
+
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -806,7 +829,7 @@ class SequencerMain extends React.Component {
 
         const widthpx = Math.min(75, 20 + ((50 * this.state.zoom) / patternViewData.divs.length));
         const columnStyle = {width:`${widthpx}px`};
-        const heightpx = 14 + 2 * this.state.zoom;
+        const heightpx = 14 + 2.25 * this.state.zoom;
         const rowStyle = {height:`${heightpx}px`};
 
         const selectedTS = patch.timeSig;
@@ -825,6 +848,27 @@ class SequencerMain extends React.Component {
             rowStyle,
             timeSig: selectedTS,
         };
+
+        const listenToInstrumentList = this.state.showListenToInstrumentDropdown && this.props.app.roomState.instrumentCloset.map((inst, i) => {
+            const inUse = inst.IsInUse();
+            //const isYours = (i.controlledByUserID == app.myUser.userID);
+            let ownedBy = null;
+            if (inUse) {
+                let foundUser = this.props.app.roomState.FindUserByID(inst.controlledByUserID);
+                if (foundUser) {
+                    ownedBy = (<span className="takenBy">(<span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span>)</span>);
+                }
+            }
+    
+            return (
+                <li
+                    key={i}
+                    onClick={() => this.onClickListenToInstrument(inst)}
+                    className={(seq.listeningToInstrumentID === inst.instrumentID ? " selected" : "") + (inst.instrumentID === this.props.instrument.instrumentID ? " default" : "")}
+                >
+                    <span className='instrumentName' style={{ color: i.color }}>{inst.getDisplayName()}</span>{ownedBy}
+                </li>);
+        });
 
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
@@ -1016,8 +1060,11 @@ class SequencerMain extends React.Component {
                             }
                                 <div className="buttonArray">
                                     {/* <button onClick={() => { this.setState({isPresetsExpanded:!this.state.isPresetsExpanded});}}>Presets</button> */}
-                                    <button className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")} onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
-                                    <button title="Reset sequencer settings" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
+                                    <button
+                                        title="Save this preset (overwrite existing)"
+                                        className={'altui' + (presetSaveEnabled && !isReadOnly ? ' clickable': " disabled")}
+                                        onClick={()=>this.onClickSavePreset()}><i className="material-icons">save</i></button>
+                                    <button title="Start with a new blank patch" className={'clearPattern initPreset' + clickableIfEditable} onClick={() => this.onClickInitPatch()}>INIT</button>
                                 </div>
                             </div>
                         </div>
@@ -1069,6 +1116,33 @@ class SequencerMain extends React.Component {
                                     </div>
                                 </div>
 
+
+                                {/* listening instrument */}
+                                {seq.GetArpMapping().swallowNotes &&
+                                <div className={'legend listeningToInstrument ' + (seq.GetArpMapping().swallowNotes ? " enabled" : " disabled")}>SC</div>
+                                }
+                                {seq.GetArpMapping().swallowNotes &&
+                                <div className='paramBlock listeningToInstrument'>
+                                    <div
+                                        className={'paramValue ' + clickableIfEditable + (this.state.showListenToInstrumentDropdown ? " active" : "") + (this.props.instrument.instrumentID === seq.listeningToInstrumentID ? " default" : " notdefault")}
+                                        onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e)}
+                                        title="Arpeggiator input notes can be configured to listen to other instruments. CTRL+Click to reset."
+                                        >
+                                        {this.props.app.roomState.FindInstrumentById(seq.listeningToInstrumentID).instrument.GetShortDisplayName()}
+                                    </div>
+                                    {this.state.showListenToInstrumentDropdown && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({showListenToInstrumentDropdown:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({showListenToInstrumentDropdown:false});}}>Select at instrument to use as input for arpeggiation.</legend>
+                                            <ul className='dropDownMenu'>
+                                                {listenToInstrumentList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                    }
+                                </div>
+                                }
 
 
                             </div>{/* paramGroup */}

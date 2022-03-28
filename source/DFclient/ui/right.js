@@ -1549,9 +1549,18 @@ class Instrument extends  React.Component {
         this.props.app.ReleaseInstrument();
     }
 
-    clickSequencerIndicator() {
+    clickSequencerIndicator(e) {
         const app = this.props.app;
         const i = this.props.instrument;
+
+        if (e.ctrlKey) {
+            app.net.SeqSetListeningInstrumentID({
+                seqInstrumentID: i.instrumentID,
+                instrumentID: app.myInstrument.instrumentID,
+            });
+            return;
+        }
+
         if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser))
             return;
         // if (window.DFModifierKeyTracker.ShiftKey) {
@@ -1588,16 +1597,26 @@ class Instrument extends  React.Component {
         
         const isYourObserving = this.props.app.observingInstrument && this.props.app.observingInstrument.instrumentID == i.instrumentID;
 
+        const isSidechained = i.sequencerDevice.IsSidechained();
+        let title = "Sequencer activity (click to start/stop).";
+        if (i.sequencerDevice.GetArpMapping().swallowNotes && !!this.props.app.myInstrument) {
+            title += " CTRL+click to sidechain to your instrument.";
+        }
+        if (isSidechained) {
+            const n = this.props.app.roomState.FindInstrumentById(i.sequencerDevice.listeningToInstrumentID).instrument.getDisplayName();
+            title += ` Currently sidechained to '${n}'.`;
+        }
+
         const isSequencerOn = i.sequencerDevice.isPlaying;
         const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser);
         const canPerform = app.roomState.UserCanPerform(app.myUser);
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
             <div
-                className={"seqIndicatorAnimation1 seqCtrlContainer " + i.sequencerDevice.GetArpMapping().cssClass + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + ((canPerform && canCtrlSequencer) ? " clickable" : "")}
+                className={"seqIndicatorAnimation1 seqCtrlContainer " + i.sequencerDevice.GetArpMapping().cssClass + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + ((canPerform && canCtrlSequencer) ? " clickable" : "") + (isSidechained ? " sidechain" : "")}
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
-                title={"Sequencer activity (click to start/stop)"}
-                onClick={canPerform ? (() => this.clickSequencerIndicator()) : null}
+                title={title}
+                onClick={canPerform ? ((e) => this.clickSequencerIndicator(e)) : null}
                 >
                 <div className='seqIndicator'></div>
             </div>
@@ -2848,7 +2867,7 @@ class RootArea extends React.Component {
 
         // dynamically set the column sizes. media queries don't work because there are a bunch of dynamic states here.
         // grid-template-columns: 270px minmax(0, 1fr) 320px;
-        let leftSize = 270;
+        let leftSize = "min-content";//270;
         let rightSize = 320;
         if (this.state.wideMode) {
             rightSize = 550; // wide mode
@@ -2862,11 +2881,11 @@ class RootArea extends React.Component {
         //const isMobile = localStorage.mobile || window.navigator.maxTouchPoints > 1;
         if (window.innerWidth < 1100) { // try to be sensitive to iphone, where width is like always 1010 or something.
             rightSize = 0;
-            leftSize = 0;
+            leftSize = "0px";
         }
 
         gridContainerStyle = {
-            gridTemplateColumns: `${leftSize}px minmax(0, 1fr) ${rightSize}px`,
+            gridTemplateColumns: `${leftSize} minmax(0, 1fr) ${rightSize}px`,
         };
 
         const isDisconnected = !this.state.app?.IsConnected();

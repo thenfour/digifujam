@@ -65,6 +65,7 @@ const ClientMessages = {
     SeqSetLength: "SeqSetLength", // { lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { ops:[{type:clear|addNote|deleteNote, note:{}}]}
     SeqPatchInit: "SeqPatchInit",
+    SeqSetListeningInstrumentID: "SeqSetListeningInstrumentID", // { seqInstrumentID, instrumentID: }
 
     // OK admittedly i got lazy creating individual server/client messages and just start throwing them into this ops
     // { op:"load", presetID:<>}
@@ -149,8 +150,10 @@ const ServerMessages = {
     // { instrumentID, op:"SeqSetTranspose", transpose: }
     // { instrumentID, op:"SeqSetBaseNote", note: }
     // { instrumentID, op:"SeqSetArpMapping", mapping: }
+    // { seqInstrumentID, op:"SeqSetListeningInstrumentID", instrumentID: }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
+    SeqSetListeningInstrumentID: "SeqSetListeningInstrumentID", // { seqInstrumentID, instrumentID: }
 };
 
 const ServerSettings = {
@@ -428,6 +431,12 @@ class DigifuInstrumentSpec {
         this.supportsObservation = false; // there's no point allowing certain instruments' params to be observed like drum kit or sampler
 
         this.paramMappings = [];
+    }
+
+    // what is short anyway? 6 chars?
+    GetShortDisplayName() {
+        if (this.shortName) return this.shortName;
+        return this.name.substring(0, 6);
     }
 
     getDisplayName() {
@@ -909,10 +918,10 @@ class DigifuInstrumentSpec {
     ReleaseOwnership() {
         this.controlledByUserID = null;
 
-        if (this.sequencerDevice && this.sequencerDevice.GetArpMapping().swallowNotes) {
-            // if the sequencer swallows notes, it depends on user input to play.
-            this.sequencerDevice.SetPlaying(false);
-        }
+        // if (this.sequencerDevice && this.sequencerDevice.GetArpMapping().swallowNotes) {
+        //     // if the sequencer swallows notes, it depends on user input to play.
+        //     this.sequencerDevice.SetPlaying(false);
+        // }
 
         const pb = this.GetParamByID("pb");
         if (pb) {
@@ -928,7 +937,7 @@ class DigifuInstrumentSpec {
             return n;
         });
 
-        this.sequencerDevice = new Seq.SequencerDevice(this.sequencerDevice);
+        this.sequencerDevice = new Seq.SequencerDevice(this.sequencerDevice, this);
 
         this.seqPresetBankID ??= this.presetBankID;
 
@@ -1333,7 +1342,11 @@ class DigifuInstrumentSpec {
     CanSequencerBeStartStoppedByUser(roomState, user) {
         if (user.userID === this.controlledByUserID) return true;
         if (!roomState.UserCanPerform(user)) return false;
-        return this.IsTakeable(roomState) && this.sequencerDevice.HasData() && (!this.sequencerDevice.GetArpMapping().swallowNotes);
+        return this.IsTakeable(roomState) && this.sequencerDevice.HasData();// && (!this.sequencerDevice.GetArpMapping().swallowNotes);
+    }
+
+    CanUserSetSequencerListeningInstrument(roomState, user) {
+        return this.CanSequencerBeStartStoppedByUser(roomState, user);
     }
 
 }; // InstrumentSpec

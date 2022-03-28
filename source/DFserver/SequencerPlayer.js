@@ -301,7 +301,8 @@ function MappingFunction_Outward(params) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class InstrumentSequencerPlayer {
-  constructor(roomState, instrument) {
+  constructor(roomPlayer, roomState, instrument) {
+    this.roomPlayer = roomPlayer;
     this.roomState = roomState;
     this.metronome = roomState.metronome;
     this.quantizer = roomState.quantizer;
@@ -399,7 +400,12 @@ class InstrumentSequencerPlayer {
 
     const seq = this.instrument.sequencerDevice;
     const patch = this.instrument.sequencerDevice.livePatch;
-    const heldNotes = this.noteTracker;
+    
+    let heldNotes = this.roomPlayer.GetHeldNotesForInstrumentID(seq.listeningToInstrumentID);
+    if (!heldNotes) {
+      heldNotes = this.noteTracker;
+    }
+
     const patternView = Seq.GetPatternView(patch, this.instrument.sequencerDevice.GetNoteLegend());
 
     if (!this.instrument.sequencerDevice.isPlaying) {
@@ -506,11 +512,17 @@ class RoomSequencerPlayer {
     this.metronome = roomState.metronome;
     this.quantizer = roomState.quantizer;
 
-    this.instruments = this.roomState.instrumentCloset.filter(i => i.allowSequencer); // precalc a list of relevant instruments
+    this.instruments = this.roomState.instrumentCloset;//.filter(i => i.allowSequencer); // precalc a list of relevant instruments
     this.instrumentPlayers = new Map();                                               // map instrumentID to a held note tracker.
     this.instruments.forEach(inst => {
-      this.instrumentPlayers.set(inst.instrumentID, new InstrumentSequencerPlayer(roomState, inst));
+      this.instrumentPlayers.set(inst.instrumentID, new InstrumentSequencerPlayer(this, roomState, inst));
     });
+  }
+
+  GetHeldNotesForInstrumentID(instrumentID) {
+    if (this.instrumentPlayers.has(instrumentID))
+      return this.instrumentPlayers.get(instrumentID).noteTracker;
+    return null;
   }
 
   BPMChanged(bpm) {

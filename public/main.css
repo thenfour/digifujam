@@ -143,6 +143,7 @@ button:focus {
     display: flex;
     flex-direction: column;
     overflow: auto; /* important to let X scroll in case usernames are long */
+    max-width: 15vw;
 }
 
 @keyframes screenFadeOut {
@@ -1086,11 +1087,13 @@ ul.instParamList li.inlineLabel {
 .component.instrumentCloset>ul {
     padding-right: 0;
     padding-left: 5px;
+    /* overflow: auto; */
 }
 
 .component.instrumentCloset li {
     display: flex;
     padding-bottom: 1px;
+    justify-content: flex-end;
 }
 
 .component.instrumentCloset li .instrument {
@@ -1851,31 +1854,38 @@ https://www.w3schools.com/icons/google_icons_intro.asp
 }
 
 .component.instrumentCloset li .seqCtrlContainer.on .seqIndicator {
-    background-color: #060;
+    --seqColorBright:#4f4;
+    --seqColorDark:#060;
+    background-color: var(--seqColorDark);
 }
 
 .component.instrumentCloset li .seqCtrlContainer.off .seqIndicator {
-    background-color: #444;
+    --seqColorBright:#888;
+    --seqColorDark:#444;
 }
 
+.component.instrumentCloset li .seqCtrlContainer.on.sidechain .seqIndicator {
+    --seqColorBright:#e00;
+    --seqColorDark:#900;
+}
 
 @keyframes seqNoteIndicator1 {
     0% {
-        background-color: #4f4;
+        background-color: var(--seqColorBright);
     }
 
     100% {
-        background-color: #060;
+        background-color: var(--seqColorDark);
     }
 }
 
 @keyframes seqNoteIndicator2 {
     0% {
-        background-color: #4f4;
+        background-color: var(--seqColorBright);
     }
 
     100% {
-        background-color: #060;
+        background-color: var(--seqColorDark);
     }
 }
 

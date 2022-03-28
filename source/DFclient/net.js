@@ -266,9 +266,9 @@ class DigifuNet {
     SeqMetadata(params) {// { title, description, tags }
         this.socket.emit(DF.ClientMessages.SeqMetadata, params);
     }
-    // SeqCue(instrumentID, cancel) {
-    //     this.socket.emit(DF.ClientMessages.SeqCue, {instrumentID, cancel});
-    // }
+    SeqSetListeningInstrumentID(params) {// { seqInstrumentID, instrumentID: }
+        this.socket.emit(DF.ClientMessages.SeqSetListeningInstrumentID, params);
+    }
 
     SendUserRoleOp(payload) {
         this.socket.emit(DF.ClientMessages.UserRoleOp, payload);
@@ -358,6 +358,7 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.SeqPatchInit, (data) => this.handler.NET_SeqPatchInit(data));
         this.socket.on(DF.ServerMessages.SeqPresetOp, (data) => this.handler.NET_SeqPresetOp(data));
         this.socket.on(DF.ServerMessages.SeqMetadata, (data) => this.handler.NET_SeqMetadata(data));
+        this.socket.on(DF.ServerMessages.SeqSetListeningInstrumentID, (data) => this.handler.NET_SeqSetListeningInstrumentID(data));
         // ---- SEQ
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });

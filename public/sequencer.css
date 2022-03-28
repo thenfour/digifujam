@@ -1234,3 +1234,17 @@
     font-size:smaller;
     max-width: 400px;
 }
+
+
+
+.sequencerMain .listeningToInstrument .dialog li.default
+{
+    color: #0aa;
+    /* border-left: 6px solid #0aa; */
+    background-color: #044;
+}
+
+.sequencerMain fieldset.seqMode .listeningToInstrument .paramValue.notdefault {
+    color:#000;
+    background-color:#c40;
+}
