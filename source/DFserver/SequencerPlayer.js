@@ -3,9 +3,42 @@ const DFMusic = require('../DFcommon/DFMusic');
 const DFU = require('../DFcommon/dfutil');
 const DF = require('../DFcommon/DFCommon');
 
+// let gStart = null;
+// let gPerfs = new Map();
+// let gReported = Date.now();
+
+// function DumpPerfData(ms) {
+//   const now = Date.now();
+//   let totalms = 0;
+//   gPerfs.forEach((v, k) => {
+//     if (now - k < ms) {
+//       totalms += v;
+//     }
+//   });
+//   console.log(`${totalms}ms of cpu over ${ms} ms of time`);
+// }
+// function StartPerf() {
+//   gStart = Date.now();
+// }
+// function RegisterPerf() {
+//   const now = Date.now();
+//   const elapsed = now - gStart;
+//   gPerfs.set(now, elapsed);
+//   if (now - gReported > 5000) {
+//     DumpPerfData(10000);
+//     gReported = now;
+//   }
+// }
+
+function StartPerf() {
+}
+function RegisterPerf() {
+}
+
+
 // when you make changes that require rescheduling sequencer notes, like note ons during arpeggiator mode, or changing
 // any seq params, "throttle" recalcs by delaying a bit.
-const gRecalcLatencyMS = 30;
+const gRecalcLatencyMS = 40;
 
 // timer interval duration should be balanced:
 // * too long and it will incur too much processing (meaning noticeable periodic spikes in processing)
@@ -14,12 +47,12 @@ const gRecalcLatencyMS = 30;
 // at very least we can say the timer should be expected to DO actual work each iteration.
 // and probably even dozens of events are more efficient than a nop interval.
 // so that suggests it should be pretty long, like once per few seconds. maybe 1 measure of 4/4 @ 100bpm.
-const gIntervalMS = 2500;
+const gIntervalMS = 350;
 
 // each timer interval, a chunk of pattern data is scheduled.
 // in theory it sholud just be over the next interval,
 // but there should be some margin as well to account for jitter.
-const gChunkSizeFactor = 1.15;
+const gChunkSizeFactor = 1.1;
 
 // each arpeggiator mapping mode gets a function which transforms a div with notes on into a list of events.
 // the most basic "none" mapping just looks at noteOns and pushes the events.
@@ -353,6 +386,9 @@ class InstrumentSequencerPlayer {
   }
 
   timerProc() {
+    //const start = Date.now();
+    StartPerf();
+
     // if you call this directly, with no timer, then start interval.
     // this allows callers to invoke directly without timer, and it will restart everything.
     if (!this.timer) {
@@ -369,6 +405,7 @@ class InstrumentSequencerPlayer {
     if (!this.instrument.sequencerDevice.isPlaying) {
       //console.log(`not playing; clearing data.`);
       this.quantizer.setSequencerEvents(this.roomState.roomID, this.instrument.instrumentID, [], patternView, false, null);
+      RegisterPerf();
       return;
     }
 
@@ -382,6 +419,7 @@ class InstrumentSequencerPlayer {
     const divMappingFunction = this.divMappers[seq.GetArpMapping().id];
     if (!divMappingFunction) {
       console.log(`!! Unsupported mapping style ${seq.GetArpMapping().id}`);
+      RegisterPerf();
       return;
     }
 
@@ -456,6 +494,7 @@ class InstrumentSequencerPlayer {
     //console.log(`Events to schedule: ` + JSON.stringify(events));
 
     this.quantizer.setSequencerEvents(this.roomState.roomID, this.instrument.instrumentID, events, patternView, true);
+    RegisterPerf();
   }
 }
 

@@ -40,7 +40,7 @@ class ServerRoomQuantizer {
     //     note,
     //     velocity, // only for note on
     //   };
-    this.queuedFrames = {};
+    this.queuedFrames = new Map();
 
     // holds all NOTE ON events which appear in queuedFrames, as an easy way to access them
     // to map to the corresponding note off when it comes in.
@@ -66,7 +66,7 @@ class ServerRoomQuantizer {
     // if (!(quantizedFrame in this.queuedFrames)) {
     //     console.log(`quantized frame ${quantizedFrame} not in queue`);
     // }
-    let frame = this.queuedFrames[quantizedFrame];
+    let frame = this.queuedFrames.get(quantizedFrame);
 
     // frame.noteOns.forEach(n => {
     //   console.log(`@${quantizedFrame} executing NOTE ON ${GetMidiNoteInfo(n.note).name}: ${JSON.stringify(n)}`);
@@ -77,7 +77,7 @@ class ServerRoomQuantizer {
 
     this.noteEventsFlushRoutine(frame.noteOns, frame.noteOffs);
 
-    delete this.queuedFrames[quantizedFrame];
+    this.queuedFrames.delete(quantizedFrame);
     frame.noteOns.forEach(
         played => {
           this.allQueuedNoteOns.removeIf(n =>
@@ -111,11 +111,11 @@ class ServerRoomQuantizer {
   }
 
   scheduleEvent(quantizedFrame, noteOn, noteOff) {
-    if (quantizedFrame in this.queuedFrames) {
+    if (this.queuedFrames.has(quantizedFrame)) {
       if (noteOn)
-        this.queuedFrames[quantizedFrame].noteOns.push(noteOn);
+        this.queuedFrames.get(quantizedFrame).noteOns.push(noteOn);
       if (noteOff)
-        this.queuedFrames[quantizedFrame].noteOffs.push(noteOff);
+        this.queuedFrames.get(quantizedFrame).noteOffs.push(noteOff);
       return;
     }
 
@@ -126,11 +126,11 @@ class ServerRoomQuantizer {
     let timerCookie = setTimeout(this.onInterval,
                                  msRemaining, quantizedFrame);
 
-    this.queuedFrames[quantizedFrame] = {
+    this.queuedFrames.set(quantizedFrame, {
       timerCookie,
       noteOns : noteOn ? [ noteOn ] : [],
       noteOffs : noteOff ? [ noteOff ] : [],
-    };
+    });
   }
 
   /*
@@ -202,26 +202,28 @@ class ServerRoomQuantizer {
   }
 
   clearNoteOn(userID, instrumentID, note) {
-    Object.keys(this.queuedFrames).forEach(k => {
-      this.queuedFrames[k].noteOns.removeIf(f => f.instrumentID == instrumentID && f.userID == userID && f.note == note);
+    //Object.keys(this.queuedFrames).forEach(k => {
+    this.queuedFrames.forEach((v, k) => {
+      v.noteOns.removeIf(f => f.instrumentID == instrumentID && f.userID == userID && f.note == note);
     });
+    //});
 
     this.allQueuedNoteOns.removeIf(n => n.notePacket.userID == userID && n.notePacket.instrumentID == instrumentID && n.notePacket.note == note);
   }
 
   clearInstrument(instrumentID) {
-    Object.keys(this.queuedFrames).forEach(k => {
-      this.queuedFrames[k].noteOns.removeIf(f => f.instrumentID == instrumentID);
-      this.queuedFrames[k].noteOffs.removeIf(f => f.instrumentID == instrumentID);
+    this.queuedFrames.forEach((v, k) => {
+      v.noteOns.removeIf(f => f.instrumentID == instrumentID);
+      v.noteOffs.removeIf(f => f.instrumentID == instrumentID);
     });
 
     this.allQueuedNoteOns.removeIf(n => n.notePacket.instrumentID == instrumentID);
   }
 
   clearUser(userID) {
-    Object.keys(this.queuedFrames).forEach(k => {
-      this.queuedFrames[k].noteOns.removeIf(f => f.userID == userID);
-      this.queuedFrames[k].noteOffs.removeIf(f => f.userID == userID);
+    this.queuedFrames.forEach((v, k) => {
+      v.noteOns.removeIf(f => f.userID == userID);
+      v.noteOffs.removeIf(f => f.userID == userID);
     });
 
     this.allQueuedNoteOns.removeIf(n => n.notePacket.userID == userID);
@@ -288,8 +290,8 @@ class ServerRoomQuantizer {
     const noteEarliestEventRemoved = {}; // key=note, value={frame,isNoteOff}
 
     // remove existing events for this instrument, save what was removed.
-    Object.keys(this.queuedFrames).forEach(k => {
-      this.queuedFrames[k].noteOns.removeIf(f => {
+    this.queuedFrames.forEach((v, k) => {
+      v.noteOns.removeIf(f => {
         if (f.seqInstrumentID !== instrumentID)
           return false;
         if (!(f.note in noteEarliestEventRemoved)) {
@@ -308,7 +310,7 @@ class ServerRoomQuantizer {
         return true;
       });
 
-      this.queuedFrames[k].noteOffs.removeIf(f => {
+      v.noteOffs.removeIf(f => {
         if (f.seqInstrumentID !== instrumentID)
           return false;
         if (!(f.note in noteEarliestEventRemoved)) {
