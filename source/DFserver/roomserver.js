@@ -1174,6 +1174,7 @@ class RoomServer {
       if (data.phaseRelativeMS) {
         this.roomState.metronome.AdjustPhase(data.phaseRelativeMS);
       }
+      this.sequencerPlayer.BPMChanged(data.bpm);
       this.sequencerPlayer.onChanged_General();
 
       this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomBPMUpdate, { bpm: this.roomState.metronome.getBPM() }); //update bpm for ALL clients

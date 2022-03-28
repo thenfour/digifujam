@@ -317,9 +317,15 @@ class InstrumentSequencerPlayer {
   }
 
   // return true to swallow the event
+  BPMChanged(bpm) {
+    this.instrument.sequencerDevice.OnBPMChanged(bpm);
+    this.#invokeTimer();
+  }
+
+  // return true to swallow the event
   NoteOn(note, velocity) {
     this.noteTracker.NoteOn(note, velocity);
-    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
   }
@@ -327,21 +333,21 @@ class InstrumentSequencerPlayer {
   // return true to swallow the event
   NoteOff(note) {
     this.noteTracker.NoteOff(note);
-    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
   }
 
   PedalUp() {
     this.noteTracker.PedalUp();
-    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
   }
 
   PedalDown() {
     this.noteTracker.PedalDown();
-    const swallow = this.instrument.sequencerDevice.ShouldLiveNoteOnsAndOffsBeSwallowed();
+    const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
   }
@@ -357,15 +363,15 @@ class InstrumentSequencerPlayer {
 
     const seq = this.instrument.sequencerDevice;
     const patch = this.instrument.sequencerDevice.livePatch;
+    const heldNotes = this.noteTracker;
     const patternView = Seq.GetPatternView(patch, this.instrument.sequencerDevice.GetNoteLegend());
 
     if (!this.instrument.sequencerDevice.isPlaying) {
       //console.log(`not playing; clearing data.`);
-      this.quantizer.setSequencerEvents(this.instrument.instrumentID, [], patternView, false, null);
+      this.quantizer.setSequencerEvents(this.roomState.roomID, this.instrument.instrumentID, [], patternView, false, null);
       return;
     }
 
-    const heldNotes = this.noteTracker;
 
     const patternPlayheadInfo = this.instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
     const absPatternFloor = Math.floor(patternPlayheadInfo.absPatternFloat);
@@ -422,10 +428,18 @@ class InstrumentSequencerPlayer {
           absPatternFloor: tempAbsPatternFloor,
           patternView
         });
+
         //console.log(`Mapping result: ` + JSON.stringify(divEvents));
+        // we want to avoid scheduling duplicate notes as well.
+        const noteValuesScheduled = new Array(128);
         const absQuarter = cursorShiftedQuarter / patch.speed;
         for (let ievent = 0; ievent < divEvents.length; ++ ievent) {
           const e = divEvents[ievent];
+          if (noteValuesScheduled[e.midiNoteValue]) {
+            //console.log(`skipping dupe note ${JSON.stringify(e)}`);
+            continue;
+          }
+          noteValuesScheduled[e.midiNoteValue] = e;
           events.push(Object.assign({
             absQuarter,
             //tempAbsPatternFloor,
@@ -441,7 +455,7 @@ class InstrumentSequencerPlayer {
     //console.log(`window length quarters: ${windowLengthQuarters}, scheduling ${events.length} events`);
     //console.log(`Events to schedule: ` + JSON.stringify(events));
 
-    this.quantizer.setSequencerEvents(this.instrument.instrumentID, events, patternView, true, this.instrument.sequencerDevice.startFromAbsQuarter);
+    this.quantizer.setSequencerEvents(this.roomState.roomID, this.instrument.instrumentID, events, patternView, true);
   }
 }
 
@@ -458,6 +472,10 @@ class RoomSequencerPlayer {
     this.instruments.forEach(inst => {
       this.instrumentPlayers.set(inst.instrumentID, new InstrumentSequencerPlayer(roomState, inst));
     });
+  }
+
+  BPMChanged(bpm) {
+    this.instrumentPlayers.forEach(player => player.BPMChanged(bpm));
   }
 
   AllNotesOff(instrument) {

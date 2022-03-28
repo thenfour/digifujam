@@ -22,6 +22,7 @@ function ArpMapping(id, caption, swallowNotes, useBaseNote, description) {
     swallowNotes,
     useBaseNote,
     description,
+    cssClass: id, // for now just use ID as css class.
   };
 }
 
@@ -679,6 +680,36 @@ class SequencerPatch {
   }
 
   
+  SetBaseNote(note) {
+    if (this.baseNote === note) return;
+    if (this.arpMapping.useBaseNote) {
+      this.#cachedViewDirty = true;
+    }
+    this.baseNote = note;
+  }
+
+  GetBaseNote() {
+    return this.baseNote;
+  }
+  GetArpMapping() {
+    return this.arpMapping;
+  }
+  SetArpMapping(mapping) {
+    if (mapping === this.arpMapping.id) return;
+    this.#cachedViewDirty = true;
+    this.arpMapping = GetArpMappingByID(mapping);
+  }
+
+  // return true if the live event data should be swallowed.
+  OnNoteOnOffPedalUpDown() {
+    return (this.arpMapping.swallowNotes);
+  }
+
+  OnBPMChanged(bpm) {
+  }
+
+
+  
   GetSwingBasisQuarters() {
     return this.swingBasisQuarters;
   }
@@ -941,22 +972,29 @@ class SequencerDevice {
   }
 
   SetBaseNote(note) {
-    this.livePatch.baseNote = note;
+    this.livePatch.SetBaseNote(note);
   }
 
   GetBaseNote() {
-    return this.livePatch.baseNote;
+    return this.livePatch.GetBaseNote();
   }
   GetArpMapping() {
-    return this.livePatch.arpMapping;
+    return this.livePatch.GetArpMapping();
   }
   SetArpMapping(mapping) {
-    this.livePatch.arpMapping = GetArpMappingByID(mapping);
+    this.livePatch.SetArpMapping(mapping);
   }
 
-  ShouldLiveNoteOnsAndOffsBeSwallowed() {
+  // called by sequencerplayer when the user is doing noteon, noteoff, pedal down or pedal up.
+  // those are things which can cause the pattern view to become invalidated, and depending on arp mode, the live event should be swallowed.
+  // return true if the live event should be swallowed.
+  OnNoteOnOffPedalUpDown(heldNotes) {
     if (!this.isPlaying) return false;
-    return this.livePatch.arpMapping.swallowNotes;
+    return this.livePatch.OnNoteOnOffPedalUpDown(heldNotes);
+  }
+  OnBPMChanged(bpm) {
+    if (!this.isPlaying) return;
+    return this.livePatch.OnBPMChanged(bpm);
   }
 
   // client-side; handles incoming server msgs
@@ -1051,7 +1089,7 @@ class PatternViewCellInfo {
 
   // "thisNote" is the note which exists in underlyingNotes which is considered currently playing. can be null.
   // "previousNote" is the note which was considered playing before this one, to allow callers to extend its length
-  constructor(patch, legend, midiNoteValue, underlyingNotes, div, thisNote, previousNote, previousNoteLenQuarters, previousNoteLenMajorBeats, beginBorderType, endBorderType, noteOnNotes, noteOnCell) {
+  constructor(patchHash, patch, legend, midiNoteValue, underlyingNotes, div, thisNote, previousNote, previousNoteLenQuarters, previousNoteLenMajorBeats, beginBorderType, endBorderType, noteOnNotes, noteOnCell) {
     this.midiNoteValue = midiNoteValue | 0;
     this.patch = patch;
     this.legend = legend;
@@ -1081,7 +1119,9 @@ class PatternViewCellInfo {
     // just to optimize; this is only necessary for note ons.
     if (beginBorderType === eBorderType.NoteOn) {
       this.noteOnCell = this;
-      this.id = "pvci_" + this.underlyingNotes.reduce((rv, un) => rv + un.patternNote.id, "");
+      this.id = "pvci_" + this.underlyingNotes.reduce((rv, un) => rv + un.patternNote.id, "") + "_patch:" + patchHash;// + "_" + this.midiNoteValue + "_" + patchHash;
+      //this.id = "pvci_" + this.underlyingNotes.reduce((rv, un) => rv + un.patternNote.id, "") + "_" + this.midiNoteValue + "_" + patchHash;
+      //this.id = DFUtil.generateID();
     }
   }
 
@@ -1139,7 +1179,9 @@ class SequencerPatternView {
   // and at the same time we should try to be optimal.
   constructor(patch, legend) {
     const start = Date.now();
-    //let nodesVisited = 0;
+
+    // things that the sequencer player wants to key off of for all notes.
+    let patchHash = patch.GetArpMapping().id;// when the arp mapping mode changes, all notes should be invalidated.
 
     this.legend = legend;
     this.divs = patch.GetPatternDivisionInfo(); // COLUMNS. each column holds a noteIndexMap, with a list of indices to this.notes.
@@ -1147,7 +1189,6 @@ class SequencerPatternView {
     const pattern = patch.GetSelectedPattern();
     this.pattern = pattern;
     const patternLen = this.GetLengthMajorBeats();
-    //const patternLenQuarters = patch.GetPatternLengthQuarters();
 
     const t = pattern.notes
                   .filter(n => n.patternMajorBeat < patternLen) // filter out notes which are not in view.
@@ -1266,7 +1307,7 @@ class SequencerPatternView {
         const createCell = (leftborder, rightborder) => {
           noteLengthSwingQuarters += div.getLengthSwingQuarters();
           noteLengthMajorBeats += div.lengthMajorBeats;
-          return div.rows[midiNoteValue] = new PatternViewCellInfo(patch, legend, midiNoteValue, uns, div,
+          return div.rows[midiNoteValue] = new PatternViewCellInfo(patchHash, patch, legend, midiNoteValue, uns, div,
                                                                    currentNote, previousNote, noteLengthSwingQuarters, noteLengthMajorBeats,
                                                                    leftborder, rightborder, noteOns, currentNoteOnCell);
         }

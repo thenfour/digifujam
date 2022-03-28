@@ -1584,14 +1584,8 @@ class Instrument extends  React.Component {
         }
 
         let playBtn = null;
-        // let playBtn = takeable && (
-        //     <button onClick={() => this.OnClickInstrument(i)}>play</button>
-        // );
-
-        let releaseBtn = null;//isYours && (
-        //    <button className="release" onClick={() => this.props.app.ReleaseInstrument()}>release</button>
-        //);
-
+        let releaseBtn = null;
+        
         const isYourObserving = this.props.app.observingInstrument && this.props.app.observingInstrument.instrumentID == i.instrumentID;
 
         const isSequencerOn = i.sequencerDevice.isPlaying;
@@ -1600,7 +1594,7 @@ class Instrument extends  React.Component {
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = (
             <div
-                className={"seqIndicatorAnimation1 seqCtrlContainer" + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + (canCtrlSequencer ? " clickable" : "")}
+                className={"seqIndicatorAnimation1 seqCtrlContainer " + i.sequencerDevice.GetArpMapping().cssClass + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + ((canPerform && canCtrlSequencer) ? " clickable" : "")}
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
                 title={"Sequencer activity (click to start/stop)"}
                 onClick={canPerform ? (() => this.clickSequencerIndicator()) : null}

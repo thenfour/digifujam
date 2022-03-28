@@ -147,7 +147,6 @@ const ServerMessages = {
     // { instrumentID, op:"pastePatch", patch:{...} }
     // { instrumentID, op:"pasteBank", bank:{...} }
     // { instrumentID, op:"SeqSetTranspose", transpose: }
-    // { instrumentID, op:"cue", startFromAbsQuarter }
     // { instrumentID, op:"SeqSetBaseNote", note: }
     // { instrumentID, op:"SeqSetArpMapping", mapping: }
     SeqPresetOp: "SeqPresetOp",
@@ -910,6 +909,11 @@ class DigifuInstrumentSpec {
     ReleaseOwnership() {
         this.controlledByUserID = null;
 
+        if (this.sequencerDevice && this.sequencerDevice.GetArpMapping().swallowNotes) {
+            // if the sequencer swallows notes, it depends on user input to play.
+            this.sequencerDevice.SetPlaying(false);
+        }
+
         const pb = this.GetParamByID("pb");
         if (pb) {
             pb.currentValue = 0;
@@ -1329,7 +1333,7 @@ class DigifuInstrumentSpec {
     CanSequencerBeStartStoppedByUser(roomState, user) {
         if (user.userID === this.controlledByUserID) return true;
         if (!roomState.UserCanPerform(user)) return false;
-        return this.IsTakeable(roomState) && this.sequencerDevice.HasData();
+        return this.IsTakeable(roomState) && this.sequencerDevice.HasData() && (!this.sequencerDevice.GetArpMapping().swallowNotes);
     }
 
 }; // InstrumentSpec

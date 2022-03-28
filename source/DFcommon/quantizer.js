@@ -1,3 +1,4 @@
+const { GetMidiNoteInfo } = require('./DFMusic');
 const DF = require('./dfutil');
 
 // use a "frame" to indicate a very small slice of musical time, so we can deal in integers.
@@ -68,10 +69,10 @@ class ServerRoomQuantizer {
     let frame = this.queuedFrames[quantizedFrame];
 
     // frame.noteOns.forEach(n => {
-    //   console.log(`@${quantizedFrame} flushing NOTE ON: ${JSON.stringify(n)}`);
+    //   console.log(`@${quantizedFrame} executing NOTE ON ${GetMidiNoteInfo(n.note).name}: ${JSON.stringify(n)}`);
     // });
     // frame.noteOffs.forEach(n => {
-    //   console.log(`@${quantizedFrame} flushing NOTE OFF: ${JSON.stringify(n)}`);
+    //   console.log(`@${quantizedFrame} executing NOTE OFF ${GetMidiNoteInfo(n.note).name}: ${JSON.stringify(n)}`);
     // });
 
     this.noteEventsFlushRoutine(frame.noteOns, frame.noteOffs);
@@ -241,10 +242,52 @@ class ServerRoomQuantizer {
   //
   // so we need to know basically if the note has been deleted or not.
   // in order to do this, we save the seq note ID, and can look it up.
-  setSequencerEvents(instrumentID, notes, seqPatternView, isSeqPlaying, emitStartPlayingAbsQuarter) {
-    const noteEarliestEventRemoved = {}; // key=note, value={frame,isNoteOff}
-    // remove existing events for this instrument, save what was removed.
+  setSequencerEvents(roomID, instrumentID, notes, seqPatternView, isSeqPlaying) {
+    //if (instrumentID != 'fm4a') return;
+    //if (roomID != 'pub') return;
+    //console.log(`SetSequencerEvents begin: ${roomID} / ${instrumentID}---------------------------------------------------`);
 
+    // we detect "treating a note mid-way" by detecting if the first event to be executed is a note off.
+    // that only works if all scheduled notes NEVER overlap in timing.
+    // AND that we completely ignore non-sequenced scheduled events.
+    // so first set quantized frames
+    for (let i = 0; i < notes.length; ++ i) {
+      let n = notes[i];
+      n.noteOnQuantizedFrame = beatToFrame(n.absQuarter, this.metronome.getBPM());
+      n.noteOffQuantizedFrame = beatToFrame(n.absQuarter + n.lengthQuarters, this.metronome.getBPM()) - 1;
+      //console.log(`Reqd sched note: ${GetMidiNoteInfo(n.midiNoteValue).name} id:${n.noteID} @on:${n.noteOnQuantizedFrame} - @off:${n.noteOffQuantizedFrame}`);
+    }
+
+    // now adjust noteoff times to avoid overlaps.
+    for (let i = 0; i < notes.length; ++ i) {
+      let n = notes[i];
+      let noteOffQuantizedFrame = n.noteOffQuantizedFrame;
+      // fix overlaps: set note end not past [subsequent note ons] [of the same note value]
+      for (let i2 = 0; i2 < notes.length; ++ i2) {
+        let n2 = notes[i2];
+        if (i2 === i) continue;
+        if (n2.midiNoteValue !== n.midiNoteValue) continue; // [of the same note value]
+        if (n2.noteOnQuantizedFrame >= n.noteOnQuantizedFrame) // [subsequent note ons] -- nb: DUPE notes would also be treated here.
+        noteOffQuantizedFrame = Math.min(noteOffQuantizedFrame, n2.noteOnQuantizedFrame - 1);
+      }
+      n.noteOffQuantizedFrame = noteOffQuantizedFrame;
+
+      //console.log(`Adjusted sched note: ${GetMidiNoteInfo(n.midiNoteValue).name} id:${n.noteID} @on:${n.noteOnQuantizedFrame} - @off:${n.noteOffQuantizedFrame}`);
+    }
+    // and remove 0-length notes.
+    notes = notes.filter(n => {
+      const ret = (n.noteOffQuantizedFrame - n.noteOnQuantizedFrame) >= 2;
+      // if (!ret) {
+      //   console.log(`Removing 0-length sched note: ${GetMidiNoteInfo(n.midiNoteValue).name} id:${n.noteID} @on:${n.noteOnQuantizedFrame} - @off:${n.noteOffQuantizedFrame}`);
+      // }
+      return ret;
+    }); // at least 2 frames duration. even that's iffy.
+
+    // for each note value, the earliest event removed
+    // basically, if the first event we remove is a note-off, then we are treating the note mid-play.
+    const noteEarliestEventRemoved = {}; // key=note, value={frame,isNoteOff}
+
+    // remove existing events for this instrument, save what was removed.
     Object.keys(this.queuedFrames).forEach(k => {
       this.queuedFrames[k].noteOns.removeIf(f => {
         if (f.seqInstrumentID !== instrumentID)
@@ -261,6 +304,7 @@ class ServerRoomQuantizer {
             e.isNoteOff = false;
           }
         }
+        //console.log(`removing scheduled note on: ${GetMidiNoteInfo(f.note).name} @${k}`);
         return true;
       });
 
@@ -281,6 +325,7 @@ class ServerRoomQuantizer {
             e.seqNoteID = f.seqNoteID;
           }
         }
+        //console.log(`removing scheduled note off: ${GetMidiNoteInfo(f.note).name} @${k}`);
         return true;
       });
     });
@@ -288,23 +333,18 @@ class ServerRoomQuantizer {
     //const noteEarliestEventRemoved = {}; // key=note, value={frame,isNoteOn,seqNoteID}
     const removedPlayingNoteEntries = Object.entries(noteEarliestEventRemoved).filter(e => e[1].isNoteOff); // list of note entries where we assume we're cutting it off mid-way.
 
-    // if (Object.keys(noteEarliestEventRemoved).length) {
-    //   console.log(`Removed ${Object.keys(noteEarliestEventRemoved).length} entries, of which ${removedPlayingNoteEntries.length} are currently playing: ${JSON.stringify(noteEarliestEventRemoved)}.`);
-    // }
-
     if (!isSeqPlaying) {
       // the sequencer is no(longer)t playing. all playing notes should be sent a note-off.
-      const noteOffsToEmit = removedPlayingNoteEntries.map(e => {
-        return {
+      const noteOffsToEmit = removedPlayingNoteEntries.map(e => ({
           seqInstrumentID : instrumentID,
-          note : e[0],
+          note : parseInt(e[0]),
           seqNoteID: e[1].seqNoteID,
-        };
-      });
-      if (noteOffsToEmit?.length) {
+        }));
+      if (noteOffsToEmit.length) {
         //console.log(`Seq is no longer playing; sending noteoffs for ${noteOffsToEmit.length} notes: ${JSON.stringify(noteOffsToEmit)}`);
         this.noteEventsFlushRoutine([], noteOffsToEmit);
       }
+      //console.log(`SetSequencerEvents end (seq not playing) ---------------------------------------------------`);
       return;
     }
 
@@ -317,23 +357,24 @@ class ServerRoomQuantizer {
 
     removedPlayingNoteEntries.forEach(e => {
       console.assert(!!e[1].seqNoteID);
+      let quantizedFrame = e[1].frame;
+      const midiNoteValue = parseInt(e[0]);
       if (seqPatternView.HasViewCellID(e[1].seqNoteID)) {
         // note has not been deleted. reschedule this noteoff event.
-        let quantizedFrame = e[1].frame;
-        const midiNoteValue = e[0];
-        //console.log(`Rescheduling the note off; oops! @ frame ${quantizedFrame}`);
+        
+        //console.log(`Rescheduling the note off; oops! ${GetMidiNoteInfo(midiNoteValue).name} @ frame ${quantizedFrame} ...`);
 
         // if the incoming events also contains this note, then rescheduling this in the future could result in
         // overlapping notes. Not a deal-breaker but it will sound ugly, consume an extra voice, and cause some
         // old note to live too long.
         // find the earliest incoming note event for this note
-        const sameIncNotesAbsQuarter = notes
+        const sameIncNotesNoteOnFrame = notes
           .filter(n => n.midiNoteValue === midiNoteValue)
-          .map(n => n.absQuarter);
-        if (sameIncNotesAbsQuarter.length) {
-          const earliestAbsQuarter = Math.min(sameIncNotesAbsQuarter);
-          quantizedFrame = Math.min(quantizedFrame, beatToFrame(earliestAbsQuarter, this.metronome.getBPM()) - 1);
-          //console.log(`Preventing overlapping notes; shifting noteoff frame back to ${quantizedFrame}`);
+          .map(n => n.noteOnQuantizedFrame);
+        if (sameIncNotesNoteOnFrame.length) {
+          const earliestQuantizedFrame = Math.min(...sameIncNotesNoteOnFrame);
+          quantizedFrame = Math.min(quantizedFrame, earliestQuantizedFrame - 1);
+          //console.log(` -> Preventing overlapping notes; shifting noteoff frame back to ${quantizedFrame}`);
         }
 
         this.scheduleEvent(quantizedFrame, null, {
@@ -343,23 +384,24 @@ class ServerRoomQuantizer {
         });
       } else {
         // note has been removed from view, emit immediate note off
+        //console.log(`Note no longer exists; emitting courtesy note off. ${GetMidiNoteInfo(midiNoteValue).name} @ frame ${quantizedFrame}`);
         noteOffsToEmit.push({
           seqInstrumentID : instrumentID,
-          note : e[0],
+          note : midiNoteValue,
           seqNoteID: e[1].seqNoteID,
         });
       }
     });
 
-    if (noteOffsToEmit?.length) {
+    if (noteOffsToEmit.length) {
       //console.log(`Deleted notes will be immediately note-off'd ${noteOffsToEmit.length} notes: ${JSON.stringify(noteOffsToEmit)}`);
       this.noteEventsFlushRoutine([], noteOffsToEmit);
     }
 
     // schedule notes
     notes.forEach(n => {
-      const noteOnQuantizedFrame = beatToFrame(n.absQuarter, this.metronome.getBPM());
-      this.scheduleEvent(noteOnQuantizedFrame, { // note on
+      //const noteOnQuantizedFrame = beatToFrame(n.absQuarter, this.metronome.getBPM());
+      this.scheduleEvent(n.noteOnQuantizedFrame, { // note on
         note : n.midiNoteValue,
         seqInstrumentID : instrumentID,
         seqNoteID : n.noteID,
@@ -367,24 +409,15 @@ class ServerRoomQuantizer {
       }, null);
       
       // subtract 1 so adjascent notes in the sequencer don't get noteOff and noteOn at exactly the same time causing ambiguity.
-      let noteOffQuantizedFrame = beatToFrame(n.absQuarter + n.lengthQuarters, this.metronome.getBPM()) - 1;
-      //console.log(`Scheduling a note on + corresponding note off for ${n.noteID} @onframe:${noteOnQuantizedFrame} @offrame:${noteOffQuantizedFrame} (len quart:${n.lengthQuarters})`);
-      noteOffQuantizedFrame = Math.max(noteOffQuantizedFrame, noteOnQuantizedFrame + 1); // do not allow 0-length notes. randomly the note off could occur before note on and stick.
-      this.scheduleEvent(noteOffQuantizedFrame, null, { // corresponding note off.
+      //console.log(`Scheduling a note on + corresponding note off for ${GetMidiNoteInfo(n.midiNoteValue).name}, id ${n.noteID} @onframe:${n.noteOnQuantizedFrame} @offrame:${n.noteOffQuantizedFrame} (len quart:${n.lengthQuarters})`);
+      this.scheduleEvent(n.noteOffQuantizedFrame, null, { // corresponding note off.
         note : n.midiNoteValue,
         seqInstrumentID : instrumentID,
         seqNoteID : n.noteID,
       });
     }); // foreach notes
 
-    // schedule seq start playing if necessary.
-    if (emitStartPlayingAbsQuarter) {
-      const qf = beatToFrame(emitStartPlayingAbsQuarter, this.metronome.getBPM());
-      this.scheduleEvent(qf, {
-        seqInstrumentID : instrumentID,
-        op: "startPlaying",
-      }, null);
-    }
+    //console.log(`SetSequencerEvents end---------------------------------------------------`);
   }
 };
 

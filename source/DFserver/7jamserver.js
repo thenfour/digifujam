@@ -135,7 +135,6 @@ class _7jamServer {
 
       this.expressApp.use(roomState.route, (req, res, next) => {
         if (req.path.endsWith("/")) { // landing pages. yea i know how ugly this is.
-          console.log(`Time: ${Date.now()}`);
           res.send(indexTemplate);
           res.end();
         } else {

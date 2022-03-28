@@ -1090,6 +1090,7 @@ ul.instParamList li.inlineLabel {
 
 .component.instrumentCloset li {
     display: flex;
+    padding-bottom: 1px;
 }
 
 .component.instrumentCloset li .instrument {
