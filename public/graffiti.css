@@ -80,14 +80,6 @@
 }
 
 
-#graffitiContainer .graffiti a,
-#graffitiContainer .graffiti a:visited,
-#graffitiContainer .graffiti a:active,
-#graffitiContainer .graffiti a:link {
-    color: unset;
-    text-decoration: underline;
-}
-
 
 #graffitiContainer .graffiti {
     max-width: 200px;
@@ -96,6 +88,16 @@
     letter-spacing: -.5px;
     position: relative;
     pointer-events: none;
+}
+
+
+#graffitiContainer .graffiti a,
+#graffitiContainer .graffiti a:visited,
+#graffitiContainer .graffiti a:active,
+#graffitiContainer .graffiti a:link {
+    color: unset;
+    text-decoration: underline;
+    pointer-events: all;
 }
 
 
