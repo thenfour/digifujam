@@ -58,11 +58,6 @@ class RoomServer {
       }
     }
 
-    // do factory resets
-    // this.roomState.instrumentCloset.forEach(i => {
-    //   this.roomState.integrateRawParamChanges(i, this.roomState.GetInitPreset(i));
-    // });
-
     // remember this stuff for our "reset to factory defaults" function.
     this.factorySettings = this.roomState.instrumentCloset.map(i => {
       return {
@@ -72,8 +67,8 @@ class RoomServer {
     });
 
     setTimeout(() => {
-      this.OnPingInterval();
-    }, DF.ServerSettings.PingIntervalMS);
+      this.OnRoomObjectCleanupInterval();
+    }, DF.ServerSettings.RoomObjectCleanupIntervalMS);
 
     // set routines for metronome / quantization events
     this.roomState.metronome.setBeatRoutine(() => { this.OnRoomBeat(); });
@@ -207,6 +202,8 @@ class RoomServer {
         this.server.mServerStats.OnUserWelcome(this.roomState, u, this.roomState.users.filter(u => u.source === DF.eUserSource.SevenJam).length,
           clientSocket.DFIsDoingRoomChange);
         clientSocket.DFIsDoingRoomChange = false;
+
+        this.server.BeginUserPingInterval(clientSocket);
 
         let adminKey = null;
         if (u.IsAdmin()) {
@@ -2014,14 +2011,30 @@ class RoomServer {
   }
 
 
-  // every X seconds, this is called. here we can just do a generic push to clients and they're expected
-  // to return a pong. for now used for timing, and reporting user ping.
-  OnPingInterval() {
+  OnRequestRoomUserPings(ws, data) {
     try {
-      const startMS = Date.now();
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`OnRequestRoomUserPings => unknown user`);
+
+      const data = Object.fromEntries(this.roomState.users
+        .filter(u => u.source === DF.eUserSource.SevenJam)
+        .map(u => [u.userID, u.ExportForUserStatsPing()]));
+
+      //console.log(`OnRequestRoomUserPings returning size ${JSON.stringify(data).length}`);
+
+      ws.emit(DF.ServerMessages.RoomUserPings, data);
+    } catch (e) {
+      log(`OnRequestRoomUserPings exception occurred`);
+      log(e);
+    }
+  }
+
+  OnRoomObjectCleanupInterval() {
+    try {
+      //const startMS = Date.now();
       setTimeout(() => {
-        this.OnPingInterval();
-      }, DF.ServerSettings.PingIntervalMS);
+        this.OnRoomObjectCleanupInterval();
+      }, DF.ServerSettings.RoomObjectCleanupIntervalMS);
 
       if (!this.server.m7jamAPI) return; // <-- how could this happen? assuming it's here for a reason.
 
@@ -2044,7 +2057,7 @@ class RoomServer {
         // ONLY sevenjam native users are expected to have a websocket.
         let shouldDelete = !socketExists && u.source === DF.eUserSource.SevenJam;
         if (shouldDelete) {
-          log(`PING USER CLEANUP removing userid ${u.userID}`);
+          log(`USER CLEANUP removing userid ${u.userID}`);
           deletedUsers.push(u);
         }
         return shouldDelete;
@@ -2093,58 +2106,11 @@ class RoomServer {
           })));
         }, 100);
       }
-
-      // world population is not the sum of room population, because some users may represent identities which are in multiple rooms
-      // e.g. sync'd discord users.
-      const worldPopulation = this.server.m7jamAPI.GetGlobalUniqueIdentities();
-
-      var payload = {
-        token: (new Date()).toISOString(),
-        worldPopulation,
-        serverUptimeSec: ((new Date()) - this.server.mServerStartedDate) / 1000,
-        node_env: this.server.NODE_ENV,
-        rooms: [],
-      };
-
-      payload.rooms = Object.keys(this.server.mRooms).map(k => {
-        let room = this.server.mRooms[k];
-        return {
-          roomID: room.roomState.roomID,
-          isPrivate: !!room.roomState.isPrivate,
-          roomName: room.roomState.roomTitle,
-          users: room.roomState.users.map(u => u.ExportPing(k === this.roomState.roomID)),
-          stats: room.roomState.stats
-        };
-      });
-
-      // ping ALL clients on the room
-      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.Ping, payload);
-      //log(`ping processed in ${Date.now() - startMS} ms`);
     } catch (e) {
-      log(`OnPingInterval exception occurred`);
+      log(`OnRoomObjectCleanupInterval exception occurred`);
       log(e);
     }
-  };
-
-  OnClientPong(ws, data) {
-    try {
-      // data is the token we sent, a date iso string.
-      //log(`OnClientPong data=${data}`);
-      let a = new Date(data);
-      let b = new Date();
-
-      let foundUser = this.FindUserFromSocket(ws);
-      if (foundUser == null) {
-        log(`OnClientPong => unknown user`);
-        return;
-      }
-
-      foundUser.user.pingMS = (b - a);
-    } catch (e) {
-      log(`OnClientPong exception occurred`);
-      log(e);
-    }
-  };
+  }
 
   // call this to leave the socket from this room.
   ClientLeaveRoom(ws/* may be null */, userID, newRoomName) {

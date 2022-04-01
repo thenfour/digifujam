@@ -70,7 +70,6 @@ function EmptyPersistentInfo() {
 class DigifuUser {
 
   #pingSmall;
-  #pingDetailed;
   #pingDirty;
 
   constructor(params) {
@@ -100,7 +99,6 @@ class DigifuUser {
     };
 
     this.#pingSmall = null;    // cached ping data
-    this.#pingDetailed = null; // cached ping data
     this.#pingDirty = true;
   }
 
@@ -200,84 +198,50 @@ class DigifuUser {
     this.presence = p;
   }
 
-  // called by server; includes a bare minimum info to pass to clients from other rooms.
-  ExportPing(detailed) {
-    if (this.#pingDirty) {
-      //console.log(`exporting ping`);
-      this.#pingSmall = {
-        id : this.userID,
-        n : this.name,
-        c : this.color,
-        s : this.source,
-        p : this.presence,
-        b : this.IsBanned(),
-      };
-      
-      this.#pingDetailed = {};
-      if (this.persistentInfo?.global_roles?.length) {
-        this.#pingDetailed.gr = this.persistentInfo.global_roles;
-      }
-      if (this.persistentInfo?.stats?.noteOns) {
-        this.#pingDetailed.no = this.persistentInfo.stats.noteOns;
-      }
+  ExportForUserStatsPing() {
+    return [this.pingMS ?? 0, (this.persistentInfo?.stats?.noteOns) ?? 0];
+  }
 
-      this.#pingDetailed = Object.assign(this.#pingDetailed, this.#pingSmall);
+  ImportUserStatsPing(fields) {
+    if (fields[0]) {
+      this.pingMS = fields[0];
+    }
+    if (fields[1]) {
+      this.SetNoteOns(fields[1]);
+    }
+  }
+
+  // called by server; includes a bare minimum info to pass to clients from other rooms.
+  ExportForWorldState(/*detailed*/) {
+    if (this.#pingDirty) {
+      this.#pingSmall = [
+        this.userID,
+        this.name,
+        this.color,
+        this.source,
+        this.presence,
+        this.IsBanned()?1:0,
+      ];
+
       this.#pingDirty = false;
     }
 
-    this.#pingDetailed.ping = this.#pingSmall.ping = this.pingMS;
-
-    return detailed ? this.#pingDetailed : this.#pingSmall;
-  }
-
-  // called by clients to integrate this data to your room. name/color/etc should not actually be necessary because
-  // they come from other more timely server messages.
-  // call this AFTER FromPing().
-  IntegrateFromPing(u) {
-    //this.#pingDirty = true; // not really relevant to clients but for completeness...
-    console.assert(u.userID === this.userID);
-    if (u.pingMS)
-      this.pingMS = u.pingMS;
-    // if (u.n) this.name = u.n;
-    // if (u.c) this.color = u.c;
-    // if (u.source)
-    //   this.source = u.source;
-    // if (u.presence)
-    //   this.presence = u.presence;
-    if (u.global_roles) {
-      this.clearGlobalRoles();
-      u.global_roles.forEach(r => {this.addGlobalRole(r)});
-    }
-    if (u.noteOns) {
-      this.SetNoteOns(u.noteOns);
-    }
+    this.#pingSmall.ping = this.pingMS;
+    return this.#pingSmall;
   }
 
   // called by clients for users of OTHER rooms. so don't actually return a DigifuUser object, return a js object map with
   // sensible field naming that resembles DigifuUser.
-  static FromPing(data) {
-    if (data.ping)
-      data.pingMS = data.ping;
-    data.userID = data.id;
-    data.name = data.n;
-    data.color = data.c;
-    data.source = data.s;
-    data.presence = data.p;
-    data.isBanned = data.b;
-    if (data.no)
-      data.noteOns = data.no;
-    if (data.gr)
-      data.global_roles = data.gr;
-    delete data.id;
-    delete data.ping;
-    delete data.n;
-    delete data.c;
-    delete data.s;
-    delete data.p;
-    delete data.no;
-    delete data.gr;
-    delete data.b;
-    return data;
+  static FromWorldState(data) {
+    return {
+      userID: data[0],
+      name: data[1],
+      color: data[2],
+      source: data[3],
+      presence: data[4],
+      isBanned: !!data[5],
+    }
+
   }
 
   PersistentSignIn(hasPersistentIdentity, persistentID, persistentInfo) {

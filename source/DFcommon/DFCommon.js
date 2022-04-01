@@ -16,6 +16,8 @@ let SetGlobalInstrumentList = function (x) {
 
 const ClientMessages = {
     Identify: "Identify", // { name, color, google_refresh_token }
+    RequestWorldState:"RequestWorldState", // clients use this to request user lists of all rooms. call less often and include less detail.
+    RequestRoomUserPings:"RequestRoomUserPings", // clients use this to request user list of their room. call more often; just a ID:ping mapping
     InstrumentRequest: "InstrumentRequest", // instid
     InstrumentRelease: "InstrumentRelease",
     ChatMessage: "ChatMessage",// (to_userID_null, msg)
@@ -107,6 +109,8 @@ const ServerMessages = {
     PleaseIdentify: "PleaseIdentify",
     PleaseReconnect: "PleaseReconnect", // when something on the server requires a reconnection of all users, or when you're not authorized.
     Welcome: "Welcome",// { yourUserID, roomState, adminKey, globalSequencerConfig }
+    WorldState: "WorldState", // 
+    RoomUserPings: "RoomUserPings",
     UserEnter: "UserEnter",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserLeave: "UserLeave",// { user, <chatMessageEntry> }  there won't be a chat msg entry for external (discord) users.
     UserChatMessage: "UserChatMessage",// (fromUserID, toUserID_null, msg)
@@ -188,7 +192,9 @@ const ServerMessages = {
 };
 
 const ServerSettings = {
-    PingIntervalMS: 5000,
+    UserPingIntervalMS: 2134, // ping is just to calculate ping time
+    RoomObjectCleanupIntervalMS: 5120, // clean up things like expired graffiti, double-check out of sync state
+    CacheWorldStateIntervalMS: 1234, // re-calculate cached server data about world state.
     ChatHistoryMaxMS: (1000 * 60 * 60),
 
     InstrumentIdleTimeoutMS: (1000 * 60),
@@ -227,6 +233,8 @@ const ClientSettings = {
     InstrumentParamIntervalMS: 30,
     InstrumentFloatParamDiscreteValues: 64000,
     OfflineUserListLimit: 15, // 0 = no maximum
+    RequestWorldStateIntervalMS: 3511,
+    RequestUserPingsIntervalMS: 2431,
 };
 
 const eParamMappingSource = {

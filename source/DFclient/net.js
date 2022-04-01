@@ -277,6 +277,14 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.RoomPatchOp, data);
     }
 
+    SendRequestWorldState() {
+        this.socket.emit(DF.ClientMessages.RequestWorldState);
+    }
+
+    SendRequestUserPings() {
+        this.socket.emit(DF.ClientMessages.RequestRoomUserPings);
+    }
+
     // --------------
 
     IsConnected() {
@@ -345,6 +353,9 @@ class DigifuNet {
 
         this.socket.on(DF.ServerMessages.UserRoleOp, (data) => this.handler.NET_OnUserRoleOp(data))
         this.socket.on(DF.ServerMessages.ChatMessageOp, (data) => this.handler.NET_OnChatMessageOp(data))
+
+        this.socket.on(DF.ServerMessages.WorldState, (data) => this.handler.NET_OnWorldState(data));
+        this.socket.on(DF.ServerMessages.RoomUserPings, (data) => this.handler.NET_OnRoomUserPings(data));
 
         // SEQ ----
         this.socket.on(DF.ServerMessages.SeqPlayStop, (data) => this.handler.NET_SeqPlayStop(data));

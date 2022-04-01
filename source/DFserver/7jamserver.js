@@ -24,7 +24,7 @@ class _7jamServer {
 
   constructor(io, expressApp, http) {
 
-    this.mServerStartedDate = new Date();
+    this.mServerStartedDate = Date.now();
     this.expressApp = expressApp;
     this.io = io;
 
@@ -165,6 +165,9 @@ class _7jamServer {
 
     setTimeout(() => this.OnPruneServerStateInterval(), DF.ServerSettings.ServerStatePruneIntervalMS);
 
+    this.cachedWorldState = null;
+    setTimeout(() => this.OnUpdateCachedWorldState(), DF.ServerSettings.CacheWorldStateIntervalMS);
+
     this.mServerStats.OnRoomsLoaded(this.mRooms);
 
     this.mAdminApp = new ServerAdminApp(this.mConfig, this.mRooms, this.m7jamAPI, this.mServerStats, this.mDiscordBot, this.mDiscordIntegrationManager);
@@ -203,6 +206,104 @@ class _7jamServer {
       return false;
     });
     return ret;
+  };
+
+
+  OnRequestWorldState(ws, data) {
+    try {
+      if (!this.cachedWorldState) return; // server not ready yet.
+
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnRequestWorldState => unknown user`);
+        return;
+      }
+
+      //console.log(`OnRequestWorldState, sending size=${JSON.stringify(this.cachedWorldState).length}`);
+
+      ws.emit(DF.ServerMessages.WorldState, this.cachedWorldState);
+    } catch (e) {
+      log(`OnRequestWorldState exception occurred`);
+      log(e);
+    }
+  }
+  
+  OnClientPong(ws, data) {
+    try {
+      //log(`OnClientPong data=${data}`);
+      let a = data.token;
+      let b = Date.now();
+
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`! OnClientPong => unknown user`);
+        return;
+      }
+
+      foundUser.pingMS = (b - a);
+    } catch (e) {
+      log(`OnClientPong exception occurred`);
+      log(e);
+    }
+  };
+
+  OnUserPingInterval(ws) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnUserPingInterval => unknown user; stopping ping timer for this user.`);
+        return;
+      }
+
+      setTimeout(() => {
+        this.OnUserPingInterval(ws);
+      }, DF.ServerSettings.UserPingIntervalMS);
+
+      ws.emit(DF.ServerMessages.Ping, {
+        token: Date.now(),
+      });
+    } catch (e) {
+      log(`OnUserPingInterval exception occurred`);
+      log(e);
+    }
+  };
+
+  // rooms should call this when teh user has fully "connected" and is now visible in the world.
+  BeginUserPingInterval(ws) {
+    setTimeout(() => {
+      this.OnUserPingInterval(ws);
+    }, 100);
+  }
+
+  // every X seconds, this is called. here we can just do a generic push to clients and they're expected
+  // to return a pong. for now used for timing, and reporting user ping.
+  OnUpdateCachedWorldState() {
+    try {
+      setTimeout(() => {
+        this.OnUpdateCachedWorldState();
+      }, DF.ServerSettings.CacheWorldStateIntervalMS);
+
+      // world population is not the sum of room population, because some users may represent identities which are in multiple rooms
+      // e.g. sync'd discord users.
+      this.cachedWorldState ??= {};
+
+      this.cachedWorldState.worldPopulation = this.m7jamAPI.GetGlobalUniqueIdentities();
+      this.cachedWorldState.serverUptimeSec = ((Date.now()) - this.mServerStartedDate) / 1000;
+      this.cachedWorldState.node_env = this.NODE_ENV;
+      this.cachedWorldState.rooms = Object.values(this.mRooms).map(room => ({
+          roomID: room.roomState.roomID,
+          isPrivate: !!room.roomState.isPrivate,
+          roomName: room.roomState.roomTitle,
+          users: room.roomState.users
+            .filter(u => u.source === DF.eUserSource.SevenJam)
+            .map(u => u.ExportForWorldState(false)),
+          stats: room.roomState.stats
+      }));
+
+    } catch (e) {
+      log(`OnUpdateCachedWorldState exception occurred`);
+      log(e);
+    }
   };
 
   OnPersistentSignOut(ws, data) {
@@ -436,8 +537,12 @@ class _7jamServer {
       ws.on('disconnect', data => this.OnDisconnect(ws, data));
       ws.on(DF.ClientMessages.PersistentSignOut, data => this.OnPersistentSignOut(ws, data));
       ws.on(DF.ClientMessages.GoogleSignIn, data => this.OnGoogleSignIn(ws, data));
+      ws.on(DF.ClientMessages.RequestWorldState, data => this.OnRequestWorldState(ws, data));
+      ws.on(DF.ClientMessages.Pong, data => this.OnClientPong(ws, data));
+
       ws.on(DF.ClientMessages.Identify, data => this.ForwardToRoom(ws, room => room.OnClientIdentify(ws, data)));
       ws.on(DF.ClientMessages.JoinRoom, data => this.ForwardToRoom(ws, room => room.OnClientJoinRoom(ws, data)));
+      ws.on(DF.ClientMessages.RequestRoomUserPings, data => this.ForwardToRoom(ws, room => room.OnRequestRoomUserPings(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRequest, data => this.ForwardToRoom(ws, room => room.OnClientInstrumentRequest(ws, data)));
       ws.on(DF.ClientMessages.InstrumentRelease, () => this.ForwardToRoom(ws, room => room.OnClientInstrumentRelease(ws)));
       ws.on(DF.ClientMessages.NoteOn, data => this.ForwardToRoom(ws, room => room.OnClientNoteOn(ws, data)));
@@ -455,7 +560,6 @@ class _7jamServer {
       ws.on(DF.ClientMessages.InstrumentBankMerge, data => this.ForwardToRoom(ws, room => room.OnClientInstrumentBankMerge(ws, data)));
 
       ws.on(DF.ClientMessages.ChatMessage, data => this.ForwardToRoom(ws, room => room.OnClientChatMessage(ws, data)));
-      ws.on(DF.ClientMessages.Pong, data => this.ForwardToRoom(ws, room => room.OnClientPong(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => this.ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
       ws.on(DF.ClientMessages.Quantization, data => this.ForwardToRoom(ws, room => room.OnClientQuantization(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => this.ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));

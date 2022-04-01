@@ -592,8 +592,38 @@ class DigifuApp {
     this.heldNotes.AllNotesOff();
     this.handleAllNotesOff();
 
+    
+    if (this.worldStateTimer) {
+      clearTimeout(this.worldStateTimer);
+    }
+    this.worldStateTimer = setTimeout(this.WorldStateTimerProc, 50);
+
+    if (this.userPingsTimer) {
+      clearTimeout(this.userPingsTimer);
+    }
+    this.userPingsTimer = setTimeout(this.UserPingsTimerProc, 10);
+
+
     this.FireUserDance(this.myUser);
     this.handleRoomWelcome();
+  };
+
+  WorldStateTimerProc = () => {
+    this.worldStateTimer = null;
+    if (!this.roomState)
+      return;
+    this.net.SendRequestWorldState();
+    this.worldStateTimer = setTimeout(this.WorldStateTimerProc, DF.ClientSettings.RequestWorldStateIntervalMS);
+  };
+  
+  UserPingsTimerProc = () => {
+    this.userPingsTimer = null;
+    if (!this.roomState) {
+      console.log(`UserPingsTimerProc => no room state!`);
+      return;
+    }
+    this.net.SendRequestUserPings();
+    this.userPingsTimer = setTimeout(this.UserPingsTimerProc, DF.ClientSettings.RequestUserPingsIntervalMS);
   };
 
   NET_OnUserEnter(data) {
@@ -1249,33 +1279,31 @@ class DigifuApp {
   NET_OnPing(data) {
     if (!this.roomState)
       return;
-    this.net.SendPong(data.token);
+    this.net.SendPong({token: data.token});
+  };
+
+  NET_OnWorldState(data) {
     if (!this.roomState)
-      return; // technically a ping could be sent before we've populated room state.
+      return; // don't think this is possible
 
     data.rooms.forEach(room => {
-      room.users = room.users.map(user => DigifuUser.FromPing(user));
+      room.users = room.users.map(user => DigifuUser.FromWorldState(user));
+      if (room.roomID === this.roomState.roomID) {
+        // integrate things for the room.
+        this.roomState.stats = room.stats;
+      }
     });
     this.rooms = data.rooms;
 
     this.node_env = data.node_env;
 
-    // bring user stats to our room's user list
-    let room = this.rooms.find(r => r.roomID == this.roomState.roomID);
-    console.assert(!!room, "what, we're in a room, get a ping that doesn't have stats about this room???");
-    room.users.forEach(u => {
-      let foundUser = this.roomState.FindUserByID(u.userID);
-      if (!foundUser)
-        return; // this is possible because the server may be latent in sending this user data.
-      foundUser.user.IntegrateFromPing(u);
-    });
     this.serverUptimeSec = data.serverUptimeSec;
 
     // world population should count UNIQUE userIDs, in case users are in multiple rooms. that may be the case with
     // discord ("external"/"offline") users.
-    this.worldPopulation = data.worldPopulation; // (new Set(this.rooms.map(r => r.users).reduce((a,b)=>a.concat(b), []).map(u => u.userID))).size;
+    this.worldPopulation = data.worldPopulation;
 
-    // pings are a great time to do some cleanup.
+    // a good time to do some cleanup.
 
     // prune chat.
     let now = new Date();
@@ -1286,8 +1314,23 @@ class DigifuApp {
       return ((now - new Date(msg.timestampUTC)) < DF.ClientSettings.ChatHistoryMaxMS);
     });
 
-    this.events.emit('ping');
-  };
+    this.events.emit("ping");
+    this.stateChangeHandler();
+  }
+
+  NET_OnRoomUserPings(data) {
+    if (!this.roomState)
+      return; // don't think this is possible
+    console.log(`NET_OnRoomUserPings`);
+    Object.entries(data).forEach(e => {
+      const u = this.roomState.FindUserByID(e[0]);
+      if (!u) return;
+      u.user.ImportUserStatsPing(e[1]);
+    });
+
+    this.events.emit("ping");
+    this.stateChangeHandler();
+  }
 
   NET_ChangeRoomState(data) {
     switch (data.cmd) {
@@ -1627,9 +1670,21 @@ class DigifuApp {
 
   NET_OnDisconnect() {
     this.synth.AllNotesOff(this.myInstrument); // prevent disconnect leaving you in a noisy state. anyway when you reconnect you'll reset all synths anyway.
+
     if (this.radio)
       this.radio.stop();
     this.radio = null;
+
+    if (this.worldStateTimer) {
+      clearTimeout(this.worldStateTimer);
+      this.worldStateTimer = null;
+    }
+
+    if (this.userPingsTimer) {
+      clearTimeout(this.userPingsTimer);
+      this.userPingsTimer = null;
+    }
+
     this.stateChangeHandler();
   }
 

@@ -1424,16 +1424,16 @@ class UserList extends React.Component {
             return null;
         }
 
-        const room = this.props.app?.rooms?.find(r => r.roomID == this.props.app.roomState.roomID);
+        const room = this.props.app.roomState;//this.props.app?.rooms?.find(r => r.roomID == this.props.app.roomState.roomID);
 
-        const onlineUsers = room?.users?.filter(u => u.presence === DF.eUserPresence.Online && this.props.app.UserIsVisible(u));
-        const offlineUsers = room?.users?.filter(u => u.presence !== DF.eUserPresence.Online);
+        const onlineUsers = room.users.filter(u => u.presence === DF.eUserPresence.Online && this.props.app.UserIsVisible(u));
+        const offlineUsers = room.users.filter(u => u.presence !== DF.eUserPresence.Online);
 
-        const onlineUsersR = onlineUsers?.map(u => (
+        const onlineUsersR = onlineUsers.map(u => (
                 <li className='userRow' key={u.userID}>
                     <span className='presenceIndicator'>•</span>
                     <UIUser.UIUserName user={u} app={this.props.app} />
-                    <span className="userPing"> ({u.pingMS}ms ping)</span>
+                    {(u.pingMS > 0) && <span className="userPing"> ({u.pingMS}ms ping)</span>}
                 </li>
             ));
 
@@ -1457,9 +1457,9 @@ class UserList extends React.Component {
                     {room &&
                         <span className="roomHeaderStats">
                             [
-                            <span className="userCount">{onlineUsers?.length}</span>/
-                            <span className="userCount">{room.users?.length}</span>
-                            ] ♫<span className="noteOns">{room?.stats.noteOns}</span></span>
+                            <span className="userCount">{onlineUsers.length}</span>/
+                            <span className="userCount">{room.users.length}</span>
+                            ] ♫<span className="noteOns">{room.stats.noteOns}</span></span>
                     }
                 </h2>
                 <ul className="userList onlineUserList">
@@ -1499,9 +1499,9 @@ class WorldStatus extends React.Component {
         const rooms = this.props.app.rooms.filter(r => r.roomID != this.props.app.roomState.roomID && !r.isPrivate);
 
         const userList = (visibleUserList) => visibleUserList
-            .filter(u => u.source === DF.eUserSource.SevenJam) // there's really not much use in showing external users here.
             .map(u => (
-                <li key={u.userID}><span className='presenceIndicator'>•</span><span className="userName" style={{ color: u.color }}>{u.name}</span><span className="userPing"> ({u.pingMS}ms ping)</span></li>
+                <li key={u.userID}><span className='presenceIndicator'>•</span><span className="userName" style={{ color: u.color }}>{u.name}</span>
+                </li>
             ));
 
         const roomsMarkup = rooms.map((room, i) => {
