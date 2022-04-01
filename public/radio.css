@@ -9,7 +9,7 @@
   color:#0cc;
   display:flex;
   flex-direction: row;
-  z-index: 999;
+  z-index: var(--z-index-radio-controls);
   height: 100%;
   align-content: stretch;
   width: 100%;

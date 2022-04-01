@@ -1,7 +1,7 @@
 .dfmodal {
   position: absolute;
   background-color: #000c;
-  z-index: 9999;
+  z-index: var(--z-index-modal-dialog);
   --margin: 15px;
   max-width: calc(100% - 2 * var(--margin));
   max-height: calc(100% - 2 * var(--margin));

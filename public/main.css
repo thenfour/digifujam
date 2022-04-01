@@ -3,6 +3,32 @@
 
 :root {
     --move-duration: 1s;
+
+    /* putting all z-index values here to keep them under control. */
+
+    --z-index-radio-metadata: 996; /* in front of vis, but behind radio controls */
+
+    --z-index-avatar: 997;
+    --z-index-avatar-me: 998;
+
+    --z-index-radio-controls: 999;
+    --z-index-cheer: 1000;
+
+    --z-index-param-group-sticky-ctrl: 9900;
+    --z-index-instrument-closet-button-container: 9901;
+    --z-index-sequencer-main: 9902;
+
+    --z-index-chat-slash-command-help: 10000;
+    --z-index-sequencer-dialog: 10010;
+    --z-index-popup-menu: 10020;
+    --z-index-modal-dialog: 10030;
+    --z-index-moderation-dialog: 10040;
+
+    --z-index-alert-screen: 10100;
+    --z-index-room-alert-area: 10110;
+
+    --z-index-gesture-splash: 100000;
+
 }
 
 body {
@@ -368,7 +394,7 @@ button:focus {
     font-size: 32px;
     font-weight: bold;
     margin-top: 5px;
-    z-index: 100000;
+    z-index: var(--z-index-room-alert-area);
     position: relative;
 }
 
@@ -475,7 +501,7 @@ button.muteButton:focus {
 .cheer {
     position: absolute;
     pointer-events: none;
-    z-index: 1000;
+    z-index: var(--z-index-cheer);
 }
 
 #cheerControl {
@@ -908,7 +934,7 @@ div.presetFilter input[type="text"] {
     top: 0px;
     padding-top: 4px;
     background-color: #222;
-    z-index: 9900;
+    z-index: var(--z-index-param-group-sticky-ctrl);
 }
 
 
@@ -1134,7 +1160,7 @@ li.floatParam .paramMappingBox button:hover {
 .component.instrumentCloset li .instrument .buttonContainer {
     position: absolute;
     right: 0;
-    z-index: 9999;
+    z-index: var(--z-index-instrument-closet-button-container);
     visibility: hidden;
 }
 
@@ -1388,7 +1414,7 @@ button.stayLoggedIn:hover {
     padding: 10px;
     position: absolute;
     font-size: 16px;
-    z-index: 9991;
+    z-index: var(--z-index-popup-menu);
     width: 450px;
     background-color: #111111e8;
     text-align: left;
@@ -1735,7 +1761,7 @@ li.preloadSFZ {
     height: 100vh;
     width: 100%;
     background-color: #0006;
-    z-index: 10000;
+    z-index: var(--z-index-gesture-splash);
     display: flex;
     flex-direction: row;
     align-content: stretch;
@@ -1911,7 +1937,7 @@ https://www.w3schools.com/icons/google_icons_intro.asp
     height: 100vh;
     width: 100%;
     background-color: #0006;
-    z-index: 10000;
+    z-index: var(--z-index-alert-screen);
     display: flex;
     flex-direction: row;
     overflow: hidden;
@@ -1991,7 +2017,7 @@ ul.instParamList li.floatParam .floatParamMainControls {
     color: #0cc;
     border: 2px solid #044;
     border-radius: 4px;
-    z-index: 10000;
+    z-index: var(--z-index-chat-slash-command-help);
     opacity: 80%;
 }
 

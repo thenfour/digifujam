@@ -17,7 +17,7 @@
 .sequencerMain {
     color: #044;
     background-color: #ffd;
-    z-index: 8999;
+    z-index: var(--z-index-sequencer-main);
     display: flex;
     flex-direction: column;
     padding: 6px;
@@ -330,7 +330,7 @@
     color: #0cc;
     font-family: monospace;
     font-size: 16px;
-    z-index: 10000;
+    z-index: var(--z-index-sequencer-dialog);
 }
 
 .sequencerMain .dialog legend {
