@@ -50,7 +50,12 @@ function renderKnob(el, value01, formatSpec, valueSpec, propGetter) {
     ctx.fillStyle = propGetter(formatSpec.textColor);
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(valueSpec.value01ToString(value01), centerX, centerY);
+    let txt;
+    if (formatSpec.centerText)
+      txt = propGetter(formatSpec.centerText);
+    else
+      txt = valueSpec.value01ToString(value01);
+    ctx.fillText(txt, centerX, centerY);
   }
 }
 
@@ -75,6 +80,7 @@ class SeqLegendKnob extends React.Component {
       valHighlightLineCap: 'round', // butt round
     };
     this.valueSpec = this.props.valueSpec;
+    this.smallCaption = this.props.smallCaption ?? "";
     this.isDragging = false;
   }
 
@@ -88,7 +94,7 @@ class SeqLegendKnob extends React.Component {
 
         this.slider = new ValueSliderElement({
           valueSpec : this.valueSpec,
-          elements : [this.canvasRef, this.legendRef],
+          elements : this.props.hideTitle ? [this.canvasRef] : [this.canvasRef, this.legendRef],
           initialValue : this.props.initialValue,
           onChange : (v, s, isUserAction) => {
             this.value01 = v;
@@ -111,16 +117,17 @@ class SeqLegendKnob extends React.Component {
     const valueStr = !this.value01 ? "" : this.valueSpec.value01ToString(this.value01);
     return (
       <div className='paramGroup'>
-        <div title={valueStr} className='legend' ref={(r) => { this.legendRef = r; }}>{this.props.caption}</div>
+        {!this.props.hideTitle &&
+          <div title={valueStr} className='legend' ref={(r) => { this.legendRef = r; }}>{this.props.caption}</div>
+        }
         <div className='paramBlock'>
-          <canvas title={valueStr} className={this.props.className} ref={(r) => { this.canvasRef = r; }}></canvas>
+          <canvas title={this.props.caption + ": " + valueStr} className={this.props.className} ref={(r) => { this.canvasRef = r; }}></canvas>
         </div>
         {this.props.children}
       </div>
     );
   }
 }
-
 
 class IntRangeValueSpec {
   constructor(min, max, centerValue, resetValue) {

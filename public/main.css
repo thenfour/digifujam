@@ -279,6 +279,7 @@ button:focus {
     padding: 3px;
     display: flex;
     justify-content: space-between;
+    user-select: none;
 }
 
 .headerArea>span {
@@ -288,6 +289,14 @@ button:focus {
     font-size: small;
     display: inline-flex;
     align-items: center;
+}
+
+.headerArea .masterVolume,
+ .headerArea .pitchBend
+ {
+ margin:0px 10px;
+ display:flex;
+ align-items: center;
 }
 
 .headerArea .headerTitle {
