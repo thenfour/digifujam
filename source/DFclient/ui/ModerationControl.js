@@ -365,11 +365,25 @@ class UserModerationDialog extends React.Component {
     })
   }
 
+  onClickForceReleaseInstrument() {
+    const userID = window.DFModerationControlContext.userID;
+    this.props.app.net.SendUserRoleOp({
+      op: "InstrumentRelease",
+      userID
+    });
+  }
+
   render() {
     const userID = window.DFModerationControlContext.userID;
     let foundUser = this.props.app.roomState.FindUserByID(userID);
     if (!foundUser) return null;
     const u = foundUser.user;
+
+    let instrument = this.props.app.roomState.instrumentCloset.find(i => i.controlledByUserID === u.userID);
+    let instStyle = {};
+    if (instrument) {
+      instStyle.color = instrument.color;
+    }
 
     return (
       <div className='moderationPanel'>
@@ -385,6 +399,14 @@ class UserModerationDialog extends React.Component {
               <span className='field colorSwatch' style={{backgroundColor:u.color}}></span>
               <span className='field colorText'>{u.color}</span>
               <span className='field id'>#{u.userID}</span>
+            </dd>
+            <dt>Instrument</dt><dd className='playingInstrument'>
+              {instrument ?
+                <div>
+                  <span className='field' style={instStyle}>{instrument.getDisplayName()}</span>
+                  <button onClick={() => this.onClickForceReleaseInstrument()}>Force release</button>
+                </div>
+                : <span className='none'>(none)</span>}
             </dd>
             <dt>Presence</dt><dd className='presence'><span className='field'>{UserPresenceToString(u.presence)}</span></dd>
             <dt>Source</dt><dd className='source'><span className='field'>{UserSourceToString(u.source)}</span></dd>

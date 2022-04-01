@@ -292,7 +292,7 @@ class RoomPresetLI extends React.Component {
 
           {this.state.loadingObj &&
             <div className="confirmationBox">
-              Select which elements to import for "{this.props.preset.name}"
+              Select which elements to import for "{this.props.preset.name}".  NOTE: If someone else is playing an instrument, that instrument will fail to get updated.
               <RoomPatchSelection app={this.props.app}
                 instrumentListType="loadingPatch"
                 loadingPatch={this.state.loadingObj}
@@ -580,7 +580,7 @@ class RoomPresetsDialog extends React.Component {
                 {this.state.pastingObj &&
                   <li>
                   <div className='confirmation'>
-                    Select which elements you want to import. NOTE! If someone else is controlling an instrument, that instrument will not be updated.
+                    Select which elements you want to import. NOTE: If someone else is playing an instrument, that instrument will not be updated.
                     {/* <RoomPatchObjDesc patch={this.state.pastingObj} app={app} /> */}
                     <RoomPatchSelection app={app} loadingPatch={this.state.pastingObj} instrumentListType="loadingPatch" valueSetter={(sel) => this.onChangePastingSelection(sel)} />
                     <button className='ok' onClick={() => this.OnClickPasteOK()}>OK</button>

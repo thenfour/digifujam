@@ -1533,11 +1533,12 @@ class DigifuApp {
     }
 
     switch (data.op) {
-      case "addGlobalRole":
+      case "addGlobalRole": {
         u.user.addGlobalRole(data.role);
         //console.log(`adding role ${data.role} to user ${u.user.name}`);
         break;
-      case "removeGlobalRole":
+      }
+      case "removeGlobalRole": {
         u.user.removeGlobalRole(data.role);
 
         // stop local things that you can't do without performance rights.
@@ -1547,6 +1548,15 @@ class DigifuApp {
 
         //console.log(`removing role ${data.role} from user ${u.user.name}`);
         break;
+      }
+      case "InstrumentRelease": {
+        const instrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == data.userID);
+        if (!instrument) {
+          throw new Error(`server wants us to release an instrument for a user when that user is not controlling an instrument?`);
+        }
+        this.NET_OnInstrumentOwnership(instrument.instrumentID, null, false);
+        return;
+      }
       default:
         throw new Error(`unknown op '${data.op}'`);
     }

@@ -51,6 +51,7 @@ const ClientMessages = {
     // admin
     // { userID, op:"addGlobalRole", role:"..." }
     // { userID, op:"removeGlobalRole", role:"..." }
+    // { userID, op:"InstrumentRelease" }
     UserRoleOp: "UserRoleOp", // { userID, op, ...}
     ChatMessageOp: "ChatMessageOp", // { messageID, op:"delete" }
 
@@ -134,6 +135,7 @@ const ServerMessages = {
 
     // { userID, op:"addGlobalRole", role:"..." }
     // { userID, op:"removeGlobalRole", role:"..." }
+    // { userID, op:"InstrumentRelease" }
     UserRoleOp: "UserRoleOp", // { userID, op, ...}
     ChatMessageOp: "ChatMessageOp", // { messageID, op:"delete" }
 
@@ -1739,7 +1741,31 @@ class DigifuRoomState {
             }
             return v;
         };
-        return JSON.stringify(this, replacer);
+        const ret = JSON.stringify(this, replacer);
+
+        // https://github.com/thenfour/digifujam/issues/263
+        // console.log(`welcome payload = ${ret.length}`);
+        // console.log(`  users = ${JSON.stringify(this.users, replacer).length}`);
+        // console.log(`  instruments = ${JSON.stringify(this.instrumentCloset, replacer).length}`);
+        // console.log(`  presetBanks = ${JSON.stringify(this.presetBanks, replacer).length}`);
+        // console.log(`  seqPresetBanks = ${JSON.stringify(this.seqPresetBanks, replacer).length}`);
+        // console.log(`  roomPresets = ${JSON.stringify(this.roomPresets, replacer).length}`);
+
+        // let totalParams = 0;
+        // let totalParamMappings = 0;
+        // let totalSequencerDevices = 0;
+
+        // this.instrumentCloset.forEach(instrument => {
+        //     totalParams += JSON.stringify(instrument.params).length;
+        //     totalParamMappings += JSON.stringify(instrument.paramMappings).length;
+        //     totalSequencerDevices += JSON.stringify(instrument.sequencerDevice).length;
+        // });
+
+        // console.log(`  totalParams = ${totalParams}`);
+        // console.log(`  totalParamMappings = ${totalParamMappings}`);
+        // console.log(`  totalSequencerDevices = ${totalSequencerDevices}`);
+
+        return ret;
     }
 
     adminExportRoomState() {

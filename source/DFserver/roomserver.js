@@ -1291,7 +1291,7 @@ class RoomServer {
         return;
       }
 
-      if (!caller.user.HasRequiredRoleToManageRole(data.role)) throw new Error(`caller isn't an admin.`);
+      if (!caller.user.HasRequiredRoleToManageRole(data.role)) throw new Error(`caller doesn't have permissions to ${data.op}.`);
 
       let foundUser = this.roomState.FindUserByID(data.userID);
       if (!foundUser) {
@@ -1300,10 +1300,11 @@ class RoomServer {
       }
 
       switch (data.op) {
-        case "addGlobalRole":
+        case "addGlobalRole": {
           foundUser.user.addGlobalRole(data.role);
           break;
-        case "removeGlobalRole":
+        }
+        case "removeGlobalRole": {
           foundUser.user.removeGlobalRole(data.role);
           // when you no longer have permission to perform, release instrument.
           const inst = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
@@ -1318,8 +1319,23 @@ class RoomServer {
             }
           }
           break;
+        }
+        case "InstrumentRelease": {
+          // find their instrument.
+          let foundInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
+          if (foundInstrument == null) {
+            log(`=> not controlling an instrument.`);
+            return;
+          }
+
+          this.roomState.quantizer.clearUser(foundUser.user.userID);
+          this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
+          foundInstrument.instrument.ReleaseOwnership();
+          this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
+          break;
+        }
         default:
-          throw new Error(`unknown op '${data.op}'`);
+          throw new Error(`unknown user role op '${data.op}'`);
       }
 
       this.server.mDB.UpdateUserPersistentInfo(foundUser.user);
