@@ -9,6 +9,10 @@
     height: 100%;
 }
 
+#graffitiContainer {
+    z-index: var(--z-index-graffiti);
+}
+
 
 #graffitiScreen svg {
     position: absolute;
@@ -124,6 +128,7 @@
     font-size: 64px;
     user-select: none;
     pointer-events: none;
+    z-index: var(--z-index-drag-graffiti-screen);
 }
 
 

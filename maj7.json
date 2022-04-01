@@ -2,7 +2,12 @@
   "roomID": "maj7",
   "roomTitle": "#maj7",
   "route": "/maj7",
-  "img": "/roomart/tony01_lightsout_1750.jpg",
+  "backgroundLayers": [
+    {
+      "img": "/roomart/tony01_lightsout_1750.jpg",
+      "palallax": 1
+    }
+  ],
   "width": 1750,
   "height": 1280,
   "bpm": 100,

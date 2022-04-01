@@ -1907,7 +1907,7 @@ class UIRoomItem extends React.Component {
             }
     
             return (
-                <div>
+                <div className='roomItemContainer'>
                     <div className="roomItem graffitiText" style={style} dangerouslySetInnerHTML={{ __html: html }}></div>
                 </div>);
         } else if (this.props.item.itemType === DF.DFRoomItemType.radioMetadata) {
@@ -1917,7 +1917,7 @@ class UIRoomItem extends React.Component {
         }
 
         return (
-            <div>
+            <div className='roomItemContainer'>
                 <div className="roomItem" style={style}>{this.props.item.name}</div>
                 {signMarkup}
             </div>
@@ -2391,9 +2391,9 @@ class RoomArea extends React.Component {
     }
 
     render() {
-        let style = {};
         let userAvatars = null;
         let roomItems = null;
+        let backgroundLayers = null;
 
         if (this.props.app && this.props.app.roomState) {
             let scrollPos = this.getScreenScrollPosition();
@@ -2408,13 +2408,18 @@ class RoomArea extends React.Component {
                 <UIRoomItem key={item.itemID} app={this.props.app} item={item} displayHelper={() => this} />
             ));
 
-            style = {
-                gridArea: "roomArea",
-                backgroundImage: `url(${StaticURL(this.props.app.roomState.img)})`,
-                backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
-            };
-        }
+            backgroundLayers = this.props.app.roomState.backgroundLayers.map((layer,i) => {
+                const style = {
+                    backgroundImage: `url(${StaticURL(layer.img)})`,
+                    backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
+                };
 
+                return (
+                    <div key={i} className='backgroundLayer' style={style}></div>
+                )
+            });
+
+        }
 
         let connection = (this.props.app) ? null : (
             <DFSignIn.Connection app={this.props.app} handleConnect={this.props.handleConnect} googleOAuthModule={this.props.googleOAuthModule} />
@@ -2448,13 +2453,13 @@ class RoomArea extends React.Component {
         return (
             <div id="roomArea" className={"roomArea" + (isDisconnected ? " disconnectedGrayscale" : "")}
                 onClick={e => this.onClick(e)}
-                style={style}
                 onDrop={this.onDrop}
                 onDragOver={this.onDragOver}
                 onDragEnter={this.onDragEnter}
                 onDragLeave={this.onDragLeave}
                 >
                 {window.DFShowChatSlashCommandHelp && <ChatSlashCommandHelp context={context} />}
+                {backgroundLayers}
                 {connection}
                 <ModerationControlPanel app={this.props.app} />
                 <ModalDialogController app={this.props.app} />

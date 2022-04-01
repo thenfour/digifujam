@@ -1281,11 +1281,11 @@ class RoomServer {
           this.roomState.announcementHTML = data.params;
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
-        case "setRoomImg":
-          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
-          this.roomState.img = data.params;
-          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
-          break;
+        // case "setRoomImg":
+        //   if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
+        //   this.roomState.img = data.params;
+        //   this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+        //   break;
         case "setRadioChannel":
           if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
           this.roomState.radio.channelID = data.params.channelID;

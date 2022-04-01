@@ -5,14 +5,21 @@
     --move-duration: 1s;
 
     /* putting all z-index values here to keep them under control. */
+    --z-index-room-background-layers: 500;
 
-    --z-index-radio-metadata: 996; /* in front of vis, but behind radio controls */
+    --z-index-radio-metadata: 1000; /* in front of vis, but behind radio controls */
+    --z-index-graffiti: 1010;
+    --z-index-room-item: 1015;
 
-    --z-index-avatar: 997;
-    --z-index-avatar-me: 998;
+    --z-index-avatar: 1020;
+    --z-index-avatar-me: 1030;
 
-    --z-index-radio-controls: 999;
-    --z-index-cheer: 1000;
+    --z-index-radio-controls: 1040;
+    --z-index-cheer: 1050;
+
+    --z-index-full-chat-log: 1060;
+    --z-index-room-overlay-controls: 1070;
+    --z-index-cheer-controls:1071;
 
     --z-index-param-group-sticky-ctrl: 9900;
     --z-index-instrument-closet-button-container: 9901;
@@ -26,6 +33,7 @@
 
     --z-index-alert-screen: 10100;
     --z-index-room-alert-area: 10110;
+    --z-index-drag-graffiti-screen: 10120;
 
     --z-index-gesture-splash: 100000;
 
@@ -154,13 +162,14 @@ button:focus {
 .roomArea {
     background-color: black;
     color: #339;
-    background-repeat: no-repeat;
     position: relative;
     overflow: hidden;
+    background-repeat: no-repeat;
     transition: background-position var(--move-duration);
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    grid-area: "roomArea";
     /* announcement area fix */
 }
 
@@ -197,6 +206,18 @@ button:focus {
     opacity: 100%;
     animation: screenFadeOut 1s 1;
     animation-fill-mode: forwards;
+}
+
+.backgroundLayer {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index: var(--z-index-room-background-layers);
+    background-repeat: no-repeat;
+    transition: background-position var(--move-duration);
+    pointer-events: none;
 }
 
 .component {
@@ -309,6 +330,7 @@ button:focus {
 .fullChatLog {
     overflow-y: scroll;
     position: absolute;
+    z-index: var(--z-index-full-chat-log);
     bottom: 0;
     width: 100%;
     /* important because if you have 1 message that cannot be wrapped, it will make the chat log area grow wider, and everyone's messages will get cutoff. this allows other long messages to still wrap.*/
@@ -337,6 +359,7 @@ button:focus {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    z-index: var(--z-index-room-overlay-controls);
 }
 
 .roomOverlayControlsRight div.showSequencer button.showSequencerButton {
@@ -508,6 +531,7 @@ button.muteButton:focus {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: var(--z-index-cheer-controls);
 }
 
 #cheerControl input[type="text"i] {
@@ -750,7 +774,10 @@ ul.instParamList li.buttonsParam.sfzSelect button {
 }
 
 
-
+.roomItemContainer,
+.roomItem {
+    z-index: var(--z-index-room-item);
+}
 .roomItem {
     border: 5px solid blue;
     box-sizing: border-box;
