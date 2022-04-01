@@ -45,3 +45,10 @@
     filter: drop-shadow(3px -3px 5px black) grayscale(50%);
 }
 
+.backgroundLayer.parallaxBG {
+    background: repeating-radial-gradient(black, #26163e 694px, black 1714px);
+}
+
+.backgroundLayer.milkywayBG {
+    opacity: 25%;
+}

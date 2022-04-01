@@ -1321,7 +1321,6 @@ class DigifuApp {
   NET_OnRoomUserPings(data) {
     if (!this.roomState)
       return; // don't think this is possible
-    console.log(`NET_OnRoomUserPings`);
     Object.entries(data).forEach(e => {
       const u = this.roomState.FindUserByID(e[0]);
       if (!u) return;

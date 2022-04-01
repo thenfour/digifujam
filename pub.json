@@ -4,8 +4,30 @@
   "route": "/",
   "backgroundLayers": [
     {
-      "img": "/roomart/matt01x1200.jpg",
-      "palallax": 1
+      "img": "/roomart/matt1200-masked.png",
+      "default":1,
+      "parallaxFactor": 0.85,
+      "z":10,
+      "width": 1200,
+      "height": 1200,
+      "cssClass": ""
+    },
+    {
+      "img": "/roomart/stars.png",
+      "parallaxFactor": 0.5,
+      "z":1,
+      "width": 2560,
+      "height": 1440,
+      "offsetX": -680,
+      "offsetY": -120,
+      "cssClass": "milkywayBG"
+    },
+    {
+      "parallaxFactor": 0.4,
+      "z":0,
+      "width": 1200,
+      "height": 1200,
+      "cssClass": "parallaxBG"
     }
   ],
   "width": 1200,

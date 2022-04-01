@@ -214,7 +214,8 @@ button:focus {
     left:0;
     width:100%;
     height:100%;
-    z-index: var(--z-index-room-background-layers);
+    --background-z:0;
+    z-index: calc(var(--background-z) + var(--z-index-room-background-layers));
     background-repeat: no-repeat;
     transition: background-position var(--move-duration);
     pointer-events: none;

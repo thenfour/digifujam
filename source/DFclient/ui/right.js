@@ -2222,19 +2222,20 @@ class RoomArea extends React.Component {
 
     // helper APIs
     // where to display the background
-    getScreenScrollPosition() {
+    getScreenScrollPosition(layer) {
         if ((!this.props.app) || (!this.props.app.roomState)) return { x: 0, y: 0 };
+        if (!layer) layer = this.props.app.roomState.backgroundLayers.find(layer => layer.default);
         let userPos = this.props.app.myUser.position;
         let x1 = (this.state.scrollSize.x / 2) - userPos.x;
         let y1 = (this.state.scrollSize.y / 2) - userPos.y;
 
         // that will put you square in the center of the screen every time.
         // now calculate the opposite: where the room is always centered.
-        let x2 = (this.state.scrollSize.x / 2) - (this.props.app.roomState.width / 2);
-        let y2 = (this.state.scrollSize.y / 2) - (this.props.app.roomState.height / 2);
+        let x2 = (this.state.scrollSize.x / 2) - (layer.width / 2) + (layer.offsetX??0);
+        let y2 = (this.state.scrollSize.y / 2) - (layer.height / 2) + (layer.offsetY??0);
 
         // so interpolate between the two. smaller = easier on the eyes, the room stays put, but parts can become unreachable.
-        let t = 0.85;
+        let t = layer.parallaxFactor;//0.85;
 
         return {
             x: ((x1 * t) + (x2 * (1 - t))),
@@ -2396,7 +2397,6 @@ class RoomArea extends React.Component {
         let backgroundLayers = null;
 
         if (this.props.app && this.props.app.roomState) {
-            let scrollPos = this.getScreenScrollPosition();
 
             userAvatars = this.props.app.roomState.users
                 .filter(u => u.presence === DF.eUserPresence.Online && this.props.app.UserIsVisible(u))
@@ -2409,13 +2409,17 @@ class RoomArea extends React.Component {
             ));
 
             backgroundLayers = this.props.app.roomState.backgroundLayers.map((layer,i) => {
+                let scrollPos = this.getScreenScrollPosition(layer);
                 const style = {
-                    backgroundImage: `url(${StaticURL(layer.img)})`,
                     backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
+                    "--background-z": layer.z,
                 };
+                if (layer.img) {
+                    style.backgroundImage = `url(${StaticURL(layer.img)})`;
+                }
 
                 return (
-                    <div key={i} className='backgroundLayer' style={style}></div>
+                    <div key={i} className={'backgroundLayer ' + layer.cssClass} style={style}></div>
                 )
             });
 

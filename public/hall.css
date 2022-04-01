@@ -97,6 +97,13 @@
 }
 
 
+.backgroundLayer.parallaxBG {
+    background: repeating-radial-gradient(black, #26163e 694px, black 1714px);
+}
+
+.backgroundLayer.milkywayBG {
+    opacity: 25%;
+}
 
 
 

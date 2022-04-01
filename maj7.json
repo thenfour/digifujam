@@ -4,8 +4,30 @@
   "route": "/maj7",
   "backgroundLayers": [
     {
-      "img": "/roomart/tony01_lightsout_1750.jpg",
-      "palallax": 1
+      "img": "/roomart/tony01_lightsout_1750.png",
+      "default":1,
+      "parallaxFactor": 0.85,
+      "z":10,
+      "cssClass": "",
+      "width": 1750,
+      "height": 1280
+    },
+    {
+      "img": "/roomart/stars.png",
+      "parallaxFactor": 0.5,
+      "z":1,
+      "width": 2560,
+      "height": 1440,
+      "offsetX": -405,
+      "offsetY": -80,
+      "cssClass": "milkywayBG"
+    },
+    {
+      "parallaxFactor": 0.4,
+      "z":0,
+      "width": 1750,
+      "height": 1280,
+      "cssClass": "parallaxBG"
     }
   ],
   "width": 1750,

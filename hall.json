@@ -4,8 +4,30 @@
   "route": "/hall",
   "backgroundLayers": [
     {
-      "img": "/roomart/DigifuJam_Hallway2_1920x1080.jpg",
-      "palallax": 1
+      "img": "/roomart/DigifuJam_Hallway2_1920x1080.png",
+      "default":1,
+      "parallaxFactor": 0.85,
+      "z":10,
+      "width": 1920,
+      "height": 1080,
+      "cssClass": ""
+    },
+    {
+      "img": "/roomart/stars.png",
+      "parallaxFactor": 0.5,
+      "z":1,
+      "width": 2560,
+      "height": 1440,
+      "offsetX": -320,
+      "offsetY": -180,
+      "cssClass": "milkywayBG"
+    },
+    {
+      "parallaxFactor": 0.4,
+      "z":0,
+      "width": 1920,
+      "height": 1080,
+      "cssClass": "parallaxBG"
     }
   ],
   "width": 1920,
