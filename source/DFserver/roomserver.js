@@ -215,7 +215,7 @@ class RoomServer {
         // notify this 1 user of their user id & room state
         clientSocket.emit(DF.ServerMessages.Welcome, {
           yourUserID: userID,
-          roomState: JSON.parse(this.roomState.asFilteredJSON()), // filter out stuff that shouldn't be sent to clients
+          roomState: JSON.parse(this.roomState.asWelcomeJSON()), // filter out stuff that shouldn't be sent to clients
           adminKey,
           globalSequencerConfig: Seq.GetGlobalSequencerConfig(),
         });
@@ -1834,6 +1834,81 @@ class RoomServer {
   
   
   // END: SEQUENCER
+
+  RoomPatchOp(ws, data) {
+    try {
+      const foundUser = this.FindUserFromSocket(ws);
+      if (!foundUser) throw new Error(`RoomPatchOp => unknown user`);
+
+      //console.log(`room patch op: ${JSON.stringify(data)}`);
+
+      switch (data.op) {
+        case "SetMetadata": {
+          if (!this.roomState.UserCanEditRoomPatches(foundUser.user)) {
+            console.log(`Rejecting room metadata edit bc permissions; for user ${foundUser.user}, data=${JSON.stringify(data)}`);
+            return;
+          }
+          if (!this.roomState.roomPresets.SetMetadata(data.metadata)) {
+            console.log(`Rejecting room metadata edit bc validation; for user ${foundUser.user}, data=${JSON.stringify(data)}`);
+            return;
+          }
+          // forward to room. format is the same.
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, data);
+          return;
+        }
+        case "Paste": {
+          if (!this.roomState.UserCanEditRoomPatches(foundUser.user)) {
+            console.log(`Rejecting room patch paste bc permissions; for user ${foundUser.user}, data=${JSON.stringify(data)}`);
+            return;
+          }
+
+          const r = this.roomState.roomPresets.Paste(data.data,
+            (instrument, presetObj) => {
+              this.roomState.integrateRawParamChanges(instrument, presetObj, true);
+            },
+            (instrument, seqPatch, isPlaying) => {
+              instrument.sequencerDevice.LoadPatch(seqPatch);
+              instrument.sequencerDevice.SetPlaying(isPlaying);
+            });
+
+          if (!r) {
+            console.log(`Rejecting room patch paste bc validation; for user ${foundUser.user}, data=${JSON.stringify(data).substring(0, 200)}`);
+            return;
+          }
+
+          // forward to room. format is the same.
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, data);
+          return;
+        }
+        case "Save": {
+          if (!this.roomState.UserCanEditRoomPatches(foundUser.user)) {
+            console.log(`Rejecting room patch save bc permissions; for user ${foundUser.user}, data=${JSON.stringify(data)}`);
+            return;
+          }
+
+          let preset = this.roomState.roomPresets.SaveCompletePreset(data.data, foundUser.user);
+
+          // forward to room. format is different this time; we only send the compact version to clients.
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, {
+            op: "Save",
+            compactData: preset.ToCompactObj()
+          });
+          break;
+        }
+        case "Read": {
+          break;
+        }
+        case "Delete": {
+          break;
+        }
+      }
+
+    } catch (e) {
+      console.log(`RoomPatchOp exception occurred`);
+      console.log(e);
+    }
+  }
+
 
   // every X seconds, this is called. here we can just do a generic push to clients and they're expected
   // to return a pong. for now used for timing, and reporting user ping.

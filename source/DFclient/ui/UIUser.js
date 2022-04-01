@@ -43,7 +43,7 @@ class UIUserName extends React.Component {
                 {moderationCtrl}
                 <span className='uname'>{this.props.user.name}</span>
                 {this.props.user.hasPersistentIdentity && <span className="badge hasPersistentIdentity">✓</span>}
-                {this.props.user.persistentInfo && this.props.user.persistentInfo.global_roles && this.props.user.persistentInfo.global_roles.length &&
+                {this.props.user.persistentInfo && (this.props.user.persistentInfo.global_roles?.length > 0) &&
                     <span className="badge">
                         {this.props.user.persistentInfo.global_roles.map(r => {
                             const displayTxt = this.getRoleDisplayText(r);

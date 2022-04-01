@@ -3,47 +3,7 @@ const DFU = require('../../DFcommon/dfutil');
 const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
 const DF = require("../../DFcommon/DFCommon");
 const Seq = require('../../DFcommon/SequencerCore');
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-// allow live editing
-// props.fieldID
-// props.valueSetter
-// props.valueGetter
-// props.readOnly
-// props.maxLength
-class TextField extends React.Component {
-   constructor(props) {
-       super(props);
-       this.inpID = "seqPresetField_" + this.props.fieldID;
-       this.renderedValue = "";
-   }
-   onChange = (e) => {
-       let val = e.target.value;
-       this.renderedValue = val;
-       this.props.valueSetter(val);
-   }
-   componentDidMount() {
-       // set initial values.
-       let val = this.props.valueGetter();
-       $("#" + this.inpID).val(val);
-       this.renderedValue = val;
-   }
-   render() {
-      let val = this.props.valueGetter();
-       if (this.renderedValue != val) {
-           //has been externally modified. update ui.
-           this.renderedValue = val;
-           $("#" + this.inpID).val(val);
-       }
-
-       return (
-         <input readOnly={this.props.readOnly} id={this.inpID} type="text" maxLength={this.props.maxLength} onChange={this.onChange} />
-       );
-   }
-}
-
-
+const { TextField } = require('./DFReactUtils');
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // key={preset.presetID}

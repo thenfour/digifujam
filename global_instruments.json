@@ -6,6 +6,7 @@
       "supportsPresets": false,
       "color": "#CC0",
       "paramChangeRenewal": true,
+      "showRoomPresetsButton": true,
       "engine": "mixingdesk",
       "activityDisplay": "none",
       "wantsMIDIInput": false,

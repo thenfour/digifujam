@@ -4,6 +4,7 @@ const {GenerateUserName} = require('./NameGenerator');
 const Seq = require('./SequencerCore');
 const {ServerRoomMetronome} = require('./serverMetronome');
 const { DigifuUser, eUserSource, eUserPresence } = require('./DFUser');
+const { RoomPresetManager } = require('./roomPresetsCore');
 
 let gGlobalInstruments = [];
 
@@ -82,6 +83,13 @@ const ClientMessages = {
     SeqPresetOp: "SeqPresetOp",
     //SeqCue: "SeqCue", // { instrumentID, cancel }
     SeqMetadata: "SeqMetadata", // { title, description, tags }
+
+    // { op: "SetMetadata", metadata } // also part of metadata but not included: user, date
+    // { op: "Paste", data } // paste live data into room (no patch op)
+    // { op: "Save", data } // save given patch. ID will determine new patch or overwrite existing
+    // { op: "Read", id } // reads a complete patch with given ID. no changes to room (expect corresponding msg from server)
+    // { op: "Delete", id } // delete patch with given ID.
+    RoomPatchOp: "RoomPatchOp", // {op, ...}
 };
 
 const ServerMessages = {
@@ -154,6 +162,13 @@ const ServerMessages = {
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
     SeqSetListeningInstrumentID: "SeqSetListeningInstrumentID", // { seqInstrumentID, instrumentID: }
+
+    // { op: "SetMetadata", metadata }
+    // { op: "Paste", data } // makes a patch live
+    // { op: "Read", data } // in response to Read, sent to the 1 client who requested it.
+    // { op: "Save", compactData } // save specified patch under the given ID. can be unique for new.
+    // { op: "Delete", id } // delete patch with given ID.
+    RoomPatchOp: "RoomPatchOp", // {op, ...}
 };
 
 const ServerSettings = {
@@ -1526,6 +1541,8 @@ class DigifuRoomState {
         this.roomTitle = "";
         this.absoluteURL = "";
 
+        this.roomPresets = new RoomPresetManager(this);
+
         this.stats = {
             noteOns: 0,
             cheers: 0,
@@ -1549,6 +1566,8 @@ class DigifuRoomState {
 
         this.seqPresetBanks = this.seqPresetBanks?.map(o => new Seq.SeqPresetBank(o));
         this.seqPresetBanks ??= [];
+
+        this.roomPresets = new RoomPresetManager(this, this.roomPresets);
         
         this.chatLog = this.chatLog.map(o => {
             let n = Object.assign(new DigifuChatMessage(), o);
@@ -1706,13 +1725,15 @@ class DigifuRoomState {
         this.chatLog.splice(i, 1);
     }
 
-    asFilteredJSON() {
+    asWelcomeJSON() {
         const replacer = (k, v) => {
             switch (k) {
                 case "discordMemberID": // don't send this to clients.
                 case "metronome":
                 case "quantizer":
                     return undefined;
+                case "roomPresets":
+                    return v.ToCompactObj();
             }
             return v;
         };
@@ -1723,6 +1744,7 @@ class DigifuRoomState {
         const ret = {
             presetBanks: this.presetBanks,
             seqPresetBanks: this.seqPresetBanks,
+            roomPresets: this.roomPresets,
             chatLog: [],//this.chatLog,
             stats: this.stats,
             announcementHTML: this.announcementHTML,
@@ -1753,6 +1775,8 @@ class DigifuRoomState {
 
         this.seqPresetBanks = data.seqPresetBanks?.map(o => new Seq.SeqPresetBank(o));
         this.seqPresetBanks ??= [];
+
+        this.roomPresets = new RoomPresetManager(this, data.roomPresets);
 
         this.stats = data.stats;
         this.announcementHTML = data.announcementHTML;
@@ -1886,6 +1910,7 @@ class DigifuRoomState {
         return ret;
     }
 
+    // called both in response to OnWelcome (on clients), and on server startup from the base room config json files
     static FromJSONData(data, syncLoadTextRoutine, syncLoadJSONRoutine) {
         // thaw into live classes
         let ret = Object.assign(new DigifuRoomState(), data);
@@ -2152,6 +2177,14 @@ class DigifuRoomState {
         }
         return this.UserIsVisibleTo(observingUser, u.user, showToModsAndAdmins);
     }
+
+    UserCanEditRoomPatches(user) {
+        return this.UserCanPerform(user);
+    }
+
+    // -----------------------------
+    // room presets
+
 
 }; // DigifuRoomState
 

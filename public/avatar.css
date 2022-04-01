@@ -42,6 +42,8 @@
   --bounce-anim: avatarBump1;
   z-index: 999; /* consider cheer, room items, graffiti, ... */
   animation: var(--bounce-anim) .2s 1;/*, var(--dance-anim) 1s infinite;*/
+  max-width: 285px;
+  overflow: hidden;
 }
 
 .userAvatar .av2 {

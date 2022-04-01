@@ -16,16 +16,21 @@ const {InlinePitchBendCtrl, InlineMasterGainCtrl} = require('./InlinePitchBendCt
 const {UserSettingsButton} = require("./userSettings");
 const {GoogleOAuthModule} = require('../googleSignIn');
 const {GestureSplash} = require('./splash');
-const {SequencerParamGroup} = require('./SequencerParamGroup');
 const {DFAlert} = require('./DFAlert');
 const {GraffitiScreen, GraffitiContainer} = require("./graffiti");
 const EventEmitter = require('events');
-const {RadioControls, RadioMetadataRoomItem, RadioVisRoomItem} = require('./radioControls');
+const {RadioMetadataRoomItem, RadioVisRoomItem} = require('./radioControls');
 const { ModerationControlPanel } = require('./ModerationControl');
+const { ModalDialogController, DFInvokeModal } = require('./roomPresets');
 
 // NOTE that this can be true even if you're not a moderator, so for safety check IsModerator
 window.DFModerationControlsVisible = false;
 
+// defines which ctrl panel is visible.
+window.DFModalDialogContext = {
+    op: null, // "roomPresets"
+  };
+  
 const md = require('markdown-it')({
     html:         false,        // Enable HTML tags in source
     xhtmlOut:     false,        // Use '/' to close single tags (<br />).
@@ -1200,6 +1205,8 @@ class InstrumentParams extends React.Component {
                     </div>
             </div>);
 
+        const roomPresetsAreShown = window.DFModalDialogContext.op === 'roomPresets';
+
         return (
             <div className="component">
                 <h2 id="showInstrumentPanel" style={{ cursor: 'pointer' }} onClick={this.onToggleShownClick}>
@@ -1265,11 +1272,17 @@ class InstrumentParams extends React.Component {
 
                                     {presetList}
 
-                                </ul>)}
+                                </ul>) /* preset list */}
 
                         </fieldset>
                     /* instrumentSupportsPresets */}
-                    <SequencerParamGroup app={this.props.app} sequencerShown={this.props.sequencerShown} setSequencerShown={this.props.setSequencerShown} instrument={this.props.instrument} observerMode={this.props.observerMode}></SequencerParamGroup>
+                    {this.props.instrument.showRoomPresetsButton &&
+                        <button
+                            className={'roomPresets ' + (roomPresetsAreShown ? " shown" : " notshown")}
+                            onClick={() => roomPresetsAreShown ? DFInvokeModal({op:null}) : DFInvokeModal({op:"roomPresets"})}>
+                                <span>Room presets <i className="material-icons">launch</i></span>
+                        </button>
+                    }   
                     {groups}
                 </div>
             </div>
@@ -1611,7 +1624,7 @@ class Instrument extends  React.Component {
         const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser);
         const canPerform = app.roomState.UserCanPerform(app.myUser);
         const sequencerHasData = i.sequencerDevice.HasData();
-        const sequencerCtrl = (
+        const sequencerCtrl = i.allowSequencer && (
             <div
                 className={"seqIndicatorAnimation1 seqCtrlContainer " + i.sequencerDevice.GetArpMapping().cssClass + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + ((canPerform && canCtrlSequencer) ? " clickable" : "") + (isSidechained ? " sidechain" : "")}
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
@@ -2436,6 +2449,7 @@ class RoomArea extends React.Component {
                 {window.DFShowChatSlashCommandHelp && <ChatSlashCommandHelp context={context} />}
                 {connection}
                 <ModerationControlPanel app={this.props.app} />
+                <ModalDialogController app={this.props.app} />
                 {seqViewVisible && <SequencerMain
                     app={this.props.app}
                     sequencerShown={this.props.sequencerShown}
@@ -2867,7 +2881,7 @@ class RootArea extends React.Component {
 
         // dynamically set the column sizes. media queries don't work because there are a bunch of dynamic states here.
         // grid-template-columns: 270px minmax(0, 1fr) 320px;
-        let leftSize = "min-content";//270;
+        let leftSize = "270px";//"min-content";//270;
         let rightSize = 320;
         if (this.state.wideMode) {
             rightSize = 550; // wide mode

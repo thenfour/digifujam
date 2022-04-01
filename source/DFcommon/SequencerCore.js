@@ -1004,6 +1004,10 @@ class SequencerDevice {
     return this.livePatch.OnBPMChanged(bpm);
   }
 
+  GetLivePatchObj() {
+    return JSON.parse(JSON.stringify(this.livePatch));
+  }
+
   // client-side; handles incoming server msgs
   SeqPresetOp(data, bank, allNotesOffRoutine) {
     switch (data.op) {

@@ -1,0 +1,281 @@
+.dfmodal {
+  position: absolute;
+  background-color: #000c;
+  z-index: 9999;
+  --margin: 15px;
+  max-width: calc(100% - 2 * var(--margin));
+  max-height: calc(100% - 2 * var(--margin));
+  top: 50%;
+  border: 2px solid #055;
+  color: #ccc;
+  font-family: monospace;
+  font-size: 18px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+}
+
+
+.dfmodal .topControls {
+  /* padding:20px; */
+  background-color: #044;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.dfmodal .topControls span {
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 10px;
+  color: #0cc;
+}
+
+.dfmodal .topControls button {
+  border: 0;
+  background-color: #000;
+  margin: 8px;
+}
+
+.dfmodal .body {
+  /* padding: 16px 20px; */
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: #033;
+}
+
+
+/* on the right side; didn't find a better way to specify these */
+button.roomPresets {
+  padding: 6px 14px;
+  margin: 7px 20px;
+  color: #0aa;
+  background-color: #022;
+  border: 2px solid #044;
+  font-size: 14px;
+}
+
+button.roomPresets.shown {
+  background-color: #044;
+}
+
+button.roomPresets:hover {
+  background-color: #055;
+}
+
+
+
+.dfmodal .body fieldset {
+  background-color: #000;
+  border: 0;
+  margin: 11px 15px;
+  padding: 0;
+  /* border: 4px solid #055; */
+  border-radius: 4px;
+  color: #0aa;
+}
+
+.dfmodal .body .legend {
+  background-color: #033;
+  margin: 0;
+  border-bottom: 2px solid #0aa;
+}
+
+.dfmodal .body .subtext {
+  font-size: smaller;
+  max-width: 800px;
+  padding: 2px 23px;
+}
+
+.dfmodal .body input[type=text] {
+  font-size: 19px;
+  color: #cc0;
+}
+
+
+.dfmodal .body span.caption {
+  color: #aaa;
+}
+
+.dfmodal .confirmation {
+  padding: 7px 11px;
+  margin: 11px 11px;
+  background-color: #640;
+  color: #ccc;
+  max-width: 800px;
+}
+
+.dfmodal .confirmation .patch,
+.dfmodal .confirmation .seq {
+  display: inline-block;
+  font-size: 12px;
+  background-color: #aa0;
+  border-radius: 5px;
+  padding: 2px 7px;
+  margin: 0px 3px;
+  color: #000;
+}
+
+.dfmodal .confirmation .patch {}
+
+.dfmodal .confirmation .seq {}
+
+.dfmodal .confirmation button {}
+
+.dfmodal .confirmation th,
+.dfmodal .confirmation td {
+  background-color:#0003;
+  padding: 0 16px;
+  color: #888;
+}
+
+
+
+
+/*  ----- preset dialog ----- */
+.dfmodal.presets li {
+  display: flex;
+  align-items: center;
+}
+
+.dfmodal.presets li.presetItem {
+  background-color: #044;
+  display: block;
+  margin-bottom: 6px;
+  padding: 2px 6px;
+  border-left: 5px solid #066;
+  border-radius: 6px;
+}
+
+.dfmodal.presets li.presetItem:hover {
+  background-color: #055;
+  border-left: 5px solid #088;
+}
+
+
+.dfmodal.presets li.presetItem .presetName {
+  color: #bbb;
+  font-size: 20px;
+  display: block;
+  font-weight: bold;
+}
+
+
+.dfmodal.presets li.presetItem .description {
+  font-style: italic;
+  display: block;
+}
+
+.dfmodal.presets li.presetItem .authorAndDateBox {
+  color: #888;
+  font-size: 13px;
+  font-style: italic;
+  display: block;
+}
+
+
+.dfmodal.presets .confirmationBox {
+  color: #8cc;
+  padding: 10px;
+  border-radius: 0;
+  border: 1px solid #a00;
+  background-color: #200;
+  white-space: normal;
+  border-left: 7px solid #a00;
+}
+
+.dfmodal.presets .confirmationBox button {
+  background-color: #666;
+  color: #000;
+  padding: 5px;
+  /* width: unset; */
+}
+
+.dfmodal.presets .confirmationBox button:hover {
+  background-color: #acc;
+}
+
+.dfmodal.presets ul.presetsList {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dfmodal.presets li .buttonContainer {
+  float: right;
+  line-height: 10px;
+  visibility: hidden;
+}
+
+.dfmodal.presets li:hover .buttonContainer {
+  visibility: visible;
+}
+
+.dfmodal.presets li .buttonContainer button {
+  background-color: #333;
+  color: #0cc;
+}
+
+.dfmodal.presets li .buttonContainer button:hover {
+  background-color: #044;
+}
+
+
+.dfmodal.presets ul.buttonPatchOps {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: fit-content;
+}
+
+.dfmodal.presets .presetItem.selected {
+  border-left: 8px solid #cc0;
+}
+
+/* inst/seq selection control */
+.dfmodal.presets .roomPatchSelection table {
+  background-color:#022;
+  padding:5px;
+  user-select: none;
+}
+.dfmodal.presets .roomPatchSelection td {
+  background-color: #111;
+  max-width: 500px;
+}
+
+.dfmodal.presets .roomPatchSelection td.instSelection .btn,
+.dfmodal.presets .roomPatchSelection td.seqSelection .btn{
+  border-radius: 8px;
+  /* border: 2px solid #444; */
+  color: #444;
+  padding: 0px 5px;
+  cursor:pointer;
+  margin: 2px 0px;
+}
+
+.dfmodal.presets .roomPatchSelection td.instSelection.selected .btn,
+.dfmodal.presets .roomPatchSelection td.seqSelection.selected .btn{
+  /* border: 2px solid #055; */
+  background-color:#033;
+  color: #0cc;
+}
+
+
+
+.dfmodal.presets .roomPatchSelection td.seqState .seqIndicator {
+  --d:12px;
+  height:var(--d);
+  width:var(--d);
+  border-radius:50%;
+  border:2px solid #2228;
+}
+
+.dfmodal.presets .roomPatchSelection td.seqState .seqIndicator.hasData.stopped {
+  background-color:#444;
+}
+
+
+.dfmodal.presets .roomPatchSelection td.seqState .seqIndicator.hasData.isPlaying {
+  background-color:#0c0;
+}

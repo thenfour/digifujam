@@ -12,6 +12,7 @@ const { DigifuUser } = require("../DFcommon/DFUser");
 const EventEmitter = require('events');
 const { RadioMachine } = require('./radioMachine');
 const { hasUncaughtExceptionCaptureCallback } = require("process");
+const { InstSeqSelection } = require("../DFcommon/roomPresetsCore");
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -1193,6 +1194,38 @@ class DigifuApp {
 
   // ----------------------
 
+  NET_RoomPatchOp(data) {
+    if (!this.roomState) return;
+    console.log(`room patch op ${JSON.stringify(data)}`);
+    switch (data.op) {
+      case "SetMetadata": {
+        if (!this.roomState.roomPresets.SetMetadata(data.metadata)) {
+          throw new Error(`server told us to set metadata but it was rejected huh?`);
+        }
+        break;
+      }
+      case "Paste": {
+        const r = this.roomState.roomPresets.Paste(data.data,
+          (instrument, presetObj) => {
+            this.synth.SetInstrumentParams(instrument, presetObj, true);
+          },
+          (instrument, seqPatch, isSeqPlaying) => {
+            instrument.sequencerDevice.LoadPatch(seqPatch);
+            instrument.sequencerDevice.SetPlaying(isSeqPlaying);
+          });
+        if (!r) {
+          throw new Error (`Server told us to set room patch but it was rejected huh?`);
+        }
+        break;
+      }
+      case "Save": {
+        this.roomState.roomPresets.SaveCompactPreset(data.compactData);
+        break;
+      }
+    }
+    this.stateChangeHandler();
+  }
+
   NET_OnPing(data) {
     if (!this.roomState)
       return;
@@ -1686,7 +1719,7 @@ class DigifuApp {
     if (!this.myInstrument)
       return;
     this.net.SendInstrumentParams(presetObj, isWholePatch);
-    if (this.synth.SetInstrumentParams(this.myInstrument, presetObj, isWholePatch)) {
+    if (this.synth.SetInstrumentParams(this.myInstrument, presetObj, isWholePatch)) { // hm why?
       this.stateChangeHandler();
     }
   };

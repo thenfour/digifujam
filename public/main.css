@@ -143,7 +143,7 @@ button:focus {
     display: flex;
     flex-direction: column;
     overflow: auto; /* important to let X scroll in case usernames are long */
-    max-width: 15vw;
+    /* max-width: 15vw; */
 }
 
 @keyframes screenFadeOut {
@@ -1411,6 +1411,7 @@ button.stayLoggedIn:hover {
     cursor: pointer;
     flex-direction: row;
     align-items: center;
+    white-space: nowrap;
 }
 
 .dropdownMenuButton>*:not(:first-child) {
@@ -1862,6 +1863,7 @@ https://www.w3schools.com/icons/google_icons_intro.asp
 .component.instrumentCloset li .seqCtrlContainer.off .seqIndicator {
     --seqColorBright:#888;
     --seqColorDark:#444;
+    background-color: var(--seqColorDark);
 }
 
 .component.instrumentCloset li .seqCtrlContainer.on.sidechain .seqIndicator {
@@ -1953,11 +1955,10 @@ https://www.w3schools.com/icons/google_icons_intro.asp
 
 ul.instParamList li.floatParam {
     display: flex;
-    align-items: stretch;
-    margin-bottom: 1px;
-    align-content: stretch;
+    margin-bottom: 2px;
     justify-content: stretch;
     flex-direction: column;
+    align-items: stretch;
 }
 
 ul.instParamList li.floatParam>div>* {
@@ -1974,9 +1975,8 @@ ul.instParamList li.floatParam>div>label {
 ul.instParamList li.floatParam .floatParamMainControls {
     display: flex;
     margin-bottom: 1px;
+    /* flex-grow: 1; */
     align-items: center;
-    align-content: stretch;
-    justify-content: space-evenly;
 }
 
 

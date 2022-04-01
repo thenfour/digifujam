@@ -273,6 +273,9 @@ class DigifuNet {
     SendUserRoleOp(payload) {
         this.socket.emit(DF.ClientMessages.UserRoleOp, payload);
     }
+    SendRoomPatchOp(data) {
+        this.socket.emit(DF.ClientMessages.RoomPatchOp, data);
+    }
 
     // --------------
 
@@ -360,6 +363,8 @@ class DigifuNet {
         this.socket.on(DF.ServerMessages.SeqMetadata, (data) => this.handler.NET_SeqMetadata(data));
         this.socket.on(DF.ServerMessages.SeqSetListeningInstrumentID, (data) => this.handler.NET_SeqSetListeningInstrumentID(data));
         // ---- SEQ
+
+        this.socket.on(DF.ServerMessages.RoomPatchOp, (data) => this.handler.NET_RoomPatchOp(data));
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };
