@@ -87,7 +87,10 @@ class GraffitiItem extends React.Component {
 
     //const isYours = app.roomState.isUserForGraffiti(g, app.myUser.userID, app.myUser.persistentID);
 
-    let rot = remap(g.seed, 0, 1, 4, 10) * Math.sign(((g.seed * 1337) % 2) - 1);
+    let rot = 0;
+    if (!g.disableRotation) {
+      rot = remap(g.seed, 0, 1, 4, 10) * Math.sign(((g.seed * 1337) % 2) - 1);
+    }
     const fonts = [
       'Barriecito',
       'Gochi Hand',
@@ -124,7 +127,7 @@ class GraffitiItem extends React.Component {
     // container because we apply our own transformations & positioning.
     return (
       <div className={"graffitiItemContainer " + (isImage ? " image" : " text")} style={style}>
-      <div className={"graffiti " + g.cssClass}>
+      <div className={"graffiti " + g.cssClass + " " + g.extraCssClass}>
         {contentEl}
         {(window.DFModerationControlsVisible && app.myUser.IsModerator()) &&
           <div className='graffitiControls'>

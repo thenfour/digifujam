@@ -44,7 +44,17 @@ const ClientMessages = {
     JoinRoom: "JoinRoom", // roomID
     PersistentSignOut: "PersistentSignOut",
     GoogleSignIn: "GoogleSignIn", // { google_access_token }
-     // [{ op:[place,remove,pin,setExpiration, setColor, setSize, setPosition], content, id, ... }] // id only used for admin, lifetime & content only for placement
+    // { op:"place", }
+    // { op:"remove", }
+    // { op:"pin", }
+    // { op:"setExpiration", }
+    // { op:"setColor", }
+    // { op:"setSize", }
+    // { op:"setPosition", }
+    // { op:"setSeed", }
+    // { op:"setDisableRotation", }
+    // { op:"setExtraCssClass", }
+     // [{ op:, content, id, ... }] // id only used for admin, lifetime & content only for placement
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { danceID: }
 
@@ -129,6 +139,9 @@ const ServerMessages = {
 
     // [{ op:"place", graffiti:{} }]
     // [{ op:"remove", id }]
+    // { op:"setSeed", }
+    // { op:"setDisableRotation", }
+    // { op:"setExtraCssClass", }
     // pin,setExpiration, setColor, setSize, setPosition
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { userID: , danceID: }
@@ -1648,7 +1661,9 @@ class DigifuRoomState {
             userID: u.user.userID,
             persistentID: u.user.persistentID,
             position: Object.assign({}, u.user.position), // careful about refs!
-            cssClass: rgn.cssClass ?? "",
+            cssClass: rgn.cssClass ?? "", // "cssClass" is the auto-generated class.
+            extraCssClass: "", // this is user-set (by moderators)
+            disableRotation: false, // can be overridden by mods
             content,
             expires,
             // 'size' is also supported and optional. a default size is always used to begin with, but mods can change size. example: "size":"140px"

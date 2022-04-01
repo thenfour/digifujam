@@ -2,6 +2,7 @@
 const React = require('react');
 const { UserSourceToString, UserPresenceToString, eUserGlobalRole } = require('../../DFcommon/DFUser');
 const { TimeSpan, hoursToMS, daysToMS } = require('../../DFcommon/dfutil');
+const { TextField } = require('./DFReactUtils');
 const { IntRangeValueSpec, SeqLegendKnob } = require('./knob');
 
 // window.DFModerationControlsVisible
@@ -161,6 +162,45 @@ class GraffitiModerationDialog extends React.Component {
     this.setPos(1, 0);
   }
 
+  onClickNewSeed = () => {
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+    this.props.app.net.SendGraffitiOps([{
+      op: "setSeed",
+      id: graffitiID,
+    }]);
+  }
+
+  onClickDisableRotation(disableRotation) {
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+    this.props.app.net.SendGraffitiOps([{
+      op: "setDisableRotation",
+      id: graffitiID,
+      disableRotation,
+    }]);
+  }
+
+  setExtraCSSClass(extraCssClass) {
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+    this.props.app.net.SendGraffitiOps([{
+      op: "setExtraCssClass",
+      id: graffitiID,
+      extraCssClass,
+    }]);
+  }
+
+
   render() {
     const graffitiID = window.DFModerationControlContext.graffitiID;
     let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
@@ -187,8 +227,31 @@ class GraffitiModerationDialog extends React.Component {
               <span className='field userid'>uid #{g.userID}</span>
               <span className='field userid'>puid #{g.persistentID}</span>
             </dd>
+
             <dt>Content</dt>
             <dd className='content'>{g.content}</dd>
+
+            <dt>Seed</dt>
+            <dd className='content'>
+              {g.seed.toFixed(3)}
+              <button onClick={() => this.onClickNewSeed()}>New seed</button>
+            </dd>
+
+            <dt>Random Rotation</dt>
+            <dd className='content'>
+              <button onClick={() => this.onClickDisableRotation(true)} className={g.disableRotation ? "notselected" : "selected"}>Disabled</button>
+              <button onClick={() => this.onClickDisableRotation(false)} className={g.disableRotation ? "selected" : "notselected"}>Enabled</button>
+            </dd>
+
+            <dt>Extra CSS</dt>
+            <dd className='content'>
+              <TextField
+                fieldID="graffitiExtraCSS"
+                valueSetter={(val) => this.setExtraCSSClass(val)}
+                valueGetter={() => g.extraCssClass}
+                maxLength={500}
+              />
+            </dd>
 
             <dt>Size/Position</dt>
             <dd className='size'>

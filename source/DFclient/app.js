@@ -11,8 +11,6 @@ const {pointInPolygon, ParamThrottler} = require('../DFcommon/dfutil');
 const { DigifuUser } = require("../DFcommon/DFUser");
 const EventEmitter = require('events');
 const { RadioMachine } = require('./radioMachine');
-const { hasUncaughtExceptionCaptureCallback } = require("process");
-const { InstSeqSelection } = require("../DFcommon/roomPresetsCore");
 
 // see in console:
 // gDFApp.audioCtx.byName
@@ -1457,7 +1455,7 @@ class DigifuApp {
       {
         const g = this.roomState.graffiti.find(g => g.id === op.id);
         if (!g) {
-          console.log(`pin: graffiti not found ${g.id}`);
+          console.log(`pin: graffiti not found ${op.id}`);
           return;
         }
         g.pinned = !!op.pin;
@@ -1467,7 +1465,7 @@ class DigifuApp {
       {
         const g = this.roomState.graffiti.find(g => g.id === op.id);
         if (!g) {
-          console.log(`setExpiration: graffiti not found ${g.id}`);
+          console.log(`setExpiration: graffiti not found ${op.id}`);
           return;
         }
         g.expires = parseInt(op.expiration);
@@ -1477,7 +1475,7 @@ class DigifuApp {
       {
         const g = this.roomState.graffiti.find(g => g.id === op.id);
         if (!g) {
-          console.log(`setColor: graffiti not found ${g.id}`);
+          console.log(`setColor: graffiti not found ${op.id}`);
           return;
         }
         g.color = op.color;
@@ -1487,7 +1485,7 @@ class DigifuApp {
       {
         const g = this.roomState.graffiti.find(g => g.id === op.id);
         if (!g) {
-          console.log(`setSize: graffiti not found ${g.id}`);
+          console.log(`setSize: graffiti not found ${op.id}`);
           return;
         }
         g.size = op.size;
@@ -1497,13 +1495,44 @@ class DigifuApp {
       {
         const g = this.roomState.graffiti.find(g => g.id === op.id);
         if (!g) {
-          console.log(`setPosition: graffiti not found ${g.id}`);
+          console.log(`setPosition: graffiti not found ${op.id}`);
           return;
         }
         this.roomState.SetGraffitiPosition(g, op.x, op.y);
         break;
       }
+      case "setSeed":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setSeed: graffiti not found ${op.id}`);
+          return;
+        }
+        g.seed = op.seed;
+        break;
       }
+      case "setDisableRotation":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setDisableRotation: graffiti not found ${op.id}`);
+          return;
+        }
+        g.disableRotation = op.disableRotation;
+        break;
+      }
+      case "setExtraCssClass":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setExtraCssClass: graffiti not found ${op.id}`);
+          return;
+        }
+        g.extraCssClass = op.extraCssClass;
+        break;
+      }    
+    
+    }
     });
     this.stateChangeHandler();
   }

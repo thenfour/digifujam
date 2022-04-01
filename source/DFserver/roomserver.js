@@ -1084,10 +1084,49 @@ class RoomServer {
             return;
           }
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setPosition", id: op.id, x:op.x, y:op.y }]);
+          break;
         }
-        break;
 
+        case "setSeed": // { op:"setSeed", id, seed } // seed optional.
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setSeed on graffiti ${op.id}`);
+            return;
+          }
+          g.seed = op.seed ?? Math.random();
+          console.log(`setting new seed. id=${g.id} seed=${g.seed}`);
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setSeed", id:g.id, seed:g.seed }]);
+          break;
+        }
 
+        case "setDisableRotation": // { op:"setDisableRotation", id, disableRotation }
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setDisableRotation on graffiti ${op.id}`);
+            return;
+          }
+          g.disableRotation = !!op.disableRotation;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setDisableRotation", id:g.id, disableRotation:g.disableRotation }]);
+          break;
+        }
+
+        case "setExtraCssClass": // { op:"setExtraCssClass", id, extraCssClass }
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setExtraCssClass on graffiti ${op.id}`);
+            return;
+          }
+          g.extraCssClass = op.extraCssClass;
+          console.log(`setting extra css. id=${g.id} css=${g.extraCssClass}`);
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setExtraCssClass", id:g.id, extraCssClass:g.extraCssClass }]);
+          break;
+        }
 
       }
     });
