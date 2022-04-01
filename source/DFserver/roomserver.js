@@ -4,6 +4,7 @@ const {RoomSequencerPlayer} = require('./SequencerPlayer');
 const DFU = require('../DFcommon/dfutil');
 const { EmptyPersistentInfo, eUserGlobalRole } = require('../DFcommon/DFUser');
 const Seq = require('../DFcommon/SequencerCore');
+const { InstSeqSelection, RoomPreset } = require('../DFcommon/roomPresetsCore');
 
 const log = (a) => { return console.log(a) };
 
@@ -1862,22 +1863,48 @@ class RoomServer {
             return;
           }
 
-          const r = this.roomState.roomPresets.Paste(data.data,
+          const successes = new InstSeqSelection(this.roomState);
+          successes.SelectNone();
+
+          const failures = new InstSeqSelection(this.roomState);
+          failures.SelectNone();
+
+          const roomPreset = new RoomPreset(data.data);
+
+          const r = this.roomState.roomPresets.Paste(roomPreset,
             (instrument, presetObj) => {
+              if (!this.roomState.UserCanSetRoomPatchForInstrument(foundUser.user, instrument)) {
+                failures.instrumentIDs.push(instrument.instrumentID);
+                return false;
+              }
               this.roomState.integrateRawParamChanges(instrument, presetObj, true);
+              successes.instrumentIDs.push(instrument.instrumentID);
+              return true;
             },
             (instrument, seqPatch, isPlaying) => {
+              if (!this.roomState.UserCanSetRoomPatchForSequencer(foundUser.user, instrument)) {
+                failures.sequencerInstrumentIDs.push(instrument.instrumentID);
+                return false;
+              }
               instrument.sequencerDevice.LoadPatch(seqPatch);
               instrument.sequencerDevice.SetPlaying(isPlaying);
+              successes.sequencerInstrumentIDs.push(instrument.instrumentID);
+              return true;
             });
 
-          if (!r) {
-            console.log(`Rejecting room patch paste bc validation; for user ${foundUser.user}, data=${JSON.stringify(data).substring(0, 200)}`);
-            return;
-          }
+          // notify user of result
+          ws.emit(DF.ServerMessages.RoomPresetLoadResult, {
+            successes,
+            failures,
+          });
 
-          // forward to room. format is the same.
-          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, data);
+          // filter out anything that we rejected, before sending to clients.
+          roomPreset.KeepOnlySelected(successes);
+  
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, {
+            op: "Paste",
+            data: roomPreset,
+          });
           return;
         }
         case "Save": {
@@ -1895,10 +1922,28 @@ class RoomServer {
           });
           break;
         }
-        case "Read": {
+        case "ReadPatch": {
+          const patch = this.roomState.roomPresets.GetFullPresetById(data.id);
+          ws.emit(DF.ServerMessages.RoomPatchOp, {
+            op: "ReadPatch",
+            data: patch,
+          });
           break;
         }
-        case "Delete": {
+        case "DeletePatch": {
+          if (!this.roomState.UserCanEditRoomPatches(foundUser.user)) {
+            console.log(`Rejecting room patch delete bc permissions; for user ${foundUser.user}, data=${JSON.stringify(data)}`);
+            return;
+          }
+
+          const r = this.roomState.roomPresets.DeletePresetByID(data.id);
+          if (!r) {
+            console.log(`Rejecting room patch delete bc ... it did'nt exist probably. for user ${foundUser.user}, data=${JSON.stringify(data)}`);
+            return;
+          }
+
+          // forward to room. format is the same.
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, data);
           break;
         }
       }

@@ -365,6 +365,7 @@ class DigifuNet {
         // ---- SEQ
 
         this.socket.on(DF.ServerMessages.RoomPatchOp, (data) => this.handler.NET_RoomPatchOp(data));
+        this.socket.on(DF.ServerMessages.RoomPresetLoadResult, (data) => this.handler.NET_RoomPresetLoadResult(data));        
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };

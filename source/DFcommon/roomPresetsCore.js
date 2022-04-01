@@ -139,7 +139,12 @@ class RoomPresetMetadata {
 // SERIALIZABLE
 class CompactRoomPreset {
   constructor(params) {
-    Object.assign(this, params);
+    if (params.metadata) {
+      console.log(`!! wrong type of object to compact!`);
+      this.presetID = params.presetID;
+    } else {
+      Object.assign(this, params);
+    }
 
     console.assert(this.presetID);
 
@@ -248,11 +253,19 @@ class RoomPresetManager {
     return true;
   }
 
-  GetPresetById(presetID) {
-    const obj = this.presets.find(p => p.presetID === presetID);
-    if (!obj)
-      return null;
-    return new SequencerPatch(obj);
+  GetCompactPresetById(presetID) {
+    return this.compactPresets.find(p => p.presetID === presetID);
+  }
+
+  GetFullPresetById(presetID) {
+    console.assert(DFUtil.IsServer()); // clients don't have full presets
+    return this.presets.find(p => p.presetID === presetID);
+  }
+
+  DeletePresetByID(presetID) {
+    this.compactPresets.removeIf(p => p.presetID === presetID);
+    this.presets.removeIf(p => p.presetID === presetID);
+    return true;
   }
 
   // create a new RoomPreset object with settings of the room.
@@ -303,17 +316,15 @@ class RoomPresetManager {
 
     Object.entries(data.instPatches).forEach(e => {
       const instrumentID = e[0];
-      // if (!instSeqSelection.instrumentIDs.find(iid => iid === instrumentID)) {
-      //   return;
-      // }
       const patch = e[1];
       const instrument = this.#roomState.FindInstrumentById(instrumentID);
       if (!instrument) {
         console.log(`attempting to import instrument patch for instrumentID; instrument ${instrumentID} was not found. continuing...`);
         return;
       }
-      synthPatchHandler(instrument.instrument, patch);
-      ret.instPatchesImported ++;
+      if (synthPatchHandler(instrument.instrument, patch)) {
+        ret.instPatchesImported ++;
+      }
     });
 
     Object.entries(data.seqPatches).forEach(e => {
@@ -327,14 +338,15 @@ class RoomPresetManager {
         console.log(`attempting to import sequencer patch for instrumentID; instrument ${instrumentID} was not found. continuing...`);
         return;
       }
-      seqPatchHandler(instrument.instrument, patch, !!data.seqPlaying[instrumentID]);
-      ret.seqPatchesImported ++;
+      if (seqPatchHandler(instrument.instrument, patch, !!data.seqPlaying[instrumentID])) {
+        ret.seqPatchesImported ++;
+      }
     });
 
-    this.metadata = new RoomPresetMetadata(data.metadata);
+    this.liveMetadata = new RoomPresetMetadata(data.metadata);
     this.livePresetID = data.presetID;
 
-    console.log(`Imported room patch '${this.metadata.name}'; ${ret.instPatchesImported} inst patches, ${ret.seqPatchesImported} seq patches.`);
+    console.log(`Imported room patch '${this.liveMetadata.name}'; ${ret.instPatchesImported} inst patches, ${ret.seqPatchesImported} seq patches.`);
 
     return true;
   }
@@ -349,14 +361,24 @@ class RoomPresetManager {
 
     data = new RoomPreset(data);
     let i = this.presets.findIndex(p => p.presetID === data.presetID);
-    if (i !== -1) {
+    if (i === -1) {
+      this.presets.push(data);
+      console.log(`saved new whole room preset ${data.presetID}`);
+    } else {
       // existing.
       this.presets[i] = data;
       console.log(`overwrote whole room preset ${data.presetID}`);
-      return data;
     }
-    this.compactPresets.push(data);
-    console.log(`saved new whole room preset ${data.presetID}`);
+
+    i = this.compactPresets.findIndex(p => p.presetID === data.presetID);
+    if (i === -1) {
+      this.compactPresets.push(data.ToCompactObj());
+      //console.log(`saved new whole room preset ${data.presetID}`);
+    } else {
+      // existing.
+      this.compactPresets[i] = data.ToCompactObj();
+      //console.log(`overwrote whole room preset ${data.presetID}`);
+    }
     return data;
   }
 

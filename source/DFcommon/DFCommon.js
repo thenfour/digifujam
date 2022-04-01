@@ -87,8 +87,8 @@ const ClientMessages = {
     // { op: "SetMetadata", metadata } // also part of metadata but not included: user, date
     // { op: "Paste", data } // paste live data into room (no patch op)
     // { op: "Save", data } // save given patch. ID will determine new patch or overwrite existing
-    // { op: "Read", id } // reads a complete patch with given ID. no changes to room (expect corresponding msg from server)
-    // { op: "Delete", id } // delete patch with given ID.
+    // { op: "ReadPatch", id } // reads a complete patch with given ID. no changes to room (expect corresponding msg from server)
+    // { op: "DeletePatch", id } // delete patch with given ID.
     RoomPatchOp: "RoomPatchOp", // {op, ...}
 };
 
@@ -165,10 +165,11 @@ const ServerMessages = {
 
     // { op: "SetMetadata", metadata }
     // { op: "Paste", data } // makes a patch live
-    // { op: "Read", data } // in response to Read, sent to the 1 client who requested it.
     // { op: "Save", compactData } // save specified patch under the given ID. can be unique for new.
-    // { op: "Delete", id } // delete patch with given ID.
+    // { op: "ReadPatch", data } // in response to ReadPatch, sent to the 1 client who requested it.
+    // { op: "DeletePatch", id } // delete patch with given ID.
     RoomPatchOp: "RoomPatchOp", // {op, ...}
+    RoomPresetLoadResult: "RoomPresetLoadResult", // { successes: {}, failures: {} }
 };
 
 const ServerSettings = {
@@ -2180,6 +2181,20 @@ class DigifuRoomState {
 
     UserCanEditRoomPatches(user) {
         return this.UserCanPerform(user);
+    }
+
+    UserCanSetRoomPatchForInstrument(user, instrument) {
+        if (!this.UserCanEditRoomPatches(user)) return false;
+        if (!instrument.supportsPresets) return false;
+        if (instrument.controlledByUserID === user.id) return true;
+        if (!instrument.controlledByUserID) return true; // empty instruments can be modified because theoretically you can take the instrument, play with settings, and release it. same deal.
+        return false;
+    }
+
+    UserCanSetRoomPatchForSequencer(user, instrument) {
+        if (!this.UserCanEditRoomPatches(user)) return false;
+        if (!this.UserCanSetRoomPatchForInstrument(user, instrument)) return false;
+        return instrument.allowSequencer;
     }
 
     // -----------------------------

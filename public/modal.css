@@ -198,8 +198,8 @@ button.roomPresets:hover {
 }
 
 .dfmodal.presets ul.presetsList {
-  max-height: 400px;
-  overflow-y: auto;
+  /* max-height: 400px; */
+  /* overflow-y: auto; */
 }
 
 .dfmodal.presets li .buttonContainer {

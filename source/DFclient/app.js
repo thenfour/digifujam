@@ -1193,10 +1193,13 @@ class DigifuApp {
   }
 
   // ----------------------
-
+  NET_RoomPresetLoadResult(data) {
+    alert(`Imported ${data.successes.instrumentIDs.length} instruments and ${data.successes.sequencerInstrumentIDs.length} sequencers.` + 
+      ` Failed to import ${data.failures.instrumentIDs.length} instruments & ${data.failures.sequencerInstrumentIDs.length} sequencers.`);
+  }
   NET_RoomPatchOp(data) {
     if (!this.roomState) return;
-    console.log(`room patch op ${JSON.stringify(data)}`);
+    //console.log(`room patch op ${JSON.stringify(data)}`);
     switch (data.op) {
       case "SetMetadata": {
         if (!this.roomState.roomPresets.SetMetadata(data.metadata)) {
@@ -1208,10 +1211,12 @@ class DigifuApp {
         const r = this.roomState.roomPresets.Paste(data.data,
           (instrument, presetObj) => {
             this.synth.SetInstrumentParams(instrument, presetObj, true);
+            return true;
           },
           (instrument, seqPatch, isSeqPlaying) => {
             instrument.sequencerDevice.LoadPatch(seqPatch);
             instrument.sequencerDevice.SetPlaying(isSeqPlaying);
+            return true;
           });
         if (!r) {
           throw new Error (`Server told us to set room patch but it was rejected huh?`);
@@ -1220,6 +1225,19 @@ class DigifuApp {
       }
       case "Save": {
         this.roomState.roomPresets.SaveCompactPreset(data.compactData);
+        break;
+      }
+      case "ReadPatch": {
+        if (!data.data) {
+          throw new Error(`i think you tried to load an invalid room patch or something? i got no data.`);
+        }
+        this.events.emit("RoomPatchRead", {
+          data: data.data,
+        });
+        break;
+      }
+      case "DeletePatch": {
+        this.roomState.roomPresets.DeletePresetByID(data.id);
         break;
       }
     }

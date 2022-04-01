@@ -40,7 +40,6 @@ class DFModalDialog extends React.Component {
 class RoomPatchSelectionInstrumentTR extends React.Component {
 
   onClickInst(e) {
-    console.log(`clicked inst`);
     const i = this.props.selectionObj.instrumentIDs.findIndex(iid => iid === this.props.instrumentID);
     if (i == -1) {
       this.props.selectionObj.instrumentIDs.push(this.props.instrumentID);
@@ -51,7 +50,6 @@ class RoomPatchSelectionInstrumentTR extends React.Component {
   }
 
   onClickSeq(e) {
-    console.log(`clicked seq`);
     const i = this.props.selectionObj.sequencerInstrumentIDs.findIndex(iid => iid === this.props.instrumentID);
     if (i == -1) {
       this.props.selectionObj.sequencerInstrumentIDs.push(this.props.instrumentID);
@@ -206,28 +204,69 @@ class RoomPresetLI extends React.Component {
      super(props);
      this.state = {
         deleteConfirmShowing: false,
+        loadingObj: null,
+        loadingSelection: null,
      };
   }
 
+  onChangeLoadingSelection(sel) {
+    this.setState({loadingSelection: sel});
+  }
+
+  componentDidMount() {
+    this.props.app.events.addListener("RoomPatchRead", this.onRoomPatchFetched);
+  }
+
+  componentWillUnmount() {
+    this.props.app.events.removeListener("RoomPatchRead", this.onRoomPatchFetched);
+  }
+
+  onRoomPatchFetched = (e) => {
+    if (e.data.presetID === this.props.preset.presetID) {
+      this.setState({
+        loadingObj: new RoomPreset(e.data),
+      });
+    } else {
+      this.setState({
+        loadingObj: null, // for OTHER rows, abandon the loading confirmation otherwise it gets spammy
+      });
+    }
+  }
+
   onClickLoad = (e) => {
-    //  const isReadOnly = this.props.isReadOnly;
-    //  if (isReadOnly) return;
-    //  this.props.app.SendRoomPatchOp({
-    //     op: "Read",
-    //     id: this.props.preset.presetID,
-    //  });
-     // ... then Paste...
+     const isReadOnly = this.props.isReadOnly;
+     if (isReadOnly) return;
+     this.props.app.net.SendRoomPatchOp({
+        op: "ReadPatch",
+        id: this.props.preset.presetID,
+     });
+     // nothing happens yet. wait for server to eventually result in RoomPatchRead event.
+  }
+
+  onClickLoadOK = (e) => {
+    const isReadOnly = this.props.isReadOnly;
+    if (isReadOnly) return;
+    const patch = this.state.loadingObj;
+    patch.KeepOnlySelected(this.state.loadingSelection);
+    this.props.app.net.SendRoomPatchOp({
+      op: "Paste",
+      data: patch,
+    });
+    this.setState({
+      loadingObj:null,
+      loadingSelection:null,
+    });
   }
 
   onClickDelete = (e) => {
-    //  const isReadOnly = this.props.isReadOnly;
-    //  if (isReadOnly) return;
-    //  this.props.app.SendRoomPatchOp({
-    //     op: "Delete",
-    //     id: this.props.preset.presetID,
-    //  });
-    //  this.setState({deleteConfirmShowing:false});
-    //  alert(`Deleted patch '${this.props.preset.presetName}'`);
+     const isReadOnly = this.props.isReadOnly;
+     if (isReadOnly) return;
+     this.props.app.net.SendRoomPatchOp({
+        op: "DeletePatch",
+        id: this.props.preset.presetID,
+     });
+     this.setState({deleteConfirmShowing:false});
+     alert(`Deleted patch '${this.props.preset.presetName}'`);
   }
 
   render() {
@@ -250,12 +289,18 @@ class RoomPresetLI extends React.Component {
               <span className="savedDate">{this.props.preset.date.toLocaleString()}</span>
            </div>
 
-           {this.state.deleteConfirmShowing && <div className="confirmationBox">
-              Click 'OK' to load "{this.props.preset.name}"
-              <br />
-              <button className="OK clickable" onClick={() => this.onClickDelete()}>OK</button>
-              <button className="Cancel clickable" onClick={() => this.setState({deleteConfirmShowing:false})}>Cancel</button>
-           </div>}
+          {this.state.loadingObj &&
+            <div className="confirmationBox">
+              Select which elements to import for "{this.props.preset.name}"
+              <RoomPatchSelection app={this.props.app}
+                instrumentListType="loadingPatch"
+                loadingPatch={this.state.loadingObj}
+                valueSetter={(sel) => this.onChangeLoadingSelection(sel)}
+                />
+              <button className="OK clickable" onClick={() => this.onClickLoadOK()}>OK</button>
+              <button className="Cancel clickable" onClick={() => this.setState({loadingObj:null})}>Cancel</button>
+           </div>
+           }
 
            {this.state.deleteConfirmShowing && <div className="confirmationBox">
               Click 'OK' to delete "{this.props.preset.name}"
@@ -271,53 +316,6 @@ class RoomPresetLI extends React.Component {
 }
 
 
-
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-// <RoomPatchObjDesc patch={this.state.pastingObjDesc} app= />
-// function RoomPatchObjDesc(props) {
-//   const patch = props.patch;
-//   const app = props.app;
-//   const instrumentMap = new Map(); // map inst to stuff.
-
-//   app.roomState.instrumentCloset.forEach(instrument => {
-//     if (!instrument.supportsPresets) return;
-//     instrumentMap.set(instrument.instrumentID, {});
-//     if (patch.instPatches[instrument.instrumentID]) {
-//       instrumentMap.get(instrument.instrumentID).patch = true;
-//     }
-//     if (patch.seqPatches[instrument.instrumentID]) {
-//       instrumentMap.get(instrument.instrumentID).seq = true;
-//     }
-//   });
-
-//   const instArray = [];
-//   instrumentMap.forEach((v, k) => {
-//     if (!v.patch && !v.seq) return;
-//     instArray.push(<tr key={k}>
-//       <th>{k}</th>
-//       <td>
-//         {v.patch && <span className='patch'>patch</span>}
-//         {v.seq && <span className='seq'>seq</span>}
-//       </td></tr>
-//     );
-//   });
-
-//   return (
-//     <table className='roomPatchDescTable'>
-//       <tbody>
-//         <tr>
-//         <th className='patchName'>name</th><td className='patchName'>{patch.metadata.name}</td></tr>
-//         <tr><th className='patchDesc'>description</th><td className='patchDesc'>{patch.metadata.description}</td></tr>
-//         <tr><th className='patchTags'>tags</th><td className='patchTags'>{patch.metadata.tags}</td></tr>
-//         <tr><th className='patchAuthor'>author</th><td className='patchAuthor'>{patch.metadata.author}</td></tr>
-//         {instArray}
-//       </tbody>
-//     </table>
-//   );
-// }
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class RoomPresetsDialog extends React.Component {
   constructor(props) {
@@ -331,13 +329,15 @@ class RoomPresetsDialog extends React.Component {
     };
   }
 
+  onChangeSavingSelection(sel) {
+    this.setState({savingSelection:sel});
+  }
+
   onChangePastingSelection(sel) {
-    console.log(`onChangePastingSelection to ${sel}`);
     this.setState({pastingSelection:sel});
   }
 
   onChangeCopyingSelection(sel) {
-    console.log(`onChangePastingSelection to ${sel}`);
     this.setState({copyingSelection:sel});
   }
 
@@ -393,27 +393,42 @@ class RoomPresetsDialog extends React.Component {
     alert('Ok, should be good to go.');
   }
 
+
+
   onClickSaveNew = (e) => {
     if (this.IsReadOnly()) return;
-    const data = this.props.app.roomState.roomPresets.GetLivePatchObj();
-    data.GenerateUniquePatchID();// give it a new ID to ensure saving new.
-    this.props.app.net.SendRoomPatchOp({
-      op: "Save",
-      data,
+    this.setState({
+      saveConfirmationShown:true,
+      isSaveNew:true,
     });
-    alert("Saved!");
   }
  
   onClickSaveExisting = (e) => {
     // it's the same as Save New except without generating a new ID.
     if (this.IsReadOnly()) return;
-    const data = this.props.app.roomState.roomPresets.GetLivePatchObj();
+    this.setState({
+      saveConfirmationShown:true,
+      isSaveNew:false,
+    });
+  }
+
+  OnClickSaveOK() {
+    if (this.IsReadOnly()) return;
+    const data = this.props.app.roomState.roomPresets.GetLivePatchObj(this.state.savingSelection);
+    if (this.state.isSaveNew) {
+      data.GenerateUniquePatchID();// give it a new ID to ensure saving new.
+    }
     this.props.app.net.SendRoomPatchOp({
       op: "Save",
       data,
     });
+    this.setState({
+      saveConfirmationShown:false,
+      isSaveNew:false,
+    });
     alert("Saved!");
   }
+
 
   onFilterChange = (txt) => {
     this.setState({ filterTxt: txt });
@@ -462,7 +477,6 @@ class RoomPresetsDialog extends React.Component {
   }
 
   render() {
-    console.log(`rendering room presets dlg`);
     const app = this.props.app;
     if (!app.myInstrument?.showRoomPresetsButton) {
       setTimeout(() => DFInvokeModal({op:null}), 10);
@@ -474,7 +488,7 @@ class RoomPresetsDialog extends React.Component {
     const isReadOnly = this.IsReadOnly();
     const clickableIfEditable = isReadOnly ? "" : " clickable";
 
-    const bankRef = mgr.GetPresetById(mgr.livePresetID);
+    const bankRef = mgr.GetCompactPresetById(mgr.livePresetID);
 
     const presetList = mgr.compactPresets.filter(preset => this.patchMatches(preset, this.state.filterTxt)).map((preset, i) => <RoomPresetLI
       key={i}
@@ -486,7 +500,7 @@ class RoomPresetsDialog extends React.Component {
     return (
       <DFModalDialog title="Room presets" modalClassName="presets roomPresets">
           <div className='subtext'>
-            Room presets are like a mega preset. They bundle up many instrument settings and sequencer settings into one package.
+            Room presets are like a mega preset, or a DAW project. They bundle up many instrument settings and sequencer settings into one package.
             This is a way to save the whole room's settings as a "song" you can recall in the future.
           </div>
          <fieldset>
@@ -524,10 +538,21 @@ class RoomPresetsDialog extends React.Component {
 
                <li>
                   {bankRef &&
-                     <button title="Save and Overwrite" className={clickableIfEditable} onClick={(e)=>this.onClickSaveExisting(e)}><i className="material-icons">save</i>Save (update "{bankRef.metadata.name}")</button>
+                     <button title="Save and Overwrite" className={clickableIfEditable} onClick={(e)=>this.onClickSaveExisting(e)}><i className="material-icons">save</i>Save existing (update "{bankRef.name}")</button>
                   }
                   <button title="Save as new preset" className={clickableIfEditable} onClick={(e)=>this.onClickSaveNew(e)}><i className="material-icons">save</i>Save as new</button>
                </li>
+
+               {this.state.saveConfirmationShown &&
+                  <li>
+                  <div className='confirmation'>
+                    Select which elements you want to include.
+                    <RoomPatchSelection app={app} instrumentListType="live" valueSetter={(sel) => this.onChangeSavingSelection(sel)} />
+                    <button className='ok' onClick={() => this.OnClickSaveOK()}>OK</button>
+                    <button className='cancel' onClick={() => this.setState({saveConfirmationShown:false})}>Cancel</button>
+                  </div>
+                  </li>
+                  }  
 
 
 
