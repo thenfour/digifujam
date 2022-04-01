@@ -197,7 +197,7 @@ class RoomPatchSelection extends React.Component {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // key={preset.presetID}
 // app={this.props.app}
-// preset={preset}
+// preset={preset} // a compact preset!
 // isReadOnly
 class RoomPresetLI extends React.Component {
   constructor(props) {
@@ -282,6 +282,7 @@ class RoomPresetLI extends React.Component {
            {this.props.app.myUser.IsAdmin() && 
               <div>presetID: {this.props.preset.presetID}</div>
            }
+           <span className="bpm">{this.props.preset.bpm} BPM</span>
            <span className="description">{this.props.preset.description}</span>
            <span className="tags">{this.props.preset.tags}</span>
            <div className="authorAndDateBox">
@@ -505,7 +506,7 @@ class RoomPresetsDialog extends React.Component {
           </div>
          <fieldset>
             <div className="legend">Live settings</div>
-            <ul>
+            <ul className='liveSettings'>
                <li><TextField
                   fieldID="name"
                   valueSetter={(val) => this.SetPatchName(val)}
@@ -513,6 +514,8 @@ class RoomPresetsDialog extends React.Component {
                   readOnly={isReadOnly}
                   maxLength={RoomPresetSettings.NameMaxLen}
                   ></TextField><span className='caption'>preset name</span></li>
+
+                <li className='bpm'><span className='value'>{this.props.app.roomState.bpm}</span><span className='caption'>BPM</span></li>
 
                <li><TextField
                   fieldID="description"

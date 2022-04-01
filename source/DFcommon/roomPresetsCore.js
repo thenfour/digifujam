@@ -123,6 +123,7 @@ class RoomPresetMetadata {
     this.name ??= "untitled";
     this.description ??= "";
     this.tags ??= "";
+    this.bpm ??= 100;
     this.author ??= ""; // set by server on save.
     if (this.date) { // set by server on save.
       this.date = new Date(this.date);
@@ -151,6 +152,7 @@ class CompactRoomPreset {
     this.name ??= "untitled";
     this.description ??= "";
     this.tags ??= "";
+    this.bpm ??= 100;
     this.author ??= ""; // set by server on save.
     if (this.date) { // set by server on save.
       this.date = new Date(this.date);
@@ -205,6 +207,7 @@ class RoomPreset {
       name: this.metadata.name,
       description: this.metadata.description,
       tags: this.metadata.tags,
+      bpm: this.metadata.bpm,
       author: this.metadata.author,
       date: this.metadata.date,
     });
@@ -250,6 +253,8 @@ class RoomPresetManager {
       this.liveMetadata.description = metadata.description;
     if (metadata.tags && IsValidRoomPatchTags(metadata.tags))
       this.liveMetadata.tags = metadata.tags;
+    if (metadata.bpm && IsValidRoomPatchBPM(metadata.bpm))
+      this.liveMetadata.bpm = metadata.bpm;
     return true;
   }
 
@@ -276,6 +281,8 @@ class RoomPresetManager {
       metadata: Object.assign({}, this.liveMetadata),
     });
 
+    ret.metadata.bpm = this.#roomState.bpm;
+
     instSeqSelection ??= new InstSeqSelection(this.#roomState);
 
     instSeqSelection.instrumentIDs.forEach(instrumentID => {
@@ -301,7 +308,7 @@ class RoomPresetManager {
     return ret;
   }
 
-  Paste(data, synthPatchHandler, seqPatchHandler) {
+  Paste(data, synthPatchHandler, seqPatchHandler, bpmHandler) {
     // set live metadata
     if (!data.presetID) return false;
     if (!data.metadata) return false;
@@ -343,10 +350,14 @@ class RoomPresetManager {
       }
     });
 
+    if (data.metadata?.bpm) {
+      bpmHandler(data.metadata.bpm);
+    }
+
     this.liveMetadata = new RoomPresetMetadata(data.metadata);
     this.livePresetID = data.presetID;
 
-    console.log(`Imported room patch '${this.liveMetadata.name}'; ${ret.instPatchesImported} inst patches, ${ret.seqPatchesImported} seq patches.`);
+    //console.log(`Imported room patch '${this.liveMetadata.name}'; ${ret.instPatchesImported} inst patches, ${ret.seqPatchesImported} seq patches.`);
 
     return true;
   }
@@ -363,11 +374,11 @@ class RoomPresetManager {
     let i = this.presets.findIndex(p => p.presetID === data.presetID);
     if (i === -1) {
       this.presets.push(data);
-      console.log(`saved new whole room preset ${data.presetID}`);
+      //console.log(`saved new whole room preset ${data.presetID}`);
     } else {
       // existing.
       this.presets[i] = data;
-      console.log(`overwrote whole room preset ${data.presetID}`);
+      //console.log(`overwrote whole room preset ${data.presetID}`);
     }
 
     i = this.compactPresets.findIndex(p => p.presetID === data.presetID);

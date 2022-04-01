@@ -98,7 +98,7 @@ class AdminControlsButton extends React.Component {
        if (!this.props.app) return null;
 
        return [
-            <div key="1" className='topMenuButton' onClick={this.onClickExpand}>
+            <div key="1" className='topMenuButton serverSettings' onClick={this.onClickExpand}>
                 Server <i className="material-icons">settings</i>
             </div>,
             <div key="2" className='popupPositioner'>

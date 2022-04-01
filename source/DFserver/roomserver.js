@@ -1890,7 +1890,11 @@ class RoomServer {
               instrument.sequencerDevice.SetPlaying(isPlaying);
               successes.sequencerInstrumentIDs.push(instrument.instrumentID);
               return true;
-            });
+            },
+            (bpm) => {
+              this.roomState.setBPM(bpm);
+            }
+            );
 
           // notify user of result
           ws.emit(DF.ServerMessages.RoomPresetLoadResult, {

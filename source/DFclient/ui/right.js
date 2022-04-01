@@ -2872,10 +2872,10 @@ class RootArea extends React.Component {
         );
 
         const modControlButton = (this.state.app && this.state.app?.myUser?.IsModerator()) && (
-            [<div key={1} className='topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
+            [<div key={1} className='modctrl topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
                 Mod ctrl {window.DFModerationControlsVisible ? "👮‍♀️" : "☮"}
             </div>,
-            <div key={2} className='topMenuButton' onClick={() => this.clickModerateRoom()}>Room <i className="material-icons">settings</i></div>
+            <div key={2} className='roomsettings topMenuButton' onClick={() => this.clickModerateRoom()}>Room <i className="material-icons">settings</i></div>
             ]
         );
 

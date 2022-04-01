@@ -1217,7 +1217,11 @@ class DigifuApp {
             instrument.sequencerDevice.LoadPatch(seqPatch);
             instrument.sequencerDevice.SetPlaying(isSeqPlaying);
             return true;
-          });
+          },
+          (bpm) => {
+            this.roomState.setBPM(bpm);
+          }
+          );
         if (!r) {
           throw new Error (`Server told us to set room patch but it was rejected huh?`);
         }

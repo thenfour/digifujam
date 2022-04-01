@@ -140,6 +140,13 @@ button.roomPresets:hover {
   align-items: center;
 }
 
+
+.dfmodal.presets li.bpm .value {
+    width: 227px;
+    text-align:right;
+}
+
+
 .dfmodal.presets li.presetItem {
   background-color: #044;
   display: block;
@@ -152,6 +159,11 @@ button.roomPresets:hover {
 .dfmodal.presets li.presetItem:hover {
   background-color: #055;
   border-left: 5px solid #088;
+}
+
+
+.dfmodal.presets li.presetItem.selected {
+  border-left: 8px solid #cc0;
 }
 
 
@@ -175,6 +187,14 @@ button.roomPresets:hover {
   display: block;
 }
 
+.dfmodal.presets li.presetItem .bpm {
+  color:#888;
+  
+}
+.dfmodal.presets li.presetItem .tags {
+  color:#88c;
+  
+}
 
 .dfmodal.presets .confirmationBox {
   color: #8cc;
@@ -227,10 +247,6 @@ button.roomPresets:hover {
   flex-direction: column;
   align-items: stretch;
   width: fit-content;
-}
-
-.dfmodal.presets .presetItem.selected {
-  border-left: 8px solid #cc0;
 }
 
 /* inst/seq selection control */

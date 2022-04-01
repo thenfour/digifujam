@@ -263,3 +263,15 @@ span.userModerationGear i {
   color: #9cc;
 }
 
+
+.topMenuButton.modctrl,
+.topMenuButton.roomsettings,
+.topMenuButton.serverSettings {
+  border: 2px solid #f739;
+}
+
+.topMenuButton.modctrl:hover,
+.topMenuButton.roomsettings:hover,
+.topMenuButton.serverSettings:hover {
+  border: 2px solid #f73;
+}

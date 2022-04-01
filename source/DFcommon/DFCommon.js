@@ -1590,6 +1590,7 @@ class DigifuRoomState {
     }
 
     setBPM(bpm) {
+        bpm = sanitizeBPM(bpm);
         this.bpm = bpm;
         this.metronome.setBPM(bpm);
     }
@@ -2256,6 +2257,12 @@ let sanitizeCheerText = function (n) {
     n = n.trim();
     if (n.length == 0) return null;
     return String.fromCodePoint(n.codePointAt(0));
+}
+
+function sanitizeBPM(bpm) {
+    bpm ??= 100;
+    bpm = parseFloat(bpm);
+    return DFUtil.baseClamp(bpm, 20, 220);
 }
 
 module.exports = {
