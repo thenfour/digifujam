@@ -127,14 +127,15 @@ function MappingFunction_Random(params) {
 // this is the "key trigger" mode.
 function MappingFunction_TranspSeq(params) {
   const ret = [];
-  if (!params.lastNoteOn) return ret;
+  if (!params.lowestNoteValue) return ret; // don't play anything if no notes.
+  const lowestNoteValue = params.lowestNoteValue;
 
   for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
     const cell = params.div.noteOns[irow];
     if (cell.isMuted)
       continue;
 
-    let note = cell.midiNoteValue + params.lastNoteOn.note - params.seq.GetBaseNote();
+    let note = cell.midiNoteValue + lowestNoteValue - params.seq.GetBaseNote();
 
     ret.push({
       velocity: cell.velocity,
@@ -431,6 +432,7 @@ class InstrumentSequencerPlayer {
 
     const heldNotesByNoteValue = heldNotes.heldNotesByNoteValue;
     const lastNoteOn = heldNotes.lastNoteOn;
+    const lowestNoteValue = heldNotes.lowestNoteValue;
     //console.log(`==== scheduling. heldnotes = ${JSON.stringify(heldNotesByNoteValue)}`);
 
     // scheduling time must be in abs quarters.
@@ -465,7 +467,7 @@ class InstrumentSequencerPlayer {
       for (let cursorShiftedQuarter = divFirstFutureAbsQuarter; cursorShiftedQuarter <= windowEndShiftedQuarters; cursorShiftedQuarter += patternPlayheadInfo.patternLengthQuarters) {
         const divEvents = divMappingFunction({
           heldNotes: heldNotesByNoteValue,
-          lastNoteOn,
+          lowestNoteValue,
           div,
           patch,
           seq,

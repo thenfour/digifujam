@@ -15,10 +15,11 @@ const SequencerSettings = {
   MaxNoteOnsPerColumn : 8,
 };
 
-function ArpMapping(id, caption, swallowNotes, useBaseNote, description) {
+function ArpMapping(id, caption, betterCaption, swallowNotes, useBaseNote, description) {
   return {
     id,
     caption,
+    betterCaption,
     swallowNotes,
     useBaseNote,
     description,
@@ -27,17 +28,17 @@ function ArpMapping(id, caption, swallowNotes, useBaseNote, description) {
 }
 
 const SequencerArpMapping = [
-  ArpMapping("ArpMap_Seq","Seq", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
-  ArpMapping("ArpMap_Spread","Spread", true, false, "Spread the held chord over the sequence, interpolating note values."),
-  ArpMapping("ArpMap_TranspSeq","TranspSeq", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
-  ArpMapping("ArpMap_ArpUp","ArpUp", true, false, "Play held notes in sequence, ignoring sequenced note value."),
-  ArpMapping("ArpMap_ArpDown","ArpDown", true, false, ""),
-  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", true, false, ""),
-  ArpMapping("ArpMap_ArpInward","ArpInward", true, false, ""),
-  ArpMapping("ArpMap_ArpOutward","ArpOutward", true, false, ""),
+  ArpMapping("ArpMap_Seq","Seq", "Sequencer (normal mode)", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
+  ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, "Spread the held chord over the sequence, interpolating note values."),
+  ArpMapping("ArpMap_TranspSeq","TranspSeq", "Transposing sequencer", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
+  ArpMapping("ArpMap_ArpUp","ArpUp", "Arpeggiator: Up", true, false, "Play held notes in sequence, ignoring sequenced note value."),
+  ArpMapping("ArpMap_ArpDown","ArpDown", "Arpeggiator: Down", true, false, ""),
+  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", "Arpeggiator: Up-Down", true, false, ""),
+  ArpMapping("ArpMap_ArpInward","ArpInward", "Arpeggiator: Inward", true, false, ""),
+  ArpMapping("ArpMap_ArpOutward","ArpOutward", "Arpeggiator: Outward", true, false, ""),
   //ArpMapping("ArpMap_ArpInOut","ArpInOut", true, false, ""),
-  ArpMapping("ArpMap_Random","Random", true, false, "Play held notes at random, ignoring sequenced note value."),
-  ArpMapping("ArpMap_AsPlayed","AsPlayed", true, false, "Play held chord for every sequenced note."),
+  ArpMapping("ArpMap_Random","Random", "Random", true, false, "Play held notes at random, ignoring sequenced note value."),
+  ArpMapping("ArpMap_AsPlayed","Rhythm", "As played (rhythm-only sequencer)", true, false, "Play held chord for every sequenced note."),
   //ArpMapping("ArpMap_TranspHeld","TranspHeld", true, true), // polyphonic "transpseq" mode. but we risk too many notes.
   // harmonize. repeat your playing chord at the pattern note.
 ];

@@ -1566,10 +1566,18 @@ class Instrument extends  React.Component {
         const app = this.props.app;
         const i = this.props.instrument;
 
-        if (e.ctrlKey) {
+        if (e.shiftKey && !e.ctrlKey) {
             app.net.SeqSetListeningInstrumentID({
                 seqInstrumentID: i.instrumentID,
                 instrumentID: app.myInstrument.instrumentID,
+            });
+            return;
+        }
+
+        if (e.ctrlKey && !e.shiftKey) {
+            app.net.SeqSetListeningInstrumentID({
+                seqInstrumentID: i.instrumentID,
+                instrumentID: i.instrumentID,
             });
             return;
         }
@@ -1613,7 +1621,7 @@ class Instrument extends  React.Component {
         const isSidechained = i.sequencerDevice.IsSidechained();
         let title = "Sequencer activity (click to start/stop).";
         if (i.sequencerDevice.GetArpMapping().swallowNotes && !!this.props.app.myInstrument) {
-            title += " CTRL+click to sidechain to your instrument.";
+            title += " Shift+click to sidechain to your instrument. CTRL+Click to remove sidechain.";
         }
         if (isSidechained) {
             const n = this.props.app.roomState.FindInstrumentById(i.sequencerDevice.listeningToInstrumentID).instrument.getDisplayName();

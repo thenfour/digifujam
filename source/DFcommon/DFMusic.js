@@ -360,6 +360,17 @@ class HeldNoteTracker {
     return this.notesOn.sort((a, b) => a.note - b.note);
   }
 
+  get lowestNoteValue() {
+    if (this.notesOn.length === 0) return null;
+    let minval = this.notesOn[0].note;
+    for (let i = 1; i < this.notesOn.length; ++ i) {
+      if (this.notesOn[i].note < minval) {
+        minval = this.notesOn[i].note;
+      }
+    }
+    return minval;
+  }
+
   get lastNoteOn() {
     if (this.notesOn.length === 0) return null;
     let maxval = this.notesOn[0].timestamp;

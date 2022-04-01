@@ -1248,3 +1248,13 @@
     color:#000;
     background-color:#c40;
 }
+
+
+.sequencerMain fieldset.seqMode .listeningToInstrument .scButton {
+}
+
+
+.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton {color: #eee;background-color: #088;height: 20px;display: flex;align-items: center;justify-content: center;border-radius: 4px;border: 1px solid #4b694b;width: 20px;}
+
+
+.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton:hover {background-color: #999;}

@@ -849,26 +849,29 @@ class SequencerMain extends React.Component {
             timeSig: selectedTS,
         };
 
-        const listenToInstrumentList = this.state.showListenToInstrumentDropdown && this.props.app.roomState.instrumentCloset.map((inst, i) => {
-            const inUse = inst.IsInUse();
-            //const isYours = (i.controlledByUserID == app.myUser.userID);
-            let ownedBy = null;
-            if (inUse) {
-                let foundUser = this.props.app.roomState.FindUserByID(inst.controlledByUserID);
-                if (foundUser) {
-                    ownedBy = (<span className="takenBy">(<span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span>)</span>);
-                }
-            }
-    
-            return (
-                <li
-                    key={i}
-                    onClick={() => this.onClickListenToInstrument(inst)}
-                    className={(seq.listeningToInstrumentID === inst.instrumentID ? " selected" : "") + (inst.instrumentID === this.props.instrument.instrumentID ? " default" : "")}
-                >
-                    <span className='instrumentName' style={{ color: i.color }}>{inst.getDisplayName()}</span>{ownedBy}
-                </li>);
-        });
+        const listenToInstrumentList = this.state.showListenToInstrumentDropdown &&
+            this.props.app.roomState.instrumentCloset
+                .filter(inst => inst.wantsMIDIInput)
+                .map((inst, i) => {
+                    const inUse = inst.IsInUse();
+                    //const isYours = (i.controlledByUserID == app.myUser.userID);
+                    let ownedBy = null;
+                    if (inUse) {
+                        let foundUser = this.props.app.roomState.FindUserByID(inst.controlledByUserID);
+                        if (foundUser) {
+                            ownedBy = (<span className="takenBy">(<span style={{ color: foundUser.user.color }}>{foundUser.user.name}</span>)</span>);
+                        }
+                    }
+            
+                    return (
+                        <li
+                            key={i}
+                            onClick={() => this.onClickListenToInstrument(inst)}
+                            className={(seq.listeningToInstrumentID === inst.instrumentID ? " selected" : "") + (inst.instrumentID === this.props.instrument.instrumentID ? " default" : "")}
+                        >
+                            <span className='instrumentName' style={{ color: i.color }}>{inst.getDisplayName()}</span>{ownedBy}
+                        </li>);
+                });
 
          const timeSigList = this.state.showTimeSigDropdown && DFMusic.CommonTimeSignatures.map(ts => {
              return (
@@ -886,7 +889,10 @@ class SequencerMain extends React.Component {
                     key={m.id}
                     onClick={() => this.onClickArpMapping(m.id)}
                     className={seq.GetArpMapping().id === m.id ? " selected" : ""}
-                    ><div className='caption'>{m.caption}</div><div className='description'>{m.description}</div></li>
+                >
+                    <div className='caption'>{m.betterCaption}</div>
+                    <div className='description'>{m.description}</div>
+                </li>
              );
          });
 
@@ -1119,9 +1125,15 @@ class SequencerMain extends React.Component {
 
                                 {/* listening instrument */}
                                 {seq.GetArpMapping().swallowNotes &&
-                                <div className={'legend listeningToInstrument ' + (seq.GetArpMapping().swallowNotes ? " enabled" : " disabled")}>SC</div>
+                                <div
+                                    className={'legend listeningToInstrument '+ clickableIfEditable + (seq.GetArpMapping().swallowNotes ? " enabled" : " disabled")}
+                                    onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e)}
+                                    title="Arpeggiator input notes can be configured to listen to other instruments. CTRL+Click to reset."
+                                    >
+                                        <div className="scButton">SC</div>
+                                    </div>
                                 }
-                                {seq.GetArpMapping().swallowNotes &&
+                                {seq.GetArpMapping().swallowNotes && (this.state.showListenToInstrumentDropdown || (this.props.instrument.instrumentID !== seq.listeningToInstrumentID)) &&
                                 <div className='paramBlock listeningToInstrument'>
                                     <div
                                         className={'paramValue ' + clickableIfEditable + (this.state.showListenToInstrumentDropdown ? " active" : "") + (this.props.instrument.instrumentID === seq.listeningToInstrumentID ? " default" : " notdefault")}
