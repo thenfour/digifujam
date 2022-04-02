@@ -2,6 +2,9 @@ const React = require('react');
 const {ValueSliderElement} = require('../util');
 
 function renderKnob(el, value01, formatSpec, valueSpec, propGetter) {
+  // if (!el) {
+  //   console.log(`el is null`);
+  // }
   let centerX = formatSpec.width / 2;
   let centerY = formatSpec.height / 2;
 
@@ -82,6 +85,7 @@ class SeqLegendKnob extends React.Component {
     this.valueSpec = this.props.valueSpec;
     this.smallCaption = this.props.smallCaption ?? "";
     this.isDragging = false;
+    this.isEnabled = this.props.enabled ?? true;
   }
 
   get value() {
@@ -110,11 +114,18 @@ class SeqLegendKnob extends React.Component {
   }
 
   nonReactUpdate() {
+    if (!this.canvasRef) return;
     renderKnob(this.canvasRef, this.value01, this.formatSpec, this.valueSpec, (p) => typeof (p) === 'function' ? p(this) : p);
   }
 
   render() {
     const valueStr = !this.value01 ? "" : this.valueSpec.value01ToString(this.value01);
+    //console.log(`knob react render: this.props.enabled=${this.props.enabled}  this.isEnabled=${this.isEnabled}`);
+    if (this.props.enabled !== this.isEnabled) 
+    {
+      this.isEnabled = !!this.props.enabled;
+      this.nonReactUpdate();
+    }
     return (
       <div className='paramGroup'>
         {!this.props.hideTitle &&

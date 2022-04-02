@@ -9,10 +9,11 @@ Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest
 ## Features
 
 - Multiple music rooms, each with different instrument sets
+- Save your work via "room presets" (similar to a "song" or DAW project), or save presets in sequencers and synthesizers.
 - Over 55 sample-based instruments are available, each with multiple variations
 - Step sequencer for synchronized playing with or without a MIDI device.
-  - Constant playing mode
-  - Key trigger mode
+  - Arpeggiator modes
+  - Can link to other instruments
 - Two different synthesizer engines available
   - 4-oscilltors, each with pulse width modulation capability
   - Monophonic or polyphonic mode, with portamento
@@ -30,6 +31,16 @@ Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest
 - Room metronome so everyone is playing to the same tempo
 - Quantization options
 - Free and open to explore and play with
+
+
+# Hotkeys
+
+- <kbd>\\</kbd> cheer
+- <kbd>ALT</kbd>+<kbd>M</kbd> toggle mute
+- <kbd>ALT</kbd>+<kbd>1</kbd> show error log window
+- <kbd>ALT</kbd>+<kbd>2</kbd> throw an exception (for debugging)
+- <kbd>ALT</kbd>+<kbd>5</kbd> show / hide sequencer window
+- <kbd>ALT</kbd>+<kbd>9</kbd> show moderation controls
 
 
 ## FAQ
@@ -134,6 +145,7 @@ Discord users should have some properties that normal 7jam users do not:
 * server configuration files
 * sequencer configuration files
 * graffiti uploads
+* sfz importing
 * ...
 
 

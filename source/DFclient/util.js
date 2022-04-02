@@ -79,6 +79,10 @@ class GestureTracker {
           handled = true;
           this.events.emit('toggleModerationControls');
         }
+        if (e.key === 'm' && e.altKey) {
+          handled = true;
+          this.events.emit('toggleMute');
+        }
         if (e.key === '5' && e.altKey) {
           handled = true;
           this.events.emit('toggleSequencerShown');

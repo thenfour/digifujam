@@ -13,6 +13,7 @@ const SequencerSettings = {
   PatternCount : 4,
   MaxDivs : 65,
   MaxNoteOnsPerColumn : 8,
+  RecentlyPlayedActivityThresholdMS : DFUtil.minutesToMS(30), 
 };
 
 function ArpMapping(id, caption, betterCaption, swallowNotes, useBaseNote, description) {
@@ -884,6 +885,7 @@ class SequencerDevice {
       Object.assign(this, params);
 
     this.instrumentID = instrument.instrumentID;
+    this.lastPlayingActivity ??= 0; // make it just expired.
 
     this.isPlaying ??= false;          // false while cueued
     this.listeningToInstrumentID ??= this.instrumentID; // null = this own instrument.
@@ -911,6 +913,14 @@ class SequencerDevice {
   }
 
   IsPlaying() { return this.isPlaying; }
+
+  RegisterPlayingActivity() {
+    this.lastPlayingActivity = Date.now();
+  }
+
+  HasRecentlyPlayed() {
+    return (Date.now() - this.lastPlayingActivity) < SequencerSettings.RecentlyPlayedActivityThresholdMS;
+  }
 
   // NOTE: return is SPEED-ADJUSTED
   // given abs quarter (absolute room beat, NOT speed-adjusted), calculate some pattern times.

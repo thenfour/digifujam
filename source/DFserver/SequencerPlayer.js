@@ -47,12 +47,15 @@ const gRecalcLatencyMS = 40;
 // at very least we can say the timer should be expected to DO actual work each iteration.
 // and probably even dozens of events are more efficient than a nop interval.
 // so that suggests it should be pretty long, like once per few seconds. maybe 1 measure of 4/4 @ 100bpm.
-const gIntervalMS = 350;
+
+// 350 is pretty much a sweet spot for local activity. But on the server, we should favor the
+// longer period for stability.
+const gIntervalMS = 941;
 
 // each timer interval, a chunk of pattern data is scheduled.
 // in theory it sholud just be over the next interval,
 // but there should be some margin as well to account for jitter.
-const gChunkSizeFactor = 1.1;
+const gChunkSizeFactor = 1.15;
 
 // each arpeggiator mapping mode gets a function which transforms a div with notes on into a list of events.
 // the most basic "none" mapping just looks at noteOns and pushes the events.
@@ -500,6 +503,9 @@ class InstrumentSequencerPlayer {
     //console.log(`scheduling ${events.length} seq events in SA window [${patternPlayheadInfo.shiftedAbsQuarter} - ${windowEndShiftedQuarters}] and SA minmax [${minAbsQuarter}, ${maxAbsQuarter}]`);
     //console.log(`window length quarters: ${windowLengthQuarters}, scheduling ${events.length} events`);
     //console.log(`Events to schedule: ` + JSON.stringify(events));
+    if (events.length) {
+      seq.RegisterPlayingActivity();
+    }
 
     this.quantizer.setSequencerEvents(this.roomState.roomID, this.instrument.instrumentID, events, patternView, true);
     RegisterPerf();

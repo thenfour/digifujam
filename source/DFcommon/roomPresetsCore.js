@@ -1,5 +1,6 @@
 // based a lot on SeqPresetBank
 
+const DFG = require('./dfglobal');
 const DFUtil = require('./dfutil');
 
 const RoomPresetSettings = {
@@ -100,7 +101,8 @@ class InstSeqSelection
   static ShouldBeIncludedInDefaultSeqSelection(instrument) {
     if (!instrument.allowSequencer) return false;
     if (instrument.sequencerDevice.IsPlaying()) return true;
-    return instrument.sequencerDevice.HasData();
+    return instrument.sequencerDevice.HasRecentlyPlayed();
+    //return instrument.sequencerDevice.HasData();
   }
 
   static ShouldBeIncludedInDefaultInstSelection(instrument) {
@@ -253,8 +255,8 @@ class RoomPresetManager {
       this.liveMetadata.description = metadata.description;
     if (metadata.tags && IsValidRoomPatchTags(metadata.tags))
       this.liveMetadata.tags = metadata.tags;
-    if (metadata.bpm && IsValidRoomPatchBPM(metadata.bpm))
-      this.liveMetadata.bpm = metadata.bpm;
+    if (metadata.bpm)
+      this.liveMetadata.bpm = DFG.sanitizeBPM(metadata.bpm);
     return true;
   }
 

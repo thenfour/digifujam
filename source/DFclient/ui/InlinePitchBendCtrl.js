@@ -7,17 +7,17 @@ const { SeqLegendKnob, IntRangeValueSpec } = require('./knob');
 
 const gTopRowKnobFormatSpec = {
    fontSpec: "12px sans-serif",
-   centerText: (knob) => { return `${knob.smallCaption}:${knob.valueSpec.value01ToString(knob.valueSpec.valueToValue01(knob.value))}`; },// knob.isDragging ?  : knob.smallCaption; },//knob.isDragging ? "16px monospace" : null; },
+   centerText: (knob) => { return knob.props.enabled ? `${knob.smallCaption}:${knob.valueSpec.value01ToString(knob.valueSpec.valueToValue01(knob.value))}` : "mute"; },
    textColor: "#ddd",
    padding: 1,
    lineWidth: 10,
    valHighlightWidth: 10,
    offsetY: 2,
    trackColor: "#555",
-   fgColor: (knob) => { return "#077"; },
-   valHighlightColor: (knob) => { return knob.value === knob.valueSpec.centerValue ? "#0cc" : "#0aa"; },
-   radius: 15,
-   valHighlightRadius: 15,
+   fgColor: (knob) => { return knob.props.enabled ? "#077" : "#777"; },
+   valHighlightColor: (knob) => { return knob.props.enabled ? "#0cc" : "#bbb"; },
+   radius: 18,
+   valHighlightRadius: 18,
    valueRangeRadians: .75 * 2 * Math.PI,
    valueOffsetRadians: Math.PI * 1.5,
    valHighlightRangeRad: 0,
@@ -65,6 +65,7 @@ class KnobPitchBendCtrl extends React.Component {
                caption="Pitch Bend"
                smallCaption="PB"
                className="knob"
+               enabled="true"
                hideTitle="1"
                initialValue={this.props.app.pitchBendRange}
                valueSpec={this.pbValueSpec}
@@ -115,6 +116,20 @@ class KnobMasterVolumeCtrl extends React.Component {
       this.valueSpec = new IntRangeValueSpec(0, 200, 100, 100);
    }
 
+   componentDidMount() {
+      window.DFKeyTracker.events.on("toggleMute", this.handleMuteHotkey);
+   }
+
+   componentWillUnmount() {
+      window.DFKeyTracker.events.removeListener("toggleMute", this.handleMuteHotkey);
+   }
+
+   handleMuteHotkey = () => {
+      if (!this.props.app) return;
+      this.props.app.SetMuted(!this.props.app.IsMuted());
+      this.props.stateChangeHandler.OnStateChange();
+   }
+
    setVolumeVal = (v) => {
       let realVal = parseFloat(v) / 100;
       this.props.app.synth.masterGain = realVal;
@@ -133,14 +148,23 @@ class KnobMasterVolumeCtrl extends React.Component {
                caption="Master volume"
                smallCaption="Vol"
                className="knob"
+               enabled={!this.props.app.IsMuted()}
                hideTitle="1"
                initialValue={this.props.app.synth.masterGain * 100}
                valueSpec={this.valueSpec}
                onChange={this.setVolumeVal}
                formatSpec={gTopRowKnobFormatSpec}
             />
-         <button className = "muteButton" onClick = {this.onClickMute}>{this.props.app.IsMuted() ?
-         (<i className="material-icons">volume_off</i>) : (<i className="material-icons">volume_up</i>)}</button>
+         <button
+            className={"muteButton " + (this.props.app.IsMuted() ? "muted" : "unmuted")}
+            onClick = {this.onClickMute}
+            title="Toggle mute (ALT+M)"
+            >
+            { this.props.app.IsMuted() ?
+               (<i className="material-icons">volume_off</i>)
+               : (<i className="material-icons">volume_up</i>)
+            }
+         </button>
       </span>);
    }
 };

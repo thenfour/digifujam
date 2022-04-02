@@ -2813,8 +2813,6 @@ class RootArea extends React.Component {
             this.setState({sequencerShown:!this.state.sequencerShown});
         });
 
-        
-
         // help catch window-changing events that change layout. actually a more robust solution would be a mediaquerylist change handler but ... it requires more thought.
         document.addEventListener('visibilitychange', () => {
             //console.log(`visibility change`);
@@ -2952,6 +2950,7 @@ class RootArea extends React.Component {
                             <div>pos: {Math.round(this.state.app?.myUser?.position?.x)}, {Math.round(this.state.app?.myUser?.position?.y)}]</div>
                         )}
                     </span>
+                    
                     <span>
                         {connectionIndicator}
                         <span className='headerTitle'>7jam.io</span>

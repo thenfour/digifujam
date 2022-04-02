@@ -167,7 +167,12 @@ class RoomPatchSelection extends React.Component {
         <div className='topControls'>
           <button onClick={() => this.onClickAll()}>All</button>
           <button onClick={() => this.onClickNone()}>None</button>
-          {(this.props.instrumentListType !== 'loadingPatch') && <button onClick={() => this.onClickAuto()}>Auto</button>}
+          {(this.props.instrumentListType !== 'loadingPatch') &&
+            <button
+              onClick={() => this.onClickAuto()}
+              title="Automatically select only instruments which are being played, and sequencers with recently played activity."
+              >Auto
+            </button>}
         </div>
         <table>
           <tbody>
@@ -279,7 +284,7 @@ class RoomPresetLI extends React.Component {
               {!isReadOnly && <button className='clickable' onClick={() => this.setState({deleteConfirmShowing:true})}><i className="material-icons">delete</i>Delete</button>}
            </div>
            <span className="presetName">{this.props.preset.name}</span>
-           {this.props.app.myUser.IsAdmin() && 
+           {window.DFModerationControlsVisible && 
               <div>presetID: {this.props.preset.presetID}</div>
            }
            <span className="bpm">{this.props.preset.bpm} BPM</span>
@@ -533,7 +538,7 @@ class RoomPresetsDialog extends React.Component {
                   maxLength={RoomPresetSettings.TagsMaxLen}
                   ></TextField><span className='caption'>tags</span></li>
 
-               {this.props.app.myUser.IsAdmin() && <li>live presetID: {mgr.livePresetID}</li>}
+               {window.DFModerationControlsVisible && <li>live presetID: {mgr.livePresetID}</li>}
 
             </ul>
             <ul className='buttonPatchOps'>

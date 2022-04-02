@@ -5,6 +5,7 @@ const Seq = require('./SequencerCore');
 const {ServerRoomMetronome} = require('./serverMetronome');
 const { DigifuUser, eUserSource, eUserPresence } = require('./DFUser');
 const { RoomPresetManager } = require('./roomPresetsCore');
+const DFG = require('./dfglobal');
 
 let gGlobalInstruments = [];
 
@@ -218,8 +219,8 @@ const ServerSettings = {
     ServerStatePruneIntervalMS: DFUtil.hoursToMS(24),
     ServerStateMaxAgeMS: DFUtil.daysToMS(5),
 
-    MinBPM: 30,
-    MaxBPM: 200,
+    MinBPM: 20,
+    MaxBPM: 220,
 
     GraffitiDefaultLifetimeMS: DFUtil.daysToMS(26),
     GraffitiContentLengthMax: 1800, // max allowed content
@@ -1595,7 +1596,7 @@ class DigifuRoomState {
     }
 
     setBPM(bpm) {
-        bpm = sanitizeBPM(bpm);
+        bpm = DFG.sanitizeBPM(bpm);
         this.bpm = bpm;
         this.metronome.setBPM(bpm);
     }
@@ -2304,11 +2305,6 @@ let sanitizeCheerText = function (n) {
     return String.fromCodePoint(n.codePointAt(0));
 }
 
-function sanitizeBPM(bpm) {
-    bpm ??= 100;
-    bpm = parseFloat(bpm);
-    return DFUtil.baseClamp(bpm, 20, 220);
-}
 
 module.exports = {
     ClientMessages,

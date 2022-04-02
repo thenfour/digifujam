@@ -282,6 +282,7 @@ button:focus {
 
 .headerArea {
     padding: 3px;
+    padding-bottom:0;
     display: flex;
     justify-content: space-between;
     user-select: none;
@@ -305,9 +306,10 @@ button:focus {
 }
 
 .headerArea .headerTitle {
-    font-size: 20px;
-    color: #cc0;
+    font-size: 34px;
+    color: #dd0;
     font-weight: bold;
+    padding: 0px 18px;
 }
 
 .headerArea a:link,
@@ -492,6 +494,15 @@ button:focus {
 button.muteButton,
 button.muteButton:focus {
     border: 0;
+}
+
+
+button.muteButton.muted  {
+    color: #bbb;
+}
+
+button.muteButton.muted:hover  {
+    background-color: #888;
 }
 
 

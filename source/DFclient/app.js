@@ -774,6 +774,7 @@ class DigifuApp {
       instrument = this.roomState.FindInstrumentById(seqInstrumentID)?.instrument;
       if (!instrument)
         return; // sequencer sends stuff very out-of-time; it can happen before room state processed.
+      instrument.sequencerDevice.RegisterPlayingActivity();
       let foundUser = this.roomState.FindUserByID(instrument.controlledByUserID);
       if (foundUser) {
         user = foundUser.user;
@@ -809,6 +810,7 @@ class DigifuApp {
       instrument = this.roomState.FindInstrumentById(seqInstrumentID)?.instrument;
       if (!instrument)
         return; // sequencer sends stuff very out-of-time; it can happen before room state processed.
+      instrument.sequencerDevice.RegisterPlayingActivity();
       let foundUser = this.roomState.FindUserByID(instrument.controlledByUserID);
       if (foundUser) {
         user = foundUser.user;
