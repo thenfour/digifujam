@@ -381,6 +381,26 @@ function pointInPolygon(point, vs, start, end) {
   return inside;
 };
 
+
+class DFRect {
+  constructor() {
+      this.x = 0;
+      this.y = 0;
+      this.w = 0;
+      this.h = 0;
+  }
+  thaw() { }
+
+  PointIntersects(pt) {
+      if (pt.x < this.x) return false;
+      if (pt.y < this.y) return false;
+      if (pt.x >= this.x + this.w) return false;
+      if (pt.y >= this.y + this.h) return false;
+      return true;
+  }
+};
+
+
 function pointToStr(p) {
   return `${p[0]},${p[1]}`;
 }
@@ -514,4 +534,5 @@ module.exports = {
   IsImageFilename,
   CommandHistory,
   ParamThrottler,
+  DFRect,
 };

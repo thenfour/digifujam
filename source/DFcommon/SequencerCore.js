@@ -1012,19 +1012,25 @@ class SequencerDevice {
   // client-side; handles incoming server msgs
   SeqPresetOp(data, bank, allNotesOffRoutine) {
     switch (data.op) {
-    case "load": {
-      let preset = bank.GetPresetById(data.presetID);
-      if (!preset) {
-        console.log(`unknown seq preset ID ${presetID}`);
-        return false;
-      }
-      this.LoadPatch(preset);
+    case "loadFull": {
+      // let preset = bank.GetPresetById(data.presetID);
+      // if (!preset) {
+      //   console.log(`unknown seq preset ID ${presetID}`);
+      //   return false;
+      // }
+      this.LoadPatch(data.fullPreset);
       return true;
     }
-    case "save": {
+    // case "save": {
+    //   // save the live patch to a presetID specified.
+    //   this.livePatch.presetID = data.presetID; // when you save as, link live patch to the new one
+    //   return bank.Save(data.presetID, data.author, data.savedDate, this.livePatch);
+    // }
+    case "saveCompact": {
       // save the live patch to a presetID specified.
-      this.livePatch.presetID = data.presetID; // when you save as, link live patch to the new one
-      return bank.Save(data.presetID, data.author, data.savedDate, this.livePatch);
+      //console.log(` -> setting live ID ${data.compactPreset.presetID}`);
+      this.livePatch.presetID = data.compactPreset.presetID; // when you save as, link live patch to the new one
+      return bank.SaveCompact(data.compactPreset);
     }
     case "delete": {
       return bank.DeletePresetById(data.presetID);
@@ -1037,10 +1043,10 @@ class SequencerDevice {
       this.LoadPatch(data.patch);
       return true;
     }
-    case "pasteBank": {
-      bank.ReplaceBank(data.bank);
-      return true;
-    }
+    // case "pasteBank": {
+    //   bank.ReplaceBank(data.bank);
+    //   return true;
+    // }
     case "SeqSetTranspose": {
       this.livePatch.SetTranspose(data.transpose);
       return true;
@@ -1064,6 +1070,9 @@ class SequencerDevice {
         allNotesOffRoutine();
       }
       return true;
+    }
+    default: {
+      throw new Error(`unknown seq preset op ${data.op}`);
     }
     }
     return false;
@@ -1774,19 +1783,61 @@ class SequencerPatternView {
                     lengthMajorBeats : this.CalcLengthMajorBeats(destDivIndex, destDivLength),
                   });
     return ret;
-  }}
+  }
+}
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-// this is little more than an array of SequencerPatch objects
+// holds compact data about a preset which does not include the big patch data itself. supports lazy loading
+class SeqCompactPreset {
+  constructor(params) {
+    Object.assign(this, params);
+    this.presetName ??= '(init)';
+    this.presetDescription ??= '';
+    this.presetTags ??= '';
+    this.presetAuthor ??= '';
+    this.presetSavedDate ??= Date.now();
+    this.presetSavedDate = new Date(this.presetSavedDate); // ensure date type
+    this.presetID ??= DFUtil.generateID();
+  }
+
+  static FromPreset(p) {
+    return new SeqCompactPreset({
+      presetName: p.presetName,
+      presetDescription: p.presetDescription,
+      presetTags: p.presetTags,
+      presetAuthor: p.presetAuthor,
+      presetSavedDate: p.presetSavedDate,
+      presetID: p.presetID,
+    });
+  }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 class SeqPresetBank {
   constructor(params) {
     Object.assign(this, params);
     this.id ??= DFUtil.generateID();
     this.presets ??= [];
     this.presets = this.presets.map(o => new SequencerPatch(o));
+
+    if (DFUtil.IsServer()) {
+      this.compactPresets = this.presets.map(p => SeqCompactPreset.FromPreset(p));
+    } else {
+      this.compactPresets ??= [];
+      this.compactPresets = this.compactPresets.map(o => SeqCompactPreset.FromPreset(o));
+    }
+  }
+
+  ToCompactObj() {
+    return {
+      id: this.id,
+      compactPresets: this.compactPresets,
+    };
   }
 
   Save(presetID, author, savedDate, patchObj) {
+    console.assert(DFUtil.IsServer());
     const n = new SequencerPatch(patchObj);
     patchObj.presetID = presetID;
     n.presetID = presetID;
@@ -1794,36 +1845,69 @@ class SeqPresetBank {
       n.presetAuthor = author; // client side doesn't need to set author/date info
     if (savedDate)
       n.presetSavedDate = new Date(savedDate);
-    const existingIndex = this.presets.findIndex(p => p.presetID === presetID);
+    
+    let existingIndex = this.presets.findIndex(p => p.presetID === presetID);
     if (existingIndex === -1) {
       this.presets.push(n);
-      return true;
+    } else {
+      this.presets[existingIndex] = n;
     }
-    this.presets[existingIndex] = n;
+    
+    existingIndex = this.compactPresets.findIndex(p => p.presetID === presetID);
+    const compact = SeqCompactPreset.FromPreset(n);
+    if (existingIndex === -1) {
+      this.compactPresets.push(compact);
+    } else {
+      this.compactPresets[existingIndex] = compact;
+    }
+    return compact;
+  }
+
+  SaveCompact(obj) {
+    console.assert(DFUtil.IsClient());
+    existingIndex = this.compactPresets.findIndex(p => p.presetID === obj.presetID);
+    if (existingIndex === -1) {
+      this.compactPresets.push(new SeqCompactPreset(obj));
+    } else {
+      this.compactPresets[existingIndex] = new SeqCompactPreset(obj);
+    }
     return true;
   }
 
   GetPresetById(presetID) {
+    console.assert(DFUtil.IsServer());
     const obj = this.presets.find(p => p.presetID === presetID);
     if (!obj)
       return null;
     return new SequencerPatch(obj);
   }
 
-  ReplaceBank(presetsArrayObj) {
-    this.presets = presetsArrayObj.map(p => new SequencerPatch(p));
-    return true;
+  GetCompactPresetById(presetID) {
+    const obj = this.compactPresets.find(p => p.presetID === presetID);
+    if (!obj)
+      return null;
+    return new SeqCompactPreset(obj);
   }
 
-  ExportBankAsJSON() {
-    return JSON.stringify(this.presets); // destructure/deref everything
-  }
+  // ReplaceBank(presetsArrayObj) {
+  //   this.presets = presetsArrayObj.map(p => new SequencerPatch(p));
+  //   return true;
+  // }
+
+  // ExportBankAsJSON() {
+  //   return JSON.stringify(this.presets); // destructure/deref everything
+  // }
 
   DeletePresetById(presetID) {
-    const existingIndex = this.presets.findIndex(p => p.presetID === presetID);
-    if (existingIndex === -1)
-      return true;
-    this.presets.splice(existingIndex, 1);
+    let existingIndex = this.presets.findIndex(p => p.presetID === presetID);
+    if (existingIndex !== -1) {
+      this.presets.splice(existingIndex, 1);
+    }
+
+    existingIndex = this.compactPresets.findIndex(p => p.presetID === presetID);
+    if (existingIndex !== -1) {
+      this.compactPresets.splice(existingIndex, 1);
+    }
     return true;
   }
 }

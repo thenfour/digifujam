@@ -103,33 +103,33 @@ class SequencerPresetDialog extends React.Component {
          filterTxt:"",
       };
    }
-   onClickCopyBank = (e) => {
-      if (!this.props.app.myUser.IsAdmin()) return;
-      const bank = this.props.app.roomState.GetSeqPresetBankForInstrument(this.props.instrument);
-      const txt = bank.ExportBankAsJSON();
-      navigator.clipboard.writeText(txt).then(() => {
-          alert('Bank was copied to the clipboard.')
-      }, () => {
-          alert('Unable to copy.')
-      });
-   }
-   onClickPasteBank = (e) => {
-      if (this.props.observerMode) return;
-      navigator.clipboard.readText().then(text => {
-         try {
-            const newBankInp = JSON.parse(text);
-            this.props.app.SeqPresetOp({
-               op: "pasteBank",
-               bank: newBankInp,
-            });
-            alert("Import bank successful");
-         } catch (e) 
-         {
-            console.log(e);
-            alert('There was some problem importing the bank.')
-         }
-      });
-   }
+   // onClickCopyBank = (e) => {
+   //    if (!this.props.app.myUser.IsAdmin()) return;
+   //    const bank = this.props.app.roomState.GetSeqPresetBankForInstrument(this.props.instrument);
+   //    const txt = bank.ExportBankAsJSON();
+   //    navigator.clipboard.writeText(txt).then(() => {
+   //        alert('Bank was copied to the clipboard.')
+   //    }, () => {
+   //        alert('Unable to copy.')
+   //    });
+   // }
+   // onClickPasteBank = (e) => {
+   //    if (this.props.observerMode) return;
+   //    navigator.clipboard.readText().then(text => {
+   //       try {
+   //          const newBankInp = JSON.parse(text);
+   //          this.props.app.SeqPresetOp({
+   //             op: "pasteBank",
+   //             bank: newBankInp,
+   //          });
+   //          alert("Import bank successful");
+   //       } catch (e) 
+   //       {
+   //          console.log(e);
+   //          alert('There was some problem importing the bank.')
+   //       }
+   //    });
+   // }
    onClickCopyPatch = (e) => {
       const patch = this.props.instrument.sequencerDevice.livePatch;
       const txt = JSON.stringify(patch);
@@ -224,9 +224,9 @@ class SequencerPresetDialog extends React.Component {
       const isReadOnly = this.props.observerMode;
       const clickableIfEditable = isReadOnly ? "" : " clickable";
 
-      const bankRef = bank.GetPresetById(patch.presetID);
+      const bankRef = bank.GetCompactPresetById(patch.presetID);
 
-      const presetList = bank.presets.filter(preset => this.presetMatches(preset, this.state.filterTxt)).map(preset => (
+      const presetList = bank.compactPresets.filter(preset => this.presetMatches(preset, this.state.filterTxt)).map(preset => (
          <SequencerPresetItem
             key={preset.presetID}
             app={this.props.app}
@@ -283,14 +283,14 @@ class SequencerPresetDialog extends React.Component {
                <li>
                   <button title="Paste patch" className={clickableIfEditable} onClick={(e)=>this.onClickPastePatch(e)}><i className="material-icons">content_paste</i>Paste patch</button>
                </li>
-               {this.props.app.myUser.IsAdmin() &&
+               {/* {this.props.app.myUser.IsAdmin() &&
                <li>
                   <button className='clickable' title="Copy bank" onClick={(e)=>this.onClickCopyBank(e)}><i className="material-icons">content_copy</i>Copy bank</button>
                </li>}
                {this.props.app.myUser.IsAdmin() &&
                <li>
                   <button className='clickable' title="Paste bank" onClick={(e)=>this.onClickPasteBank(e)}><i className="material-icons">content_paste</i>Paste bank</button>
-               </li>}
+               </li>} */}
             </ul>
          </fieldset>
          <fieldset>

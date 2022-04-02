@@ -172,7 +172,7 @@ class RoomServer {
         u.persistentID = persistentID?.toString();
         u.hasPersistentIdentity = hasPersistentIdentity;
         clientSocket.DFUserID = userID;
-        console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
+        //console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
         u.persistentInfo = persistentInfo;
         u.lastActivity = new Date();
         u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
@@ -814,7 +814,7 @@ class RoomServer {
     //log(`ROOM CHANGE => ${params.roomID} user ${user.name}`);
     // send user part to everyone else in old room
     ws.DFIsDoingRoomChange = true;  // gets unset in welcome
-    this.ClientLeaveRoom(ws, user.userID, newRoom.roomState.roomTitle);
+    this.ClientLeaveRoom(ws, user.userID, newRoom.roomState.roomTitle, "user room change");
 
     if (!('x' in params)) {
       params.x = newRoom.roomState.width / 2;
@@ -1710,8 +1710,9 @@ class RoomServer {
     data.author = user.name;
     data.savedDate = new Date();
     const bank = this.roomState.GetSeqPresetBankForInstrument(instrument);
-    bank.Save(presetID, data.author, data.savedDate, instrument.sequencerDevice.livePatch);
-    return true;
+    let compact = bank.Save(presetID, data.author, data.savedDate, instrument.sequencerDevice.livePatch);
+    //console.log(`Saved presetID ${presetID} // ${compact.presetID}`);
+    return compact;
   }
 
   SeqPreset_Load(user, instrument, data) {
@@ -1721,7 +1722,7 @@ class RoomServer {
     if (!preset)
       return false;
     instrument.sequencerDevice.LoadPatch(preset);
-    return true;
+    return preset;
   }
 
   SeqPreset_Delete(user, instrument, data) {
@@ -1744,11 +1745,11 @@ class RoomServer {
 
   // user pasting some external patch.
   // { bank: }
-  SeqPreset_PasteBank(user, instrument, data) {
-    if (!user.IsAdmin())
-      return false;
-    return this.roomState.GetSeqPresetBankForInstrument(instrument).ReplaceBank(data.bank);
-  }
+  // SeqPreset_PasteBank(user, instrument, data) {
+  //   if (!user.IsAdmin())
+  //     return false;
+  //   return this.roomState.GetSeqPresetBankForInstrument(instrument).ReplaceBank(data.bank);
+  // }
 
   SeqPreset_Transpose(user, instrument, data) {
     return instrument.sequencerDevice.livePatch.SetTranspose(data.transpose);
@@ -1773,12 +1774,39 @@ class RoomServer {
 
       // perform the operation; if it succeeds then forward to clients to perform themselves.
       switch (data.op) {
-        case "load":
-          if (!this.SeqPreset_Load(foundUser.user, foundInstrument.instrument, data)) return;
-          break;
-        case "save":
-          if (!this.SeqPreset_Save(foundUser.user, foundInstrument.instrument, data)) return;
-          break;
+        case "load": {
+          const fullPreset = this.SeqPreset_Load(foundUser.user, foundInstrument.instrument, data);
+          if (!fullPreset) {
+            throw new Error(`why was no fullPreset loaded?`);
+          }
+
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, {
+            op: "loadFull",
+            instrumentID: foundInstrument.instrument.instrumentID,
+            fullPreset,
+          });
+          if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+            this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+          }
+          return;
+        }
+        case "save": {
+          const compactPreset = this.SeqPreset_Save(foundUser.user, foundInstrument.instrument, data);
+          if (!compactPreset) {
+            throw new Error(`why was no compact preset generated?`);
+          }
+
+          //console.log(` -> sending to clients compact ${compactPreset.presetID}`);
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.SeqPresetOp, {
+            op: "saveCompact",
+            instrumentID: foundInstrument.instrument.instrumentID,
+            compactPreset,
+          });
+          if (foundInstrument.instrument.controlledByUserID === foundUser.user.userID) {
+            this.UnidleInstrument(foundUser.user, foundInstrument.instrument);
+          }
+          return;
+        }
         case "delete":
           if (!this.SeqPreset_Delete(foundUser.user, foundInstrument.instrument, data)) return;
           break;
@@ -1788,9 +1816,9 @@ class RoomServer {
         case "pastePatch":
           if (!this.SeqPreset_PastePatch(foundUser.user, foundInstrument.instrument, data)) return;
           break;
-        case "pasteBank":
-          if (!this.SeqPreset_PasteBank(foundUser.user, foundInstrument.instrument, data)) return;
-          break;
+        // case "pasteBank":
+        //   if (!this.SeqPreset_PasteBank(foundUser.user, foundInstrument.instrument, data)) return;
+        //   break;
         case "SeqSetTranspose":
           if (!this.SeqPreset_Transpose(foundUser.user, foundInstrument.instrument, data)) return;
           break;
@@ -2065,7 +2093,7 @@ class RoomServer {
 
       // for the users that deleted, gracefully kill them off.
       deletedUsers.forEach(u => {
-        this.ClientLeaveRoom(null, u.userID);
+        this.ClientLeaveRoom(null, u.userID, null, "user cleanup; socket appears to not exist.");
       });
 
       this.Idle_CheckIdlenessAndEmit();
@@ -2113,7 +2141,7 @@ class RoomServer {
   }
 
   // call this to leave the socket from this room.
-  ClientLeaveRoom(ws/* may be null */, userID, newRoomName) {
+  ClientLeaveRoom(ws/* may be null */, userID, newRoomName, reason) {
     try {
       // find the user object and remove it.
       let foundUser = this.roomState.FindUserByID(userID);
@@ -2122,7 +2150,7 @@ class RoomServer {
         return;
       }
 
-      log(`ClientLeaveRoom => ${userID} ${foundUser.user.name}`);
+      log(`ClientLeaveRoom => ${userID} ${foundUser.user.name} because ${reason}`);
 
       // remove references to this user.
       this.roomState.instrumentCloset.forEach(inst => {

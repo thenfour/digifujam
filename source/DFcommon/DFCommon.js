@@ -168,8 +168,8 @@ const ServerMessages = {
     SeqSetLength: "SeqSetLength", // { instrumentID, lengthMajorBeats }
     SeqPatternOps: "SeqPatternOps", // { instrumentID, ops:[{type:clear|addNote|deleteNote, note:{}}]}
     SeqPatchInit: "SeqPatchInit", // {instrumentID, presetID }
-    // { instrumentID, op:"load", presetID:<>}
-    // { instrumentID, op:"save", presetID:<> }
+    // { instrumentID, op:"loadFull", fullPreset:<>}
+    // { instrumentID, op:"saveCompact", compactPreset:{} }
     // { instrumentID, op:"delete", presetID:<>}
     // { instrumentID, op:"pastePattern", pattern:{...} }
     // { instrumentID, op:"pastePatch", patch:{...} }
@@ -1479,24 +1479,6 @@ class DigifuChatMessage {
     }
 };
 
-class DFRect {
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.w = 0;
-        this.h = 0;
-    }
-    thaw() { }
-
-    PointIntersects(pt) {
-        if (pt.x < this.x) return false;
-        if (pt.y < this.y) return false;
-        if (pt.x >= this.x + this.w) return false;
-        if (pt.y >= this.y + this.h) return false;
-        return true;
-    }
-};
-
 const RoomFns = {
     roomChange: "roomChange",
     toggleSign: "toggleSign",
@@ -1534,7 +1516,7 @@ class RoomItem {
             this.interactions[k].thaw();
         });
         if (this.rect) {
-            this.rect = Object.assign(new DFRect(), this.rect);
+            this.rect = Object.assign(new DFUtil.DFRect(), this.rect);
             this.rect.thaw();
         }
     }
@@ -1761,18 +1743,32 @@ class DigifuRoomState {
                     return undefined;
                 case "roomPresets":
                     return v.ToCompactObj();
+                case "seqPresetBanks":
+                    return v.map(v2 => v2.ToCompactObj());
             }
             return v;
         };
         const ret = JSON.stringify(this, replacer);
 
-        // https://github.com/thenfour/digifujam/issues/263
+        // const replacer2 = (k, v) => {
+        //     switch (k) {
+        //         case "discordMemberID": // don't send this to clients.
+        //         case "metronome":
+        //         case "quantizer":
+        //             return undefined;
+        //     }
+        //     return v;
+        // };
+
+
+        // // https://github.com/thenfour/digifujam/issues/263
         // console.log(`welcome payload = ${ret.length}`);
-        // console.log(`  users = ${JSON.stringify(this.users, replacer).length}`);
-        // console.log(`  instruments = ${JSON.stringify(this.instrumentCloset, replacer).length}`);
-        // console.log(`  presetBanks = ${JSON.stringify(this.presetBanks, replacer).length}`);
-        // console.log(`  seqPresetBanks = ${JSON.stringify(this.seqPresetBanks, replacer).length}`);
-        // console.log(`  roomPresets = ${JSON.stringify(this.roomPresets, replacer).length}`);
+        // console.log(`welcome payload without replacement = ${JSON.stringify(this, replacer2).length}`);
+        // console.log(`  users = ${JSON.stringify({users: this.users}, replacer).length}`);
+        // console.log(`  instruments = ${JSON.stringify({instrumentCloset: this.instrumentCloset}, replacer).length}`);
+        // console.log(`  presetBanks = ${JSON.stringify({presetBanks: this.presetBanks}, replacer).length}`);
+        // console.log(`  seqPresetBanks = ${JSON.stringify({seqPresetBanks: this.seqPresetBanks}, replacer).length}`);
+        // console.log(`  roomPresets = ${JSON.stringify({roomPresets: this.roomPresets}, replacer).length}`);
 
         // let totalParams = 0;
         // let totalParamMappings = 0;

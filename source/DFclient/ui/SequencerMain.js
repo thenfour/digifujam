@@ -824,7 +824,7 @@ class SequencerMain extends React.Component {
          const clickableIfEditable = isReadOnly ? "" : " clickable";
 
          const bank = this.props.app.roomState.GetSeqPresetBankForInstrument(this.props.instrument);
-         const bankRef = bank.GetPresetById(patch.presetID);
+         const bankRef = bank.GetCompactPresetById(patch.presetID);
          const presetSaveEnabled = !!bankRef; // if this patch has been saved to the preset bank, it can be 1-click saved.
 
         const widthpx = Math.min(75, 20 + ((50 * this.state.zoom) / patternViewData.divs.length));

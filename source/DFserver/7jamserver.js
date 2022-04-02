@@ -191,7 +191,7 @@ class _7jamServer {
       if (!ws.DFUserID) {
         console.log(`! OnDisconnect / websocket doesn't have a user ID.`);
       }
-      this.mRooms[roomID].ClientLeaveRoom(ws, ws.DFUserID);
+      this.mRooms[roomID].ClientLeaveRoom(ws, ws.DFUserID, null, "OnDisconnect");
     });
   };
 
