@@ -475,6 +475,10 @@ class SequencerPatch {
 
     this.timeSig = new DFMusic.TimeSig(this.timeSig);
 
+    // on the server, a serialized SequencerPatch may include this.instrumentPatch, but it's not sent to clients.
+    // synchronize this field
+    this.includeInstrumentPatch = !!this.instrumentPatch;
+
     this.presetName ??= '(init)';
     this.presetDescription ??= '';
     this.presetTags ??= '';
@@ -967,6 +971,7 @@ class SequencerDevice {
 
   LoadPatch(patchObj) {
     this.livePatch = new SequencerPatch(patchObj);
+    this.livePatch.instrumentPatch = null;
     return true;
   }
 
@@ -1010,7 +1015,8 @@ class SequencerDevice {
   }
 
   // client-side; handles incoming server msgs
-  SeqPresetOp(data, bank, allNotesOffRoutine) {
+  SeqPresetOp(data, bank, allNotesOffRoutine, loadInstrumentParamsRoutine) {
+    console.assert(DFUtil.IsClient());
     switch (data.op) {
     case "loadFull": {
       // let preset = bank.GetPresetById(data.presetID);
@@ -1018,7 +1024,10 @@ class SequencerDevice {
       //   console.log(`unknown seq preset ID ${presetID}`);
       //   return false;
       // }
-      this.LoadPatch(data.fullPreset);
+      if (data.fullPreset.instrumentPatch) {
+        loadInstrumentParamsRoutine(data.fullPreset.instrumentPatch);
+      }
+      this.LoadPatch(data.fullPreset); // important to call this after loading instrument patch because it strips off the instrument patch.
       return true;
     }
     // case "save": {
@@ -1799,6 +1808,7 @@ class SeqCompactPreset {
     this.presetSavedDate ??= Date.now();
     this.presetSavedDate = new Date(this.presetSavedDate); // ensure date type
     this.presetID ??= DFUtil.generateID();
+    this.includeInstrumentPatch ??= false;
   }
 
   static FromPreset(p) {
@@ -1809,6 +1819,7 @@ class SeqCompactPreset {
       presetAuthor: p.presetAuthor,
       presetSavedDate: p.presetSavedDate,
       presetID: p.presetID,
+      includeInstrumentPatch: p.includeInstrumentPatch,
     });
   }
 }
@@ -1836,11 +1847,18 @@ class SeqPresetBank {
     };
   }
 
-  Save(presetID, author, savedDate, patchObj) {
+  Save(presetID, author, savedDate, patchObj, includeInstrumentPatch, instrument) {
     console.assert(DFUtil.IsServer());
     const n = new SequencerPatch(patchObj);
     patchObj.presetID = presetID;
     n.presetID = presetID;
+    patchObj.includeInstrumentPatch = includeInstrumentPatch;
+    n.includeInstrumentPatch = includeInstrumentPatch;
+
+    if (includeInstrumentPatch) {
+      n.instrumentPatch = instrument.exportPatchObj();
+    }
+
     if (author)
       n.presetAuthor = author; // client side doesn't need to set author/date info
     if (savedDate)

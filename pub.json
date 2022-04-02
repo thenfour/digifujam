@@ -14,7 +14,7 @@
     },
     {
       "img": "/roomart/stars.png",
-      "parallaxFactor": 0.5,
+      "parallaxFactor": 0.25,
       "z":1,
       "width": 2560,
       "height": 1440,
@@ -23,7 +23,7 @@
       "cssClass": "milkywayBG"
     },
     {
-      "parallaxFactor": 0.4,
+      "parallaxFactor": 0.35,
       "z":0,
       "width": 1200,
       "height": 1200,

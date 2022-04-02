@@ -1710,7 +1710,7 @@ class RoomServer {
     data.author = user.name;
     data.savedDate = new Date();
     const bank = this.roomState.GetSeqPresetBankForInstrument(instrument);
-    let compact = bank.Save(presetID, data.author, data.savedDate, instrument.sequencerDevice.livePatch);
+    let compact = bank.Save(presetID, data.author, data.savedDate, instrument.sequencerDevice.livePatch, data.includeInstrumentPatch, instrument);
     //console.log(`Saved presetID ${presetID} // ${compact.presetID}`);
     return compact;
   }
@@ -1722,6 +1722,10 @@ class RoomServer {
     if (!preset)
       return false;
     instrument.sequencerDevice.LoadPatch(preset);
+    console.assert(!!preset.includeInstrumentPatch === !!preset.instrumentPatch); // should be in sync
+    if (preset.instrumentPatch) {
+      this.roomState.integrateRawParamChanges(instrument, preset.instrumentPatch, true);
+    }
     return preset;
   }
 

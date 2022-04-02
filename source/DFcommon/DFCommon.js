@@ -83,7 +83,7 @@ const ClientMessages = {
 
     // OK admittedly i got lazy creating individual server/client messages and just start throwing them into this ops
     // { op:"load", presetID:<>}
-    // { op:"save", presetID:<> }
+    // { op:"save", presetID:<>, includeInstrumentPatch:<bool> }
     // { op:"delete", presetID:<>}
     // { op:"pastePattern", pattern:{...} }
     // { op:"pastePatch", patch:{...} }

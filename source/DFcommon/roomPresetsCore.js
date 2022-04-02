@@ -336,9 +336,6 @@ class RoomPresetManager {
 
     Object.entries(data.seqPatches).forEach(e => {
       const instrumentID = e[0];
-      // if (!instSeqSelection.sequencerInstrumentIDs.find(iid => iid === instrumentID)) {
-      //   return;
-      // }
       const patch = e[1];
       const instrument = this.#roomState.FindInstrumentById(instrumentID);
       if (!instrument) {
@@ -402,11 +399,11 @@ class RoomPresetManager {
     if (i !== -1) {
       // existing.
       this.compactPresets[i] = data;
-      console.log(`overwrote compact room preset ${data.presetID}`);
+      //console.log(`overwrote compact room preset ${data.presetID}`);
       return;
     }
     this.compactPresets.push(data);
-    console.log(`saved new compact room preset ${data.presetID}`);
+    //console.log(`saved new compact room preset ${data.presetID}`);
   }
 
   DeletePresetById(presetID) {

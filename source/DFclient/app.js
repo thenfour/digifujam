@@ -1188,10 +1188,16 @@ class DigifuApp {
     }
 
     const bank = this.roomState.GetSeqPresetBankForInstrument(foundInstrument.instrument);
-    foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank, () => {
-      this.synth.AllNotesOff(foundInstrument.instrument);
-      this.handleUserAllNotesOff(foundUser?.user, foundInstrument.instrument);
-    });
+    foundInstrument.instrument.sequencerDevice.SeqPresetOp(data, bank,
+      () => { // note off handler.
+        this.synth.AllNotesOff(foundInstrument.instrument);
+        this.handleUserAllNotesOff(foundUser?.user, foundInstrument.instrument);
+      },
+      (presetObj) => { // set instrument params handler
+        this.synth.SetInstrumentParams(foundInstrument.instrument, presetObj, true);
+        return true;
+      }
+    );
     this.stateChangeHandler();
   }
 

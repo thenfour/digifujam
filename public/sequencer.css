@@ -161,8 +161,7 @@
     margin: 1px 3px;
 }
 
-.sequencerMain button.cueButton.playMode.Arpeggiator
-{
+.sequencerMain button.cueButton.playMode.Arpeggiator {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     margin-bottom: 0;
@@ -518,6 +517,34 @@
     background-color: #055;
 }
 
+.sequencerMain .dialog.presetDialog button.radio {
+    background: none;
+    color: #666;
+    border: 1px solid #666;
+    padding: 2px 6px;
+    border-radius: 8px;
+}
+
+.sequencerMain .dialog.presetDialog button.radio:hover {
+    color: #888;
+    border: 1px solid #888;
+    background-color: unset;
+}
+
+
+.sequencerMain .dialog.presetDialog button.radio.active {
+    color: #0aa;
+    background-color: #033;
+    border: 1px solid #0aa;
+}
+
+.sequencerMain .dialog.presetDialog button.radio.active:hover {
+    color: #0cc;
+    background-color: #044;
+    border: 1px solid #0cc;
+}
+
+
 .sequencerMain .dialog.presetDialog li {
     display: flex;
     align-items: center;
@@ -547,6 +574,13 @@
 }
 
 .sequencerMain .dialog.presetDialog li.presetItem .authorAndDateBox {
+    color: #888;
+    font-size: x-small;
+    font-style: italic;
+    display: block;
+}
+
+.sequencerMain .dialog.presetDialog li.presetItem .includeInstrumentPatch {
     color: #888;
     font-size: x-small;
     font-style: italic;
@@ -872,29 +906,30 @@
 
 .sequencerMain .tapTempo {
     display: flex;
-    background-color:#0883;
+    background-color: #0883;
 }
 
 .sequencerMain .tapTempo .helpText {
-    display:none;
+    display: none;
 }
 
 .sequencerMain .tapTempo button {
-    width:auto;
-    border-radius:0;
+    width: auto;
+    border-radius: 0;
 }
+
 .sequencerMain .tapTempo button.save,
-.sequencerMain .tapTempo button.cancel
- {
-    background-color:#ccf;
+.sequencerMain .tapTempo button.cancel {
+    background-color: #ccf;
 }
 
 .sequencerMain .tapTempo .bpmValue {
-    font-size:24px;
+    font-size: 24px;
 }
+
 .sequencerMain .tapTempo .bpmLegend {
-    font-size:16px;
-    color:#088;
+    font-size: 16px;
+    color: #088;
 }
 
 
@@ -956,8 +991,7 @@
     justify-content: center;
 }
 
-.sequencerMain ul.pianoRollColumn li div
-{
+.sequencerMain ul.pianoRollColumn li div {
     height: 100%;
     display: flex;
     flex-grow: 1;
@@ -971,18 +1005,19 @@
 .sequencerMain ul.pianoRollColumn li:hover .noteBase,
 .sequencerMain ul.pianoRollColumn li .hoverOL,
 .sequencerMain ul.pianoRollColumn li .noteOnHandle,
-.sequencerMain ul.pianoRollColumn li .noteOffHandle
-{
+.sequencerMain ul.pianoRollColumn li .noteOffHandle {
     border-radius: 3px;
 }
 
-.sequencerMain ul.pianoRollColumn li.begincontinue.dragTargetbeginnoteon div /* while dragging over existing notes, round corners */
-{
+.sequencerMain ul.pianoRollColumn li.begincontinue.dragTargetbeginnoteon div
+
+/* while dragging over existing notes, round corners */
+    {
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
 }
-.sequencerMain ul.pianoRollColumn li.endcontinue.dragTargetendnoteoff div
-{
+
+.sequencerMain ul.pianoRollColumn li.endcontinue.dragTargetendnoteoff div {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
 }
@@ -1020,7 +1055,7 @@
 
 .sequencerMain ul.pianoRollColumn li .noteBase {
     background-color: #333;
-/*     align-items: center; */
+    /*     align-items: center; */
 }
 
 .sequencerMain ul.pianoRollColumn li:hover .noteBase {}
@@ -1036,7 +1071,7 @@
 }
 
 .sequencerMain ul.pianoRollColumn li:hover .muteOL {
-    border-radius:3px;
+    border-radius: 3px;
     border: 2px solid #777;
 }
 
@@ -1066,24 +1101,22 @@
 
 .sequencerMain ul.pianoRollColumn li .noteOnHandle,
 .sequencerMain ul.pianoRollColumn li .noteOffHandle {
-    visibility:hidden;
+    visibility: hidden;
 }
 
 /* show handles */
 .sequencerMain ul.pianoRollColumn li.beginnoteon .noteOnHandle,
 .sequencerMain ul.pianoRollColumn li.endnoteoff .noteOffHandle,
 .sequencerMain ul.pianoRollColumn li.dragTargetbeginnoteon .noteOnHandle,
-.sequencerMain ul.pianoRollColumn li.dragTargetendnoteoff .noteOffHandle
-{
+.sequencerMain ul.pianoRollColumn li.dragTargetendnoteoff .noteOffHandle {
     width: max(20%, 5px);
     background-color: #fff3;
-    cursor:ew-resize;
-    visibility:visible;
+    cursor: ew-resize;
+    visibility: visible;
 }
 
 .sequencerMain ul.pianoRollColumn li.endcontinue div,
-.sequencerMain ul.pianoRollColumn li.dragTargetendcontinue div
-{
+.sequencerMain ul.pianoRollColumn li.dragTargetendcontinue div {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
@@ -1095,15 +1128,13 @@
 }
 
 .sequencerMain ul.pianoRollColumn li.begincontinue .noteBase,
-.sequencerMain ul.pianoRollColumn li.dragTargetbegincontinue .noteBase
- {
+.sequencerMain ul.pianoRollColumn li.dragTargetbegincontinue .noteBase {
     flex-grow: 0;
     margin-left: 0;
 }
 
 .sequencerMain ul.pianoRollColumn li.endcontinue .noteBase,
-.sequencerMain ul.pianoRollColumn li.dragTargetendcontinue .noteBase
- {
+.sequencerMain ul.pianoRollColumn li.dragTargetendcontinue .noteBase {
     flex-grow: 0;
     margin-right: 0;
 }
@@ -1122,10 +1153,11 @@
 
 
 .sequencerMain ul.pianoRollColumn li.dragTarget .noteOL,
-.sequencerMain ul.pianoRollColumn li.dragTarget.note.genvel0 .noteOL, /* specificity lol. ALL notes should be gray */
-.sequencerMain ul.pianoRollColumn li.dragTarget.note.genvel1 .noteOL
-{
-    background-color: #0aa; /* tempting for drop targets to animate this, but it's many cells and they'll get out of phase.*/
+.sequencerMain ul.pianoRollColumn li.dragTarget.note.genvel0 .noteOL,
+/* specificity lol. ALL notes should be gray */
+.sequencerMain ul.pianoRollColumn li.dragTarget.note.genvel1 .noteOL {
+    background-color: #0aa;
+    /* tempting for drop targets to animate this, but it's many cells and they'll get out of phase.*/
 }
 
 .sequencerMain ul.pianoRollColumn li.dragTarget.note.genvel0 .noteOL,
@@ -1136,36 +1168,34 @@
 
 .sequencerMain ul.pianoRollColumn li.dragSrc .noteOL,
 .sequencerMain ul.pianoRollColumn li.dragSrc.note.genvel0 .noteOL,
-.sequencerMain ul.pianoRollColumn li.dragSrc.note.genvel1 .noteOL
-{
+.sequencerMain ul.pianoRollColumn li.dragSrc.note.genvel1 .noteOL {
     background-color: #455;
 }
 
 /* when you drag a new note OVER the existing note.*/
 .sequencerMain ul.pianoRollColumn li.dragTarget.dragSrc .noteOL,
 .sequencerMain ul.pianoRollColumn li.dragTarget.dragSrc.note.genvel0 .noteOL,
-.sequencerMain ul.pianoRollColumn li.dragTarget.dragSrc.note.genvel1 .noteOL
-{
+.sequencerMain ul.pianoRollColumn li.dragTarget.dragSrc.note.genvel1 .noteOL {
     background-color: #099;
 }
 
 .sequencerMain ul.pianoRollColumn li.dragTargetbegincontinue .noteOnHandle,
 .sequencerMain ul.pianoRollColumn li.dragTargetendcontinue .noteOffHandle {
-    visibility:hidden;
+    visibility: hidden;
 }
 
 .sequencerMain ul.pianoRollColumn li,
 .sequencerMain ul.pianoRollColumn li .noteOnHandle,
 .sequencerMain ul.pianoRollColumn li .noteOffHandle,
 .sequencerMain ul.pianoRollColumn li .cellBody {
-    pointer-events:all;
+    pointer-events: all;
 }
 
 
 
 
 .sequencerMain .unicodeNote {
-    font-size:24px;
+    font-size: 24px;
 }
 
 
@@ -1179,7 +1209,7 @@
 }
 
 .sequencerMain fieldset.seqMode .legend {
-    color:#bbb;
+    color: #bbb;
 }
 
 .sequencerMain fieldset.seqMode .paramValue {
@@ -1194,67 +1224,80 @@
 
 @keyframes baseNoteListening {
     0% {
-        background-color:var(--red);
+        background-color: var(--red);
     }
+
     15% {
-        background-color:#000;
+        background-color: #000;
     }
+
     50% {
-        background-color:#000;
+        background-color: #000;
     }
+
     85% {
-        background-color:var(--red);
+        background-color: var(--red);
     }
 }
 
 
 .sequencerMain fieldset.seqMode .baseNote .paramValue.active {
     --red: #b44;
-    background-color:var(--red);
-    animation: baseNoteListening .6s linear infinite ;
+    background-color: var(--red);
+    animation: baseNoteListening .6s linear infinite;
 }
 
 .legend.baseNote.disabled {
-    color:#444;
+    color: #444;
 }
 
 
 .sequencerMain fieldset.seqMode .baseNote .paramValue.disabled {
-    color:#444;
-    background-color:#0000;
-    box-shadow:none;
+    color: #444;
+    background-color: #0000;
+    box-shadow: none;
 }
 
-.sequencerMain fieldset.seqMode .arpMapping .caption {
-}
+.sequencerMain fieldset.seqMode .arpMapping .caption {}
+
 .sequencerMain fieldset.seqMode .arpMapping .description {
     /* font-style:italic; */
-    color:#bbb;
-    padding-bottom:4px;
-    font-size:smaller;
+    color: #bbb;
+    padding-bottom: 4px;
+    font-size: smaller;
     max-width: 400px;
 }
 
 
 
-.sequencerMain .listeningToInstrument .dialog li.default
-{
+.sequencerMain .listeningToInstrument .dialog li.default {
     color: #0aa;
     /* border-left: 6px solid #0aa; */
     background-color: #044;
 }
 
 .sequencerMain fieldset.seqMode .listeningToInstrument .paramValue.notdefault {
-    color:#000;
-    background-color:#c40;
+    color: #000;
+    background-color: #c40;
 }
 
 
-.sequencerMain fieldset.seqMode .listeningToInstrument .scButton {
+.sequencerMain fieldset.seqMode .listeningToInstrument .scButton {}
+
+
+.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton {
+    color: #eee;
+    background-color: #088;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    border: 1px solid #4b694b;
+    width: 20px;
 }
 
 
-.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton {color: #eee;background-color: #088;height: 20px;display: flex;align-items: center;justify-content: center;border-radius: 4px;border: 1px solid #4b694b;width: 20px;}
-
-
-.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton:hover {background-color: #999;}
+.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton:hover {
+    background-color: #999;
+}

@@ -58,11 +58,10 @@ class SequencerPresetItem extends React.Component {
          <li className={'presetItem' + (this.props.livePatch.presetID === this.props.preset.presetID ? " selected" : "")}>
             <div className="buttonContainer">
                {!isReadOnly && <button className='clickable' onClick={() => this.onClickLoad()}><i className="material-icons">file_open</i>Load</button>}
-               {/* {!isReadOnly && <button className='clickable' onClick={() => this.setState({overwriteConfirmShowing:true})}><i className="material-icons">save</i>Replace</button>} */}
                {!isReadOnly && <button className='clickable' onClick={() => this.setState({deleteConfirmShowing:true})}><i className="material-icons">delete</i>Delete</button>}
             </div>
             <span className="presetName">{this.props.preset.presetName}</span>
-            {this.props.app.myUser.IsAdmin() && 
+            {window.DFModerationControlsVisible && 
                <div>presetID: {this.props.preset.presetID}</div>
             }
             <span className="description">{this.props.preset.presetDescription}</span>
@@ -71,9 +70,15 @@ class SequencerPresetItem extends React.Component {
                <span className="author">by {this.props.preset.presetAuthor}</span>
                <span className="savedDate">{this.props.preset.presetSavedDate.toLocaleString()}</span>
             </div>
+            {
+               this.props.preset.includeInstrumentPatch &&
+               <div className="includeInstrumentPatch">
+                  * includes instrument parameters
+               </div>
+            }
 
             {this.state.overwriteConfirmShowing && <div className="confirmationBox">
-               Click 'OK' to overwrite with the live patch
+               Click 'OK' to load this preset
                <br />
                <button className="OK clickable" onClick={() => this.onClickOverwrite()}>OK</button>
                <button className="Cancel clickable" onClick={() => this.setState({overwriteConfirmShowing:false})}>Cancel</button>
@@ -101,6 +106,7 @@ class SequencerPresetDialog extends React.Component {
       super(props);
       this.state = {
          filterTxt:"",
+         includeInstrumentPatch:true,
       };
    }
    // onClickCopyBank = (e) => {
@@ -162,6 +168,7 @@ class SequencerPresetDialog extends React.Component {
       if (isReadOnly) return;
       this.props.app.SeqPresetOp({
          op: "save",
+         includeInstrumentPatch: this.state.includeInstrumentPatch,
          presetID: null,
       });
       alert("Saved");
@@ -172,6 +179,7 @@ class SequencerPresetDialog extends React.Component {
       const patch = this.props.instrument.sequencerDevice.livePatch;
       this.props.app.SeqPresetOp({
          op: "save",
+         includeInstrumentPatch: this.state.includeInstrumentPatch,
          presetID: patch.presetID,
       });
       alert("Saved");
@@ -215,6 +223,10 @@ class SequencerPresetDialog extends React.Component {
       if (keys.some(k => preset.presetAuthor.toLowerCase().includes(k))) return true;
       if (!preset.presetTags) return false;
       return keys.some(k => preset.presetTags.toLowerCase().includes(k));
+  }
+
+  onClickToggleIncludeInstrumentParams = (e) => {
+     this.setState({includeInstrumentPatch:!this.state.includeInstrumentPatch});
   }
 
    render() {
@@ -267,21 +279,32 @@ class SequencerPresetDialog extends React.Component {
                   maxLength={25}
                   ></TextField>tags</li>
 
-               {this.props.app.myUser.IsAdmin() && <li>presetID: {patch.presetID}</li>}
+               {window.DFModerationControlsVisible && <li>presetID: {patch.presetID}</li>}
 
             </ul>
             <ul className='buttonPatchOps'>
                <li>
                   {bankRef &&
-                     <button title="Save and Overwrite" className={clickableIfEditable} onClick={(e)=>this.onClickSaveExisting(e)}><i className="material-icons">save</i>Save (and overwrite "{bankRef.presetName}")</button>
+                     <button title="Save and Overwrite" className={clickableIfEditable} onClick={(e)=>this.onClickSaveExisting(e)}>
+                        <i className="material-icons">save</i>Save existing (overwrite "{bankRef.presetName}")
+                     </button>
                   }
-                  <button title="Save as new preset" className={clickableIfEditable} onClick={(e)=>this.onClickSaveNew(e)}><i className="material-icons">save</i>Save as new preset</button>
+                  <button title="Save as new preset" className={clickableIfEditable} onClick={(e)=>this.onClickSaveNew(e)}>
+                     <i className="material-icons">save</i>Save as new preset
+                  </button>
+                  <button className={"radio " + clickableIfEditable + (this.state.includeInstrumentPatch ? " active" : " inactive")}
+                  onClick={(e)=>this.onClickToggleIncludeInstrumentParams()}>
+                     {this.state.includeInstrumentPatch ? "will include instrument params" : "will not include instrument parameters"}
+                  </button>
                </li>
                <li>
-                  <button className='clickable' title="Copy patch" onClick={(e)=>this.onClickCopyPatch(e)}><i className="material-icons">content_copy</i>Copy patch</button>
+                  <button className='clickable' title="Copy patch" onClick={(e)=>this.onClickCopyPatch(e)}>
+                     <i className="material-icons">content_copy</i>Copy patch to clipboard</button>
                </li>
                <li>
-                  <button title="Paste patch" className={clickableIfEditable} onClick={(e)=>this.onClickPastePatch(e)}><i className="material-icons">content_paste</i>Paste patch</button>
+                  <button title="Paste patch" className={clickableIfEditable} onClick={(e)=>this.onClickPastePatch(e)}>
+                     <i className="material-icons">content_paste</i>Paste patch from clipboard
+                  </button>
                </li>
                {/* {this.props.app.myUser.IsAdmin() &&
                <li>
