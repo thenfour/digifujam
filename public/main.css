@@ -17,6 +17,10 @@
     --z-index-radio-controls: 1040;
     --z-index-cheer: 1050;
 
+    --z-index-room-welcome-fade-screen: 1055;
+    --z-index-graffiti-debug-overlay: 1058;
+
+    --z-index-short-chat-log: 1060;
     --z-index-full-chat-log: 1060;
     --z-index-room-overlay-controls: 1070;
     --z-index-cheer-controls:1071;
@@ -36,7 +40,6 @@
     --z-index-drag-graffiti-screen: 10120;
 
     --z-index-gesture-splash: 100000;
-
 }
 
 body {
@@ -195,6 +198,7 @@ button:focus {
     background-color: black;
 }
 
+/* this is the fade-in fade-out screen which appears when entering / leaving rooms. */
 #roomArea .screen {
     background-color: black;
     position: absolute;
@@ -204,6 +208,7 @@ button:focus {
     height: 100vh;
     pointer-events: none;
     opacity: 100%;
+    z-index: var(--z-index-room-welcome-fade-screen);
     animation: screenFadeOut 1s 1;
     animation-fill-mode: forwards;
 }
@@ -334,6 +339,8 @@ button:focus {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+
+    z-index: var(--z-index-short-chat-log);
 }
 
 

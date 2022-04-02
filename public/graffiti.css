@@ -13,6 +13,9 @@
     z-index: var(--z-index-graffiti);
 }
 
+#graffitiScreen {
+    z-index: var(--z-index-graffiti-debug-overlay);
+}
 
 #graffitiScreen svg {
     position: absolute;
