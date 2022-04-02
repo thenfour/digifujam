@@ -2808,6 +2808,11 @@ class RootArea extends React.Component {
         window.DFKeyTracker.events.on("toggleModerationControls", () => {
             window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({});
         });
+
+        window.DFKeyTracker.events.on("toggleSequencerShown", () => {
+            this.setState({sequencerShown:!this.state.sequencerShown});
+        });
+
         
 
         // help catch window-changing events that change layout. actually a more robust solution would be a mediaquerylist change handler but ... it requires more thought.

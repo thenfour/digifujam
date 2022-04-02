@@ -76,8 +76,12 @@ class GestureTracker {
 
       if (!handled && e.target.tagName == 'BODY') {
         if (e.key === '9' && e.altKey) {
-          handled = true; // allow debug log hotkey not to interfere
+          handled = true;
           this.events.emit('toggleModerationControls');
+        }
+        if (e.key === '5' && e.altKey) {
+          handled = true;
+          this.events.emit('toggleSequencerShown');
         }
         // check for hotkeys
         else if (e.key.length === 1) {
