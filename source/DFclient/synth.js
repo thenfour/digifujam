@@ -270,10 +270,10 @@ class DigifuSynth {
 		DFSynthTools.initSynthTools(this.audioCtx);
 
 		/*
+																				                                                     [soundEffectGainNode] --->
 																				[metronomeGainNode] --->
-																				[soundEffectGainNode] --->
 			(instruments) -----------------------------------------------------------------------------> [masterGainNode] -->  (destination)
-						--------------------------------------------> [masterReverb] ---------------->                  -> [analysis]
+						--------------------------------------------> [masterReverb] ---------------->
 																	.>
 																	/
 												.>[delayVerbGain]--'
@@ -288,7 +288,7 @@ class DigifuSynth {
 		this.metronomeGainNode.connect(this.masterGainNode);
 
 		this.soundEffectGainNode = this.audioCtx.createGain("soundEffectGainNode");
-		this.soundEffectGainNode.connect(this.masterGainNode);
+		this.soundEffectGainNode.connect(this.audioCtx.destination);
 
 		this.masterGainNode.connect(this.audioCtx.destination);
 
