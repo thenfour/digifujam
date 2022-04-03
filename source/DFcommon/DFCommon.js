@@ -1805,6 +1805,7 @@ class DigifuRoomState {
                     {
                         patch: i.exportPatchObj(),
                         seqPatch: i.sequencerDevice.livePatch,
+                        seqPlaying: i.sequencerDevice.IsPlaying(),
                     }
                 ];
             })),
@@ -1858,7 +1859,7 @@ class DigifuRoomState {
         if (data.instrumentLivePatches) {
             Object.entries(data.instrumentLivePatches).forEach(e => {
                 const instrumentID = e[0];
-                const {patch, seqPatch} = e[1];
+                const {patch, seqPatch, seqPlaying} = e[1];
                 const f = this.FindInstrumentById(instrumentID);
                 if (!f) {
                     console.log(`instrument ${instrumentID} was not found; couldn't import its live patch data. Make sure instruments all have constant IDs set. Or maybe instrument sets changed since export?`);
@@ -1870,6 +1871,9 @@ class DigifuRoomState {
                 }
                 if (seqPatch) {
                     instrument.sequencerDevice.LoadPatch(seqPatch);
+                }
+                if (seqPlaying) {
+                    instrument.sequencerDevice.StartPlaying();
                 }
             });
         }

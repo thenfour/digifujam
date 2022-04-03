@@ -1615,9 +1615,13 @@ class Instrument extends  React.Component {
         const isYourObserving = this.props.app.observingInstrument && this.props.app.observingInstrument.instrumentID == i.instrumentID;
 
         const isSidechained = i.sequencerDevice.IsSidechained();
+        const arpMapping = i.sequencerDevice.GetArpMapping();
         let title = "Sequencer activity (click to start/stop).";
-        if (i.sequencerDevice.GetArpMapping().swallowNotes && !!this.props.app.myInstrument) {
-            title += " Shift+click to sidechain to your instrument. CTRL+Click to remove sidechain.";
+        if (arpMapping.swallowNotes) {
+            title += " Plays only in response to MIDI input.";
+            if (!!this.props.app.myInstrument) {
+                title += " Shift+click to sidechain to your instrument. Ctrl+Click to remove sidechain.";
+            }
         }
         if (isSidechained) {
             const n = this.props.app.roomState.FindInstrumentById(i.sequencerDevice.listeningToInstrumentID).instrument.getDisplayName();
@@ -1630,7 +1634,13 @@ class Instrument extends  React.Component {
         const sequencerHasData = i.sequencerDevice.HasData();
         const sequencerCtrl = i.allowSequencer && (
             <div
-                className={"seqIndicatorAnimation1 seqCtrlContainer " + i.sequencerDevice.GetArpMapping().cssClass + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty")) + ((canPerform && canCtrlSequencer) ? " clickable" : "") + (isSidechained ? " sidechain" : "")}
+                className={"seqIndicatorAnimation1 seqCtrlContainer "
+                    + arpMapping.cssClass
+                    + (isSequencerOn ? " on" : (sequencerHasData ? " off" : " empty"))
+                    + ((canPerform && canCtrlSequencer) ? " clickable" : "")
+                    + (isSidechained ? " sidechain" : "")
+                    + (arpMapping.swallowNotes ? " swallows" : "")
+                }
                 id={GenerateSeqNoteActivityIndicatorID(i.instrumentID)}
                 title={title}
                 onClick={canPerform ? ((e) => this.clickSequencerIndicator(e)) : null}

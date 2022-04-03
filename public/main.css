@@ -1952,6 +1952,12 @@ https://www.w3schools.com/icons/google_icons_intro.asp
     --seqColorDark:#900;
 }
 
+.component.instrumentCloset li .seqCtrlContainer.on.swallows .seqIndicator {
+    --seqColorBright: #c787ff;
+    --seqColorDark: #60e;
+    background-color: var(--seqColorDark);
+}
+
 @keyframes seqNoteIndicator1 {
     0% {
         background-color: var(--seqColorBright);
