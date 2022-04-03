@@ -1584,11 +1584,7 @@ class Instrument extends  React.Component {
 
         if (!i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser))
             return;
-        // if (window.DFModifierKeyTracker.ShiftKey) {
-        //     this.props.app.SeqCue(i.instrumentID, false);
-        // } else {
-            this.props.app.SeqPlayStop(!i.sequencerDevice.isPlaying, i.instrumentID);
-        //}
+        this.props.app.SeqPlayStop(!i.sequencerDevice.isPlaying, i.instrumentID);
     }
 
     render() {
@@ -2541,6 +2537,11 @@ class ChatArea extends React.Component {
                 this.inputRef.selectionStart = this.inputRef.selectionEnd = this.state.value.length;
             }, 10);
         }
+        else if (e.key === 'Escape') {
+            setTimeout(()=> {
+                this.inputRef.blur();
+            }, 10);
+        }
     }
 
     render() {
@@ -2801,6 +2802,10 @@ class RootArea extends React.Component {
         this.setState({});
     }
   
+    selectSequencerPattern(index) {
+        if (!this.state.app) return;
+        this.state.app.SeqSelectPattern(index);
+    }
 
     componentDidMount() {
         window.addEventListener('resize', () => this.onWindowResize());
@@ -2811,6 +2816,27 @@ class RootArea extends React.Component {
 
         window.DFKeyTracker.events.on("toggleSequencerShown", () => {
             this.setState({sequencerShown:!this.state.sequencerShown});
+        });
+
+        window.DFKeyTracker.events.on("toggleStartStopSequencer", () => {
+            if (!this.state.app) return;
+            if (!this.state.app.myInstrument) return;
+            if (!this.state.app.myInstrument.sequencerDevice) return;
+            const p = !this.state.app.myInstrument.sequencerDevice.IsPlaying();
+            this.state.app.SeqPlayStop(p, this.state.app.myInstrument.instrumentID);
+        });
+
+        window.DFKeyTracker.events.on("selectSeqPatternA", () => {
+            this.selectSequencerPattern(0);
+        });
+        window.DFKeyTracker.events.on("selectSeqPatternB", () => {
+            this.selectSequencerPattern(1);
+        });
+        window.DFKeyTracker.events.on("selectSeqPatternC", () => {
+            this.selectSequencerPattern(2);
+        });
+        window.DFKeyTracker.events.on("selectSeqPatternD", () => {
+            this.selectSequencerPattern(3);
         });
 
         // help catch window-changing events that change layout. actually a more robust solution would be a mediaquerylist change handler but ... it requires more thought.

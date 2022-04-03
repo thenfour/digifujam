@@ -39,83 +39,90 @@
 
         window.DFlog = [];
         window.DFlogEntryID = 0;
+
+
+        function GetLogWindowElement() {
+            let logel = document.getElementById("errorlog");
+            if (logel) return logel;
+
+            logel = document.createElement("div");
+            logel.id = "errorlog";
+            if (gForceLogVisible) {
+                logel.classList.add("visible");
+            }
+            document.body.appendChild(logel);
+
+            // close button
+            let close = document.createElement("button");
+            close.innerText = "Close";
+            close.title = "Close (alt+1)";
+            close.addEventListener("click", () => {
+                if (!gForceLogVisible) {
+                    document.getElementById('errorlog').classList.toggle("visible");
+                }
+            });
+            logel.appendChild(close);
+
+            // clear button
+            let clear = document.createElement("button");
+            clear.innerText = "Clear";
+            clear.addEventListener("click", () => {
+                if (!gForceLogVisible) {
+                    document.getElementById('errorlog').classList.toggle("visible");
+                }
+                window.DFlog = [];
+                const nodes = document.querySelectorAll(".log_entry");
+                nodes.forEach(node => {
+                    node.parentElement.removeChild(node);
+                });
+            });
+            logel.appendChild(clear);
+
+            // send button
+            let send = document.createElement("button");
+            send.innerText = "Report";
+            send.addEventListener("click", (e) => {
+                const payload = window.DFlog.filter(entry => !entry.reported);
+                if (payload.length < 1) {
+                    alert("there are no errors to report hmm 🤔.");
+                    return;
+                }
+
+                const request = new Request('/reportlog', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                try {
+                    fetch(request)
+                        .then(resp => {
+                            console.log(`status = ${resp.status}`);
+                            payload.forEach(element => {
+                                element.reported = true;
+                                const el = document.getElementById(`log_entry_${element.id}`);
+                                el.classList.add("reported");
+                            });
+                            alert(`${payload.length} Errors have been sent to the server, thanks!`);
+                        })
+                        .catch(err => {
+                            alert(`There were errors sending errors to the server. hmm?`);
+                        });
+                } catch (err) {
+                    alert(`There were errors sending errors to the server. that's a bummer`);
+                }
+            });
+            logel.appendChild(send);
+            return logel;
+        }
+
         window.addEventListener("error", (e) => {
             if (gLogItemsRemaining < 1) return;
             gLogItemsRemaining--;
 
-            let logel = document.getElementById("errorlog");
-            if (!logel) {
-                logel = document.createElement("div");
-                logel.id = "errorlog";
-                if (gForceLogVisible) {
-                    logel.classList.add("visible");
-                }
-                document.body.appendChild(logel);
-
-                // close button
-                let close = document.createElement("button");
-                close.innerText = "Close";
-                close.title = "Close (alt+1)";
-                close.addEventListener("click", () => {
-                    if (!gForceLogVisible) {
-                        document.getElementById('errorlog').classList.toggle("visible");
-                    }
-                });
-                logel.appendChild(close);
-
-                // clear button
-                let clear = document.createElement("button");
-                clear.innerText = "Clear";
-                clear.addEventListener("click", () => {
-                    if (!gForceLogVisible) {
-                        document.getElementById('errorlog').classList.toggle("visible");
-                    }
-                    window.DFlog = [];
-                    const nodes = document.querySelectorAll(".log_entry");
-                    nodes.forEach(node => {
-                        node.parentElement.removeChild(node);
-                    });
-                });
-                logel.appendChild(clear);
-
-                // send button
-                let send = document.createElement("button");
-                send.innerText = "Report";
-                send.addEventListener("click", (e) => {
-                    const payload = window.DFlog.filter(entry => !entry.reported);
-                    if (payload.length < 1) {
-                        alert("there are no errors to report hmm 🤔.");
-                        return;
-                    }
-
-                    const request = new Request('/reportlog', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    try {
-                        fetch(request)
-                            .then(resp => {
-                                console.log(`status = ${resp.status}`);
-                                payload.forEach(element => {
-                                    element.reported = true;
-                                    const el = document.getElementById(`log_entry_${element.id}`);
-                                    el.classList.add("reported");
-                                });
-                                alert(`${payload.length} Errors have been sent to the server, thanks!`);
-                            })
-                            .catch(err => {
-                                alert(`There were errors sending errors to the server. hmm?`);
-                            });
-                    } catch (err) {
-                        alert(`There were errors sending errors to the server. that's a bummer`);
-                    }
-                });
-                logel.appendChild(send);
-            }
+            const logel = GetLogWindowElement();
 
             const msg =
                 `@ ${e.filename}:${e.lineno}
@@ -149,30 +156,22 @@ error.stack: ${e.error.stack.toString()}
             logel.appendChild(entry);
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === '1' && e.altKey) {
-                const st = document.getElementById('errorlog')?.classList;
-                if (!st) return;
-                if (!gForceLogVisible) {
-                    st.toggle("visible");
-                }
-                e.preventDefault();
-                return;
-            }
-            if (e.key === '2' && e.altKey) {
-                throw new Error(`test error because you pressed alt+2`);
-                e.preventDefault();
-                return;
-            }
-        });
-
         window.DFLogToggle = () => {
+            const logel = GetLogWindowElement(); // ensure the window created.
             const st = document.getElementById('errorlog')?.classList;
             if (!st) return;
             if (!gForceLogVisible) {
                 st.toggle("visible");
             }
         }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '0' && e.altKey) {
+                window.DFLogToggle();
+                e.preventDefault();
+                return;
+            }
+        });
 
 
         // Safari polyfill for .at

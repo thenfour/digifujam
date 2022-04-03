@@ -578,7 +578,7 @@ class SequencerPatch {
   }
   SelectPatternIndex(selectedPatternIdx) {
     this.#cachedViewDirty = true;
-    this.selectedPatternIdx = selectedPatternIdx;
+    this.selectedPatternIdx = DFUtil.baseClamp(selectedPatternIdx, 0, SequencerSettings.PatternCount);
   }
   SetSpeed(speed) {
     this.#cachedViewDirty = true;

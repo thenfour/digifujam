@@ -2,6 +2,42 @@
 const DF = require("../DFcommon/DFCommon");
 const EventEmitter = require('events');
 
+function altHotkey(keyName, eventName) {
+  return {
+    altKey: true,
+    ctrlKey: false,
+    shiftKey: false,
+    eventName,
+    keyName,
+  };
+}
+
+// modifier hotkeys can be triggered even when you're focused in a text box.
+const gModifierHotkeys = [
+  altHotkey("m", "toggleMute"),
+  // alt+0 is error log
+  altHotkey("1", "selectSeqPatternA"),
+  altHotkey("2", "selectSeqPatternB"),
+  altHotkey("3", "selectSeqPatternC"),
+  altHotkey("4", "selectSeqPatternD"),
+  altHotkey("5", "toggleSequencerShown"),
+  altHotkey("9", "toggleModerationControls"),
+];
+
+// raw hotkeys represent hotkeys that can result in character input. therefore
+// they should only trigger when not focused in a text box.
+function rawHotkey(keyName, eventName) {
+  return {
+    keyName,
+    eventName,
+  };
+}
+
+const gRawHotkeys = [
+  rawHotkey("\\", "cheer"),
+  rawHotkey(" ", "toggleStartStopSequencer"),
+];
+
 class ModifierKeyTracker {
   constructor() {
 
@@ -56,46 +92,46 @@ class GestureTracker {
 
       this.events.emit('keydown', e);
 
-      // who wants some ugly!
-      if (e.key === '1' && e.altKey) {
-        return; // allow debug log hotkey not to interfere
+      // if (window.DFModerationControlsVisible) {
+      //   console.log(e);
+      // }
+
+      if (e.key === '0' && e.altKey) {
+        return; // special case: don't let the global debug log hotkey to interfere with our handling.
       }
 
-      let handled = false;
+      let handled = gModifierHotkeys.find(hotkey => {
+        if (e.key !== hotkey.keyName) return false;
+        if ((hotkey.altKey !== null) && e.altKey !== hotkey.altKey) return false;
+        if ((hotkey.ctrlKey !== null) && e.ctrlKey !== hotkey.ctrlKey) return false;
+        if ((hotkey.shiftKey !== null) && e.shiftKey !== hotkey.shiftKey) return false;
+        e.preventDefault();
+        this.events.emit(hotkey.eventName, e);
+        handled = true;
+        return true;
+      });
+      if (handled) return;
+
       if (window.DFChatinput) {
-        if (e.target.tagName == 'BODY' && e.key.length === 1 && !e.altKey) { // BODY means it's bubbled up to the top of the DOM. nothing else has handled it.
+        if (e.target.tagName == 'BODY' && e.key.length === 1 && !e.altKey && !e.ctrlKey) { // BODY means it's bubbled up to the top of the DOM. nothing else has handled it.
           //console.log(`  charcode=${e.charCode}, keycode=${e.keyCode} key=${e.key} code=${e.code} which=${e.which} tag=${e.target.tagName}`);
           if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
-            if ("/abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()='\",<>.`~;:".indexOf(e.key) != -1) { // don't include registered hotkeys here.
+            //if ("/abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()='\",<>.`~;:".indexOf(e.key) != -1) { // don't include registered hotkeys here.
+            if (!gRawHotkeys.find(hk => hk.keyName === e.key)) {
               window.DFChatinput.focus();
-              handled = true;
+              return;
             }
           }
         }
       }
 
       if (!handled && e.target.tagName == 'BODY') {
-        if (e.key === '9' && e.altKey) {
-          handled = true;
-          this.events.emit('toggleModerationControls');
-        }
-        if (e.key === 'm' && e.altKey) {
-          handled = true;
-          this.events.emit('toggleMute');
-        }
-        if (e.key === '5' && e.altKey) {
-          handled = true;
-          this.events.emit('toggleSequencerShown');
-        }
-        // check for hotkeys
-        else if (e.key.length === 1) {
-          if (getSelectionText()?.length === 0) { // if you are selecting text, then you probably want to copy it or something? using keyboard shortcuts? anyway don't proceed.
-            if (e.key==='\\') {
-              handled = true;
-              this.events.emit('cheer');
-            }
-          }
-        }
+        gRawHotkeys.find(hk => {
+          if (hk.keyName !== e.key) return false;
+          e.preventDefault();
+          this.events.emit(hk.eventName, e);
+          return true;
+        });
       }
     });
 

@@ -37,10 +37,13 @@ Feel free to join our [Discord](https://discord.gg/kkf9gQfKAd) to get the latest
 
 - <kbd>\\</kbd> cheer
 - <kbd>ALT</kbd>+<kbd>M</kbd> toggle mute
-- <kbd>ALT</kbd>+<kbd>1</kbd> show error log window
-- <kbd>ALT</kbd>+<kbd>2</kbd> throw an exception (for debugging)
+- <kbd>ALT</kbd>+<kbd>1</kbd> Select sequencer pattern A
+- <kbd>ALT</kbd>+<kbd>2</kbd> Select sequencer pattern B
+- <kbd>ALT</kbd>+<kbd>3</kbd> Select sequencer pattern C
+- <kbd>ALT</kbd>+<kbd>4</kbd> Select sequencer pattern D
 - <kbd>ALT</kbd>+<kbd>5</kbd> show / hide sequencer window
 - <kbd>ALT</kbd>+<kbd>9</kbd> show moderation controls
+- <kbd>ALT</kbd>+<kbd>0</kbd> show error log window
 
 
 ## FAQ
@@ -104,7 +107,6 @@ Please report compatibility in our [Discord](https://discord.gg/kkf9gQfKAd).
 - `npm run start` // to start local server (or just node index.js)
 - `node --inspect index.js` // for chrome inspector debugging the server
 - `node --inspect-brk index.js` // for chrome inspector debugging the server, but start broken to give time to attach debugger for startup.
-
 - if using a CDN config (where static files have different host prefix than the app), you can use `node cdn.js` to serve.
 
 You will need a `config2.yaml`.

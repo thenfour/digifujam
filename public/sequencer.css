@@ -155,6 +155,7 @@
     height: 80px;
     width: 90px;
     margin: 3px 3px;
+    position: relative;
 }
 
 .sequencerMain button.cueButton {
@@ -179,6 +180,40 @@
     background-color: #7f7;
     color: #444;
     box-shadow: 0 0 10px #7F7, inset 0 0 18px #888c;
+}
+
+
+@keyframes playButtonListening {
+    0% {
+        background-color: var(--c1);
+    }
+    
+    80% {
+        background-color: var(--c1);
+    }
+    85% {
+        background-color: var(--c2);
+    }
+
+    95% {
+        background-color: var(--c2);
+    }
+}
+
+.sequencerMain button.playButton.active .swallowsIndicator {
+    --c1: #d29eff;
+    --c2: #ff0000;
+    background-color: var(--c1);
+    animation: playButtonListening .8s linear infinite;
+    position: absolute;
+    border-radius: 50%;
+    --d: 10px;
+    width: var(--d);
+    height: var(--d);
+    top: 0;
+    right: 0;
+    margin: 7px;
+    box-shadow: 0 0 6px var(--c1);
 }
 
 .sequencerMain button.playButton>* {
@@ -1214,12 +1249,17 @@
 
 .sequencerMain fieldset.seqMode .paramValue {
     color: #e1e1e1;
-    background-color: #575;
+    background-color: #242;
     box-shadow: inset 0 0 10px #0005;
+    text-shadow: 0 0 12px #8f8;
     width: auto;
     padding: 0px 6px;
 }
 
+.sequencerMain fieldset.seqMode .swallows .paramValue {
+    color: #d29eff;
+    text-shadow: 0 0 18px #ffffff;
+}
 
 
 @keyframes baseNoteListening {

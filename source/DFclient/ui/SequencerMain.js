@@ -896,6 +896,8 @@ class SequencerMain extends React.Component {
              );
          });
 
+         const arpMappingTitle = `${seq.GetArpMapping().betterCaption}: ${seq.GetArpMapping().swallowNotes ? "This mode requires MIDI note input to play. " : ""}${seq.GetArpMapping().description}`;
+
          const speedObj = gSpeeds.GetClosestMatch(patch.speed, 0);
          const speedList = this.state.isSpeedExpanded && gSpeeds.sortedValues.map(s => {
             return (
@@ -1003,9 +1005,14 @@ class SequencerMain extends React.Component {
                             <fieldset>
                                 <div className='paramGroup'>
                                     <div className='paramBlock'>
-                                    <button className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable} onClick={this.onClickPlayStop}>
-                                                <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
-                                            </button>
+                                    <button
+                                        className={(seq.isPlaying ? 'playButton active' : "playButton") + clickableIfEditable + (seq.GetArpMapping().swallowNotes ? " swallows" : "")}
+                                        onClick={this.onClickPlayStop}
+                                        title={seq.GetArpMapping().swallowNotes ? "This sequencer mode plays in response to MIDI notes." : ""}
+                                    >
+                                        <i className="material-icons">{seq.isPlaying ? 'pause' : 'play_arrow'}</i>
+                                        {seq.GetArpMapping().swallowNotes && <div className='swallowsIndicator'></div>}
+                                    </button>
 
                                     </div>
                                 </div>
@@ -1082,8 +1089,14 @@ class SequencerMain extends React.Component {
                             <div className='paramGroup'>
 
                                 {/* arpMapping */}
-                                <div className='legend arpMapping'>Mode</div>
-                                <div className='paramBlock arpMapping'>
+                                <div
+                                    className={'legend arpMapping ' + (seq.GetArpMapping().swallowNotes ? "swallows " : " ") + (seq.GetArpMapping().cssClass)}
+                                    title={arpMappingTitle}
+                                >Mode</div>
+                                <div
+                                    className={'paramBlock arpMapping ' + (seq.GetArpMapping().swallowNotes ? "swallows " : " ") + (seq.GetArpMapping().cssClass)}
+                                    title={arpMappingTitle}
+                                >
                                     <div
                                         className={'paramValue ' + clickableIfEditable + (this.state.isArpMappingExpanded ? " active" : "")}
                                         onClick={isReadOnly ? ()=>{} : () => this.setState({isArpMappingExpanded:true})}
