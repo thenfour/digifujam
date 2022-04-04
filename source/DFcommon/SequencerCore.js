@@ -31,6 +31,8 @@ function ArpMapping(id, caption, betterCaption, swallowNotes, useBaseNote, descr
 const SequencerArpMapping = [
   ArpMapping("ArpMap_Seq","Seq", "Sequencer (normal mode)", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
   ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, "Spread the held chord over the sequence, interpolating note values."),
+  ArpMapping("ArpMap_FillUp","FillUp", "Fill Upwards", true, false, "Repeat held chord over the sequence, filling from bottom to top. For greater note range, repeated across octaves. Think arpeggios that repeat the same chord across octaves."),
+  ArpMapping("ArpMap_FillDown","FillDown", "Fill Downwards", true, false, "Repeat held chord over the sequence, filling from top to bottom."),
   ArpMapping("ArpMap_TranspSeq","TranspSeq", "Transposing sequencer", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
   ArpMapping("ArpMap_ArpUp","ArpUp", "Arpeggiator: Up", true, false, "Play held notes in sequence, ignoring sequenced note value."),
   ArpMapping("ArpMap_ArpDown","ArpDown", "Arpeggiator: Down", true, false, ""),

@@ -1179,10 +1179,17 @@ ul.instParamList li.inlineLabel {
 
 .component.instrumentCloset li .instrument {
     position: relative;
-    padding: 2px;
+    /* padding: 2px; */
     padding-bottom: 0;
     flex: 1 1;
-}
+border:  2px solid transparent;}
+
+.component.instrumentCloset li .instrument.sidechainSource{
+    
+    
+    
+    
+border: 2px solid #900;border-style: dashed;}
 
 .component.instrumentCloset li .instrument:hover {
     background-color: #044;
@@ -1947,15 +1954,15 @@ https://www.w3schools.com/icons/google_icons_intro.asp
     background-color: var(--seqColorDark);
 }
 
+.component.instrumentCloset li .seqCtrlContainer.on.swallows .seqIndicator {
+    --seqColorBright: #99f;
+    --seqColorDark: #44f;
+    background-color: var(--seqColorDark);
+}
+
 .component.instrumentCloset li .seqCtrlContainer.on.sidechain .seqIndicator {
     --seqColorBright:#e00;
     --seqColorDark:#900;
-}
-
-.component.instrumentCloset li .seqCtrlContainer.on.swallows .seqIndicator {
-    --seqColorBright: #c787ff;
-    --seqColorDark: #60e;
-    background-color: var(--seqColorDark);
 }
 
 @keyframes seqNoteIndicator1 {
@@ -2218,3 +2225,16 @@ ul.instParamList li.floatParam .floatParamMainControls {
     background-color: #822;
     padding: 6px 18px;
 }
+
+
+.sfzEditBtn {
+    border: 0;
+    background: none;
+    color: #f80;
+}
+.sfzEditBtn i {
+    font-size:14px;
+      
+  }
+
+  

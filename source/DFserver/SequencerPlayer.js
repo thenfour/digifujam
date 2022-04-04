@@ -185,6 +185,64 @@ function MappingFunction_Spread(params) {
 
 
 
+function MappingFunction_FillUp(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  // try to center the octaves.
+  let octaveShift = Math.round(params.patternView.patternNoteCount / params.heldNotes.length / 2);
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    let patNoteIdx = cell.noteValueInPatternIndexFromBottom;// * (params.heldNotes.length - 1);
+    let heldNoteIdx = patNoteIdx % params.heldNotes.length;
+    let octave = Math.floor(patNoteIdx / params.heldNotes.length);
+    
+    let note = params.heldNotes[heldNoteIdx].note;
+    note += (octave - octaveShift) * 12;
+
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
+function MappingFunction_FillDown(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  // try to center the octaves.
+  let octaveShift = Math.round(params.patternView.patternNoteCount / params.heldNotes.length / 2);
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    let patNoteIdx = cell.noteValueInPatternIndexFromTop;
+    let heldNoteIdx = patNoteIdx % params.heldNotes.length;
+    let octave = Math.floor(patNoteIdx / params.heldNotes.length);
+    
+    let note = params.heldNotes[params.heldNotes.length - 1 - heldNoteIdx].note;
+    note += (octave - octaveShift) * 12;
+
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
 // ignore pattern note value, just go DOWN in sequence according to rhythm and polyphony of x_Uprn
 function MappingFunction_ArpGeneric(params, indexFn) {
   const ret = [];
@@ -326,6 +384,9 @@ class InstrumentSequencerPlayer {
     this.divMappers["ArpMap_ArpInward"] = MappingFunction_Inward;
     this.divMappers["ArpMap_ArpOutward"] = MappingFunction_Outward;
     //this.divMappers["ArpMap_ArpInOut"] = MappingFunction_InwardOutward;
+    this.divMappers["ArpMap_FillUp"] = MappingFunction_FillUp;
+    this.divMappers["ArpMap_FillDown"] = MappingFunction_FillDown;
+    
     
 
     this.#invokeTimer();

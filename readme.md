@@ -153,4 +153,14 @@ Discord users should have some properties that normal 7jam users do not:
 
 
 
+## Design guide
+
+* Main GUI are based largely around cyan on cyan (`#00a`), with highlights or "more dynamic / unstable values" in yellow (`#aa0`)
+* Moderation controls get orange
+* Sequencer play indication green
+* Sequencer play with "note swallow" = blue
+* Sequencer play with sidechain enabled = red
+
+
+
 

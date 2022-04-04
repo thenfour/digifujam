@@ -623,18 +623,28 @@ class RoomPresetsDialog extends React.Component {
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+const gModalHandlers = [
+  { op:"roomPresets", launchFn:(app, context) => <RoomPresetsDialog app={app} /> },
+];
+
+function RegisterModalHandler(op, launchFn) {
+  gModalHandlers.push({op, launchFn});
+}
+
 class ModalDialogController extends React.Component {
   render() {
-    if (this.props.app && (window.DFModalDialogContext.op === "roomPresets")) {
-      return <RoomPresetsDialog app={this.props.app} />
-    }
-    return null;
+    if (!this.props.app) return null;
+    const h = gModalHandlers.find(h => h.op === window.DFModalDialogContext.op);
+    if (!h) return null;
+    return h.launchFn(this.props.app, window.DFModalDialogContext);
   }
 }
 
 module.exports = {
   ModalDialogController,
-  DFInvokeModal
+  DFModalDialog,
+  DFInvokeModal,
+  RegisterModalHandler,
 }
 
 

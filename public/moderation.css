@@ -234,7 +234,6 @@ span.userModerationGear i {
 }
 .chatLog .chatLogEntryChat .deleteChatMsg {
   color:#f40;
-  background-color:black;
   pointer-events: all;
   /* font-size:14px; */
   position:absolute;
@@ -246,6 +245,8 @@ span.userModerationGear i {
   cursor:pointer;
 }
 .chatLog .chatLogEntryChat .deleteChatMsg .confirmation {
+  background-color:#000c;
+  border: 2px solid #f40;
   padding: 8px;
 }
 .chatLog .chatLogEntryChat .deleteChatMsg .confirmation .content {

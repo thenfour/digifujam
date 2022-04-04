@@ -201,8 +201,8 @@
 }
 
 .sequencerMain button.playButton.active .swallowsIndicator {
-    --c1: #d29eff;
-    --c2: #ff0000;
+    --c1: #44f;
+    --c2: #99f;
     background-color: var(--c1);
     animation: playButtonListening .8s linear infinite;
     position: absolute;
@@ -1257,7 +1257,7 @@
 }
 
 .sequencerMain fieldset.seqMode .swallows .paramValue {
-    color: #d29eff;
+    color: #88f;
     text-shadow: 0 0 18px #ffffff;
 }
 
