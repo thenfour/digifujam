@@ -414,8 +414,12 @@ class AutoLatchingHeldNoteTracker {
     console.assert(Number.isInteger(note));
     const ei = this.notesOn.findIndex(n => (!n.physicallyHeld && (n.note === note)));
     if (ei !== -1) {
-      this.notesOn.splice(ei, 1);
-      return;
+      // this is a latched note. if it's the only note, then remove it and you'll have nothing playing.
+      if (this.notesOn.length === 1) {
+        this.notesOn = [];
+        return;
+      }
+      // otherwise, treat like any other note on
     }
     this.notesOn = this.notesOn.filter(n => n.physicallyHeld); // remove all latched notes
     this.notesOn.push({

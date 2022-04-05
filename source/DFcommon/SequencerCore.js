@@ -30,8 +30,8 @@ function ArpMapping(id, caption, betterCaption, swallowNotes, useBaseNote, descr
 
 const SequencerArpMapping = [
   ArpMapping("ArpMap_Seq","Seq", "Sequencer (normal mode)", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
-  ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, "Spread the held chord over the sequence, interpolating note values."),
   ArpMapping("ArpMap_TranspSeq","TranspSeq", "Transposing sequencer", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
+  ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, "Spread the held chord over the sequence, interpolating note values."),
   ArpMapping("ArpMap_FillUp","FillUp", "Fill Upwards", true, false, "Repeat held chord over the sequence, filling from bottom to top. For greater note range, repeated across octaves. Think arpeggios that repeat the same chord across octaves."),
   ArpMapping("ArpMap_FillDown","FillDown", "Fill Downwards", true, false, "Repeat held chord over the sequence, filling from top to bottom."),
   ArpMapping("ArpMap_ArpUp","ArpUp", "Arpeggiator: Up", true, false, "Play held notes in sequence, ignoring sequenced note value."),
@@ -62,9 +62,11 @@ function LatchMode(id, shortName, longName, description) {
 
 const SeqLatchMode = [
   LatchMode("LMSilent", "Off", "Off", "No note latching; when not playing notes don't play anything"),
-  LatchMode("LMSequencer", "Seq", "Play sequencer", "Play the sequence as it's written in the pattern editor"),
-  LatchMode("LMPedal", "Pedl", "Latch via sustain pedal", "Hold the sustain pedal to latch notes. Release sustain pedal to stop playing. This disables sustain pedal in the instrument (so sustain pedal only controls latching)."),
+  LatchMode("LMSequencer", "Seq", "Play sequencer", "When not holding notes, play the sequence as it's written in the pattern editor"),
+  LatchMode("LMPedal", "Pedal", "Sustain pedal latch", "Hold the sustain pedal to latch notes. Release sustain pedal to stop playing. This disables sustain pedal in the instrument (so sustain pedal only controls latching)."),
+  LatchMode("LMPedalSeq", "PedSq", "Sustain pedal latch + Sequencer", "Hold the sustain pedal to latch notes. Release sustain pedal to play sequence as written."),
   LatchMode("LMAuto", "Auto", "Auto (sticky keys)", "Automatically detect which notes to latch, no sustain pedal required. Double-tap a note to stop the sequencer."),
+  LatchMode("LMAutoSeq", "AutSq", "Auto + Sequencer", "Automatically detect which notes to latch, no sustain pedal required. Double-tap a note to stop latching and play the sequence as written."),
 ];
 
 const gDefaultLatchMode = SeqLatchMode[2];
@@ -564,6 +566,12 @@ class SequencerPatch {
   AdjustMidiNoteValue(midiNoteValue) {
     midiNoteValue += this.octave * 12;
     midiNoteValue += this.transpose;
+    // while (midiNoteValue < 22) {
+    //   midiNoteValue += 12; // wrap octaves; it's just more musical especially for bass instruments.
+    // }
+    // while (midiNoteValue > 108) {
+    //   midiNoteValue -= 12;
+    // }
     if (midiNoteValue < 1)
       return 0;
     if (midiNoteValue > 127)
@@ -967,6 +975,8 @@ class SequencerDevice {
     if (!this.GetArpMapping().swallowNotes) return false; // this mode doesn't swallow notes; latch mode is not relevant. normal behavior.
     if (this.IsSidechained()) return false; // if sidechained, then your pedal is not controlling the sequencer anyway. normal behavior.
     if (this.GetLatchMode().id === 'LMPedal') return true;
+    if (this.GetLatchMode().id === 'LMPedalSeq') return true;
+    return false;
   }
 
   // NOTE: return is SPEED-ADJUSTED
@@ -1145,7 +1155,7 @@ class SequencerDevice {
       return true;
     }
     case "SeqSetLatchMode": {
-      if (this.GetLatchMode().id === 'LMPedal' || data.latchMode === 'LMPedal') {
+      if (this.GetLatchMode().id === 'LMPedal' || data.latchMode === 'LMPedal' || this.GetLatchMode().id === 'LMPedalSeq' || data.latchMode === 'LMPedalSeq') {
         // make sure we don't switch to/from pedal mode while your pedal is held, otherwise there's no way to unstick them notes.
         pedalUpRoutine();
       }

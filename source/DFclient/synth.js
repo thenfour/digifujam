@@ -129,6 +129,8 @@ class DigifuSynth {
 
 		this.events.emit("noteOn", {user, instrumentSpec, note, velocity, isFromSequencer});
 
+		instrumentSpec.RegisterPlayingActivity();
+
 		if (this._isMuted || instrumentSpec.isMuted) {
 			this.fallbackNoteOnTracker.NoteOn(user, instrumentSpec, note, isFromSequencer);
 			return;

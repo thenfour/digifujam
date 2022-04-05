@@ -1,0 +1,145 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings.sfz.json
+Region count: 11
+Source samples to read: 11
+Dest samples to create: 11
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 1.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 1.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 2.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 2.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 3.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 3.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 4.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 4.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 5.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 5.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 6.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 6.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 7.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 7.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 8.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 8.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 9.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 9.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 10.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 10.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\SQ-R_Piano__Strings\SQ-R Piano & Strings\SQ-R Piano & Strings 11.flac" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 11.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 1.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 1_0_end.wav from SQ-R Piano & Strings 1.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 1_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 1_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 5.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 5_0_end.wav from SQ-R Piano & Strings 5.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 5_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 5_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 7.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 7_0_end.wav from SQ-R Piano & Strings 7.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 7_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 7_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 8.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 8_0_end.wav from SQ-R Piano & Strings 8.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 8_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 8_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 2.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 2_0_end.wav from SQ-R Piano & Strings 2.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 2_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 2_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 9.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 9_0_end.wav from SQ-R Piano & Strings 9.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 9_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 9_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 10.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 10_0_end.wav from SQ-R Piano & Strings 10.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 10_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 10_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 6.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 6_0_end.wav from SQ-R Piano & Strings 6.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 6_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 6_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 11.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 11_0_end.wav from SQ-R Piano & Strings 11.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 11_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 11_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 4.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 4_0_end.wav from SQ-R Piano & Strings 4.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 4_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 4_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 3.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 333791
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating SQ-R Piano & Strings 3_0_end.wav from SQ-R Piano & Strings 3.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 3_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 3_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 5_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 5.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 1_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 1.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 7_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 7.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 8_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 8.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 2_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 2.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 9_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 9.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 10_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 10.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 6_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 6.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 11_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 11.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 4_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 4.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 3_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\SQ-R Piano & Strings\SQ-R Piano & Strings 3.flac.wav
+Completed processing source WAV files with 11 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_SQRPianoStrings",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/SQ-R Piano & Strings/SQ-R Piano & Strings.sfz.json",
+  "name": "SQ-R Piano & Strings"
+}

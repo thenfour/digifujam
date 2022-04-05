@@ -220,6 +220,7 @@ function MappingFunction_FillDown(params) {
 
   // try to center the octaves.
   let octaveShift = Math.floor((params.patternView.allNoteValues.length / params.heldNotes.length / 2) - .33); // using .Round (at .5) is not good; we want to slightly favor going UP so using 0.33.
+  //octaveShift = 0;
 
   for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
     const cell = params.div.noteOns[irow];
@@ -231,7 +232,8 @@ function MappingFunction_FillDown(params) {
     let octave = Math.floor(patNoteIdx / params.heldNotes.length);
     
     let note = params.heldNotes[params.heldNotes.length - 1 - heldNoteIdx].note;
-    note += (octave + octaveShift) * 12;
+    note -= octave * 12;
+    note += octaveShift * 12;
 
     ret.push({
       velocity: cell.velocity,
@@ -490,7 +492,7 @@ class InstrumentSequencerPlayer {
 
     let heldNotes = this.roomPlayer.GetHeldNotesForInstrumentID(seq.listeningToInstrumentID, seq.GetLatchMode().id);
     if (!heldNotes) {
-      heldNotes = seq.GetLatchMode().id === 'LMAuto' ? this.autoLatchingNoteTracker : this.noteTracker;
+      heldNotes = (seq.GetLatchMode().id === 'LMAuto' || seq.GetLatchMode().id === 'LMAutoSeq') ? this.autoLatchingNoteTracker : this.noteTracker;
     }
 
     let divMappingFunction = this.divMappers[seq.GetArpMapping().id];
@@ -506,7 +508,7 @@ class InstrumentSequencerPlayer {
 
     //console.log(`using seq mapping mode ${seq.GetLatchMode().id }`);
 
-    if ((heldNotesByNoteValue.length === 0) && seq.GetArpMapping().swallowNotes && (seq.GetLatchMode().id === "LMSequencer")) {
+    if ((heldNotesByNoteValue.length === 0) && seq.GetArpMapping().swallowNotes && (seq.GetLatchMode().id === "LMSequencer" || seq.GetLatchMode().id === "LMAutoSeq" || seq.GetLatchMode().id === "LMPedalSeq")) {
       divMappingFunction = MappingFunction_Seq;
     }
 
@@ -601,7 +603,9 @@ class RoomSequencerPlayer {
 
   GetHeldNotesForInstrumentID(instrumentID, latchModeID) {
     if (this.instrumentPlayers.has(instrumentID)) {
-      return latchModeID === 'LMAuto' ? this.instrumentPlayers.get(instrumentID).autoLatchingNoteTracker : this.instrumentPlayers.get(instrumentID).noteTracker;
+      return (latchModeID === 'LMAuto' || latchModeID === 'LMAutoSeq') ?
+        this.instrumentPlayers.get(instrumentID).autoLatchingNoteTracker
+        : this.instrumentPlayers.get(instrumentID).noteTracker;
     }
     return null;
   }

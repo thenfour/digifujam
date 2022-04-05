@@ -101,13 +101,14 @@ class InstSeqSelection
   static ShouldBeIncludedInDefaultSeqSelection(instrument) {
     if (!instrument.allowSequencer) return false;
     if (instrument.sequencerDevice.IsPlaying()) return true;
-    return instrument.sequencerDevice.HasRecentlyPlayed();
+    if (instrument.sequencerDevice.HasRecentlyPlayed()) return true;
     //return instrument.sequencerDevice.HasData();
   }
 
   static ShouldBeIncludedInDefaultInstSelection(instrument) {
     if (instrument.controlledByUserID) return true;
-    return InstSeqSelection.ShouldBeIncludedInDefaultSeqSelection(instrument);
+    if (InstSeqSelection.ShouldBeIncludedInDefaultSeqSelection(instrument)) return true;
+    return instrument.HasRecentlyPlayed();
   }
 
 }

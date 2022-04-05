@@ -129,6 +129,7 @@ class RoomServer {
   UnidleInstrument(user, instrument) {
     try {
       user.lastActivity = new Date();
+      instrument.RegisterPlayingActivity();
       if (user.idle) {
         user.idle = false;
         this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
@@ -387,6 +388,7 @@ class RoomServer {
       noteOns.forEach(note => {
         if (note.seqInstrumentID) {
           const foundInstrument = this.roomState.FindInstrumentById(note.seqInstrumentID);
+          foundInstrument.instrument.RegisterPlayingActivity();
           if (note.op === "startPlaying") {
             foundInstrument.instrument.sequencerDevice.StartPlaying();
             //console.log(`start playing due to cue`);

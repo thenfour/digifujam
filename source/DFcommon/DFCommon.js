@@ -240,6 +240,8 @@ const ClientSettings = {
     RequestUserPingsIntervalMS: 2431,
 };
 
+const InstrumentRecentlyPlayedActivityThresholdMS = DFUtil.minutesToMS(15);
+
 const eParamMappingSource = {
     Macro0: 1000,
     Macro1: 1001,
@@ -473,6 +475,18 @@ class DigifuInstrumentSpec {
         this.supportsObservation = false; // there's no point allowing certain instruments' params to be observed like drum kit or sampler
 
         this.paramMappings = [];
+
+        this.lastPlayingActivity ??= 0;
+    }
+
+    HasRecentlyPlayed() {
+        const age = (Date.now() - this.lastPlayingActivity);
+        const ret = age < InstrumentRecentlyPlayedActivityThresholdMS;
+        return ret;
+    }
+    
+    RegisterPlayingActivity() {
+        this.lastPlayingActivity = Date.now();
     }
 
     // what is short anyway? 6 chars?
