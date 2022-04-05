@@ -448,7 +448,7 @@ class AutoLatchingHeldNoteTracker {
   }
 
   get lowestNoteValue() {
-    return this.heldNotesByNoteValue.at(0);
+    return this.heldNotesByNoteValue.at(0)?.note;
   }
 };
 

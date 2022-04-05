@@ -1164,7 +1164,9 @@ ul.instParamList li.inlineLabel {
 
 
 /* --- instrument closet --- */
-
+.component.instrumentCloset {
+    user-select: none;
+}
 .component.instrumentCloset>ul {
     padding-right: 0;
     padding-left: 5px;
@@ -1196,7 +1198,9 @@ border: 2px solid #900;border-style: dashed;}
 }
 
 .component.instrumentCloset li .instrument.selected {
-    border: 2px solid #066;
+    /* border-left: 6px solid #0aa; */
+    background-color: #055;
+    padding-left: 4px;
 }
 
 

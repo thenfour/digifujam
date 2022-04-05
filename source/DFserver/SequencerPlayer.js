@@ -190,7 +190,7 @@ function MappingFunction_FillUp(params) {
   if (params.heldNotes.length === 0) return ret;
 
   // try to center the octaves.
-  let octaveShift = Math.round(params.patternView.patternNoteCount / params.heldNotes.length / 2);
+  let octaveShift = Math.floor((params.patternView.allNoteValues.length / params.heldNotes.length / 2) - .33); // using .Round (at .5) is not good; we want to slightly favor going UP so using 0.33.
 
   for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
     const cell = params.div.noteOns[irow];
@@ -219,7 +219,7 @@ function MappingFunction_FillDown(params) {
   if (params.heldNotes.length === 0) return ret;
 
   // try to center the octaves.
-  let octaveShift = Math.round(params.patternView.patternNoteCount / params.heldNotes.length / 2);
+  let octaveShift = Math.floor((params.patternView.allNoteValues.length / params.heldNotes.length / 2) - .33); // using .Round (at .5) is not good; we want to slightly favor going UP so using 0.33.
 
   for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
     const cell = params.div.noteOns[irow];
@@ -231,7 +231,7 @@ function MappingFunction_FillDown(params) {
     let octave = Math.floor(patNoteIdx / params.heldNotes.length);
     
     let note = params.heldNotes[params.heldNotes.length - 1 - heldNoteIdx].note;
-    note += (octave - octaveShift) * 12;
+    note += (octave + octaveShift) * 12;
 
     ret.push({
       velocity: cell.velocity,
