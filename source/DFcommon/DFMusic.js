@@ -444,7 +444,7 @@ class AutoLatchingHeldNoteTracker {
   }
 
   get heldNotesByNoteValue() {
-    return this.notesOn.sort((a, b) => a - b);
+    return this.notesOn.sort((a, b) => a.note - b.note);
   }
 
   get lowestNoteValue() {
