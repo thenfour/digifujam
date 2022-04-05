@@ -153,6 +153,18 @@ Discord users should have some properties that normal 7jam users do not:
 
 
 
+## How to: Graffiti
+
+* `/g <content>`. Content can be a URL; if it's a URL then if it's an image it will be displayed as an image.
+* You may also drag & drop images from your local computer to 7jam; they'll be imported.
+* Supported formats: `GIF`, `JPEG`, `PNG`, `WEBP`. Webp is nice because it supports high-color animations.
+* If you want to use giphy or whatever websites, search for stickers. They're typically in `.webp` format which is best.
+* Everyone can place 1 graffiti at a time. If your graffiti gets pinned, then you can add another one.
+* If you are using a "persistent account" (logged in with a google account), then your graffiti will stay for like 25 days.
+  * otherwise, your graffiti will be removed as soon as you disconnect.
+* Mods can change parameters of graffiti like position, size, random seed.
+* Graffiti can also be pinned by moderators, so it never expires.
+
 ## Design guide
 
 * Main GUI are based largely around cyan on cyan (`#00a`), with highlights or "more dynamic / unstable values" in yellow (`#aa0`)

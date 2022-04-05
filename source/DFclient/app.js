@@ -238,7 +238,7 @@ class DigifuApp {
     this.midi = new DFMidi.DigifuMidi();
     this.metronome = new DFMetronome.DigifuMetronome();
     this.synth = new DFSynth.DigifuSynth(); // contains all music-making stuff.
-    this.heldNotes = new DFMusic.HeldNoteTracker();
+    this.heldNotes = new DFMusic.HeldNoteTracker(); // currently only used for the sequencer when you hold notes + click a cell.
 
     // monitoring your own playback
     this.monitoringType = eMonitoringType.Remote;
@@ -421,10 +421,14 @@ class DigifuApp {
     if (!this.myInstrument.wantsMIDIInput)
       return;
     this.net.SendPedalDown();
-    this.heldNotes.PedalDown();
-    if (this.monitoringType == eMonitoringType.Local) {
-      this.synth.PedalDown(this.myUser, this.myInstrument);
+
+    if (!this.myInstrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+      this.heldNotes.PedalDown();
+      if (this.monitoringType == eMonitoringType.Local) {
+        this.synth.PedalDown(this.myUser, this.myInstrument);
+      }
     }
+
   };
 
   MIDI_PedalUp() {
@@ -433,9 +437,12 @@ class DigifuApp {
     if (!this.myInstrument.wantsMIDIInput)
       return;
     this.net.SendPedalUp();
-    this.heldNotes.PedalUp();
-    if (this.monitoringType == eMonitoringType.Local) {
-      this.synth.PedalUp(this.myUser, this.myInstrument);
+
+    if (!this.myInstrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+      this.heldNotes.PedalUp();
+      if (this.monitoringType == eMonitoringType.Local) {
+        this.synth.PedalUp(this.myUser, this.myInstrument);
+      }
     }
   };
 
@@ -865,7 +872,10 @@ class DigifuApp {
         return;
       }
     }
-    this.synth.PedalDown(foundUser.user, foundInstrument.instrument);
+
+    if (!foundInstrument.instrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+      this.synth.PedalDown(foundUser.user, foundInstrument.instrument);
+    }
   };
 
   NET_OnPedalUp(userID) {
@@ -884,7 +894,9 @@ class DigifuApp {
       }
     }
 
-    this.synth.PedalUp(foundUser.user, foundInstrument.instrument);
+    if (!foundInstrument.instrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+      this.synth.PedalUp(foundUser.user, foundInstrument.instrument);
+    }
   };
 
   //
@@ -1198,6 +1210,9 @@ class DigifuApp {
       (presetObj) => { // set instrument params handler
         this.synth.SetInstrumentParams(foundInstrument.instrument, presetObj, true);
         return true;
+      },
+      () => { // emit pedal up handler
+        this.synth.PedalUp(foundUser.user, foundInstrument.instrument);
       }
     );
     this.stateChangeHandler();

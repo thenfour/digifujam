@@ -371,15 +371,17 @@ class InstrumentSequencerPlayer {
     this.timer = null;
     this.instrument = instrument;
     this.noteTracker = new DFMusic.HeldNoteTracker();
+    this.autoLatchingNoteTracker = new DFMusic.AutoLatchingHeldNoteTracker();
+
     this.divMappers = {};
 
+    this.divMappers["ArpMap_Seq"] = MappingFunction_Seq;
+    this.divMappers["ArpMap_TranspSeq"] = MappingFunction_TranspSeq;
     this.divMappers["ArpMap_AsPlayed"] = MappingFunction_AsPlayed;
     this.divMappers["ArpMap_ArpUp"] = MappingFunction_XUp;
     this.divMappers["ArpMap_ArpDown"] = MappingFunction_XDown;
     this.divMappers["ArpMap_ArpUpDown"] = MappingFunction_XUpDown;
     this.divMappers["ArpMap_Random"] = MappingFunction_Random;
-    this.divMappers["ArpMap_Seq"] = MappingFunction_Seq;
-    this.divMappers["ArpMap_TranspSeq"] = MappingFunction_TranspSeq;
     this.divMappers["ArpMap_Spread"] = MappingFunction_Spread;
     this.divMappers["ArpMap_ArpInward"] = MappingFunction_Inward;
     this.divMappers["ArpMap_ArpOutward"] = MappingFunction_Outward;
@@ -412,6 +414,7 @@ class InstrumentSequencerPlayer {
 
   AllNotesOff() {
     this.noteTracker.AllNotesOff();
+    this.autoLatchingNoteTracker.AllNotesOff();
     //this.#invokeTimer();
   }
 
@@ -424,6 +427,7 @@ class InstrumentSequencerPlayer {
   // return true to swallow the event
   NoteOn(note, velocity) {
     this.noteTracker.NoteOn(note, velocity);
+    this.autoLatchingNoteTracker.NoteOn(note, velocity);
     const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
@@ -432,6 +436,7 @@ class InstrumentSequencerPlayer {
   // return true to swallow the event
   NoteOff(note) {
     this.noteTracker.NoteOff(note);
+    this.autoLatchingNoteTracker.NoteOff(note);
     const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
@@ -439,6 +444,7 @@ class InstrumentSequencerPlayer {
 
   PedalUp() {
     this.noteTracker.PedalUp();
+    this.autoLatchingNoteTracker.PedalUp();
     const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
@@ -446,6 +452,7 @@ class InstrumentSequencerPlayer {
 
   PedalDown() {
     this.noteTracker.PedalDown();
+    this.autoLatchingNoteTracker.PedalDown();
     const swallow = this.instrument.sequencerDevice.OnNoteOnOffPedalUpDown(this.noteTracker);
     if (swallow) this.#invokeTimer(); // hacky but basically if a note is to be swallowed it's because we're doing something with it.
     return swallow;
@@ -466,11 +473,6 @@ class InstrumentSequencerPlayer {
     const seq = this.instrument.sequencerDevice;
     const patch = this.instrument.sequencerDevice.livePatch;
     
-    let heldNotes = this.roomPlayer.GetHeldNotesForInstrumentID(seq.listeningToInstrumentID);
-    if (!heldNotes) {
-      heldNotes = this.noteTracker;
-    }
-
     const patternView = Seq.GetPatternView(patch, this.instrument.sequencerDevice.GetNoteLegend());
 
     if (!this.instrument.sequencerDevice.isPlaying) {
@@ -480,14 +482,18 @@ class InstrumentSequencerPlayer {
       return;
     }
 
-
     const patternPlayheadInfo = this.instrument.sequencerDevice.GetAbsQuarterInfo(playheadAbsBeat); // adjusted for patch speed
     const absPatternFloor = Math.floor(patternPlayheadInfo.absPatternFloat);
     const windowLengthMS = gIntervalMS * gChunkSizeFactor;
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
     const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
 
-    const divMappingFunction = this.divMappers[seq.GetArpMapping().id];
+    let heldNotes = this.roomPlayer.GetHeldNotesForInstrumentID(seq.listeningToInstrumentID, seq.GetLatchMode().id);
+    if (!heldNotes) {
+      heldNotes = seq.GetLatchMode().id === 'LMAuto' ? this.autoLatchingNoteTracker : this.noteTracker;
+    }
+
+    let divMappingFunction = this.divMappers[seq.GetArpMapping().id];
     if (!divMappingFunction) {
       console.log(`!! Unsupported mapping style ${seq.GetArpMapping().id}`);
       RegisterPerf();
@@ -495,9 +501,14 @@ class InstrumentSequencerPlayer {
     }
 
     const heldNotesByNoteValue = heldNotes.heldNotesByNoteValue;
-    const lastNoteOn = heldNotes.lastNoteOn;
     const lowestNoteValue = heldNotes.lowestNoteValue;
     //console.log(`==== scheduling. heldnotes = ${JSON.stringify(heldNotesByNoteValue)}`);
+
+    //console.log(`using seq mapping mode ${seq.GetLatchMode().id }`);
+
+    if ((heldNotesByNoteValue.length === 0) && seq.GetArpMapping().swallowNotes && (seq.GetLatchMode().id === "LMSequencer")) {
+      divMappingFunction = MappingFunction_Seq;
+    }
 
     // scheduling time must be in abs quarters.
     // this walks through all pattern divs, and for all notes in each div, schedules note on/off event pairs.
@@ -588,9 +599,10 @@ class RoomSequencerPlayer {
     });
   }
 
-  GetHeldNotesForInstrumentID(instrumentID) {
-    if (this.instrumentPlayers.has(instrumentID))
-      return this.instrumentPlayers.get(instrumentID).noteTracker;
+  GetHeldNotesForInstrumentID(instrumentID, latchModeID) {
+    if (this.instrumentPlayers.has(instrumentID)) {
+      return latchModeID === 'LMAuto' ? this.instrumentPlayers.get(instrumentID).autoLatchingNoteTracker : this.instrumentPlayers.get(instrumentID).noteTracker;
+    }
     return null;
   }
 

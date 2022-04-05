@@ -807,6 +807,27 @@ class SequencerMain extends React.Component {
             this.setState({showListenToInstrumentDropdown:false});
         }
 
+        onClickLatchMode(e) {
+            if (this.props.observerMode) return;
+            if (e.ctrlKey) {
+                this.props.app.SeqPresetOp({
+                    op: "SeqSetLatchMode",
+                    latchMode: "LMPedal",
+                });
+                return;
+            }
+            this.setState({showLatchModeDropdown: !this.state.showLatchModeDropdown});
+        }
+
+        onSelectLatchMode(lm) {
+            if (this.props.observerMode) return;
+            this.props.app.SeqPresetOp({
+                op: "SeqSetLatchMode",
+                latchMode: lm.id,
+            });
+            this.setState({showLatchModeDropdown:false});
+        }
+
       render() {
           if (!this.props.instrument.allowSequencer)
             return null;
@@ -880,6 +901,19 @@ class SequencerMain extends React.Component {
                     onClick={() => this.onClickTimeSig(ts)}
                     className={selectedTS.id == ts.id ? " selected" : ""}
                     >{ts.toString()}</li>
+             );
+         });
+
+         const latchModeList = this.state.showLatchModeDropdown && Seq.SeqLatchMode.map(lm => {
+             return (
+                <li
+                key={lm.id}
+                onClick={() => this.onSelectLatchMode(lm)}
+                className={seq.GetLatchMode().id === lm.id ? " selected" : ""}
+                >
+                <div className='caption'>{lm.longName}</div>
+                <div className='description'>{lm.description}</div>
+                </li>
              );
          });
 
@@ -1136,6 +1170,45 @@ class SequencerMain extends React.Component {
                                 </div>
 
 
+
+
+                                {/* latch mode */}
+                                {seq.GetArpMapping().swallowNotes &&
+                                <div
+                                    className={'legend latchMode enabled ' + clickableIfEditable}
+                                    onClick={(e) => this.onClickLatchMode(e)}
+                                    title="When not holding notes on your keyboard, what should happen?"
+                                    >
+                                        <div className="latchButton">Latch</div>
+                                    </div>
+                                }
+                                {seq.GetArpMapping().swallowNotes &&
+                                <div className='paramBlock latchMode'>
+                                    <div
+                                        className={'paramValue ' + clickableIfEditable}
+                                        onClick={(e) => this.onClickLatchMode(e)}
+                                        title="When not holding notes on your keyboard, what should happen?"
+                                        >
+                                        {seq.GetLatchMode().shortName}
+                                    </div>
+                                    {this.state.showLatchModeDropdown && (
+                                        <ClickAwayListener onClickAway={() => { this.setState({showLatchModeDropdown:false});}}>
+                                        <div className='dialog'>
+                                            <legend onClick={() => { this.setState({showLatchModeDropdown:false});}}>
+                                                Choose how notes can be "stickied" when you let go of them during arpeggiator modes.
+                                            </legend>
+                                            <ul className='dropDownMenu'>
+                                                {latchModeList}
+                                            </ul>
+                                        </div>
+                                        </ClickAwayListener>
+                                        )
+                                    }
+                                </div>
+                                }
+
+
+
                                 {/* listening instrument */}
                                 {seq.GetArpMapping().swallowNotes &&
                                 <div
@@ -1143,7 +1216,7 @@ class SequencerMain extends React.Component {
                                     onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e)}
                                     title="Arpeggiator input notes can be configured to listen to other instruments. Click to select an instrument. CTRL+Click to reset."
                                     >
-                                        <div className="scButton">SC</div>
+                                        <div className={"scButton " + ((this.props.instrument.instrumentID === seq.listeningToInstrumentID) ? " disabled" : " enabled")}>SC</div>
                                     </div>
                                 }
                                 {seq.GetArpMapping().swallowNotes && (this.state.showListenToInstrumentDropdown || (this.props.instrument.instrumentID !== seq.listeningToInstrumentID)) &&
@@ -1168,7 +1241,6 @@ class SequencerMain extends React.Component {
                                     }
                                 </div>
                                 }
-
 
                             </div>{/* paramGroup */}
                         </fieldset>

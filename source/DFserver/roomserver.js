@@ -1838,6 +1838,10 @@ class RoomServer {
         case "SeqSetArpMapping":
           foundInstrument.instrument.sequencerDevice.SetArpMapping(data.mapping);
           break;
+        case "SeqSetLatchMode": {
+          foundInstrument.instrument.sequencerDevice.SetLatchModeByID(data.latchMode);
+          break;
+        }
         default:
           console.log(`client sent us a bad seq preset op ${data.op}`);
           return;

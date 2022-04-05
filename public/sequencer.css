@@ -376,10 +376,10 @@
 
 .sequencerMain ul.dropDownMenu {
     padding: 0;
-    max-height: 450px;
+    max-height: 600px;
     /* super long menus will get hidden; this allows scrolling */
     overflow: auto;
-}
+max-width: 615px;}
 
 .sequencerMain ul.dropDownMenu li {
     padding: 2px;
@@ -1300,7 +1300,7 @@
 
 .sequencerMain fieldset.seqMode .arpMapping .caption {}
 
-.sequencerMain fieldset.seqMode .arpMapping .description {
+.sequencerMain fieldset.seqMode .dropDownMenu .description {
     /* font-style:italic; */
     color: #bbb;
     padding-bottom: 4px;
@@ -1310,34 +1310,38 @@
 
 
 
-.sequencerMain .listeningToInstrument .dialog li.default {
+.sequencerMain .listeningToInstrument .dialog li.default,
+.sequencerMain .latchMode .dialog li.default
+{
     color: #0aa;
     /* border-left: 6px solid #0aa; */
     background-color: #044;
 }
 
-.sequencerMain fieldset.seqMode .listeningToInstrument .paramValue.notdefault {
+.sequencerMain fieldset.seqMode .paramValue.notdefault {
     color: #000;
     background-color: #c40;
 }
 
-
-.sequencerMain fieldset.seqMode .listeningToInstrument .scButton {}
-
-
-.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton {
+.sequencerMain .scButton {
     color: #eee;
-    background-color: #088;
+    background-color: #00c;
     height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
     border: 1px solid #4b694b;
-    width: 20px;
+    padding:0px 4px;
+/*     width: 20px; */
 }
 
 
-.sequencerMain fieldset.seqMode .listeningToInstrument.clickable .scButton:hover {
+.sequencerMain fieldset.seqMode .clickable .scButton:hover {
     background-color: #999;
+}
+
+.sequencerMain .scButton.enabled {
+    background-color: #c40;
+    
 }

@@ -394,6 +394,68 @@ class HeldNoteTracker {
 
 
 
+
+// tracks which notes are held, specifically for use with the sequencer in an arpeggiator mode, with "auto latch".
+// see https://github.com/thenfour/digifujam/issues/266
+// pedal is ignored. notes are either "held" or "latched".
+// when you release a note, it stays "latched".
+// when you press a note which is currently latched, that 1 note is released.
+// when you press a note which is not currently latched, latched notes are released (held notes remain held)
+class AutoLatchingHeldNoteTracker {
+  constructor() {
+    this.AllNotesOff();
+  }
+
+  AllNotesOff() {
+    this.notesOn = [];
+  }
+
+  NoteOn(note, velocity) {
+    console.assert(Number.isInteger(note));
+    const ei = this.notesOn.findIndex(n => (!n.physicallyHeld && (n.note === note)));
+    if (ei !== -1) {
+      this.notesOn.splice(ei, 1);
+      return;
+    }
+    this.notesOn = this.notesOn.filter(n => n.physicallyHeld); // remove all latched notes
+    this.notesOn.push({
+      note,
+      velocity,
+      timestamp: Date.now(),
+      physicallyHeld: true,
+    });
+  }
+
+  NoteOff(note) {
+    console.assert(Number.isInteger(note));
+    const ei = this.notesOn.findIndex(n => (n.physicallyHeld && (n.note === note))); // existing physically held
+    if (ei === -1) {
+      // not currently physically held note, that you note-off?
+      // can happen if you pressed this note in order to un-latch a note. you have to play it again to register it.
+      return;
+    }
+    this.notesOn[ei].physicallyHeld = false;
+  }
+
+  PedalUp() {
+  }
+
+  PedalDown() {
+  }
+
+  get heldNotesByNoteValue() {
+    return this.notesOn.sort((a, b) => a - b);
+  }
+
+  get lowestNoteValue() {
+    return this.heldNotesByNoteValue.at(0);
+  }
+};
+
+
+
+
+
 module.exports = {
   MusicalTimeTracker,
   CommonTimeSignatures,
@@ -406,4 +468,5 @@ module.exports = {
   GetTimeSigById,
   GetMidiNoteInfo,
   HeldNoteTracker,
+  AutoLatchingHeldNoteTracker,
 };
