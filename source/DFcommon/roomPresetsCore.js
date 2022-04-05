@@ -344,7 +344,7 @@ class RoomPresetManager {
         console.log(`attempting to import sequencer patch for instrumentID; instrument ${instrumentID} was not found. continuing...`);
         return;
       }
-      if (seqPatchHandler(instrument.instrument, patch, !!data.seqPlaying[instrumentID])) {
+      if (seqPatchHandler(instrument.instrument, patch, !!data.seqPlaying.find(iid => iid === instrumentID))) {
         ret.seqPatchesImported ++;
       }
     });
@@ -389,6 +389,11 @@ class RoomPresetManager {
       this.compactPresets[i] = data.ToCompactObj();
       //console.log(`overwrote whole room preset ${data.presetID}`);
     }
+
+    // the live room data is now this one.
+    this.liveMetadata = data.metadata;
+    this.livePresetID = data.presetID;
+
     return data;
   }
 
@@ -405,6 +410,9 @@ class RoomPresetManager {
       return;
     }
     this.compactPresets.push(data);
+
+    this.liveMetadata = new RoomPresetMetadata(data);
+    this.livePresetID = data.presetID;
     //console.log(`saved new compact room preset ${data.presetID}`);
   }
 

@@ -71,7 +71,7 @@ class GraffitiModerationDialog extends React.Component {
       shiftAmt: 5,
     };
     
-    this.sizeValueSpec = new IntRangeValueSpec(10, 400, 100);
+    this.sizeValueSpec = new IntRangeValueSpec(4, 400, 100);
   }
 
   clickDelete = (e) => {
@@ -200,6 +200,18 @@ class GraffitiModerationDialog extends React.Component {
     }]);
   }
 
+  setColor(color) {
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+    this.props.app.net.SendGraffitiOps([{
+      op: "setColor",
+      id: graffitiID,
+      color,
+    }]);
+  }
 
   render() {
     const graffitiID = window.DFModerationControlContext.graffitiID;
@@ -221,11 +233,20 @@ class GraffitiModerationDialog extends React.Component {
 
             <dt>Graffiti</dt>
             <dd className='graffiti'>
-              <span className='field colorSwatch' style={{backgroundColor:g.color}}></span>
-              <span className='field colorText'>{g.color}</span>
               <span className='field id'>gid #{g.id}</span>
               <span className='field userid'>uid #{g.userID}</span>
               <span className='field userid'>puid #{g.persistentID}</span>
+            </dd>
+
+            <dt>Color</dt>
+            <dd className='content'>
+              <span className='field colorSwatch' style={{backgroundColor:g.color}}></span>
+              <TextField
+                fieldID="graffitiColor"
+                valueSetter={(val) => this.setColor(val)}
+                valueGetter={() => g.color}
+                maxLength={500}
+              />
             </dd>
 
             <dt>Content</dt>
@@ -245,12 +266,15 @@ class GraffitiModerationDialog extends React.Component {
 
             <dt>Extra CSS</dt>
             <dd className='content'>
+              <div>
+              (e.g. "hidden", "straight", "monofont", "sansfont", "dynamicFontSize")<br />
               <TextField
                 fieldID="graffitiExtraCSS"
                 valueSetter={(val) => this.setExtraCSSClass(val)}
                 valueGetter={() => g.extraCssClass}
                 maxLength={500}
               />
+              </div>
             </dd>
 
             <dt>Size/Position</dt>

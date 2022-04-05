@@ -167,4 +167,31 @@
 .graffitiUserCtrl .mygraffiti .controls {
     display: flex;
     justify-content: space-between;
+    visibility: visible;
 }
+
+#graffitiContainer .graffitiItemContainer .graffiti.hidden .graffitiContent {
+    visibility: hidden;
+}
+
+
+#graffitiContainer .graffitiItemContainer .graffiti.straight {
+    transform: none;
+}
+
+
+#graffitiContainer .graffitiItemContainer .graffiti.sansfont .graffitiContent {
+    font-family: 'Overpass', sans-serif;
+}
+
+#graffitiContainer .graffitiItemContainer .graffiti.monofont .graffitiContent {
+    font-family: monospace;
+}
+
+#graffitiContainer .graffitiItemContainer .graffiti.dynamicFontSize .graffitiContent {
+    font-size: var(--size);
+}
+
+
+
+

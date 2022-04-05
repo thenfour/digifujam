@@ -1214,7 +1214,7 @@ class SequencerMain extends React.Component {
                                 <div
                                     className={'legend listeningToInstrument '+ clickableIfEditable + (seq.GetArpMapping().swallowNotes ? " enabled" : " disabled")}
                                     onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e)}
-                                    title="Arpeggiator input notes can be configured to listen to other instruments. Click to select an instrument. CTRL+Click to reset."
+                                    title="Sidechain: Arpeggiator input notes can be configured to listen to other instruments. Click to select an instrument. CTRL+Click to reset."
                                     >
                                         <div className={"scButton " + ((this.props.instrument.instrumentID === seq.listeningToInstrumentID) ? " disabled" : " enabled")}>SC</div>
                                     </div>
@@ -1224,7 +1224,7 @@ class SequencerMain extends React.Component {
                                     <div
                                         className={'paramValue ' + clickableIfEditable + (this.state.showListenToInstrumentDropdown ? " active" : "") + (this.props.instrument.instrumentID === seq.listeningToInstrumentID ? " default" : " notdefault")}
                                         onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e)}
-                                        title="Arpeggiator input notes can be configured to listen to other instruments. Click to select an instrument. CTRL+Click to reset."
+                                        title="Sidechain: Arpeggiator input notes can be configured to listen to other instruments. Click to select an instrument. CTRL+Click to reset."
                                         >
                                         {this.props.app.roomState.FindInstrumentById(seq.listeningToInstrumentID).instrument.GetShortDisplayName()}
                                     </div>

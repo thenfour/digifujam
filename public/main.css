@@ -172,7 +172,7 @@ button:focus {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    grid-area: "roomArea";
+    grid-area: roomArea;
     /* announcement area fix */
 }
 

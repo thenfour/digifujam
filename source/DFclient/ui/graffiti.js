@@ -118,9 +118,16 @@ class GraffitiItem extends React.Component {
       };
       contentEl = (<div className="graffitiContent image" style={imgStyle}></div>);
     } else {
+      const style = {
+        // this is not actually used most of the time, but if you want to be able to change the size of text, use dynamicFontSize css class and then it will use this.
+        "--size": g.size ? `${g.size}px` : "100px",
+      };
       let content = g.content.substring(0, DF.ServerSettings.GraffitiContentTruncate);
+      content = content.replaceAll("{roomTitle}", app.roomState.roomPresets.liveMetadata.name);
+      content = content.replaceAll("{roomDescription}", app.roomState.roomPresets.liveMetadata.description);
+      content = content.replaceAll("{roomTags}", app.roomState.roomPresets.liveMetadata.tags);
       content = this.props.context.md.renderInline(content);
-      contentEl = (<div className="graffitiContent text" dangerouslySetInnerHTML={{__html: content}}></div>);
+      contentEl = (<div className="graffitiContent text" style={style} dangerouslySetInnerHTML={{__html: content}}></div>);
     }
 
     // graffitiItemContainer > graffiti > graffitiContent
