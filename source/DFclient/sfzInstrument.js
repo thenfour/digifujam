@@ -810,6 +810,8 @@ class sfzInstrument {
     connect() {
         if (this.isConnected) return true;
 
+        //console.log(`  { connecting ${this.instrumentSpec.instrumentID}`);
+
         this.ensureSelectedSFZVariantParams();
         const sfzSpec = this.getCurrentSFZSpec();
 
@@ -878,15 +880,19 @@ class sfzInstrument {
         this.isFilterConnected = false;
         this._SetFiltType(); // this will connect the voices & filter if needed.
 
+
+        //console.log(`  } connecting ${this.instrumentSpec.instrumentID}`);
         return true;
     }
 
     disconnect() {
+        //console.log(`  { disconnecting ${this.instrumentSpec.instrumentID}`);
         this.isConnected = false;
         this.AllNotesOff();
         //console.log(`Inst disconnect`);
         this.voices.forEach(v => v.disconnect());
         this.graph.disconnect();
+        //console.log(`  } disconnecting ${this.instrumentSpec.instrumentID}`);
     }
 
     AllNotesOff() {
@@ -1000,6 +1006,11 @@ class sfzInstrument {
     _SetFiltType() {
         let disableFilter = () => {
             if (!this.isFilterConnected) return; // already disconnected.
+            if (!this.graph.nodes.filter) {
+                //console.log(`disabling filter and filter is null? this.isConnected=${this.isConnected}; ${this.instrumentSpec.instrumentID}`);
+                // this can happen when connecting / disconnecting in response to param changes, and the filter graph hasn't been set up fully yet. the params will get initialized later.
+                return;
+            }
 
             //console.log(`DISABLING filter`);
 
@@ -1020,6 +1031,11 @@ class sfzInstrument {
         };
         let enableFilter = () => {
             if (this.isFilterConnected) return; // already connected.
+            if (!this.graph.nodes.dryGainer) {
+                //console.log(`enabling filter and dry gainer is null this.isConnected=${this.isConnected}; ${this.instrumentSpec.instrumentID}`);
+                // this can happen when connecting / disconnecting in response to param changes, and the filter graph hasn't been set up fully yet. the params will get initialized later.
+                return;
+            }
             //console.log(`ENABLING filter`);
 
             /*
@@ -1050,15 +1066,15 @@ class sfzInstrument {
                 return;
             case 1:
                 enableFilter();
-                this.graph.nodes.filter.type = "lowpass";
+                if (this.graph.nodes.filter) this.graph.nodes.filter.type = "lowpass";
                 return;
             case 2:
                 enableFilter();
-                this.graph.nodes.filter.type = "highpass";
+                if (this.graph.nodes.filter) this.graph.nodes.filter.type = "highpass";
                 return;
             case 3:
                 enableFilter();
-                this.graph.nodes.filter.type = "bandpass";
+                if (this.graph.nodes.filter) this.graph.nodes.filter.type = "bandpass";
                 return;
         }
         console.warn(`unknown filter type ${this.instrumentSpec.GetParamByID("filterType").currentValue}`);
@@ -1084,7 +1100,12 @@ class sfzInstrument {
     };
 
     SetParamValues(patchObj) {
-        if (!this.isConnected) return; // mixing desk can change params when it's not even connected.
+        //if (!this.isConnected) return; // mixing desk can change params when it's not even connected.
+        if (!this.isConnected) {
+            //console.log(`# setting params while disconnected; ${this.instrumentSpec.instrumentID}`);
+            return;
+        }
+        //console.log(`{ setting params while connected ${this.instrumentSpec.instrumentID}`);
         Object.keys(patchObj).forEach(paramID => {
             switch (paramID) {
                 case "mixerGainDB":
@@ -1118,6 +1139,7 @@ class sfzInstrument {
                     break;
             }
         });
+        //console.log(`} ${this.instrumentSpec.instrumentID}; isconnected=${this.isConnected}`);
     };
 };
 
