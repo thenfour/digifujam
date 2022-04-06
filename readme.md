@@ -173,6 +173,3 @@ Discord users should have some properties that normal 7jam users do not:
 * Sequencer play with "note swallow" = blue
 * Sequencer play with sidechain enabled = red
 
-
-
-

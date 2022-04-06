@@ -10,17 +10,17 @@ const RoomPresetSettings = {
 };
 
 function IsValidRoomPatchName(s) {
-  if (!s) return false;
+  if (!DFUtil.IsString(s)) return false;
   return s.length < RoomPresetSettings.NameMaxLen;
 }
 
 function IsValidRoomPatchDescription(s) {
-  if (!s) return false;
+  if (!DFUtil.IsString(s)) return false;
   return s.length < RoomPresetSettings.DescriptionMaxLen;
 }
 
 function IsValidRoomPatchTags(s) {
-  if (!s) return false;
+  if (!DFUtil.IsString(s)) return false;
   return s.length < RoomPresetSettings.TagsMaxLen;
 }
 
@@ -120,7 +120,7 @@ class InstSeqSelection
 // SERIALIZABLE
 class RoomPresetMetadata {
   constructor(params) {
-    Object.assign(this, params);
+    if (params) Object.assign(this, JSON.parse(JSON.stringify(params)));
     
     // current metadata for room
     this.name ??= "untitled";
@@ -172,7 +172,7 @@ class CompactRoomPreset {
 // contains instrument patches, sequencer patches, and metadata for the room.
 class RoomPreset {
   constructor(params) {
-    Object.assign(this, params);
+    if (params) Object.assign(this, JSON.parse(JSON.stringify(params))); // prevent object instances from bleeding into live state.
     this.presetID ??= DFUtil.generateID();
     this.metadata = new RoomPresetMetadata(this.metadata);
 
@@ -241,20 +241,20 @@ class RoomPresetManager {
   // when sending to users on room Welcome, do not send the ENTIRE stuff. it's too much data.
   // so transform it to mostly just an array of metadata.
   ToCompactObj() {
-    return {
+    return JSON.parse(JSON.stringify({
       livePresetID: this.livePresetID,
       liveMetadata: this.liveMetadata,
       compactPresets: this.compactPresets,
-    };
+    }));
   }
 
   // validates, returns true
   SetMetadata(metadata) {
-    if (metadata.name && IsValidRoomPatchName(metadata.name))
+    if (DFUtil.IsString(metadata.name) && IsValidRoomPatchName(metadata.name))
       this.liveMetadata.name = metadata.name;
-    if (metadata.description && IsValidRoomPatchDescription(metadata.description))
+    if (DFUtil.IsString(metadata.description) && IsValidRoomPatchDescription(metadata.description))
       this.liveMetadata.description = metadata.description;
-    if (metadata.tags && IsValidRoomPatchTags(metadata.tags))
+    if (DFUtil.IsString(metadata.tags) && IsValidRoomPatchTags(metadata.tags))
       this.liveMetadata.tags = metadata.tags;
     if (metadata.bpm)
       this.liveMetadata.bpm = DFG.sanitizeBPM(metadata.bpm);
@@ -279,10 +279,10 @@ class RoomPresetManager {
   // create a new RoomPreset object with settings of the room.
   // instSeqSelection of InstSeqSelection
   GetLivePatchObj(instSeqSelection) {
-    const ret = new RoomPreset({
+    const ret = new RoomPreset(JSON.parse(JSON.stringify({
       presetID: this.livePresetID,
-      metadata: Object.assign({}, this.liveMetadata),
-    });
+      metadata: this.liveMetadata,
+    })));
 
     ret.metadata.bpm = this.#roomState.bpm;
 
@@ -392,7 +392,7 @@ class RoomPresetManager {
     }
 
     // the live room data is now this one.
-    this.liveMetadata = data.metadata;
+    this.liveMetadata = new RoomPresetMetadata(data.metadata);
     this.livePresetID = data.presetID;
 
     return data;

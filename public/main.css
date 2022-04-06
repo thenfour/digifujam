@@ -1940,7 +1940,10 @@ https://www.w3schools.com/icons/google_icons_intro.asp
     margin-left: 3px;
     border-radius: 50%;
 }
-
+.component.instrumentCloset li.sidechainedToYou .seqCtrlContainer {
+    background-color:#055;
+  }
+  
 .component.instrumentCloset li:hover .seqCtrlContainer .seqIndicator {
     /* empty */
     border: 1px solid #444;
@@ -1965,8 +1968,10 @@ https://www.w3schools.com/icons/google_icons_intro.asp
 }
 
 .component.instrumentCloset li .seqCtrlContainer.on.sidechain .seqIndicator {
+    border: 1px solid #E00;
+/* 
     --seqColorBright:#e00;
-    --seqColorDark:#900;
+    --seqColorDark:#900; */
 }
 
 @keyframes seqNoteIndicator1 {

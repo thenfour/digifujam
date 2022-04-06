@@ -1684,9 +1684,13 @@ class Instrument extends  React.Component {
         }
 
         return (
-            <li>
+            <li className={(i.allowSequencer && i.sequencerDevice.IsSidechained() && i.sequencerDevice.listeningToInstrumentID === app.myInstrument?.instrumentID ? " sidechainedToYou" : "")}>
                 <div
-                    className={"instrument" + (allowBigClick ? " bigClick" : "") + (isYours ? " selected" : "") + (this.props.sidechainSourceInstrumentIDs.has(i.instrumentID) ? " sidechainSource" : "")}
+                    className={"instrument"
+                        + (allowBigClick ? " bigClick" : "")
+                        + (isYours ? " selected" : "")
+                        + (this.props.sidechainSourceInstrumentIDs.has(i.instrumentID) ? " sidechainSource" : "")
+                    }
                     onClick={bigClickHandler} style={{ color: i.color }}>
                     <div className="buttonContainer">{playBtn}{releaseBtn}{observeBtn}{stopObservingBtn}</div>
                     {idle}
@@ -1723,6 +1727,7 @@ class InstrumentList extends React.Component {
         const sidechainSourceInstrumentIDs = new Set();
         this.props.app.roomState.instrumentCloset.forEach(i => {
             if (!i.allowSequencer) return;
+            if (!i.sequencerDevice.IsPlaying()) return; // if a seq is not playing, it's not important to care about the sidechain sources
             if (!i.sequencerDevice.IsSidechained()) return;
             sidechainSourceInstrumentIDs.add(i.sequencerDevice.listeningToInstrumentID);
         });

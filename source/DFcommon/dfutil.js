@@ -335,6 +335,12 @@ function IsClient() {
   return !IsServer();
 }
 
+// https://stackoverflow.com/questions/4059147/check-if-a-variable-is-a-string-in-javascript?answertab=scoredesc#tab-top
+// lol javascript.
+function IsString(myVar) {
+  return (typeof myVar === 'string' || myVar instanceof String);
+}
+
 const imageExtensions = [
   ".png",
   ".gif",
@@ -535,4 +541,5 @@ module.exports = {
   CommandHistory,
   ParamThrottler,
   DFRect,
+  IsString,
 };

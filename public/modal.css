@@ -204,6 +204,7 @@ button.roomPresets:hover {
   background-color: #200;
   white-space: normal;
   border-left: 7px solid #a00;
+  max-width:700px;
 }
 
 .dfmodal.presets .confirmationBox button {
