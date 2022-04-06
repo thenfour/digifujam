@@ -775,6 +775,15 @@ class SequencerMain extends React.Component {
             this.setState({ baseNoteListening: true });
         }
 
+        onClickRestrictTransposeToOneOctave() {
+            const seq = this.props.instrument.sequencerDevice;
+            if (this.props.observerMode) return;
+            this.props.app.SeqPresetOp({
+                op: "SeqSetRestrictTransposeToOneOctave",
+                restrictTransposeToOneOctave: !seq.GetRestrictTransposeToOneOctave(),
+            });
+        }
+
         onClickArpMapping(mapping) {
             if (this.props.observerMode) return;
             this.props.app.SeqPresetOp({
@@ -1169,6 +1178,19 @@ class SequencerMain extends React.Component {
                                     </div>
                                 </div>
 
+
+
+                                {/* restrict to 1 octave */}
+                                {seq.GetArpMapping().useOctaveRestrict &&
+                                <div
+                                    className={'legend oneoct '+ clickableIfEditable + (seq.GetRestrictTransposeToOneOctave() ? " enabled" : " disabled")}
+                                    onClick={isReadOnly ? ()=>{} : (e) => this.onClickRestrictTransposeToOneOctave(e)}
+                                    title={(seq.GetRestrictTransposeToOneOctave() ? "Enabled" : "Disabled") + ": Restrict transposition to +/- a single octave from original sequenced note"}
+                                    >
+                                        <div className="oneoctButton">{seq.GetRestrictTransposeToOneOctave() ? "1oct" : "Noct"}</div>
+                                    </div>
+                                }
+                                
 
 
 

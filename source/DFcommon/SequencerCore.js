@@ -16,34 +16,39 @@ const SequencerSettings = {
   RecentlyPlayedActivityThresholdMS : DFUtil.minutesToMS(30), 
 };
 
-function ArpMapping(id, caption, betterCaption, swallowNotes, useBaseNote, description) {
+function ArpMapping(id, caption, betterCaption, swallowNotes, useBaseNote, useOctaveRestrict, description) {
   return {
     id,
     caption,
     betterCaption,
     swallowNotes,
     useBaseNote,
+    useOctaveRestrict,
     description,
     cssClass: id, // for now just use ID as css class.
   };
 }
 
 const SequencerArpMapping = [
-  ArpMapping("ArpMap_Seq","Seq", "Sequencer (normal mode)", false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
-  ArpMapping("ArpMap_TranspSeq","TranspSeq", "Transposing sequencer", true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
-  ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, "Spread the held chord over the sequence, interpolating note values."),
-  ArpMapping("ArpMap_FillUp","FillUp", "Fill Upwards", true, false, "Repeat held chord over the sequence, filling from bottom to top. For greater note range, repeated across octaves. Think arpeggios that repeat the same chord across octaves."),
-  ArpMapping("ArpMap_FillDown","FillDown", "Fill Downwards", true, false, "Repeat held chord over the sequence, filling from top to bottom."),
-  ArpMapping("ArpMap_ArpUp","ArpUp", "Arpeggiator: Up", true, false, "Play held notes in sequence, ignoring sequenced note value."),
-  ArpMapping("ArpMap_ArpDown","ArpDown", "Arpeggiator: Down", true, false, ""),
-  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", "Arpeggiator: Up-Down", true, false, ""),
-  ArpMapping("ArpMap_ArpInward","ArpInward", "Arpeggiator: Inward", true, false, ""),
-  ArpMapping("ArpMap_ArpOutward","ArpOutward", "Arpeggiator: Outward", true, false, ""),
+  ArpMapping("ArpMap_Seq","Seq", "Sequencer (normal mode)", false, false, false, "Normal sequencer mode. No mapping is done; held notes don't affect played notes."),
+  ArpMapping("ArpMap_TranspSeq","TranspSeq", "Transposing sequencer", true, true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
+  ArpMapping("ArpMap_ChordScale","ChrdScale", "Chord scale (nearest enharmonic)", true, false, false, "The notes you are holding define a scale. The pattern notes are adjusted to match the nearest note in the scale."),
+  ArpMapping("ArpMap_TranspChordScale","TranpChSc", "Transposing chord scale", true, true, true, "Same as Chord Scale, except the pattern is transposed first, as in Transposing Sequencer mode."),
+  ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, true, "Spread the held chord over the sequence, interpolating note values."),
+  ArpMapping("ArpMap_FillUp","FillUp", "Fill Upwards", true, false, true, "Repeat held chord over the sequence, filling from bottom to top. For greater note range, repeated across octaves. Think arpeggios that repeat the same chord across octaves."),
+  ArpMapping("ArpMap_FillDown","FillDown", "Fill Downwards", true, false, true, "Repeat held chord over the sequence, filling from top to bottom."),
+  ArpMapping("ArpMap_ArpUp","ArpUp", "Arpeggiator: Up", true, false, true, "Play held notes in sequence, ignoring sequenced note value."),
+  ArpMapping("ArpMap_ArpDown","ArpDown", "Arpeggiator: Down", true, false, true, ""),
+  ArpMapping("ArpMap_ArpUpDown","ArpUpDown", "Arpeggiator: Up-Down", true, false, true, ""),
+  ArpMapping("ArpMap_ArpInward","ArpInward", "Arpeggiator: Inward", true, false, true, ""),
+  ArpMapping("ArpMap_ArpOutward","ArpOutward", "Arpeggiator: Outward", true, false, true, ""),
   //ArpMapping("ArpMap_ArpInOut","ArpInOut", true, false, ""),
-  ArpMapping("ArpMap_Random","Random", "Random", true, false, "Play held notes at random, ignoring sequenced note value."),
-  ArpMapping("ArpMap_AsPlayed","Rhythm", "As played (rhythm-only sequencer)", true, false, "Play held chord for every sequenced note."),
+  ArpMapping("ArpMap_Random","Random", "Random", true, false, true, "Play held notes at random, ignoring sequenced note value."),
+  ArpMapping("ArpMap_AsPlayed","Rhythm", "As played (rhythm-only sequencer)", true, false, true, "Play held chord for every sequenced note."),
   //ArpMapping("ArpMap_TranspHeld","TranspHeld", true, true), // polyphonic "transpseq" mode. but we risk too many notes.
   // harmonize. repeat your playing chord at the pattern note.
+  // nearset chord tone. ignore holding note octave; adjust pattern note to nearest held chord tone.
+  // transp + nearest chord tone. Same thing, but includes transposing behavior
 ];
 const gDefaultArpMapping = SequencerArpMapping[0];
 
@@ -530,6 +535,7 @@ class SequencerPatch {
     this.noteLenAdjustDivs ??= 0;
 
     this.baseNote ??= 60; // middle C
+    this.restrictTransposeToOneOctave ??= false;
     this.arpMapping ??= gDefaultArpMapping;
 
     this.latchMode ??= gDefaultLatchMode;
@@ -731,6 +737,15 @@ class SequencerPatch {
   GetBaseNote() {
     return this.baseNote;
   }
+
+  GetRestrictTransposeToOneOctave() {
+    return this.restrictTransposeToOneOctave;
+  }
+  SetRestrictTransposeToOneOctave(val) {
+    this.restrictTransposeToOneOctave = val;
+  }
+
+
   GetArpMapping() {
     return this.arpMapping;
   }
@@ -1054,6 +1069,14 @@ class SequencerDevice {
   GetBaseNote() {
     return this.livePatch.GetBaseNote();
   }
+
+  GetRestrictTransposeToOneOctave() {
+    return this.livePatch.GetRestrictTransposeToOneOctave();
+  }
+  SetRestrictTransposeToOneOctave(val) {
+    return this.livePatch.SetRestrictTransposeToOneOctave(val);
+  }
+
   GetArpMapping() {
     return this.livePatch.GetArpMapping();
   }
@@ -1162,6 +1185,11 @@ class SequencerDevice {
       this.SetLatchModeByID(data.latchMode);
       return true;
     }
+    case "SeqSetRestrictTransposeToOneOctave": {
+      // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
+      this.SetRestrictTransposeToOneOctave(!!data.restrictTransposeToOneOctave);
+      return true;
+    }    
     default: {
       throw new Error(`unknown seq preset op ${data.op}`);
     }

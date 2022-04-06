@@ -404,6 +404,12 @@ class HeldNoteTracker {
 class AutoLatchingHeldNoteTracker {
   constructor() {
     this.AllNotesOff();
+
+    // if you play the last latched note, it's a special case to turn all notes off.
+    // but then if you're still holding it and hold other notes, bring them all back, including the one that caused the all notes off.
+    // it feels intuitive even though complex.
+    // and very unintuitive to be holding a note where only some of them are playing.
+    this.maybeHeldNote = null;
   }
 
   AllNotesOff() {
@@ -412,14 +418,29 @@ class AutoLatchingHeldNoteTracker {
 
   NoteOn(note, velocity) {
     console.assert(Number.isInteger(note));
+
+    if (this.maybeHeldNote && this.maybeHeldNote.note !== note) {
+      // there's a "maybe held note" and you pressed other keys. bring the maybeHeld Note back into playing.
+      this.notesOn.push(this.maybeHeldNote);
+      this.maybeHeldNote = null;
+    }
+
     const ei = this.notesOn.findIndex(n => (!n.physicallyHeld && (n.note === note)));
     if (ei !== -1) {
+      // convert a latched note to physically held note
+      this.notesOn[ei].physicallyHeld = true;
+      this.notesOn[ei].timestamp = Date.now();
+      this.notesOn[ei].velocity = velocity;
+
       // this is a latched note. if it's the only note, then remove it and you'll have nothing playing.
       if (this.notesOn.length === 1) {
+        this.maybeHeldNote = this.notesOn[ei];
         this.notesOn = [];
         return;
       }
-      // otherwise, treat like any other note on
+
+      this.notesOn = this.notesOn.filter(n => n.physicallyHeld); // remove all latched notes
+      return;
     }
     this.notesOn = this.notesOn.filter(n => n.physicallyHeld); // remove all latched notes
     this.notesOn.push({
@@ -432,6 +453,9 @@ class AutoLatchingHeldNoteTracker {
 
   NoteOff(note) {
     console.assert(Number.isInteger(note));
+    if (this.maybeHeldNote && this.maybeHeldNote.note === note) {
+      this.maybeHeldNote = null; // you released the "maybe held note"
+    }
     const ei = this.notesOn.findIndex(n => (n.physicallyHeld && (n.note === note))); // existing physically held
     if (ei === -1) {
       // not currently physically held note, that you note-off?

@@ -81,6 +81,15 @@ function MappingFunction_Seq(params) {
   return ret;
 }
 
+function RestrictTo1OctaveIfNecessary(cellNote, calculatedNote, params)
+{
+  if (!params.seq.GetRestrictTransposeToOneOctave()) return calculatedNote;
+  let dist = calculatedNote - cellNote;
+  while (dist > 6) dist -= 12;
+  while (dist < -6) dist += 12;
+  return cellNote + dist;
+}
+
 // AsPlayed.
 // do not examine pattern data at all; just repeat what you're playing
 function MappingFunction_AsPlayed(params) {
@@ -97,7 +106,7 @@ function MappingFunction_AsPlayed(params) {
 
   return params.heldNotes.map(o => ({
     velocity: o.velocity,
-    midiNoteValue: params.patch.AdjustMidiNoteValue(o.note),
+    midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, o.note, params)),
     lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
     noteID: cell.id,
   }));
@@ -113,12 +122,11 @@ function MappingFunction_Random(params) {
     if (cell.isMuted)
       continue;
 
-    //const ni = (params.absPatternFloor * params.patternView.patternNoteCount + cell.patternNoteIndex) % params.heldNotes.length;
     const ni = Math.random() * params.heldNotes.length;
     const heldNote = params.heldNotes.at(ni);
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, heldNote.note, params)),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -138,11 +146,12 @@ function MappingFunction_TranspSeq(params) {
     if (cell.isMuted)
       continue;
 
-    let note = cell.midiNoteValue + lowestNoteValue - params.seq.GetBaseNote();
+    let transp = lowestNoteValue - params.seq.GetBaseNote();
+    let note = cell.midiNoteValue + transp;
 
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, note, params)),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -175,6 +184,53 @@ function MappingFunction_Spread(params) {
 
     ret.push({
       velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, note, params)),
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
+
+
+function MappingFunction_ChordScale(params) {
+  const ret = [];
+  if (params.heldNotes.length === 0) return ret;
+
+  let heldNotes3Oct = [...new Set(params.heldNotes.map(n => n.note % 12))]; // unique held notes without octave info
+  heldNotes3Oct = heldNotes3Oct.concat(heldNotes3Oct.map(n => n + 12)).concat(heldNotes3Oct.map(n => n + 24));// repeat it for 3 octaves.
+  //heldNotes3Oct.sort((a,b) => a - b); <-- could be an optimization for lookup below.
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    // put this in octave 1 (not octave 0), so it lands in the middle of the 3-octave heldnotes array.
+    // 12.4 instead of 12, so we need to favor transposing up just a bit, otherwise we get too many identical notes.
+    const noteOct1 = (cell.midiNoteValue % 12) + 12.4; 
+
+    // find the closest held note, then transpose it via octave to be nearest.
+    let nearestNote = null;
+    let nearestDist = 1e4;
+    for (let ihn = 0; ihn < heldNotes3Oct.length; ++ ihn) {
+      const hn = heldNotes3Oct[ihn];
+      const dist = Math.abs(noteOct1 - hn);
+      
+      if (dist < nearestDist) {
+        nearestDist = dist;
+        nearestNote = hn;
+      }
+    }
+
+    if (!nearestNote) continue; // i don't think this is possible
+
+    // apply the diff to the original pattern note.
+    let note = Math.ceil((nearestNote - noteOct1) + cell.midiNoteValue);
+
+    ret.push({
+      velocity: cell.velocity,
       midiNoteValue: params.patch.AdjustMidiNoteValue(note),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
@@ -182,6 +238,60 @@ function MappingFunction_Spread(params) {
   }
   return ret;
 }
+
+
+function MappingFunction_TranspChordScale(params) {
+  const ret = [];
+  if (!params.lowestNoteValue) return ret; // don't play anything if no notes.
+  const lowestNoteValue = params.lowestNoteValue;
+
+  let heldNotes3Oct = [...new Set(params.heldNotes.map(n => n.note % 12))]; // unique held notes without octave info
+  heldNotes3Oct = heldNotes3Oct.concat(heldNotes3Oct.map(n => n + 12)).concat(heldNotes3Oct.map(n => n + 24));// repeat it for 3 octaves.
+
+  for (let irow = 0; irow < params.div.noteOns.length; ++irow) {
+    const cell = params.div.noteOns[irow];
+    if (cell.isMuted)
+      continue;
+
+    // put this in octave 1 (not octave 0), so it lands in the middle of the 3-octave heldnotes array.
+    // 12.4 instead of 12, so we need to favor transposing up just a bit, otherwise we get too many identical notes.
+    let transp = lowestNoteValue - params.seq.GetBaseNote();
+    if (params.seq.GetRestrictTransposeToOneOctave()) {
+      while (transp > 6) transp -= 12;
+      while (transp < -6) transp += 12;
+    }
+
+    let patternNote = cell.midiNoteValue + transp;
+    const noteOct1 = (patternNote % 12) + 12.4;
+
+    // find the closest held note, then transpose it via octave to be nearest.
+    let nearestNote = null;
+    let nearestDist = 1e4;
+    for (let ihn = 0; ihn < heldNotes3Oct.length; ++ ihn) {
+      const hn = heldNotes3Oct[ihn];
+      const dist = Math.abs(noteOct1 - hn);
+      
+      if (dist < nearestDist) {
+        nearestDist = dist;
+        nearestNote = hn;
+      }
+    }
+
+    if (!nearestNote) continue; // i don't think this is possible
+
+    // apply the diff to the original pattern note.
+    let note = Math.ceil((nearestNote - noteOct1) + patternNote);
+
+    ret.push({
+      velocity: cell.velocity,
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, note, params)),
+      lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
+      noteID: cell.id,
+    });
+  }
+  return ret;
+}
+
 
 
 
@@ -206,7 +316,7 @@ function MappingFunction_FillUp(params) {
 
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, note, params)),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -237,7 +347,7 @@ function MappingFunction_FillDown(params) {
 
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(note),
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, note, params)),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -260,7 +370,7 @@ function MappingFunction_ArpGeneric(params, indexFn) {
     const heldNote = params.heldNotes.at(ni);
     ret.push({
       velocity: cell.velocity,
-      midiNoteValue: params.patch.AdjustMidiNoteValue(heldNote.note),
+      midiNoteValue: params.patch.AdjustMidiNoteValue(RestrictTo1OctaveIfNecessary(cell.midiNoteValue, heldNote.note, params)),
       lengthQuarters: cell.thisLengthSwingQuarters / params.patch.speed,
       noteID: cell.id,
     });
@@ -379,6 +489,8 @@ class InstrumentSequencerPlayer {
 
     this.divMappers["ArpMap_Seq"] = MappingFunction_Seq;
     this.divMappers["ArpMap_TranspSeq"] = MappingFunction_TranspSeq;
+    this.divMappers["ArpMap_ChordScale"] = MappingFunction_ChordScale;
+    this.divMappers["ArpMap_TranspChordScale"] = MappingFunction_TranspChordScale;
     this.divMappers["ArpMap_AsPlayed"] = MappingFunction_AsPlayed;
     this.divMappers["ArpMap_ArpUp"] = MappingFunction_XUp;
     this.divMappers["ArpMap_ArpDown"] = MappingFunction_XDown;

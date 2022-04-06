@@ -1122,7 +1122,7 @@ class RoomServer {
             return;
           }
           g.extraCssClass = op.extraCssClass;
-          console.log(`setting extra css. id=${g.id} css=${g.extraCssClass}`);
+          //console.log(`setting extra css. id=${g.id} css=${g.extraCssClass}`);
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setExtraCssClass", id:g.id, extraCssClass:g.extraCssClass }]);
           break;
         }
@@ -1842,6 +1842,10 @@ class RoomServer {
           break;
         case "SeqSetLatchMode": {
           foundInstrument.instrument.sequencerDevice.SetLatchModeByID(data.latchMode);
+          break;
+        }
+        case "SeqSetRestrictTransposeToOneOctave": {
+          foundInstrument.instrument.sequencerDevice.SetRestrictTransposeToOneOctave(!!data.restrictTransposeToOneOctave);
           break;
         }
         default:

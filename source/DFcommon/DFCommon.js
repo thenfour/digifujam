@@ -95,6 +95,7 @@ const ClientMessages = {
     // { op:"SeqSetBaseNote", note: }
     // { op:"SeqSetArpMapping", mapping: }
     // { op:"SeqSetLatchMode", latchMode: }
+    // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
     SeqPresetOp: "SeqPresetOp",
     //SeqCue: "SeqCue", // { instrumentID, cancel }
     SeqMetadata: "SeqMetadata", // { title, description, tags }
@@ -181,6 +182,7 @@ const ServerMessages = {
     // { instrumentID, op:"SeqSetArpMapping", mapping: }
     // { seqInstrumentID, op:"SeqSetListeningInstrumentID", instrumentID: }
     // { instrumentID, op:"SeqSetLatchMode", latchMode: }
+    // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
     SeqSetListeningInstrumentID: "SeqSetListeningInstrumentID", // { seqInstrumentID, instrumentID: }

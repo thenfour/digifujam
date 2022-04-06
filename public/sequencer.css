@@ -1323,7 +1323,8 @@ max-width: 615px;}
     background-color: #c40;
 }
 
-.sequencerMain .scButton {
+.sequencerMain .scButton,
+.sequencerMain .oneoct .oneoctButton {
     color: #eee;
     background-color: #00c;
     height: 20px;
@@ -1336,6 +1337,14 @@ max-width: 615px;}
 /*     width: 20px; */
 }
 
+.sequencerMain .oneoct .oneoctButton {
+    background-color: #4b694b;
+    text-transform: none;
+}
+
+.sequencerMain .oneoct.enabled .oneoctButton {
+    background-color: #00c;
+}
 
 .sequencerMain fieldset.seqMode .clickable .scButton:hover {
     background-color: #999;
