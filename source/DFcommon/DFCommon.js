@@ -1808,13 +1808,14 @@ class DigifuRoomState {
 
     adminExportRoomState() {
         const ret = {
+            bpm: this.bpm,
+            stats: this.stats,
+            whoCanPerform: this.whoCanPerform,
             presetBanks: this.presetBanks,
             seqPresetBanks: this.seqPresetBanks,
             roomPresets: this.roomPresets,
             chatLog: [],//this.chatLog,
-            stats: this.stats,
             announcementHTML: this.announcementHTML,
-            whoCanPerform: this.whoCanPerform,
             graffiti: this.graffiti,
             radio: this.radio,
             instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
@@ -1849,6 +1850,8 @@ class DigifuRoomState {
         this.announcementHTML = data.announcementHTML;
         this.whoCanPerform = data.whoCanPerform;
         this.graffiti = data.graffiti ?? [];
+
+        this.setBPM(data.bpm ?? 100);
 
         if (this.radio) {
             const channels = this.radio.channels;
