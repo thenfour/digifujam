@@ -1,49 +1,48 @@
-
-
-
-
 @keyframes avatarBump1 {
   0% {
-      transform: translate(-50%, -50%);
-      animation-timing-function: ease-in-out;
+    transform: translate(-50%, -50%);
+    animation-timing-function: ease-in-out;
   }
 
   10% {
-      transform: translate(-50%, calc(-50% + 4px));
+    transform: translate(-50%, calc(-50% + 4px));
   }
 
   100% {
-      transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
 }
 
 /* exact duplicate of the other, so when i toggle between the classes, it resets the animation. why doesn't CSS let you reset one-shot animations?? */
 @keyframes avatarBump2 {
   0% {
-      transform: translate(-50%, -50%);
-      animation-timing-function: ease-in-out;
+    transform: translate(-50%, -50%);
+    animation-timing-function: ease-in-out;
   }
 
   10% {
-      transform: translate(-50%, calc(-50% + 4px));
+    transform: translate(-50%, calc(-50% + 4px));
   }
 
   100% {
-      transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
 }
 
 .userAvatar {
   pointer-events: none;
-  transition: top var(--move-duration), left var(--move-duration); /* when moving around. */
+  transition: top var(--move-duration), left var(--move-duration);
+  /* when moving around. */
   position: absolute;
-  transform: translate(-50%, -50%); /* this puts the "origin" of the element in the center. */
+  transform: translate(-50%, -50%);
+  /* this puts the "origin" of the element in the center. */
   transform-origin: center;
   --bounce-anim: avatarBump1;
   z-index: var(--z-index-avatar);
-  animation: var(--bounce-anim) .2s 1;/*, var(--dance-anim) 1s infinite;*/
+  animation: var(--bounce-anim) .2s 1;
+  /*, var(--dance-anim) 1s infinite;*/
   max-width: 285px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .userAvatar .av2 {
@@ -68,6 +67,10 @@
   border-top-width: 10px;
 }
 
+.userAvatar .userAvatarInstrument {
+  overflow: hidden;
+}
+
 .userAvatar .userAvatarInstrument button {
   pointer-events: all;
 }
@@ -79,18 +82,22 @@
     transform: rotateZ(10deg) skewX(var(--dance-skew));
     animation-timing-function: cubic-bezier(1, 0, 1, 1);
   }
+
   25% {
     transform: rotateZ(-10deg) skewX(var(--dance-skewN));
     animation-timing-function: ease-out;
   }
+
   50% {
     transform: rotateZ(10deg) skewY(var(--dance-skewN));
     animation-timing-function: cubic-bezier(1, 0, 1, 1);
   }
+
   75% {
     transform: rotateZ(-10deg) skewY(var(--dance-skew));
     animation-timing-function: ease-out;
   }
+
   100% {
     transform: rotateZ(10deg) skewX(var(--dance-skew));
   }
@@ -104,10 +111,12 @@
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
   }
+
   50% {
     transform: translateY(-20px);
     animation-timing-function: cubic-bezier(0.9, 0, 1, 1);
- }
+  }
+
   100% {
     transform: translateY(0);
     animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
@@ -121,12 +130,15 @@
   4% {
     transform: scale(120%) rotateZ(10deg);
   }
+
   50% {
     transform: scale(90%) rotateZ(10deg);
   }
+
   54% {
     transform: scale(120%) rotateZ(-10deg);
   }
+
   100% {
     transform: scale(90%) rotateZ(-10deg);
   }
@@ -140,10 +152,12 @@
     filter: hue-rotate(0deg);
     transform: rotateY(0) rotateZ(10deg);
   }
+
   50% {
     filter: hue-rotate(180deg);
     transform: rotateY(180deg) rotateZ(10deg);
   }
+
   100% {
     filter: hue-rotate(360deg);
     transform: rotateY(360deg) rotateZ(10deg);
@@ -157,6 +171,7 @@
     transform: rotateZ(360deg);
     transform-origin: left top;
   }
+
   100% {
     transform: rotateZ(0deg);
     transform-origin: right top;
@@ -171,21 +186,25 @@
     filter: blur(0px) grayscale(0%);
     animation-timing-function: linear;
   }
+
   25% {
     transform: rotateY(90deg);
     filter: blur(2px) grayscale(100%);
     animation-timing-function: linear;
   }
+
   50% {
     transform: rotateY(180deg);
     filter: blur(0px) grayscale(0%);
     animation-timing-function: linear;
   }
+
   75% {
     transform: rotateY(270deg);
     filter: blur(2px) grayscale(100%);
     animation-timing-function: linear;
   }
+
   100% {
     transform: rotateY(360deg);
     filter: blur(0px) grayscale(0%);
@@ -220,6 +239,3 @@
 .userAvatar .av2.dance6 {
   animation: dance_emo 3s infinite;
 }
-
-
-

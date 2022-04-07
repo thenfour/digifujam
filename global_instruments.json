@@ -1608,6 +1608,7 @@
       "instrumentID": "sfzMulti",
       "engine": "sfz",
       "allowSequencer": "1",
+      "supportsObservation": true,
       "supportsPresets": true,
       "maxPolyphony": 12,
       "activityDisplay": "keyboard",

@@ -249,15 +249,17 @@ class RoomServer {
       // find their instrument.
       let existingInstrument = this.roomState.FindInstrumentByUserID(foundUser.user.userID);
       if (existingInstrument != null) {
-        existingInstrument.instrument.ReleaseOwnership();
-        this.sequencerPlayer.AllNotesOff(existingInstrument.instrument);
+        this.DoInstrumentRelease(existingInstrument.instrument);
 
-        // broadcast instrument change to all clients
-        this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
-          instrumentID: existingInstrument.instrument.instrumentID,
-          userID: null,
-          idle: false,
-        });
+        // existingInstrument.instrument.ReleaseOwnership();
+        // this.sequencerPlayer.AllNotesOff(existingInstrument.instrument);
+
+        // // broadcast instrument change to all clients
+        // this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
+        //   instrumentID: existingInstrument.instrument.instrumentID,
+        //   userID: null,
+        //   idle: false,
+        // });
       }
 
       if (!this.roomState.UserCanPerform(foundUser.user)) {
@@ -292,6 +294,21 @@ class RoomServer {
     }
   };
 
+  // releases the instrument internally, and sends the message to clients.
+  DoInstrumentRelease(instrument) {
+    this.roomState.quantizer.clearUser(instrument.controlledByUserID);
+    this.roomState.quantizer.clearInstrument(instrument.instrumentID);
+
+    instrument.ReleaseOwnership();
+    this.sequencerPlayer.AllNotesOff(instrument);
+
+    this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
+      instrumentID: instrument.instrumentID,
+      userID: null,
+      idle: false
+    });
+  }
+
   OnClientInstrumentRelease(ws) {
     try {
       //log(`OnClientInstrumentRelease => ${ws.id}`)
@@ -310,18 +327,19 @@ class RoomServer {
         return;
       }
 
-      this.roomState.quantizer.clearUser(foundUser.user.userID);
-      this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
+      this.DoInstrumentRelease(foundInstrument.instrument);
 
-      foundInstrument.instrument.ReleaseOwnership();
-      this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
+      // this.roomState.quantizer.clearUser(foundUser.user.userID);
+      // this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
+      // foundInstrument.instrument.ReleaseOwnership();
+      // this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
 
-      // broadcast instrument change to all clients
-      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
-        instrumentID: foundInstrument.instrument.instrumentID,
-        userID: null,
-        idle: false
-      });
+      // // broadcast instrument change to all clients
+      // this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, {
+      //   instrumentID: foundInstrument.instrument.instrumentID,
+      //   userID: null,
+      //   idle: false
+      // });
     } catch (e) {
       log(`OnClientInstrumentRelease exception occurred`);
       log(e);
@@ -1332,11 +1350,24 @@ class RoomServer {
           if (!foundUser.user.IsAdmin()) throw new Error(`User isn't an admin.`);
           this.server.OnBackupServerState();
           break;
-        case "setWhoCanPerform":
+        case "setWhoCanPerform": {
           if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
+          //let oldVal = this.roomState.whoCanPerform;
           this.roomState.whoCanPerform = data.params.whoCanPerform;
+          // anyone that cannot perform should release their instruments.
+
+          this.roomState.users.forEach(u => {
+            if (this.roomState.UserCanPerform(u)) return;
+            // user does not have permissions to perform. is the user controlling an instrument?
+            const inst = this.roomState.FindInstrumentByUserID(u.userID);
+            if (!inst) return; // no instrument; no action necessary.
+            // release this instrument.
+            this.DoInstrumentRelease(inst.instrument);
+          });
+
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
+        }
       }
 
     } catch (e) {
@@ -1374,11 +1405,12 @@ class RoomServer {
           if (inst) {
             if (!this.roomState.UserCanPerform(foundUser.user)) {
               console.log(`Releasing instrument for user because they lost performance permissions.`);
-              this.roomState.quantizer.clearUser(foundUser.user.userID);
-              this.roomState.quantizer.clearInstrument(inst.instrument.instrumentID);
-              inst.instrument.ReleaseOwnership();
-              this.sequencerPlayer.AllNotesOff(inst.instrument);
-              this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrument.instrumentID, userID: null, idle: false });
+              this.DoInstrumentRelease(inst);
+              // this.roomState.quantizer.clearUser(foundUser.user.userID);
+              // this.roomState.quantizer.clearInstrument(inst.instrument.instrumentID);
+              // inst.instrument.ReleaseOwnership();
+              // this.sequencerPlayer.AllNotesOff(inst.instrument);
+              // this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrument.instrumentID, userID: null, idle: false });
             }
           }
           break;
@@ -1391,10 +1423,11 @@ class RoomServer {
             return;
           }
 
-          this.roomState.quantizer.clearUser(foundUser.user.userID);
-          this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
-          foundInstrument.instrument.ReleaseOwnership();
-          this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
+          this.DoInstrumentRelease(foundInstrument.instrument);
+          // this.roomState.quantizer.clearUser(foundUser.user.userID);
+          // this.roomState.quantizer.clearInstrument(foundInstrument.instrument.instrumentID);
+          // foundInstrument.instrument.ReleaseOwnership();
+          // this.sequencerPlayer.AllNotesOff(foundInstrument.instrument);
           break;
         }
         default:
@@ -2198,10 +2231,12 @@ class RoomServer {
       // remove references to this user.
       this.roomState.instrumentCloset.forEach(inst => {
         if (inst.controlledByUserID != foundUser.user.userID) return;
-        inst.ReleaseOwnership();
-        this.sequencerPlayer.AllNotesOff(inst);
+
+        this.DoInstrumentRelease(inst);
+        //inst.ReleaseOwnership();
+        //this.sequencerPlayer.AllNotesOff(inst);
         // broadcast this to clients
-        this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
+        //this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
       });
 
       let chatMessageEntry = new DF.DigifuChatMessage();
@@ -2309,10 +2344,12 @@ class RoomServer {
     // remove references to this user.
     this.roomState.instrumentCloset.forEach(inst => {
       if (inst.controlledByUserID != foundUser.user.userID) return;
-      inst.ReleaseOwnership();
-      this.sequencerPlayer.AllNotesOff(inst);
-      // broadcast this to clients
-      this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
+
+      this.DoInstrumentRelease(inst);
+      // inst.ReleaseOwnership();
+      // this.sequencerPlayer.AllNotesOff(inst);
+      // // broadcast this to clients
+      // this.io.to(this.roomState.roomID).emit(DF.ServerMessages.InstrumentOwnership, { instrumentID: inst.instrumentID, userID: null, idle: false });
     });
 
     // remove user from room.

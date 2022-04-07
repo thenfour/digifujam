@@ -1628,7 +1628,7 @@ class DigifuApp {
     }
 
     u.user.danceID = data.danceID;
-    console.log(`user dance: ${u.user.danceID}`);
+    //console.log(`user dance: ${u.user.danceID}`);
     //this.handle({user : u.user, text : data.text, x : data.x, y : data.y});
     this.FireUserDance(u.user);
   }
@@ -1660,11 +1660,12 @@ class DigifuApp {
         break;
       }
       case "InstrumentRelease": {
-        const instrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == data.userID);
-        if (!instrument) {
-          throw new Error(`server wants us to release an instrument for a user when that user is not controlling an instrument?`);
-        }
-        this.NET_OnInstrumentOwnership(instrument.instrumentID, null, false);
+        // this gets sent to clients as a InstrumentRelease message. nothing to do.
+        // const instrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == data.userID);
+        // if (!instrument) {
+        //   throw new Error(`server wants us to release an instrument for a user when that user is not controlling an instrument?`);
+        // }
+        //this.NET_OnInstrumentOwnership(instrument.instrumentID, null, false);
         return;
       }
       default:
