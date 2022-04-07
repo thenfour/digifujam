@@ -1,4 +1,27 @@
 
+function LatchMode(id, shortName, longName, description) {
+  return {
+    id, shortName, longName, description
+  };
+}
+
+const gSeqLatchMode = {
+  "LMAuto": LatchMode("LMAuto", "Auto", "Auto (sticky keys)", "Automatically detect which notes to latch, no sustain pedal required. Double-tap a note to stop the sequencer."),
+  "LMPedal": LatchMode("LMPedal", "Pedal", "Sustain pedal latch", "Hold the sustain pedal to latch notes. Release sustain pedal to stop playing. This disables sustain pedal in the instrument (so sustain pedal only controls latching)."),
+  "LMSilent": LatchMode("LMSilent", "Off", "Off", "No note latching; when not playing notes don't play anything"),
+  //LatchMode("LMSequencer", "Seq", "Play sequencer", "When not holding notes, play the sequence as it's written in the pattern editor"),
+  //LatchMode("LMPedalSeq", "PedSq", "Sustain pedal latch + Sequencer", "Hold the sustain pedal to latch notes. Release sustain pedal to play sequence as written."),
+  //LatchMode("LMAutoSeq", "AutSq", "Auto + Sequencer", "Automatically detect which notes to latch, no sustain pedal required. Double-tap a note to stop latching and play the sequence as written."),
+};
+
+const gDefaultLatchModeID = "LMAuto";
+
+// function GetLatchModeByID(modeID) {
+//   const ret = SeqLatchMode.find(m => m.id === modeID);
+//   if (!ret) return gDefaultLatchMode;
+//   return ret;
+// }
+
 
 const eUserSource = {
   SevenJam : 1,
@@ -91,6 +114,8 @@ class DigifuUser {
     //this.idle = null; // this gets set when a user's instrument ownership becomes idle
     this.lastCheerSentDate ??= new Date();
 
+    this.latchModeID ??= gDefaultLatchModeID;
+
     this.quantizeSpec ??= {
       beatDivision : 0,
       swallowBoundary : 1.00,
@@ -104,6 +129,15 @@ class DigifuUser {
 
   toString() {
     return `[uname:${this.name} uid:${this.userID} upid:${this.persistentID}]`;
+  }
+
+  GetLatchModeObj() {
+    const lm = gSeqLatchMode[this.latchModeID];
+    if (lm) return lm;
+    return gSeqLatchMode[gDefaultLatchModeID];
+  }
+  SetLatchModeID(lmid) {
+    this.latchModeID = lmid;
   }
 
   IsAdmin() {
@@ -289,4 +323,6 @@ module.exports = {
   UserDBRecordToPersistentInfo,
   UserPresenceToString,
   UserSourceToString,
+  gDefaultLatchModeID,
+  gSeqLatchMode,
 }

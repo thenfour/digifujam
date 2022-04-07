@@ -422,7 +422,7 @@ class DigifuApp {
       return;
     this.net.SendPedalDown();
 
-    if (!this.myInstrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+    if (!this.myInstrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth(this.roomState)) {
       this.heldNotes.PedalDown();
       if (this.monitoringType == eMonitoringType.Local) {
         this.synth.PedalDown(this.myUser, this.myInstrument);
@@ -438,7 +438,7 @@ class DigifuApp {
       return;
     this.net.SendPedalUp();
 
-    if (!this.myInstrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+    if (!this.myInstrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth(this.roomState)) {
       this.heldNotes.PedalUp();
       if (this.monitoringType == eMonitoringType.Local) {
         this.synth.PedalUp(this.myUser, this.myInstrument);
@@ -873,7 +873,7 @@ class DigifuApp {
       }
     }
 
-    if (!foundInstrument.instrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+    if (!foundInstrument.instrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth(this.roomState)) {
       this.synth.PedalDown(foundUser.user, foundInstrument.instrument);
     }
   };
@@ -894,7 +894,7 @@ class DigifuApp {
       }
     }
 
-    if (!foundInstrument.instrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth()) {
+    if (!foundInstrument.instrument.sequencerDevice?.ShouldPedalEventBeBlockedFromSynth(this.roomState)) {
       this.synth.PedalUp(foundUser.user, foundInstrument.instrument);
     }
   };
@@ -1487,6 +1487,22 @@ class DigifuApp {
 
     this.handleCheer({user : u.user, text : data.text, x : data.x, y : data.y});
     this.stateChangeHandler(); // <-- pretty sure this is not needed.
+  }
+
+  NET_UserStateOp(data) {
+    if (!this.roomState)
+      return;
+    switch (data.op) {
+      case "SeqSetLatchMode": {
+        let user = this.roomState.FindUserByID(data.userID);
+        if (!user) {
+          throw new Error(`server told us to set latch mode to non existent userid ${data.userID}`);
+        }
+        user.user.SetLatchModeID(data.latchModeID);
+        this.stateChangeHandler(); // <-- pretty sure this is not needed.
+        return;
+      }
+    }
   }
 
   NET_OnRoomBeat(data) {

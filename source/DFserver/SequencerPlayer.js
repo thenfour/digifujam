@@ -602,9 +602,10 @@ class InstrumentSequencerPlayer {
     const windowLengthQuarters = DFU.MSToBeats(windowLengthMS, this.metronome.getBPM()) * patch.speed; // speed-adjusted
     const windowEndShiftedQuarters = patternPlayheadInfo.shiftedAbsQuarter + windowLengthQuarters;     // speed-adjusted
 
-    let heldNotes = this.roomPlayer.GetHeldNotesForInstrumentID(seq.listeningToInstrumentID, seq.GetLatchMode().id);
+    const latchMode = seq.GetLatchMode(this.roomState);
+    let heldNotes = this.roomPlayer.GetHeldNotesForInstrumentID(seq.listeningToInstrumentID, latchMode.id);
     if (!heldNotes) {
-      heldNotes = (seq.GetLatchMode().id === 'LMAuto' || seq.GetLatchMode().id === 'LMAutoSeq') ? this.autoLatchingNoteTracker : this.noteTracker;
+      heldNotes = (latchMode.id === 'LMAuto') ? this.autoLatchingNoteTracker : this.noteTracker;
     }
 
     let divMappingFunction = this.divMappers[seq.GetArpMapping().id];
@@ -620,7 +621,7 @@ class InstrumentSequencerPlayer {
 
     //console.log(`using seq mapping mode ${seq.GetLatchMode().id }`);
 
-    if ((heldNotesByNoteValue.length === 0) && seq.GetArpMapping().swallowNotes && (seq.GetLatchMode().id === "LMSequencer" || seq.GetLatchMode().id === "LMAutoSeq" || seq.GetLatchMode().id === "LMPedalSeq")) {
+    if ((heldNotesByNoteValue.length === 0) && seq.GetArpMapping().swallowNotes && (seq.GetPlaySequenceWhenIdle())) {
       divMappingFunction = MappingFunction_Seq;
     }
 

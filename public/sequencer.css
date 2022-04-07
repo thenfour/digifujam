@@ -93,10 +93,11 @@
     align-content: center;
     justify-content: center;
     align-items: center;
-    padding-left: 6px;
-    padding-right: 6px;
+
+
     font-weight: bold;
     text-transform: uppercase;
+    padding: 0px 6px;
 }
 
 /* fieldset -> multiple paramgroups -> legend, paramblock -> whatever controls*/
@@ -187,10 +188,11 @@
     0% {
         background-color: var(--c1);
     }
-    
+
     80% {
         background-color: var(--c1);
     }
+
     85% {
         background-color: var(--c2);
     }
@@ -379,7 +381,8 @@
     max-height: 600px;
     /* super long menus will get hidden; this allows scrolling */
     overflow: auto;
-max-width: 615px;}
+    max-width: 615px;
+}
 
 .sequencerMain ul.dropDownMenu li {
     padding: 2px;
@@ -1311,8 +1314,7 @@ max-width: 615px;}
 
 
 .sequencerMain .listeningToInstrument .dialog li.default,
-.sequencerMain .latchMode .dialog li.default
-{
+.sequencerMain .latchMode .dialog li.default {
     color: #0aa;
     /* border-left: 6px solid #0aa; */
     background-color: #044;
@@ -1323,34 +1325,39 @@ max-width: 615px;}
     background-color: #c40;
 }
 
-.sequencerMain .scButton,
-.sequencerMain .oneoct .oneoctButton {
-    color: #eee;
-    background-color: #00c;
-    height: 20px;
+.sequencerMain fieldset .legend.toggle  {
+    padding: 0px 2px;
+    margin:0;
+}
+
+.sequencerMain fieldset .legend.toggle:hover {
+    background-color:#fff2;
+}
+
+.sequencerMain .toggleButton {
+    color: #888;
+    background-color: #555;
+    /* height: 20px; */
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    border: 1px solid #4b694b;
-    padding:0px 4px;
-/*     width: 20px; */
+    border: 1px outset #888888;
+    padding: 3px 4px;
+
+line-height: 10px;}
+
+.sequencerMain .toggleButton.enabled {
+    color:#cc0;
+    background-color:#10aa10;
+    border-style:inset;
 }
 
-.sequencerMain .oneoct .oneoctButton {
-    background-color: #4b694b;
-    text-transform: none;
-}
-
-.sequencerMain .oneoct.enabled .oneoctButton {
-    background-color: #00c;
-}
-
-.sequencerMain fieldset.seqMode .clickable .scButton:hover {
+.sequencerMain .clickable .toggleButton:hover {
     background-color: #999;
 }
 
 .sequencerMain .scButton.enabled {
     background-color: #c40;
-    
+
 }

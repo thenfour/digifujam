@@ -931,6 +931,31 @@ class RoomServer {
     }
   };
 
+  OnClientUserStateOp(ws, data) {
+    try {
+      let foundUser = this.FindUserFromSocket(ws);
+      if (foundUser == null) {
+        log(`OnClientUserStateOp => unknown user`);
+        return;
+      }
+
+      switch (data.op) {
+        case "SeqSetLatchMode": {
+          foundUser.user.SetLatchModeID(data.latchModeID);
+          data.userID = foundUser.user.userID;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.UserStateOp, data);
+          return;
+        }
+      }
+
+    } catch (e) {
+      log(`OnClientUserStateOp exception occurred`);
+      log(e);
+    }
+  };
+
+
+
   OnClientQuantization(ws, data) {
     try {
       let foundUser = this.FindUserFromSocket(ws);
@@ -1846,6 +1871,10 @@ class RoomServer {
         }
         case "SeqSetRestrictTransposeToOneOctave": {
           foundInstrument.instrument.sequencerDevice.SetRestrictTransposeToOneOctave(!!data.restrictTransposeToOneOctave);
+          break;
+        }
+        case "SeqSetPlaySequenceWhenIdle" : {
+          foundInstrument.instrument.sequencerDevice.SetPlaySequenceWhenIdle(!!data.playSequenceWhenIdle);
           break;
         }
         default:

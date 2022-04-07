@@ -147,15 +147,19 @@ class DFOptionsDialog extends React.Component {
         });
     };
 
-    // setPBRange = (v) => {
-    //     this.props.app.pitchBendRange = v.target.value;
-    //     this.props.stateChangeHandler.OnStateChange();
-    // }
 
     onSetMonitoringType(mt) {
         this.props.app.setMonitoringType(mt);
         this.setState({});
     }
+
+    onSetLatchMode(latchModeID) {
+        this.props.app.net.SendUserStateOp({
+            op: "SeqSetLatchMode",
+            latchModeID,
+        });
+    }
+
     findQuantizationIndex(beatDivision) {
         let nearestDist = 0;
         let nearestIndex = -1;
@@ -222,6 +226,8 @@ class DFOptionsDialog extends React.Component {
 
     render() {
 
+        const myUser = this.props.app.myUser;
+
         let _groups = [...new Set(this.quantizationOptions.map(p => p.group))];
 
         let renderButton = (qo) => {
@@ -248,30 +254,7 @@ class DFOptionsDialog extends React.Component {
             monitoringCaption = "Remote";
         }
 
-        // let tapTempoStuff = null;
-        // switch (this.props.app.tapTempoState) {
-        //     case DFApp.TapTempoState.NA:
-        //         tapTempoStuff = (<div>
-        //             <button onClick={() => { this.props.app.beginTapTempo(); }}>Tap tempo</button>
-        //         </div>);
-        //         break;
-        //     case DFApp.TapTempoState.Waiting:
-        //         tapTempoStuff = (<div>
-        //             <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
-        //             <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
-        //             <div className="helpText">Play a note or hit the button to start setting the tempo.</div>
-        //         </div>);
-        //         break;
-        //     case DFApp.TapTempoState.Tapping:
-        //         tapTempoStuff = (<div>
-        //             <button onClick={() => { this.props.app.registerTempoTap(); }}>TAP</button>
-        //             <button onClick={() => { this.props.app.commitTappedTempo(); }}>Save</button>
-        //             <button onClick={() => { this.props.app.cancelTapTempo(); }}>Cancel</button>
-        //             {this.props.app.tappedTempoBPM} BPM
-        //             <div className="helpText">Keep playing this note to refine the tempo. Play a different note to accept the new tempo.</div>
-        //         </div>);
-        //         break;
-        // };
+        const latchMode = myUser.GetLatchModeObj();
 
         return (
             <div>
@@ -287,13 +270,6 @@ class DFOptionsDialog extends React.Component {
                 {this.state.isExpanded &&
                 <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
                     <div className="optionsDialog popUpDialog">
-                        {/* <fieldset>
-                            <div className="legend">Pitch bend</div>
-                            <div>
-                                <input type="range" id="pbrange" name="pbrange" min="0" max="12" onChange={this.setPBRange} value={this.props.app.pitchBendRange} />
-                                <label htmlFor="pbrange">PB range:{this.props.app.pitchBendRange}</label>
-                            </div>
-                        </fieldset> */}
 
                         <fieldset>
                             <div className="legend">Monitoring</div>
@@ -307,6 +283,24 @@ class DFOptionsDialog extends React.Component {
                             {this.props.app.monitoringType == DFApp.eMonitoringType.Remote && <div className="helpText">You hear yourself as others hear you (more latency).</div>}
                         </fieldset>
 
+
+
+                        <fieldset>
+                            <div className="legend">Latching in sequencer arp modes</div>
+                            <div className="helpText">
+                                When a sequencer wants MIDI input to know what to play, these modes offer ways of "holding" your notes even when you take your hands off the MIDI keyboard.
+                                "Off": you must hold the keys to feed the sequencer.
+                                "Pedal": use your sustain pedal to hold notes without sustaining the playing instrument.
+                                "Auto": play &amp; release a chord; 7jam will remember which notes you played.
+                            </div>
+                            <div>
+                                <button className={"buttonParam " + ((latchMode.id == "LMSilent") ? "active" : "")} onClick={() => { this.onSetLatchMode("LMSilent") }}>Off</button>
+                                <button className={"buttonParam " + ((latchMode.id == "LMPedal") ? "active" : "")} onClick={() => { this.onSetLatchMode("LMPedal") }}>Pedal</button>
+                                <button className={"buttonParam " + ((latchMode.id == "LMAuto") ? "active" : "")} onClick={() => { this.onSetLatchMode("LMAuto") }}>Auto</button>
+                            </div>
+                        </fieldset>
+
+
                         <fieldset>
                             <div className="legend">Quantization</div>
                             <div className="helpText">Delays your notes to align to the beat.</div>
@@ -319,12 +313,6 @@ class DFOptionsDialog extends React.Component {
                                 | Period
                                 <div className="helpText">Notes played after this point in a beat will be delayed.</div>
                             </div>
-                            {/* <div>
-                                <input type="range" id="quantDeadZone" name="quantDeadZone" min="0" max="100" onChange={this.setQuantDeadZone} value={this.props.app.myUser.quantizeSpec.swallowBoundary * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
-                                {this.props.app.myUser.quantizeSpec.swallowBoundary * 100}
-                                | No man's land
-                                <div className="helpText">Notes played after this point are discarded because they're too far from a musical boundary to be useful.</div>
-                            </div> */}
                             <div>
                                 <input type="range" id="quantAmt" name="quantAmt" min="0" max="100" onChange={this.setQuantAmt} value={this.props.app.myUser.quantizeSpec.quantizeAmt * 100} disabled={!this.props.app.myUser.quantizeSpec.beatDivision} />
                                 {this.props.app.myUser.quantizeSpec.quantizeAmt * 100}

@@ -8,6 +8,7 @@
 
 const DFUtil = require('./dfutil');
 const DFMusic = require("./DFMusic");
+const { gSeqLatchMode, gDefaultLatchModeID } = require('./DFUser');
 
 const SequencerSettings = {
   PatternCount : 4,
@@ -34,16 +35,16 @@ const SequencerArpMapping = [
   ArpMapping("ArpMap_TranspSeq","TranspSeq", "Transposing sequencer", true, true, true, "aka key trigger mode. Transposes the sequence to (held note - base note)."),
   ArpMapping("ArpMap_ChordScale","ChrdScale", "Chord scale (nearest enharmonic)", true, false, false, "The notes you are holding define a scale. The pattern notes are adjusted to match the nearest note in the scale."),
   ArpMapping("ArpMap_TranspChordScale","TranpChSc", "Transposing chord scale", true, true, true, "Same as Chord Scale, except the pattern is transposed first, as in Transposing Sequencer mode."),
-  ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, true, "Spread the held chord over the sequence, interpolating note values."),
+  //ArpMapping("ArpMap_Spread","Spread", "Spread (dynamic sequencer)", true, false, true, "Spread the held chord over the sequence, interpolating note values."),
   ArpMapping("ArpMap_FillUp","FillUp", "Fill Upwards", true, false, true, "Repeat held chord over the sequence, filling from bottom to top. For greater note range, repeated across octaves. Think arpeggios that repeat the same chord across octaves."),
-  ArpMapping("ArpMap_FillDown","FillDown", "Fill Downwards", true, false, true, "Repeat held chord over the sequence, filling from top to bottom."),
+  //ArpMapping("ArpMap_FillDown","FillDown", "Fill Downwards", true, false, true, "Repeat held chord over the sequence, filling from top to bottom."),
   ArpMapping("ArpMap_ArpUp","ArpUp", "Arpeggiator: Up", true, false, true, "Play held notes in sequence, ignoring sequenced note value."),
   ArpMapping("ArpMap_ArpDown","ArpDown", "Arpeggiator: Down", true, false, true, ""),
   ArpMapping("ArpMap_ArpUpDown","ArpUpDown", "Arpeggiator: Up-Down", true, false, true, ""),
-  ArpMapping("ArpMap_ArpInward","ArpInward", "Arpeggiator: Inward", true, false, true, ""),
-  ArpMapping("ArpMap_ArpOutward","ArpOutward", "Arpeggiator: Outward", true, false, true, ""),
+  //ArpMapping("ArpMap_ArpInward","ArpInward", "Arpeggiator: Inward", true, false, true, ""),
+  //ArpMapping("ArpMap_ArpOutward","ArpOutward", "Arpeggiator: Outward", true, false, true, ""),
   //ArpMapping("ArpMap_ArpInOut","ArpInOut", true, false, ""),
-  ArpMapping("ArpMap_Random","Random", "Random", true, false, true, "Play held notes at random, ignoring sequenced note value."),
+  //ArpMapping("ArpMap_Random","Random", "Random", true, false, true, "Play held notes at random, ignoring sequenced note value."),
   ArpMapping("ArpMap_AsPlayed","Rhythm", "As played (rhythm-only sequencer)", true, false, true, "Play held chord for every sequenced note."),
   //ArpMapping("ArpMap_TranspHeld","TranspHeld", true, true), // polyphonic "transpseq" mode. but we risk too many notes.
   // harmonize. repeat your playing chord at the pattern note.
@@ -56,29 +57,6 @@ const gDefaultArpMapping = SequencerArpMapping[0];
 function GetArpMappingByID(mappingID) {
   const ret = SequencerArpMapping.find(m => m.id === mappingID);
   if (!ret) return gDefaultArpMapping;
-  return ret;
-}
-
-function LatchMode(id, shortName, longName, description) {
-  return {
-    id, shortName, longName, description
-  };
-}
-
-const SeqLatchMode = [
-  LatchMode("LMSilent", "Off", "Off", "No note latching; when not playing notes don't play anything"),
-  LatchMode("LMSequencer", "Seq", "Play sequencer", "When not holding notes, play the sequence as it's written in the pattern editor"),
-  LatchMode("LMPedal", "Pedal", "Sustain pedal latch", "Hold the sustain pedal to latch notes. Release sustain pedal to stop playing. This disables sustain pedal in the instrument (so sustain pedal only controls latching)."),
-  LatchMode("LMPedalSeq", "PedSq", "Sustain pedal latch + Sequencer", "Hold the sustain pedal to latch notes. Release sustain pedal to play sequence as written."),
-  LatchMode("LMAuto", "Auto", "Auto (sticky keys)", "Automatically detect which notes to latch, no sustain pedal required. Double-tap a note to stop the sequencer."),
-  LatchMode("LMAutoSeq", "AutSq", "Auto + Sequencer", "Automatically detect which notes to latch, no sustain pedal required. Double-tap a note to stop latching and play the sequence as written."),
-];
-
-const gDefaultLatchMode = SeqLatchMode[2];
-
-function GetLatchModeByID(modeID) {
-  const ret = SeqLatchMode.find(m => m.id === modeID);
-  if (!ret) return gDefaultLatchMode;
   return ret;
 }
 
@@ -504,6 +482,7 @@ class SequencerPatch {
   constructor(params) {
     if (params)
       Object.assign(this, params);
+    this.latchMode = null; // we don't support this anymore.
 
     this.timeSig = new DFMusic.TimeSig(this.timeSig);
 
@@ -537,8 +516,8 @@ class SequencerPatch {
     this.baseNote ??= 60; // middle C
     this.restrictTransposeToOneOctave ??= false;
     this.arpMapping ??= gDefaultArpMapping;
-
-    this.latchMode ??= gDefaultLatchMode;
+    this.playSequenceWhenIdle ??= true; // for arp mappings which swallow note events, when not holding notes should we play the sequencer as-written?
+    //this.latchMode ??= gDefaultLatchMode;
 
     // this could be a Set(), but it doesn't automatically serialize via JSON.serialize, and there should rarely be many entries.
     // since there are only 128 midi notes, an option is also to just create a fixed-size array of bools
@@ -755,13 +734,10 @@ class SequencerPatch {
     this.arpMapping = GetArpMappingByID(mapping);
   }
 
-  GetLatchMode() {
-    return this.latchMode;
+  SetPlaySequenceWhenIdle(b) {
+    this.playSequenceWhenIdle = b;
   }
-
-  SetLatchModeByID(lmid) {
-    this.latchMode = GetLatchModeByID(lmid);
-  }
+  GetPlaySequenceWhenIdle() { return this.playSequenceWhenIdle; }
 
   // return true if the live event data should be swallowed.
   OnNoteOnOffPedalUpDown() {
@@ -985,12 +961,11 @@ class SequencerDevice {
   // arp modes which swallow notes, combined with LMPedal, mean we send pedal messages to the server sequencer player,
   // but should not be sent to playing synths. that way it can be used for latching behavior without sustaining all notes,
   // which is less common for arp modes.
-  ShouldPedalEventBeBlockedFromSynth() {
+  ShouldPedalEventBeBlockedFromSynth(roomState) {
     if (!this.#instrument.allowSequencer) return false;
     if (!this.GetArpMapping().swallowNotes) return false; // this mode doesn't swallow notes; latch mode is not relevant. normal behavior.
     if (this.IsSidechained()) return false; // if sidechained, then your pedal is not controlling the sequencer anyway. normal behavior.
-    if (this.GetLatchMode().id === 'LMPedal') return true;
-    if (this.GetLatchMode().id === 'LMPedalSeq') return true;
+    if (this.GetLatchMode(roomState).id === 'LMPedal') return true;
     return false;
   }
 
@@ -1088,12 +1063,26 @@ class SequencerDevice {
     return this.livePatch.GetArpMapping().swallowNotes && (this.listeningToInstrumentID !== this.instrumentID);
   }
 
-  GetLatchMode() {
-    return this.livePatch.GetLatchMode();
+  GetLatchMode(roomState) {
+    // get latch mode of the user who is controlling the listening instrument.
+    const srcInst = roomState.instrumentCloset.find(i => i.instrumentID === this.listeningToInstrumentID);
+    if (!srcInst) return gSeqLatchMode[gDefaultLatchModeID];
+    if (!srcInst.controlledByUserID) return gSeqLatchMode[gDefaultLatchModeID];
+    const user = roomState.users.find(u => u.userID === srcInst.controlledByUserID);
+    if (!user) return gSeqLatchMode[gDefaultLatchModeID];
+    return user.GetLatchModeObj();
   }
-  SetLatchModeByID(lmid) {
-    this.livePatch.SetLatchModeByID(lmid);
+  // SetLatchModeByID(lmid) {
+  //   this.livePatch.SetLatchModeByID(lmid);
+  // }
+
+  SetPlaySequenceWhenIdle(b) {
+    this.livePatch.SetPlaySequenceWhenIdle(b);
   }
+  GetPlaySequenceWhenIdle() {
+    return this.livePatch.GetPlaySequenceWhenIdle();
+  }
+
 
   // called by sequencerplayer when the user is doing noteon, noteoff, pedal down or pedal up.
   // those are things which can cause the pattern view to become invalidated, and depending on arp mode, the live event should be swallowed.
@@ -1177,17 +1166,15 @@ class SequencerDevice {
       }
       return true;
     }
-    case "SeqSetLatchMode": {
-      if (this.GetLatchMode().id === 'LMPedal' || data.latchMode === 'LMPedal' || this.GetLatchMode().id === 'LMPedalSeq' || data.latchMode === 'LMPedalSeq') {
-        // make sure we don't switch to/from pedal mode while your pedal is held, otherwise there's no way to unstick them notes.
-        pedalUpRoutine();
-      }
-      this.SetLatchModeByID(data.latchMode);
-      return true;
-    }
+
     case "SeqSetRestrictTransposeToOneOctave": {
       // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
       this.SetRestrictTransposeToOneOctave(!!data.restrictTransposeToOneOctave);
+      return true;
+    }    
+    case "SeqSetPlaySequenceWhenIdle": {
+      // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
+      this.SetPlaySequenceWhenIdle(!!data.playSequenceWhenIdle);
       return true;
     }    
     default: {
@@ -2072,5 +2059,5 @@ module.exports = {
   GetPatternView,
   eBorderType,
   SequencerArpMapping,
-  SeqLatchMode,
+  //SeqLatchMode,
 };

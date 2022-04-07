@@ -561,6 +561,7 @@ class _7jamServer {
 
       ws.on(DF.ClientMessages.ChatMessage, data => this.ForwardToRoom(ws, room => room.OnClientChatMessage(ws, data)));
       ws.on(DF.ClientMessages.UserState, data => this.ForwardToRoom(ws, room => room.OnClientUserState(ws, data)));
+      ws.on(DF.ClientMessages.UserStateOp, data => this.ForwardToRoom(ws, room => room.OnClientUserStateOp(ws, data)));
       ws.on(DF.ClientMessages.Quantization, data => this.ForwardToRoom(ws, room => room.OnClientQuantization(ws, data)));
       ws.on(DF.ClientMessages.Cheer, data => this.ForwardToRoom(ws, room => room.OnClientCheer(ws, data)));
       ws.on(DF.ClientMessages.RoomBPMUpdate, data => this.ForwardToRoom(ws, room => room.OnClientRoomBPMUpdate(ws, data)));

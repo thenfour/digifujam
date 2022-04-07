@@ -285,6 +285,10 @@ class DigifuNet {
         this.socket.emit(DF.ClientMessages.RequestRoomUserPings);
     }
 
+    SendUserStateOp(data) {
+        this.socket.emit(DF.ClientMessages.UserStateOp, data);
+    }
+
     // --------------
 
     IsConnected() {
@@ -377,6 +381,7 @@ class DigifuNet {
 
         this.socket.on(DF.ServerMessages.RoomPatchOp, (data) => this.handler.NET_RoomPatchOp(data));
         this.socket.on(DF.ServerMessages.RoomPresetLoadResult, (data) => this.handler.NET_RoomPresetLoadResult(data));        
+        this.socket.on(DF.ServerMessages.UserStateOp, (data) => this.handler.NET_UserStateOp(data));        
 
         this.socket.on('disconnect', () => { this.ResetQueuedParamChangeData(); this.handler.NET_OnDisconnect(); });
     };

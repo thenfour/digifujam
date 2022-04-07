@@ -39,6 +39,11 @@ const ClientMessages = {
     UploadServerState: "UploadServerState",
     AdminChangeRoomState: "AdminChangeRoomState",// { cmd:str params:obj } see OnAdminChangeRoomState
     UserState: "UserState", // name, color, x, y
+
+    // the more modern version of UserState.
+    // { op:"SeqSetLatchMode", latchModeID: }
+    UserStateOp: "UserStateOp",
+
     Quantization: "Quantization", // quantizeSpec:{beatDivision, swallowBoundary, quantizeBoundary}
     Cheer: "Cheer", // text, x, y
     AdjustBeatPhase: "AdjustBeatPhase", // relativeMS
@@ -94,8 +99,8 @@ const ClientMessages = {
     // { op:"SeqSetSwingBasisQuarters", swingBasisQuarters: } // .25 or .5
     // { op:"SeqSetBaseNote", note: }
     // { op:"SeqSetArpMapping", mapping: }
-    // { op:"SeqSetLatchMode", latchMode: }
     // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
+    // { op:"SeqSetPlaySequenceWhenIdle", setPlaySequenceWhenIdle:<bool> }
     SeqPresetOp: "SeqPresetOp",
     //SeqCue: "SeqCue", // { instrumentID, cancel }
     SeqMetadata: "SeqMetadata", // { title, description, tags }
@@ -142,6 +147,9 @@ const ServerMessages = {
     ChangeRoomState: "ChangeRoomState",// { cmd:str params:obj }
 
     UserState: "UserState", // { state: { user, name, color, img, position : { x, y } }, chatMessageEntry }
+    // the more modern version of UserState.
+    // { userID:, op:"SeqSetLatchMode", latchModeID: }
+    UserStateOp: "UserStateOp",
     Cheer: "Cheer", // userID, text, x, y
 
     // [{ op:"place", graffiti:{} }]
@@ -181,8 +189,8 @@ const ServerMessages = {
     // { instrumentID, op:"SeqSetBaseNote", note: }
     // { instrumentID, op:"SeqSetArpMapping", mapping: }
     // { seqInstrumentID, op:"SeqSetListeningInstrumentID", instrumentID: }
-    // { instrumentID, op:"SeqSetLatchMode", latchMode: }
-    // { op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
+    // { instrumentID, op:"SeqSetRestrictTransposeToOneOctave", restrictTransposeToOneOctave:<bool> }
+    // { instrumentID, op:"SeqSetPlaySequenceWhenIdle", setPlaySequenceWhenIdle:<bool> }
     SeqPresetOp: "SeqPresetOp",
     SeqMetadata: "SeqMetadata", // { instrumentID, title, description, tags }
     SeqSetListeningInstrumentID: "SeqSetListeningInstrumentID", // { seqInstrumentID, instrumentID: }

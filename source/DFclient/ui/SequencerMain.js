@@ -784,6 +784,15 @@ class SequencerMain extends React.Component {
             });
         }
 
+        onClickPlaySequenceWhenIdle() {
+            const seq = this.props.instrument.sequencerDevice;
+            if (this.props.observerMode) return;
+            this.props.app.SeqPresetOp({
+                op: "SeqSetPlaySequenceWhenIdle",
+                playSequenceWhenIdle: !seq.GetPlaySequenceWhenIdle(),
+            });
+        }
+
         onClickArpMapping(mapping) {
             if (this.props.observerMode) return;
             this.props.app.SeqPresetOp({
@@ -826,15 +835,6 @@ class SequencerMain extends React.Component {
                 return;
             }
             this.setState({showLatchModeDropdown: !this.state.showLatchModeDropdown});
-        }
-
-        onSelectLatchMode(lm) {
-            if (this.props.observerMode) return;
-            this.props.app.SeqPresetOp({
-                op: "SeqSetLatchMode",
-                latchMode: lm.id,
-            });
-            this.setState({showLatchModeDropdown:false});
         }
 
       render() {
@@ -910,19 +910,6 @@ class SequencerMain extends React.Component {
                     onClick={() => this.onClickTimeSig(ts)}
                     className={selectedTS.id == ts.id ? " selected" : ""}
                     >{ts.toString()}</li>
-             );
-         });
-
-         const latchModeList = this.state.showLatchModeDropdown && Seq.SeqLatchMode.map(lm => {
-             return (
-                <li
-                key={lm.id}
-                onClick={() => this.onSelectLatchMode(lm)}
-                className={seq.GetLatchMode().id === lm.id ? " selected" : ""}
-                >
-                <div className='caption'>{lm.longName}</div>
-                <div className='description'>{lm.description}</div>
-                </li>
              );
          });
 
@@ -1183,62 +1170,41 @@ class SequencerMain extends React.Component {
                                 {/* restrict to 1 octave */}
                                 {seq.GetArpMapping().useOctaveRestrict &&
                                 <div
-                                    className={'legend oneoct '+ clickableIfEditable + (seq.GetRestrictTransposeToOneOctave() ? " enabled" : " disabled")}
+                                    className={'toggle legend oneoct '+ clickableIfEditable + (seq.GetRestrictTransposeToOneOctave() ? " enabled" : " disabled")}
                                     onClick={isReadOnly ? ()=>{} : (e) => this.onClickRestrictTransposeToOneOctave(e)}
                                     title={(seq.GetRestrictTransposeToOneOctave() ? "Enabled" : "Disabled") + ": Restrict transposition to +/- a single octave from original sequenced note"}
                                     >
-                                        <div className="oneoctButton">{seq.GetRestrictTransposeToOneOctave() ? "1oct" : "Noct"}</div>
+                                        <div className={"toggleButton" + (seq.GetRestrictTransposeToOneOctave() ? " enabled" : " disabled")}>
+                                            ±oct
+                                        </div>
                                     </div>
                                 }
                                 
 
 
-
-                                {/* latch mode */}
+                                {/* play seq when idle? */}
                                 {seq.GetArpMapping().swallowNotes &&
                                 <div
-                                    className={'legend latchMode enabled ' + clickableIfEditable}
-                                    onClick={(e) => this.onClickLatchMode(e)}
-                                    title="When not holding notes on your keyboard, what should happen?"
+                                    className={'toggle legend idleplay '+ clickableIfEditable + (seq.GetPlaySequenceWhenIdle() ? " enabled" : " disabled")}
+                                    onClick={isReadOnly ? ()=>{} : (e) => this.onClickPlaySequenceWhenIdle(e)}
+                                    title={(seq.GetPlaySequenceWhenIdle() ? "Enabled" : "Disabled") + ": when there's no MIDI input for the arp mapping, fall back to playing the sequence as written"}
                                     >
-                                        <div className="latchButton">Latch</div>
+                                        <div className={"toggleButton" + (seq.GetPlaySequenceWhenIdle() ? " enabled" : " disabled")}>idle<br />play</div>
                                     </div>
                                 }
-                                {seq.GetArpMapping().swallowNotes &&
-                                <div className='paramBlock latchMode'>
-                                    <div
-                                        className={'paramValue ' + clickableIfEditable}
-                                        onClick={(e) => this.onClickLatchMode(e)}
-                                        title="When not holding notes on your keyboard, what should happen?"
-                                        >
-                                        {seq.GetLatchMode().shortName}
-                                    </div>
-                                    {this.state.showLatchModeDropdown && (
-                                        <ClickAwayListener onClickAway={() => { this.setState({showLatchModeDropdown:false});}}>
-                                        <div className='dialog'>
-                                            <legend onClick={() => { this.setState({showLatchModeDropdown:false});}}>
-                                                Choose how notes can be "stickied" when you let go of them during arpeggiator modes.
-                                            </legend>
-                                            <ul className='dropDownMenu'>
-                                                {latchModeList}
-                                            </ul>
-                                        </div>
-                                        </ClickAwayListener>
-                                        )
-                                    }
-                                </div>
-                                }
-
+                                
 
 
                                 {/* listening instrument */}
                                 {seq.GetArpMapping().swallowNotes &&
                                 <div
-                                    className={'legend listeningToInstrument '+ clickableIfEditable + (seq.GetArpMapping().swallowNotes ? " enabled" : " disabled")}
-                                    onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e)}
+                                    className={'toggle legend listeningToInstrument '+ clickableIfEditable + (seq.GetArpMapping().swallowNotes ? " enabled" : " disabled")}
+                                    onClick={isReadOnly ? ()=>{} : (e) => this.onClickListeningToInstrument(e, true)}
                                     title="Sidechain: Arpeggiator input notes can be configured to listen to other instruments. Click to select an instrument. CTRL+Click to reset."
                                     >
-                                        <div className={"scButton " + ((this.props.instrument.instrumentID === seq.listeningToInstrumentID) ? " disabled" : " enabled")}>SC</div>
+                                        <div className={"toggleButton scButton " + ((this.props.instrument.instrumentID === seq.listeningToInstrumentID) ? " disabled" : " enabled")}>
+                                            side<br />chain
+                                        </div>
                                     </div>
                                 }
                                 {seq.GetArpMapping().swallowNotes && (this.state.showListenToInstrumentDropdown || (this.props.instrument.instrumentID !== seq.listeningToInstrumentID)) &&
