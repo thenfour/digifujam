@@ -267,7 +267,7 @@ class GraffitiModerationDialog extends React.Component {
             <dt>Extra CSS</dt>
             <dd className='content'>
               <div>
-              (e.g. "hidden", "straight", "monofont", "sansfont", "dynamicFontSize")<br />
+              (e.g. "hidden", "straight", "monofont", "sansfont", "dynamicFontSize", "vanillaInfoBox")<br />
               <TextField
                 fieldID="graffitiExtraCSS"
                 valueSetter={(val) => this.setExtraCSSClass(val)}

@@ -1265,13 +1265,23 @@ class DigifuApp {
             return true;
           },
           (instrument, seqPatch, isSeqPlaying) => {
-            instrument.sequencerDevice.LoadPatch(seqPatch);
+            if (seqPatch) {
+              instrument.sequencerDevice.LoadPatch(seqPatch);
+            }
             instrument.sequencerDevice.SetPlaying(isSeqPlaying);
+
+            if (!isSeqPlaying) {
+              this.synth.AllNotesOff(instrument);
+              const foundUser = this.roomState.FindUserByID(instrument.controlledByUserID);
+              this.handleUserAllNotesOff(foundUser?.user, instrument);
+            }
+        
             return true;
           },
           (bpm) => {
             this.roomState.setBPM(bpm);
-          }
+          },
+          data.options
           );
         if (!r) {
           throw new Error (`Server told us to set room patch but it was rejected huh?`);

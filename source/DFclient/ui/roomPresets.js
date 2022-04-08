@@ -1,6 +1,6 @@
 const React = require('react');
 const { RoomPresetSettings, RoomPreset, InstSeqSelection } = require('../../DFcommon/roomPresetsCore');
-const { TextField } = require('./DFReactUtils');
+const { TextField, TextAreaField, ScrollWhenMounted } = require('./DFReactUtils');
 
 // defines which ctrl panel is visible.
 window.DFModalDialogContext = {
@@ -12,6 +12,15 @@ function DFInvokeModal(params) {
   window.DFStateChangeHandler.OnStateChange();
 }
 
+function GetSetOfCurrentlyPlayingSequencers(app) {
+  const ret = new Set();
+  app.roomState.instrumentCloset.forEach(inst => {
+    if (!inst.allowSequencer) return;
+    if (!inst.sequencerDevice.HasData()) return;
+    if (inst.sequencerDevice.IsPlaying()) ret.add(inst.instrumentID);
+  });
+  return ret;
+}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 class DFModalDialog extends React.Component {
@@ -33,9 +42,12 @@ class DFModalDialog extends React.Component {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // app={this.props.app}
+// instrumentListType={} // "loadingPatch" or "live"
 // instrumentID={}
 // selectionObj={} // object to bind to
 // valueSetter={} // routine to handle state changes
+// seqInstIDsPlaying={} // Set() of sequeuncer instrument IDs which will be in playing state on load.
+// seqInstIDsPlayingSetter={} // routine to handle changes to the above Set
 // displays a list of instruments and sequencers to include in either an import or export operation
 class RoomPatchSelectionInstrumentTR extends React.Component {
 
@@ -59,6 +71,15 @@ class RoomPatchSelectionInstrumentTR extends React.Component {
     this.props.valueSetter(this.props.selectionObj);
   }
 
+  onClickSeqPlaying(e) {
+    if (this.props.seqInstIDsPlaying.has(this.props.instrumentID)) {
+      this.props.seqInstIDsPlaying.delete(this.props.instrumentID);
+    } else {
+      this.props.seqInstIDsPlaying.add(this.props.instrumentID);
+    }
+    this.props.seqInstIDsPlayingSetter(this.props.seqInstIDsPlaying);
+  }
+
   render() {
     const vars = {
       displayName: this.props.instrumentID,
@@ -72,6 +93,7 @@ class RoomPatchSelectionInstrumentTR extends React.Component {
       isAutoSelected: false,
       isSelectedInstrument: false,
       isSelectedSequencer: false,
+      isSeqPlaying: false,
     };
     const app = this.props.app;
     const instrumentID = this.props.instrumentID;
@@ -96,18 +118,30 @@ class RoomPatchSelectionInstrumentTR extends React.Component {
     vars.isSelectedInstrument = !!this.props.selectionObj.instrumentIDs.find(x => x === instrumentID);
     vars.isSelectedSequencer = !!this.props.selectionObj.sequencerInstrumentIDs.find(x => x === instrumentID);
 
+    if (this.props.instrumentListType === "loadingPatch") {
+      vars.isSeqPlaying = !!this.props.seqInstIDsPlaying.has(instrumentID);
+    }
+
     return (
     <tr className={(vars.isValid ? " valid" : " invalid") }>
-      <td onClick={(e) => this.onClickInst(e)} title="Instrument/synth parameters. Click to select/deselect." className={"instSelection " + (vars.isSelectedInstrument ? " selected" : "")}>
-        <div className='btn'>inst</div>
+      <td title="Instrument/synth parameters. Click to select/deselect." className="instSelection ">
+        <div className={'btn ' + (vars.isSelectedInstrument ? " selected" : "")} onClick={(e) => this.onClickInst(e)}>inst</div>
         </td>
-      <td onClick={(e) => this.onClickSeq(e)} title="Sequencer patch. Click to select/deselect." className={" seqSelection " + (vars.isSelectedSequencer ? " selected" : "")}>
-        <div className='btn'>seq</div>
+      <td title="Sequencer patch. Click to select/deselect." className={" seqSelection " + (vars.isSelectedSequencer ? " selected" : " notselected")}>
+        <div>
+          <div className={'btn ' + (vars.isSelectedSequencer ? " selected" : "")} onClick={(e) => this.onClickSeq(e)}>seq</div>
+          {this.props.instrumentListType === "loadingPatch" &&
+            <div className={'btn playseq ' + (vars.isSeqPlaying ? " play" : " stop")} onClick={(e) => this.onClickSeqPlaying(e)} title={vars.isSeqPlaying ? "Start in playing state when loaded" : "When loaded, sequencer will be in stopped state."}>{vars.isSeqPlaying ? "play" : "stop" }</div>
+          }
+        </div>
       </td>
+
+      {this.props.instrumentListType === "live" &&
       <td title="Sequencer status" className='seqState'>
         <div className={'seqIndicator ' + (vars.sequencerHasData ? " hasData" : " empty") + (vars.sequencerIsPlaying ? " isPlaying" : " stopped")}>
         </div>
       </td>
+      }
       <td className='instName'>
         <span className='instName' style={vars.instrumentStyle}>{vars.displayName}</span>
       </td>
@@ -125,6 +159,8 @@ class RoomPatchSelectionInstrumentTR extends React.Component {
 // instrumentListType={} // "loadingPatch" or "live"
 // loadingPatch={} // optional: if specified, the user is loading a patch. changes behavior regarding selection etc.
 // valueSetter={} // routine to handle state changes
+// seqInstIDsPlaying={} // array of sequeuncer instrument IDs which will be in playing state on load.
+// seqInstIDsPlayingSetter={} // routine to handle changes to the above array
 // displays a list of instruments and sequencers to include in either an import or export operation
 class RoomPatchSelection extends React.Component {
   constructor(props) {
@@ -149,6 +185,9 @@ class RoomPatchSelection extends React.Component {
   onClickAll() {
     this.state.value.SelectAll();
     this.props.valueSetter(this.state.value);
+    if (this.props.instrumentListType === 'loadingPatch') {
+      this.props.seqInstIDsPlayingSetter(new Set(this.props.loadingPatch.seqPlaying));
+    }
   }
 
   onClickNone() {
@@ -161,18 +200,25 @@ class RoomPatchSelection extends React.Component {
     this.props.valueSetter(this.state.value);
   }
 
+  onClickStopAll() {
+    this.props.seqInstIDsPlayingSetter(new Set());
+  }
+
   render() {
     return (
       <div className={'roomPatchSelection ' + this.props.instrumentListType}>
         <div className='topControls'>
-          <button onClick={() => this.onClickAll()}>All</button>
-          <button onClick={() => this.onClickNone()}>None</button>
           {(this.props.instrumentListType !== 'loadingPatch') &&
             <button
               onClick={() => this.onClickAuto()}
               title="Automatically select only instruments which are being played, and sequencers with recently played activity."
               >Auto
             </button>}
+          <button onClick={() => this.onClickAll()}>All</button>
+          <button onClick={() => this.onClickNone()}>None</button>
+          {this.props.instrumentListType === "loadingPatch" &&
+            <button onClick={() => this.onClickStopAll()}>Load all sequencers as stopped</button>
+          }
         </div>
         <table>
           <tbody>
@@ -184,6 +230,9 @@ class RoomPatchSelection extends React.Component {
                   instrumentID={instrumentID}
                   selectionObj={this.state.value}
                   valueSetter={this.props.valueSetter}
+                  seqInstIDsPlaying={this.props.seqInstIDsPlaying}
+                  seqInstIDsPlayingSetter={this.props.seqInstIDsPlayingSetter}
+                  instrumentListType={this.props.instrumentListType}
                 />)
             }
           </tbody>
@@ -211,6 +260,8 @@ class RoomPresetLI extends React.Component {
         deleteConfirmShowing: false,
         loadingObj: null,
         loadingSelection: null,
+        loadingSeqOpt: 'clobber',
+        seqInstIDsPlaying: null,
      };
   }
 
@@ -230,12 +281,17 @@ class RoomPresetLI extends React.Component {
     if (e.data.presetID === this.props.preset.presetID) {
       this.setState({
         loadingObj: new RoomPreset(e.data),
+        seqInstIDsPlaying: new Set(e.data.seqPlaying),
       });
     } else {
       this.setState({
         loadingObj: null, // for OTHER rows, abandon the loading confirmation otherwise it gets spammy
       });
     }
+  }
+
+  seqInstIDsPlayingSetter = (seqInstIDsPlaying) => {
+    this.setState({seqInstIDsPlaying});
   }
 
   onClickLoad = (e) => {
@@ -253,9 +309,14 @@ class RoomPresetLI extends React.Component {
     if (isReadOnly) return;
     const patch = this.state.loadingObj;
     patch.KeepOnlySelected(this.state.loadingSelection);
+    patch.SetSeqPlayingSet(this.state.seqInstIDsPlaying);
     this.props.app.net.SendRoomPatchOp({
       op: "Paste",
       data: patch,
+      options: {
+        clobberOtherSequencers: this.state.loadingSeqOpt === 'clobber',
+        stopOtherSequencers: this.state.loadingSeqOpt === 'stop',
+      }
     });
     this.setState({
       loadingObj:null,
@@ -288,7 +349,7 @@ class RoomPresetLI extends React.Component {
               <div>presetID: {this.props.preset.presetID}</div>
            }
            <span className="bpm">{this.props.preset.bpm} BPM</span>
-           <span className="description">{this.props.preset.description}</span>
+           <span className="description" dangerouslySetInnerHTML={{__html: window.DFRenderMarkdown(this.props.preset.description)}}></span>
            <span className="tags">{this.props.preset.tags}</span>
            <div className="authorAndDateBox">
               <span className="author">by {this.props.preset.author}</span>
@@ -302,9 +363,18 @@ class RoomPresetLI extends React.Component {
                 instrumentListType="loadingPatch"
                 loadingPatch={this.state.loadingObj}
                 valueSetter={(sel) => this.onChangeLoadingSelection(sel)}
+                seqInstIDsPlaying={this.state.seqInstIDsPlaying}
+                seqInstIDsPlayingSetter={this.seqInstIDsPlayingSetter}
                 />
+              <div className='paramRow'>
+                <label name="Specify what happens to sequencers which are NOT part of the import">Other sequencers</label>
+                <button title="Init other sequencers. This can be useful to make it clear which sequencers were loaded" className={'radio first ' + (this.state.loadingSeqOpt === 'clobber' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'clobber'})}>Clobber</button>
+                <button title="Stop other sequencers if they're playing." className={'radio ' + (this.state.loadingSeqOpt === 'stop' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'stop'})}>Stop</button>
+                <button title="Leave other sequencers alone." className={'radio last' + (this.state.loadingSeqOpt === 'leave' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'leave'})}>Leave alone</button>
+              </div>
               <button className="OK clickable" onClick={() => this.onClickLoadOK()}>OK</button>
               <button className="Cancel clickable" onClick={() => this.setState({loadingObj:null})}>Cancel</button>
+              <ScrollWhenMounted />
            </div>
            }
 
@@ -313,6 +383,7 @@ class RoomPresetLI extends React.Component {
               <br />
               <button className="OK clickable" onClick={() => this.onClickDelete()}>OK</button>
               <button className="Cancel clickable" onClick={() => this.setState({deleteConfirmShowing:false})}>Cancel</button>
+              <ScrollWhenMounted />
            </div>}
 
         </li>
@@ -332,6 +403,9 @@ class RoomPresetsDialog extends React.Component {
       copyingSelection:null,
       pastingSelection:null,
       savingSelection:null,
+
+      loadingSeqOpt:'clobber',
+      seqInstIDsPlaying: null,
     };
   }
 
@@ -374,7 +448,10 @@ class RoomPresetsDialog extends React.Component {
         .then(text => {
           let pastingObj = JSON.parse(text);
           pastingObj = new RoomPreset(pastingObj);
-          this.setState({pastingObj});
+          this.setState({
+            pastingObj,
+            seqInstIDsPlaying: new Set(pastingObj.seqPlaying),
+          });
         })
         .catch(e => {
           console.log(e);
@@ -390,10 +467,15 @@ class RoomPresetsDialog extends React.Component {
     if (this.IsReadOnly()) return;
 
     this.state.pastingObj.KeepOnlySelected(this.state.pastingSelection);
+    this.state.pastingObj.SetSeqPlayingSet(this.state.seqInstIDsPlaying);
 
     this.props.app.net.SendRoomPatchOp({
       op: "Paste",
       data: this.state.pastingObj,
+      options: {
+        clobberOtherSequencers: this.state.loadingSeqOpt === 'clobber',
+        stopOtherSequencers: this.state.loadingSeqOpt === 'stop',
+      }
     });
     this.setState({pastingObj:null});
     alert('Ok, should be good to go.');
@@ -406,6 +488,7 @@ class RoomPresetsDialog extends React.Component {
     this.setState({
       saveConfirmationShown:true,
       isSaveNew:true,
+      seqInstIDsPlaying: GetSetOfCurrentlyPlayingSequencers(this.props.app),
     });
   }
  
@@ -415,6 +498,7 @@ class RoomPresetsDialog extends React.Component {
     this.setState({
       saveConfirmationShown:true,
       isSaveNew:false,
+      seqInstIDsPlaying: GetSetOfCurrentlyPlayingSequencers(this.props.app),
     });
   }
 
@@ -482,6 +566,13 @@ class RoomPresetsDialog extends React.Component {
     return keys.some(k => preset.tags.toLowerCase().includes(k));
   }
 
+  seqInstIDsPlayingSetter = (seqInstIDsPlaying) => {
+    console.log(`seqInstIDsPlayingSetter of dialog: `);
+    console.log(seqInstIDsPlaying);
+
+    this.setState({seqInstIDsPlaying});
+  }
+
   render() {
     const app = this.props.app;
     if (!app.myInstrument?.showRoomPresetsButton) {
@@ -522,13 +613,13 @@ class RoomPresetsDialog extends React.Component {
 
                 <li className='bpm'><span className='value'>{this.props.app.roomState.bpm}</span><span className='caption'>BPM</span></li>
 
-               <li><TextField
+               <li><TextAreaField
                   fieldID="description"
                   valueSetter={(val) => this.SetPatchDescription(val)}
                   valueGetter={() => mgr.liveMetadata.description}
                   readOnly={isReadOnly}
                   maxLength={RoomPresetSettings.DescriptionMaxLen}
-                  ></TextField><span className='caption'>description</span></li>
+                  ></TextAreaField><span className='caption'>description (markdown supported)</span></li>
 
                <li><TextField
                   fieldID="tags"
@@ -555,9 +646,16 @@ class RoomPresetsDialog extends React.Component {
                   <li>
                   <div className='confirmation'>
                     Select which elements you want to include.
-                    <RoomPatchSelection app={app} instrumentListType="live" valueSetter={(sel) => this.onChangeSavingSelection(sel)} />
+                    <RoomPatchSelection
+                      app={app}
+                      instrumentListType="live"
+                      valueSetter={(sel) => this.onChangeSavingSelection(sel)}
+                      seqInstIDsPlaying={this.state.seqInstIDsPlaying}
+                      seqInstIDsPlayingSetter={this.seqInstIDsPlayingSetter}
+                    />
                     <button className='ok' onClick={() => this.OnClickSaveOK()}>OK</button>
                     <button className='cancel' onClick={() => this.setState({saveConfirmationShown:false})}>Cancel</button>
+                    <ScrollWhenMounted />
                   </div>
                   </li>
                   }  
@@ -571,9 +669,16 @@ class RoomPresetsDialog extends React.Component {
                   <li>
                   <div className='confirmation'>
                     Select which elements you want to export.
-                    <RoomPatchSelection app={app} instrumentListType="live" valueSetter={(sel) => this.onChangeCopyingSelection(sel)} />
+                    <RoomPatchSelection
+                      app={app}
+                      instrumentListType="live"
+                      valueSetter={(sel) => this.onChangeCopyingSelection(sel)}
+                      seqInstIDsPlaying={this.state.seqInstIDsPlaying}
+                      seqInstIDsPlayingSetter={this.seqInstIDsPlayingSetter}
+                    />
                     <button className='ok' onClick={() => this.OnClickCopyOK()}>OK</button>
                     <button className='cancel' onClick={() => this.setState({copyConfirmationShown:false})}>Cancel</button>
+                    <ScrollWhenMounted />
                   </div>
                   </li>
                   }  
@@ -587,9 +692,23 @@ class RoomPresetsDialog extends React.Component {
                   <div className='confirmation'>
                     Select which elements you want to import. NOTE: If someone else is playing an instrument, that instrument will not be updated.
                     {/* <RoomPatchObjDesc patch={this.state.pastingObj} app={app} /> */}
-                    <RoomPatchSelection app={app} loadingPatch={this.state.pastingObj} instrumentListType="loadingPatch" valueSetter={(sel) => this.onChangePastingSelection(sel)} />
+                    <RoomPatchSelection
+                      app={app}
+                      loadingPatch={this.state.pastingObj}
+                      instrumentListType="loadingPatch"
+                      valueSetter={(sel) => this.onChangePastingSelection(sel)}
+                      seqInstIDsPlaying={this.state.seqInstIDsPlaying}
+                      seqInstIDsPlayingSetter={this.seqInstIDsPlayingSetter}
+                    />
+                    <div className='paramRow'>
+                      <label name="Specify what happens to sequencers which are NOT part of the import">Other sequencers</label>
+                      <button title="Init other sequencers. This can be useful to make it clear which sequencers were loaded" className={'radio first ' + (this.state.loadingSeqOpt === 'clobber' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'clobber'})}>Clobber</button>
+                      <button title="Stop other sequencers if they're playing." className={'radio ' + (this.state.loadingSeqOpt === 'stop' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'stop'})}>Stop</button>
+                      <button title="Leave other sequencers alone." className={'radio last' + (this.state.loadingSeqOpt === 'leave' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'leave'})}>Leave alone</button>
+                    </div>
                     <button className='ok' onClick={() => this.OnClickPasteOK()}>OK</button>
                     <button className='cancel' onClick={() => this.setState({pastingObj:null})}>Cancel</button>
+                    <ScrollWhenMounted />
                   </div>
                   </li>
                   }

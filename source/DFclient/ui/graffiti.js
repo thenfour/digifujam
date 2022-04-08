@@ -103,7 +103,8 @@ class GraffitiItem extends React.Component {
       top:pos.y,
       color:g.color,
       transformOrigin: "0 0",
-      transform: `rotateZ(${rot}deg) translate(-50%,-50%)`,
+      "--rot": `${rot}deg`,
+      //transform: `rotateZ(${rot}deg) translate(-50%,-50%)`,
       fontFamily,
     };
 
@@ -126,14 +127,14 @@ class GraffitiItem extends React.Component {
       content = content.replaceAll("{roomTitle}", app.roomState.roomPresets.liveMetadata.name);
       content = content.replaceAll("{roomDescription}", app.roomState.roomPresets.liveMetadata.description);
       content = content.replaceAll("{roomTags}", app.roomState.roomPresets.liveMetadata.tags);
-      content = this.props.context.md.renderInline(content);
+      content = window.DFRenderMarkdown(content);
       contentEl = (<div className="graffitiContent text" style={style} dangerouslySetInnerHTML={{__html: content}}></div>);
     }
 
     // graffitiItemContainer > graffiti > graffitiContent
     // container because we apply our own transformations & positioning.
     return (
-      <div className={"graffitiItemContainer " + (isImage ? " image" : " text")} style={style}>
+      <div className={"graffitiItemContainer " + (isImage ? " image " : " text ") + g.extraCssClass} style={style}>
       <div className={"graffiti " + g.cssClass + " " + g.extraCssClass}>
         {contentEl}
         {(window.DFModerationControlsVisible && app.myUser.IsModerator()) &&

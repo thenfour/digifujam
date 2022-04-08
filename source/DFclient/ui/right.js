@@ -40,6 +40,11 @@ const md = require('markdown-it')({
     typographer:  false,
   });
 
+window.DFRenderMarkdown = (inp) => {
+    //return md.renderInline(inp);
+    return md.render(inp);
+}
+
 // just simpler than passing around interfaces everywhere, and allows subscription
 // where callers (App e.g.) don't care.
 window.DFEvents = new EventEmitter();

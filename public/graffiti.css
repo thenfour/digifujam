@@ -41,6 +41,8 @@
     position: absolute;
     transition: left var(--move-duration), top var(--move-duration);
     user-select: none;
+    --rot: 0deg;
+    transform: rotateZ(var(--rot)) translate(-50%,-50%);
 }
 
 
@@ -192,6 +194,26 @@
     font-size: var(--size);
 }
 
+#graffitiContainer .graffitiItemContainer .graffiti.vanillaInfoBox {
+    max-width:none;
+    border:2px solid #088;
+    background-color:#3088;
+    padding:6px;
+    border-radius:4px;
+    transform: none;
+}
+
+#graffitiContainer .graffitiItemContainer.vanillaInfoBox {
+    transform: rotateZ(0) translate(-50%,-50%);
+}
+
+#graffitiContainer .graffitiItemContainer .graffiti.vanillaInfoBox .text {
+    font-family: 'Overpass', sans-serif;
+    line-height: 15px;
+    font-weight: normal;
+    letter-spacing: normal;
+    font-size: 16px;
+}
 
 
 

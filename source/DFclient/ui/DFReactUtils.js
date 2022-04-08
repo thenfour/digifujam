@@ -156,13 +156,70 @@ class TextField extends React.Component {
  
  
  
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+// allow live editing
+// props.fieldID
+// props.valueSetter
+// props.valueGetter
+// props.readOnly
+// props.maxLength
+class TextAreaField extends React.Component {
+    constructor(props) {
+        super(props);
+        this.inpID = "textAreaField_" + this.props.fieldID;
+        this.renderedValue = "";
+    }
+    onChange = (e) => {
+        let val = e.target.value;
+        this.renderedValue = val;
+        this.props.valueSetter(val);
+    }
+    componentDidMount() {
+        // set initial values.
+        let val = this.props.valueGetter();
+        $("#" + this.inpID).val(val);
+        this.renderedValue = val;
+    }
+    render() {
+       let val = this.props.valueGetter();
+        if (this.renderedValue != val) {
+            //has been externally modified. update ui.
+            this.renderedValue = val;
+            $("#" + this.inpID).val(val);
+        }
+ 
+        return (
+          <textarea readOnly={this.props.readOnly} id={this.inpID} maxLength={this.props.maxLength} onChange={this.onChange} />
+        );
+    }
+ }
+ 
+ 
+ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+class ScrollWhenMounted extends React.Component {
+    constructor(props) {
+      super(props);
+      this.myRef = React.createRef();
+    }
+    componentDidMount() {
+      this.myRef.current.scrollIntoView({block: "nearest", behavior: "smooth"});
+    }
+    render() {
+      return <div className='scrollWhenMounted' ref={this.myRef}></div>;
+    }
+  }
+  
+  
 
 
 module.exports = {
     TextField,
     TextInputField,
+    TextAreaField,
     TextInputFieldExternalState,
     PasswordInput,
     getRoomID,
     getValidationErrorMsg,
+    ScrollWhenMounted,
 };

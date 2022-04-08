@@ -2,6 +2,7 @@
 
 const DFG = require('./dfglobal');
 const DFUtil = require('./dfutil');
+const { SequencerPatch } = require('./SequencerCore');
 
 const RoomPresetSettings = {
   NameMaxLen: 30,
@@ -204,6 +205,10 @@ class RoomPreset {
     this.seqPlaying.removeIf(iid => !selection.sequencerInstrumentIDs.find(i2 => i2 === iid));
   }
 
+  SetSeqPlayingSet(seqPlayingSet) {
+    this.seqPlaying = [...seqPlayingSet];
+  }
+
   ToCompactObj() {
     return new CompactRoomPreset({
       presetID: this.presetID,
@@ -311,13 +316,21 @@ class RoomPresetManager {
     return ret;
   }
 
-  Paste(data, synthPatchHandler, seqPatchHandler, bpmHandler) {
+  // options:
+  // {
+  //    clobberOtherSequencers: <bool>
+  //    stopOtherSequencers: <bool>
+  // }
+  Paste(data, synthPatchHandler, seqPatchHandler, bpmHandler, options) {
     // set live metadata
     if (!data.presetID) return false;
     if (!data.metadata) return false;
     if (!data.instPatches) return false;
     if (!data.seqPatches) return false;
     if (!data.seqPlaying) return false;
+    options ??= {};
+    options.clobberOtherSequencers ??= true;
+    options.stopOtherSequencers ??= true;
 
     let ret = {
       instPatchesImported: 0,
@@ -347,6 +360,19 @@ class RoomPresetManager {
       }
       if (seqPatchHandler(instrument.instrument, patch, !!data.seqPlaying.find(iid => iid === instrumentID))) {
         ret.seqPatchesImported ++;
+      }
+    });
+
+    // for all sequencers that are NOT specified in the import, turn them off
+    this.#roomState.instrumentCloset.forEach(instrument => {
+      if (data.seqPatches[instrument.instrumentID]) return; // we already handled this instrument.
+      if (!instrument.allowSequencer) return; // doesn't support sequencer; ignore.
+      if (options.clobberOtherSequencers) {
+        console.log(`clobbering seq ${instrument.instrumentID}`);
+        seqPatchHandler(instrument, new SequencerPatch(), false);
+      } else if (options.stopOtherSequencers) {
+        console.log(`stopping seq ${instrument.instrumentID}`);
+        seqPatchHandler(instrument, null, false);
       }
     });
 

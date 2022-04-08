@@ -2042,14 +2042,17 @@ class RoomServer {
                 failures.sequencerInstrumentIDs.push(instrument.instrumentID);
                 return false;
               }
-              instrument.sequencerDevice.LoadPatch(seqPatch);
+              if (seqPatch) {
+                instrument.sequencerDevice.LoadPatch(seqPatch);
+              }
               instrument.sequencerDevice.SetPlaying(isPlaying);
               successes.sequencerInstrumentIDs.push(instrument.instrumentID);
               return true;
             },
             (bpm) => {
               this.roomState.setBPM(bpm);
-            }
+            },
+            data.options
             );
 
           // notify user of result
@@ -2064,6 +2067,7 @@ class RoomServer {
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, {
             op: "Paste",
             data: roomPreset,
+            options: data.options,
           });
           return;
         }

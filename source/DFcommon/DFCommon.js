@@ -106,7 +106,7 @@ const ClientMessages = {
     SeqMetadata: "SeqMetadata", // { title, description, tags }
 
     // { op: "SetMetadata", metadata } // also part of metadata but not included: user, date
-    // { op: "Paste", data } // paste live data into room (no patch op)
+    // { op: "Paste", data, options } // paste live data into room (no patch op)
     // { op: "Save", data } // save given patch. ID will determine new patch or overwrite existing
     // { op: "ReadPatch", id } // reads a complete patch with given ID. no changes to room (expect corresponding msg from server)
     // { op: "DeletePatch", id } // delete patch with given ID.
@@ -196,7 +196,7 @@ const ServerMessages = {
     SeqSetListeningInstrumentID: "SeqSetListeningInstrumentID", // { seqInstrumentID, instrumentID: }
 
     // { op: "SetMetadata", metadata }
-    // { op: "Paste", data } // makes a patch live
+    // { op: "Paste", data, options } // makes a patch live
     // { op: "Save", compactData } // save specified patch under the given ID. can be unique for new.
     // { op: "ReadPatch", data } // in response to ReadPatch, sent to the 1 client who requested it.
     // { op: "DeletePatch", id } // delete patch with given ID.

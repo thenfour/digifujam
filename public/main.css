@@ -31,9 +31,10 @@
 
     --z-index-chat-slash-command-help: 10000;
     --z-index-sequencer-dialog: 10010;
-    --z-index-popup-menu: 10020;
     --z-index-modal-dialog: 10030;
     --z-index-moderation-dialog: 10040;
+
+    --z-index-popup-menu: 10050;
 
     --z-index-alert-screen: 10100;
     --z-index-room-alert-area: 10110;
@@ -79,7 +80,8 @@ ul {
 }
 
 input[type="text"i],
-input[type="password"i] {
+input[type="password"i],
+textarea {
     background-color: #444;
     border: 2px solid #055;
     color: #0cc;
@@ -89,6 +91,8 @@ input[type="password"i] {
     font-size: small;
     margin: 2px;
 }
+
+
 
 input[type="text"i]:focus,
 input[type="password"i]:focus {
