@@ -1063,6 +1063,10 @@ class SequencerDevice {
     return this.livePatch.GetArpMapping().swallowNotes && (this.listeningToInstrumentID !== this.instrumentID);
   }
 
+  IsSidechainedToInstrumentID(instrumentID) {
+    return this.livePatch.GetArpMapping().swallowNotes && (this.listeningToInstrumentID === instrumentID);
+  }
+
   GetLatchMode(roomState) {
     // get latch mode of the user who is controlling the listening instrument.
     const srcInst = roomState.instrumentCloset.find(i => i.instrumentID === this.listeningToInstrumentID);

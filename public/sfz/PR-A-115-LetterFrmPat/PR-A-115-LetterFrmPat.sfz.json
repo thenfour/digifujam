@@ -1,0 +1,227 @@
+[
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 036 064_0_end.m4a",
+    "pitch_keycenter": 36,
+    "lokey": 0,
+    "hikey": 39
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 043 064_0_end.m4a",
+    "pitch_keycenter": 43,
+    "lokey": 40,
+    "hikey": 45
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 048 064_0_end.m4a",
+    "pitch_keycenter": 48,
+    "lokey": 46,
+    "hikey": 50
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 053 064_0_end.m4a",
+    "pitch_keycenter": 53,
+    "lokey": 51,
+    "hikey": 55
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 058 064_0_end.m4a",
+    "pitch_keycenter": 58,
+    "lokey": 56,
+    "hikey": 60
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 063 064_0_end.m4a",
+    "pitch_keycenter": 63,
+    "lokey": 61,
+    "hikey": 65
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 068 064_0_end.m4a",
+    "pitch_keycenter": 68,
+    "lokey": 66,
+    "hikey": 70
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 073 064_0_end.m4a",
+    "pitch_keycenter": 73,
+    "lokey": 71,
+    "hikey": 75
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 078 064_0_end.m4a",
+    "pitch_keycenter": 78,
+    "lokey": 76,
+    "hikey": 80
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 083 064_0_end.m4a",
+    "pitch_keycenter": 83,
+    "lokey": 81,
+    "hikey": 85
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 088 064_0_end.m4a",
+    "pitch_keycenter": 88,
+    "lokey": 86,
+    "hikey": 89
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 091 064_0_end.m4a",
+    "pitch_keycenter": 91,
+    "lokey": 90,
+    "hikey": 93
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 0,
+    "hivel": 64,
+    "sample": "LetterFrmPat 096 064_0_end.m4a",
+    "pitch_keycenter": 96,
+    "lokey": 94,
+    "hikey": 127
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 036 127_0_end.m4a",
+    "pitch_keycenter": 36,
+    "lokey": 0,
+    "hikey": 39
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 043 127_0_end.m4a",
+    "pitch_keycenter": 43,
+    "lokey": 40,
+    "hikey": 45
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 048 127_0_end.m4a",
+    "pitch_keycenter": 48,
+    "lokey": 46,
+    "hikey": 50
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 053 127_0_end.m4a",
+    "pitch_keycenter": 53,
+    "lokey": 51,
+    "hikey": 55
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 058 127_0_end.m4a",
+    "pitch_keycenter": 58,
+    "lokey": 56,
+    "hikey": 60
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 063 127_0_end.m4a",
+    "pitch_keycenter": 63,
+    "lokey": 61,
+    "hikey": 65
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 068 127_0_end.m4a",
+    "pitch_keycenter": 68,
+    "lokey": 66,
+    "hikey": 70
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 073 127_0_end.m4a",
+    "pitch_keycenter": 73,
+    "lokey": 71,
+    "hikey": 75
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 078 127_0_end.m4a",
+    "pitch_keycenter": 78,
+    "lokey": 76,
+    "hikey": 80
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 083 127_0_end.m4a",
+    "pitch_keycenter": 83,
+    "lokey": 81,
+    "hikey": 85
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 088 127_0_end.m4a",
+    "pitch_keycenter": 88,
+    "lokey": 86,
+    "hikey": 89
+  },
+  {
+    "ampeg_release": 0.3,
+    "lovel": 64,
+    "hivel": 127,
+    "sample": "LetterFrmPat 091 127_0_end.m4a",
+    "pitch_keycenter": 91,
+    "lokey": 90,
+    "hikey": 93
+  }
+]

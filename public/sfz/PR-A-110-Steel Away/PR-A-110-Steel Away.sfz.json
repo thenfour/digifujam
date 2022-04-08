@@ -1,0 +1,209 @@
+[
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 024 115_0_end.m4a",
+    "lokey": 0,
+    "hikey": 27,
+    "pitch_keycenter": 24,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 024 127_0_end.m4a",
+    "lokey": 0,
+    "hikey": 27,
+    "pitch_keycenter": 24,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 030 115_0_end.m4a",
+    "lokey": 28,
+    "hikey": 33,
+    "pitch_keycenter": 30,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 030 127_0_end.m4a",
+    "lokey": 28,
+    "hikey": 33,
+    "pitch_keycenter": 30,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 036 115_0_end.m4a",
+    "lokey": 34,
+    "hikey": 39,
+    "pitch_keycenter": 36,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 036 127_0_end.m4a",
+    "lokey": 34,
+    "hikey": 39,
+    "pitch_keycenter": 36,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 042 115_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 042 127_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 048 115_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 048 127_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 054 115_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 054 127_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 060 115_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 060 127_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 066 115_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 066 127_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 072 115_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 072 127_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 078 115_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 078 127_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 084 115_0_end.m4a",
+    "lokey": 82,
+    "hikey": 87,
+    "pitch_keycenter": 84,
+    "lovel": 0,
+    "hivel": 115
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 084 127_0_end.m4a",
+    "lokey": 82,
+    "hikey": 87,
+    "pitch_keycenter": 84,
+    "lovel": 116,
+    "hivel": 127
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Steel Away 090 115_0_end.m4a",
+    "lokey": 88,
+    "hikey": 127,
+    "pitch_keycenter": 90,
+    "lovel": 0,
+    "hivel": 115
+  }
+]

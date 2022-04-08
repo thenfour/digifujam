@@ -1,0 +1,79 @@
+[
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 024_0_end.m4a",
+    "lokey": 0,
+    "hikey": 27,
+    "pitch_keycenter": 24
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 030_0_end.m4a",
+    "lokey": 28,
+    "hikey": 33,
+    "pitch_keycenter": 30
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 036_0_end.m4a",
+    "lokey": 34,
+    "hikey": 39,
+    "pitch_keycenter": 36
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 042_0_end.m4a",
+    "lokey": 40,
+    "hikey": 45,
+    "pitch_keycenter": 42
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 048_0_end.m4a",
+    "lokey": 46,
+    "hikey": 51,
+    "pitch_keycenter": 48
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 054_0_end.m4a",
+    "lokey": 52,
+    "hikey": 57,
+    "pitch_keycenter": 54
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 060_0_end.m4a",
+    "lokey": 58,
+    "hikey": 63,
+    "pitch_keycenter": 60
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 066_0_end.m4a",
+    "lokey": 64,
+    "hikey": 69,
+    "pitch_keycenter": 66
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 072_0_end.m4a",
+    "lokey": 70,
+    "hikey": 75,
+    "pitch_keycenter": 72
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 078_0_end.m4a",
+    "lokey": 76,
+    "hikey": 81,
+    "pitch_keycenter": 78
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "12str Gtr 1 084_0_end.m4a",
+    "lokey": 82,
+    "hikey": 87,
+    "pitch_keycenter": 84
+  }
+]

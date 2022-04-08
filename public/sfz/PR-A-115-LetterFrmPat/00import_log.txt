@@ -1,0 +1,313 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat.sfz.json
+Region count: 25
+Source samples to read: 25
+Dest samples to create: 25
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 036 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 043 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 048 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 053 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 058 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 063 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 068 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 073 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 078 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 083 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 088 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 091 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 096 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 096 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 036 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 043 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 048 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 053 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 058 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 063 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 068 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 073 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 078 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 083 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 088 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\PR-A-115-LetterFrmPat\PR-A-115-LetterFrmPat Samples\LetterFrmPat 091 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 127.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 175513
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 088 064_0_end.wav from LetterFrmPat 088 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 228487
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 091 064_0_end.wav from LetterFrmPat 091 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 290168
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 083 064_0_end.wav from LetterFrmPat 083 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 369565
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 078 064_0_end.wav from LetterFrmPat 078 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 396067
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 073 064_0_end.wav from LetterFrmPat 073 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 431299
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 068 064_0_end.wav from LetterFrmPat 068 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 449024
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 063 064_0_end.wav from LetterFrmPat 063 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 466652
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 058 064_0_end.wav from LetterFrmPat 058 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 493148
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 053 064_0_end.wav from LetterFrmPat 053 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 519560
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 048 064_0_end.wav from LetterFrmPat 048 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 510734
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 043 064_0_end.wav from LetterFrmPat 043 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 510589
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 036 064_0_end.wav from LetterFrmPat 036 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 096 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 105062
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 096 064_0_end.wav from LetterFrmPat 096 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 096 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 096 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 493027
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 068 127_0_end.wav from LetterFrmPat 068 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 343069
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 083 127_0_end.wav from LetterFrmPat 083 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 299029
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 088 127_0_end.wav from LetterFrmPat 088 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 299102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 091 127_0_end.wav from LetterFrmPat 091 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 501998
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 063 127_0_end.wav from LetterFrmPat 063 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 537278
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 043 127_0_end.wav from LetterFrmPat 043 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528410
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 058 127_0_end.wav from LetterFrmPat 058 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 528633
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 036 127_0_end.wav from LetterFrmPat 036 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 519680
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 048 127_0_end.wav from LetterFrmPat 048 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 537441
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 053 127_0_end.wav from LetterFrmPat 053 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 404912
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 078 127_0_end.wav from LetterFrmPat 078 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 448981
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating LetterFrmPat 073 127_0_end.wav from LetterFrmPat 073 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 127_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 096 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 096 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 088 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 091 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 083 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 068 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 043 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 036 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 063 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 053 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 058 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 078 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 048 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-115-LetterFrmPat\LetterFrmPat 073 127.flac.wav
+Completed processing source WAV files with 25 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_PRA115LetterFrmPat",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/PR-A-115-LetterFrmPat/PR-A-115-LetterFrmPat.sfz.json",
+  "name": "PR-A-115-LetterFrmPat"
+}

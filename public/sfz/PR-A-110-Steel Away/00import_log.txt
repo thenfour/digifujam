@@ -1,0 +1,289 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\PR-A-110-Steel Away.sfz.json
+Region count: 23
+Source samples to read: 23
+Dest samples to create: 23
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 024 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 024 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 030 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 030 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 036 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 036 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 042 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 042 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 048 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 048 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 054 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 054 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 060 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 060 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 066 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 066 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 072 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 072 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 078 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 078 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 084 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 115.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 084 127.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 127.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\xv-steelguitars\PR-A-110-Steel Away\Steel Away 090 115.flac" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 090 115.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 361412
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 066 115_0_end.wav from Steel Away 066 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193867
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 066 127_0_end.wav from Steel Away 066 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 090 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 352587
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 090 115_0_end.wav from Steel Away 090 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 090 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 090 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193844
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 084 127_0_end.wav from Steel Away 084 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202668
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 072 127_0_end.wav from Steel Away 072 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 229118
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 030 127_0_end.wav from Steel Away 030 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 343774
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 084 115_0_end.wav from Steel Away 084 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 396709
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 030 115_0_end.wav from Steel Away 030 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 379082
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 060 115_0_end.wav from Steel Away 060 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 220340
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 054 127_0_end.wav from Steel Away 054 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 379039
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 048 115_0_end.wav from Steel Away 048 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 387874
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 054 115_0_end.wav from Steel Away 054 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 396705
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 042 115_0_end.wav from Steel Away 042 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 352582
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 078 115_0_end.wav from Steel Away 078 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193833
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 060 127_0_end.wav from Steel Away 060 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211512
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 048 127_0_end.wav from Steel Away 048 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202664
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 078 127_0_end.wav from Steel Away 078 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211492
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 024 127_0_end.wav from Steel Away 024 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 387871
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 024 115_0_end.wav from Steel Away 024 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202666
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 036 127_0_end.wav from Steel Away 036 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 127_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 352582
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 072 115_0_end.wav from Steel Away 072 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 115.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 396675
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 036 115_0_end.wav from Steel Away 036 115.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 115_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 115_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 127.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211506
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Steel Away 042 127_0_end.wav from Steel Away 042 127.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 127_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 127_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 090 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 090 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 066 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 084 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 030 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 060 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 048 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 078 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 054 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 127_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 042 127.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 024 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 072 115.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 115_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\PR-A-110-Steel Away\Steel Away 036 115.flac.wav
+Completed processing source WAV files with 23 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_PRA110SteelAway",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/PR-A-110-Steel Away/PR-A-110-Steel Away.sfz.json",
+  "name": "PR-A-110-Steel Away"
+}

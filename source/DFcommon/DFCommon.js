@@ -1415,6 +1415,10 @@ class DigifuInstrumentSpec {
         return this.CanSequencerBeStartStoppedByUser(roomState, user);
     }
 
+    IsSequencerSidechainedTo(instrument) {
+        if (!this.allowSequencer) return false;
+        return this.sequencerDevice.IsSidechainedToInstrumentID(instrument.instrumentID);
+    }
 }; // InstrumentSpec
 
 const ChatMessageType = {

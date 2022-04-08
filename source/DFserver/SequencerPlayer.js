@@ -38,7 +38,7 @@ function RegisterPerf() {
 
 // when you make changes that require rescheduling sequencer notes, like note ons during arpeggiator mode, or changing
 // any seq params, "throttle" recalcs by delaying a bit.
-const gRecalcLatencyMS = 40;
+const gRecalcLatencyMS = 25;
 
 // timer interval duration should be balanced:
 // * too long and it will incur too much processing (meaning noticeable periodic spikes in processing)
@@ -723,6 +723,14 @@ class RoomSequencerPlayer {
     return null;
   }
 
+  InvalidateDependentSequencers(instrument) {
+    this.instruments.forEach(i => { // invalidate dependent sequencers
+      if (!i.IsSequencerSidechainedTo(instrument)) return;
+      this.onChanged_Instrument(i);
+    });
+  }
+
+
   BPMChanged(bpm) {
     this.instrumentPlayers.forEach(player => player.BPMChanged(bpm));
   }
@@ -733,19 +741,23 @@ class RoomSequencerPlayer {
 
   // return true to swallow the event
   NoteOn(instrument, note, velocity) {
+    this.InvalidateDependentSequencers(instrument);
     return this.instrumentPlayers.get(instrument.instrumentID).NoteOn(note, velocity);
   }
 
   // return true to swallow the event
   NoteOff(instrument, note) {
+    this.InvalidateDependentSequencers(instrument);
     return this.instrumentPlayers.get(instrument.instrumentID).NoteOff(note);
   }
 
   PedalUp(instrument) {
+    this.InvalidateDependentSequencers(instrument);
     this.instrumentPlayers.get(instrument.instrumentID).PedalUp();
   }
 
   PedalDown(instrument) {
+    this.InvalidateDependentSequencers(instrument);
     this.instrumentPlayers.get(instrument.instrumentID).PedalDown();
   }
 
