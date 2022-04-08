@@ -2244,7 +2244,7 @@ class DigifuRoomState {
 
     GraffitiIsVisibleTo(observingUser, graffiti, showToModsAndAdmins) {
 
-        if (graffiti.extraCssClass.indexOf("performersOnly") !== -1) {
+        if (graffiti?.extraCssClass?.indexOf("performersOnly") !== -1) {
             if (!this.UserCanPerform(observingUser)) return false;
         }
 
