@@ -16,6 +16,7 @@
     "express-fileupload": "^1.2.1",
     "googleapis": "^67.0.0",
     "markdown-it": "^12.3.0",
+    "markdown-it-color": "^2.1.1",
     "nanoid": "^3.1.20",
     "node-wav": "0.0.2",
     "react": "^17.0.2",

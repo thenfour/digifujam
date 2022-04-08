@@ -40,6 +40,11 @@ const md = require('markdown-it')({
     typographer:  false,
   });
 
+const mdcolor = require('markdown-it-color');
+md.use(mdcolor.default, {
+    inline: true, // apply color to the span itself, inline.
+});
+
 window.DFRenderMarkdown = (inp) => {
     //return md.renderInline(inp);
     return md.render(inp);

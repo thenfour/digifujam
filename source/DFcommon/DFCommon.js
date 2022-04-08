@@ -2243,6 +2243,11 @@ class DigifuRoomState {
     }
 
     GraffitiIsVisibleTo(observingUser, graffiti, showToModsAndAdmins) {
+
+        if (graffiti.extraCssClass.indexOf("performersOnly") !== -1) {
+            if (!this.UserCanPerform(observingUser)) return false;
+        }
+
         const u = this.getUserForGraffiti(graffiti);
         if (!u) {
             // OK, user is not online therefore we cannot know if they're banned / invisible / whatever.

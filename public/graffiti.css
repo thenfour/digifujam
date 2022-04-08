@@ -146,6 +146,10 @@
     font-size: 36px;
 }
 
+#graffitiContainer .graffiti .graffitiContent p { /* markdown */
+    margin:0;
+}
+
 .graffitiUserCtrl .mygraffiti {
     background-color:black;
     margin-bottom: 10px;
@@ -177,10 +181,14 @@
 }
 
 
-#graffitiContainer .graffitiItemContainer .graffiti.straight {
+#graffitiContainer .graffitiItemContainer.straight {
     transform: none;
 }
 
+
+#graffitiContainer .graffitiItemContainer .graffiti.straight {
+    transform: rotateZ(0) translate(-50%,-50%);
+}
 
 #graffitiContainer .graffitiItemContainer .graffiti.sansfont .graffitiContent {
     font-family: 'Overpass', sans-serif;
@@ -216,4 +224,7 @@
 }
 
 
+
+#graffitiContainer .graffitiItemContainer .graffiti.performersOnly {
+}
 

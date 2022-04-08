@@ -5,8 +5,8 @@ const DFUtil = require('./dfutil');
 const { SequencerPatch } = require('./SequencerCore');
 
 const RoomPresetSettings = {
-  NameMaxLen: 30,
-  DescriptionMaxLen: 300,
+  NameMaxLen: 100,
+  DescriptionMaxLen: 2048,
   TagsMaxLen: 100,
 };
 
