@@ -1639,7 +1639,7 @@ class Instrument extends  React.Component {
             title += ` Currently sidechained to '${n}'.`;
         }
 
-        const isSequencerOn = i.sequencerDevice.isPlaying;
+        const isSequencerOn = i.sequencerDevice.isPlaying && i.sequencerDevice.HasData();
         const canCtrlSequencer = i.CanSequencerBeStartStoppedByUser(app.roomState, app.myUser);
         const canPerform = app.roomState.UserCanPerform(app.myUser);
         const sequencerHasData = i.sequencerDevice.HasData();

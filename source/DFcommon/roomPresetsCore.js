@@ -101,9 +101,10 @@ class InstSeqSelection
 
   static ShouldBeIncludedInDefaultSeqSelection(instrument) {
     if (!instrument.allowSequencer) return false;
+    if (!instrument.sequencerDevice.HasData()) return false;
     if (instrument.sequencerDevice.IsPlaying()) return true;
     if (instrument.sequencerDevice.HasRecentlyPlayed()) return true;
-    //return instrument.sequencerDevice.HasData();
+    return false;
   }
 
   static ShouldBeIncludedInDefaultInstSelection(instrument) {
