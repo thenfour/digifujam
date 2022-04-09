@@ -261,6 +261,7 @@ class RoomPresetLI extends React.Component {
         loadingObj: null,
         loadingSelection: null,
         loadingSeqOpt: 'clobber',
+        affectTakenInstruments: true,
         seqInstIDsPlaying: null,
      };
   }
@@ -308,14 +309,15 @@ class RoomPresetLI extends React.Component {
     const isReadOnly = this.props.isReadOnly;
     if (isReadOnly) return;
     const patch = this.state.loadingObj;
-    patch.KeepOnlySelected(this.state.loadingSelection);
     patch.SetSeqPlayingSet(this.state.seqInstIDsPlaying);
+    patch.KeepOnlySelected(this.state.loadingSelection);
     this.props.app.net.SendRoomPatchOp({
       op: "Paste",
       data: patch,
       options: {
         clobberOtherSequencers: this.state.loadingSeqOpt === 'clobber',
         stopOtherSequencers: this.state.loadingSeqOpt === 'stop',
+        affectTakenInstruments: this.state.affectTakenInstruments,
       }
     });
     this.setState({
@@ -366,12 +368,24 @@ class RoomPresetLI extends React.Component {
                 seqInstIDsPlaying={this.state.seqInstIDsPlaying}
                 seqInstIDsPlayingSetter={this.seqInstIDsPlayingSetter}
                 />
+
               <div className='paramRow'>
                 <label name="Specify what happens to sequencers which are NOT part of the import">Other sequencers</label>
                 <button title="Init other sequencers. This can be useful to make it clear which sequencers were loaded" className={'radio first ' + (this.state.loadingSeqOpt === 'clobber' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'clobber'})}>Clobber</button>
                 <button title="Stop other sequencers if they're playing." className={'radio ' + (this.state.loadingSeqOpt === 'stop' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'stop'})}>Stop</button>
                 <button title="Leave other sequencers alone." className={'radio last' + (this.state.loadingSeqOpt === 'leave' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'leave'})}>Leave alone</button>
               </div>
+
+
+              { this.props.app.myUser.IsModerator() &&
+              <div className='paramRow modsOnly'>
+                <label name="What happens to instruments which are being controlled by someone else?">Taken instruments</label>
+                <button title="Leave them alone; it means your song might only partially load." className={'radio first ' + (this.state.affectTakenInstruments ? " notselected" : " selected")} onClick={() => this.setState({affectTakenInstruments:false})}>Light as a feather</button>
+                <button title="Load params of even instruments which are controlled by someone else. Guarantees the whole song loads but might annoy someone." className={'radio last ' + (this.state.affectTakenInstruments ? " selected" : " notselected")} onClick={() => this.setState({affectTakenInstruments:true})}>Like a wrecking ball</button>
+              </div>
+              }
+
+
               <button className="OK clickable" onClick={() => this.onClickLoadOK()}>OK</button>
               <button className="Cancel clickable" onClick={() => this.setState({loadingObj:null})}>Cancel</button>
               <ScrollWhenMounted />
@@ -405,6 +419,7 @@ class RoomPresetsDialog extends React.Component {
       savingSelection:null,
 
       loadingSeqOpt:'clobber',
+      affectTakenInstruments: true,
       seqInstIDsPlaying: null,
     };
   }
@@ -466,8 +481,8 @@ class RoomPresetsDialog extends React.Component {
   OnClickPasteOK = () => {
     if (this.IsReadOnly()) return;
 
-    this.state.pastingObj.KeepOnlySelected(this.state.pastingSelection);
     this.state.pastingObj.SetSeqPlayingSet(this.state.seqInstIDsPlaying);
+    this.state.pastingObj.KeepOnlySelected(this.state.pastingSelection);
 
     this.props.app.net.SendRoomPatchOp({
       op: "Paste",
@@ -475,6 +490,7 @@ class RoomPresetsDialog extends React.Component {
       options: {
         clobberOtherSequencers: this.state.loadingSeqOpt === 'clobber',
         stopOtherSequencers: this.state.loadingSeqOpt === 'stop',
+        affectTakenInstruments: this.state.affectTakenInstruments,
       }
     });
     this.setState({pastingObj:null});
@@ -706,6 +722,15 @@ class RoomPresetsDialog extends React.Component {
                       <button title="Stop other sequencers if they're playing." className={'radio ' + (this.state.loadingSeqOpt === 'stop' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'stop'})}>Stop</button>
                       <button title="Leave other sequencers alone." className={'radio last' + (this.state.loadingSeqOpt === 'leave' ? " selected" : " notselected")} onClick={() => this.setState({loadingSeqOpt:'leave'})}>Leave alone</button>
                     </div>
+
+                    { app.myUser.IsModerator() &&
+                    <div className='paramRow modsOnly'>
+                      <label name="What happens to instruments which are being controlled by someone else?">Taken instruments</label>
+                      <button title="Leave them alone; it means your song might only partially load." className={'radio first ' + (this.state.affectTakenInstruments ? " notselected" : " selected")} onClick={() => this.setState({affectTakenInstruments:false})}>Light as a feather</button>
+                      <button title="Load params of even instruments which are controlled by someone else. Guarantees the whole song loads but might annoy someone." className={'radio last ' + (this.state.affectTakenInstruments ? " selected" : " notselected")} onClick={() => this.setState({affectTakenInstruments:true})}>Like a wrecking ball</button>
+                    </div>
+                    }
+
                     <button className='ok' onClick={() => this.OnClickPasteOK()}>OK</button>
                     <button className='cancel' onClick={() => this.setState({pastingObj:null})}>Cancel</button>
                     <ScrollWhenMounted />

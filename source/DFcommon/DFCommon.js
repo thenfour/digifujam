@@ -227,9 +227,9 @@ const ServerSettings = {
     StatsPruneIntervalMS: DFUtil.hoursToMS(24), // once a day prune stats
     StatsMaxAgeMS: DFUtil.daysToMS(365),
 
-    ServerStateBackupIntervalMS: DFUtil.minutesToMS(5),
+    ServerStateBackupIntervalMS: DFUtil.minutesToMS(8),
     ServerStatePruneIntervalMS: DFUtil.hoursToMS(24),
-    ServerStateMaxAgeMS: DFUtil.daysToMS(5),
+    ServerStateMaxAgeMS: DFUtil.daysToMS(7),
 
     MinBPM: 20,
     MaxBPM: 220,

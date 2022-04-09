@@ -2026,26 +2026,39 @@ class RoomServer {
           failures.SelectNone();
 
           const roomPreset = new RoomPreset(data.data);
+          const resultPreset = new RoomPreset(data.data); // create a new preset which captures what happened (considering permissions for example)
+          resultPreset.instPatches = {};
+          resultPreset.seqPatches = {};
+          resultPreset.seqPlaying = [];
+
+          const modExemption = foundUser.user.IsModerator() && data.options.affectTakenInstruments;
 
           const r = this.roomState.roomPresets.Paste(roomPreset,
             (instrument, presetObj) => {
-              if (!this.roomState.UserCanSetRoomPatchForInstrument(foundUser.user, instrument)) {
+              if (!(modExemption || this.roomState.UserCanSetRoomPatchForInstrument(foundUser.user, instrument))) {
                 failures.instrumentIDs.push(instrument.instrumentID);
                 return false;
               }
               this.roomState.integrateRawParamChanges(instrument, presetObj, true);
               successes.instrumentIDs.push(instrument.instrumentID);
+              resultPreset.instPatches[instrument.instrumentID] = presetObj;
               return true;
             },
             (instrument, seqPatch, isPlaying) => {
-              if (!this.roomState.UserCanSetRoomPatchForSequencer(foundUser.user, instrument)) {
+              if (!(modExemption || this.roomState.UserCanSetRoomPatchForSequencer(foundUser.user, instrument))) {
                 failures.sequencerInstrumentIDs.push(instrument.instrumentID);
                 return false;
               }
               if (seqPatch) {
                 instrument.sequencerDevice.LoadPatch(seqPatch);
+                resultPreset.seqPatches[instrument.instrumentID] = seqPatch;
               }
-              instrument.sequencerDevice.SetPlaying(isPlaying);
+              if (modExemption || instrument.CanSequencerBeStartStoppedByUser(this.roomState, foundUser.user)) {
+                if (isPlaying) {
+                  resultPreset.seqPlaying.push(instrument.instrumentID);
+                }
+                instrument.sequencerDevice.SetPlaying(isPlaying);
+              }
               successes.sequencerInstrumentIDs.push(instrument.instrumentID);
               return true;
             },
@@ -2066,8 +2079,11 @@ class RoomServer {
   
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.RoomPatchOp, {
             op: "Paste",
-            data: roomPreset,
-            options: data.options,
+            data: resultPreset,
+            options: {
+              clobberOtherSequencers: false, // we already took care of this.
+              stopOtherSequencers: false, // also handled already.
+            },
           });
           return;
         }

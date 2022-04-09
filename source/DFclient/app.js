@@ -1268,6 +1268,7 @@ class DigifuApp {
             if (seqPatch) {
               instrument.sequencerDevice.LoadPatch(seqPatch);
             }
+            console.log(`setting seq playing ${isSeqPlaying} for seq ${instrument.instrumentID}`);
             instrument.sequencerDevice.SetPlaying(isSeqPlaying);
 
             if (!isSeqPlaying) {

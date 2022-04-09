@@ -328,6 +328,11 @@ overflow: hidden;}
 
 .dfmodal.presets .confirmationBox .paramRow label {}
 
+.dfmodal.presets .confirmationBox .paramRow.modsOnly {
+  border:1px dashed #f80;
+  background-color:#f802;
+}
+
 .dfmodal.presets .confirmationBox button.radio,
 .dfmodal.presets .confirmation button.radio
 {

@@ -369,10 +369,8 @@ class RoomPresetManager {
       if (data.seqPatches[instrument.instrumentID]) return; // we already handled this instrument.
       if (!instrument.allowSequencer) return; // doesn't support sequencer; ignore.
       if (options.clobberOtherSequencers) {
-        console.log(`clobbering seq ${instrument.instrumentID}`);
-        seqPatchHandler(instrument, new SequencerPatch(), false);
+        seqPatchHandler(instrument, {}, false); // don't do new SequencerPatch() because this will get serialized and {} is smaller.
       } else if (options.stopOtherSequencers) {
-        console.log(`stopping seq ${instrument.instrumentID}`);
         seqPatchHandler(instrument, null, false);
       }
     });
