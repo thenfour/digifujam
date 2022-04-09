@@ -1,0 +1,35 @@
+[
+  {
+    "bend_up": 200,
+    "bend_down": "-200",
+    "ampeg_release": 0.32,
+    "ampeg_release_shape": 0,
+    "sample": "Orchestra Hits 1_0_end.m4a",
+    "lokey": 0,
+    "hikey": 29,
+    "pitch_keycenter": 12,
+    "loop_mode": "no_loop"
+  },
+  {
+    "bend_up": 200,
+    "bend_down": "-200",
+    "ampeg_release": 0.32,
+    "ampeg_release_shape": 0,
+    "sample": "Orchestra Hits 2_0_end.m4a",
+    "lokey": 30,
+    "hikey": 53,
+    "pitch_keycenter": 36,
+    "loop_mode": "no_loop"
+  },
+  {
+    "bend_up": 200,
+    "bend_down": "-200",
+    "ampeg_release": 0.32,
+    "ampeg_release_shape": 0,
+    "sample": "Orchestra Hits 3_0_end.m4a",
+    "lokey": 54,
+    "hikey": 77,
+    "pitch_keycenter": 60,
+    "loop_mode": "no_loop"
+  }
+]
