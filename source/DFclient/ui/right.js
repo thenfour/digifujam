@@ -3019,7 +3019,7 @@ class RootArea extends React.Component {
                         {adminControls}
 
                         {window.DFShowDebugInfo && (
-                            <div>pos: {Math.round(this.state.app?.myUser?.position?.x)}, {Math.round(this.state.app?.myUser?.position?.y)}]</div>
+                            <div>pos: {Math.round(this.state.app?.myUser?.position?.x)}, {Math.round(this.state.app?.myUser?.position?.y)}</div>
                         )}
                     </span>
                     

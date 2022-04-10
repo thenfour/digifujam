@@ -1,8 +1,170 @@
 const DF = require('../../DFcommon/DFCommon');
 const React = require('react');
 const { polyToPathDesc, remap, IsImageFilename, modulo, TimeSpan } = require('../../DFcommon/dfutil');
+const { RegisterModalHandler, DFInvokeModal, DFModalDialog } = require('./roomPresets');
 
 
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+class RoomRegionPointDlg extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      shiftAmt: 5,
+      liveValueStr: props.context.pointStr,
+    };
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.keydownHandler);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.keydownHandler);
+  }
+
+  keydownHandler = (e) => {
+    const callback = {
+      "ArrowLeft"  : this.onClickShiftLeft,
+      "ArrowRight" : this.onClickShiftRight,
+      "ArrowUp"    : this.onClickShiftUp,
+      "ArrowDown"  : this.onClickShiftDown,
+    }[e.key];
+    callback?.();
+  }
+
+  setPos(dx, dy) {
+    const newPt = JSON.parse(this.state.liveValueStr);
+    newPt[0] += dx * this.state.shiftAmt;
+    newPt[1] += dy * this.state.shiftAmt;
+    const newStr = JSON.stringify(newPt);
+    // find all points which are liveValueStr, and make them the new str
+
+    this.props.app.roomState.roomRegions.forEach(rgn => {
+      rgn.polyPoints = rgn.polyPoints.map(existingPt => {
+        const str = JSON.stringify(existingPt);
+        if (str === this.state.liveValueStr) {
+          return newPt;
+        }
+        return existingPt;
+      });
+    });
+
+    this.setState({liveValueStr: newStr});
+    window.DFModalDialogContext.pointStr = newStr;
+    window.DFStateChangeHandler.OnStateChange();
+  }
+
+  onClickShiftUp = () => {
+    this.setPos(0, -1);
+  }
+  onClickShiftDown = () => {
+    this.setPos(0, 1);
+  }
+  onClickShiftLeft = () => {
+    this.setPos(-1, 0);
+  }
+  onClickShiftRight = () => {
+    this.setPos(1, 0);
+  }
+
+  onClickCopy = (e) => {
+    const txt = JSON.stringify({ roomRegions: this.props.app.roomState.roomRegions });
+    navigator.clipboard.writeText(txt).then(() => {
+      alert('Copied to the clipboard!')
+    }, (e) => {
+      console.log(e);
+      alert('Unable to copy.')
+    });
+  }
+
+  onClickPaste = (e) => {
+    try {
+      navigator.clipboard.readText()
+        .then(text => {
+          let pastingObj = JSON.parse(text);
+          if (!pastingObj.roomRegions) {
+            alert(`i don't think this is the right format.`);
+            return;
+          }
+          this.props.app.roomState.roomRegions = pastingObj.roomRegions;
+          window.DFStateChangeHandler.OnStateChange();
+        })
+        .catch(e => {
+          console.log(e);
+          alert('There was a problem pasting; check console (A)');
+        });
+    } catch (e) {
+      console.log(e);
+      alert('There was some problem pasting; check console (B).');
+    }
+  }
+
+  render() {
+    return (
+      <DFModalDialog modalClassName="roomRegionPointEditor">
+          <div className='subtext'>
+            Changes made here are local only.
+          </div>
+        <fieldset>
+          <div className="legend">Point editor</div>
+
+          <input type="text" readOnly="readonly" value={this.state.liveValueStr} />
+
+          <div className='positionCtrl'>
+            <div className='vertbuttons'>
+                <button onClick={this.onClickShiftUp}><i className="material-icons">arrow_drop_up</i></button>
+                <button onClick={this.onClickShiftDown}><i className="material-icons">arrow_drop_down</i></button>
+            </div>
+            <div className='horizbuttons'>
+                <button onClick={this.onClickShiftLeft}><i className="material-icons">arrow_left</i></button>
+                <button onClick={this.onClickShiftRight}><i className="material-icons">arrow_right</i></button>
+            </div>
+          </div>
+          <div className='shiftAmtButtons'>
+            <button className={this.state.shiftAmt === 1 ? "active" : ""} onClick={() => this.setState({shiftAmt: 1})}>1px</button>
+            <button className={this.state.shiftAmt === 5 ? "active" : ""} onClick={() => this.setState({shiftAmt: 5})}>5px</button>
+            <button className={this.state.shiftAmt === 25 ? "active" : ""} onClick={() => this.setState({shiftAmt: 25})}>25px</button>
+            <button className={this.state.shiftAmt === 125 ? "active" : ""} onClick={() => this.setState({shiftAmt: 125})}>125px</button>
+          </div>
+        </fieldset>
+        <button onClick={this.onClickCopy}>Copy room region JSON</button>
+        <button onClick={this.onClickPaste}>Paste room region JSON</button>
+      </DFModalDialog>
+    );
+  }
+}
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+RegisterModalHandler("RoomRegionPointDlg", (app, context) => {
+  return <RoomRegionPointDlg app={app} context={context} />;
+});
+
+function LaunchRoomRegionPointDlg(pointStr) {
+  //window.DFStateChangeHandler.OnStateChange();
+  DFInvokeModal({
+    op: "RoomRegionPointDlg",
+    pointStr,
+  })
+}
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 class GraffitiArea extends React.Component {
   constructor(props) {
       super(props);
@@ -14,11 +176,23 @@ class GraffitiArea extends React.Component {
     if (this.props.area.polyPoints.length < 1) return null;
     const rgn = this.props.context.app.MyRoomRegion;
     //console.log(`rendering ${this.props.area.id}; myrgn = ${rgn?.id}`);
-    return (<path d={polyToPathDesc(this.props.area.polyPoints)} className={this.props.area.cssClass + (rgn?.id === this.props.area.id ? " active" : "")} />);
+    // find a suitable location for text.
+    const acc = [0,0];
+    this.props.area.polyPoints.forEach(pt => { acc[0] += pt[0]; acc[1] += pt[1]; });
+    acc[0] /= this.props.area.polyPoints.length;
+    acc[1] /= this.props.area.polyPoints.length;
+    const activeClass = (rgn?.id === this.props.area.id ? " active" : "");
+    return (
+      <g>
+      <path d={polyToPathDesc(this.props.area.polyPoints)} className={this.props.area.cssClass +activeClass} />
+      <text x={acc[0]} y={acc[1]} className={"regionLabel " + activeClass}>ID:{this.props.area.id}</text>
+      </g>
+    );
   }
 
 };
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 class GraffitiScreen extends React.Component {
   constructor(props) {
       super(props);
@@ -41,10 +215,33 @@ class GraffitiScreen extends React.Component {
     const areas = app.roomState.roomRegions.map(a => (<GraffitiArea key={a.id} context={this.props.context} area={a} />));
     const pos = this.props.context.displayHelper.roomToScreenPosition({x:0,y:0});
 
+    const uniquePoints = new Set(); // stores a STRING representation of points.
+    app.roomState.roomRegions.forEach(rgn => {
+      rgn.polyPoints.forEach(pt => {
+        const str = JSON.stringify(pt);
+        uniquePoints.add(str);
+      });
+    });
+
+    const points = [];
+    uniquePoints.forEach((ptStr, i) => {
+      const pt = JSON.parse(ptStr);
+      const ptpos = this.props.context.displayHelper.roomToScreenPosition({x:pt[0],y:pt[1]});
+      const ptstyle = {
+        "--x": `${ptpos.x}px`,
+        "--y": `${ptpos.y}px`,
+      };
+      points.push(
+      <div key={i} className={"roomRegionPointHandle " + (window.DFModalDialogContext.pointStr === ptStr ? " selected" : "")} style={ptstyle} onClick={(e) => LaunchRoomRegionPointDlg(ptStr)}>
+        <div className='inner'></div>
+      </div>);
+    })
+
     return (<div id="graffitiScreen" onClick={this.onClick}>
       <svg style={{left:pos.x,top:pos.y, height:app.roomState.height, width:app.roomState.width}}>
         {areas}
       </svg>
+      {points}
     </div>);
   }
 
