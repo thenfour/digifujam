@@ -51,6 +51,7 @@
     width: 66px;
     height: 49px;
     background-size: cover;
+    filter: drop-shadow(0px 0px 5px white);
 }
 
 
@@ -59,16 +60,31 @@
 }
 
 #graffitiContainer .graffitiItemContainer.image.pcMonitor,
-#graffitiContainer .graffitiItemContainer.image.nesMonitor
-{
-    transform: translate(-50%, -50%); /* don't allow rotations on the monitors */
+#graffitiContainer .graffitiItemContainer.image.nesMonitor,
+#graffitiContainer .graffitiItemContainer.image.jacuzziMonitor {
+    transform: translate(-50%, -50%);
+    /* don't allow rotations on the monitors */
 }
 
 #graffitiContainer .graffiti.pcMonitor .graffitiContent.image {
     width: 72px;
     height: 46px;
     background-size: cover;
+    filter: drop-shadow(0px 0px 15px #fff);
 }
+
+
+#graffitiContainer .graffiti.jacuzziMonitor .graffitiContent.image {
+    width: 24px;
+    height: 28px;
+    background-size: cover;
+    filter: drop-shadow(0px 0px 5px white);
+}
+
+#graffitiContainer .graffiti.jacuzziMonitor {
+    transform: skew(342deg, 36deg);
+}
+
 
 
 .roomItem {
