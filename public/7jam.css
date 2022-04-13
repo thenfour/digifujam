@@ -1,0 +1,59 @@
+
+.roomItem.graffitiText {
+    transform:skewY(-27deg) scaleY(120%);
+    border:0;
+    color:#aa0;
+    background: none;
+    font-size: 24px;
+    text-shadow: 4px -4px 8px black, 0 0 15px #0aa;
+    text-align: right;
+}
+
+#graffitiContainer .graffiti .graffitiContent.image {
+    filter: drop-shadow(4px 3px 5px black);
+}
+
+
+
+#graffitiContainer .graffiti.frontFacing
+{
+}
+
+#graffitiContainer .graffiti.stairs
+{
+}
+
+
+#graffitiContainer .graffiti.leftFacing
+{
+    transform: skewY(30deg) scaleY(1.25);
+}
+
+
+#graffitiContainer .graffiti.rightFacing
+{
+    transform: skewY(330deg) scaleY(1.25);
+}
+
+
+
+#graffitiContainer .graffiti.upFacing
+{
+    transform: rotateX(60deg) rotateZ(calc(var(--rot) * 2));
+}
+
+.roomItem {
+    border: none;
+    background: none;
+    font-size: 24px;
+    color: #0aa;
+    text-shadow: 0 0 3px black;
+}
+
+
+
+
+.backgroundLayer.parallaxBG {
+    background-color: black;
+}
+

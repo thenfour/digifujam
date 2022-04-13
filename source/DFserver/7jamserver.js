@@ -126,6 +126,7 @@ class _7jamServer {
     let indexTemplate = fs.readFileSync("public/indexTemplate.html").toString();
     indexTemplate = indexTemplate.replaceAll("{StaticHostPrefix}", this.mConfig.StaticHostPrefix);
     indexTemplate = indexTemplate.replaceAll("{LocalStaticHostPrefix}", this.mConfig.LocalStaticHostPrefix);
+    indexTemplate = indexTemplate.replaceAll("{DefaultRoomID}", this.mConfig.defaultRoomID);
 
     this.mConfig.room_json.forEach(path => {
       const jsonTxt = fs.readFileSync(path);
@@ -526,7 +527,7 @@ class _7jamServer {
         ws.disconnect();
         return;
       }
-      let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"]);
+      let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"], this.mConfig.defaultRoomID);
       let room = this.mRooms[requestedRoomID];
       if (!room) {
         console.log(`user trying to connect to nonexistent roomID ${requestedRoomID}`);

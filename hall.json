@@ -85,8 +85,8 @@
       }
     },
     {
-      "itemID": "doorToMaj7",
-      "name": "#MAJ7",
+      "itemID": "doorTo7jam",
+      "name": "#7JAM",
       "itemType": "door",
       "style": {
         "fontSize": 32,
@@ -102,9 +102,9 @@
         "processor": "server",
         "fn": "roomChange",
         "params": {
-          "roomID": "maj7",
-          "x": 1100,
-          "y": 460
+          "roomID": "7jam",
+          "x": 295,
+          "y": 708
         }
       }
     },

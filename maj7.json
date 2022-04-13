@@ -167,7 +167,7 @@
     },
     {
       "itemID": "roomItem1",
-      "name": "#DigiLounge",
+      "name": "#7jam",
       "itemType": "door",
       "style": {
         "transform": "skewY(45deg)"
@@ -182,9 +182,9 @@
         "processor": "server",
         "fn": "roomChange",
         "params": {
-          "roomID": "hall",
-          "x": 400,
-          "y": 825
+          "roomID": "7jam",
+          "x": 1704,
+          "y": 632
         }
       }
     },

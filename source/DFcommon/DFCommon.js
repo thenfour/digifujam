@@ -2294,15 +2294,15 @@ class DigifuRoomState {
 
 
 
-let routeToRoomID = function (r) {
+let routeToRoomID = function (r, fallbackID) {
     let requestedRoomID = r;
-    if (requestedRoomID.length < 1) return "pub"; // for 0-length strings return a special valid name.
+    if (requestedRoomID.length < 1) return fallbackID;
 
     // trim slashes
     if (requestedRoomID[0] == '/') requestedRoomID = requestedRoomID.substring(1);
     if (requestedRoomID[requestedRoomID.length - 1] == '/') requestedRoomID = requestedRoomID.substring(0, requestedRoomID.length - 1);
 
-    if (requestedRoomID.length < 1) return "pub"; // for 0-length strings return a special valid name.
+    if (requestedRoomID.length < 1) return fallbackID;
 
     return requestedRoomID.toLowerCase();
 };

@@ -16,7 +16,7 @@ $(() => {
         });
 
     // a default room name based on the URL you entered. only to be used when you're not connected to a room.
-    let roomID = DF.routeToRoomID(window.location.pathname);
+    let roomID = DF.routeToRoomID(window.location.pathname, window.DFDefaultRoomID);
     window.DFRoomID = roomID;
 
     window.DFModifierKeyTracker = new DFUtils.ModifierKeyTracker();

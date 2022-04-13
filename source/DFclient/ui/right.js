@@ -2972,8 +2972,7 @@ class RootArea extends React.Component {
         );
 
         // dynamically set the column sizes. media queries don't work because there are a bunch of dynamic states here.
-        // grid-template-columns: 270px minmax(0, 1fr) 320px;
-        let leftSize = "270px";//"min-content";//270;
+        let leftSize = 270;
         let rightSize = 320;
         if (this.state.wideMode) {
             rightSize = 550; // wide mode
@@ -2985,13 +2984,22 @@ class RootArea extends React.Component {
         // and moreso, returns correct results when un-minimizing. see #243
         //console.log(`width = ${window.innerWidth}`);
         //const isMobile = localStorage.mobile || window.navigator.maxTouchPoints > 1;
-        if (window.innerWidth < 1100) { // try to be sensitive to iphone, where width is like always 1010 or something.
+        // if (window.innerWidth < 1300) { // try to be sensitive to iphone, where width is like always 1010 or something.
+        //     rightSize = 0;
+        //     leftSize = "0px";
+        // }
+
+        // do not consider right size here, because then you'd get very ugly behavior when selecting an instrument.
+        // (you'd select an instrument, all the sudden left+right take up too much of the screen and both columns disappear.)
+        if (leftSize > (window.innerWidth * 0.3)) {
             rightSize = 0;
-            leftSize = "0px";
+            leftSize = 0;
         }
 
         gridContainerStyle = {
-            gridTemplateColumns: `${leftSize} minmax(0, 1fr) ${rightSize}px`,
+            //gridTemplateColumns: `${leftSize}px minmax(0, 1fr) ${rightSize}px`,
+            "--left-column-size": `${leftSize}px`,
+            "--right-column-size": `${rightSize}px`,
         };
 
         const isDisconnected = !this.state.app?.IsConnected();

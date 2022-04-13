@@ -1,43 +1,984 @@
 {
-  "roomID": "revisionmainstage",
-  "roomTitle": "#revisionmainstage",
-  "route": "/revisionmainstage",
-  "img": "/roomart/tony01_lightsout_1750.jpg",
-  "isPrivate": true,
-  "width": 1750,
-  "height": 1280,
+  "roomID": "7jam",
+  "roomTitle": "#7jam",
+  "route": "/",
+  "backgroundLayers": [
+    {
+      "img": "/roomart/7jam-2350.png",
+      "default": 1,
+      "parallaxFactor": 0.85,
+      "z": 10,
+      "cssClass": "",
+      "width": 1750,
+      "height": 1280
+    },
+    {
+      "parallaxFactor": 0.35,
+      "z": 0,
+      "width": 1750,
+      "height": 1280,
+      "cssClass": "parallaxBG"
+    }
+  ],
+  "width": 2350,
+  "height": 1600,
   "bpm": 100,
   "announcementHTML": "",
+  "roomRegions": [
+    {
+      "id": "oobTopLeft",
+      "polyPoints": [
+        [
+          7,
+          657
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1063,
+          20
+        ],
+        [
+          1054,
+          70
+        ]
+      ],
+      "cssClass": "oob"
+    },
+    {
+      "id": "oobTopRight",
+      "polyPoints": [
+        [
+          1231,
+          57
+        ],
+        [
+          1217,
+          17
+        ],
+        [
+          2350,
+          0
+        ],
+        [
+          2350,
+          631
+        ]
+      ],
+      "cssClass": "oob"
+    },
+    {
+      "id": "oobBottomLeft",
+      "polyPoints": [
+        [
+          0,
+          1600
+        ],
+        [
+          10,
+          1018
+        ],
+        [
+          44,
+          1033
+        ],
+        [
+          1200,
+          1600
+        ]
+      ],
+      "cssClass": "oob"
+    },
+    {
+      "id": "oobBottomRight",
+      "polyPoints": [
+        [
+          1200,
+          1600
+        ],
+        [
+          2323,
+          988
+        ],
+        [
+          2350,
+          967
+        ],
+        [
+          2350,
+          1600
+        ]
+      ],
+      "cssClass": "oob"
+    },
+    {
+      "id": "speakerStack",
+      "polyPoints": [
+        [
+          968,
+          589
+        ],
+        [
+          983,
+          465
+        ],
+        [
+          1054,
+          70
+        ],
+        [
+          1063,
+          20
+        ],
+        [
+          1217,
+          17
+        ],
+        [
+          1231,
+          57
+        ],
+        [
+          1329,
+          440
+        ],
+        [
+          1314,
+          546
+        ],
+        [
+          1294,
+          587
+        ]
+      ],
+      "cssClass": "speakerStack frontFacing"
+    },
+    {
+      "id": "amplifier",
+      "polyPoints": [
+        [
+          1299,
+          699
+        ],
+        [
+          1294,
+          587
+        ],
+        [
+          1314,
+          546
+        ],
+        [
+          1409,
+          583
+        ],
+        [
+          1401,
+          695
+        ]
+      ],
+      "cssClass": "amplifier frontFacing"
+    },
+    {
+      "id": "stairs",
+      "polyPoints": [
+        [
+          170,
+          634
+        ],
+        [
+          438,
+          487
+        ],
+        [
+          455,
+          769
+        ]
+      ],
+      "cssClass": "stairs"
+    },
+    {
+      "id": "pcMonitor",
+      "polyPoints": [
+        [
+          1717,
+          960
+        ],
+        [
+          1797,
+          954
+        ],
+        [
+          1804,
+          1030
+        ],
+        [
+          1715,
+          1039
+        ]
+      ],
+      "cssClass": "pcMonitor"
+    },
+    {
+      "id": "nesMonitor",
+      "polyPoints": [
+        [
+          1504,
+          1142
+        ],
+        [
+          1580,
+          1172
+        ],
+        [
+          1583,
+          1235
+        ],
+        [
+          1507,
+          1213
+        ]
+      ],
+      "cssClass": "nesMonitor"
+    },
+    {
+      "id": "nesLeftFace",
+      "polyPoints": [
+        [
+          1482,
+          1281
+        ],
+        [
+          1481,
+          1199
+        ],
+        [
+          1612,
+          1280
+        ],
+        [
+          1619,
+          1345
+        ]
+      ],
+      "cssClass": "nesLeftFace leftFacing"
+    },
+    {
+      "id": "rightSofaLeftFace",
+      "polyPoints": [
+        [
+          1949,
+          912
+        ],
+        [
+          1958,
+          851
+        ],
+        [
+          2151,
+          958
+        ],
+        [
+          2162,
+          1018
+        ]
+      ],
+      "cssClass": "rightSofaLeftFace leftFacing"
+    },
+    {
+      "id": "jacuzziLeftFace",
+      "polyPoints": [
+        [
+          1692,
+          875
+        ],
+        [
+          1402,
+          732
+        ],
+        [
+          1409,
+          583
+        ],
+        [
+          1475,
+          611
+        ],
+        [
+          1478,
+          685
+        ],
+        [
+          1686,
+          783
+        ]
+      ],
+      "cssClass": "leftFacing jacuzziLeftFace"
+    },
+    {
+      "id": "vendingLeftFace",
+      "polyPoints": [
+        [
+          491,
+          538
+        ],
+        [
+          552,
+          569
+        ],
+        [
+          548,
+          781
+        ],
+        [
+          488,
+          745
+        ]
+      ],
+      "cssClass": "vendingLeftFace leftFacing"
+    },
+    {
+      "id": "rightWall",
+      "polyPoints": [
+        [
+          1231,
+          57
+        ],
+        [
+          2350,
+          631
+        ],
+        [
+          2350,
+          967
+        ],
+        [
+          2323,
+          988
+        ],
+        [
+          2266,
+          963
+        ],
+        [
+          2258,
+          868
+        ],
+        [
+          2205,
+          912
+        ],
+        [
+          1882,
+          763
+        ],
+        [
+          1875,
+          681
+        ],
+        [
+          1667,
+          573
+        ],
+        [
+          1663,
+          520
+        ],
+        [
+          1585,
+          488
+        ],
+        [
+          1513,
+          522
+        ],
+        [
+          1329,
+          440
+        ]
+      ],
+      "cssClass": "rightWall leftFacing"
+    },
+    {
+      "id": "rightSofaRightFace",
+      "polyPoints": [
+        [
+          2162,
+          1018
+        ],
+        [
+          2151,
+          958
+        ],
+        [
+          2205,
+          912
+        ],
+        [
+          2258,
+          868
+        ],
+        [
+          2266,
+          963
+        ]
+      ],
+      "cssClass": "rightSofaRightFace rightFacing"
+    },
+    {
+      "id": "deskRightFace",
+      "polyPoints": [
+        [
+          1836,
+          1039
+        ],
+        [
+          1839,
+          1161
+        ],
+        [
+          1665,
+          1239
+        ],
+        [
+          1611,
+          1192
+        ],
+        [
+          1623,
+          1154
+        ]
+      ],
+      "cssClass": "rightFacing deskRightFace"
+    },
+    {
+      "id": "nesRightFace",
+      "polyPoints": [
+        [
+          1612,
+          1280
+        ],
+        [
+          1702,
+          1252
+        ],
+        [
+          1702,
+          1319
+        ],
+        [
+          1619,
+          1345
+        ]
+      ],
+      "cssClass": "nesRightFace rightFacing"
+    },
+    {
+      "id": "djRightFace",
+      "polyPoints": [
+        [
+          1475,
+          611
+        ],
+        [
+          1663,
+          520
+        ],
+        [
+          1667,
+          573
+        ],
+        [
+          1478,
+          685
+        ]
+      ],
+      "cssClass": "djRightFace rightFacing"
+    },
+    {
+      "id": "jacuzziRightFace",
+      "polyPoints": [
+        [
+          1686,
+          783
+        ],
+        [
+          1875,
+          681
+        ],
+        [
+          1882,
+          763
+        ],
+        [
+          1692,
+          875
+        ]
+      ],
+      "cssClass": "jacuzziRightFace rightFacing"
+    },
+    {
+      "id": "vendingRightFace",
+      "polyPoints": [
+        [
+          552,
+          569
+        ],
+        [
+          639,
+          522
+        ],
+        [
+          638,
+          718
+        ],
+        [
+          548,
+          781
+        ]
+      ],
+      "cssClass": "vendingRightFace rightFacing"
+    },
+    {
+      "id": "leftWall",
+      "polyPoints": [
+        [
+          44,
+          1033
+        ],
+        [
+          10,
+          1018
+        ],
+        [
+          7,
+          657
+        ],
+        [
+          1054,
+          70
+        ],
+        [
+          983,
+          465
+        ],
+        [
+          639,
+          635
+        ],
+        [
+          639,
+          522
+        ],
+        [
+          576,
+          478
+        ],
+        [
+          491,
+          538
+        ],
+        [
+          488,
+          745
+        ],
+        [
+          455,
+          769
+        ],
+        [
+          438,
+          487
+        ],
+        [
+          170,
+          634
+        ],
+        [
+          179,
+          942
+        ]
+      ],
+      "cssClass": "leftWall rightFacing"
+    },
+    {
+      "id": "vendingTop",
+      "polyPoints": [
+        [
+          576,
+          478
+        ],
+        [
+          639,
+          522
+        ],
+        [
+          552,
+          569
+        ],
+        [
+          491,
+          538
+        ]
+      ],
+      "cssClass": "vendingTop upFacing"
+    },
+    {
+      "id": "floorRight",
+      "polyPoints": [
+        [
+          1637,
+          1375
+        ],
+        [
+          1619,
+          1345
+        ],
+        [
+          1702,
+          1319
+        ],
+        [
+          1702,
+          1252
+        ],
+        [
+          1665,
+          1239
+        ],
+        [
+          1839,
+          1161
+        ],
+        [
+          1836,
+          1039
+        ],
+        [
+          1804,
+          1030
+        ],
+        [
+          1797,
+          954
+        ],
+        [
+          1949,
+          912
+        ],
+        [
+          2162,
+          1018
+        ],
+        [
+          2266,
+          963
+        ],
+        [
+          2323,
+          988
+        ]
+      ],
+      "cssClass": "floorRight upFacing"
+    },
+    {
+      "id": "desktop",
+      "polyPoints": [
+        [
+          1612,
+          1280
+        ],
+        [
+          1507,
+          1213
+        ],
+        [
+          1583,
+          1235
+        ],
+        [
+          1580,
+          1172
+        ],
+        [
+          1504,
+          1142
+        ],
+        [
+          1715,
+          1039
+        ],
+        [
+          1804,
+          1030
+        ],
+        [
+          1836,
+          1039
+        ],
+        [
+          1623,
+          1154
+        ],
+        [
+          1611,
+          1192
+        ],
+        [
+          1665,
+          1239
+        ],
+        [
+          1702,
+          1252
+        ]
+      ],
+      "cssClass": "desktop upFacing"
+    },
+    {
+      "id": "floorLower",
+      "polyPoints": [
+        [
+          44,
+          1033
+        ],
+        [
+          179,
+          942
+        ],
+        [
+          1949,
+          912
+        ],
+        [
+          1797,
+          954
+        ],
+        [
+          1717,
+          960
+        ],
+        [
+          1715,
+          1039
+        ],
+        [
+          1504,
+          1142
+        ],
+        [
+          1507,
+          1213
+        ],
+        [
+          1481,
+          1199
+        ],
+        [
+          1482,
+          1281
+        ],
+        [
+          1619,
+          1345
+        ],
+        [
+          1637,
+          1375
+        ],
+        [
+          1200,
+          1600
+        ]
+      ],
+      "cssClass": "floorLower upFacing"
+    },
+    {
+      "id": "jacuzziWater",
+      "polyPoints": [
+        [
+          1478,
+          685
+        ],
+        [
+          1667,
+          573
+        ],
+        [
+          1875,
+          681
+        ],
+        [
+          1686,
+          783
+        ]
+      ],
+      "cssClass": "jacuzziWater upFacing"
+    },
+    {
+      "id": "djTop",
+      "polyPoints": [
+        [
+          1329,
+          440
+        ],
+        [
+          1513,
+          522
+        ],
+        [
+          1585,
+          488
+        ],
+        [
+          1663,
+          520
+        ],
+        [
+          1475,
+          611
+        ],
+        [
+          1409,
+          583
+        ],
+        [
+          1314,
+          546
+        ]
+      ],
+      "cssClass": "djTop upFacing"
+    },
+    {
+      "id": "floorUpper",
+      "polyPoints": [
+        [
+          179,
+          942
+        ],
+        [
+          170,
+          634
+        ],
+        [
+          455,
+          769
+        ],
+        [
+          488,
+          745
+        ],
+        [
+          548,
+          781
+        ],
+        [
+          638,
+          718
+        ],
+        [
+          639,
+          635
+        ],
+        [
+          983,
+          465
+        ],
+        [
+          968,
+          589
+        ],
+        [
+          1294,
+          587
+        ],
+        [
+          1299,
+          699
+        ],
+        [
+          1401,
+          695
+        ],
+        [
+          1402,
+          732
+        ],
+        [
+          1692,
+          875
+        ],
+        [
+          1882,
+          763
+        ],
+        [
+          2205,
+          912
+        ],
+        [
+          2151,
+          958
+        ],
+        [
+          1958,
+          851
+        ],
+        [
+          1949,
+          912
+        ]
+      ],
+      "cssClass": "floorUpper upFacing"
+    }
+  ],
   "roomItems": [
     {
-      "itemID": "roomCredits",
-      "name": "i",
-      "itemType": "sign",
+      "itemID": "announcement",
+      "itemType": "graffitiText",
+      "rect": {
+        "x": 460,
+        "y": 330,
+        "w": 400,
+        "h": 150
+      }
+    },
+    {
+      "itemID": "doorToHall",
+      "name": "#hall",
+      "itemType": "door",
       "style": {
-        "fontSize": 32,
-        "borderRadius": "50%",
+        "transform": "skewY(-30deg)"
+      },
+      "rect":{"x": 250, "y": 550, "w": 180, "h": 250},
+      "onAvatarEnter": {
+        "processor": "server",
+        "fn": "roomChange",
+        "params": {
+          "roomID": "hall",
+          "x": 400,
+          "y": 825
+        }
+      }
+    },
+    {
+      "itemID": "doorToMaj7",
+      "name": "#maj7",
+      "itemType": "door",
+      "style": {
         "transform": "skewY(30deg)"
       },
-      "rect": {
-        "x": 1590,
-        "y": 480,
-        "w": 40,
-        "h": 40
-      },
-      "params": {
-        "message": "Artwork for #maj7 by Tony Thai<br /><a target=\"_blank\" href=\"https://twitter.com/uewipiw\">twitter/@uewipiw</a>.",
-        "style": {
-          "transform": "skewY(26deg) translateX(-200px)",
-          "border": "5px solid #925113eb",
-          "fontSize": 18,
-          "backgroundColor": "black",
-          "width": 200,
-          "height": 100
-        }
-      },
+      "rect": {"x":1915,"y":515,"w":120,"h":295},
       "onAvatarEnter": {
-        "processor": "client",
-        "fn": "toggleSign"
+        "processor": "server",
+        "fn": "roomChange",
+        "params": {
+          "roomID": "maj7",
+          "x": 1188,
+          "y": 565
+        }
       }
     }
   ],
@@ -49,6 +990,7 @@
       "presetBankID": "fm4",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4a: ",
+      "seqPresetBankID": "seqfm4",
       "name": "Mini FM A"
     },
     {
@@ -56,6 +998,7 @@
       "presetBankID": "fm4",
       "copyOfInstrumentID": "minifm",
       "namePrefix": "FM4b: ",
+      "seqPresetBankID": "seqfm4",
       "name": "Mini FM B"
     },
     {
@@ -64,6 +1007,7 @@
       "namePrefix": "MicroA: ",
       "presetBankID": "microFM",
       "name": "MicroA",
+      "seqPresetBankID": "seqmicroFM",
       "behaviorStyle": "microSub"
     },
     {
@@ -72,6 +1016,7 @@
       "namePrefix": "MicroB: ",
       "presetBankID": "microFM",
       "name": "MicroB",
+      "seqPresetBankID": "seqmicroFM",
       "behaviorStyle": "microSub"
     },
     {
@@ -79,6 +1024,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(73, 137, 255)",
       "name": "Acoustic Pianos",
+      "seqPresetBankID": "sfzACPno",
       "sfzArray": [
         {
           "gain": 1.8,
@@ -86,6 +1032,22 @@
           "sfzURL": "/sfz/001_Yamaha_C7/001_Yamaha_C7.sfz.json",
           "filtCutoffMul": 7000,
           "name": "001_Yamaha_C7",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "sfzURL": "/sfz/M1 Piano/M1 Piano.sfz.json",
+          "name": "M1 Piano",
+          "gain": 1.2,
+          "sfzExtendRange": true,
+          "transpose": 12,
           "sfzPatch": {
             "velCurve": 2.0,
             "velAmpMod": 0.85,
@@ -111,6 +1073,22 @@
             "adjustS": 0,
             "adjustR": 0
           }
+        },
+        {
+          "gain": 0.8,
+          "transpose": 12,
+          "sfzURL": "/sfz/SQ-R Piano & Strings/SQ-R Piano & Strings.sfz.json",
+          "name": "SQ-R Piano & Strings",
+          "sfzExtendRange": true,
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
         }
       ]
     },
@@ -118,6 +1096,7 @@
       "instrumentID": "sfzEP",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(121, 255, 255)",
+      "seqPresetBankID": "sfzEP",
       "name": "Electric Pianos",
       "sfzArray": [
         {
@@ -175,16 +1154,47 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "orange",
       "name": "Acoustic Guitars",
+      "seqPresetBankID": "sfzAcGt",
       "sfzArray": [
         {
-          "gain": 2.5,
+          "gain": 0.55,
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-A-110-Steel Away/PR-A-110-Steel Away.sfz.json",
+          "name": "XV: Steel Away",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "gain": 1.0,
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-A-112-12str Gtr 1/PR-A-112-12str Gtr 1.sfz.json",
+          "name": "XV: 12str Gtr 1",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "gain": 5.0,
           "transpose": 0,
           "sfzURL": "/sfz/025_Steel_Guitar/025_Steel_Guitar.sfz.json",
           "sfzExtendRange": true,
           "name": "025_Steel_Guitar",
           "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.76,
+            "velCurve": 3.5,
+            "velAmpMod": 0.0,
             "adjustFinetune": 0,
             "adjustA": 0,
             "adjustD": 0,
@@ -230,6 +1240,7 @@
       "instrumentID": "sfzElGt",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#ff5900",
+      "seqPresetBankID": "sfzElGt",
       "name": "Electric Guitars",
       "sfzArray": [
         {
@@ -266,6 +1277,21 @@
         },
         {
           "gain": 0.5,
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-A-115-LetterFrmPat/PR-A-115-LetterFrmPat.sfz.json",
+          "name": "PR-A-115-LetterFrmPat",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 2
+          }
+        },
+        {
+          "gain": 0.5,
           "transpose": 0,
           "sfzURL": "/sfz/029_Overdrive_Guitar/029_Overdrive_Guitar.sfz.json",
           "sfzExtendRange": true,
@@ -286,6 +1312,7 @@
       "instrumentID": "sfzBrassSolo",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#11ff66",
+      "seqPresetBankID": "sfzBrassSolo",
       "name": "Brass Solo",
       "sfzArray": [
         {
@@ -326,6 +1353,7 @@
       "instrumentID": "sfzBrassEns",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#00ff55",
+      "seqPresetBankID": "sfzBrassEns",
       "name": "Brass Ensemble",
       "sfzArray": [
         {
@@ -365,6 +1393,7 @@
       "instrumentID": "sfzAccordion",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#12c781",
+      "seqPresetBankID": "sfzAccordion",
       "name": "Accordion",
       "sfzArray": [
         {
@@ -406,6 +1435,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "name": "Calliope",
       "color": "green",
+      "seqPresetBankID": "sfz_G83SynCaliope",
       "sfzArray": [
         {
           "sfzURL": "/sfz/G83 SynCaliope/G83 SynCaliope.sfz.json",
@@ -443,8 +1473,41 @@
       "instrumentID": "sfzVox",
       "copyOfInstrumentID": "sfzMulti",
       "color": "#8eff40",
+      "seqPresetBankID": "sfzVox",
       "name": "Vox",
       "sfzArray": [
+        {
+          "name": "M1 Choir",
+          "sfzURL": "/sfz/M1 Choir/M1 Choir.sfz.json",
+          "transpose": 12,
+          "sfzExtendRange": true,
+          "gain": 0.5,
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
+        },
+        {
+          "gain": 1,
+          "transpose": 0,
+          "sfzExtendRange": true,
+          "sfzURL": "/sfz/PR-A-079-Fantasy-Vox/PR-A-079-Fantasy-Vox.sfz.json",
+          "name": "PR-A-079-Fantasy-Vox",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0.7
+          }
+        },
         {
           "gain": 0.62,
           "transpose": 12,
@@ -476,22 +1539,6 @@
             "adjustS": 0,
             "adjustR": 0
           }
-        },
-        {
-          "gain": 1,
-          "transpose": 0,
-          "sfzExtendRange": true,
-          "sfzURL": "/sfz/PR-A-079-Fantasy-Vox/PR-A-079-Fantasy-Vox.sfz.json",
-          "name": "PR-A-079-Fantasy-Vox",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0.7
-          }
         }
       ]
     },
@@ -500,6 +1547,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 75, 75)",
       "name": "Pad",
+      "seqPresetBankID": "sfzPad",
       "sfzArray": [
         {
           "gain": 1,
@@ -587,6 +1635,7 @@
       "instrumentID": "sfzStr",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 75, 75)",
+      "seqPresetBankID": "sfzStr",
       "name": "Strings",
       "sfzArray": [
         {
@@ -643,6 +1692,7 @@
       "instrumentID": "sfzPluck",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 245, 53)",
+      "seqPresetBankID": "sfzPluck",
       "name": "Pluck",
       "sfzArray": [
         {
@@ -700,6 +1750,7 @@
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(255, 245, 53)",
       "name": "Mallet / Bell",
+      "seqPresetBankID": "sfzMallet",
       "sfzArray": [
         {
           "gain": 2,
@@ -787,6 +1838,7 @@
     {
       "instrumentID": "sfzBass",
       "copyOfInstrumentID": "sfzMulti",
+      "seqPresetBankID": "sfzBass",
       "color": "rgb(203, 203, 203)",
       "name": "Bass",
       "sfzArray": [
@@ -875,26 +1927,19 @@
       ]
     },
     {
-      "instrumentID": "sfzPerc",
+      "instrumentID": "sfzSfx",
       "activityDisplay": "drums",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
-      "name": "Percussion",
+      "seqPresetBankID": "seqsfx",
+      "sequencerDevice": {
+        "legendRef": "GeneralNotes"
+      },
+      "name": "SFX",
       "sfzArray": [
         {
-          "gain": 1,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/BagOPercussion/BagOPercussion.json",
-          "name": "BagOPercussion",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
+          "sfzURL": "/sfz/Gospel Voice Set/Gospel Voice Set.sfz.json",
+          "name": "Gospel Voice Set"
         },
         {
           "gain": 1,
@@ -925,6 +1970,49 @@
             "adjustS": 0,
             "adjustR": 0
           }
+        },
+        {
+          "gain": 0.8,
+          "transpose": -24,
+          "sfzURL": "/sfz/Orchestra Hits/Orchestra Hits.sfz.json",
+          "name": "Orchestra Hits",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 2
+          }
+        }
+      ]
+    },
+    {
+      "instrumentID": "sfzPerc",
+      "activityDisplay": "drums",
+      "copyOfInstrumentID": "sfzMulti",
+      "color": "rgb(91, 91, 255)",
+      "seqPresetBankID": "seqperc",
+      "sequencerDevice": {
+        "legendRef": "PercA"
+      },
+      "name": "Percussion",
+      "sfzArray": [
+        {
+          "gain": 1,
+          "transpose": 0,
+          "sfzURL": "/drum-samples/BagOPercussion/BagOPercussion.json",
+          "name": "BagOPercussion",
+          "sfzPatch": {
+            "velCurve": 2.0,
+            "velAmpMod": 0.85,
+            "adjustFinetune": 0,
+            "adjustA": 0,
+            "adjustD": 0,
+            "adjustS": 0,
+            "adjustR": 0
+          }
         }
       ]
     },
@@ -933,37 +2021,18 @@
       "activityDisplay": "drums",
       "copyOfInstrumentID": "sfzMulti",
       "color": "rgb(91, 91, 255)",
+      "seqPresetBankID": "seqdrums",
+      "transpose": 0,
+      "ignoreLoop": true,
+      "sfzForceOneShot": true,
+      "sequencerDevice": {
+        "legendRef": "DrumsA"
+      },
       "name": "Drum kits",
       "sfzArray": [
         {
-          "gain": 1,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/808vs909.sfz.json",
-          "name": "808 vs 909",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
-        },
-        {
-          "gain": 2,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/jazzy/jazz.sfz.json",
-          "name": "Jazzy",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
+          "sfzURL": "/sfz/Drum-Pre-08-808-Kit/Drum-Pre-08-808-Kit.sfz.json",
+          "name": "CS6R 808"
         },
         {
           "gain": 0.66,
@@ -981,10 +2050,23 @@
           }
         },
         {
-          "gain": 1.3,
+          "sfzURL": "/sfz/Drum-Pre-02-House-Kit/Drum-Pre-02-House-Kit.sfz.json",
+          "name": "CS6R House",
+          "gain": 0.9
+        },
+        {
+          "sfzURL": "/sfz/Drum-Pre-04-Trance-Kit/Drum-Pre-04-Trance-Kit.sfz.json",
+          "name": "CS6R Trance"
+        },
+        {
+          "sfzURL": "/sfz/Drum-Pre-05-Nasty-Kit/Drum-Pre-05-Nasty-Kit.sfz.json",
+          "name": "CS6R Nasty"
+        },
+        {
+          "gain": 1.6,
           "transpose": 0,
-          "sfzURL": "/drum-samples/SC88/sc88.sfz.json",
-          "name": "SC88",
+          "sfzURL": "/drum-samples/jazzy/jazz.sfz.json",
+          "name": "Jazzy",
           "sfzPatch": {
             "velCurve": 2.0,
             "velAmpMod": 0.85,
@@ -996,27 +2078,12 @@
           }
         },
         {
-          "gain": 1,
-          "transpose": 0,
-          "sfzURL": "/drum-samples/SecretOfManaExt/SecretOfManaExt.sfz.json",
-          "name": "SecretOfManaExt",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
-        },
-        {
-          "gain": 2,
+          "gain": 1.6,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,
           "sfzURL": "/sfz/User-61-XV-BrushKit/User-61-XV-BrushKit.sfz.json",
-          "name": "User-61-XV-BrushKit",
+          "name": "XV 61-BrushKit",
           "sfzPatch": {
             "velCurve": 2.0,
             "velAmpMod": 0.85,
@@ -1028,7 +2095,11 @@
           }
         },
         {
-          "gain": 2.5,
+          "sfzURL": "/sfz/Drum-Pre-06-Brush-Kit/Drum-Pre-06-Brush-Kit.sfz.json",
+          "name": "CS6R Brush"
+        },
+        {
+          "gain": 3.0,
           "transpose": 0,
           "ignoreLoop": true,
           "sfzForceOneShot": true,
@@ -1045,21 +2116,13 @@
           }
         },
         {
-          "gain": 2,
-          "transpose": 0,
-          "ignoreLoop": true,
-          "sfzForceOneShot": true,
-          "sfzURL": "/sfz/032_Jazz/032_Jazz.sfz.json",
-          "name": "032_Jazz",
-          "sfzPatch": {
-            "velCurve": 2.0,
-            "velAmpMod": 0.85,
-            "adjustFinetune": 0,
-            "adjustA": 0,
-            "adjustD": 0,
-            "adjustS": 0,
-            "adjustR": 0
-          }
+          "sfzURL": "/sfz/Drum-Pre-01-Rock-Kit/Drum-Pre-01-Rock-Kit.sfz.json",
+          "name": "CS6R Rock"
+        },
+        {
+          "sfzURL": "/sfz/Drum-Pre-03-Hip-Kit/Drum-Pre-03-Hip-Kit.sfz.json",
+          "name": "CS6R Hip",
+          "gain": 1.5
         }
       ]
     },

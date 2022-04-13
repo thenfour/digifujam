@@ -7,10 +7,12 @@ host_prefix: http://localhost:8081
 # LocalStaticHostPrefix: http://localhost:8081/uploads
 log_command: supervisorctl tail -9000 7jam
 room_json:
+  - 7jam.json
   - pub.json
   - maj7.json
-  - revisionMainStage.json
   - hall.json
+defaultRoomID: 7jam
+
 #google_client_id: ...
 #google_client_secret: ...
 #google_redirect_url: ... # i think this should become obsolete

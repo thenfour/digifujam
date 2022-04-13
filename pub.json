@@ -1,7 +1,7 @@
 {
   "roomID": "pub",
   "roomTitle": "#DigiLounge",
-  "route": "/",
+  "route": "/digilounge",
   "backgroundLayers": [
     {
       "img": "/roomart/matt1200-masked.png",

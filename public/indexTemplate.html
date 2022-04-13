@@ -3,6 +3,12 @@
 
 <head>
 
+    <title>7jam online jam session & concerts</title>
+    <meta name="description"
+        content="7jam is a 24/7 virtual online jam session for musicians. Play live music in realtime in a multiplayer virtual world. Monthly jam sessions and free online concerts." />
+    
+    <meta name="keywords" content="7jam, online jam, online concert, vr jam, virtual jam, multiplayer jam, online synthesizer, digital audio workstation, online music studio, virtual music studio, virtual concert, music making, online DAW, online jamming, live jam, online music collaboration, virtual reality">
+    
     <style type="text/css">
         #errorlog {
             display: none;
@@ -200,12 +206,6 @@ error.stack: ${e.error.stack.toString()}
 
     </script>
 
-    <title>7jam online jam session & concerts</title>
-    <meta name="description"
-        content="7jam is a 24/7 multiplayer online jam session for musicians. Play and create live music with others, in real-time. Monthly jam sessions and concerts in a virtual music studio that's free and anonymous." />
-    
-    <meta name="keywords" content="7jam, jam online, music making, metaverse, metaverse jam session, multiplayer DAW, realtime jam, online jamming, online jam sessions, live jam, online music collaboration, recording, music, audio, software, social, virtual reality">
-
     <script src="{StaticHostPrefix}/ext/jquery.min.js"></script>
 
     <!-- i don't honestly get how this works. does it install its own express route?? -->
@@ -218,6 +218,8 @@ error.stack: ${e.error.stack.toString()}
 
         let gDFStaticHostPrefix = '{StaticHostPrefix}';
         let gDFLocalStaticHostPrefix = '{LocalStaticHostPrefix}';
+        
+        window.DFDefaultRoomID = '{DefaultRoomID}';
 
         function IsValidURL(u) {
             try { new URL(u); }

@@ -14,8 +14,10 @@
   font-size: 18px;
   transform: translateY(-50%);
   display: flex;
+  right:0;
   flex-direction: column;
 }
+
 
 
 .moderationPanel .topControls {
