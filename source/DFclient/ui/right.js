@@ -1949,8 +1949,8 @@ class UIRoomItem extends React.Component {
             }
     
             return (
-                <div className='roomItemContainer'>
-                    <div className="roomItem graffitiText" style={style} dangerouslySetInnerHTML={{ __html: html }}></div>
+                <div className='roomItemContainer announcementText'>
+                    <div className="roomItem graffitiText announcementText" style={style} dangerouslySetInnerHTML={{ __html: html }}></div>
                 </div>);
         } else if (this.props.item.itemType === DF.DFRoomItemType.radioMetadata) {
             return (this.props.app.radio && <RadioMetadataRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);

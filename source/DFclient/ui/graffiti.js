@@ -23,10 +23,17 @@ class RoomRegionPointDlg extends React.Component {
 
   componentDidMount() {
     document.addEventListener('keydown', this.keydownHandler);
+    this.props.app.events.addListener("LaunchRoomRegionPointDlg", this.onLaunchRoomRegionPointDlg);
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.keydownHandler);
+    this.props.app.events.removeListener("LaunchRoomRegionPointDlg", this.onLaunchRoomRegionPointDlg);
+  }
+
+  onLaunchRoomRegionPointDlg = (e) => {
+    console.log(e);
+    this.setState({liveValueStr:e.pointStr});
   }
 
   keydownHandler = (e) => {
@@ -153,8 +160,10 @@ RegisterModalHandler("RoomRegionPointDlg", (app, context) => {
   return <RoomRegionPointDlg app={app} context={context} />;
 });
 
-function LaunchRoomRegionPointDlg(pointStr) {
+function LaunchRoomRegionPointDlg(app, pointStr) {
   //window.DFStateChangeHandler.OnStateChange();
+  app.events.emit("LaunchRoomRegionPointDlg", { pointStr });
+
   DFInvokeModal({
     op: "RoomRegionPointDlg",
     pointStr,
@@ -232,7 +241,7 @@ class GraffitiScreen extends React.Component {
         "--y": `${ptpos.y}px`,
       };
       points.push(
-      <div key={i} className={"roomRegionPointHandle " + (window.DFModalDialogContext.pointStr === ptStr ? " selected" : "")} style={ptstyle} onClick={(e) => LaunchRoomRegionPointDlg(ptStr)}>
+      <div key={i} className={"roomRegionPointHandle " + (window.DFModalDialogContext.pointStr === ptStr ? " selected" : "")} style={ptstyle} onClick={(e) => LaunchRoomRegionPointDlg(app, ptStr)}>
         <div className='inner'></div>
       </div>);
     })

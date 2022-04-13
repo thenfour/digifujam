@@ -215,6 +215,7 @@ class DigifuApp {
     this.tapTempoState = TapTempoState.NA;
 
     this.events = new EventEmitter();
+    this.events.setMaxListeners(200);
 
     this.stateChangeHandler = null; // called when any state changes; mostly for debugging / dev purposes only.
     this.handleRoomWelcome = null;  // called when you enter a new room.
