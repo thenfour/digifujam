@@ -331,7 +331,7 @@ class GraffitiItem extends React.Component {
     // graffitiItemContainer > graffiti > graffitiContent
     // container because we apply our own transformations & positioning.
     return (
-      <div className={"graffitiItemContainer " + (isImage ? " image " : " text ") + g.extraCssClass} style={style}>
+      <div className={"graffitiItemContainer " + (isImage ? " image " : " text ") + " " + g.cssClass + " " + g.extraCssClass} style={style}>
       <div className={"graffiti " + g.cssClass + " " + g.extraCssClass}>
         {contentEl}
         {(window.DFModerationControlsVisible && app.myUser.IsModerator()) &&

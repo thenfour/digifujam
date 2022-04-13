@@ -1,0 +1,16 @@
+[
+  {
+    "ampeg_release": 0.4,
+    "sample": "Rain Stick 048_0_end.m4a",
+    "lokey": 0,
+    "hikey": 54,
+    "pitch_keycenter": 48
+  },
+  {
+    "ampeg_release": 0.4,
+    "sample": "Rain Stick 060_0_end.m4a",
+    "lokey": 55,
+    "hikey": 66,
+    "pitch_keycenter": 60
+  }
+]

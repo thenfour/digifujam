@@ -1,0 +1,37 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\XP-C-214-Rain Stick.sfz.json
+Region count: 2
+Source samples to read: 2
+Dest samples to create: 2
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\Rain-Stick\XP-C-214-Rain Stick\Rain Stick 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\Rain-Stick\XP-C-214-Rain Stick\Rain Stick 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 060.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 238140
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rain Stick 048_0_end.wav from Rain Stick 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 238140
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating Rain Stick 060_0_end.wav from Rain Stick 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 060_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\XP-C-214-Rain Stick\Rain Stick 060.flac.wav
+Completed processing source WAV files with 2 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_XPC214RainStick",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/XP-C-214-Rain Stick/XP-C-214-Rain Stick.sfz.json",
+  "name": "XP-C-214-Rain Stick"
+}

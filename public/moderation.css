@@ -162,6 +162,7 @@ span.userModerationGear i {
   background-color: #333;
   padding: 10px 10px;
   color: #0cc;
+  max-width: 450px;
 }
 
 .moderationPanel.graffiti dd.size {

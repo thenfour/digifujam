@@ -1,0 +1,553 @@
+Output JSON will be @: C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM-009-GM2 SFX.sfz.json
+Region count: 45
+Source samples to read: 45
+Dest samples to create: 45
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 039.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 039.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 040.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 040.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 041.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 041.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 042.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 042.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 043.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 043.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 044.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 044.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 045.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 045.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 046.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 046.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 047.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 047.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 048.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 048.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 049.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 049.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 050.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 050.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 051.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 051.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 052.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 052.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 053.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 053.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 054.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 054.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 055.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 055.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 056.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 056.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 057.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 057.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 058.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 058.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 059.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 059.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 060.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 060.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 061.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 061.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 062.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 062.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 063.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 063.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 064.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 064.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 065.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 065.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 066.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 066.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 067.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 067.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 068.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 068.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 069.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 069.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 070.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 070.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 071.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 071.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 072.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 072.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 073.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 073.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 074.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 074.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 075.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 075.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 076.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 076.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 077.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 077.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 078.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 078.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 079.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 079.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 080.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 080.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 081.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 081.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 082.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 082.flac.wav"
+Exec to conv to WAV: ffmpeg -y -i "C:\Users\carl\Downloads\GM2-SFX\GM-009-GM2 SFX\GM2 SFX 083.flac" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 083.flac.wav"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 041.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 041_0_end.wav from GM2 SFX 041.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 041_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 041_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 058.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 220282
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 058_0_end.wav from GM2 SFX 058.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 058_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 058_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 073.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 220282
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 073_0_end.wav from GM2 SFX 073.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 073_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 073_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 072.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 176182
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 072_0_end.wav from GM2 SFX 072.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 072_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 072_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 056.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 056_0_end.wav from GM2 SFX 056.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 056_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 056_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 083.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211462
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 083_0_end.wav from GM2 SFX 083.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 083_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 083_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 066.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 193822
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 066_0_end.wav from GM2 SFX 066.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 066_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 066_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 054.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158542
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 054_0_end.wav from GM2 SFX 054.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 054_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 054_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 052.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185002
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 052_0_end.wav from GM2 SFX 052.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 052_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 052_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 055.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 167362
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 055_0_end.wav from GM2 SFX 055.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 055_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 055_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 065.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202642
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 065_0_end.wav from GM2 SFX 065.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 065_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 065_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 063.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237922
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 063_0_end.wav from GM2 SFX 063.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 063_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 063_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 075.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255562
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 075_0_end.wav from GM2 SFX 075.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 075_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 075_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 051.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 114442
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 051_0_end.wav from GM2 SFX 051.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 051_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 051_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 057.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 057_0_end.wav from GM2 SFX 057.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 057_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 057_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 079.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 255562
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 079_0_end.wav from GM2 SFX 079.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 079_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 079_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 060.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158542
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 060_0_end.wav from GM2 SFX 060.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 060_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 060_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 076.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158542
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 076_0_end.wav from GM2 SFX 076.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 076_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 076_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 080.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 237922
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 080_0_end.wav from GM2 SFX 080.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 080_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 080_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 040.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132082
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 040_0_end.wav from GM2 SFX 040.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 040_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 040_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 062.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 220282
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 062_0_end.wav from GM2 SFX 062.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 062_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 062_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 039.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132082
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 039_0_end.wav from GM2 SFX 039.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 039_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 039_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 082.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 229102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 082_0_end.wav from GM2 SFX 082.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 082_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 082_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 078.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211462
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 078_0_end.wav from GM2 SFX 078.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 078_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 078_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 050.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 050_0_end.wav from GM2 SFX 050.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 050_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 050_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 064.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 202642
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 064_0_end.wav from GM2 SFX 064.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 064_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 064_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 049.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132082
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 049_0_end.wav from GM2 SFX 049.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 049_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 049_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 067.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 229102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 067_0_end.wav from GM2 SFX 067.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 067_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 067_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 068.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 264382
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 068_0_end.wav from GM2 SFX 068.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 068_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 068_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 069.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 326122
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 069_0_end.wav from GM2 SFX 069.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 069_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 069_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 077.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 211462
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 077_0_end.wav from GM2 SFX 077.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 077_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 077_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 048.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 123262
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 048_0_end.wav from GM2 SFX 048.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 048_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 048_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 053.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185002
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 053_0_end.wav from GM2 SFX 053.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 053_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 053_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 074.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 074_0_end.wav from GM2 SFX 074.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 074_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 074_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 045.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132082
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 045_0_end.wav from GM2 SFX 045.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 045_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 045_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 042.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 149722
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 042_0_end.wav from GM2 SFX 042.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 042_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 042_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 071.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 220282
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 071_0_end.wav from GM2 SFX 071.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 071_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 071_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 081.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 273202
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 081_0_end.wav from GM2 SFX 081.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 081_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 081_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 061.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 158542
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 061_0_end.wav from GM2 SFX 061.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 061_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 061_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 046.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 132082
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 046_0_end.wav from GM2 SFX 046.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 046_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 046_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 043.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 043_0_end.wav from GM2 SFX 043.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 043_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 043_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 059.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 185002
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 059_0_end.wav from GM2 SFX 059.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 059_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 059_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 047.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 140902
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 047_0_end.wav from GM2 SFX 047.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 047_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 047_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 044.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 61522
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 044_0_end.wav from GM2 SFX 044.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 044_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 044_0_end.m4a"
+Loading C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 070.flac.wav
+  Samplerate: 44100
+  Channels: 2
+  Length in samples: 229102
+  Min offset       : 0
+  Max offset       : 0
+  Reflen in samples: 0
+  > Creating GM2 SFX 070_0_end.wav from GM2 SFX 070.flac [0-end]
+Exec to conv to m4a: ffmpeg -y -i "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 070_0_end.wav" "C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 070_0_end.m4a"
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 063_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 063.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 065_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 065.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 055_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 055.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 052_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 052.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 054_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 054.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 066_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 066.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 083_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 083.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 074_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 074.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 048_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 048.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 067_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 067.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 049_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 049.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 064_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 064.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 050_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 050.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 078_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 078.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 082_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 082.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 058_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 058.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 039_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 039.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 062_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 062.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 040_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 040.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 056_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 056.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 080_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 080.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 076_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 076.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 073_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 073.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 060_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 060.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 079_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 079.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 041_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 041.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 057_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 057.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 051_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 051.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 072_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 072.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 075_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 075.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 045_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 045.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 069_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 069.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 068_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 068.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 077_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 077.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 042_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 042.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 061_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 061.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 053_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 053.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 044_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 044.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 046_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 046.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 043_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 043.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 071_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 071.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 047_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 047.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 059_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 059.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 081_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 081.flac.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 070_0_end.wav
+Deleting/unlinking C:\root\git\thenfour\digifujam\public\sfz\GM-009-GM2 SFX\GM2 SFX 070.flac.wav
+Completed processing source WAV files with 45 conversions.
+Import complete.
+Sample JSON instrument spec:
+{
+  "instrumentID": "sfz_GM009GM2SFX",
+  "copyOfInstrumentID": "sfz",
+  "sfzURL": "/sfz/GM-009-GM2 SFX/GM-009-GM2 SFX.sfz.json",
+  "name": "GM-009-GM2 SFX"
+}
