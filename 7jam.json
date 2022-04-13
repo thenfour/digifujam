@@ -4,7 +4,7 @@
   "route": "/",
   "backgroundLayers": [
     {
-      "img": "/roomart/7jam-2350.png",
+      "img": "/roomart/7jam-8.png",
       "default": 1,
       "parallaxFactor": 0.85,
       "z": 10,
