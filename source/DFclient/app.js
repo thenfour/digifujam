@@ -2163,7 +2163,7 @@ class DigifuApp {
   IsConnected() {
     return !!(this.net?.IsConnected());
   }
-
+  
   Connect(userName, userColor, stateChangeHandler, noteOnHandler, noteOffHandler, handleUserAllNotesOff, handleAllNotesOff, handleUserLeave, pleaseReconnectHandler, handleCheer, handleRoomWelcome, google_access_token, onInstrumentLoadProgress, onMyInstrumentChange) {
     this.myUser = new DF.DigifuUser();
     this.myUser.name = userName;

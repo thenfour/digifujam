@@ -1,3 +1,17 @@
+/*
+
+rightFacingRotateAnim
+frontFacingRotateAnim
+upFacingRotateAnim
+leftFacingRotateAnim
+opacity50
+hueRotateAnim
+nofilter
+
+
+*/
+
+
 .roomItem.graffitiText {
     transform: skewY(-30deg) scaleY(120%);
     border: 0;
@@ -12,7 +26,9 @@
     color: #7ac8ff;
     text-shadow: 0px 0px 3px black, 0px 0px 13px black;
     opacity: 60%;
-    font-size: 36px;
+    font-size: 32px;
+    text-align: right;
+    transform: skewY(28deg) scaleY(130%);
 }
 
 #graffitiContainer .graffiti .graffitiContent.image {
@@ -84,6 +100,146 @@
 #graffitiContainer .graffiti.jacuzziMonitor {
     transform: skew(342deg, 36deg);
 }
+
+
+
+
+@keyframes upFacingGraffitiRotateAnim {
+    0% {
+        transform: rotateX(60deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(60deg) rotateZ(360deg);
+    }
+}
+
+#graffitiContainer .graffiti.upFacingRotateAnim {
+    animation: upFacingGraffitiRotateAnim 40s infinite;
+    animation-timing-function: linear;
+}
+
+
+
+
+@keyframes frontFacingGraffitiRotateAnim {
+    0% {
+        transform: rotateX(0deg) rotateZ(0deg);
+    }
+
+    100% {
+        transform: rotateX(0deg) rotateZ(360deg);
+    }
+}
+
+#graffitiContainer .graffiti.frontFacingRotateAnim {
+    animation: frontFacingGraffitiRotateAnim 40s infinite;
+    animation-timing-function: linear;
+}
+
+
+
+
+@keyframes rightFacingGraffitiRotateAnim {
+    0% {
+        transform: skewY(330deg) scaleY(1.2) rotateZ(0deg);
+    }
+
+    100% {
+        transform: skewY(330deg) scaleY(1.2) rotateZ(360deg);
+    }
+}
+
+#graffitiContainer .graffiti.rightFacingRotateAnim {
+    animation: rightFacingGraffitiRotateAnim 40s infinite;
+    animation-timing-function: linear;
+}
+
+
+
+
+@keyframes leftFacingGraffitiRotateAnim {
+    0% {
+        transform: skewY(30deg) scaleY(1.2) rotateZ(0deg);
+    }
+
+    100% {
+        transform: skewY(30deg) scaleY(1.2) rotateZ(360deg);
+    }
+}
+
+#graffitiContainer .graffiti.leftFacingRotateAnim {
+    animation: leftFacingGraffitiRotateAnim 40s infinite;
+    animation-timing-function: linear;
+}
+
+
+
+
+
+
+
+
+#graffitiContainer .graffiti.nofilter .graffitiContent.image {
+    filter: none;
+}
+
+@keyframes graffitiHueRotateAnim {
+    0% {
+        filter: hue-rotate(0deg);
+    }
+
+    100% {
+        filter: hue-rotate(360deg);
+    }
+}
+
+#graffitiContainer .graffiti.hueRotateAnim .graffitiContent.image {
+    animation: graffitiHueRotateAnim 50s infinite;
+    animation-timing-function: linear;
+}
+
+
+#graffitiContainer .graffiti.opacity0 {
+    opacity: 0%;
+}
+
+#graffitiContainer .graffiti.opacity10 {
+    opacity: 10%;
+}
+
+#graffitiContainer .graffiti.opacity20 {
+    opacity: 20%;
+}
+
+#graffitiContainer .graffiti.opacity30 {
+    opacity: 30%;
+}
+
+#graffitiContainer .graffiti.opacity40 {
+    opacity: 40%;
+}
+
+#graffitiContainer .graffiti.opacity50 {
+    opacity: 50%;
+}
+
+#graffitiContainer .graffiti.opacity60 {
+    opacity: 60%;
+}
+
+#graffitiContainer .graffiti.opacity70 {
+    opacity: 70%;
+}
+
+#graffitiContainer .graffiti.opacity80 {
+    opacity: 80%;
+}
+
+#graffitiContainer .graffiti.opacity90 {
+    opacity: 90%;
+}
+
 
 
 

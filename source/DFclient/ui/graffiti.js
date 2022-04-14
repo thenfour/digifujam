@@ -333,6 +333,7 @@ class GraffitiItem extends React.Component {
       content = content.replaceAll("{roomTitle}", app.roomState.roomPresets.liveMetadata.name);
       content = content.replaceAll("{roomDescription}", app.roomState.roomPresets.liveMetadata.description);
       content = content.replaceAll("{roomTags}", app.roomState.roomPresets.liveMetadata.tags);
+      // content = content.replaceAll("{roomAnnouncement}", app.roomState.); <-- currently not supported because it's non-trivial with the timer stuff
       content = window.DFRenderMarkdown(content);
       contentEl = (<div className="graffitiContent text" style={style} dangerouslySetInnerHTML={{__html: content}}></div>);
     }
