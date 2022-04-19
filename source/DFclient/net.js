@@ -306,7 +306,7 @@ class DigifuNet {
         this.ResetQueuedParamChangeData();
         let query = Object.assign({
             '7jamRealm': 'main',
-            jamroom: window.location.pathname,
+            roomID: window.DFRoomID,
         }, Object.fromEntries(new URLSearchParams(location.search)));
 
         if (google_access_token) {

@@ -176,7 +176,8 @@ class RoomServer {
         //console.log(`Setting DFUserID for socket ${clientSocket.id} to ${userID}`);
         u.persistentInfo = persistentInfo;
         u.lastActivity = new Date();
-        u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
+        u.position = this.roomState.GenerateRandomStartingPosition();
+        //u.position = { x: this.roomState.width / 2, y: this.roomState.height / 2 };
         if (clientSocket.DFPosition) {
           u.position = clientSocket.DFPosition; // if you're transitioning from a previous room, we store your neew position here across the workflow.
         }

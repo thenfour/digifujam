@@ -123,10 +123,7 @@ class _7jamServer {
 
     this.mDB = new DFDB.DFDB(this.mConfig);
 
-    let indexTemplate = fs.readFileSync("public/indexTemplate.html").toString();
-    indexTemplate = indexTemplate.replaceAll("{StaticHostPrefix}", this.mConfig.StaticHostPrefix);
-    indexTemplate = indexTemplate.replaceAll("{LocalStaticHostPrefix}", this.mConfig.LocalStaticHostPrefix);
-    indexTemplate = indexTemplate.replaceAll("{DefaultRoomID}", this.mConfig.defaultRoomID);
+    let indexTemplate = "";
 
     this.mConfig.room_json.forEach(path => {
       const jsonTxt = fs.readFileSync(path);
@@ -143,6 +140,12 @@ class _7jamServer {
         }
       })
     });
+
+    indexTemplate = fs.readFileSync("public/indexTemplate.html").toString();
+    indexTemplate = indexTemplate.replaceAll("{StaticHostPrefix}", this.mConfig.StaticHostPrefix);
+    indexTemplate = indexTemplate.replaceAll("{LocalStaticHostPrefix}", this.mConfig.LocalStaticHostPrefix);
+    indexTemplate = indexTemplate.replaceAll("{DefaultRoomID}", this.mConfig.defaultRoomID);
+    indexTemplate = indexTemplate.replaceAll("{RoomIDRouteMapping}", JSON.stringify(Object.entries(this.mRooms).map(e => ({roomID: e[0], route: e[1].roomState.route}))));
 
     this.expressApp.use("/", express.static('public'));
 
@@ -527,12 +530,15 @@ class _7jamServer {
         ws.disconnect();
         return;
       }
-      let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"], this.mConfig.defaultRoomID);
+      // in fact this is the PATH of the URL. it's the route, not the room ID.
+      //let requestedRoomID = DF.routeToRoomID(ws.handshake.query["jamroom"], this.mConfig.defaultRoomID);
+      let requestedRoomID = ws.handshake.query["roomID"];
       let room = this.mRooms[requestedRoomID];
       if (!room) {
-        console.log(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
-        ws.disconnect();
-        return;
+        //console.log(`user trying to connect to nonexistent roomID ${requestedRoomID}`);
+        requestedRoomID = this.mConfig.defaultRoomID
+        room = this.mRooms[requestedRoomID];
+        //return;
       }
 
       ws.on('disconnect', data => this.OnDisconnect(ws, data));

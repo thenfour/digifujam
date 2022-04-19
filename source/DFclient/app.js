@@ -542,6 +542,7 @@ class DigifuApp {
         });
         //console.log(`pushing state.`);
         window.history.pushState({roomID : data.roomState.roomID}, '', roomURL);
+        window.DFRoomID = data.roomState.roomID;
       }
     }
 

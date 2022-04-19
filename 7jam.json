@@ -3,6 +3,13 @@
   "roomTitle": "#7jam",
   "route": "/",
   "purposes": 6,
+  "width": 2350,
+  "height": 1600,
+  "startingPosition": {
+    "cx": 1175,
+    "cy": 800,
+    "r": 200
+  },
   "backgroundLayers": [
     {
       "img": "/roomart/7jam-8.png",
@@ -21,8 +28,6 @@
       "cssClass": "parallaxBG"
     }
   ],
-  "width": 2350,
-  "height": 1600,
   "bpm": 100,
   "announcementHTML": "",
   "roomRegions": [

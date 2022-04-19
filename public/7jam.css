@@ -247,9 +247,11 @@ RZ = range of rotation
     0% {
         transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ))) skewY(30deg);
     }
+
     33% {
         transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ))) skewY(30deg);
     }
+
     66% {
         transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ))) skewY(30deg);
     }
@@ -263,13 +265,13 @@ RZ = range of rotation
 #graffitiContainer .graffitiItemContainer.floatingSign3D_LeftFacing {
     --rotExtentY: 15deg;
     --rotExtentX: 15deg;
-  perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
-  perspective: calc(100px + (1000px * var(--RY)));
+    perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
+    perspective: calc(100px + (1000px * var(--RY)));
 }
 
 #graffitiContainer .graffitiItemContainer .floatingSign3D_LeftFacing {
     animation: SignFloatAnim3D_LeftFacing calc(20s * var(--RX)) infinite;
-      transform-origin: calc(.5px * var(--size))  calc(.5px * var(--size));
+    transform-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
     animation-timing-function: linear;
     animation-direction: alternate;
 }
@@ -279,9 +281,11 @@ RZ = range of rotation
     0% {
         transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ))) skewY(-30deg);
     }
+
     33% {
         transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ))) skewY(-30deg);
     }
+
     66% {
         transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ))) skewY(-30deg);
     }
@@ -295,13 +299,13 @@ RZ = range of rotation
 #graffitiContainer .graffitiItemContainer.floatingSign3D_RightFacing {
     --rotExtentY: 15deg;
     --rotExtentX: 15deg;
-  perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
-  perspective: calc(100px + (1000px * var(--RY)));
+    perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
+    perspective: calc(100px + (1000px * var(--RY)));
 }
 
 #graffitiContainer .graffitiItemContainer .floatingSign3D_RightFacing {
     animation: SignFloatAnim3D_RightFacing calc(20s * var(--RX)) infinite;
-      transform-origin: calc(.5px * var(--size))  calc(.5px * var(--size));
+    transform-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
     animation-timing-function: linear;
     animation-direction: alternate;
 }
@@ -376,6 +380,7 @@ RZ = range of rotation
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .nowPlayingTitle {
-    font-size: 46px;
+    font-size: 40px;
     color: #e50;
+    line-height: 40px;
 }

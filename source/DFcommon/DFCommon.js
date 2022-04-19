@@ -1609,6 +1609,12 @@ class DigifuRoomState {
 
         this.purposes ??= eRoomPurposeFlags.JamPurpose;
 
+        this.startingPosition ??= {
+            cx: this.width / 2,
+            cy: this.height / 2,
+            r: 100,
+        };
+
         this.presetBanks = this.presetBanks.map(o => {
             const n = Object.assign(new PresetBank(), o);
             n.thaw();
@@ -2339,21 +2345,40 @@ class DigifuRoomState {
     // room presets
 
 
+    // { x: this.roomState.width / 2, y: this.roomState.height / 2 };
+    GenerateRandomStartingPosition() {
+        // https://stackoverflow.com/questions/5837572/generate-a-random-point-within-a-circle-uniformly
+        const r = this.startingPosition.r * Math.sqrt(Math.random());
+        const theta = Math.random() * 2 * Math.PI;
+        const x = this.startingPosition.cx + r * Math.cos(theta);
+        const y = this.startingPosition.cy + r * Math.sin(theta);
+        return { x, y};
+    }
+
 }; // DigifuRoomState
 
 
+function TrimSlashes(s) {
+    if (s.length < 1) return s;
+    if (s[0] == '/') s = s.substring(1);
+    if (s[s.length - 1] == '/') s = s.substring(0, s.length - 1);
+    return s;
+}
 
-let routeToRoomID = function (r, fallbackID) {
-    let requestedRoomID = r;
-    if (requestedRoomID.length < 1) return fallbackID;
+// need to figure out which room to place people based on the URL. this does that.
+let routeToRoomID = function (r, fallbackID, mapping) {
+    let requestedRoute = r.toLowerCase();
+    if (requestedRoute.length < 1) return fallbackID;
 
-    // trim slashes
-    if (requestedRoomID[0] == '/') requestedRoomID = requestedRoomID.substring(1);
-    if (requestedRoomID[requestedRoomID.length - 1] == '/') requestedRoomID = requestedRoomID.substring(0, requestedRoomID.length - 1);
+    requestedRoute = TrimSlashes(requestedRoute);
 
-    if (requestedRoomID.length < 1) return fallbackID;
+    const match = mapping.find(m => {
+        const routeClean = TrimSlashes(m.route).toLowerCase();
+        return (routeClean === requestedRoute);
+    });
 
-    return requestedRoomID.toLowerCase();
+    if (!match) return fallbackID;
+    return match.roomID;
 };
 
 
