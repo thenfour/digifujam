@@ -163,10 +163,12 @@ class IntRangeValueSpec {
 
 
 class FloatValueSpec01 {
-  constructor() {
+  constructor(params) {
+    if (params) Object.assign(this, params);
       this.mouseSpeed ??= 0.004;
       this.fineMouseSpeed ??= 0.0008;
-      this.centerValue = 0.0;
+      this.centerValue ??= 0.0;
+      this.resetValue ??= this.centerValue;
   }
   value01ToValue = (v01) => {
       return v01;

@@ -1719,7 +1719,10 @@ class DigifuRoomState {
             position: Object.assign({}, u.user.position), // careful about refs!
             cssClass: rgn.cssClass ?? "", // "cssClass" is the auto-generated class.
             extraCssClass: "", // this is user-set (by moderators)
-            // RX, RY, RZ, RW
+            RX: 0.5,
+            RY: 0.5,
+            RZ: 0.5,
+            RW: 0.5,
             disableRotation: false, // can be overridden by mods
             content,
             expires,

@@ -85,7 +85,7 @@ class GraffitiModerationDialog extends React.Component {
     };
     
     this.sizeValueSpec = new IntRangeValueSpec(4, 400, 100);
-    this.registerValueSpec = new FloatValueSpec01();
+    this.registerValueSpec = new FloatValueSpec01({centerValue: 0.5});
   }
 
   clickDelete = (e) => {

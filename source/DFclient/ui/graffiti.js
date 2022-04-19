@@ -281,9 +281,14 @@ class GraffitiItem extends React.Component {
 
   onClickCtrl(graffitiID) {
     //console.log(`control ${graffitiID}`);
-    window.DFModerationControlContext.op = "graffiti";
-    window.DFModerationControlContext.graffitiID = graffitiID;
+    window.DFModerationControlContext.op = null;
     window.DFStateChangeHandler.OnStateChange();
+
+    setTimeout(()=> {
+      window.DFModerationControlContext.op = "graffiti";
+      window.DFModerationControlContext.graffitiID = graffitiID;
+      window.DFStateChangeHandler.OnStateChange();
+    }, 100);
   }
 
   render() {

@@ -210,25 +210,27 @@ RZ = range of rotation
 */
 @keyframes jacuzziFloatAnim {
     0% {
-        transform: translateY(calc(30px * var(--RY))) rotateZ(calc(-90deg * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * -1 * var(--RZ)));
     }
 
     33% {
-        transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(-30deg * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * -0.333 * var(--RZ)));
     }
 
     66% {
-        transform: translateY(calc(30px * var(--RY))) rotateZ(calc(30deg * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * 0.333 * var(--RZ)));
     }
 
     100% {
-        transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(90deg * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * var(--RZ)));
     }
 }
 
 
 #graffitiContainer .graffitiItemContainer.jacuzziFloating {
-    animation: jacuzziFloatAnim calc(20s * var(--RX)) infinite;
+    --extentY: 15px;
+    --extentZ: 10deg;
+    animation: jacuzziFloatAnim calc(6s * var(--RX) + 3s * (var(--seed) - .5)) infinite;
     animation-timing-function: linear;
     animation-direction: alternate;
 }
