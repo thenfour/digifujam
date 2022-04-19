@@ -210,19 +210,19 @@ RZ = range of rotation
 */
 @keyframes jacuzziFloatAnim {
     0% {
-        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * -1 * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * -1 * var(--RZ)))  translate(-50%, -50%);
     }
 
     33% {
-        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * -0.333 * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * -0.333 * var(--RZ)))  translate(-50%, -50%);
     }
 
     66% {
-        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * 0.333 * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * 0.333 * var(--RZ)))  translate(-50%, -50%);
     }
 
     100% {
-        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * var(--RZ)));
+        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * var(--RZ)))  translate(-50%, -50%);
     }
 }
 
