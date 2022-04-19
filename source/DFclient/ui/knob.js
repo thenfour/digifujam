@@ -162,9 +162,47 @@ class IntRangeValueSpec {
 };
 
 
+class FloatValueSpec01 {
+  constructor() {
+      this.mouseSpeed ??= 0.004;
+      this.fineMouseSpeed ??= 0.0008;
+      this.centerValue = 0.0;
+  }
+  value01ToValue = (v01) => {
+      return v01;
+  }
+  valueToValue01 = (v) => {
+      return v;
+  }
+  value01ToString = (v01) => {
+      return parseFloat(v01).toFixed(2);
+  }
+};
+
+class FreqValueSpec {
+  constructor() {
+      this.mouseSpeed ??= 0.004;
+      this.fineMouseSpeed ??= 0.0008;
+      this.centerValue = 0.0;
+  }
+  value01ToValue = (v01) => {
+      return Math.pow(v01, 3.5) * 20000;
+  }
+  valueToValue01 = (v) => {
+      return Math.pow(v / 20000, 1.0/3.5);
+  }
+  value01ToString = (v01) => {
+      return parseInt(this.value01ToValue(v01));
+  }
+};
+
+
+
 
 module.exports = {
   SeqLegendKnob,
   IntRangeValueSpec,
+  FloatValueSpec01,
+  FreqValueSpec,
 };
 

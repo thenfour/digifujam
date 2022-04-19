@@ -1732,6 +1732,9 @@ class InstrumentList extends React.Component {
         if (!this.props.app || !this.props.app.roomState || (this.props.app.roomState.instrumentCloset.length < 1)) {
             return null;
         }
+        if (!this.props.app.roomState.HasJamPurpose()) {
+            return null;
+        }
 
         // make a list of all instruments which are sidechain inputs
         const sidechainSourceInstrumentIDs = new Set();
@@ -1953,9 +1956,9 @@ class UIRoomItem extends React.Component {
                     <div className="roomItem graffitiText announcementText" style={style} dangerouslySetInnerHTML={{ __html: html }}></div>
                 </div>);
         } else if (this.props.item.itemType === DF.DFRoomItemType.radioMetadata) {
-            return (this.props.app.radio && <RadioMetadataRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
+            return (this.props.app.radio && this.props.app.roomState.HasRadioPurpose() && <RadioMetadataRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
         } else if (this.props.item.itemType === DF.DFRoomItemType.radioVis) {
-            return (this.props.app.radio && <RadioVisRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
+            return (this.props.app.radio && this.props.app.roomState.HasRadioPurpose() && <RadioVisRoomItem style={style} item={this.props.item} displayHelper={this.props.displayHelper} app={this.props.app} />);
         }
 
         return (
@@ -2666,13 +2669,19 @@ class RootArea extends React.Component {
     }
 
     onUserDance = (e) => {
-        //console.log(`do user dance for ${e.user.userID} / ${e.danceID}`);
-
-        const el = document.querySelector(`#userAvatar${e.user.userID} .av2`);
+        const el = document.querySelector(`#userAvatar${e.user.userID}`);
         if (!el) return;
-        el.className = `av2 dance${e.danceID}`;
-        //el.style.setProperty('--dance-anim', `dance${e.danceID}`);
-        //el.style.setProperty('--dance-anim-duration', `var(--dance${e.danceID}-duration)`);
+        //el.className = `av2 dance${e.danceID}`;
+        const classesToRemove = [];
+        el.classList.forEach(n => {
+            if (n.startsWith("dance")) {
+                classesToRemove.push(n);
+            }
+        });
+        classesToRemove.forEach(n => {
+            el.classList.remove(n);
+        });
+        el.classList.add(`dance${e.danceID}`);
     }
 
     onMyInstrumentChange = (inst) => {
@@ -3007,7 +3016,7 @@ class RootArea extends React.Component {
             <span className='connectionIndicator disconnected' title="Trying to reconnect to 7jam..."><i className="material-icons">power_off</i></span>
         );
 
-        const canPerform = this.state.app?.roomState?.UserCanPerform(this.state.app?.myUser);
+        const canPerform = this.state.app?.roomState?.UserCanPerform(this.state.app?.myUser) && this.state.app?.roomState?.HasJamPurpose();
 
         return (
             <div id="allContentContainer" onKeyDown={this.onKeyDown}>

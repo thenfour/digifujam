@@ -51,6 +51,9 @@ span.userModerationGear {
   pointer-events: all; /* important for avatars */
 }
 
+/* don't display on the top row; it's annoying and not useful */
+.userSettingsButton .userModerationGear { display: none; }
+
 span.userModerationGear i {
   color:#f83;
   padding: 1px 4px;
@@ -228,8 +231,8 @@ span.userModerationGear i {
 }
 
 .moderationPanel.room button.active {
-  background-color:#044;
-}
+  background-color: #055;
+color: #0ee;border: 1px solid #099;}
 
 
 .chatLog .chatLogEntryChat {

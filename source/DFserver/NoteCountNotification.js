@@ -406,6 +406,14 @@ class JamStatusNotification {
          return;
       }
 
+      // "JAM IS ONGOING AND SUPER COOL WITH <0> people playing" is just really stupid looking.
+      // even 1 player sorta calls them out a bit too much. a jam is not a jam if it's 1 person.
+      const currentPop = this.mgr._7jamAPI.Get7JamUserCountForRoom(this.subscription.roomID);
+      if (currentPop < 2) {
+         console.log(`${this.integrationID} ** skipping discord notification because <2 population.`);
+         return;
+      }
+
       this.HandlePassedTrigger(ongoingSpec, this.jamTracker.GetJamStats());
    }
 

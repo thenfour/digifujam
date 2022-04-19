@@ -312,6 +312,12 @@ class GraffitiItem extends React.Component {
       "--rot": `${rot}deg`,
       //transform: `rotateZ(${rot}deg) translate(-50%,-50%)`,
       fontFamily,
+      "--RX": g.RX ?? 0,
+      "--RY": g.RY ?? 0,
+      "--RZ": g.RZ ?? 0,
+      "--RW": g.RW ?? 0,
+      "--seed": g.seed,
+      "--size": g.size ?? 0,
     };
 
     let isImage = isImageUrl(g.content);
@@ -340,20 +346,19 @@ class GraffitiItem extends React.Component {
 
     // graffitiItemContainer > graffiti > graffitiContent
     // container because we apply our own transformations & positioning.
-    return (
-      <div className={"graffitiItemContainer " + (isImage ? " image " : " text ") + " " + g.cssClass + " " + g.extraCssClass} style={style}>
-      <div className={"graffiti " + g.cssClass + " " + g.extraCssClass}>
-        {contentEl}
-        {(window.DFModerationControlsVisible && app.myUser.IsModerator()) &&
-          <div className='graffitiControls'>
-            {/* <div className="graffitiRemove" title='delete' onClick={this.onClickRemove}>&#128465;<i className="material-icons">delete</i></div> */}
-            {g.pinned && <div className="graffitiPin" title='Pinned' onClick={() => this.onClickCtrl(g.id)}><i className="material-icons">push_pin</i></div>}
-            {<div className="graffitiCtrl" title='Settings' onClick={() => this.onClickCtrl(g.id)}><i className="material-icons">settings</i></div>}
-          </div>
-        }
+    return [
+      (<div key="g" className={"graffitiItemContainer " + (isImage ? " image " : " text ") + " " + g.cssClass + " " + g.extraCssClass} style={style}>
+        <div className={"graffiti " + g.cssClass + " " + g.extraCssClass}>
+          {contentEl}
+        </div>
+      </div>),
+
+    (window.DFModerationControlsVisible && app.myUser.IsModerator()) &&
+      <div key="mod" className='graffitiModerationCtrl' style={style}>
+        {g.pinned && <div className="graffitiPin" title='Pinned' onClick={() => this.onClickCtrl(g.id)}><i className="material-icons">push_pin</i></div>}
+        {<div className="graffitiCtrl" title='Settings' onClick={() => this.onClickCtrl(g.id)}><i className="material-icons">settings</i></div>}
       </div>
-      </div>
-    );
+    ];
   }
 }
 

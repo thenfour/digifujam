@@ -1,6 +1,6 @@
 const React = require('react');
 const { eConnectionStatus } = require('../radioMachine');
-const { SeqLegendKnob } = require('./knob');
+const { SeqLegendKnob, FloatValueSpec01, FreqValueSpec } = require('./knob');
 
 const gKnobFormatSpec = {
   fontSpec: (knob) => { return knob.isDragging ? "16px monospace" : null; },
@@ -18,40 +18,6 @@ const gKnobFormatSpec = {
   valueOffsetRadians: Math.PI * 1.5,
   valHighlightRangeRad: 0,
   valHighlightLineCap: 'round', // butt round
-};
-
-class FloatValueSpec01 {
-  constructor() {
-      this.mouseSpeed ??= 0.004;
-      this.fineMouseSpeed ??= 0.0008;
-      this.centerValue = 0.0;
-  }
-  value01ToValue = (v01) => {
-      return v01;
-  }
-  valueToValue01 = (v) => {
-      return v;
-  }
-  value01ToString = (v01) => {
-      return parseFloat(v01).toFixed(2);
-  }
-};
-
-class FreqValueSpec {
-  constructor() {
-      this.mouseSpeed ??= 0.004;
-      this.fineMouseSpeed ??= 0.0008;
-      this.centerValue = 0.0;
-  }
-  value01ToValue = (v01) => {
-      return Math.pow(v01, 3.5) * 20000;
-  }
-  valueToValue01 = (v) => {
-      return Math.pow(v / 20000, 1.0/3.5);
-  }
-  value01ToString = (v01) => {
-      return parseInt(this.value01ToValue(v01));
-  }
 };
 
 class QValueSpec {
@@ -198,7 +164,7 @@ class RadioControls extends React.Component {
             <div className='nowPlayingTitle'>{info.nowPlaying.title ?? ""}</div>
           </div>
           <div className='lessImportantControls'>
-            <button title="Reload the stream" id="radioRefresh" onClick={() => this.props.app.radio.IcyNode.refresh()}><i className="material-icons">refresh</i></button>
+            <button title="Reload the stream. If you paused the stream, then you will be behind the live stream; this will fast-forward you to catch up." id="radioRefresh" onClick={() => this.props.app.radio.IcyNode.refresh()}><i className="material-icons">refresh</i></button>
             <div title={connectionStateDescription} id="radioConnectionStatus" className={info.connectionState}>{connectionState}</div>
             {this.props.app.myUser.IsModerator() && <div className='settings' onClick={this.toggleSettings}><i className="material-icons">settings</i></div>}
           </div>

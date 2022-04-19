@@ -2,6 +2,7 @@
   "roomID": "maj7",
   "roomTitle": "#maj7",
   "route": "/maj7",
+  "purposes": 4,
   "backgroundLayers": [
     {
       "img": "/roomart/tony01_lightsout_1750.png",

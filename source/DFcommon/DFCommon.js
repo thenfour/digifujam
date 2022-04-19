@@ -62,6 +62,7 @@ const ClientMessages = {
     // { op:"setSeed", }
     // { op:"setDisableRotation", }
     // { op:"setExtraCssClass", }
+    // { op:"setRegister", register: "RX", value: 0}
      // [{ op:, content, id, ... }] // id only used for admin, lifetime & content only for placement
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { danceID: }
@@ -157,6 +158,7 @@ const ServerMessages = {
     // { op:"setSeed", }
     // { op:"setDisableRotation", }
     // { op:"setExtraCssClass", }
+    // { op:"setRegister", register: "RX", value: 0}
     // pin,setExpiration, setColor, setSize, setPosition
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { userID: , danceID: }
@@ -251,6 +253,16 @@ const ClientSettings = {
 };
 
 const InstrumentRecentlyPlayedActivityThresholdMS = DFUtil.minutesToMS(15);
+
+
+// helps to decide UI things for rooms of different fundamental purpose.
+// of course rooms can have more than 1 purpose too.
+// so like, without JamPurpose, you won't see instrument closet (even if instruments are defined!)
+const eRoomPurposeFlags = {
+    UnspecifiedPurpose : 1,
+    RadioPurpose : 2,
+    JamPurpose : 4,
+}
 
 const eParamMappingSource = {
     Macro0: 1000,
@@ -1595,6 +1607,8 @@ class DigifuRoomState {
             return n;
         });
 
+        this.purposes ??= eRoomPurposeFlags.JamPurpose;
+
         this.presetBanks = this.presetBanks.map(o => {
             const n = Object.assign(new PresetBank(), o);
             n.thaw();
@@ -1621,8 +1635,29 @@ class DigifuRoomState {
         this.graffiti ??= [];
         this.whoCanPerform ??= "anyone";
 
+        if (this.HasRadioPurpose()) {
+            this.radio.fxEnabled ??= false;
+            this.radio.reverbGain ??= 0.5;
+            this.radio.filterType ??= "bandpass";
+            this.radio.filterFrequency ??= 200;
+            this.radio.filterQ ??= 1.4;
+        }
+
         this.metronome = new ServerRoomMetronome();
         this.quantizer = new DBQuantizer.ServerRoomQuantizer(this.metronome);
+    }
+
+    HasRadioPurpose() {
+        return !!(this.purposes & eRoomPurposeFlags.RadioPurpose);
+    }
+
+    HasJamPurpose() {
+        return !!(this.purposes & eRoomPurposeFlags.JamPurpose);
+    }
+
+    SetPurposes(purposes) {
+        // todo: validation? any cleanup?
+        this.purposes = purposes | 0;
     }
 
     setBPM(bpm) {
@@ -1684,6 +1719,7 @@ class DigifuRoomState {
             position: Object.assign({}, u.user.position), // careful about refs!
             cssClass: rgn.cssClass ?? "", // "cssClass" is the auto-generated class.
             extraCssClass: "", // this is user-set (by moderators)
+            // RX, RY, RZ, RW
             disableRotation: false, // can be overridden by mods
             content,
             expires,
@@ -1830,6 +1866,7 @@ class DigifuRoomState {
             announcementHTML: this.announcementHTML,
             graffiti: this.graffiti,
             radio: this.radio,
+            purposes: this.purposes,
             instrumentLivePatches: Object.fromEntries(this.instrumentCloset.map(i => {
                 return [
                     i.instrumentID,
@@ -1858,6 +1895,8 @@ class DigifuRoomState {
 
         this.roomPresets = new RoomPresetManager(this, data.roomPresets);
 
+        this.purposes = (data.purposes ?? eRoomPurposeFlags.JamPurpose) | 0;
+
         this.stats = data.stats;
         this.announcementHTML = data.announcementHTML;
         this.whoCanPerform = data.whoCanPerform;
@@ -1868,6 +1907,13 @@ class DigifuRoomState {
         if (this.radio) {
             const channels = this.radio.channels;
             this.radio = Object.assign(this.radio, data.radio ?? {});
+
+            this.radio.fxEnabled ??= false;
+            this.radio.reverbGain ??= 0.5;
+            this.radio.filterType ??= "bandpass";
+            this.radio.filterFrequency ??= 200;
+            this.radio.filterQ ??= 1.4;
+        
             this.radio.channels = channels;
         }
 
@@ -2376,4 +2422,5 @@ module.exports = {
     eUserSource,
     eUserPresence,
     eMessageSource,
+    eRoomPurposeFlags,
 };

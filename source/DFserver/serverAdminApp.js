@@ -131,7 +131,7 @@ class ServerAdminApp {
    }
 
    IntegrationCmd(ws, args) {
-      if (args.length < 2) {
+      if (args?.length < 2) {
          this.SendLogMessage(`Not enough args; can't find subscription/integration combo.`);
          return;
       }

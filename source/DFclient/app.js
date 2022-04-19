@@ -575,18 +575,17 @@ class DigifuApp {
     // connect instruments to synth
     this.synth.InitInstruments(this.roomState.instrumentCloset);
 
-    //set metronome bpm to the room bpm
-    //this.metronome.bpm = this.roomState.bpm;
-
     // are any instruments assigned to you?
     this.myInstrument = this.roomState.instrumentCloset.find(i => i.controlledByUserID == myUserID);
 
     // initialize radio.
-    if (!this.roomState.radio) {
-      if (this.radio)
-        this.radio.stop();
+    if (this.radio) {
+      // stop existing radio.
+      this.radio.stop();
       this.radio = null;
-    } else {
+    }
+
+    if (this.roomState.radio) {
       this.radio = new RadioMachine(this, this.audioCtx);
     }
 
@@ -1368,46 +1367,52 @@ class DigifuApp {
 
   NET_ChangeRoomState(data) {
     switch (data.cmd) {
-    case "setAnnouncementHTML":
-      this.roomState.announcementHTML = data.params;
-      this.stateChangeHandler();
-      break;
-    // case "setRoomImg":
-    //   this.roomState.img = data.params;
-    //   this.stateChangeHandler();
-    //   break;
-    case "setRadioChannel":
-      if (this.radio)
-        this.radio.stop();
-      if (!this.roomState.radio) {
-        this.radio = null;
-      } else {
-        this.roomState.radio.channelID = data.params.channelID;
-        this.radio = new RadioMachine(this, this.audioCtx);
+      case "setAnnouncementHTML":
+        this.roomState.announcementHTML = data.params;
+        this.stateChangeHandler();
+        break;
+      // case "setRoomImg":
+      //   this.roomState.img = data.params;
+      //   this.stateChangeHandler();
+      //   break;
+      case "setRadioChannel":
+        if (this.radio)
+          this.radio.stop();
+        if (!this.roomState.radio) {
+          this.radio = null;
+        } else {
+          this.roomState.radio.channelID = data.params.channelID;
+          this.radio = new RadioMachine(this, this.audioCtx);
+        }
+        this.events.emit("changeRadioChannel");
+        this.stateChangeHandler();
+        break;
+      case "setRadioFX":
+        if (!this.roomState.radio) return;
+        this.roomState.radio.fxEnabled = data.params.fxEnabled;
+        this.roomState.radio.reverbGain = data.params.reverbGain;
+        this.roomState.radio.filterType = data.params.filterType;
+        this.roomState.radio.filterFrequency = data.params.filterFrequency;
+        this.roomState.radio.filterQ = data.params.filterQ;
+        if (this.radio) {
+          this.radio.FXEnabled = this.roomState.radio.fxEnabled;
+          this.radio.ReverbLevel = this.roomState.radio.reverbGain;
+          this.radio.FilterType = this.roomState.radio.filterType;
+          this.radio.FilterFrequency = this.roomState.radio.filterFrequency;
+          this.radio.FilterQ = this.roomState.radio.filterQ;
+        }
+        this.events.emit("changeRadioFX");
+        break;
+      case "setWhoCanPerform": {
+        this.roomState.whoCanPerform = data.params.whoCanPerform;
+        this.stateChangeHandler();
+        break;
       }
-      this.events.emit("changeRadioChannel");
-      this.stateChangeHandler();
-      break;
-    case "setRadioFX":
-      if (!this.roomState.radio) return;
-      this.roomState.radio.fxEnabled = data.params.fxEnabled;
-      this.roomState.radio.reverbGain = data.params.reverbGain;
-      this.roomState.radio.filterType = data.params.filterType;
-      this.roomState.radio.filterFrequency = data.params.filterFrequency;
-      this.roomState.radio.filterQ = data.params.filterQ;
-      if (this.radio) {
-        this.radio.FXEnabled = this.roomState.radio.fxEnabled;
-        this.radio.ReverbLevel = this.roomState.radio.reverbGain;
-        this.radio.FilterType = this.roomState.radio.filterType;
-        this.radio.FilterFrequency = this.roomState.radio.filterFrequency;
-        this.radio.FilterQ = this.roomState.radio.filterQ;
+      case "setRoomPurposes": {
+        this.roomState.SetPurposes(data.params.purposes);
+        this.stateChangeHandler();
+        break;
       }
-      this.events.emit("changeRadioFX");
-      break;
-    case "setWhoCanPerform":
-      this.roomState.whoCanPerform = data.params.whoCanPerform;
-      this.stateChangeHandler();
-      break;
     }
   }
 
@@ -1625,6 +1630,18 @@ class DigifuApp {
         break;
       }    
     
+      case "setRegister": // { op:"setRegister", register: "RX", value: 0}
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setRegister: graffiti not found ${op.id}`);
+          return;
+        }
+
+        g[op.register] = op.value; // kinda dangerous but it's only for mods so...
+        break;
+      }
+
     }
     });
     this.stateChangeHandler();
@@ -1772,6 +1789,12 @@ class DigifuApp {
         op : "place",
         content : msgText.substring(cmd.length),
       } ]);
+      return;
+    }
+
+    if (l.startsWith("/help")) {
+      window.open("https://github.com/thenfour/digifujam/wiki",'_blank');
+      
       return;
     }
 

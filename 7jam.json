@@ -2,6 +2,7 @@
   "roomID": "7jam",
   "roomTitle": "#7jam",
   "route": "/",
+  "purposes": 6,
   "backgroundLayers": [
     {
       "img": "/roomart/7jam-8.png",
@@ -81,8 +82,43 @@
           "y": 565
         }
       }
+    },
+    {
+      "itemID": "radioMetadata",
+      "itemType": "radioMetadata",
+      "cssClass": "room7jam radioItem rightFacing radioMetadata",
+      "rect": {"x":678,"y":275,"w":300,"h":150}
+    },
+    {
+      "itemID": "radioVis",
+      "itemType": "radioVis",
+      "cssClass": "room7jam radioItem rightFacing radioVis",
+      "rect": {"x":678,"y":185,"w":700,"h":150}
     }
   ],
+  "radio": {
+    "reverbImpulseURL": "/radio/hallImpulse.m4a",
+    "fxEnabled": false,
+    "streamInfoRefreshIntervalMS": 2500,
+    "channelID": 0,
+    "channels": [
+      {
+        "name": "Offline",
+        "streamURL":"",
+        "streamInfoURL": ""
+      },
+      {
+        "name": "Δ7 Radio",
+        "streamURL":"https://radio.7jam.io/maj7",
+        "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/maj7"
+      },
+      {
+        "name": "Nectarine Radio A",
+        "streamInfoURL": "https://scenestream.io/status-json.xsl?mount=/necta64.mp3",
+        "streamURL": "https://scenestream.io/necta64.mp3"
+      }
+    ]
+  },
   "users": [],
   "chatLog": [],
   "instrumentCloset": [

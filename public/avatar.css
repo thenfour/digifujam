@@ -214,28 +214,115 @@
 
 
 
-.userAvatar .av2.dance1 {
+@keyframes dance_waterfloat {
+  0% {
+    transform: translateY(calc(30px * var(--RY))) rotateZ(calc(-90deg * var(--RZ)));
+  }
+
+  33% {
+    transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(-30deg * var(--RZ)));
+  }
+
+  66% {
+    transform: translateY(calc(30px * var(--RY))) rotateZ(calc(30deg * var(--RZ)));
+  }
+
+  100% {
+    transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(90deg * var(--RZ)));
+  }
+}
+
+
+
+
+@keyframes dance_3dfloat {
+  0% {
+    transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ)));
+}
+33% {
+    transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ)));
+}
+66% {
+    transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ)));
+}
+
+100% {
+    transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * var(--RZ)));
+}
+}
+
+
+
+@keyframes dance_jitter {
+     0% { transform: translate3d(calc(0.8147 * var(--extentX)), calc(0.0975 * var(--extentY)), 0); }
+    10% { transform: translate3d(calc(0.9058 * var(--extentX)), calc(0.2785 * var(--extentY)), 0); }
+    20% { transform: translate3d(calc(0.1270 * var(--extentX)), calc(0.5469 * var(--extentY)), 0); }
+    30% { transform: translate3d(calc(0.9134 * var(--extentX)), calc(0.9575 * var(--extentY)), 0); }
+    40% { transform: translate3d(calc(0.6324 * var(--extentX)), calc(0.9649 * var(--extentY)), 0); }
+    50% { transform: translate3d(calc(0.1576 * var(--extentX)), calc(0.1419 * var(--extentY)), 0); }
+    60% { transform: translate3d(calc(0.9706 * var(--extentX)), calc(0.4218 * var(--extentY)), 0); }
+    70% { transform: translate3d(calc(0.9572 * var(--extentX)), calc(0.9157 * var(--extentY)), 0); }
+    80% { transform: translate3d(calc(0.4854 * var(--extentX)), calc(0.7922 * var(--extentY)), 0); }
+    90% { transform: translate3d(calc(0.8003 * var(--extentX)), calc(0.9595 * var(--extentY)), 0); }
+  }
+
+
+.userAvatar.dance1 {
+    --rotExtentY: 15deg;
+    --rotExtentX: 15deg;
+  perspective: 80px;
+}
+
+.userAvatar.dance1 .av2 {
+  --RZ: 1.4;
+  animation: dance_3dfloat 2.5s infinite;
+  animation-timing-function: ease-out;
+  animation-direction: alternate;
+}
+
+
+.userAvatar.dance2 .av2 {
   --dance-skew: 15deg;
   --dance-skewN: calc(var(--dance-skew) * -1);
   animation: dance_skewy 1s infinite;
 }
 
-.userAvatar .av2.dance2 {
+.userAvatar.dance3 .av2 {
   animation: dance_bouncey .5s infinite;
 }
 
-.userAvatar .av2.dance3 {
+.userAvatar.dance4 .av2 {
   animation: dance_smack 1s infinite;
 }
 
-.userAvatar .av2.dance4 {
+.userAvatar.dance5 .av2 {
   animation: dance_colorrot 1s infinite;
 }
 
-.userAvatar .av2.dance5 {
+.userAvatar.dance6 .av2 {
   animation: dance_flip 1s infinite;
 }
 
-.userAvatar .av2.dance6 {
+
+.userAvatar.dance7 .av2 {
+  --extentX: 10px;
+  --extentY: 10px;
+  animation: dance_jitter .25s infinite;
+  animation-timing-function: linear;
+  animation-direction: alternate;
+}
+
+
+.userAvatar.dance8 .av2 {
   animation: dance_emo 3s infinite;
 }
+
+
+.userAvatar.dance9 .av2 {
+  --RY: 0.25;
+  --RZ: 0.1;
+  animation: dance_waterfloat 3.33s infinite;
+  animation-timing-function: linear;
+  animation-direction: alternate;
+}
+

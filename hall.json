@@ -2,6 +2,7 @@
   "roomID": "hall",
   "roomTitle": "#hall",
   "route": "/hall",
+  "purposes": 2,
   "backgroundLayers": [
     {
       "img": "/roomart/DigifuJam_Hallway2_1920x1080.png",
@@ -141,6 +142,11 @@
     "streamInfoRefreshIntervalMS": 2500,
     "channelID": 0,
     "channels": [
+      {
+        "name": "Offline",
+        "streamURL":"",
+        "streamInfoURL": ""
+      },
       {
         "name": "Δ7 Radio",
         "streamURL":"https://radio.7jam.io/maj7",

@@ -1170,6 +1170,23 @@ class RoomServer {
           break;
         }
 
+        case "setRegister": // { op:"setRegister", register: "RX", value: 0}
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setRegister on graffiti ${op.id}`);
+            return;
+          }
+
+          op.value ??= 0;
+          op.value = DFU.baseClamp(op.value, 0, 1);
+          g[op.register] = op.value; // kinda dangerous but it's only for mods so...
+
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setRegister", id:g.id, register:op.register, value: op.value }]);
+          break;
+        }
+
       }
     });
   }
@@ -1365,6 +1382,12 @@ class RoomServer {
             this.DoInstrumentRelease(inst.instrument);
           });
 
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+          break;
+        }
+        case "setRoomPurposes": {
+          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
+          this.roomState.SetPurposes(data.params.purposes);
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
         }

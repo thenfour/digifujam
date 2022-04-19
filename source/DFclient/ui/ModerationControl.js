@@ -1,9 +1,10 @@
 
 const React = require('react');
+const { eRoomPurposeFlags } = require('../../DFcommon/DFCommon');
 const { UserSourceToString, UserPresenceToString, eUserGlobalRole } = require('../../DFcommon/DFUser');
 const { TimeSpan, hoursToMS, daysToMS } = require('../../DFcommon/dfutil');
 const { TextField } = require('./DFReactUtils');
-const { IntRangeValueSpec, SeqLegendKnob } = require('./knob');
+const { IntRangeValueSpec, SeqLegendKnob, FloatValueSpec01 } = require('./knob');
 
 // window.DFModerationControlsVisible
 
@@ -28,6 +29,13 @@ class RoomModerationDialog extends React.Component {
     });
   }
 
+  onClickTogglePurpose(flag) {
+    let purposes = this.props.app.roomState.purposes ^ flag; // https://stackoverflow.com/questions/1436438/how-do-you-set-clear-and-toggle-a-single-bit-in-javascript
+    this.props.app.net.SendAdminChangeRoomState("setRoomPurposes", {
+      purposes,
+    });
+  }
+
   render() {
     const app = this.props.app;
 
@@ -38,10 +46,15 @@ class RoomModerationDialog extends React.Component {
           <button className='close' onClick={() => { window.DFModerationControlContext.op = null; window.DFStateChangeHandler.OnStateChange();}}><i className="material-icons">close</i></button>
         </div>
         <div className='body'>
-          <dt>who can perform?</dt>
+        <dt>who can perform?</dt>
           <dd>
             <button className={app.roomState.whoCanPerform === "anyone" ? "active" : ""} onClick={() => this.onClickWhoCanPerform("anyone")}>Anyone</button>
             <button className={app.roomState.whoCanPerform === "performers" ? "active" : ""} onClick={() => this.onClickWhoCanPerform("performers")}>Only performers</button>
+          </dd>
+        <dt>room purposes?</dt>
+          <dd>
+            <button className={app.roomState.HasRadioPurpose() ? "active" : ""} onClick={() => this.onClickTogglePurpose(eRoomPurposeFlags.RadioPurpose)}>Radio</button>
+            <button className={app.roomState.HasJamPurpose() ? "active" : ""} onClick={() => this.onClickTogglePurpose(eRoomPurposeFlags.JamPurpose)}>JAMMIN</button>
           </dd>
         </div>
       </div>
@@ -72,6 +85,7 @@ class GraffitiModerationDialog extends React.Component {
     };
     
     this.sizeValueSpec = new IntRangeValueSpec(4, 400, 100);
+    this.registerValueSpec = new FloatValueSpec01();
   }
 
   clickDelete = (e) => {
@@ -213,6 +227,40 @@ class GraffitiModerationDialog extends React.Component {
     }]);
   }
 
+  onChangeRegister = (register, value) => {
+    if (isNaN(parseFloat(value))) value = 0;
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+
+    this.props.app.net.SendGraffitiOps([{
+      op: "setRegister",
+      id: graffitiID,
+      register,
+      value,
+    }]);
+
+    this.setState({});
+  }
+
+
+  onChangeRX = (value) => {
+    this.onChangeRegister("RX", value);
+  }
+
+  onChangeRY = (value) => {
+    this.onChangeRegister("RY", value);
+  }
+  onChangeRZ = (value) => {
+    this.onChangeRegister("RZ", value);
+  }
+  onChangeRW = (value) => {
+    this.onChangeRegister("RW", value);
+  }
+
+
   render() {
     const graffitiID = window.DFModerationControlContext.graffitiID;
     let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
@@ -238,7 +286,7 @@ class GraffitiModerationDialog extends React.Component {
               <span className='field userid'>puid #{g.persistentID}</span>
             </dd>
 
-            <dt>Color</dt>
+            <dt>Color (used by text graffiti)</dt>
             <dd className='content'>
               <span className='field colorSwatch' style={{backgroundColor:g.color}}></span>
               <TextField
@@ -264,10 +312,42 @@ class GraffitiModerationDialog extends React.Component {
               <button onClick={() => this.onClickDisableRotation(false)} className={g.disableRotation ? "selected" : "notselected"}>Enabled</button>
             </dd>
 
+            <dt>Generic parameters (CSS Variables to be used by extra CSS classes)</dt>
+            <dd className='content'>
+            <SeqLegendKnob
+                  caption="RX"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RX)) ? 0 : g.RX}
+                  valueSpec={this.registerValueSpec}
+                  onChange={this.onChangeRX}
+                />
+            <SeqLegendKnob
+                  caption="RY"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RY)) ? 0 : g.RY}
+                  valueSpec={this.registerValueSpec}
+                  onChange={this.onChangeRY}
+                />
+            <SeqLegendKnob
+                  caption="RZ"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RZ)) ? 0 : g.RZ}
+                  valueSpec={this.registerValueSpec}
+                  onChange={this.onChangeRZ}
+                />
+            <SeqLegendKnob
+                  caption="RW"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RW)) ? 0 : g.RW}
+                  valueSpec={this.registerValueSpec}
+                  onChange={this.onChangeRW}
+                />
+            </dd>
+
             <dt>Extra CSS</dt>
             <dd className='content'>
               <div>
-              (e.g. "hidden", "straight", "monofont", "sansfont", "dynamicFontSize", "vanillaInfoBox", "performersOnly")<br />
+              (e.g. "hidden", "straight", "monofont", "sansfont", "dynamicFontSize", "vanillaInfoBox", "performersOnly", "opacityRX", "opacityRY")<br />
               <TextField
                 fieldID="graffitiExtraCSS"
                 valueSetter={(val) => this.setExtraCSSClass(val)}
@@ -343,6 +423,7 @@ class GraffitiModerationDialog extends React.Component {
               <div className='info'>
                 <div className='field absolute'>{new Date(g.expires).toISOString()}</div>
                 <div className='field remaining'>{ new TimeSpan(new Date(g.expires) - new Date()).longString }</div>
+                {g.pinned && <div className="field infoText">Note: Expiration doesn't apply to pinned graffiti.</div>}
               </div>
               <div className='buttons'>
                 <button className="expiration extend" onClick={() => this.setState({setExpirationConfirmation: hoursToMS(1)})}>+ Extend 1 hour</button>

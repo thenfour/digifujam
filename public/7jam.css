@@ -44,12 +44,14 @@ nofilter
 }
 
 
-#graffitiContainer .graffiti.leftFacing {
+#graffitiContainer .graffiti.leftFacing,
+.roomItem.leftFacing {
     transform: skewY(30deg) scaleY(1.25);
 }
 
 
-#graffitiContainer .graffiti.rightFacing {
+#graffitiContainer .graffiti.rightFacing,
+.roomItem.rightFacing {
     transform: skewY(330deg) scaleY(1.25);
 }
 
@@ -200,45 +202,110 @@ nofilter
 }
 
 
-#graffitiContainer .graffiti.opacity0 {
-    opacity: 0%;
+/*
+RX = duration / 10
+RY = range of Y movement
+RZ = range of rotation
+
+*/
+@keyframes jacuzziFloatAnim {
+    0% {
+        transform: translateY(calc(30px * var(--RY))) rotateZ(calc(-90deg * var(--RZ)));
+    }
+
+    33% {
+        transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(-30deg * var(--RZ)));
+    }
+
+    66% {
+        transform: translateY(calc(30px * var(--RY))) rotateZ(calc(30deg * var(--RZ)));
+    }
+
+    100% {
+        transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(90deg * var(--RZ)));
+    }
 }
 
-#graffitiContainer .graffiti.opacity10 {
-    opacity: 10%;
+
+#graffitiContainer .graffitiItemContainer.jacuzziFloating {
+    animation: jacuzziFloatAnim calc(20s * var(--RX)) infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
 }
 
-#graffitiContainer .graffiti.opacity20 {
-    opacity: 20%;
+
+
+/*
+RX = duration
+RY = field of view
+RZ = range of rotation
+
+*/
+@keyframes SignFloatAnim3D_LeftFacing {
+    0% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ))) skewY(30deg);
+    }
+    33% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ))) skewY(30deg);
+    }
+    66% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ))) skewY(30deg);
+    }
+
+    100% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * var(--RZ))) skewY(30deg);
+    }
 }
 
-#graffitiContainer .graffiti.opacity30 {
-    opacity: 30%;
+
+#graffitiContainer .graffitiItemContainer.floatingSign3D_LeftFacing {
+    --rotExtentY: 15deg;
+    --rotExtentX: 15deg;
+  perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
+  perspective: calc(100px + (1000px * var(--RY)));
 }
 
-#graffitiContainer .graffiti.opacity40 {
-    opacity: 40%;
+#graffitiContainer .graffitiItemContainer .floatingSign3D_LeftFacing {
+    animation: SignFloatAnim3D_LeftFacing calc(20s * var(--RX)) infinite;
+      transform-origin: calc(.5px * var(--size))  calc(.5px * var(--size));
+    animation-timing-function: linear;
+    animation-direction: alternate;
 }
 
-#graffitiContainer .graffiti.opacity50 {
-    opacity: 50%;
+
+@keyframes SignFloatAnim3D_RightFacing {
+    0% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ))) skewY(-30deg);
+    }
+    33% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ))) skewY(-30deg);
+    }
+    66% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ))) skewY(-30deg);
+    }
+
+    100% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * var(--RZ))) skewY(-30deg);
+    }
 }
 
-#graffitiContainer .graffiti.opacity60 {
-    opacity: 60%;
+
+#graffitiContainer .graffitiItemContainer.floatingSign3D_RightFacing {
+    --rotExtentY: 15deg;
+    --rotExtentX: 15deg;
+  perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
+  perspective: calc(100px + (1000px * var(--RY)));
 }
 
-#graffitiContainer .graffiti.opacity70 {
-    opacity: 70%;
+#graffitiContainer .graffitiItemContainer .floatingSign3D_RightFacing {
+    animation: SignFloatAnim3D_RightFacing calc(20s * var(--RX)) infinite;
+      transform-origin: calc(.5px * var(--size))  calc(.5px * var(--size));
+    animation-timing-function: linear;
+    animation-direction: alternate;
 }
 
-#graffitiContainer .graffiti.opacity80 {
-    opacity: 80%;
-}
 
-#graffitiContainer .graffiti.opacity90 {
-    opacity: 90%;
-}
+
 
 
 
@@ -256,4 +323,57 @@ nofilter
 
 .backgroundLayer.parallaxBG {
     background-color: black;
+}
+
+.room7jam section#radioVis {
+
+    flex-direction: row-reverse;
+}
+
+
+.room7jam.roomItem.radioItem.radioMetadata {
+    font-size: 24px;
+    color: #0cc;
+    text-shadow: 0 0 4px black, 0 0 4px black;
+    z-index: var(--z-index-radio-metadata);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .radioStationName {
+    font-size: 20px;
+    color: #999;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .connectionState.offline {
+    font-size: 40px;
+    color: #000;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .connectionState.disconnected {
+    font-size: 40px;
+    color: #aa0;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .streamName {
+    font-size: 20px;
+    color: #aaa;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .streamDescription {
+    font-size: 12px;
+    color: #aaa;
+    font-style: italic;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .nowPlayingArtist {
+    font-size: 60px;
+    color: #ee0;
+}
+
+.room7jam.roomItem.radioItem.radioMetadata .nowPlayingTitle {
+    font-size: 46px;
+    color: #e50;
 }
