@@ -168,6 +168,23 @@ span.userModerationGear i {
   max-width: 450px;
 }
 
+.moderationPanel dd a {
+  color:#aa0;
+  text-decoration:underline;
+  display:block;
+}
+
+.moderationPanel.graffiti dd.content input[type="text"i] {
+  width:100%;
+}
+
+.moderationPanel.graffiti dd.content .spacer {
+  width: 6px;
+  margin: 9px 15px;
+  height: 45px;
+  background-color:black;
+}
+
 .moderationPanel.graffiti dd.size {
   
 }

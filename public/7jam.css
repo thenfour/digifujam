@@ -1,5 +1,7 @@
 /*
 
+PLEASE KEEP custom CSS updated @ https://github.com/thenfour/digifujam/wiki
+
 rightFacingRotateAnim
 frontFacingRotateAnim
 upFacingRotateAnim
@@ -8,8 +10,11 @@ hueRotateAnim
 nofilter
 floatingSign3D_RightFacing
 floatingSign3D_LeftFacing
+floatingSign3D_FrontFacing
 solidColor
 solidColorHueAnim
+softLight
+overlay
 
 */
 
@@ -297,7 +302,6 @@ RZ = range of rotation
     }
 }
 
-
 #graffitiContainer .graffitiItemContainer.floatingSign3D_RightFacing {
     --rotExtentY: 15deg;
     --rotExtentX: 15deg;
@@ -314,9 +318,47 @@ RZ = range of rotation
 
 
 
+
+
+@keyframes SignFloatAnim3D_FrontFacing {
+    0% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ)));
+    }
+
+    33% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ)));
+    }
+
+    66% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ)));
+    }
+
+    100% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * var(--RZ)));
+    }
+}
+
+#graffitiContainer .graffitiItemContainer.floatingSign3D_FrontFacing {
+    --rotExtentY: 15deg;
+    --rotExtentX: 15deg;
+    perspective-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
+    perspective: calc(100px + (1000px * var(--RY)));
+}
+
+#graffitiContainer .graffitiItemContainer .floatingSign3D_FrontFacing {
+    animation: SignFloatAnim3D_FrontFacing calc(20s * var(--RX)) infinite;
+    transform-origin: calc(.5px * var(--size)) calc(.5px * var(--size));
+    animation-timing-function: linear;
+    animation-direction: alternate;
+}
+
+
+
+
+
 #graffitiContainer .graffitiItemContainer .graffiti.solidColor {
     /* filter: grayscale(100%) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RX))) saturate(var(--RY)); */
-    filter: brightness(10) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RX))) saturate(var(--RY)) brightness(var(--RZ));
+    filter: brightness(10) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RS))) saturate(var(--RT)) brightness(var(--RU));
 }
 
 
@@ -325,11 +367,11 @@ RZ = range of rotation
 
 @keyframes graffitiSolidColorHueRotateAnim {
     0% {
-        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(0deg) saturate(var(--RY)) brightness(var(--RZ));
+        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(0deg) saturate(var(--RT)) brightness(var(--RU));
     }
 
     100% {
-        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(360deg) saturate(var(--RY)) brightness(var(--RZ));
+        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(360deg) saturate(var(--RT)) brightness(var(--RU));
     }
 }
 
@@ -337,6 +379,17 @@ RZ = range of rotation
 #graffitiContainer .graffiti.solidColorHueAnim .graffitiContent.image {
     animation: graffitiSolidColorHueRotateAnim calc(50s * var(--RX)) infinite;
     animation-timing-function: linear;
+}
+
+
+
+#graffitiContainer .graffitiItemContainer.softLight {
+    mix-blend-mode: soft-light;
+}
+
+
+#graffitiContainer .graffitiItemContainer.overlay {
+    mix-blend-mode: overlay;
 }
 
 

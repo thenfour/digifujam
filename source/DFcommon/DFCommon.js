@@ -1727,8 +1727,12 @@ class DigifuRoomState {
             extraCssClass: "", // this is user-set (by moderators)
             RX: 0.5,
             RY: 0.5,
-            RZ: 0.5,
+            RZ: 0.5, // rotation?
             RW: 0.5,
+            RS: 0.5, // speed
+            RT: 0.5, // opacity? offset?
+            RU: 0.5, // x
+            RV: 0.5, // y
             disableRotation: false, // can be overridden by mods
             content,
             expires,

@@ -2248,6 +2248,66 @@ class ChatSlashCommandHelp extends React.Component {
 }
 
 
+class DFBackgroundLayer extends React.Component {
+    render() {
+        const { app, displayHelper, md } = this.props.context;
+        const layer = app.roomState.backgroundLayers[this.props.layerIndex];
+
+        let scrollPos = displayHelper.getScreenScrollPosition(layer);
+        const style = {
+            backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
+            "--background-z": this.props.layerIndex,
+        };
+        if (layer.img) {
+            style.backgroundImage = `url(${StaticURL(layer.img)})`;
+        }
+
+        const isLastLayer = this.props.layerIndex >= (app.roomState.backgroundLayers.length - 1);
+
+        let children = null;
+        if (isLastLayer) {
+            const roomItems = app.roomState.roomItems.map(item => (
+                    <UIRoomItem key={item.itemID} app={app} item={item} displayHelper={() => displayHelper} />
+                ));
+
+            const userAvatars = app.roomState.users
+                .filter(u => u.presence === DF.eUserPresence.Online && app.UserIsVisible(u))
+                .map(u => (
+                    <UserAvatar key={u.userID} app={app} user={u} displayHelper={() => displayHelper} />
+                ));
+
+            children = (<div>
+                    {window.DFShowDebugInfo && <GraffitiScreen context={this.props.context} />}
+                    <GraffitiContainer context={this.props.context} />
+                    {roomItems}
+                    {userAvatars}
+                    </div>);
+            return (
+                <div className={'backgroundLayer ' + layer.cssClass} style={style}>{children}</div>
+            )
+        }
+
+        return (
+            <div className={'backgroundLayer ' + layer.cssClass} style={style}><DFBackgroundLayer layerIndex={this.props.layerIndex + 1} context={this.props.context} /></div>
+        )
+
+    }
+}
+
+class DFBackgroundContent extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            
+        };
+    }
+    render() {
+        const { app, displayHelper, md } = this.props.context;
+        if (!app || !app.roomState) return null;
+
+        return <DFBackgroundLayer layerIndex={0} context={this.props.context} />;
+    }
+}
 
 
 class RoomArea extends React.Component {
@@ -2437,39 +2497,6 @@ class RoomArea extends React.Component {
     }
 
     render() {
-        let userAvatars = null;
-        let roomItems = null;
-        let backgroundLayers = null;
-
-        if (this.props.app && this.props.app.roomState) {
-
-            userAvatars = this.props.app.roomState.users
-                .filter(u => u.presence === DF.eUserPresence.Online && this.props.app.UserIsVisible(u))
-                .map(u => (
-                    <UserAvatar key={u.userID} app={this.props.app} user={u} displayHelper={() => this} />
-                ));
-
-            roomItems = this.props.app.roomState.roomItems.map(item => (
-                <UIRoomItem key={item.itemID} app={this.props.app} item={item} displayHelper={() => this} />
-            ));
-
-            backgroundLayers = this.props.app.roomState.backgroundLayers.map((layer,i) => {
-                let scrollPos = this.getScreenScrollPosition(layer);
-                const style = {
-                    backgroundPosition: `${scrollPos.x}px ${scrollPos.y}px`,
-                    "--background-z": layer.z,
-                };
-                if (layer.img) {
-                    style.backgroundImage = `url(${StaticURL(layer.img)})`;
-                }
-
-                return (
-                    <div key={i} className={'backgroundLayer ' + layer.cssClass} style={style}></div>
-                )
-            });
-
-        }
-
         let connection = (this.props.app) ? null : (
             <DFSignIn.Connection app={this.props.app} handleConnect={this.props.handleConnect} googleOAuthModule={this.props.googleOAuthModule} />
         );
@@ -2508,7 +2535,7 @@ class RoomArea extends React.Component {
                 onDragLeave={this.onDragLeave}
                 >
                 {window.DFShowChatSlashCommandHelp && <ChatSlashCommandHelp context={context} />}
-                {backgroundLayers}
+                <DFBackgroundContent context={context} />
                 {connection}
                 <ModerationControlPanel app={this.props.app} />
                 <ModalDialogController app={this.props.app} />
@@ -2520,11 +2547,7 @@ class RoomArea extends React.Component {
                     observerMode={!!this.props.app.observingInstrument}
 
                     ></SequencerMain>}
-                {window.DFShowDebugInfo && <GraffitiScreen context={context} />}
-                <GraffitiContainer context={context} />
                 { (this.state.isDraggingGraffiti || false) && <div className='dragGraffitiScreen'><div>Place graffiti</div></div> }
-                {roomItems}
-                {userAvatars}
                 { (this.state.viewType === "Hybrid view") && <ShortChatLog app={this.props.app} />}
                 { (this.state.viewType === "Chat view") && <FullChatLog app={this.props.app} />}
                 <RoomAlertArea app={this.props.app} />

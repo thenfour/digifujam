@@ -47,6 +47,6 @@
 }
 
 .backgroundLayer.milkywayBG {
-    opacity: 15%;
+    /* opacity: 25%; causes whole room to be opaque */
 }
 

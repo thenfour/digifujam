@@ -5,18 +5,14 @@
   "purposes": 4,
   "backgroundLayers": [
     {
-      "img": "/roomart/matt1200-masked.png",
-      "default":1,
-      "parallaxFactor": 0.85,
-      "z":10,
+      "parallaxFactor": 0.35,
       "width": 1200,
       "height": 1200,
-      "cssClass": ""
+      "cssClass": "parallaxBG"
     },
     {
-      "img": "/roomart/stars.png",
+      "img": "/roomart/stars-25p-8b.png",
       "parallaxFactor": 0.25,
-      "z":1,
       "width": 2560,
       "height": 1440,
       "offsetX": -680,
@@ -24,11 +20,12 @@
       "cssClass": "milkywayBG"
     },
     {
-      "parallaxFactor": 0.35,
-      "z":0,
+      "img": "/roomart/matt1200-masked.png",
+      "default":1,
+      "parallaxFactor": 0.85,
       "width": 1200,
       "height": 1200,
-      "cssClass": "parallaxBG"
+      "cssClass": ""
     }
   ],
   "width": 1200,

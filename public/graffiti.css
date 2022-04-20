@@ -1,8 +1,8 @@
 #graffitiScreen,
 #graffitiContainer {
-    position: absolute;
+    /* position: absolute; <-- this causes mix blend mode not to work. it's not needed anyway.
     top: 0;
-    left: 0;
+    left: 0;*/
     pointer-events: none;
     width: 100%;
     height: 100%;
@@ -323,4 +323,8 @@
 
 #graffitiContainer .graffiti.opacityRW {
     opacity: calc(100% * var(--RW));
+}
+
+#graffitiContainer .graffiti.opacityRV {
+    opacity: calc(100% * var(--RV));
 }

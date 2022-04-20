@@ -12,20 +12,18 @@
   },
   "backgroundLayers": [
     {
-      "img": "/roomart/7jam-8.png",
-      "default": 1,
-      "parallaxFactor": 0.85,
-      "z": 10,
-      "cssClass": "",
-      "width": 1750,
-      "height": 1280
-    },
-    {
       "parallaxFactor": 0.35,
-      "z": 0,
       "width": 1750,
       "height": 1280,
       "cssClass": "parallaxBG"
+    },
+    {
+      "img": "/roomart/7jam-8.png",
+      "default": 1,
+      "parallaxFactor": 0.85,
+      "cssClass": "",
+      "width": 1750,
+      "height": 1280
     }
   ],
   "bpm": 100,

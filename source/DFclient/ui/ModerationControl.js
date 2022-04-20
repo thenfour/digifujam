@@ -312,42 +312,87 @@ class GraffitiModerationDialog extends React.Component {
               <button onClick={() => this.onClickDisableRotation(false)} className={g.disableRotation ? "selected" : "notselected"}>Enabled</button>
             </dd>
 
-            <dt>Generic parameters (CSS Variables to be used by extra CSS classes)</dt>
-            <dd className='content'>
+            <dt>
+              Generic parameters (CSS Variables to be used by extra CSS classes)
+            </dt>
+            <dd className='content registers'>
             <SeqLegendKnob
                   caption="RX"
                   className="knob"
-                  initialValue={isNaN(parseFloat(g.RX)) ? 0 : g.RX}
+                  initialValue={isNaN(parseFloat(g.RX)) ? 0.5 : g.RX}
                   valueSpec={this.registerValueSpec}
                   onChange={this.onChangeRX}
                 />
             <SeqLegendKnob
                   caption="RY"
                   className="knob"
-                  initialValue={isNaN(parseFloat(g.RY)) ? 0 : g.RY}
+                  initialValue={isNaN(parseFloat(g.RY)) ? 0.5 : g.RY}
                   valueSpec={this.registerValueSpec}
                   onChange={this.onChangeRY}
                 />
             <SeqLegendKnob
                   caption="RZ"
                   className="knob"
-                  initialValue={isNaN(parseFloat(g.RZ)) ? 0 : g.RZ}
+                  initialValue={isNaN(parseFloat(g.RZ)) ? 0.5 : g.RZ}
                   valueSpec={this.registerValueSpec}
                   onChange={this.onChangeRZ}
                 />
             <SeqLegendKnob
                   caption="RW"
                   className="knob"
-                  initialValue={isNaN(parseFloat(g.RW)) ? 0 : g.RW}
+                  initialValue={isNaN(parseFloat(g.RW)) ? 0.5 : g.RW}
                   valueSpec={this.registerValueSpec}
                   onChange={this.onChangeRW}
                 />
+
+            <div className='spacer'></div>
+
+            <SeqLegendKnob
+                  caption="RS"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RS)) ? 0.5 : g.RS}
+                  valueSpec={this.registerValueSpec}
+                  onChange={(value) => this.onChangeRegister("RS", value)}
+                />
+
+            <SeqLegendKnob
+                  caption="RT"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RT)) ? 0.5 : g.RT}
+                  valueSpec={this.registerValueSpec}
+                  onChange={(value) => this.onChangeRegister("RT", value)}
+                />
+
+            <SeqLegendKnob
+                  caption="RU"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RU)) ? 0.5 : g.RU}
+                  valueSpec={this.registerValueSpec}
+                  onChange={(value) => this.onChangeRegister("RU", value)}
+                />
+
+            <SeqLegendKnob
+                  caption="RV"
+                  className="knob"
+                  initialValue={isNaN(parseFloat(g.RV)) ? 0.5 : g.RV}
+                  valueSpec={this.registerValueSpec}
+                  onChange={(value) => this.onChangeRegister("RV", value)}
+                />
             </dd>
 
-            <dt>Extra CSS</dt>
+            <dd>
+              <div className='info'>
+                <div className="infoText"><a href="https://github.com/thenfour/digifujam/wiki#extra-css-styles-and-control-registers" target="_blank">Help with extra classes &amp; registers</a></div>
+              </div>
+
+            </dd>
+
+            <dt>
+              Extra CSS
+            </dt>
             <dd className='content'>
+
               <div>
-              (e.g. "hidden", "straight", "monofont", "sansfont", "dynamicFontSize", "vanillaInfoBox", "performersOnly", "opacityRX", "opacityRY")<br />
               <TextField
                 fieldID="graffitiExtraCSS"
                 valueSetter={(val) => this.setExtraCSSClass(val)}
@@ -423,7 +468,7 @@ class GraffitiModerationDialog extends React.Component {
               <div className='info'>
                 <div className='field absolute'>{new Date(g.expires).toISOString()}</div>
                 <div className='field remaining'>{ new TimeSpan(new Date(g.expires) - new Date()).longString }</div>
-                {g.pinned && <div className="field infoText">Note: Expiration doesn't apply to pinned graffiti.</div>}
+                {g.pinned && <div className="infoText">Note: Expiration doesn't apply to pinned graffiti.</div>}
               </div>
               <div className='buttons'>
                 <button className="expiration extend" onClick={() => this.setState({setExpirationConfirmation: hoursToMS(1)})}>+ Extend 1 hour</button>
