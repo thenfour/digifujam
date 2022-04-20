@@ -354,43 +354,71 @@ RZ = range of rotation
 
 
 
-
-
-#graffitiContainer .graffitiItemContainer .graffiti.solidColor {
-    /* filter: grayscale(100%) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RX))) saturate(var(--RY)); */
-    filter: brightness(10) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RS))) saturate(var(--RT)) brightness(var(--RU));
-}
-
-
-
-
-
-@keyframes graffitiSolidColorHueRotateAnim {
+@keyframes KF_SpotlightAnim_UpFacing {
     0% {
-        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(0deg) saturate(var(--RT)) brightness(var(--RU));
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY))) rotateX(var(--rotX));
+    }
+
+    33% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) rotateX(var(--rotX));
+    }
+
+    66% {
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY))) rotateX(var(--rotX));
     }
 
     100% {
-        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(360deg) saturate(var(--RT)) brightness(var(--RU));
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * var(--RY))) rotateX(var(--rotX));
     }
 }
 
 
-#graffitiContainer .graffiti.solidColorHueAnim .graffitiContent.image {
-    animation: graffitiSolidColorHueRotateAnim calc(50s * var(--RX)) infinite;
+#graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing {
+    --extentX: 250px;
+    --extentY: 250px;
+    --rotX: 60deg;
+    animation: KF_SpotlightAnim_UpFacing calc(90s * var(--RZ)) infinite;
     animation-timing-function: linear;
+    animation-direction: alternate;
 }
 
 
 
-#graffitiContainer .graffitiItemContainer.softLight {
-    mix-blend-mode: soft-light;
+@keyframes KF_SpotlightAnim_SideFacing {
+    0% {
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY)))  skewY(var(--skewY));
+    }
+
+    33% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) skewY(var(--skewY));
+    }
+
+    66% {
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY)))  skewY(var(--skewY));
+    }
+
+    100% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * var(--RY))) skewY(var(--skewY));
+    }
 }
 
 
-#graffitiContainer .graffitiItemContainer.overlay {
-    mix-blend-mode: overlay;
+#graffitiContainer .graffitiItemContainer .spotlightAnim_LeftFacing,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_RightFacing,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing {
+    --extentX: 250px;
+    --extentY: 250px;
+    --skewY: 30deg;
+    animation: KF_SpotlightAnim_SideFacing calc(90s * var(--RZ)) infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
 }
+
+#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing {
+    --skewY: 0deg;
+}
+
+
 
 
 

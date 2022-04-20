@@ -1344,11 +1344,11 @@ class RoomServer {
           this.roomState.announcementHTML = data.params;
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
-        // case "setRoomImg":
-        //   if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
-        //   this.roomState.img = data.params;
-        //   this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
-        //   break;
+        case "setRoomImg":
+          if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
+          this.roomState.backgroundLayers.at(-1).img = data.params;
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
+          break;
         case "setRadioChannel":
           if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
           this.roomState.radio.channelID = data.params.channelID;
@@ -1389,6 +1389,16 @@ class RoomServer {
         case "setRoomPurposes": {
           if (!foundUser.user.IsModerator()) throw new Error(`User isn't a moderator.`);
           this.roomState.SetPurposes(data.params.purposes);
+
+          if (!this.roomState.HasJamPurpose()) {
+            // release instruments & mute sequencers
+            this.roomState.instrumentCloset.forEach(inst => {
+              this.DoInstrumentRelease(inst);
+            });
+          }
+          // the sequencers will stay in "playing" mode but the sequencer player knows not to play stuff when the room doesn't have jam purpose.
+          this.sequencerPlayer.onChanged_General();
+
           this.io.to(this.roomState.roomID).emit(DF.ServerMessages.ChangeRoomState, data);
           break;
         }

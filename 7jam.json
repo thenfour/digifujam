@@ -18,7 +18,7 @@
       "cssClass": "parallaxBG"
     },
     {
-      "img": "/roomart/7jam-8.png",
+      "img": "/roomart/7jam-8-tidy-processed.png",
       "default": 1,
       "parallaxFactor": 0.85,
       "cssClass": "",

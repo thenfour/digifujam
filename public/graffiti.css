@@ -328,3 +328,43 @@
 #graffitiContainer .graffiti.opacityRV {
     opacity: calc(100% * var(--RV));
 }
+
+
+
+
+#graffitiContainer .graffitiItemContainer .graffiti.solidColor {
+    /* filter: grayscale(100%) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RX))) saturate(var(--RY)); */
+    filter: brightness(10) sepia(100%) saturate(10) hue-rotate(calc(360deg * var(--RS))) saturate(var(--RT)) brightness(var(--RU));
+}
+
+
+
+
+
+@keyframes graffitiSolidColorHueRotateAnim {
+    0% {
+        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(0deg) saturate(var(--RT)) brightness(var(--RU));
+    }
+
+    100% {
+        filter: brightness(10) sepia(100%) saturate(10) hue-rotate(360deg) saturate(var(--RT)) brightness(var(--RU));
+    }
+}
+
+
+#graffitiContainer .graffiti.solidColorHueAnim .graffitiContent.image {
+    animation: graffitiSolidColorHueRotateAnim calc(50s * var(--RX)) infinite;
+    animation-timing-function: linear;
+}
+
+
+
+#graffitiContainer .graffitiItemContainer.softLight {
+    mix-blend-mode: soft-light;
+}
+
+
+#graffitiContainer .graffitiItemContainer.overlay {
+    mix-blend-mode: overlay;
+}
+

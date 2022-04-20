@@ -70,10 +70,10 @@ class AdminControls extends React.Component {
                             announcement HTML (live update):<br />
                             <textarea style={{width:"100%", height:"250px"}} value={this.props.app.roomState.announcementHTML} onChange={e => this._handleChangeAnnouncementHTML(e.target.value)} />
                         </div>
-                        {/* <div>
+                        <div>
                             background image:<br />
-                            <input style={{width:"100%"}} type="text" value={this.props.app.roomState.img} onChange={e => this._handleChangeRoomImg(e.target.value)} />
-                        </div> */}
+                            <input style={{width:"100%"}} type="text" value={this.props.app.roomState.backgroundLayers.at(-1).img} onChange={e => this._handleChangeRoomImg(e.target.value)} />
+                        </div>
                     </div>
         );
     }

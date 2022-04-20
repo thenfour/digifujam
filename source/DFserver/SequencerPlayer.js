@@ -589,7 +589,7 @@ class InstrumentSequencerPlayer {
     
     const patternView = Seq.GetPatternView(patch, this.instrument.sequencerDevice.GetNoteLegend());
 
-    if (!this.instrument.sequencerDevice.isPlaying) {
+    if (!this.instrument.sequencerDevice.isPlaying || !this.roomState.HasJamPurpose()) {
       //console.log(`not playing; clearing data.`);
       this.quantizer.setSequencerEvents(this.roomState.roomID, this.instrument.instrumentID, [], patternView, false, null);
       RegisterPerf();

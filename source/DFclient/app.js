@@ -1372,10 +1372,11 @@ class DigifuApp {
         this.roomState.announcementHTML = data.params;
         this.stateChangeHandler();
         break;
-      // case "setRoomImg":
-      //   this.roomState.img = data.params;
-      //   this.stateChangeHandler();
-      //   break;
+      case "setRoomImg":
+        this.roomState.backgroundLayers.at(-1).img = data.params;
+        //this.roomState.img = data.params;
+        this.stateChangeHandler();
+        break;
       case "setRadioChannel":
         if (this.radio)
           this.radio.stop();
