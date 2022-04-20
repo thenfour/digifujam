@@ -323,6 +323,7 @@ class GraffitiItem extends React.Component {
       "--RW": g.RW ?? 0,
       "--seed": g.seed,
       "--size": g.size ?? 0,
+      "--color": g.color,
     };
 
     let isImage = isImageUrl(g.content);

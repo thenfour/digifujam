@@ -263,24 +263,24 @@ class RadioMachine {
 
     this.AnalyserNode = this.audioCtx.createAnalyser();
 
-    // this.FilterNode = audioCtx.createBiquadFilter();
-    // this.FilterNode.type = app.roomState.radio.filterType ?? "lowpass";
-    // this.FilterNode.frequency.value = app.roomState.radio.filterFrequency ?? 2000;
-    // this.FilterNode.Q.value = app.roomState.radio.filterQ ?? 2;
+    this.FilterNode = audioCtx.createBiquadFilter();
+    this.FilterNode.type = app.roomState.radio.filterType ?? "lowpass";
+    this.FilterNode.frequency.value = app.roomState.radio.filterFrequency ?? 2000;
+    this.FilterNode.Q.value = app.roomState.radio.filterQ ?? 2;
 
-    // this.Reverb = audioCtx.createConvolver();
-    // this.ReverbGain = audioCtx.createGain();
-    // this.ReverbGain.gain.value = 0;
+    this.Reverb = audioCtx.createConvolver();
+    this.ReverbGain = audioCtx.createGain();
+    this.ReverbGain.gain.value = 0;
 
-    // DFSynthTools.gLoadSample(this.audioCtx, app.roomState.radio.reverbImpulseURL,
-    //                          (buffer) => {
-    //                            this.Reverb.buffer = buffer;
-    //                            this.ReverbGain.gain.value = app.roomState.radio.reverbGain ?? 0.2;
-    //                          },
-    //                          (e) => {
-    //                            console.log(`Error loading radio reverb impulse`);
-    //                            console.log(e);
-    //                          });
+    DFSynthTools.gLoadSample(this.audioCtx, app.roomState.radio.reverbImpulseURL,
+                             (buffer) => {
+                               this.Reverb.buffer = buffer;
+                               this.ReverbGain.gain.value = app.roomState.radio.reverbGain ?? 0.2;
+                             },
+                             (e) => {
+                               console.log(`Error loading radio reverb impulse`);
+                               console.log(e);
+                             });
 
     this.fxEnabled = app.roomState.radio.fxEnabled ?? false;
     this.connect();
@@ -288,10 +288,10 @@ class RadioMachine {
   }
 
   disconnect() {
-    // this.ReverbGain.disconnect();
-    // this.Reverb.disconnect();
+    this.ReverbGain.disconnect();
+    this.Reverb.disconnect();
     this.AnalyserNode.disconnect();
-    // this.FilterNode.disconnect();
+    this.FilterNode.disconnect();
     this.IcyNode.Node.disconnect();
   }
 
@@ -303,15 +303,15 @@ class RadioMachine {
     */
     this.IcyNode.Node.connect(this.AnalyserNode);
 
-    // if (this.fxEnabled) {
-    //   this.AnalyserNode.connect(this.FilterNode);
-    //   this.FilterNode.connect(this.destNode);
-    //   this.FilterNode.connect(this.Reverb);
-    //   this.Reverb.connect(this.ReverbGain);
-    //   this.ReverbGain.connect(this.destNode);
-    // } else {
+    if (this.fxEnabled) {
+      this.AnalyserNode.connect(this.FilterNode);
+      this.FilterNode.connect(this.destNode);
+      this.FilterNode.connect(this.Reverb);
+      this.Reverb.connect(this.ReverbGain);
+      this.ReverbGain.connect(this.destNode);
+    } else {
       this.AnalyserNode.connect(this.destNode);
-    //}
+    }
   }
 
   get FXEnabled() {
@@ -324,23 +324,23 @@ class RadioMachine {
     this.connect();
   }
 
-  // get ReverbLevel() { return this.ReverbGain.gain.value; }
-  // set ReverbLevel(v) { this.ReverbGain.gain.value = v; }
-  // get FilterFrequency() { return this.FilterNode.frequency.value; }
-  // set FilterFrequency(v) { this.FilterNode.frequency.value = v; }
-  // get FilterQ() { return this.FilterNode.Q.value; }
-  // set FilterQ(v) { this.FilterNode.Q.value = v; }
-  // get FilterType() { return this.FilterNode.type; }
-  // set FilterType(v) { this.FilterNode.type = v; }
+  get ReverbLevel() { return this.ReverbGain.gain.value; }
+  set ReverbLevel(v) { this.ReverbGain.gain.value = v; }
+  get FilterFrequency() { return this.FilterNode.frequency.value; }
+  set FilterFrequency(v) { this.FilterNode.frequency.value = v; }
+  get FilterQ() { return this.FilterNode.Q.value; }
+  set FilterQ(v) { this.FilterNode.Q.value = v; }
+  get FilterType() { return this.FilterNode.type; }
+  set FilterType(v) { this.FilterNode.type = v; }
 
-  get ReverbLevel() { return 0; }
-  set ReverbLevel(v) { }
-  get FilterFrequency() { return 100; }
-  set FilterFrequency(v) { }
-  get FilterQ() { return 2; }
-  set FilterQ(v) { }
-  get FilterType() { return "lowpass"; }
-  set FilterType(v) { }
+  // get ReverbLevel() { return 0; }
+  // set ReverbLevel(v) { }
+  // get FilterFrequency() { return 100; }
+  // set FilterFrequency(v) { }
+  // get FilterQ() { return 2; }
+  // set FilterQ(v) { }
+  // get FilterType() { return "lowpass"; }
+  // set FilterType(v) { }
 
 
   stop() {

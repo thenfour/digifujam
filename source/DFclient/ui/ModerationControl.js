@@ -84,7 +84,7 @@ class GraffitiModerationDialog extends React.Component {
       shiftAmt: 5,
     };
     
-    this.sizeValueSpec = new IntRangeValueSpec(4, 400, 100);
+    this.sizeValueSpec = new IntRangeValueSpec(4, 600, 100);
     this.registerValueSpec = new FloatValueSpec01({centerValue: 0.5});
   }
 
