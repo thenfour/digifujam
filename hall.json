@@ -150,34 +150,14 @@
         "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/maj7"
       },
       {
+        "name": "7jam Radio",
+        "streamURL": "https://radio.7jam.io/7jam",
+        "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/7jam"
+      },
+      {
         "name": "Nectarine Radio A",
         "streamInfoURL": "https://scenestream.io/status-json.xsl?mount=/necta64.mp3",
         "streamURL": "https://scenestream.io/necta64.mp3"
-      },
-      {
-        "name": "Nectarine Radio B",
-        "streamInfoURL": "http://pmaster.no:9000/status-json.xsl?mount=/necta",
-        "streamURL": "http://pmaster.no:9000/necta"
-      },
-      {
-        "name": "Nectarine Radio C",
-        "streamInfoURL": "http://nectarine.shakeme.info:8000/status-json.xsl?mount=/nectarine",
-        "streamURL": "http://nectarine.shakeme.info:8000/nectarine"
-      },
-      {
-        "name": "Nectarine Radio D",
-        "streamInfoURL": "http://nectarine.ers35.net:8000/status-json.xsl?mount=/necta192.mp3",
-        "streamURL": "http://nectarine.ers35.net:8000/necta192.mp3"
-      },
-      {
-        "name": "Nectarine Radio E",
-        "streamInfoURL": "http://nectarine.bgp.wtf:1337/status-json.xsl?mount=/nectarine",
-        "streamURL": "http://nectarine.bgp.wtf:1337/nectarine"
-      },
-      {
-        "name": "Nectarine Radio F",
-        "streamInfoURL": "http://necta.burn.net:8000/status-json.xsl?mount=/nectarine",
-        "streamURL": "http://necta.burn.net:8000/nectarine"
       }
     ]
   },

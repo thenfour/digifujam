@@ -191,9 +191,9 @@ section#radioVis {
 
 section#radioVis i {
   flex: 1 1 100%;
-  height: calc(100% * var(--c)/255);
-  background: hsla(calc(var(--c)/255*360), calc(var(--c)/255 * 100%), 50%, 30%);
-  border-top:5px solid hsl(calc(var(--c)/255*360), calc(var(--c)/255 * 100%), 50%);
+  height: calc(100% * var(--c));
+  background: hsla(calc(var(--c)*360), calc(var(--c) * 100%), 50%, 30%);
+  border-top:5px solid hsl(calc(var(--c)*360), calc(var(--c) * 100%), 50%);
   box-shadow: 0 0 12px #022;
   /* border-right:2px solid hsl(calc(var(--c)/255*360), calc(var(--c)/255 * 90%), 50%); */
   /* margin-left:3px; */

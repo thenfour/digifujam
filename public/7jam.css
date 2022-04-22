@@ -2,20 +2,6 @@
 
 PLEASE KEEP custom CSS updated @ https://github.com/thenfour/digifujam/wiki
 
-rightFacingRotateAnim
-frontFacingRotateAnim
-upFacingRotateAnim
-leftFacingRotateAnim
-hueRotateAnim
-nofilter
-floatingSign3D_RightFacing
-floatingSign3D_LeftFacing
-floatingSign3D_FrontFacing
-solidColor
-solidColorHueAnim
-softLight
-overlay
-
 */
 
 
@@ -354,69 +340,134 @@ RZ = range of rotation
 
 
 
-@keyframes KF_SpotlightAnim_UpFacing {
+@keyframes KF_SpotlightAnim_360 {
     0% {
-        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY))) rotateX(var(--rotX));
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(0deg);
+    }
+
+    17% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(60deg);
     }
 
     33% {
-        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) rotateX(var(--rotX));
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(120deg);
     }
+
+    50% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(180deg);
+    }
+
 
     66% {
-        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY))) rotateX(var(--rotX));
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(240deg);
     }
 
-    100% {
-        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * var(--RY))) rotateX(var(--rotX));
+    83% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(300deg);
     }
+    
+    100% {
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(360deg);
+    }
+
 }
 
 
-#graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing {
+#graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing_360,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_LeftFacing_360,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_RightFacing_360,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing_360 {
+    transform-origin: calc(0.5px * var(--size)) calc(0.5px * var(--size));
     --extentX: 250px;
     --extentY: 250px;
-    --rotX: 60deg;
-    animation: KF_SpotlightAnim_UpFacing calc(90s * var(--RZ)) infinite;
-    animation-timing-function: linear;
-    animation-direction: alternate;
-}
-
-
-
-@keyframes KF_SpotlightAnim_SideFacing {
-    0% {
-        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY)))  skewY(var(--skewY));
-    }
-
-    33% {
-        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) skewY(var(--skewY));
-    }
-
-    66% {
-        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY)))  skewY(var(--skewY));
-    }
-
-    100% {
-        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * var(--RY))) skewY(var(--skewY));
-    }
-}
-
-
-#graffitiContainer .graffitiItemContainer .spotlightAnim_LeftFacing,
-#graffitiContainer .graffitiItemContainer .spotlightAnim_RightFacing,
-#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing {
-    --extentX: 250px;
-    --extentY: 250px;
+    --rotX: 0;
     --skewY: 30deg;
-    animation: KF_SpotlightAnim_SideFacing calc(90s * var(--RZ)) infinite;
+    animation: KF_SpotlightAnim_360 calc(90s * var(--RZ)) infinite;
     animation-timing-function: linear;
-    animation-direction: alternate;
+    animation-direction: normal;
 }
 
-#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing {
+#graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing_360 {
+    --rotX: 60deg;
+    --skewY:0;
+}
+
+#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing_360 {
     --skewY: 0deg;
 }
+
+
+
+
+
+
+
+
+
+@keyframes KF_SpotlightAnim_Rot {
+    0% {
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(calc(-1 * var(--RW) * var(--extentRotZ)));
+    }
+
+    33% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(calc(1 * var(--RW) * var(--extentRotZ)));
+    }
+
+    66% {
+        transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * .333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(calc(-1 * var(--RW) * var(--extentRotZ)));
+    }
+
+    100% {
+        transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(calc(1 * var(--RW) * var(--extentRotZ)));
+    }
+
+}
+
+
+#graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing_rot,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_LeftFacing_rot,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_RightFacing_rot,
+#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing_rot {
+    transform-origin: calc(0.5px * var(--size)) calc(0.5px * var(--size));
+    --extentX: 250px;
+    --extentY: 250px;
+    --rotX: 0;
+    --skewY: 30deg;
+    --extentRotZ: 45deg;
+    animation: KF_SpotlightAnim_Rot calc(90s * var(--RZ)) infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+}
+
+#graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing_rot {
+    --rotX: 60deg;
+    --skewY:0;
+}
+
+#graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing_rot {
+    --skewY: 0deg;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -455,6 +506,10 @@ RZ = range of rotation
     flex-direction: row-reverse;
 }
 
+.roomItem.radioItem.radioVis {
+    z-index: var(--z-index-radio-vis);
+}
+
 
 .room7jam.roomItem.radioItem.radioMetadata {
     font-size: 24px;
@@ -470,6 +525,7 @@ RZ = range of rotation
 .room7jam.roomItem.radioItem.radioMetadata .radioStationName {
     font-size: 20px;
     color: #999;
+    display:none;
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .connectionState.offline {
@@ -483,11 +539,13 @@ RZ = range of rotation
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .streamName {
+    display:none;
     font-size: 20px;
     color: #aaa;
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .streamDescription {
+    display:none;
     font-size: 12px;
     color: #aaa;
     font-style: italic;

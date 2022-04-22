@@ -1089,6 +1089,11 @@
         "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/maj7"
       },
       {
+        "name": "7jam Radio",
+        "streamURL": "https://radio.7jam.io/7jam",
+        "streamInfoURL": "https://radio.7jam.io/status-json.xsl?mount=/7jam"
+      },
+      {
         "name": "Nectarine Radio A",
         "streamInfoURL": "https://scenestream.io/status-json.xsl?mount=/necta64.mp3",
         "streamURL": "https://scenestream.io/necta64.mp3"

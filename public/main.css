@@ -7,7 +7,8 @@
     /* putting all z-index values here to keep them under control. */
     --z-index-room-background-layers: 500;
 
-    --z-index-radio-metadata: 1000; /* in front of vis, but behind radio controls */
+    --z-index-radio-vis: 1000;
+    --z-index-radio-metadata: 1005;
     --z-index-graffiti: 1010;
     --z-index-room-item: 1015;
 
