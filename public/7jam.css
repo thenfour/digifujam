@@ -39,7 +39,7 @@ PLEASE KEEP custom CSS updated @ https://github.com/thenfour/digifujam/wiki
 
 #graffitiContainer .graffiti.leftFacing,
 .roomItem.leftFacing {
-    transform: skewY(30deg) scaleY(1.25);
+    transform: skewY(27.5deg) scaleY(1.25);
 }
 
 
@@ -503,7 +503,7 @@ RZ = range of rotation
 
 .room7jam section#radioVis {
 
-    flex-direction: row-reverse;
+    /* flex-direction: row-reverse; */
 }
 
 .roomItem.radioItem.radioVis {

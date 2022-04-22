@@ -1052,23 +1052,19 @@
     {
       "itemID": "radioMetadata",
       "itemType": "radioMetadata",
-      "cssClass": "room7jam radioItem rightFacing radioMetadata",
+      "cssClass": "room7jam radioItem leftFacing radioMetadata",
       "rect": {
-        "x": 678,
-        "y": 275,
-        "w": 300,
-        "h": 150
+        "x":1320,"y":230,"w":300,"h":150,
+        "_": "when rightFacing, 678, 275, 300, 150"
       }
     },
     {
       "itemID": "radioVis",
       "itemType": "radioVis",
-      "cssClass": "room7jam radioItem rightFacing radioVis",
+      "cssClass": "room7jam radioItem leftFacing radioVis",
       "rect": {
-        "x": 678,
-        "y": 185,
-        "w": 700,
-        "h": 150
+        "x":1345,"y":390,"w":700,"h":150,
+        "_": "when rightFacing, 678, 185, 700, 150"
       }
     }
   ],
