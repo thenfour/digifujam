@@ -166,6 +166,15 @@ span.userModerationGear i {
   padding: 10px 10px;
   color: #0cc;
   max-width: 450px;
+display: flex;/* flex-direction: column; */}
+
+
+.moderationPanel.graffiti dd.content.column {
+  flex-direction: column;}
+
+
+.moderationPanel.graffiti dd.content img {
+  max-width: 212px;
 }
 
 .moderationPanel dd a {
@@ -232,6 +241,12 @@ span.userModerationGear i {
 .moderationPanel.graffiti dd button
 {border: 0;background-color: #044;color:  #0cc;padding: 3px 9px;font-size: 16px;font-weight: normal;}
 
+.moderationPanel.graffiti dd button.selected {
+  background-color: #055;
+color: #0ee;border: 1px solid #099;
+
+}
+
 .moderationPanel.graffiti dd.expiration button.delete,
 .moderationPanel.graffiti dd.pinning button.unpin
 {background-color: #840;color: #ccc;}
@@ -249,7 +264,8 @@ span.userModerationGear i {
 
 .moderationPanel.room button.active {
   background-color: #055;
-color: #0ee;border: 1px solid #099;}
+color: #0ee;border: 1px solid #099;
+}
 
 
 .chatLog .chatLogEntryChat {
@@ -290,7 +306,9 @@ color: #0ee;border: 1px solid #099;}
 
 .topMenuButton.modctrl,
 .topMenuButton.roomsettings,
-.topMenuButton.serverSettings {
+.topMenuButton.serverSettings,
+.topMenuButton.graffitiList
+{
   border: 2px solid #f739;
 }
 

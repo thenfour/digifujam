@@ -17,7 +17,7 @@ const {UserSettingsButton} = require("./userSettings");
 const {GoogleOAuthModule} = require('../googleSignIn');
 const {GestureSplash} = require('./splash');
 const {DFAlert} = require('./DFAlert');
-const {GraffitiScreen, GraffitiContainer} = require("./graffiti");
+const {GraffitiScreen, GraffitiContainer, ModGraffitiListMenuButton} = require("./graffiti");
 const EventEmitter = require('events');
 const {RadioMetadataRoomItem, RadioVisRoomItem} = require('./radioControls');
 const { ModerationControlPanel } = require('./ModerationControl');
@@ -2930,6 +2930,10 @@ class RootArea extends React.Component {
         window.DFStateChangeHandler.OnStateChange();
     }
 
+    clickGraffitiList = () => {
+        this.setState({showGraffitiList: !this.state.showGraffitiList});
+    }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -2999,7 +3003,8 @@ class RootArea extends React.Component {
             [<div key={1} className='modctrl topMenuButton' onClick={() => { window.DFModerationControlsVisible = !window.DFModerationControlsVisible; this.setState({}); }}>
                 Mod ctrl {window.DFModerationControlsVisible ? "👮‍♀️" : "☮"}
             </div>,
-            <div key={2} className='roomsettings topMenuButton' onClick={() => this.clickModerateRoom()}>Room <i className="material-icons">settings</i></div>
+            <div key={2} className='roomsettings topMenuButton' onClick={() => this.clickModerateRoom()}>Room <i className="material-icons">settings</i></div>,
+            <ModGraffitiListMenuButton key={3} app={this.state.app}></ModGraffitiListMenuButton>
             ]
         );
 

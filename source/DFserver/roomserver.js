@@ -1188,6 +1188,21 @@ class RoomServer {
           break;
         }
 
+        case "setEnabled": // { op:"setRegister", register: "RX", value: 0}
+        {
+          const g = this.roomState.graffiti.find(g => g.id === op.id);
+          if (!g) return; // something out of sync.
+          if (!this.roomState.UserCanManageGraffiti(user, g)) {
+            console.log(`!! user ${user.name} ${user.userID} has no permission to setEnabled on graffiti ${op.id}`);
+            return;
+          }
+
+          g.enabled = !!op.enabled; // kinda dangerous but it's only for mods so...
+
+          this.io.to(this.roomState.roomID).emit(DF.ServerMessages.GraffitiOps, [{ op:"setEnabled", id:g.id, enabled:g.enabled }]);
+          break;
+        }
+
       }
     });
   }

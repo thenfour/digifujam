@@ -304,6 +304,7 @@ class RadioVisRoomItem extends React.Component {
     this.analyzerNode = this.props.app.radio.AnalyserNode;
     //this.analyzerNode.smoothingTimeConstant = 0.8;
     this.analyzerNode.fftSize = 2 ** 5;
+    this.peakIndex = 3;
     this.bufferLength = this.analyzerNode.frequencyBinCount;
     this.dataArray = new Uint8Array(this.bufferLength);
 
@@ -341,6 +342,10 @@ class RadioVisRoomItem extends React.Component {
     this.frameSkip = 2;
     this.analyzerNode.getByteFrequencyData(this.dataArray);
     this.dataArray.forEach((d, i) => this.v[i].style.setProperty('--c', d));
+
+    // peak data
+    document.getElementById("graffitiContainer").style.setProperty('--radio-peak', this.dataArray[this.peakIndex] / 255);
+
     requestAnimationFrame(this.animFrame);
   };
 

@@ -1,11 +1,22 @@
 const DF = require('../../DFcommon/DFCommon');
 const React = require('react');
-const { polyToPathDesc, remap, IsImageFilename, modulo, TimeSpan } = require('../../DFcommon/dfutil');
+const { polyToPathDesc, remap, IsImageFilename, modulo, TimeSpan, isImageUrl } = require('../../DFcommon/dfutil');
 const { RegisterModalHandler, DFInvokeModal, DFModalDialog } = require('./roomPresets');
+const ClickAwayListener = require ('./3rdparty/react-click-away-listener');
 
 
 
+function InvokeGraffitiSettingsDlg(graffitiID) {
+  //console.log(`control ${graffitiID}`);
+  window.DFModerationControlContext.op = null;
+  window.DFStateChangeHandler.OnStateChange();
 
+  setTimeout(()=> {
+    window.DFModerationControlContext.op = "graffiti";
+    window.DFModerationControlContext.graffitiID = graffitiID;
+    window.DFStateChangeHandler.OnStateChange();
+  }, 100);
+}
 
 
 
@@ -256,15 +267,6 @@ class GraffitiScreen extends React.Component {
 
 };
 
-///------------------------------------------------
-function isImageUrl(url) {
-  try {
-    url = new URL(url);
-    return IsImageFilename(url.pathname);
-  } catch (e) {
-  }
-  return false;
-}
 
 ///------------------------------------------------
 class GraffitiItem extends React.Component {
@@ -280,15 +282,16 @@ class GraffitiItem extends React.Component {
   }
 
   onClickCtrl(graffitiID) {
-    //console.log(`control ${graffitiID}`);
-    window.DFModerationControlContext.op = null;
-    window.DFStateChangeHandler.OnStateChange();
+    InvokeGraffitiSettingsDlg(graffitiID);
+    // //console.log(`control ${graffitiID}`);
+    // window.DFModerationControlContext.op = null;
+    // window.DFStateChangeHandler.OnStateChange();
 
-    setTimeout(()=> {
-      window.DFModerationControlContext.op = "graffiti";
-      window.DFModerationControlContext.graffitiID = graffitiID;
-      window.DFStateChangeHandler.OnStateChange();
-    }, 100);
+    // setTimeout(()=> {
+    //   window.DFModerationControlContext.op = "graffiti";
+    //   window.DFModerationControlContext.graffitiID = graffitiID;
+    //   window.DFStateChangeHandler.OnStateChange();
+    // }, 100);
   }
 
   render() {
@@ -385,7 +388,7 @@ class GraffitiContainer extends React.Component {
     if (!app.roomState?.roomRegions) return null;
 
     const items = app.roomState.graffiti
-      .filter(g => app.GraffitiIsVisible(g))
+      .filter(g => app.GraffitiIsVisible(g) && (g.enabled ?? true))
       .map(g => (<GraffitiItem key={g.id} context={this.props.context} graffiti={g} />));
 
     return (<div id="graffitiContainer" className={window.DFShowDebugInfo ? "admin" : ""}>
@@ -460,10 +463,107 @@ class GraffitiCtrl extends React.Component {
 
 
 ///------------------------------------------------
+// GraffitiModPreviewLI key={i} app={this.props.app} graffiti={g} />
+class GraffitiModPreviewLI extends React.Component {
+
+  onClickPin = (e) => {
+    const g = this.props.graffiti;
+    const app = this.props.app;
+    app.net.SendGraffitiOps([{
+      op: "pin",
+      id: g.id,
+      pin: !g.pinned,
+    }]);
+
+    this.setState({});
+  };
+
+  onClickEnabled = (e) => {
+    const g = this.props.graffiti;
+    const app = this.props.app;
+    app.net.SendGraffitiOps([{
+      op: "setEnabled",
+      id: g.id,
+      enabled: !g.enabled,
+    }]);
+    this.setState({});
+  }
+
+  render() {
+    const g = this.props.graffiti;
+    const app = this.props.app;
+    const u = this.props.app.roomState.getUserForGraffiti(g); // may be null!
+    return <li>
+        <div className='column'>
+          <div className='row'>
+            <div className={"buttonlike graffitiPin " + (g.pinned ? "enabled" : "")} onClick={this.onClickPin} title={g.pinned ? "Pinned" : "not pinned"}><i className="material-icons">push_pin</i></div>
+            <div className="buttonlike graffitiCtrl" title='Settings' onClick={() => {InvokeGraffitiSettingsDlg(g.id); this.props.closeHandler(); }}><i className="material-icons">settings</i></div>
+            <div className={'buttonlike isEnabled ' + ((g.enabled ?? true) ? "enabled" : "disabled")} onClick={this.onClickEnabled}>{(g.enabled??true) ? "Enabled" : "Disabled"}</div>
+            <div className='user'><div className='caption'>User</div><div className='userName'>{u ? u.name : "(user not found)"}</div></div>
+          </div>
+          <div className='row'>
+            <div className='content'>{g.content}</div>
+          </div>
+        </div>
+        <div className='column'>
+          <div className='row'>
+            { isImageUrl(g.content) && <img src={g.content} />}
+          </div>
+        </div>
+      </li>
+  }
+}
+
+///------------------------------------------------
+class ModGraffitiListMenuButton extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {
+          isExpanded: false,
+      };
+  }
+
+  onClickExpand = () => {
+      this.setState({
+          isExpanded: !this.state.isExpanded,
+      });
+  };
+
+  render() {
+     if (!this.props.app) return null;
+
+     return [
+          <div key="1" className='topMenuButton graffitiList' onClick={this.onClickExpand}>
+              Graffiti <i className="material-icons">settings</i>
+          </div>,
+          <div key="2" className='popupPositioner'>
+          {this.state.isExpanded &&
+              <ClickAwayListener onClickAway={() => { this.setState({isExpanded:false});}}>
+                  <div className="popUpDialog graffitiListPopup">
+                    <ul className='modGraffitiList'>
+                    {
+                      this.props.app.roomState.graffiti.map((g, i)=> (
+                        <GraffitiModPreviewLI key={i} app={this.props.app} graffiti={g} closeHandler={() => this.setState({isExpanded:false})} />
+                      ))
+                    }
+                    </ul>
+                  </div>
+              </ClickAwayListener>
+          }
+          </div>
+      ];
+  }
+};
+
+
+
+
+///------------------------------------------------
 module.exports = {
   GraffitiScreen,
   GraffitiContainer,
   GraffitiCtrl,
+  ModGraffitiListMenuButton,
 };
 
 

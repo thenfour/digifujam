@@ -353,7 +353,7 @@
 
 
 #graffitiContainer .graffiti.solidColorHueAnim .graffitiContent.image {
-    animation: graffitiSolidColorHueRotateAnim calc(50s * var(--RX)) infinite;
+    animation: graffitiSolidColorHueRotateAnim calc(50s * var(--RS)) infinite;
     animation-timing-function: linear;
 }
 
@@ -368,3 +368,116 @@
     mix-blend-mode: overlay;
 }
 
+
+/* moderation menu */
+.popUpDialog.graffitiListPopup {
+    border-radius: 0;
+    padding: 0;
+    width: auto;
+}
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList {
+    margin: 0;
+    padding: 0;
+}
+
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList div.column {
+    display: flex;
+    flex-direction: column;
+}
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList div.row {
+    display: flex;
+    align-items: center;
+}
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList .content {
+
+    background-color: black;
+    padding: 6px 10px;
+    margin: 6px 10px;
+    ;
+    color: #999;
+    max-width: 500px;
+}
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList>li {
+    background-color: #222;
+    margin: 7px 0px;
+    /* vertical-align: middle; */
+    display: flex;
+}
+
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList>li:hover {
+    background-color: #044;
+}
+
+.popUpDialog.graffitiListPopup ul.modGraffitiList img {
+    max-height: 114px;
+}
+
+.popUpDialog.graffitiListPopup .buttonlike {
+    cursor: pointer;
+}
+
+.popUpDialog.graffitiListPopup .modGraffitiList .graffitiPin {
+    color: #444;
+}
+
+.popUpDialog.graffitiListPopup .modGraffitiList .graffitiPin i,
+.popUpDialog.graffitiListPopup .modGraffitiList .graffitiCtrl i {
+    font-size: 24px;
+}
+
+.popUpDialog.graffitiListPopup .modGraffitiList .graffitiPin.enabled {
+    color: #ff0;
+}
+
+.popUpDialog.graffitiListPopup .modGraffitiList .graffitiCtrl:hover,
+.popUpDialog.graffitiListPopup .modGraffitiList .graffitiPin:hover {
+    color: #f80;
+}
+
+
+.popUpDialog.graffitiListPopup .isEnabled {
+
+    background-color: #333;
+    padding: 3px 8px;
+    /* vertical-align: middle; */
+    color: #666;
+    margin: 0px 5px;
+}
+
+.popUpDialog.graffitiListPopup .isEnabled.enabled {
+
+    color: #0aa;
+    background-color: #055;
+    border: 1px solid #0cc;
+    border-radius: 4px;
+}
+
+
+.popUpDialog.graffitiListPopup .isEnabled:hover {
+    background-color: #066;
+}
+
+
+.popUpDialog.graffitiListPopup .modGraffitiList .user {
+
+    display: inline-flex;
+}
+
+.popUpDialog.graffitiListPopup .modGraffitiList .user .caption {
+
+    color: #999;
+    margin: 0px 4px;
+}
+
+.popUpDialog.graffitiListPopup .modGraffitiList .user .userName {
+
+    font-weight: bold;
+    color: #0cc;
+    margin: 0 4px;
+}

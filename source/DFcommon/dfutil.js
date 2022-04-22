@@ -355,6 +355,16 @@ function IsImageFilename(f) {
   f = f.toLowerCase();
   return imageExtensions.some(ext => f.endsWith(ext));
 }
+///------------------------------------------------
+function isImageUrl(url) {
+  try {
+    url = new URL(url);
+    return IsImageFilename(url.pathname);
+  } catch (e) {
+  }
+  return false;
+}
+
 
 // point-in-polygon stuff
 // https://github.com/substack/point-in-polygon
@@ -538,6 +548,7 @@ module.exports = {
   polyToPathDesc,
   pointInPolygon,
   IsImageFilename,
+  isImageUrl,
   CommandHistory,
   ParamThrottler,
   DFRect,

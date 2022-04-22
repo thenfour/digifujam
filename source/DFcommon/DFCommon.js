@@ -63,6 +63,7 @@ const ClientMessages = {
     // { op:"setDisableRotation", }
     // { op:"setExtraCssClass", }
     // { op:"setRegister", register: "RX", value: 0}
+    // { op:"setEnabled", enabled:0/1 }
      // [{ op:, content, id, ... }] // id only used for admin, lifetime & content only for placement
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { danceID: }
@@ -159,7 +160,7 @@ const ServerMessages = {
     // { op:"setDisableRotation", }
     // { op:"setExtraCssClass", }
     // { op:"setRegister", register: "RX", value: 0}
-    // pin,setExpiration, setColor, setSize, setPosition
+    // pin,setExpiration, setColor, setSize, setPosition, setEnabled
     GraffitiOps: "GraffitiOps",
     UserDance: "UserDance", // { userID: , danceID: }
 
@@ -1734,6 +1735,7 @@ class DigifuRoomState {
             RU: 0.5, // x
             RV: 0.5, // y
             disableRotation: false, // can be overridden by mods
+            enabled:1,
             content,
             expires,
             // 'size' is also supported and optional. a default size is always used to begin with, but mods can change size. example: "size":"140px"

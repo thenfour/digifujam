@@ -2,7 +2,7 @@
 const React = require('react');
 const { eRoomPurposeFlags } = require('../../DFcommon/DFCommon');
 const { UserSourceToString, UserPresenceToString, eUserGlobalRole } = require('../../DFcommon/DFUser');
-const { TimeSpan, hoursToMS, daysToMS } = require('../../DFcommon/dfutil');
+const { TimeSpan, hoursToMS, daysToMS, isImageUrl } = require('../../DFcommon/dfutil');
 const { TextField } = require('./DFReactUtils');
 const { IntRangeValueSpec, SeqLegendKnob, FloatValueSpec01 } = require('./knob');
 
@@ -84,7 +84,7 @@ class GraffitiModerationDialog extends React.Component {
       shiftAmt: 5,
     };
     
-    this.sizeValueSpec = new IntRangeValueSpec(4, 600, 100);
+    this.sizeValueSpec = new IntRangeValueSpec(4, 1000, 100);
     this.registerValueSpec = new FloatValueSpec01({centerValue: 0.5});
   }
 
@@ -245,6 +245,19 @@ class GraffitiModerationDialog extends React.Component {
     this.setState({});
   }
 
+  onClickEnableGraffiti = (enabled) => {
+    const graffitiID = window.DFModerationControlContext.graffitiID;
+    let g = this.props.app.roomState.graffiti.find(g => g.id === graffitiID);
+    if (!g) {
+      return null;
+    }
+    this.props.app.net.SendGraffitiOps([{
+      op: "setEnabled",
+      id: graffitiID,
+      enabled,
+    }]);
+  }
+
 
   onChangeRX = (value) => {
     this.onChangeRegister("RX", value);
@@ -281,6 +294,9 @@ class GraffitiModerationDialog extends React.Component {
 
             <dt>Graffiti</dt>
             <dd className='graffiti'>
+              <button onClick={() => this.onClickEnableGraffiti(true)} className={g.enabled ? "selected" : "notselected"}>Enabled</button>
+              <button onClick={() => this.onClickEnableGraffiti(false)} className={g.enabled ? "notselected" : "selected"}>Disabled</button>
+
               <span className='field id'>gid #{g.id}</span>
               <span className='field userid'>uid #{g.userID}</span>
               <span className='field userid'>puid #{g.persistentID}</span>
@@ -298,7 +314,10 @@ class GraffitiModerationDialog extends React.Component {
             </dd>
 
             <dt>Content</dt>
-            <dd className='content'>{g.content}</dd>
+            <dd className='content column'>
+              {g.content}
+              { isImageUrl(g.content) && <img src={g.content} />}
+            </dd>
 
             <dt>Seed</dt>
             <dd className='content'>
@@ -392,14 +411,12 @@ class GraffitiModerationDialog extends React.Component {
             </dt>
             <dd className='content'>
 
-              <div>
               <TextField
                 fieldID="graffitiExtraCSS"
                 valueSetter={(val) => this.setExtraCSSClass(val)}
                 valueGetter={() => g.extraCssClass}
                 maxLength={500}
               />
-              </div>
             </dd>
 
             <dt>Size/Position</dt>

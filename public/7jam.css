@@ -420,6 +420,15 @@ RZ = range of rotation
 
 
 
+#graffitiContainer .graffitiItemContainer .radioPeakScaleRW {
+    transform: scale(calc(1 + var(--RW) * 2 * var(--radio-peak)));
+}
+
+#graffitiContainer .graffitiItemContainer .radioPeakScaleRV {
+    transform: scale(calc(1 + var(--RV) * 2 * var(--radio-peak)));
+}
+
+
 
 
 

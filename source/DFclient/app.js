@@ -1644,6 +1644,18 @@ class DigifuApp {
         break;
       }
 
+      case "setEnabled":
+      {
+        const g = this.roomState.graffiti.find(g => g.id === op.id);
+        if (!g) {
+          console.log(`setEnabled: graffiti not found ${op.id}`);
+          return;
+        }
+
+        g.enabled = !!op.enabled;
+        break;
+      }
+
     }
     });
     this.stateChangeHandler();

@@ -12,16 +12,10 @@
   },
   "backgroundLayers": [
     {
-      "parallaxFactor": 0.35,
-      "width": 1750,
-      "height": 1280,
-      "cssClass": "parallaxBG"
-    },
-    {
       "img": "/roomart/7jam-8-tidy-processed.png",
       "default": 1,
       "parallaxFactor": 0.85,
-      "cssClass": "",
+      "cssClass": "parallaxBG",
       "width": 1750,
       "height": 1280
     }
