@@ -186,7 +186,7 @@ class RadioControls extends React.Component {
             <SeqLegendKnob
               caption="FiltFreq"
               className="knob"
-              initialValue={200}
+              initialValue={this.props.app.radio.FilterFrequency}
               valueSpec={gFreqSpec}
               formatSpec={gKnobFormatSpec}
               onChange={this.onChangeFreq}
