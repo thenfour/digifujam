@@ -1,0 +1,230 @@
+#alertScreen {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  background-color: #0006;
+  z-index: var(--z-index-alert-screen);
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 0;
+}
+
+#alertScreen.darker {
+  background-color: #000c;
+}
+
+#alertScreen2 {
+  background-color: #000d;
+  /* flex-grow: 1; */
+  display: flex;
+  flex-direction: column;
+  margin: 25vh;
+  align-content: center;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* border-radius: 30px; */
+  border: 3px solid #044;
+  max-width: 400px;
+  padding: 40px;
+}
+
+#alertContent {
+  font-size: 24px;
+  /* font-weight: bold; */
+  color: #cc0;
+}
+
+#alertClickToContinue {
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 25px;
+}
+
+
+
+
+
+.ideasDialog #alertScreen2 {
+  max-width: 1000px;
+  padding-top: 0;
+  padding-right: 0;
+  /* for the close button float */
+  cursor: auto;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.ideasDialog h2 {
+  margin-top: 40px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+}
+
+.ideasDialog ul {
+
+  padding: 0;
+  padding-right: 20px;
+
+  color: #0aa;
+
+  list-style-type: square;
+width: 800px;}
+
+.ideasDialog li {
+
+  display: flex;
+
+  /* align-content: center; */
+
+  /* justify-content: flex-start; */
+
+  /* display: list-item; */
+}
+
+.ideasDialog a {
+
+  display: flex;
+
+  flex-direction: row;
+
+  align-content: center;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+
+.ideasDialog em {
+  font-style: normal;
+}
+
+.ideasDialog a,
+.ideasDialog a:visited,
+.ideasDialog a:link {
+  color: #0aa;
+}
+
+.ideasDialog li:before {
+  content: "⮞";
+  margin-right: 10px;
+  color: #6669;
+}
+
+.ideasDialog a:hover {
+  background-color: #335;
+}
+
+.ideasDialog .socicon:hover {
+  background-color: transparent;
+  fill: #0cc;
+}
+
+
+
+.ideasDialog li em {
+  color: #0ff;
+  text-shadow: 0 0 12px #ff0;
+}
+
+
+.ideasDialog .closeButton {
+  float: right;
+  color: #777;
+  background-color: #222;
+  border: 0;
+  height: 48px;
+  width: 48px;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  border-radius: 0;
+}
+
+.ideasDialog .closeButton i {
+  font-size: 32px;
+}
+
+
+.ideasDialog .closeButton:hover {
+  color: #099;
+}
+
+
+.creditsDialog h2>* {
+  display: inline;
+}
+
+
+.creditsDialog ul li:before {
+  content: "";
+}
+
+.creditsDialog ul li {
+  width: 100%;
+  margin: 0px 0px;
+  padding: 0px 0px;
+  color: #f80;
+  font-size:30px;
+}
+
+.creditsDialog ul.tenfour li {
+  width: 100%;
+  margin: 0px 0px;
+  padding: 0px 0px;
+  color: #f80;
+  font-size: 44px;
+}
+
+.creditsDialog ul li:hover {
+  background-color:#333;
+}
+
+
+.creditsDialog img {
+  max-height: 70px;
+  margin: 6px 31px;
+}
+
+.creditsDialog .tenfour img {
+  max-height:104px;
+}
+
+.creditsDialog a,
+.creditsDialog a:visited,
+.creditsDialog a:link {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  color:#f80;
+  width: 100%;
+  font-weight:bold;
+}
+
+.creditsDialog ul.tenfour a {
+  color: #a18db7;
+}
+
+.creditsDialog li.saga a {
+  color: #1c9d1c;
+}
+
+.creditsDialog .withHelpFrom {
+  margin: 21px 9px;
+  color:#999;
+  font-style:italic;
+  font-size: 17px;
+text-align: center;}
+
+.creditsDialog #alertScreen2 {
+  padding: 5px 21px;
+}
+

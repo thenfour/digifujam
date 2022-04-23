@@ -10,7 +10,7 @@ const UIUser = require("./UIUser");
 const DFU = require('../../DFcommon/dfutil');
 const DFOptionsDialog = require('./optionsDialog');
 const KeybDisplayState = require("./keybDisplayState");
-const {CreditsButton, IdeasButton, IdeasDialog} = require("./CreditsButton");
+const {CreditsButton, IdeasButton, IdeasDialog, CreditsDialog} = require("./CreditsButton");
 const {SequencerMain} = require("./SequencerMain");
 const {InlinePitchBendCtrl, InlineMasterGainCtrl} = require('./InlinePitchBendCtrl');
 const {UserSettingsButton} = require("./userSettings");
@@ -3051,6 +3051,7 @@ class RootArea extends React.Component {
             <GestureSplash app={this.state.app}></GestureSplash>
             <DFAlert></DFAlert>
             <IdeasDialog></IdeasDialog>
+            <CreditsDialog></CreditsDialog>
             <div id="grid-container" style={gridContainerStyle}>
                 <div style={{ gridArea: "headerArea", textAlign: 'center' }} className="headerArea">
                     <span>

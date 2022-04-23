@@ -1,48 +1,121 @@
 const React = require('react');
 
-class CreditsButton extends React.Component {
+// class CreditsButton extends React.Component {
+//     constructor(props) {
+//         super(props);
+
+//         this.state = {
+//             isExpanded: false,
+//         };
+//     }
+
+//     onClickExpand = () => {
+//         this.setState({
+//             isExpanded: !this.state.isExpanded,
+//         });
+//     };
+
+//     render() {
+
+//         return (
+//             <div className='dropdownMenu right'>
+//                 <div className={"dropdownMenuButton creditsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>greetz</div>
+
+//                 {this.state.isExpanded &&
+//                     <div className="creditsDialog popUpDialog">
+//                         <div className='tenfour'>
+//                         7jam was created by <a href="https://tenfour.bandcamp.com/album/c-wars-original-game-soundtrack" target="_blank">tenfour</a>
+//                         </div>
+//                         <div className='withHelpFrom'>
+//                         with tons of help from
+//                         </div>
+//                         <ul className='helpers'>
+//                             <li><a href="https://sagamusix.de/"><img className='avatar' src={StaticURL("avatars/saga.png")} /> Saga Musix</a></li>
+//                             <li><a href="https://piecewi.se/">wwhhooami</a></li>
+//                             <li><a href="https://piecewi.se/">∮ f⁽ʷ⁾(z) 𝐝w = 0</a></li>
+//                             <li><a href="https://piecewi.se/">wwhhooami</a></li>
+//                             <li><a href="https://piecewi.se/">Wayfinder</a></li>
+//                             <li><a href="https://piecewi.se/">Tony Thai</a></li>
+//                             <li><a href="https://piecewi.se/">Mattmatatt</a></li>
+//                         </ul>
+//                     </div>}
+//             </div>);
+//     }
+// };
+
+
+class CreditsDialog extends React.Component {
+
     constructor(props) {
         super(props);
-
         this.state = {
-            isExpanded: false,
-        };
+            isShown: false,
+        }
+    }
+    
+    componentDidMount() {
+        window.DFEvents.on("CreditsButtonClick", this.handleButtonClick);
+    }
+    
+    componentWillUnmount() {
+        window.DFEvents.removeListener("CreditsButtonClick", this.handleButtonClick);
+    }
+    
+    handleButtonClick = (e) => {
+        this.setState({isShown: true});
     }
 
-    onClickExpand = () => {
-        this.setState({
-            isExpanded: !this.state.isExpanded,
-        });
-    };
-
+    clickMainArea = (e) => {
+        e.stopPropagation();
+        //e.preventDefault();
+    }
+    
     render() {
-
+        if (!this.state.isShown) return null;
         return (
-            <div className='dropdownMenu right'>
-                <div className={"dropdownMenuButton creditsButton " + (this.state.isExpanded ? "expanded" : "")} onClick={this.onClickExpand}>greetz</div>
+            <div id="alertScreen" className='darker ideasDialog creditsDialog' onClick={() => this.setState({isShown: false})}>
+            <div id="alertScreen2" onClick={this.clickMainArea}>
+                <div id="alertContent">
+                    <button className='closeButton'  onClick={() => this.setState({isShown: false})}><i className="material-icons">close</i></button>
 
-                {this.state.isExpanded &&
-                    <div className="creditsDialog popUpDialog">
-                        <pre>
-                        7jam was created by tenfour with tons of help from:<br />
-                        <br />
-                        wwhhooami<br />
-                        ∮ f⁽ʷ⁾(z) 𝐝w = 0<br />
-                        wwhhooami<br />
-                        Saga Musix<br />
-                        Wayfinder<br />
-                        Tony Thai<br />
-                        Mattmatatt<br />
-                        </pre>
-                    </div>}
+                    <h2><div>7jam.io</div> <div>was created by</div></h2>
+
+                    <ul className='helpers tenfour'>
+                        <li><a target="_blank" href="https://tenfour.bandcamp.com/album/c-wars-original-game-soundtrack"><img className='avatar' src={StaticURL("avatars/tenfour.png")} />tenfour</a></li>
+                    </ul>
+
+                    <div className='withHelpFrom'>
+                        with tons of help from
+                    </div>
+
+                    <ul className='helpers'>
+                        <li className='saga'><a target="_blank" href="https://sagamusix.de/"><img className='avatar' src={StaticURL("avatars/saga.png")} />Saga Musix</a></li>
+                        <li className='wwhhooami'><a target="_blank" href="https://www.youtube.com/channel/UCyT6iu3715zm-ilKPjDZY4A"><img className='avatar' src={StaticURL("avatars/whoami.webp")} />wwhhooami</a></li>
+                        <li className='guy'><a target="_blank" href="https://piecewi.se/"><img className='avatar' src={StaticURL("avatars/jackson.svg")} />∮ f⁽ʷ⁾(z) 𝐝w = 0</a></li>
+                        <li className='wayfinder'><a target="_blank" href="https://twitter.com/wayfu"><img className='avatar' src={StaticURL("avatars/wayfinder.gif")} />Wayfinder</a></li>
+                        <li className='midiman'><a target="_blank" href="https://www.youtube.com/c/TonyThai"><img className='avatar' src={StaticURL("avatars/tonythai.jpg")} />Tony Thai</a></li>
+                        <li className='mattmatatt'><a target="_blank" href="https://twitter.com/MattMatatt"><img className='avatar' src={StaticURL("avatars/matt.png")} />Mattmatatt</a></li>
+                        <li className='maj7'><a target="_blank" href="https://discord.gg/939amdA8b5"><img className='avatar' src={StaticURL("avatars/nanakun.png")} />Everyone in the #maj7 discord</a></li>
+                    </ul>
+                </div>
+            </div>
             </div>);
+    };
+}
+
+
+
+class CreditsButton extends React.Component {
+    render() {
+        return (<button className='dropdownMenuButton' onClick={() => window.DFEvents.emit("CreditsButtonClick")}>GREETZ</button>);
     }
 };
 
 
+
 class IdeasButton extends React.Component {
     render() {
-        return (<button className='dropdownMenuButton' onClick={() => window.DFEvents.emit("IdeasButtonClick")}>? ? ?</button>);
+        return (<button className='dropdownMenuButton' onClick={() => window.DFEvents.emit("IdeasButtonClick")}><i className="material-icons">help</i></button>);
     }
 };
 
@@ -71,6 +144,11 @@ class IdeasDialog extends React.Component {
     clickMainArea = (e) => {
         e.stopPropagation();
         //e.preventDefault();
+    }
+
+    clickSupport = (e) => {
+        this.setState({isShown: false});
+        window.DFEvents.emit("CreditsButtonClick");
     }
     
     render() {
@@ -106,7 +184,7 @@ class IdeasDialog extends React.Component {
     <ul>
     <li><em>Play</em> and have fun!</li>
     <li><em>Spread the word</em>, invite friends. The more the merrier!</li>
-    <li><div>7jam is 100% a labor of love. Please <em>support the many musicians</em> that have contributed to the project!</div></li>
+    <li><div>7jam is 100% a labor of love. Please <em onClick={this.clickSupport} style={{cursor:"pointer"}}>support the many musicians</em> that have contributed to the project!</div></li>
     </ul>
 
                 </div>
@@ -120,5 +198,6 @@ module.exports = {
     CreditsButton,
     IdeasButton,
     IdeasDialog,
+    CreditsDialog,
 };
 
