@@ -135,8 +135,8 @@
 timestamp: ${e.timeStamp}
 message: ${e.message}
 type: ${e.type}
-error.message: ${e.error.message}
-error.stack: ${e.error.stack.toString()}
+error.message: ${e.error?.message}
+error.stack: ${e.error?.stack.toString()}
 `;
 
             const stackLines = e.error?.stack?.match(/[^\r\n]+/g);

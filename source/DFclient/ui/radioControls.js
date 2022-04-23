@@ -304,7 +304,7 @@ class RadioVisRoomItem extends React.Component {
     this.analyzerNode = this.props.app.radio.AnalyserNode;
     this.analyzerNode.smoothingTimeConstant = 0.6;
     this.analyzerNode.fftSize = 2 ** 5;
-    this.peakIndex = 3;
+    this.peakIndex = 2;
     this.bufferLength = this.analyzerNode.frequencyBinCount;
     this.dataArray = new Uint8Array(this.bufferLength);
 

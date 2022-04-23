@@ -327,7 +327,7 @@ class GraffitiModerationDialog extends React.Component {
 
             <dt>Random Rotation</dt>
             <dd className='content'>
-              <button onClick={() => this.onClickDisableRotation(true)} className={g.disableRotation ? "selected" : "selected"}>Disabled</button>
+              <button onClick={() => this.onClickDisableRotation(true)} className={g.disableRotation ? "selected" : "notselected"}>Disabled</button>
               <button onClick={() => this.onClickDisableRotation(false)} className={g.disableRotation ? "notselected" : "selected"}>Enabled</button>
             </dd>
 

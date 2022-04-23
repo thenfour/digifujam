@@ -493,13 +493,19 @@ class GraffitiModPreviewLI extends React.Component {
     const g = this.props.graffiti;
     const app = this.props.app;
     const u = this.props.app.roomState.getUserForGraffiti(g); // may be null!
+    const userStyle = {
+      color: g.color ?? "#666",
+    };
+    if (u) {
+      userStyle.color = u.color;
+    }
     return <li>
         <div className='column'>
           <div className='row'>
             <div className={"buttonlike graffitiPin " + (g.pinned ? "enabled" : "")} onClick={this.onClickPin} title={g.pinned ? "Pinned" : "not pinned"}><i className="material-icons">push_pin</i></div>
             <div className="buttonlike graffitiCtrl" title='Settings' onClick={() => {InvokeGraffitiSettingsDlg(g.id); this.props.closeHandler(); }}><i className="material-icons">settings</i></div>
             <div className={'buttonlike isEnabled ' + ((g.enabled ?? true) ? "enabled" : "disabled")} onClick={this.onClickEnabled}>{(g.enabled??true) ? "Enabled" : "Disabled"}</div>
-            <div className='user'><div className='caption'>User</div><div className='userName'>{u ? u.name : "(user not found)"}</div></div>
+            <div className='user'><div className='caption'>User</div><div className='userName' style={userStyle}>{u ? u.name : "(user not found)"}</div></div>
           </div>
           <div className='row'>
             <div className='content'>{g.content}</div>
@@ -544,7 +550,7 @@ class ModGraffitiListMenuButton extends React.Component {
                     {
                       this.props.app.roomState.graffiti.map((g, i)=> (
                         <GraffitiModPreviewLI key={i} app={this.props.app} graffiti={g} closeHandler={() => this.setState({isExpanded:false})} />
-                      ))
+                      )).reverse()
                     }
                     </ul>
                   </div>

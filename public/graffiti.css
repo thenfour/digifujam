@@ -374,12 +374,12 @@
     border-radius: 0;
     padding: 0;
     width: auto;
-}
+margin-right: 100px;max-height: 90vh;overflow-y: scroll;}
 
 .popUpDialog.graffitiListPopup ul.modGraffitiList {
     margin: 0;
     padding: 0;
-}
+display: flex;/* flex-wrap: wrap; */flex-direction: column;}
 
 
 .popUpDialog.graffitiListPopup ul.modGraffitiList div.column {
@@ -400,14 +400,14 @@
     ;
     color: #999;
     max-width: 500px;
-}
+overflow-x: auto;}
 
 .popUpDialog.graffitiListPopup ul.modGraffitiList>li {
-    background-color: #222;
-    margin: 7px 0px;
+    background-color: #333;
+    margin: 4px;
     /* vertical-align: middle; */
     display: flex;
-}
+padding: 3px;}
 
 
 .popUpDialog.graffitiListPopup ul.modGraffitiList>li:hover {

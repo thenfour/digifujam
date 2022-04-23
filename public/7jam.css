@@ -203,19 +203,19 @@ RZ = range of rotation
 */
 @keyframes jacuzziFloatAnim {
     0% {
-        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * -1 * var(--RZ)))  translate(-50%, -50%);
+        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * -1 * var(--RZ))) translate(-50%, -50%);
     }
 
     33% {
-        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * -0.333 * var(--RZ)))  translate(-50%, -50%);
+        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * -0.333 * var(--RZ))) translate(-50%, -50%);
     }
 
     66% {
-        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * 0.333 * var(--RZ)))  translate(-50%, -50%);
+        transform: translateY(calc(var(--extentY) * var(--RY))) rotateZ(calc(var(--extentZ) * 0.333 * var(--RZ))) translate(-50%, -50%);
     }
 
     100% {
-        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * var(--RZ)))  translate(-50%, -50%);
+        transform: translateY(calc(var(--extentY) * -1 * var(--RY))) rotateZ(calc(var(--extentZ) * var(--RZ))) translate(-50%, -50%);
     }
 }
 
@@ -365,7 +365,7 @@ RZ = range of rotation
     83% {
         transform: translate(calc(var(--extentX) * var(--RX)), calc(var(--extentY) * -.333 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(300deg);
     }
-    
+
     100% {
         transform: translate(calc(var(--extentX) * -1 * var(--RX)), calc(var(--extentY) * -1 * var(--RY))) rotateX(var(--rotX)) skewY(var(--skewY)) rotateZ(360deg);
     }
@@ -389,7 +389,7 @@ RZ = range of rotation
 
 #graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing_360 {
     --rotX: 60deg;
-    --skewY:0;
+    --skewY: 0;
 }
 
 #graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing_360 {
@@ -441,7 +441,7 @@ RZ = range of rotation
 
 #graffitiContainer .graffitiItemContainer .spotlightAnim_UpFacing_rot {
     --rotX: 60deg;
-    --skewY:0;
+    --skewY: 0;
 }
 
 #graffitiContainer .graffitiItemContainer .spotlightAnim_FrontFacing_rot {
@@ -525,7 +525,7 @@ RZ = range of rotation
 .room7jam.roomItem.radioItem.radioMetadata .radioStationName {
     font-size: 20px;
     color: #999;
-    display:none;
+    display: none;
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .connectionState.offline {
@@ -539,13 +539,13 @@ RZ = range of rotation
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .streamName {
-    display:none;
+    display: none;
     font-size: 20px;
     color: #aaa;
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .streamDescription {
-    display:none;
+    display: none;
     font-size: 12px;
     color: #aaa;
     font-style: italic;
@@ -554,6 +554,7 @@ RZ = range of rotation
 .room7jam.roomItem.radioItem.radioMetadata .nowPlayingArtist {
     font-size: 60px;
     color: #ee0;
+    line-height: 55px;
 }
 
 .room7jam.roomItem.radioItem.radioMetadata .nowPlayingTitle {
