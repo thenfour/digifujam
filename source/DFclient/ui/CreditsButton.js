@@ -90,10 +90,10 @@ class CreditsDialog extends React.Component {
 
                     <ul className='helpers'>
                         <li className='saga'><a target="_blank" href="https://sagamusix.de/"><img className='avatar' src={StaticURL("avatars/saga.png")} />Saga Musix</a></li>
-                        <li className='wwhhooami'><a target="_blank" href="https://www.youtube.com/channel/UCyT6iu3715zm-ilKPjDZY4A"><img className='avatar' src={StaticURL("avatars/whoami.webp")} />wwhhooami</a></li>
+                        <li className='wwhhooami'><a target="_blank" href="https://soundcloud.com/udelighter"><img className='avatar' src={StaticURL("avatars/whoami.webp")} />wwhhooami</a></li>
                         <li className='guy'><a target="_blank" href="https://piecewi.se/"><img className='avatar' src={StaticURL("avatars/jackson.svg")} />∮ f⁽ʷ⁾(z) 𝐝w = 0</a></li>
-                        <li className='wayfinder'><a target="_blank" href="https://twitter.com/wayfu"><img className='avatar' src={StaticURL("avatars/wayfinder.gif")} />Wayfinder</a></li>
-                        <li className='midiman'><a target="_blank" href="https://www.youtube.com/c/TonyThai"><img className='avatar' src={StaticURL("avatars/tonythai.jpg")} />Tony Thai</a></li>
+                        <li className='wayfinder'><a target="_blank" href="https://twitter.com/wayfu"><img className='avatar' src={StaticURL("avatars/wayfu-sm.png")} />Wayfinder</a></li>
+                        <li className='midiman'><a target="_blank" href="https://twitter.com/uewipiw"><img className='avatar' src={StaticURL("avatars/midiman-icon-small.png")} />Tony Thai</a></li>
                         <li className='mattmatatt'><a target="_blank" href="https://twitter.com/MattMatatt"><img className='avatar' src={StaticURL("avatars/matt.png")} />Mattmatatt</a></li>
                         <li className='maj7'><a target="_blank" href="https://discord.gg/939amdA8b5"><img className='avatar' src={StaticURL("avatars/nanakun.png")} />Everyone in the #maj7 discord</a></li>
                     </ul>

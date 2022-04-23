@@ -173,14 +173,14 @@ width: 800px;}
   color: #f80;
   font-size:30px;
 }
-
+/* 
 .creditsDialog ul.tenfour li {
   width: 100%;
   margin: 0px 0px;
   padding: 0px 0px;
   color: #f80;
   font-size: 44px;
-}
+} */
 
 .creditsDialog ul li:hover {
   background-color:#333;
@@ -191,10 +191,10 @@ width: 800px;}
   max-height: 70px;
   margin: 6px 31px;
 }
-
+/* 
 .creditsDialog .tenfour img {
   max-height:104px;
-}
+} */
 
 .creditsDialog a,
 .creditsDialog a:visited,
@@ -215,6 +215,10 @@ width: 800px;}
 
 .creditsDialog li.saga a {
   color: #1c9d1c;
+}
+
+.creditsDialog li.midiman a {
+  color: #429bc6;
 }
 
 .creditsDialog .withHelpFrom {
