@@ -222,7 +222,7 @@ width: 800px;}
 }
 
 .creditsDialog .withHelpFrom {
-  margin: 21px 9px;
+  margin: 7px 9px;
   color:#999;
   font-style:italic;
   font-size: 17px;
@@ -232,3 +232,8 @@ text-align: center;}
   padding: 5px 21px;
 }
 
+.creditsDialog .littleDescription {
+  color:#999;
+  font-style:italic;
+  font-size: 16px;
+}

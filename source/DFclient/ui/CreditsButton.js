@@ -83,15 +83,42 @@ class CreditsDialog extends React.Component {
                     <ul className='helpers tenfour'>
                         <li><a target="_blank" href="https://tenfour.bandcamp.com/album/c-wars-original-game-soundtrack"><img className='avatar' src={StaticURL("avatars/tenfour.png")} />tenfour</a></li>
                     </ul>
-
+{/* 
                     <div className='withHelpFrom'>
                         with tons of help from
-                    </div>
+                    </div> */}
 
                     <ul className='helpers'>
-                        <li className='saga'><a target="_blank" href="https://sagamusix.de/"><img className='avatar' src={StaticURL("avatars/saga.png")} />Saga Musix</a></li>
-                        <li className='wwhhooami'><a target="_blank" href="https://soundcloud.com/udelighter"><img className='avatar' src={StaticURL("avatars/whoami.webp")} />wwhhooami</a></li>
-                        <li className='guy'><a target="_blank" href="https://piecewi.se/"><img className='avatar' src={StaticURL("avatars/jackson.svg")} />∮ f⁽ʷ⁾(z) 𝐝w = 0</a></li>
+                    <li className='blasphysics'><a target="_blank" href="https://twitter.com/blasphysics"><img className='avatar' src={StaticURL("avatars/blasphysics.jpg")} />
+                            <div>
+                                <div>blasphysics</div>
+                            <div className='littleDescription'>Creator of the 7jam logo</div>
+                            </div>
+                        </a></li>
+                        <li className='blasphysics'><a target="_blank" href="https://twitter.com/Promtastik"><img className='avatar' src={StaticURL("avatars/promtastik.jpg")} />
+                            <div>
+                                <div>Promtastik | Narek</div>
+                            <div className='littleDescription'>Interior decorator and event host supreme</div>
+                            </div>
+                        </a></li>
+                        <li className='saga'><a target="_blank" href="https://sagamusix.de/"><img className='avatar' src={StaticURL("avatars/saga.png")} />
+                            <div>
+                                <div>Saga Musix</div>
+                                <div className='littleDescription'>...who provided most of the sounds and demoscene memes</div>
+                            </div>
+                        </a></li>
+                        <li className='wwhhooami'><a target="_blank" href="https://soundcloud.com/udelighter"><img className='avatar' src={StaticURL("avatars/whoami.webp")} />
+                        <div>
+                                <div>wwhhooami</div>
+                                <div className='littleDescription'>for code and chords</div>
+                            </div>
+                            </a></li>
+                        <li className='guy'><a target="_blank" href="https://piecewi.se/"><img className='avatar' src={StaticURL("avatars/jackson.svg")} />
+                            <div>
+                                <div>∮ f⁽ʷ⁾(z) 𝐝w = 0</div>
+                                <div className='littleDescription'>for design advice</div>
+                            </div>
+                        </a></li>
                         <li className='wayfinder'><a target="_blank" href="https://twitter.com/wayfu"><img className='avatar' src={StaticURL("avatars/wayfu-sm.png")} />Wayfinder</a></li>
                         <li className='midiman'><a target="_blank" href="https://twitter.com/uewipiw"><img className='avatar' src={StaticURL("avatars/midiman-icon-small.png")} />Tony Thai</a></li>
                         <li className='mattmatatt'><a target="_blank" href="https://twitter.com/MattMatatt"><img className='avatar' src={StaticURL("avatars/matt.png")} />Mattmatatt</a></li>
