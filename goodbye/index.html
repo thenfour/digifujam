@@ -48,6 +48,231 @@
       overflow-x: hidden;
     }
 
+
+    @keyframes dance_skewy {
+      0% {
+        transform: rotateZ(10deg) skewX(var(--dance-skew));
+        animation-timing-function: cubic-bezier(1, 0, 1, 1);
+      }
+
+      25% {
+        transform: rotateZ(-10deg) skewX(var(--dance-skewN));
+        animation-timing-function: ease-out;
+      }
+
+      50% {
+        transform: rotateZ(10deg) skewY(var(--dance-skewN));
+        animation-timing-function: cubic-bezier(1, 0, 1, 1);
+      }
+
+      75% {
+        transform: rotateZ(-10deg) skewY(var(--dance-skew));
+        animation-timing-function: ease-out;
+      }
+
+      100% {
+        transform: rotateZ(10deg) skewX(var(--dance-skew));
+      }
+    }
+
+
+
+
+    @keyframes dance_bouncey {
+      0% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
+      }
+
+      50% {
+        transform: translateY(-20px);
+        animation-timing-function: cubic-bezier(0.9, 0, 1, 1);
+      }
+
+      100% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.1, 1);
+      }
+    }
+
+
+
+
+    @keyframes dance_smack {
+      4% {
+        transform: scale(120%) rotateZ(10deg);
+      }
+
+      50% {
+        transform: scale(90%) rotateZ(10deg);
+      }
+
+      54% {
+        transform: scale(120%) rotateZ(-10deg);
+      }
+
+      100% {
+        transform: scale(90%) rotateZ(-10deg);
+      }
+    }
+
+
+
+
+    @keyframes dance_colorrot {
+      0% {
+        filter: hue-rotate(0deg);
+        transform: rotateY(0) rotateZ(10deg);
+      }
+
+      50% {
+        filter: hue-rotate(180deg);
+        transform: rotateY(180deg) rotateZ(10deg);
+      }
+
+      100% {
+        filter: hue-rotate(360deg);
+        transform: rotateY(360deg) rotateZ(10deg);
+      }
+    }
+
+
+
+    @keyframes dance_flip {
+      0% {
+        transform: rotateZ(360deg);
+        transform-origin: left top;
+      }
+
+      100% {
+        transform: rotateZ(0deg);
+        transform-origin: right top;
+      }
+    }
+
+
+
+    @keyframes dance_emo {
+      0% {
+        transform: rotateY(0deg);
+        filter: blur(0px) grayscale(0%);
+        animation-timing-function: linear;
+      }
+
+      25% {
+        transform: rotateY(90deg);
+        filter: blur(2px) grayscale(100%);
+        animation-timing-function: linear;
+      }
+
+      50% {
+        transform: rotateY(180deg);
+        filter: blur(0px) grayscale(0%);
+        animation-timing-function: linear;
+      }
+
+      75% {
+        transform: rotateY(270deg);
+        filter: blur(2px) grayscale(100%);
+        animation-timing-function: linear;
+      }
+
+      100% {
+        transform: rotateY(360deg);
+        filter: blur(0px) grayscale(0%);
+        animation-timing-function: linear;
+      }
+    }
+
+
+
+    @keyframes dance_waterfloat {
+      0% {
+        transform: translateY(calc(30px * var(--RY))) rotateZ(calc(-90deg * var(--RZ)));
+      }
+
+      33% {
+        transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(-30deg * var(--RZ)));
+      }
+
+      66% {
+        transform: translateY(calc(30px * var(--RY))) rotateZ(calc(30deg * var(--RZ)));
+      }
+
+      100% {
+        transform: translateY(calc(-30px * var(--RY))) rotateZ(calc(90deg * var(--RZ)));
+      }
+    }
+
+
+
+
+    @keyframes dance_3dfloat {
+      0% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ)));
+      }
+
+      33% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -.333 * var(--RZ)));
+      }
+
+      66% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * .333 * var(--RZ)));
+      }
+
+      100% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * var(--RZ)));
+      }
+    }
+
+
+
+    @keyframes dance_jitter {
+      0% {
+        transform: translate3d(calc(0.8147 * var(--extentX)), calc(0.0975 * var(--extentY)), 0);
+      }
+
+      10% {
+        transform: translate3d(calc(0.9058 * var(--extentX)), calc(0.2785 * var(--extentY)), 0);
+      }
+
+      20% {
+        transform: translate3d(calc(0.1270 * var(--extentX)), calc(0.5469 * var(--extentY)), 0);
+      }
+
+      30% {
+        transform: translate3d(calc(0.9134 * var(--extentX)), calc(0.9575 * var(--extentY)), 0);
+      }
+
+      40% {
+        transform: translate3d(calc(0.6324 * var(--extentX)), calc(0.9649 * var(--extentY)), 0);
+      }
+
+      50% {
+        transform: translate3d(calc(0.1576 * var(--extentX)), calc(0.1419 * var(--extentY)), 0);
+      }
+
+      60% {
+        transform: translate3d(calc(0.9706 * var(--extentX)), calc(0.4218 * var(--extentY)), 0);
+      }
+
+      70% {
+        transform: translate3d(calc(0.9572 * var(--extentX)), calc(0.9157 * var(--extentY)), 0);
+      }
+
+      80% {
+        transform: translate3d(calc(0.4854 * var(--extentX)), calc(0.7922 * var(--extentY)), 0);
+      }
+
+      90% {
+        transform: translate3d(calc(0.8003 * var(--extentX)), calc(0.9595 * var(--extentY)), 0);
+      }
+    }
+
+
+
+
+
     /* Animated starfield background */
     .starfield {
       position: fixed;
@@ -106,6 +331,25 @@
       max-height: 202px;
       /* margin-bottom: px; */
       /* filter: drop-shadow(0 0 10px var(--secondary-cyan)); */
+
+    }
+
+    @keyframes logoFloat3D {
+      0% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * -1 * var(--RZ)));
+      }
+
+      33% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * -0.333 * var(--RZ)));
+      }
+
+      66% {
+        transform: rotateY(calc(var(--rotExtentY) * -1 * var(--RZ))) rotateX(calc(var(--rotExtentX) * 0.333 * var(--RZ)));
+      }
+
+      100% {
+        transform: rotateY(calc(var(--rotExtentY) * var(--RZ))) rotateX(calc(var(--rotExtentX) * var(--RZ)));
+      }
     }
 
     .title {
@@ -406,10 +650,6 @@
       }
     }
 
-    .main-header {
-      animation: fadeInUp 1s ease-out;
-    }
-
     .announcement-box {
       animation: fadeInUp 1s ease-out 0.2s both;
     }
@@ -425,6 +665,19 @@
     .site-footer {
       animation: fadeInUp 1s ease-out 0.8s both;
     }
+
+
+
+
+
+    .main-header {
+      /* animation: dance_smack 1s infinite; */
+      --RY: 0.25;
+      --RZ: 0.1;
+      animation: dance_waterfloat 3.33s infinite;
+      animation-timing-function: linear;
+      animation-direction: alternate;
+    }
   </style>
 </head>
 
@@ -433,7 +686,9 @@
 
   <div class="container">
     <header class="main-header">
-      <img src="./splash_logo.png" alt="7jam logo" class="logo">
+      <div class="logo-container">
+        <img src="./splash_logo.png" alt="7jam logo" class="logo">
+      </div>
       <h1 class="title">Thanks for jamming with us</h1>
     </header>
 
