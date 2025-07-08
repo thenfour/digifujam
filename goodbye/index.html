@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7jam - Thank You for the Music</title>
+  <meta name="description"
+    content="7jam.io is closing down. Thank you for being part of our amazing musical community. Join us on Discord or check out the open source code on GitHub.">
+  <link rel="icon" href="../public/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style type="text/css">
+    /* 7jam Goodbye Page Styles - Reflecting the original brand */
+
+    :root {
+      /* Core 7jam colors */
+      --primary-cyan: #0aa;
+      --secondary-cyan: #0cc;
+      --accent-cyan: #0bb;
+      --bright-cyan: #0dd;
+      --yellow-accent: #aa0;
+      --bright-yellow: #cc0;
+      --gold-accent: #dd0;
+      --background-dark: #000;
+      --surface-dark: #022;
+      --surface-medium: #033;
+      --surface-light: #044;
+      --border-color: #066;
+      --text-primary: #0aa;
+      --text-secondary: #888;
+      --text-muted: #666;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-dark);
+      color: var(--text-primary);
+      font-family: 'Overpass', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Animated starfield background */
+    .starfield {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: radial-gradient(circle at 25% 25%, #001122 0%, #000000 50%);
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: var(--secondary-cyan);
+      border-radius: 50%;
+      animation: twinkle linear infinite;
+      box-shadow: 0 0 6px var(--secondary-cyan);
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    /* Main container */
+    .container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    .main-header {
+      text-align: center;
+      display: flex;
+      margin: 40px 0 60px 0;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo {
+      max-height: 202px;
+      /* margin-bottom: px; */
+      /* filter: drop-shadow(0 0 10px var(--secondary-cyan)); */
+    }
+
+    .title {
+      font-size: 4rem;
+      font-weight: 700;
+      color: var(--bright-yellow);
+      margin: 0;
+      text-shadow: 0 0 20px var(--yellow-accent);
+      /* transform: skewY(-2deg); */
+      letter-spacing: -1px;
+    }
+
+    /* Content area */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    /* Announcement box */
+    .announcement-box {
+      background: linear-gradient(135deg, var(--surface-dark) 0%, var(--surface-medium) 100%);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 170, 170, 0.1);
+      /* transform: skewY(-1deg); */
+    }
+
+    .announcement-box h2 {
+      font-size: 2.5rem;
+      color: var(--bright-cyan);
+      margin: 0 0 20px 0;
+      text-shadow: 0 0 15px var(--primary-cyan);
+    }
+
+    .announcement-box p {
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin: 0 0 20px 0;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Action cards */
+    .action-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: var(--surface-dark);
+      border: 2px solid var(--surface-light);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      /* transform: skewY(-1deg); */
+    }
+
+    .card:hover {
+      border-color: var(--secondary-cyan);
+      box-shadow: 0 0 25px rgba(0, 170, 170, 0.2);
+      /* transform: skewY(-1deg) translateY(-5px); */
+    }
+
+    .card-icon {
+      margin-bottom: 20px;
+    }
+
+    .card-icon .material-icons {
+      font-size: 48px;
+      color: var(--secondary-cyan);
+      text-shadow: 0 0 10px var(--secondary-cyan);
+    }
+
+    /* Social SVG Icons */
+    .social-icon {
+      width: 48px;
+      height: 48px;
+      fill: var(--secondary-cyan);
+      filter: drop-shadow(0 0 10px var(--secondary-cyan));
+      transition: all 0.3s ease;
+    }
+
+    .discord-card:hover .discord-icon {
+      fill: #7289da;
+      filter: drop-shadow(0 0 10px #7289da);
+    }
+
+    .github-card:hover .github-icon {
+      fill: var(--bright-yellow);
+      filter: drop-shadow(0 0 10px var(--yellow-accent));
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      color: var(--bright-cyan);
+      margin: 0 0 15px 0;
+      text-shadow: 0 0 8px var(--primary-cyan);
+    }
+
+    .card p {
+      color: var(--text-primary);
+      margin: 0 0 25px 0;
+      line-height: 1.6;
+    }
+
+    /* Action buttons */
+    .action-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background-color: var(--surface-medium);
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .action-button:hover {
+      background-color: var(--surface-light);
+      border-color: var(--secondary-cyan);
+      color: var(--bright-cyan);
+      text-shadow: 0 0 8px var(--secondary-cyan);
+      box-shadow: 0 0 15px rgba(0, 170, 170, 0.3);
+    }
+
+    .discord-button:hover {
+      border-color: #7289da;
+      color: #7289da;
+      text-shadow: 0 0 8px #7289da;
+      box-shadow: 0 0 15px rgba(114, 137, 218, 0.3);
+    }
+
+    .github-button:hover {
+      border-color: var(--bright-yellow);
+      color: var(--bright-yellow);
+      text-shadow: 0 0 8px var(--yellow-accent);
+      box-shadow: 0 0 15px rgba(221, 221, 0, 0.3);
+    }
+
+    /* Memories section */
+    .memories {
+      background: var(--surface-dark);
+      border: 2px solid var(--surface-medium);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .memories h3 {
+      font-size: 1.8rem;
+      color: var(--bright-cyan);
+      margin: 0 0 20px 0;
+      text-shadow: 0 0 10px var(--primary-cyan);
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      text-align: left;
+    }
+
+    .feature-list li {
+      padding: 10px 15px;
+      background: var(--surface-medium);
+      border-left: 4px solid var(--secondary-cyan);
+      border-radius: 4px;
+      color: var(--text-primary);
+      position: relative;
+    }
+
+    .feature-list li::before {
+      content: "♪";
+      color: var(--yellow-accent);
+      font-weight: bold;
+      margin-right: 10px;
+      text-shadow: 0 0 5px var(--yellow-accent);
+    }
+
+    /* Footer */
+    .site-footer {
+      margin-top: 60px;
+      text-align: center;
+      padding: 30px 0;
+      border-top: 2px solid var(--surface-medium);
+    }
+
+    .site-footer p {
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      margin: 0 0 15px 0;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .footer-links a {
+      color: var(--secondary-cyan);
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--bright-cyan);
+      text-shadow: 0 0 8px var(--secondary-cyan);
+    }
+
+    .separator {
+      color: var(--text-secondary);
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      .title {
+        font-size: 2.2rem;
+      }
+
+      .announcement-box {
+        padding: 25px;
+        transform: none;
+      }
+
+      .announcement-box h2 {
+        font-size: 1.8rem;
+      }
+
+      .card {
+        transform: none;
+      }
+
+      .card:hover {
+        transform: translateY(-2px);
+      }
+
+      .action-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-list {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .footer-links {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 1.8rem;
+      }
+
+      .announcement-box p {
+        font-size: 1rem;
+      }
+
+      .logo {
+        max-height: 60px;
+      }
+    }
+
+    /* Additional animations for enhanced visual appeal */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .main-header {
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .announcement-box {
+      animation: fadeInUp 1s ease-out 0.2s both;
+    }
+
+    .action-cards {
+      animation: fadeInUp 1s ease-out 0.4s both;
+    }
+
+    .memories {
+      animation: fadeInUp 1s ease-out 0.6s both;
+    }
+
+    .site-footer {
+      animation: fadeInUp 1s ease-out 0.8s both;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="starfield"></div>
+
+  <div class="container">
+    <header class="main-header">
+      <img src="./splash_logo.png" alt="7jam logo" class="logo">
+      <h1 class="title">Thanks for jamming with us</h1>
+    </header>
+
+    <main class="content">
+      <div class="announcement-box">
+        <h2>7jam.io is closing down</h2>
+        <p>After bringing musicians together online since 2020, it's time to say goodbye.
+          You made 7jam special through 9 million notes played, dozens of album releases and concerts.</p>
+      </div>
+
+      <div class="action-cards">
+        <div class="card discord-card">
+          <div class="card-icon">
+            <svg class="social-icon discord-icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <title>Discord</title>
+              <path
+                d="M20.222 0c1.406 0 2.54 1.137 2.607 2.475V24l-2.677-2.273-1.47-1.338-1.604-1.398.67 2.205H3.71c-1.402 0-2.54-1.065-2.54-2.476V2.48C1.17 1.142 2.31.003 3.715.003h16.5L20.222 0zm-6.118 5.683h-.03l-.202.2c2.073.6 3.076 1.537 3.076 1.537-1.336-.668-2.54-1.002-3.744-1.137-.87.068-1.74.202-2.475.336a11.319 11.319 0 0 0-4.344 0c-.935.134-1.74.202-2.677.268 0 0 1.003-.669 3.076-1.537l-.202-.2s-1.467-.067-2.942 1.33c0 0-1.474 2.543-1.474 5.156 0 0 .87 1.331 3.141 1.537 0 0 .402-.402.735-.735-1.336-.135-1.795-.802-1.795-.802.135.135.335.202.468.335a8.18 8.18 0 0 0 2.677 1.002c.402.067.870.135 1.336.135a9.28 9.28 0 0 0 2.542-.135 8.8 8.8 0 0 0 2.678-.668c.334-.135.735-.335 1.137-.668 0 0-.402.724-1.795.802.334.333.735.735.735.735 2.272-.206 3.14-1.537 3.14-1.537 0-2.613-1.473-5.156-1.473-5.156-1.336-1.006-2.807-.939-2.807-.939zm-5.53 5.156c-.602 0-1.006-.402-1.006-1.006 0-.604.335-1.006 1.005-1.006.67 0 1.006.402 1.006 1.006 0 .604-.335 1.006-1.006 1.006zm4.344 0c-.602 0-1.006-.402-1.006-1.006 0-.604.335-1.006 1.006-1.006.67 0 1.005.402 1.005 1.006 0 .604-.335 1.006-1.005 1.006z" />
+            </svg>
+          </div>
+          <h3>Stay Connected</h3>
+          <p>Join our Discord community to stay in touch with fellow musicians and get updates about future projects.
+          </p>
+          <a href="https://discord.gg/kkf9gQfKAd" class="action-button discord-button" target="_blank" rel="noopener">
+            <span>Join Discord</span>
+            <i class="material-icons">arrow_forward</i>
+          </a>
+        </div>
+
+        <div class="card github-card">
+          <div class="card-icon">
+            <svg class="social-icon github-icon" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <title>GitHub</title>
+              <path
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.610-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+            </svg>
+          </div>
+          <h3>Open Source</h3>
+          <p>7jam was built with love and is open source. Fork it, learn from it, or start your own musical adventure.
+          </p>
+          <a href="https://github.com/thenfour/digifujam" class="action-button github-button" target="_blank"
+            rel="noopener">
+            <span>View on GitHub</span>
+            <i class="material-icons">arrow_forward</i>
+          </a>
+        </div>
+      </div>
+
+      <div class="memories">
+        <h3>What made 7jam special</h3>
+        <ul class="feature-list">
+          <li>55+ sample-based instruments across multiple jam rooms</li>
+          <li>Step sequencers and synthesizers for creative expression</li>
+          <li>Concerts, jam sessions, parties</li>
+          <li>A welcoming space for musicians and fans</li>
+          <li>7jam radio stream and Nectarine hallway</li>
+          <li>Graffiti, cheers, /dance, and an overflowing jacuzzi</li>
+        </ul>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>Thank you for being part of the 7jam community. Keep making music! 🎵</p>
+      <div class="footer-links">
+        <a href="https://discord.gg/kkf9gQfKAd" target="_blank" rel="noopener">Discord</a>
+        <span class="separator">•</span>
+        <a href="https://github.com/thenfour/digifujam" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    // Simple starfield animation
+    function createStars() {
+      const starfield = document.querySelector('.starfield');
+      const numStars = 200;
+
+      for (let i = 0; i < numStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 4 + 's';
+        star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        starfield.appendChild(star);
+      }
+    }
+
+    createStars();
+
+    // Add subtle glow effect on hover for action buttons
+    document.querySelectorAll('.action-button').forEach(button => {
+      button.addEventListener('mouseenter', function () {
+        this.style.transform = 'translateY(-2px) scale(1.02)';
+      });
+
+      button.addEventListener('mouseleave', function () {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+  </script>
+</body>
+
+</html>
