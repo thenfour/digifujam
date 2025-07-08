@@ -1,10 +1,16 @@
-path_separator: \
 admin_key: myadminkey
+path_separator: \
 storage_path: C:\root\Dropbox\root\Digifujam\storage
+private_storage_path: C:\root\Dropbox\root\Digifujam\private_storage
+## for Linux/Mac:
+# path_separator: /
+# storage_path: /home/digifujam/storage
+# private_storage_path: /home/digifujam/private_storage
 port: 8081
 host_prefix: http://localhost:8081
-# StaticHostPrefix: http://localhost:8081/uploads
-# LocalStaticHostPrefix: http://localhost:8081/uploads
+StaticHostPrefix: http://localhost:8081
+LocalStaticHostPrefix: http://localhost:8081
+UploadsDirectory: public/uploads
 log_command: supervisorctl tail -9000 7jam
 room_json:
   - 7jam.json
